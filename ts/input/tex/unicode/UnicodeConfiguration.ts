@@ -134,6 +134,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
     let c = '';
     const text = parser.string.substring(parser.i);
     if (next === "'") {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       match = text.match(/^'([0-7]{1,7}) ?/u);
       if (match) {
@@ -145,6 +146,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
         c = String.fromCodePoint(parseInt(match[1], 16));
       }
     } else if (next === '`') {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       match = text.match(/^`(?:(\\\S)|(.))/u);
       if (match) {

@@ -13,9 +13,11 @@ import {mathjax} from '#js/mathjax.js';
 import {OptionList} from '#js/util/Options.js';
 import {tmpJsonFile} from '#src/constants.js';
 import * as fs from 'fs';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import {init} from '#source/node-main/node-main.mjs';
 import {expect} from '@jest/globals';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import {source} from '#source/source.js';
 
