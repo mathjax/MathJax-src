@@ -22,7 +22,10 @@ jobs:
         run: pnpm -s i
 
       - name: Build MathJax
-        run: pnpm -s build-all
+        run: |
+          ./components/bin/version
+          pnpm -s link:src
+          pnpm -s build-all
         
       - name: Publish to npm
         env:
