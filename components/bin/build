@@ -36,7 +36,7 @@ const INDENT = '  ';
  * The pattern to use when looking for explort commands to process
  */
 const EXPORTPATTERN =
-      /(^export(?:\s+default)?(?:\s+abstract)?\s+(?:[^ {*}]+\s+(?:enum\s+)?[a-zA-Z0-9_.$]+|\{.* as .*\}))/m;
+      /(^export(?:\s+(?:default|abstract|async))?\s+(?:[^ {*}]+\s+(?:enum\s+)?[a-zA-Z0-9_.$]+|\{.* as .*\}))/m;
 
 const EXPORT_IGNORE = ['type', 'interface'];
 const EXPORT_PROCESS = ['let', 'const', 'var', 'function', 'class', 'namespace', 'enum', 'as'];

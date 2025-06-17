@@ -482,4 +482,5 @@ export function getHighlighter(
 const highlighterMapping: { [key: string]: new () => Highlighter } = {
   SVG: SvgHighlighter,
   CHTML: ChtmlHighlighter,
+  generic: ChtmlHighlighter,
 };

@@ -33,7 +33,7 @@ import { HTMLMathList } from './HTMLMathList.js';
 import { HTMLDomStrings } from './HTMLDomStrings.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { InputJax } from '../../core/InputJax.js';
-import { STATE, ProtoItem, Location } from '../../core/MathItem.js';
+import { STATE, newState, ProtoItem, Location } from '../../core/MathItem.js';
 import { StyleJson } from '../../util/StyleJson.js';
 
 /*****************************************************************/
@@ -48,6 +48,11 @@ import { StyleJson } from '../../util/StyleJson.js';
  * @template T  The Text node class
  */
 export type HTMLNodeArray<N, T> = [N | T, number][][];
+
+/**
+ * Add STATE value for adding the stylesheets (after INSERTED)
+ */
+newState('STYLES', STATE.INSERTED + 1);
 
 /*****************************************************************/
 /**
@@ -71,7 +76,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     ...AbstractMathDocument.OPTIONS,
     renderActions: expandable({
       ...AbstractMathDocument.OPTIONS.renderActions,
-      styles: [STATE.INSERTED + 1, '', 'updateStyleSheet', false]  // update styles on a rerender() call
+      styles: [STATE.STYLES, '', 'updateStyleSheet', false]  // update styles on a rerender() call
     }),
     MathList: HTMLMathList,           // Use the HTMLMathList for MathLists
     MathItem: HTMLMathItem,           // Use the HTMLMathItem for MathItem
