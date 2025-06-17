@@ -39,8 +39,7 @@ jobs:
           git config --global user.email "actions@github.com"
           
           # Get the release name from the context
-          # RELEASE_NAME="${{ github.event.release.name }}"
-          RELEASE_NAME="Testing"
+          RELEASE_NAME="${{ github.event.release.name }}"
           
           # Clone the MathJax repo
           git clone https://github.com/MathJax/MathJax.git
