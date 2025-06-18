@@ -200,16 +200,13 @@ export const NewcommandUtil = {
     }
     let i = parser.i;
     let j = 0;
-    let hasBraces = 0;
+    let hasBraces = false;
     while (parser.i < parser.string.length) {
       const c = parser.string.charAt(parser.i);
       // @test Def Let, Def Optional Brace, Def Options CS
       if (c === '{') {
         // @test Def Optional Brace, Def Options CS
-        if (parser.i === i) {
-          // @test Def Optional Brace
-          hasBraces = 1;
-        }
+        hasBraces = parser.i === i;
         parser.GetArgument(name);
         j = parser.i - i;
       } else if (this.MatchParam(parser, param)) {
@@ -224,7 +221,7 @@ export const NewcommandUtil = {
         // @test Def Options CS
         parser.i++;
         j++;
-        hasBraces = 0;
+        hasBraces = false;
         const match = parser.string.substring(parser.i).match(/[a-z]+|./i);
         if (match) {
           // @test Def Options CS
@@ -235,7 +232,7 @@ export const NewcommandUtil = {
         // @test Def Let
         parser.i++;
         j++;
-        hasBraces = 0;
+        hasBraces = false;
       }
     }
     // @test Runaway Argument
