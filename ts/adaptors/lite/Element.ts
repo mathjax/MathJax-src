@@ -172,7 +172,7 @@ export class LiteIFrame extends LiteElement {
       this.options.debug,
     ];
     const pool = `${this.options.path}/speech-workerpool.js`;
-    if (MathJax?.loader) {
+    if (typeof MathJax !== 'undefined' && MathJax.loader) {
       MathJax.loader.versions.set(pool, mathjax.version);
     }
     const { WorkerPool, setContext } = await asyncLoad(pool);
