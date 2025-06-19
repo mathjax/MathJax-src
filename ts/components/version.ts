@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2023 The MathJax Consortium
+ *  Copyright (c) 2023-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
  */
 
 /**
- * @file  The version of MathJax (used to tell what version a component
+ * @fileoverview  The version of MathJax (used to tell what version a component
  *                was compiled against).
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-export const VERSION = '4.0.0-beta.7';
+export const VERSION = '4.0.0-rc.1';
