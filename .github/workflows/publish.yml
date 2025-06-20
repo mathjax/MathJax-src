@@ -31,8 +31,13 @@ jobs:
           pnpm -s link:src
           pnpm -s build-all
         
-      - name: Publish to npm
+      - name: Temp fix to publish
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
+
+      - name: Publish to npmjs
+        run: pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public
 
