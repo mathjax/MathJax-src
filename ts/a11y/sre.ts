@@ -26,10 +26,10 @@ import { Engine } from '#sre/common/engine.js';
 import { parseInput } from '#sre/common/dom_util.js';
 import { Variables } from '#sre/common/variables.js';
 import { semanticMathmlSync } from '#sre/enrich_mathml/enrich.js';
-export {
-  addPreference,
-  fromPreference,
-  toPreference,
+import {
+  addPreference as addPref,
+  fromPreference as fromPref,
+  toPreference as toPref,
 } from '#sre/speech_rules/clearspeak_preference_string.js';
 
 export const locales = Variables.LOCALES;
@@ -42,9 +42,17 @@ export const engineSetup = () => {
   return Engine.getInstance().json();
 };
 
-// export const toEnriched = Api.toEnriched;
 export const toEnriched = (mml: string) => {
   return semanticMathmlSync(mml, Engine.getInstance().options);
 };
 
 export const parseDOM = parseInput;
+
+//
+// webpack doesn't seem to pick these up when building the ui/menu
+// component when they are exported directly, so import first
+// and then export.
+//
+export const addPreference = addPref;
+export const fromPreference = fromPref;
+export const toPreference = toPref;
