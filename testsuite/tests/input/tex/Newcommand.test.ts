@@ -552,6 +552,28 @@ describe('Newcommand', () => {
 
   /********************************************************************************/
 
+  it('Def Template Brace Removal', () => {
+    toXmlMatch(
+      tex2mml('\\def\\test#1\\end{\\text{#1}} \\test{a b}\\end'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\test#1\\end{\\text{#1}} \\test{a b}\\end" display="block">
+        <mtext data-latex="\\text{a b}">a b</mtext>
+      </math>`
+    );
+  });
+
+  /********************************************************************************/
+
+  it('Def Template Brace Retention', () => {
+    toXmlMatch(
+      tex2mml('\\def\\test#1\\end{\\text{#1}} \\test{a}{b}\\end'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\test#1\\end{\\text{#1}} \\test{a}{b}\\end" display="block">
+        <mtext data-latex="\\text{{a}{b}}">{a}{b}</mtext>
+      </math>`
+    );
+  });
+
+  /********************************************************************************/
+
   it('Def Hash Replacement', () => {
     toXmlMatch(
       tex2mml('\\def\\x#1{\\def\\y##1#1{[##1]}\\y} \\x\\X abc \\X'),
