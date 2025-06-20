@@ -37,7 +37,7 @@ jobs:
           pnpm -s copy:pkg cjs
 
       - name: Build tests
-        run: pnpm -s tsc -p testsuite/tsconfig.json
+        run: pnpm tsc -p testsuite/tsconfig.json
           
       - name: Run tests
         run: pnpm -s test:gh

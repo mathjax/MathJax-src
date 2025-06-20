@@ -8,6 +8,9 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     name: Build and publish MathJax
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -17,9 +20,10 @@ jobs:
         with:
           version: 10
           run_install: false
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install packages
-        run: pnpm -s i
+        run: pnpm i
 
       - name: Build MathJax
         run: |
@@ -30,5 +34,5 @@ jobs:
       - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm -s publish --access public
+        run: pnpm publish --access public
 
