@@ -24,7 +24,7 @@ jobs:
 
       - name: Install packages
         run: |
-          pnpm -s -r i
+          pnpm -r i
           pnpm -s link:src
 
       - name: Compile MathJax
