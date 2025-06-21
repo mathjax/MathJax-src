@@ -8,11 +8,11 @@ import {SpeechHandler} from '#js/a11y/speech.js';
 if (MathJax.loader) {
   let path = Package.resolvePath('[sre]', false);
   if (!hasWindow) {
-    if (MathJax.config.loader.require?.resolve) {
-      const require = MathJax.config.loader.require;
+    const REQUIRE = typeof require !== 'undefined' ? require : MathJax.config.loader.require;
+    if (REQUIRE?.resolve) {
       const pool = MathJax.config.options?.worker?.pool || 'speech-workerpool.js';
       path = path.replace(/\/bundle\/sre$/, '/cjs/a11y/sre');
-      path = require.resolve(`${path}/${pool}`).replace(/\/[^\/]*$/, '');
+      path = REQUIRE.resolve(`${path}/${pool}`).replace(/\/[^\/]*$/, '');
     } else {
       path = '';
     }

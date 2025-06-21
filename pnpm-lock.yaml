@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@mathjax/mathjax-newcm-font':
-        specifier: 4.0.0-rc.1
-        version: 4.0.0-rc.1
+        specifier: 4.0.0-rc.2
+        version: 4.0.0-rc.2
       mhchemparser:
         specifier: ^4.2.1
         version: 4.2.1
@@ -18,8 +18,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       speech-rule-engine:
-        specifier: 5.0.0-alpha.5
-        version: 5.0.0-alpha.5
+        specifier: 5.0.0-alpha.6
+        version: 5.0.0-alpha.6
     devDependencies:
       '@eslint/js':
         specifier: ^9.28.0
@@ -59,7 +59,7 @@ importers:
         version: 5.0.10
       terser-webpack-plugin:
         specifier: ^5.3.14
-        version: 5.3.14(webpack@5.99.9(webpack-cli@5.1.4))
+        version: 5.3.14(webpack@5.99.9)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -175,8 +175,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@mathjax/mathjax-newcm-font@4.0.0-rc.1':
-    resolution: {integrity: sha512-1zEBHqKHiYneakV07PlOYlestLccq1q9UKgI1aeSx7xFOL6v15SkDTRFhyzcAVkXcWmF8NTUIKdyHGrYlVxUbQ==}
+  '@mathjax/mathjax-newcm-font@4.0.0-rc.2':
+    resolution: {integrity: sha512-1re6TdUi6FAYt5mZdFllvokDUZY4VoGLydtrGOSh6/AjcACSN3BjsRCVsEMpvRH4q9vA7UTXYfWBS8zf3nuVbA==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1302,8 +1302,8 @@ packages:
   spdx-license-ids@3.0.21:
     resolution: {integrity: sha512-Bvg/8F5XephndSK3JffaRqdT+gyhfqIPwDHpX80tJrF8QQRYMo8sNMeaZ2Dp5+jhwKnUmIOyFFQfHRkjJm5nXg==}
 
-  speech-rule-engine@5.0.0-alpha.5:
-    resolution: {integrity: sha512-fhGydCi1aOqMGy0nYZ2p6vvorDPo22f4ym9GxHU974CCLpAk+4yguHMmXokrCMykjYGPFVZxozQ1fGpq8sWK/Q==}
+  speech-rule-engine@5.0.0-alpha.6:
+    resolution: {integrity: sha512-B+D5HnT372/uP3ZpdPB5/NjOvzUAfMbglf4Ca+RTm46FPJIQosx8CpgLOTdc8Z9wDrYCU43b9nWnU7OuHsv6/A==}
     hasBin: true
 
   string-argv@0.3.2:
@@ -1640,7 +1640,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@mathjax/mathjax-newcm-font@4.0.0-rc.1': {}
+  '@mathjax/mathjax-newcm-font@4.0.0-rc.2': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -1847,17 +1847,17 @@ snapshots:
       '@webassemblyjs/ast': 1.14.1
       '@xtuc/long': 4.2.2
 
-  '@webpack-cli/configtest@2.1.1(webpack-cli@5.1.4(webpack@5.99.9))(webpack@5.99.9(webpack-cli@5.1.4))':
+  '@webpack-cli/configtest@2.1.1(webpack-cli@5.1.4)(webpack@5.99.9)':
     dependencies:
       webpack: 5.99.9(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack@5.99.9)
 
-  '@webpack-cli/info@2.0.2(webpack-cli@5.1.4(webpack@5.99.9))(webpack@5.99.9(webpack-cli@5.1.4))':
+  '@webpack-cli/info@2.0.2(webpack-cli@5.1.4)(webpack@5.99.9)':
     dependencies:
       webpack: 5.99.9(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack@5.99.9)
 
-  '@webpack-cli/serve@2.0.5(webpack-cli@5.1.4(webpack@5.99.9))(webpack@5.99.9(webpack-cli@5.1.4))':
+  '@webpack-cli/serve@2.0.5(webpack-cli@5.1.4)(webpack@5.99.9)':
     dependencies:
       webpack: 5.99.9(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack@5.99.9)
@@ -2764,7 +2764,7 @@ snapshots:
 
   spdx-license-ids@3.0.21: {}
 
-  speech-rule-engine@5.0.0-alpha.5:
+  speech-rule-engine@5.0.0-alpha.6:
     dependencies:
       '@xmldom/xmldom': 0.9.8
       commander: 13.1.0
@@ -2829,7 +2829,7 @@ snapshots:
 
   tapable@2.2.2: {}
 
-  terser-webpack-plugin@5.3.14(webpack@5.99.9(webpack-cli@5.1.4)):
+  terser-webpack-plugin@5.3.14(webpack@5.99.9):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
@@ -2902,9 +2902,9 @@ snapshots:
   webpack-cli@5.1.4(webpack@5.99.9):
     dependencies:
       '@discoveryjs/json-ext': 0.5.7
-      '@webpack-cli/configtest': 2.1.1(webpack-cli@5.1.4(webpack@5.99.9))(webpack@5.99.9(webpack-cli@5.1.4))
-      '@webpack-cli/info': 2.0.2(webpack-cli@5.1.4(webpack@5.99.9))(webpack@5.99.9(webpack-cli@5.1.4))
-      '@webpack-cli/serve': 2.0.5(webpack-cli@5.1.4(webpack@5.99.9))(webpack@5.99.9(webpack-cli@5.1.4))
+      '@webpack-cli/configtest': 2.1.1(webpack-cli@5.1.4)(webpack@5.99.9)
+      '@webpack-cli/info': 2.0.2(webpack-cli@5.1.4)(webpack@5.99.9)
+      '@webpack-cli/serve': 2.0.5(webpack-cli@5.1.4)(webpack@5.99.9)
       colorette: 2.0.20
       commander: 10.0.1
       cross-spawn: 7.0.6
@@ -2947,7 +2947,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.2
       tapable: 2.2.2
-      terser-webpack-plugin: 5.3.14(webpack@5.99.9(webpack-cli@5.1.4))
+      terser-webpack-plugin: 5.3.14(webpack@5.99.9)
       watchpack: 2.4.4
       webpack-sources: 3.3.2
     optionalDependencies:

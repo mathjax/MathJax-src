@@ -63,6 +63,10 @@ const PLUGINS = function (js, dir, target, font, jax, name) {
       '../../../components/root-pack.js'
     ),
     new webpack.NormalModuleReplacementPlugin(
+      /mjs\/components\/mjs\/sre-root\.js/,
+      '../../../components/sre-pack.js'
+    ),
+    new webpack.NormalModuleReplacementPlugin(
       /mathjax-full\/js\//,
       function (resource) {
         resource.request = resource.request.replace(/mathjax-full\/js\//, `mathjax-full/${target}/`);
