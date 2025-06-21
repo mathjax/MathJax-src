@@ -170,6 +170,6 @@
     "@mathjax/mathjax-newcm-font": "4.0.0-rc.1",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.9.1",
-    "speech-rule-engine": "5.0.0-alpha.5"
+    "speech-rule-engine": "5.0.0-alpha.6"
   }
 }
