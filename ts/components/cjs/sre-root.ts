@@ -27,7 +27,7 @@
 declare const __dirname: string;
 
 /**
- * @return {string}   The MathJax component root directory
+ * @return {string}   The MathJax mjs SRE root directory
  */
 export function sreRoot(): string {
   return __dirname.replace(/components\/[cm]js$/, 'a11y/sre');
