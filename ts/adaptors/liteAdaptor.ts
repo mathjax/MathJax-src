@@ -24,7 +24,7 @@
 import { AbstractDOMAdaptor } from '../core/DOMAdaptor.js';
 import { NodeMixin, Constructor } from './NodeMixin.js';
 import { LiteDocument } from './lite/Document.js';
-import { LiteElement, LiteNode, LiteIFrame } from './lite/Element.js';
+import { LiteElement, LiteNode } from './lite/Element.js';
 import { LiteText, LiteComment } from './lite/Text.js';
 import { LiteList } from './lite/List.js';
 import { LiteWindow } from './lite/Window.js';
@@ -77,7 +77,7 @@ export class LiteBase extends AbstractDOMAdaptor<
    * @override
    */
   protected create(kind: string, _ns: string = null) {
-    return kind === 'iframe' ? new LiteIFrame(kind) : new LiteElement(kind);
+    return new LiteElement(kind);
   }
 
   /**
@@ -128,30 +128,6 @@ export class LiteBase extends AbstractDOMAdaptor<
    */
   public doctype(doc: LiteDocument = this.document) {
     return doc.type;
-  }
-
-  /**
-   * @override
-   */
-  public domain(_doc: LiteDocument | LiteElement = this.document) {
-    return 'file://';
-  }
-
-  /**
-   * @override
-   */
-  public listener(
-    listener: (event: any) => void,
-    doc: LiteDocument = this.document
-  ) {
-    return doc.addEventListener('message', listener);
-  }
-
-  /**
-   * @override
-   */
-  public post(msg: any, domain: string, doc: LiteDocument = this.document) {
-    doc.postMessage(msg, domain);
   }
 
   /**
@@ -383,11 +359,6 @@ export class LiteBase extends AbstractDOMAdaptor<
     }
     node.children.push(child);
     child.parent = node;
-    if (child instanceof LiteIFrame) {
-      if (String(child.attributes.id).match(/^WorkerHandler-\d+$/)) {
-        child.loadWorker(this.document);
-      }
-    }
     return child;
   }
 

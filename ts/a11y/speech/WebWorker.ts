@@ -84,7 +84,7 @@ export class WorkerHandler<N, T, D> {
    * Create the worker and add the listener.
    */
   private createWorker() {
-    const path = this.options.path.replace(/\/[^/]*\/\.\./g, '');
+    const path = this.options.path;
     const content = `
       self.SREfeature = {
         json: '${path}/mathmaps',

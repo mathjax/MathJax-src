@@ -107,25 +107,6 @@ export interface DOMAdaptor<N, T, D> {
   doctype(doc?: D): string;
 
   /**
-   * @param {D | N} doc  The document or iframe whose domain is to be obtained
-   * @returns {string}   The domain
-   */
-  domain(doc?: D | N): string;
-
-  /**
-   * @param {(event: any) => void} listener  The message listener to attach
-   * @param {D} doc                          The document whose window to attach the listener to
-   */
-  listener(listener: (event: any) => void, doc?: D): void;
-
-  /**
-   * @param {any} msg         The message to post
-   * @param {string} domain   The window's domain
-   * @param {D} doc           The document whose window should post the message
-   */
-  post(msg: any, domain: string, doc?: D): void;
-
-  /**
    * @param {N} node        The node to search for tags
    * @param {string} name   The name of the tag to search for
    * @param {string} ns     The namespace to search in (or null for no namespace)
@@ -547,21 +528,6 @@ export abstract class AbstractDOMAdaptor<N, T, D>
    * @override
    */
   public abstract doctype(doc?: D): string;
-
-  /**
-   * @override
-   */
-  public abstract domain(doc?: D | N): string;
-
-  /**
-   * @override
-   */
-  public abstract listener(listender: (event: any) => void, doc?: D): void;
-
-  /**
-   * @override
-   */
-  public abstract post(msg: any, domain: string, doc?: D): void;
 
   /**
    * @override
