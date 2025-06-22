@@ -29,7 +29,7 @@ export type WorkerCommand = {
   data: Message;
 };
 
-export type PoolCommand = {
+export type ClientCommand = {
   cmd: string;
   data: WorkerCommand | Message;
 };

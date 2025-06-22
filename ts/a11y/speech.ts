@@ -221,7 +221,6 @@ export function SpeechMathDocumentMixin<
       }),
       worker: {
         path: sreRoot(),
-        pool: 'speech-workerpool.html',
         worker: 'speech-worker.js',
         debug: false,
       },

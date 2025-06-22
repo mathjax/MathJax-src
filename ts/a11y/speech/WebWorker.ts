@@ -25,12 +25,11 @@ import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { OptionList } from '../../util/Options.js';
 import {
   Message,
-  PoolCommand,
+  ClientCommand,
   Structure,
   StructureData,
 } from './MessageTypes.js';
 import { SpeechMathItem } from '../speech.js';
-import { hasWindow } from '../../util/context.js';
 import { SemAttr } from './SpeechUtil.js';
 
 /**
@@ -38,7 +37,7 @@ import { SemAttr } from './SpeechUtil.js';
  */
 class Task<N, T, D> {
   constructor(
-    public cmd: PoolCommand,
+    public cmd: ClientCommand,
     public item: SpeechMathItem<N, T, D>,
     public resolve: (value: any) => void,
     public reject: (cmd: string) => void
@@ -53,17 +52,6 @@ class Task<N, T, D> {
  * @template D  The Document class
  */
 export class WorkerHandler<N, T, D> {
-  private static ID = 0;
-
-  /**
-   * The hidden iframe
-   */
-  public iframe: N = null;
-
-  /**
-   * Document of the iframe for the pool
-   */
-  public pool: D = null;
 
   /**
    * Callback for ready signal
@@ -71,14 +59,14 @@ export class WorkerHandler<N, T, D> {
   public ready: boolean = false;
 
   /**
-   * The domain for the worker functions
-   */
-  public domain = '';
-
-  /**
    * The task queue
    */
   private tasks: Task<N, T, D>[] = [];
+
+  /**
+   * The webworker
+   */
+  protected worker: Worker;
 
   /**
    * The adaptor to work with typeset nodes.
@@ -91,67 +79,34 @@ export class WorkerHandler<N, T, D> {
     private options: OptionList
   ) {}
 
+
   /**
-   * Set up the basic iframe
+   * Create the worker and add the listener.
    */
-  private createIframe() {
-    const src = this.computeSrc(
-      this.rewriteFirefox(this.adaptor.domain()),
-      this.options.worker,
-      this.options.debug.toString()
-    );
-    this.iframe = this.adaptor.node('iframe', {
-      style: { display: 'none' },
-      id: 'WorkerHandler-' + ++WorkerHandler.ID,
-      properties: { src },
-    });
-    if (!hasWindow) {
-      //
-      // Make the worker options available to the iframe in node applications
-      //
-      this.adaptor.setProperty(this.iframe, 'options', this.options);
-    }
+  private createWorker() {
+    const path = this.options.path.replace(/\/[^/]*\/\.\./g, '');
+    const content = `
+      self.SREfeature = {
+        json: '${path}/mathmaps',
+        custom(locale) {
+          const file = self.SREfeature.json + '/' + locale + '.json';
+          return fetch(file).then((data) => data.json()).catch((err) => console.log(err));
+        }
+      };
+      import('${path}/${this.options.worker}');
+    `;
+    const url = URL.createObjectURL(new Blob([content], {type: 'text/javascript'}));
+    this.worker = new Worker(url, {type: "module"});
+    this.worker.onmessage = this.Listener.bind(this);
+    URL.revokeObjectURL(url);
   }
 
   /**
-   * Computes the URL passed to the worker pool.
-   *
-   * @param {string[]} parameters Additional parameters to encode.
-   * @returns {string} The source URL with all the parameters.
-   */
-  private computeSrc(...parameters: string[]): string {
-    const hash = parameters.map((part) => encodeURIComponent(part)).join('&');
-    return this.options.path + '/' + this.options.pool + '#' + hash;
-  }
-
-  /**
-   * Firefox is tricky if we run from File protocol.
-   *
-   * @param {string} domain The domain to rewrite.
-   * @returns {string} The source URL rewritten for Firefox.
-   */
-  private rewriteFirefox(domain: string): string {
-    return domain.substring(0, 7) === 'file://' ? '*' : domain;
-  }
-
-  /**
-   * This starts the worker pool so that you can create the SRE worker.
-   * This works by creating an iframe that loads a file from the backend where
-   * the webworkers are launched. Since the webworkers are created from the
-   * iframe, they can use resources from the backend (and only from the
-   * backend!), even though the page with the WorkerPool is from a different
-   * origin.
-   *
-   * Since the iframe comes (or may come) from a different origin, we use
-   * the iframe window's postMessage() command and our own onmessage handler
-   * to communicate with the iframe.
+   * This starts the worker.
    */
   public Start() {
-    if (this.ready) throw Error('WorkerHandler already started');
-    this.createIframe();
-    this.adaptor.listener(this.Listener.bind(this)); //    // listen for messages from iframe
-    this.adaptor.append(this.adaptor.body(), this.iframe); // add iframe to page (start loading its contents)
-    this.domain = this.rewriteFirefox(this.adaptor.domain(this.iframe));
+    if (this.ready) throw Error('Worker already started');
+    this.createWorker();
   }
 
   /**
@@ -167,9 +122,7 @@ export class WorkerHandler<N, T, D> {
   }
 
   /**
-   * Listener for the messages from the iframe.
-   * We check that the origin of the message is correct (since
-   * any window could send messages to us).
+   * Listener for the messages from the worker.
    * The message will contain a command and data, and we look
    * in the list of commands to see if we have an implementation for the
    * given one.  If so, we run the command on the data from the message,
@@ -178,26 +131,23 @@ export class WorkerHandler<N, T, D> {
    * @param {MessageEvent} event The message event.
    */
   public Listener(event: MessageEvent) {
-    this.debug('Iframe  >>>  Client:', event.data);
-    let origin = event.origin;
-    if (origin === 'null' || origin === 'file://') origin = '*';
-    if (origin !== this.domain) return; // make sure the message is from the WorkerPool
+    this.debug('Worker  >>>  Client:', event.data);
     if (Object.hasOwn(this.Commands, event.data.cmd)) {
       this.Commands[event.data.cmd](this, event.data.data);
     } else {
-      this.debug('Invalid command from pool: ' + event.data.cmd);
+      this.debug('Invalid command from worker: ' + event.data.cmd);
     }
   }
 
   /**
    * Send messages to the worker.
    *
-   * @param {PoolCommand} msg The command message.
+   * @param {ClientCommand} msg The command message.
    * @param {SpeechMathItem} item Optional SpeechMathItem that is being processed
    *     command name as input.
    * @returns {Promise<any>} A promise that resolves when the command completes
    */
-  public Post(msg: PoolCommand, item?: SpeechMathItem<N, T, D>): Promise<any> {
+  public Post(msg: ClientCommand, item?: SpeechMathItem<N, T, D>): Promise<any> {
     const promise = new Promise((resolve, reject) => {
       this.tasks.push(new Task(msg, item, resolve, reject));
     });
@@ -212,7 +162,8 @@ export class WorkerHandler<N, T, D> {
    */
   private postNext() {
     if (this.tasks.length) {
-      this.adaptor.post(this.tasks[0].cmd, this.domain, this.pool);
+      const msg = Object.assign({}, this.tasks[0].cmd, {debug: this.options.debug});
+      this.worker.postMessage(msg);
     }
   }
 
@@ -237,16 +188,12 @@ export class WorkerHandler<N, T, D> {
    */
   public Setup(options: OptionList): Promise<void> {
     return this.Post({
-      cmd: 'Worker',
+      cmd: 'setup',
       data: {
-        cmd: 'setup',
-        debug: this.options.debug,
-        data: {
-          domain: options.domain,
-          style: options.style,
-          locale: options.locale,
-          modality: options.modality,
-        },
+        domain: options.domain,
+        style: options.style,
+        locale: options.locale,
+        modality: options.modality,
       },
     });
   }
@@ -270,12 +217,8 @@ export class WorkerHandler<N, T, D> {
       options.enableBraille,
       await this.Post(
         {
-          cmd: 'Worker',
-          data: {
-            cmd: 'speech',
-            debug: this.options.debug,
-            data: { mml: math, options: options },
-          },
+          cmd: 'speech',
+          data: { mml: math, options: options },
         },
         item
       )
@@ -302,12 +245,8 @@ export class WorkerHandler<N, T, D> {
       options.enableBraille,
       await this.Post(
         {
-          cmd: 'Worker',
-          data: {
-            cmd: 'nextRules',
-            debug: this.options.debug,
-            data: { mml: math, options: options },
-          },
+          cmd: 'nextRules',
+          data: { mml: math, options: options },
         },
         item
       )
@@ -342,15 +281,11 @@ export class WorkerHandler<N, T, D> {
       options.enableBraille,
       await this.Post(
         {
-          cmd: 'Worker',
+          cmd: 'nextStyle',
           data: {
-            cmd: 'nextStyle',
-            debug: this.options.debug,
-            data: {
-              mml: math,
-              options: options,
-              nodeId: nodeId,
-            },
+            mml: math,
+            options: options,
+            nodeId: nodeId,
           },
         },
         item
@@ -555,10 +490,8 @@ export class WorkerHandler<N, T, D> {
 
   /**
    * Terminates the worker.
-   *
-   * @returns {Promise<void>} A promise that resolves when the command completes
    */
-  public Terminate(): Promise<void> {
+  public Terminate() {
     this.debug('Terminating pending tasks');
     for (const task of this.tasks) {
       task.reject(
@@ -566,21 +499,20 @@ export class WorkerHandler<N, T, D> {
       );
     }
     this.tasks = [];
-    this.debug('Terminating WorkerPool');
-    return this.Post({ cmd: 'Terminate', data: {} });
+    this.debug('Terminating worker');
+    this.worker.terminate();
   }
 
   /**
-   * Stop the pool from running by removing and freeing the iframe.
-   * Clear the values so that the pool can be restarted, if desired.
+   * Stop the worker and clear the values so that the worker can be
+   * restarted, if desired.
    */
-  public async Stop() {
-    if (!this.iframe) {
-      throw Error('WorkerHandler has not been started');
+  public Stop() {
+    if (!this.worker) {
+      throw Error('Worker has not been started');
     }
-    await this.Terminate();
-    this.adaptor.remove(this.iframe);
-    this.iframe = this.pool = null;
+    this.Terminate();
+    this.worker = null;
     this.ready = false;
   }
 
@@ -596,16 +528,12 @@ export class WorkerHandler<N, T, D> {
     prefs: Map<string, { [prop: string]: string[] }>
   ): Promise<void> {
     await this.Post({
-      cmd: 'Worker',
+      cmd: 'localePreferences',
       data: {
-        cmd: 'localePreferences',
-        debug: this.options.debug,
-        data: {
-          options: options,
-        },
+        options: options,
       },
-    }).then((e) => {
-      prefs.set(options.locale, e);
+    }).then((data) => {
+      prefs.set(options.locale, JSON.parse(data));
     });
   }
 
@@ -626,14 +554,10 @@ export class WorkerHandler<N, T, D> {
     counter: number
   ): Promise<void> {
     await this.Post({
-      cmd: 'Worker',
+      cmd: 'relevantPreferences',
       data: {
-        cmd: 'relevantPreferences',
-        debug: this.options.debug,
-        data: {
-          mml: math,
-          id: nodeId,
-        },
+        mml: math,
+        id: nodeId,
       },
     }).then((e) => {
       prefs.set(counter, e);
@@ -641,51 +565,47 @@ export class WorkerHandler<N, T, D> {
   }
 
   /**
-   * The list of valid commands from the WorkerPool in the iframe.
+   * The list of valid commands from the Worker.
    */
   public Commands: {
-    [id: string]: (pool: WorkerHandler<N, T, D>, data: Message) => void;
+    [id: string]: (handler: WorkerHandler<N, T, D>, data: Message) => void;
   } = {
     /**
      * This signals that the worker in the iframe is loaded and ready
      *
-     * @param {WorkerHandler} pool The active handler for the worker.
+     * @param {WorkerHandler} handler The active handler for the worker.
      * @param {Message} _data The data received from the worker. Ignored.
      */
-    Ready(pool: WorkerHandler<N, T, D>, _data: Message) {
-      pool.pool = pool.adaptor.getProperty(
-        pool.iframe,
-        'contentWindow'
-      ).document;
-      pool.ready = true;
-      pool.postNext();
+    Ready(handler: WorkerHandler<N, T, D>, _data: Message) {
+      handler.ready = true;
+      handler.postNext();
     },
 
     /**
      * Signals that the worker has finished its last task.
      *
-     * @param {WorkerHandler} pool The active handler for the worker.
+     * @param {WorkerHandler} handler The active handler for the worker.
      * @param {Message} data The data received from the worker.
      */
-    Finished(pool: WorkerHandler<N, T, D>, data: Message) {
-      const task = pool.tasks.shift();
+    Finished(handler: WorkerHandler<N, T, D>, data: Message) {
+      const task = handler.tasks.shift();
       if (data.success) {
         task.resolve(data.result);
       } else {
         task.reject(data.error);
       }
-      pool.postNext();
+      handler.postNext();
     },
 
     /**
      * Logs a message from the worker
      *
-     * @param {WorkerHandler} pool The active handler for the worker.
+     * @param {WorkerHandler} handler The active handler for the worker.
      * @param {Message} data The data received from the worker.
      */
-    Log(pool: WorkerHandler<N, T, D>, data: Message) {
-      if (pool.options.debug) {
-        console.log(data.msg);
+    Log(handler: WorkerHandler<N, T, D>, data: Message) {
+      if (handler.options.debug) {
+        console.log("Log:", data);
       }
     },
   };

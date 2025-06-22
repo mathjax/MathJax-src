@@ -90,8 +90,7 @@ declare const SRE: any;
     };
   } else {
     global = (self as any).global = self; // for web workers make global be the self object
-    global.copyStructure = (structure: StructureData) => structure;
-    global.SREfeature = { json: './mathmaps' };
+    global.copyStructure = (structure: StructureData) => JSON.stringify(structure);
   }
   global.exports = self; // lets SRE get defined as a global variable
 
@@ -118,11 +117,11 @@ declare const SRE: any;
     'message',
     function (event: MessageEvent) {
       if (event.data.debug) {
-        console.log('Iframe  >>>  Worker:', event.data);
+        console.log('Client  >>>  Worker:', event.data);
       }
       const { cmd, data } = event.data;
       if (Object.hasOwn(Commands, cmd)) {
-        Pool('Log', `running ${cmd}`);
+        Client('Log', `running ${cmd}`);
         Commands[cmd](data)
           .then((result) => Finished(cmd, { result }))
           .catch((error) => Finished(cmd, { error: error.message }));
@@ -213,33 +212,24 @@ declare const SRE: any;
      * @returns {WorkerResult} Promise fulfilled when computation is complete.
      */
     async relevantPreferences(data: Message): WorkerResult {
+console.log(String(await SRE.workerRelevantPreferences(data.mml, data.id)));
       return (await SRE.workerRelevantPreferences(data.mml, data.id)) ?? '';
     },
   };
 
   /**
-   * Post a command back to the pool. Catches the error in case the data cannot be
+   * Post a command back to the client. Catches the error in case the data cannot be
    * JSON stringified.
    *
    * @param {string} cmd The command to be posted.
    * @param {Message} data The data object to be send.
    */
-  function Pool(cmd: string, data: Message | string) {
+  function Client(cmd: string, data: Message | string) {
     try {
       self.postMessage({ cmd: cmd, data: data });
     } catch (err) {
       console.log('Posting error in worker for ', copyError(err));
     }
-  }
-
-  /**
-   * Post a command back to the client.
-   *
-   * @param {string} cmd The client command to be sent to the client.
-   * @param {Message} data The payload data to be sent to the client.
-   */
-  function Client(cmd: string, data: Message) {
-    Pool('Client', { cmd: cmd, data: data });
   }
 
   /**
@@ -249,6 +239,7 @@ declare const SRE: any;
    * @param {Message} msg The data to send back (error or result)
    */
   function Finished(cmd: string, msg: Message) {
+    Client('Log', `finished ${cmd}`);
     Client('Finished', { ...msg, cmd: cmd, success: !msg.error });
   }
 
@@ -294,5 +285,5 @@ declare const SRE: any;
    * then tell the WorkerPool that we are ready.
    */
   await SRE.engineReady();
-  Pool('Ready', {});
+  Client('Ready', {});
 })();

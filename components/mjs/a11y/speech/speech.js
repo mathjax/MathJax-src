@@ -7,7 +7,9 @@ import {SpeechHandler} from '#js/a11y/speech.js';
 
 if (MathJax.loader) {
   let path = Package.resolvePath('[sre]', false);
-  if (!hasWindow) {
+  if (hasWindow) {
+    path = new URL(path, location).href;
+  } else {
     const REQUIRE = typeof require !== 'undefined' ? require : MathJax.config.loader.require;
     if (REQUIRE?.resolve) {
       const pool = MathJax.config.options?.worker?.pool || 'speech-workerpool.js';
