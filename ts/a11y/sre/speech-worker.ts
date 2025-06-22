@@ -36,8 +36,6 @@ type OptionList = { [name: string]: any };
 type Message = { [key: string]: any };
 type WorkerResult = Promise<any>;
 type WorkerFunction = (data: Message) => WorkerResult;
-type Structure = { [id: string]: any };
-type StructureData = Structure | string;
 
 declare let global: any;
 declare const SRE: any;
@@ -52,9 +50,6 @@ declare const SRE: any;
     self = global.self = global; // for node, make self be the global object
 
     global.DedicatedWorkerGlobalScope = global.constructor; // so SRE knows we are a worker
-
-    global.copyStructure = (structure: StructureData) =>
-      JSON.stringify(structure);
 
     //
     // Create addEventListener() and postMessage() function
@@ -90,7 +85,6 @@ declare const SRE: any;
     };
   } else {
     global = (self as any).global = self; // for web workers make global be the self object
-    global.copyStructure = (structure: StructureData) => JSON.stringify(structure);
   }
   global.exports = self; // lets SRE get defined as a global variable
 
@@ -202,7 +196,7 @@ declare const SRE: any;
       const structure = await SRE.workerLocalePreferences(data.options);
       // Not strictly necessary for the menu as there should not be one in node.
       // However, it allows for getting the preferences in a different context.
-      return structure ? global.copyStructure(structure) : structure;
+      return structure ? JSON.stringify(structure) : structure;
     },
 
     /**
@@ -252,17 +246,17 @@ console.log(String(await SRE.workerRelevantPreferences(data.mml, data.id)));
    * @param {string} mml The mml expression.
    * @param {OptionList} options Setup options for SRE.
    * @param {string[]} rest Remaining arguments.
-   * @returns {Promise<StructureData>} A promise returning the data to be attached to the DOM
+   * @returns {Promise<string>} A promise returning the data to be attached to the DOM
    */
   async function Speech(
-    func: (mml: string, options: OptionList, rest: string[]) => StructureData,
+    func: (mml: string, options: OptionList, rest: string[]) => string,
     mml: string,
     options: OptionList,
     ...rest: string[]
-  ): Promise<StructureData> {
+  ): Promise<string> {
     if (!mml) return '';
     const structure = (await func.call(null, mml, options, ...rest)) ?? {};
-    return global.copyStructure(structure);
+    return JSON.stringify(structure);
   }
 
   /**

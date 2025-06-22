@@ -35,4 +35,3 @@ export type ClientCommand = {
 };
 
 export type Structure = { [id: string]: any };
-export type StructureData = Structure | string;

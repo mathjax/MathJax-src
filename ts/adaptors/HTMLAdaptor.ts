@@ -278,33 +278,6 @@ export class HTMLAdaptor<
   /**
    * @override
    */
-  public domain(doc: D | N = this.document) {
-    if ('src' in doc) {
-      return doc.src.replace(/^(.*?:\/\/.*?)\/.*/, '$1');
-    }
-    if (!('location' in doc)) {
-      doc = this.document;
-    }
-    return doc.location.protocol + '//' + doc.location.host;
-  }
-
-  /**
-   * @override
-   */
-  public listener(listener: (event: any) => void, doc: D = this.document) {
-    return doc.defaultView.addEventListener('message', listener);
-  }
-
-  /**
-   * @override
-   */
-  public post(msg: any, domain: string, doc: D = this.document) {
-    return doc.defaultView.postMessage(msg, domain);
-  }
-
-  /**
-   * @override
-   */
   public tags(node: N, name: string, ns: string = null) {
     const nodes = ns
       ? node.getElementsByTagNameNS(ns, name)
@@ -642,4 +615,27 @@ export class HTMLAdaptor<
       node.getBoundingClientRect() as PageBBox;
     return { left, right, top, bottom };
   }
+
+  /**
+   * @override
+   */
+  public async createWorker(listener: (event: any) => void, options: OptionList) {
+    const path = options.path;
+    const content = `
+      self.SREfeature = {
+        json: '${path}/mathmaps',
+        custom(locale) {
+          const file = self.SREfeature.json + '/' + locale + '.json';
+          return fetch(file).then((data) => data.json()).catch((err) => console.log(err));
+        }
+      };
+      import('${path}/${options.worker}');
+    `;
+    const url = URL.createObjectURL(new Blob([content], {type: 'text/javascript'}));
+    const worker = new Worker(url, {type: "module"});
+    worker.onmessage = listener
+    URL.revokeObjectURL(url);
+    return Promise.resolve(worker);
+  }
+
 }

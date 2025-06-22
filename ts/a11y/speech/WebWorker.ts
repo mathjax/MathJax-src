@@ -21,13 +21,12 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+import { DOMAdaptor, minWorker } from '../../core/DOMAdaptor.js';
 import { OptionList } from '../../util/Options.js';
 import {
   Message,
   ClientCommand,
   Structure,
-  StructureData,
 } from './MessageTypes.js';
 import { SpeechMathItem } from '../speech.js';
 import { SemAttr } from './SpeechUtil.js';
@@ -66,7 +65,7 @@ export class WorkerHandler<N, T, D> {
   /**
    * The webworker
    */
-  protected worker: Worker;
+  protected worker: minWorker;
 
   /**
    * The adaptor to work with typeset nodes.
@@ -81,32 +80,11 @@ export class WorkerHandler<N, T, D> {
 
 
   /**
-   * Create the worker and add the listener.
-   */
-  private createWorker() {
-    const path = this.options.path;
-    const content = `
-      self.SREfeature = {
-        json: '${path}/mathmaps',
-        custom(locale) {
-          const file = self.SREfeature.json + '/' + locale + '.json';
-          return fetch(file).then((data) => data.json()).catch((err) => console.log(err));
-        }
-      };
-      import('${path}/${this.options.worker}');
-    `;
-    const url = URL.createObjectURL(new Blob([content], {type: 'text/javascript'}));
-    this.worker = new Worker(url, {type: "module"});
-    this.worker.onmessage = this.Listener.bind(this);
-    URL.revokeObjectURL(url);
-  }
-
-  /**
    * This starts the worker.
    */
-  public Start() {
+  public async Start() {
     if (this.ready) throw Error('Worker already started');
-    this.createWorker();
+    this.worker = await this.adaptor.createWorker(this.Listener.bind(this), this.options);
   }
 
   /**
@@ -299,17 +277,15 @@ export class WorkerHandler<N, T, D> {
    * @param {SpeechMathItem} item       The SpeechMathItem to attach to
    * @param {boolean} speech            True when speech should be added
    * @param {boolean} braille           True when Braille should be added
-   * @param {StructureData} structure   The speech structure to attach
+   * @param {string} structure          The speech JSON structure to attach
    */
   public Attach(
     item: SpeechMathItem<N, T, D>,
     speech: boolean,
     braille: boolean,
-    structure: StructureData
+    structure: string
   ) {
-    const data = (
-      typeof structure === 'string' ? JSON.parse(structure) : structure
-    ) as Structure;
+    const data = JSON.parse(structure) as Structure;
     const container = item.typesetRoot;
     if (!container) return; // Element is gone, maybe retypeset or removed.
     this.setSpecialAttributes(container, data.options, 'data-semantic-', [

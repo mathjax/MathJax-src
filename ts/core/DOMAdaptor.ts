@@ -41,6 +41,15 @@ export type PageBBox = {
   bottom: number;
 };
 
+/**
+ * A minimal webworker interface
+ */
+export interface minWorker {
+  addEventListener(kind: string, listener: (event: Event) => void): void;
+  postMessage(msg: any): void;
+  terminate(): void;
+}
+
 /*****************************************************************/
 /**
  *  The interface for the DOMAdaptor
@@ -401,6 +410,13 @@ export interface DOMAdaptor<N, T, D> {
    * @returns {PageBBox}         BBox as {left, right, top, bottom} position on the page (in pixels)
    */
   nodeBBox(node: N): PageBBox;
+
+  /**
+   * @param {(event: any) => void} listener  The event listener for messages from the worker
+   * @param {OptionList} options             The worker options (for path and worker name)
+   * @returns {Promise<minWorker>}           A promise for the worker instance that was created
+   */
+  createWorker(listener: (event: any) => void, options: OptionList): Promise<minWorker>;
 }
 
 /*****************************************************************/
@@ -759,4 +775,9 @@ export abstract class AbstractDOMAdaptor<N, T, D>
    * @override
    */
   public abstract nodeBBox(node: N): PageBBox;
+
+  /**
+   * @override
+   */
+  public abstract createWorker(listener: (event: any) => void, options: OptionList): Promise<minWorker>;
 }
