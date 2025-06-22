@@ -114,9 +114,7 @@ function csSelectionBox(menu: MJContextMenu, locale: string): object {
   const props = localePreferences.get(locale);
   csPrefsVariables(menu, Object.keys(props));
   const items = [];
-console.log(props);
   for (const prop of Object.getOwnPropertyNames(props)) {
-console.log(prop, props[prop]);
     items.push({
       title: prop,
       values: props[prop].map((x) => x.replace(RegExp('^' + prop + '_'), '')),
