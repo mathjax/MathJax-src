@@ -206,7 +206,6 @@ declare const SRE: any;
      * @returns {WorkerResult} Promise fulfilled when computation is complete.
      */
     async relevantPreferences(data: Message): WorkerResult {
-console.log(String(await SRE.workerRelevantPreferences(data.mml, data.id)));
       return (await SRE.workerRelevantPreferences(data.mml, data.id)) ?? '';
     },
   };
