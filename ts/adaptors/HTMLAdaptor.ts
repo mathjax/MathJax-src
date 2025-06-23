@@ -623,23 +623,19 @@ export class HTMLAdaptor<
     listener: (event: any) => void,
     options: OptionList
   ) {
-    const path = options.path;
+    const { path, maps, worker } = options;
+    const file = `${path}/${worker}`;
+    const quoted = (text: string) => text.replace(/(\\*)([\\'])/g, '$1$1\\$2');
     const content = `
-      self.SREfeature = {
-        json: '${path}/mathmaps',
-        custom(locale) {
-          const file = self.SREfeature.json + '/' + locale + '.json';
-          return fetch(file).then((data) => data.json()).catch((err) => console.log(err));
-        }
-      };
-      import('${path}/${options.worker}');
+      self.maps = '${quoted(maps)}';
+      import('${quoted(file)}');
     `;
     const url = URL.createObjectURL(
       new Blob([content], { type: 'text/javascript' })
     );
-    const worker = new Worker(url, { type: 'module' });
-    worker.onmessage = listener;
+    const webworker = new Worker(url, { type: 'module' });
+    webworker.onmessage = listener;
     URL.revokeObjectURL(url);
-    return Promise.resolve(worker);
+    return webworker;
   }
 }

@@ -75,6 +75,7 @@ export const source = {
   'a11y/complexity': `${src}/a11y/complexity/complexity.js`,
   'a11y/explorer': `${src}/a11y/explorer/explorer.js`,
   'a11y/sre': `${src}/a11y/sre/sre.js`,
+  '[mathmaps]': `${src}/../../bundle/sre/mathmaps`,
   'ui/lazy': `${src}/ui/lazy/lazy.js`,
   'ui/menu': `${src}/ui/menu/menu.js`,
   'ui/safe': `${src}/ui/safe/safe.js`,

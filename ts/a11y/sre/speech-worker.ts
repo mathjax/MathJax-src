@@ -47,14 +47,20 @@ declare const SRE: any;
   // Set up for node worker_threads versus browser webworker
   //
   if (typeof self === 'undefined') {
-    self = global.self = global; // for node, make self be the global object
-
-    global.DedicatedWorkerGlobalScope = global.constructor; // so SRE knows we are a worker
+    //
+    // For node, make self be the global object
+    //
+    self = global.self = global;
 
     //
-    // Create addEventListener() and postMessage() function
+    // This is so SRE knows we are a worker
     //
-    const { parentPort } = await import(
+    global.DedicatedWorkerGlobalScope = global.constructor;
+
+    //
+    // Create addEventListener() and postMessage() functions
+    //
+    const { parentPort, workerData } = await import(
       /* webpackIgnore: true */ 'node:worker_threads'
     );
     global.addEventListener = (
@@ -68,25 +74,38 @@ declare const SRE: any;
     };
 
     //
-    // SRE needs require(), and we use it to load mathmaps
+    // Get the path to the mathmaps
+    //
+    global.maps = workerData.maps;
+
+    //
+    // We use require() to load mathmaps in node
     //
     if (!global.require) {
       await import(/* webpackIgnore: true */ './require.mjs');
     }
-
-    //
-    // Custom loader for mathmaps
-    //
-    global.SREfeature = {
-      custom: (locale: string) => {
-        const file = 'speech-rule-engine/lib/mathmaps/' + locale + '.json';
-        return Promise.resolve(JSON.stringify(global.require(file)));
-      },
-    };
+    global.getMap = (file: string) =>
+      Promise.resolve(JSON.stringify(global.require(file)));
   } else {
-    global = (self as any).global = self; // for web workers make global be the self object
+    //
+    // For web workers, make global be the self object
+    //
+    global = (self as any).global = self;
+    //
+    // We use fetch() to load mathmaps in web workers
+    //
+    global.getMap = (file: string) =>
+      fetch(file)
+        .then((data) => data.json())
+        .catch((err) => console.log(err));
   }
-  global.exports = self; // lets SRE get defined as a global variable
+
+  //
+  // Custom loader for mathmaps
+  //
+  global.SREfeature = {
+    custom: (locale: string) => global.getMap(`${global.maps}/${locale}.json`),
+  };
 
   //
   // Load SRE
