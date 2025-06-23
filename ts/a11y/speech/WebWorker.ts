@@ -23,11 +23,7 @@
 
 import { DOMAdaptor, minWorker } from '../../core/DOMAdaptor.js';
 import { OptionList } from '../../util/Options.js';
-import {
-  Message,
-  ClientCommand,
-  Structure,
-} from './MessageTypes.js';
+import { Message, ClientCommand, Structure } from './MessageTypes.js';
 import { SpeechMathItem } from '../speech.js';
 import { SemAttr } from './SpeechUtil.js';
 
@@ -51,7 +47,6 @@ class Task<N, T, D> {
  * @template D  The Document class
  */
 export class WorkerHandler<N, T, D> {
-
   /**
    * Callback for ready signal
    */
@@ -78,13 +73,15 @@ export class WorkerHandler<N, T, D> {
     private options: OptionList
   ) {}
 
-
   /**
    * This starts the worker.
    */
   public async Start() {
     if (this.ready) throw Error('Worker already started');
-    this.worker = await this.adaptor.createWorker(this.Listener.bind(this), this.options);
+    this.worker = await this.adaptor.createWorker(
+      this.Listener.bind(this),
+      this.options
+    );
   }
 
   /**
@@ -125,7 +122,10 @@ export class WorkerHandler<N, T, D> {
    *     command name as input.
    * @returns {Promise<any>} A promise that resolves when the command completes
    */
-  public Post(msg: ClientCommand, item?: SpeechMathItem<N, T, D>): Promise<any> {
+  public Post(
+    msg: ClientCommand,
+    item?: SpeechMathItem<N, T, D>
+  ): Promise<any> {
     const promise = new Promise((resolve, reject) => {
       this.tasks.push(new Task(msg, item, resolve, reject));
     });
@@ -140,7 +140,9 @@ export class WorkerHandler<N, T, D> {
    */
   private postNext() {
     if (this.tasks.length) {
-      const msg = Object.assign({}, this.tasks[0].cmd, {debug: this.options.debug});
+      const msg = Object.assign({}, this.tasks[0].cmd, {
+        debug: this.options.debug,
+      });
       this.worker.postMessage(msg);
     }
   }
@@ -581,7 +583,7 @@ export class WorkerHandler<N, T, D> {
      */
     Log(handler: WorkerHandler<N, T, D>, data: Message) {
       if (handler.options.debug) {
-        console.log("Log:", data);
+        console.log('Log:', data);
       }
     },
   };

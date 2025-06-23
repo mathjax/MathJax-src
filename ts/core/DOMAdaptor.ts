@@ -416,7 +416,10 @@ export interface DOMAdaptor<N, T, D> {
    * @param {OptionList} options             The worker options (for path and worker name)
    * @returns {Promise<minWorker>}           A promise for the worker instance that was created
    */
-  createWorker(listener: (event: any) => void, options: OptionList): Promise<minWorker>;
+  createWorker(
+    listener: (event: any) => void,
+    options: OptionList
+  ): Promise<minWorker>;
 }
 
 /*****************************************************************/
@@ -779,5 +782,8 @@ export abstract class AbstractDOMAdaptor<N, T, D>
   /**
    * @override
    */
-  public abstract createWorker(listener: (event: any) => void, options: OptionList): Promise<minWorker>;
+  public abstract createWorker(
+    listener: (event: any) => void,
+    options: OptionList
+  ): Promise<minWorker>;
 }

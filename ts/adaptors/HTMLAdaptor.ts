@@ -619,7 +619,10 @@ export class HTMLAdaptor<
   /**
    * @override
    */
-  public async createWorker(listener: (event: any) => void, options: OptionList) {
+  public async createWorker(
+    listener: (event: any) => void,
+    options: OptionList
+  ) {
     const path = options.path;
     const content = `
       self.SREfeature = {
@@ -631,11 +634,12 @@ export class HTMLAdaptor<
       };
       import('${path}/${options.worker}');
     `;
-    const url = URL.createObjectURL(new Blob([content], {type: 'text/javascript'}));
-    const worker = new Worker(url, {type: "module"});
-    worker.onmessage = listener
+    const url = URL.createObjectURL(
+      new Blob([content], { type: 'text/javascript' })
+    );
+    const worker = new Worker(url, { type: 'module' });
+    worker.onmessage = listener;
     URL.revokeObjectURL(url);
     return Promise.resolve(worker);
   }
-
 }

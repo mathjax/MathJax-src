@@ -707,7 +707,10 @@ export class LiteBase extends AbstractDOMAdaptor<
     return { left: 0, right: 0, top: 0, bottom: 0 };
   }
 
-  public async createWorker(listener: (event: any) => void, options: OptionList): Promise<minWorker> {
+  public async createWorker(
+    listener: (event: any) => void,
+    options: OptionList
+  ): Promise<minWorker> {
     const { Worker } = await asyncLoad('node:worker_threads');
     class LiteWorker {
       protected worker: WebWorker;
@@ -726,11 +729,10 @@ export class LiteBase extends AbstractDOMAdaptor<
     }
     const path = options.path;
     const url = `${path}/${options.worker}`;
-    const worker = new LiteWorker(url, {type: 'module'});
+    const worker = new LiteWorker(url, { type: 'module' });
     worker.addEventListener('message', listener);
     return worker;
   }
-
 }
 
 /**
