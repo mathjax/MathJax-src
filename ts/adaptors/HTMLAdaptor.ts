@@ -623,23 +623,39 @@ export class HTMLAdaptor<
     listener: (event: any) => void,
     options: OptionList
   ) {
-    const path = options.path;
+    const { path, maps, worker } = options;
+    const file = `${path}/${worker}`;
     const content = `
-      self.SREfeature = {
-        json: '${path}/mathmaps',
-        custom(locale) {
-          const file = self.SREfeature.json + '/' + locale + '.json';
-          return fetch(file).then((data) => data.json()).catch((err) => console.log(err));
-        }
-      };
-      import('${path}/${options.worker}');
+      self.maps = '${quoted(maps)}';
+      import('${quoted(file)}');
     `;
     const url = URL.createObjectURL(
       new Blob([content], { type: 'text/javascript' })
     );
-    const worker = new Worker(url, { type: 'module' });
-    worker.onmessage = listener;
+    const webworker = new Worker(url, { type: 'module' });
+    webworker.onmessage = listener;
     URL.revokeObjectURL(url);
-    return Promise.resolve(worker);
+    return webworker;
   }
+}
+
+/**
+ * Quote any backslashes or single quotes, and turn non-ASCII
+ * characters into \u{...}  so that the result can be inserted into
+ * single quotes and return the original string when evaluated.
+ *
+ * @param {string} text   The text to be quoted
+ * @returns {string}      The quoted text
+ */
+function quoted(text: string): string {
+  return [...text]
+    .map((c) => {
+      if (c === '\\' || c === "'") {
+        c = '\\' + c;
+      } else if (c < ' ' || c > '\u007e') {
+        c = `\\u{${c.codePointAt(0).toString(16)}}`;
+      }
+      return c;
+    })
+    .join('');
 }
