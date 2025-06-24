@@ -41,6 +41,15 @@ export type PageBBox = {
   bottom: number;
 };
 
+/**
+ * A minimal webworker interface
+ */
+export interface minWorker {
+  addEventListener(kind: string, listener: (event: Event) => void): void;
+  postMessage(msg: any): void;
+  terminate(): void;
+}
+
 /*****************************************************************/
 /**
  *  The interface for the DOMAdaptor
@@ -105,25 +114,6 @@ export interface DOMAdaptor<N, T, D> {
    * @returns {string}   The DOCTYPE comment
    */
   doctype(doc?: D): string;
-
-  /**
-   * @param {D | N} doc  The document or iframe whose domain is to be obtained
-   * @returns {string}   The domain
-   */
-  domain(doc?: D | N): string;
-
-  /**
-   * @param {(event: any) => void} listener  The message listener to attach
-   * @param {D} doc                          The document whose window to attach the listener to
-   */
-  listener(listener: (event: any) => void, doc?: D): void;
-
-  /**
-   * @param {any} msg         The message to post
-   * @param {string} domain   The window's domain
-   * @param {D} doc           The document whose window should post the message
-   */
-  post(msg: any, domain: string, doc?: D): void;
 
   /**
    * @param {N} node        The node to search for tags
@@ -420,6 +410,16 @@ export interface DOMAdaptor<N, T, D> {
    * @returns {PageBBox}         BBox as {left, right, top, bottom} position on the page (in pixels)
    */
   nodeBBox(node: N): PageBBox;
+
+  /**
+   * @param {(event: any) => void} listener  The event listener for messages from the worker
+   * @param {OptionList} options             The worker options (for path and worker name)
+   * @returns {Promise<minWorker>}           A promise for the worker instance that was created
+   */
+  createWorker(
+    listener: (event: any) => void,
+    options: OptionList
+  ): Promise<minWorker>;
 }
 
 /*****************************************************************/
@@ -547,21 +547,6 @@ export abstract class AbstractDOMAdaptor<N, T, D>
    * @override
    */
   public abstract doctype(doc?: D): string;
-
-  /**
-   * @override
-   */
-  public abstract domain(doc?: D | N): string;
-
-  /**
-   * @override
-   */
-  public abstract listener(listender: (event: any) => void, doc?: D): void;
-
-  /**
-   * @override
-   */
-  public abstract post(msg: any, domain: string, doc?: D): void;
 
   /**
    * @override
@@ -793,4 +778,12 @@ export abstract class AbstractDOMAdaptor<N, T, D>
    * @override
    */
   public abstract nodeBBox(node: N): PageBBox;
+
+  /**
+   * @override
+   */
+  public abstract createWorker(
+    listener: (event: any) => void,
+    options: OptionList
+  ): Promise<minWorker>;
 }

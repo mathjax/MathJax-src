@@ -66,26 +66,4 @@ export class LiteWindow {
   constructor() {
     this.document = new LiteDocument(this);
   }
-
-  /**
-   * Post a message to the window (by posting to the document);
-   *
-   * @param {any} msg         The message to post
-   * @param {string} domain   The message domain
-   */
-  postMessage(msg: any, domain: string) {
-    this.document.postMessage(msg, domain);
-  }
-
-  /**
-   * Add a message listener
-   *
-   * @param {string} kind                  The event type to listen for (only message is supported)
-   * @param {(ev: any) => void} listener   The listener to install
-   */
-  addEventListener(kind: string, listener: (event: any) => void) {
-    if (kind === 'message') {
-      this.document.listeners.push(listener);
-    }
-  }
 }

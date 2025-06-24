@@ -7,18 +7,21 @@ import {SpeechHandler} from '#js/a11y/speech.js';
 
 if (MathJax.loader) {
   let path = Package.resolvePath('[sre]', false);
-  if (!hasWindow) {
+  let maps = Package.resolvePath('[mathmaps]', false);
+  if (hasWindow) {
+    path = new URL(path, location).href;
+    maps = new URL(maps, location).href;
+  } else {
     const REQUIRE = typeof require !== 'undefined' ? require : MathJax.config.loader.require;
     if (REQUIRE?.resolve) {
-      const pool = MathJax.config.options?.worker?.pool || 'speech-workerpool.js';
-      path = path.replace(/\/bundle\/sre$/, '/cjs/a11y/sre');
-      path = REQUIRE.resolve(`${path}/${pool}`).replace(/\/[^\/]*$/, '');
+      path = REQUIRE.resolve(`${path}/package.json`).replace(/\/[^\/]*$/, '');
+      maps = REQUIRE.resolve(`${maps}/base.json`).replace(/\/[^\/]*$/, '');
     } else {
-      path = '';
+      path = maps = '';
     }
   }
   if (path) {
-    combineDefaults(MathJax.config, 'options', { worker: { path } });
+    combineDefaults(MathJax.config, 'options', { worker: { path, maps } });
   }
 }
 

@@ -21,16 +21,27 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { AbstractDOMAdaptor } from '../core/DOMAdaptor.js';
+import { AbstractDOMAdaptor, minWorker } from '../core/DOMAdaptor.js';
 import { NodeMixin, Constructor } from './NodeMixin.js';
 import { LiteDocument } from './lite/Document.js';
-import { LiteElement, LiteNode, LiteIFrame } from './lite/Element.js';
+import { LiteElement, LiteNode } from './lite/Element.js';
 import { LiteText, LiteComment } from './lite/Text.js';
 import { LiteList } from './lite/List.js';
 import { LiteWindow } from './lite/Window.js';
 import { LiteParser } from './lite/Parser.js';
 import { Styles } from '../util/Styles.js';
 import { OptionList } from '../util/Options.js';
+
+import { asyncLoad } from '../util/AsyncLoad.js';
+
+/**
+ * A minimal worker thread interface
+ */
+export interface WebWorker {
+  on(kind: string, listener: (event: Event) => void): void;
+  postMessage(msg: any): void;
+  terminate(): void;
+}
 
 /************************************************************/
 
@@ -77,7 +88,7 @@ export class LiteBase extends AbstractDOMAdaptor<
    * @override
    */
   protected create(kind: string, _ns: string = null) {
-    return kind === 'iframe' ? new LiteIFrame(kind) : new LiteElement(kind);
+    return new LiteElement(kind);
   }
 
   /**
@@ -128,30 +139,6 @@ export class LiteBase extends AbstractDOMAdaptor<
    */
   public doctype(doc: LiteDocument = this.document) {
     return doc.type;
-  }
-
-  /**
-   * @override
-   */
-  public domain(_doc: LiteDocument | LiteElement = this.document) {
-    return 'file://';
-  }
-
-  /**
-   * @override
-   */
-  public listener(
-    listener: (event: any) => void,
-    doc: LiteDocument = this.document
-  ) {
-    return doc.addEventListener('message', listener);
-  }
-
-  /**
-   * @override
-   */
-  public post(msg: any, domain: string, doc: LiteDocument = this.document) {
-    doc.postMessage(msg, domain);
   }
 
   /**
@@ -383,11 +370,6 @@ export class LiteBase extends AbstractDOMAdaptor<
     }
     node.children.push(child);
     child.parent = node;
-    if (child instanceof LiteIFrame) {
-      if (String(child.attributes.id).match(/^WorkerHandler-\d+$/)) {
-        child.loadWorker(this.document);
-      }
-    }
     return child;
   }
 
@@ -723,6 +705,39 @@ export class LiteBase extends AbstractDOMAdaptor<
    */
   public nodeBBox(_node: LiteElement) {
     return { left: 0, right: 0, top: 0, bottom: 0 };
+  }
+
+  /**
+   * @override
+   */
+  public async createWorker(
+    listener: (event: any) => void,
+    options: OptionList
+  ): Promise<minWorker> {
+    const { Worker } = await asyncLoad('node:worker_threads');
+    class LiteWorker {
+      protected worker: WebWorker;
+      constructor(url: string, options: OptionList = {}) {
+        this.worker = new Worker(url, options);
+      }
+      addEventListener(kind: string, listener: (event: any) => void) {
+        this.worker.on(kind, listener);
+      }
+      postMessage(msg: any) {
+        this.worker.postMessage({ data: msg });
+      }
+      terminate() {
+        this.worker.terminate();
+      }
+    }
+    const { path, maps } = options;
+    const url = `${path}/${options.worker}`;
+    const worker = new LiteWorker(url, {
+      type: 'module',
+      workerData: { maps },
+    });
+    worker.addEventListener('message', listener);
+    return worker;
   }
 }
 
