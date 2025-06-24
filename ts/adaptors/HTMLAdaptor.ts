@@ -625,7 +625,6 @@ export class HTMLAdaptor<
   ) {
     const { path, maps, worker } = options;
     const file = `${path}/${worker}`;
-    const quoted = (text: string) => text.replace(/(\\*)([\\'])/g, '$1$1\\$2');
     const content = `
       self.maps = '${quoted(maps)}';
       import('${quoted(file)}');
@@ -638,4 +637,25 @@ export class HTMLAdaptor<
     URL.revokeObjectURL(url);
     return webworker;
   }
+}
+
+/**
+ * Quote any backslashes or single quotes, and turn non-ASCII
+ * characters into \u{...}  so that the result can be inserted into
+ * single quotes and return the original string when evaluated.
+ *
+ * @param {string} text   The text to be quoted
+ * @returns {string}      The quoted text
+ */
+function quoted(text: string): string {
+  return [...text]
+    .map((c) => {
+      if (c === '\\' || c === "'") {
+        c = '\\' + c;
+      } else if (c < ' ' || c > '\u007e') {
+        c = `\\u{${c.codePointAt(0).toString(16)}}`;
+      }
+      return c;
+    })
+    .join('');
 }
