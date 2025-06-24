@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@mathjax/mathjax-newcm-font':
-        specifier: 4.0.0-rc.2
-        version: 4.0.0-rc.2
+        specifier: 4.0.0-rc.3
+        version: 4.0.0-rc.3
       mhchemparser:
         specifier: ^4.2.1
         version: 4.2.1
@@ -175,8 +175,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@mathjax/mathjax-newcm-font@4.0.0-rc.2':
-    resolution: {integrity: sha512-1re6TdUi6FAYt5mZdFllvokDUZY4VoGLydtrGOSh6/AjcACSN3BjsRCVsEMpvRH4q9vA7UTXYfWBS8zf3nuVbA==}
+  '@mathjax/mathjax-newcm-font@4.0.0-rc.3':
+    resolution: {integrity: sha512-I9aiHZ81RKLel5O4aBokAwMEqEyM+qrMPg5EmOe5rUgEIuMkLJ56uYfsvmRsdLo25cU5XYFJDpvXpyx1B2oouA==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1640,7 +1640,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@mathjax/mathjax-newcm-font@4.0.0-rc.2': {}
+  '@mathjax/mathjax-newcm-font@4.0.0-rc.3': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
