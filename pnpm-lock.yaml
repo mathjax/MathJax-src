@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@mathjax/mathjax-newcm-font':
-        specifier: 4.0.0-rc.3
-        version: 4.0.0-rc.3
+        specifier: 4.0.0-rc.4
+        version: 4.0.0-rc.4
       mhchemparser:
         specifier: ^4.2.1
         version: 4.2.1
@@ -18,8 +18,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       speech-rule-engine:
-        specifier: 5.0.0-alpha.7
-        version: 5.0.0-alpha.7
+        specifier: 5.0.0-alpha.8
+        version: 5.0.0-alpha.8
     devDependencies:
       '@eslint/js':
         specifier: ^9.28.0
@@ -175,8 +175,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@mathjax/mathjax-newcm-font@4.0.0-rc.3':
-    resolution: {integrity: sha512-I9aiHZ81RKLel5O4aBokAwMEqEyM+qrMPg5EmOe5rUgEIuMkLJ56uYfsvmRsdLo25cU5XYFJDpvXpyx1B2oouA==}
+  '@mathjax/mathjax-newcm-font@4.0.0-rc.4':
+    resolution: {integrity: sha512-uPl8EKpV3L+ojeNwWE1VpLgdmsn7+Ok1/rkVZcp5NxSf1Qmmh6bIKQoWFwl4N0h+hgYafQwca3JfinyRVX2/eQ==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -502,6 +502,10 @@ packages:
   commander@13.1.0:
     resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
     engines: {node: '>=18'}
+
+  commander@14.0.0:
+    resolution: {integrity: sha512-2uM9rYjPvyq39NwLRqaiLtWHyDC1FvryJDa2ATTVims5YAS4PupsEQsDvP14FqhFr0P49CYDugi59xaxJlTXRA==}
+    engines: {node: '>=20'}
 
   commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
@@ -1302,8 +1306,8 @@ packages:
   spdx-license-ids@3.0.21:
     resolution: {integrity: sha512-Bvg/8F5XephndSK3JffaRqdT+gyhfqIPwDHpX80tJrF8QQRYMo8sNMeaZ2Dp5+jhwKnUmIOyFFQfHRkjJm5nXg==}
 
-  speech-rule-engine@5.0.0-alpha.7:
-    resolution: {integrity: sha512-kGOuaKOj3p0IVWMmQz2YCxKNA3b+uqoiIFtbLhlX/2hjZcImMcws1+cRLWtA7nVpukCseeBnFOC2kQT4tE2V2w==}
+  speech-rule-engine@5.0.0-alpha.8:
+    resolution: {integrity: sha512-Tfwe3yUEZJR2zhvnn0xQnZU0re/729y4RLimX0DgWznQb1GUXTEjn2BLXgtMYd0uzpSGpuCTPDb75tScGWR68w==}
     hasBin: true
 
   string-argv@0.3.2:
@@ -1640,7 +1644,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@mathjax/mathjax-newcm-font@4.0.0-rc.3': {}
+  '@mathjax/mathjax-newcm-font@4.0.0-rc.4': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -2005,6 +2009,8 @@ snapshots:
   commander@10.0.1: {}
 
   commander@13.1.0: {}
+
+  commander@14.0.0: {}
 
   commander@2.20.3: {}
 
@@ -2764,10 +2770,10 @@ snapshots:
 
   spdx-license-ids@3.0.21: {}
 
-  speech-rule-engine@5.0.0-alpha.7:
+  speech-rule-engine@5.0.0-alpha.8:
     dependencies:
       '@xmldom/xmldom': 0.9.8
-      commander: 13.1.0
+      commander: 14.0.0
       wicked-good-xpath: 1.3.0
 
   string-argv@0.3.2: {}

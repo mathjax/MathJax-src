@@ -1,6 +1,6 @@
 {
   "name": "@mathjax/src",
-  "version": "4.0.0-rc.3",
+  "version": "4.0.0-rc.4",
   "description": "Beautiful and accessible math in all browsers. MathJax is an open-source JavaScript display engine for LaTeX, MathML, and AsciiMath notation that works in all browsers and in server-side node applications. This package includes the source code as well as the packaged components.",
   "keywords": [
     "MathJax",
@@ -167,9 +167,9 @@
     ]
   },
   "dependencies": {
-    "@mathjax/mathjax-newcm-font": "4.0.0-rc.3",
+    "@mathjax/mathjax-newcm-font": "4.0.0-rc.4",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.9.1",
-    "speech-rule-engine": "5.0.0-alpha.7"
+    "speech-rule-engine": "5.0.0-alpha.8"
   }
 }
