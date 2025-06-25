@@ -36,8 +36,6 @@ type OptionList = { [name: string]: any };
 type Message = { [key: string]: any };
 type WorkerResult = Promise<any>;
 type WorkerFunction = (data: Message) => WorkerResult;
-type Structure = { [id: string]: any };
-type StructureData = Structure | string;
 
 declare let global: any;
 declare const SRE: any;
@@ -49,17 +47,20 @@ declare const SRE: any;
   // Set up for node worker_threads versus browser webworker
   //
   if (typeof self === 'undefined') {
-    self = global.self = global; // for node, make self be the global object
-
-    global.DedicatedWorkerGlobalScope = global.constructor; // so SRE knows we are a worker
-
-    global.copyStructure = (structure: StructureData) =>
-      JSON.stringify(structure);
+    //
+    // For node, make self be the global object
+    //
+    self = global.self = global;
 
     //
-    // Create addEventListener() and postMessage() function
+    // This is so SRE knows we are a worker
     //
-    const { parentPort } = await import(
+    global.DedicatedWorkerGlobalScope = global.constructor;
+
+    //
+    // Create addEventListener() and postMessage() functions
+    //
+    const { parentPort, workerData } = await import(
       /* webpackIgnore: true */ 'node:worker_threads'
     );
     global.addEventListener = (
@@ -73,27 +74,38 @@ declare const SRE: any;
     };
 
     //
-    // SRE needs require(), and we use it to load mathmaps
+    // Get the path to the mathmaps
+    //
+    global.maps = workerData.maps;
+
+    //
+    // We use require() to load mathmaps in node
     //
     if (!global.require) {
       await import(/* webpackIgnore: true */ './require.mjs');
     }
-
-    //
-    // Custom loader for mathmaps
-    //
-    global.SREfeature = {
-      custom: (locale: string) => {
-        const file = 'speech-rule-engine/lib/mathmaps/' + locale + '.json';
-        return Promise.resolve(JSON.stringify(global.require(file)));
-      },
-    };
+    global.getMap = (file: string) =>
+      Promise.resolve(JSON.stringify(global.require(file)));
   } else {
-    global = (self as any).global = self; // for web workers make global be the self object
-    global.copyStructure = (structure: StructureData) => structure;
-    global.SREfeature = { json: './mathmaps' };
+    //
+    // For web workers, make global be the self object
+    //
+    global = (self as any).global = self;
+    //
+    // We use fetch() to load mathmaps in web workers
+    //
+    global.getMap = (file: string) =>
+      fetch(file)
+        .then((data) => data.json())
+        .catch((err) => console.log(err));
   }
-  global.exports = self; // lets SRE get defined as a global variable
+
+  //
+  // Custom loader for mathmaps
+  //
+  global.SREfeature = {
+    custom: (locale: string) => global.getMap(`${global.maps}/${locale}.json`),
+  };
 
   //
   // Load SRE
@@ -118,11 +130,11 @@ declare const SRE: any;
     'message',
     function (event: MessageEvent) {
       if (event.data.debug) {
-        console.log('Iframe  >>>  Worker:', event.data);
+        console.log('Client  >>>  Worker:', event.data);
       }
       const { cmd, data } = event.data;
       if (Object.hasOwn(Commands, cmd)) {
-        Pool('Log', `running ${cmd}`);
+        Client('Log', `running ${cmd}`);
         Commands[cmd](data)
           .then((result) => Finished(cmd, { result }))
           .catch((error) => Finished(cmd, { error: error.message }));
@@ -203,7 +215,7 @@ declare const SRE: any;
       const structure = await SRE.workerLocalePreferences(data.options);
       // Not strictly necessary for the menu as there should not be one in node.
       // However, it allows for getting the preferences in a different context.
-      return structure ? global.copyStructure(structure) : structure;
+      return structure ? JSON.stringify(structure) : structure;
     },
 
     /**
@@ -218,28 +230,18 @@ declare const SRE: any;
   };
 
   /**
-   * Post a command back to the pool. Catches the error in case the data cannot be
+   * Post a command back to the client. Catches the error in case the data cannot be
    * JSON stringified.
    *
    * @param {string} cmd The command to be posted.
    * @param {Message} data The data object to be send.
    */
-  function Pool(cmd: string, data: Message | string) {
+  function Client(cmd: string, data: Message | string) {
     try {
       self.postMessage({ cmd: cmd, data: data });
     } catch (err) {
       console.log('Posting error in worker for ', copyError(err));
     }
-  }
-
-  /**
-   * Post a command back to the client.
-   *
-   * @param {string} cmd The client command to be sent to the client.
-   * @param {Message} data The payload data to be sent to the client.
-   */
-  function Client(cmd: string, data: Message) {
-    Pool('Client', { cmd: cmd, data: data });
   }
 
   /**
@@ -249,6 +251,7 @@ declare const SRE: any;
    * @param {Message} msg The data to send back (error or result)
    */
   function Finished(cmd: string, msg: Message) {
+    Client('Log', `finished ${cmd}`);
     Client('Finished', { ...msg, cmd: cmd, success: !msg.error });
   }
 
@@ -261,17 +264,17 @@ declare const SRE: any;
    * @param {string} mml The mml expression.
    * @param {OptionList} options Setup options for SRE.
    * @param {string[]} rest Remaining arguments.
-   * @returns {Promise<StructureData>} A promise returning the data to be attached to the DOM
+   * @returns {Promise<string>} A promise returning the data to be attached to the DOM
    */
   async function Speech(
-    func: (mml: string, options: OptionList, rest: string[]) => StructureData,
+    func: (mml: string, options: OptionList, rest: string[]) => string,
     mml: string,
     options: OptionList,
     ...rest: string[]
-  ): Promise<StructureData> {
+  ): Promise<string> {
     if (!mml) return '';
     const structure = (await func.call(null, mml, options, ...rest)) ?? {};
-    return global.copyStructure(structure);
+    return JSON.stringify(structure);
   }
 
   /**
@@ -294,5 +297,5 @@ declare const SRE: any;
    * then tell the WorkerPool that we are ready.
    */
   await SRE.engineReady();
-  Pool('Ready', {});
+  Client('Ready', {});
 })();

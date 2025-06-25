@@ -24,8 +24,6 @@
 import { LiteElement } from './Element.js';
 import { LiteWindow } from './Window.js';
 
-export type LiteListener = (event: any) => void;
-
 /************************************************************/
 /**
  * Implements a lightweight Document replacement
@@ -54,11 +52,6 @@ export class LiteDocument {
   public type: string;
 
   /**
-   * The listeners for postMessage() calls
-   */
-  public listeners: LiteListener[] = [];
-
-  /**
    * The kind is always #document
    *
    * @returns {string} The document string.
@@ -78,27 +71,5 @@ export class LiteDocument {
     ]);
     this.type = '';
     this.defaultView = window;
-  }
-
-  /**
-   * @param {string} kind                    The event type to listen for
-   * @param {(event: any) => void} listener  The listener function
-   */
-  public addEventListener(kind: string, listener: (event: any) => void) {
-    if (kind === 'message') {
-      this.listeners.push(listener);
-    }
-  }
-
-  /**
-   * @param {any} msg        The message to send
-   * @param {string} domain  The domain to use for the message
-   */
-  public postMessage(msg: any, domain: string) {
-    new Promise(() => {
-      for (const listener of this.listeners) {
-        listener({ data: msg, origin: domain });
-      }
-    });
   }
 }

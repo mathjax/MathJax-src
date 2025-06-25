@@ -67,7 +67,8 @@ export const dependencies = {
 export const paths = {
   tex: '[mathjax]/input/tex/extensions',
   mml: '[mathjax]/input/mml/extensions',
-  sre: '[mathjax]/sre'
+  sre: '[mathjax]/sre',
+  mathmaps: '[sre]/mathmaps',
 };
 
 export const provides = {

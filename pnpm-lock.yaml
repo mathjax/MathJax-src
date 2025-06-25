@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@mathjax/mathjax-newcm-font':
-        specifier: 4.0.0-rc.1
-        version: 4.0.0-rc.1
+        specifier: 4.0.0-rc.3
+        version: 4.0.0-rc.3
       mhchemparser:
         specifier: ^4.2.1
         version: 4.2.1
@@ -18,8 +18,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       speech-rule-engine:
-        specifier: 5.0.0-alpha.5
-        version: 5.0.0-alpha.5
+        specifier: 5.0.0-alpha.7
+        version: 5.0.0-alpha.7
     devDependencies:
       '@eslint/js':
         specifier: ^9.28.0
@@ -181,8 +181,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@mathjax/mathjax-newcm-font@4.0.0-rc.1':
-    resolution: {integrity: sha512-1zEBHqKHiYneakV07PlOYlestLccq1q9UKgI1aeSx7xFOL6v15SkDTRFhyzcAVkXcWmF8NTUIKdyHGrYlVxUbQ==}
+  '@mathjax/mathjax-newcm-font@4.0.0-rc.3':
+    resolution: {integrity: sha512-I9aiHZ81RKLel5O4aBokAwMEqEyM+qrMPg5EmOe5rUgEIuMkLJ56uYfsvmRsdLo25cU5XYFJDpvXpyx1B2oouA==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1350,8 +1350,8 @@ packages:
   spdx-license-ids@3.0.21:
     resolution: {integrity: sha512-Bvg/8F5XephndSK3JffaRqdT+gyhfqIPwDHpX80tJrF8QQRYMo8sNMeaZ2Dp5+jhwKnUmIOyFFQfHRkjJm5nXg==}
 
-  speech-rule-engine@5.0.0-alpha.5:
-    resolution: {integrity: sha512-fhGydCi1aOqMGy0nYZ2p6vvorDPo22f4ym9GxHU974CCLpAk+4yguHMmXokrCMykjYGPFVZxozQ1fGpq8sWK/Q==}
+  speech-rule-engine@5.0.0-alpha.7:
+    resolution: {integrity: sha512-kGOuaKOj3p0IVWMmQz2YCxKNA3b+uqoiIFtbLhlX/2hjZcImMcws1+cRLWtA7nVpukCseeBnFOC2kQT4tE2V2w==}
     hasBin: true
 
   string-argv@0.3.2:
@@ -1706,7 +1706,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@mathjax/mathjax-newcm-font@4.0.0-rc.1': {}
+  '@mathjax/mathjax-newcm-font@4.0.0-rc.3': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -2877,7 +2877,7 @@ snapshots:
 
   spdx-license-ids@3.0.21: {}
 
-  speech-rule-engine@5.0.0-alpha.5:
+  speech-rule-engine@5.0.0-alpha.7:
     dependencies:
       '@xmldom/xmldom': 0.9.8
       commander: 13.1.0

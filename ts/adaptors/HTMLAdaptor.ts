@@ -278,33 +278,6 @@ export class HTMLAdaptor<
   /**
    * @override
    */
-  public domain(doc: D | N = this.document) {
-    if ('src' in doc) {
-      return doc.src.replace(/^(.*?:\/\/.*?)\/.*/, '$1');
-    }
-    if (!('location' in doc)) {
-      doc = this.document;
-    }
-    return doc.location.protocol + '//' + doc.location.host;
-  }
-
-  /**
-   * @override
-   */
-  public listener(listener: (event: any) => void, doc: D = this.document) {
-    return doc.defaultView.addEventListener('message', listener);
-  }
-
-  /**
-   * @override
-   */
-  public post(msg: any, domain: string, doc: D = this.document) {
-    return doc.defaultView.postMessage(msg, domain);
-  }
-
-  /**
-   * @override
-   */
   public tags(node: N, name: string, ns: string = null) {
     const nodes = ns
       ? node.getElementsByTagNameNS(ns, name)
@@ -642,4 +615,47 @@ export class HTMLAdaptor<
       node.getBoundingClientRect() as PageBBox;
     return { left, right, top, bottom };
   }
+
+  /**
+   * @override
+   */
+  public async createWorker(
+    listener: (event: any) => void,
+    options: OptionList
+  ) {
+    const { path, maps, worker } = options;
+    const file = `${path}/${worker}`;
+    const content = `
+      self.maps = '${quoted(maps)}';
+      import('${quoted(file)}');
+    `;
+    const url = URL.createObjectURL(
+      new Blob([content], { type: 'text/javascript' })
+    );
+    const webworker = new Worker(url, { type: 'module' });
+    webworker.onmessage = listener;
+    URL.revokeObjectURL(url);
+    return webworker;
+  }
+}
+
+/**
+ * Quote any backslashes or single quotes, and turn non-ASCII
+ * characters into \u{...}  so that the result can be inserted into
+ * single quotes and return the original string when evaluated.
+ *
+ * @param {string} text   The text to be quoted
+ * @returns {string}      The quoted text
+ */
+function quoted(text: string): string {
+  return [...text]
+    .map((c) => {
+      if (c === '\\' || c === "'") {
+        c = '\\' + c;
+      } else if (c < ' ' || c > '\u007e') {
+        c = `\\u{${c.codePointAt(0).toString(16)}}`;
+      }
+      return c;
+    })
+    .join('');
 }

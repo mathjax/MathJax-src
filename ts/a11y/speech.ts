@@ -221,7 +221,7 @@ export function SpeechMathDocumentMixin<
       }),
       worker: {
         path: sreRoot(),
-        pool: 'speech-workerpool.html',
+        maps: sreRoot().replace(/[cm]js\/a11y\/sre$/, 'bundle/sre/mathmaps'),
         worker: 'speech-worker.js',
         debug: false,
       },
