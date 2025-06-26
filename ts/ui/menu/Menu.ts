@@ -1059,7 +1059,7 @@ export class Menu {
         settings.speechRules = `${sre.domain || 'clearspeak'}-${sre.style || 'default'}`;
       }
       if (renderer !== this.defaultSettings.renderer) {
-        this.setRenderer(renderer, false);
+        this.document.whenReady(() => this.setRenderer(renderer, false));
       }
     });
   }
