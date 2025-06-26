@@ -20,6 +20,9 @@ importers:
       speech-rule-engine:
         specifier: 5.0.0-alpha.8
         version: 5.0.0-alpha.8
+      typedoc:
+        specifier: ^0.28.5
+        version: 0.28.5(typescript@5.8.3)
     devDependencies:
       '@eslint/js':
         specifier: ^9.28.0
