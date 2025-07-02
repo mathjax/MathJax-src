@@ -110,11 +110,12 @@ declare const SRE: any;
   //
   // Load SRE
   //
-  await import('./sre.js')
-    .catch((_) => import(/* webpackIgnore: true */ './sre-lab.js')) // for use in the lab
-    .then((SRE) => {
-      global.SRE = SRE;
-    });
+  await (
+    global.isLab
+      ? import(/* webpackIgnore: true */ './sre-lab.js') // for use in the lab
+      : import('./sre.js')
+  )
+    .then((SRE) => (global.SRE = SRE));
 
   /*****************************************************************/
 

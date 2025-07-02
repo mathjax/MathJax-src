@@ -6,7 +6,6 @@
     "to": "../../../../../bundle/sre",
     "from": "../../../../../ts/a11y/sre",
     "copy": [
-      "package.json",
       "require.mjs",
       "require.d.mts"
     ]
