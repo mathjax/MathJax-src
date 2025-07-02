@@ -243,7 +243,7 @@ export async function clearspeakMenu(
       )
     );
   };
-  if (!menu.settings.speech) {
+  if (!menu.settings.speech || !menu.settings.enrich) {
     exit([]);
     return;
   }
