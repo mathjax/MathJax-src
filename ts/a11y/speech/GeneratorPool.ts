@@ -121,6 +121,11 @@ export class GeneratorPool<N, T, D> {
     return (this.promise = this.webworker.Speech(mml, options, item));
   }
 
+  public SpeechFor(item: SpeechMathItem<N, T, D>, mml: string): Promise<any> {
+    const options = Object.assign({}, this.options, { modality: 'speech' });
+    return (this.promise = this.webworker.speechFor(mml, options, item));
+  }
+
   /**
    * Cancel a pending speech task
    *

@@ -125,44 +125,60 @@ generates both the text spoken by screen readers, as well as the
 visual layout for sighted users.</p>
 
 <p>Expressions typeset by MathJax can be explored interactively, and
-are focusable.  You can use the TAB key to move to a typeset
+are focusable.  You can use the <kbd>Tab</kbd> key to move to a typeset
 expression${select}.  Initially, the expression will be read in full,
 but you can use the following keys to explore the expression
 further:<p>
 
 <ul>
 
-<li><b>Down Arrow</b> moves one level deeper into the expression to
+<li><kbd>Down Arrow</kbd> moves one level deeper into the expression to
 allow you to explore the current subexpression term by term.</li>
 
-<li><b>Up Arrow</b> moves back up a level within the expression.</li>
+<li><kbd>Up Arrow</kbd> moves back up a level within the expression.</li>
 
-<li><b>Right Arrow</b> moves to the next term in the current
+<li><kbd>Right Arrow</kbd> moves to the next term in the current
 subexpression.</li>
 
-<li><b>Left Arrow</b> moves to the next term in the current
+<li><kbd>Left Arrow</kbd> moves to the next term in the current
 subexpression.</li>
 
-<li><b>Enter</b> or <b>Return</b> clicks a link or activates an active
+<li><kbd>Shift</kbd>+<kbd>Arrow</kbd> moves to a neighboring cell within a table.
+
+<li><kbd>0-9</kbd>+<kbd>0-9</kbd> jumps to a cell by its index in the table, where 0 = 10.
+
+<li><kbd>Home</kbd> takes you to the top of the expression.</li>
+
+<li><kbd>Enter</kbd> or <kbd>Return</kbd> clicks a link or activates an active
 subexpression.</li>
 
-<li><b>Space</b> opens the MathJax contextual menu where you can view
+<li><kbd>Space</kbd> opens the MathJax contextual menu where you can view
 or copy the source format of the expression, or modify MathJax's
 settings.</li>
 
-<li><b>Escape</b> exits the expression explorer.</li>
+<li><kbd>Escape</kbd> exits the expression explorer.</li>
 
-<li><b>x</b> gives a summary of the current subexpression.</li>
+<li><kbd>x</kbd> gives a summary of the current subexpression.</li>
 
-<li><b>d</b> gives the current depth within the expression.</li>
+<li><kbd>z</kbd> gives the full text of a collapsed expression.</li>
 
-<li><b>&gt;</b> cycles through the available speech rule sets
+<li><kbd>d</kbd> gives the current depth within the expression.</li>
+
+<li><kbd>s</kbd> starts or stops auto-voicing with synchronized highlighting.</li>
+
+<li><kbd>v</kbd> marks the current position in the expression.</li>
+
+<li><kbd>p</kbd> cycles through the marked positions in the expression.</li>
+
+<li><kbd>u</kbd> clears all marked positions and returns to the starting position.</li>
+
+<li><kbd>&gt;</kbd> cycles through the available speech rule sets
 (MathSpeak, ClearSpeak).</li>
 
-<li><b>&lt;</b> cycles through the verbosity levels for the current
+<li><kbd>&lt;</kbd> cycles through the verbosity levels for the current
 rule set.</li>
 
-<li><b>h</b> produces this help listing.</li>
+<li><kbd>h</kbd> produces this help listing.</li>
 </ul>
 
 <p>The MathJax contextual menu allows you to enable or disable speech
@@ -191,7 +207,7 @@ const helpData: Map<string, [string, string]> = new Map([
   [
     'MacOS',
     [
-      'on Mac OS and iOS using VoiceOver',
+      'on MacOS and iOS using VoiceOver',
       ', or the VoiceOver arrow keys to select an expression',
     ],
   ],
@@ -236,28 +252,40 @@ export class SpeechExplorer
   /*
    * The explorer key mapping
    */
-  protected static keyMap: Map<string, keyMapping> = new Map([
-    ['Tab', () => true],
-    ['Control', (explorer) => explorer.controlKey()],
-    ['Escape', (explorer) => explorer.escapeKey()],
-    ['Enter', (explorer, event) => explorer.enterKey(event)],
-    ['ArrowDown', (explorer) => (explorer.active ? explorer.moveDown() : true)],
-    ['ArrowUp', (explorer) => (explorer.active ? explorer.moveUp() : true)],
-    ['ArrowLeft', (explorer) => (explorer.active ? explorer.moveLeft() : true)],
+  protected static keyMap: Map<string, [keyMapping, boolean?]> = new Map([
+    ['Tab', [() => true]],
+    ['Escape', [(explorer) => explorer.escapeKey()]],
+    ['Enter', [(explorer, event) => explorer.enterKey(event)]],
+    ['Home', [(explorer) => explorer.homeKey()]],
+    [
+      'ArrowDown',
+      [(explorer, event) => explorer.moveDown(event.shiftKey), true],
+    ],
+    ['ArrowUp', [(explorer, event) => explorer.moveUp(event.shiftKey), true]],
+    [
+      'ArrowLeft',
+      [(explorer, event) => explorer.moveLeft(event.shiftKey), true],
+    ],
     [
       'ArrowRight',
-      (explorer) => (explorer.active ? explorer.moveRight() : true),
+      [(explorer, event) => explorer.moveRight(event.shiftKey), true],
     ],
-    [' ', (explorer) => explorer.spaceKey()],
-    ['h', (explorer) => explorer.hKey()],
-    ['H', (explorer) => explorer.hKey()],
-    ['>', (explorer) => (explorer.active ? explorer.nextRules() : false)],
-    ['<', (explorer) => (explorer.active ? explorer.nextStyle() : false)],
-    ['x', (explorer) => (explorer.active ? explorer.summary() : false)],
-    ['X', (explorer) => (explorer.active ? explorer.summary() : false)],
-    ['d', (explorer) => (explorer.active ? explorer.depth() : false)],
-    ['D', (explorer) => (explorer.active ? explorer.depth() : false)],
-  ] as [string, keyMapping][]);
+    [' ', [(explorer) => explorer.spaceKey()]],
+    ['h', [(explorer) => explorer.hKey()]],
+    ['>', [(explorer) => explorer.nextRules(), false]],
+    ['<', [(explorer) => explorer.nextStyle(), false]],
+    ['x', [(explorer) => explorer.summary(), false]],
+    ['z', [(explorer) => explorer.details(), false]],
+    ['d', [(explorer) => explorer.depth(), false]],
+    ['v', [(explorer) => explorer.addMark(), false]],
+    ['p', [(explorer) => explorer.prevMark(), false]],
+    ['u', [(explorer) => explorer.clearMarks(), false]],
+    ['s', [(explorer) => explorer.autoVoice(), false]],
+    ...[...'0123456789'].map((n) => [
+      n,
+      [(explorer: SpeechExplorer) => explorer.numberKey(parseInt(n)), false],
+    ]),
+  ] as [string, [keyMapping, boolean?]][]);
 
   /**
    * Switches on or off the use of sound on this explorer.
@@ -350,6 +378,27 @@ export class SpeechExplorer
    */
   private eventsAttached: boolean = false;
 
+  /**
+   * The array of saved positions.
+   */
+  protected marks: HTMLElement[] = [];
+
+  /**
+   * The index of the current position in the array.
+   */
+  protected currentMark: number = -1;
+
+  /**
+   * The last explored position from previously exploring this
+   * expression.
+   */
+  protected lastMark: HTMLElement = null;
+
+  /**
+   * First index of cell to jump to
+   */
+  protected pendingIndex: number[] = [];
+
   /********************************************************************/
   /*
    * The event handlers
@@ -401,13 +450,21 @@ export class SpeechExplorer
    * @override
    */
   public KeyDown(event: KeyboardEvent) {
+    this.pendingIndex.shift();
+    this.region.cancelVoice();
+    //
     if (hasModifiers(event, false)) return;
     //
     // Get the key action, if there is one and perform it
     //
     const CLASS = this.constructor as typeof SpeechExplorer;
-    const action = CLASS.keyMap.get(event.key);
-    const result = action ? action(this, event) : this.undefinedKey(event);
+    const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+    const [action, value] = CLASS.keyMap.get(key) || [];
+    const result = action
+      ? value === undefined || this.active
+        ? action(this, event)
+        : value
+      : this.undefinedKey(event);
     //
     // If result is true, propagate event,
     // Otherwise stop the event, and if false, play the honk sound
@@ -426,6 +483,9 @@ export class SpeechExplorer
    * @param {MouseEvent} event   The mouse down event
    */
   private MouseDown(event: MouseEvent) {
+    this.pendingIndex = [];
+    this.region.cancelVoice();
+    //
     if (hasModifiers(event) || event.buttons === 2) {
       this.item.outputData.nofocus = true;
       return;
@@ -539,16 +599,6 @@ export class SpeechExplorer
   }
 
   /**
-   * Stop speaking.
-   *
-   * @returns {boolean}  Don't cancel the event
-   */
-  protected controlKey(): boolean {
-    speechSynthesis.cancel();
-    return true;
-  }
-
-  /**
    * Open the help dialog, and refocus when it closes.
    */
   protected hKey() {
@@ -591,39 +641,58 @@ export class SpeechExplorer
   }
 
   /**
+   * Select top-level of expression
+   */
+  protected homeKey() {
+    this.setCurrent(this.node.querySelector(nav));
+  }
+
+  /**
    * Move to deeper level in the expression
    *
+   * @param {boolean} shift     True if shift is pressed
    * @returns {boolean | void}  False if no node, void otherwise
    */
-  protected moveDown(): boolean | void {
-    return this.moveTo(this.current.querySelector(nav));
+  protected moveDown(shift: boolean): boolean | void {
+    return shift
+      ? this.moveToNeighborCell(1, 0)
+      : this.moveTo(this.current.querySelector(nav));
   }
 
   /**
    * Move to higher level in expression
    *
+   * @param {boolean} shift     True if shift is pressed
    * @returns {boolean | void}  False if no node, void otherwise
    */
-  protected moveUp(): boolean | void {
-    return this.moveTo(this.current.parentElement.closest(nav));
+  protected moveUp(shift: boolean): boolean | void {
+    return shift
+      ? this.moveToNeighborCell(-1, 0)
+      : this.moveTo(this.current.parentElement.closest(nav));
   }
 
   /**
    * Move to next term in the expression
    *
+   * @param {boolean} shift     True if shift is pressed
    * @returns {boolean | void}  False if no node, void otherwise
    */
-  protected moveRight(): boolean | void {
-    return this.moveTo(this.nextSibling(this.current));
+  protected moveRight(shift: boolean): boolean | void {
+    return shift
+      ? this.moveToNeighborCell(0, 1)
+      : this.moveTo(this.nextSibling(this.current));
   }
 
   /**
    * Move to previous term in the expression
    *
+   * @param {boolean} shift     True if shift is pressed
    * @returns {boolean | void}  False if no node, void otherwise
    */
-  protected moveLeft(): boolean | void {
-    return this.moveTo(this.prevSibling(this.current));
+  protected moveLeft(shift: boolean): boolean | void {
+    return shift
+      ? this.moveToNeighborCell(0, -1)
+      : this.moveTo(this.prevSibling(this.current));
   }
 
   /**
@@ -638,6 +707,23 @@ export class SpeechExplorer
   }
 
   /**
+   * Move to an adjacent table cell
+   *
+   * @param {number} di          Change in row number
+   * @param {number} dj          Change in column number
+   * @returns {boolean | void}   False if no such cell, void otherwise
+   */
+  protected moveToNeighborCell(di: number, dj: number): boolean | void {
+    const cell = this.tableCell(this.current);
+    if (!cell) return false;
+    const [i, j] = this.cellPosition(cell);
+    if (i == null) return false;
+    const move = this.cellAt(this.cellTable(cell), i + di, j + dj);
+    if (!move) return false;
+    this.setCurrent(move);
+  }
+
+  /**
    * Determine if an event that is not otherwise mapped should be
    * allowed to propagate.
    *
@@ -646,6 +732,83 @@ export class SpeechExplorer
    */
   protected undefinedKey(event: KeyboardEvent): boolean {
     return !this.active || hasModifiers(event);
+  }
+
+  /**
+   * Mark a location so we can return to it later
+   */
+  protected addMark() {
+    if (this.current === this.marks[this.marks.length - 1]) {
+      this.setCurrent(this.current);
+    } else {
+      this.currentMark = this.marks.length - 1;
+      this.marks.push(this.current);
+      this.speak('Position marked');
+    }
+  }
+
+  /**
+   * Return to a previous location (loop through them).
+   * If no saved marks, go to the last previous position,
+   * or if not, the top level.
+   */
+  protected prevMark() {
+    if (this.currentMark < 0) {
+      if (this.marks.length === 0) {
+        this.setCurrent(this.lastMark || this.node.querySelector(nav));
+        return;
+      }
+      this.currentMark = this.marks.length - 1;
+    }
+    const current = this.currentMark;
+    this.setCurrent(this.marks[current]);
+    this.currentMark = current - 1;
+  }
+
+  /**
+   * Clear all saved positions and return to the last explored position.
+   */
+  protected clearMarks() {
+    this.marks = [];
+    this.currentMark = -1;
+    this.prevMark();
+  }
+
+  /**
+   * Toggle auto voicing.
+   */
+  protected autoVoice() {
+    const value = !this.document.options.a11y.voicing;
+    if (this.document.menu) {
+      this.document.menu.menu.pool.lookup('voicing').setValue(value);
+    } else {
+      this.document.options.a11y.voicing = value;
+    }
+    this.Update();
+  }
+
+  /**
+   * Get index for cell to jump to.
+   *
+   * @param {number} n         The number key that was pressed
+   * @returns {boolean|void}   False if not in a table or no such cell to jump to.
+   */
+  protected numberKey(n: number): boolean | void {
+    if (!this.tableCell(this.current)) return false;
+    if (n === 0) {
+      n = 10;
+    }
+    if (this.pendingIndex.length) {
+      const table = this.cellTable(this.tableCell(this.current));
+      const cell = this.cellAt(table, this.pendingIndex[0] - 1, n - 1);
+      this.pendingIndex = [];
+      this.speak(String(n));
+      if (!cell) return false;
+      setTimeout(() => this.setCurrent(cell), 500);
+    } else {
+      this.pendingIndex = [null, n];
+      this.speak(`Jump to row ${n} and column`);
+    }
   }
 
   /**
@@ -715,10 +878,64 @@ export class SpeechExplorer
   }
 
   /**
+   * Speak the expanded version of a collapsed expression.
+   */
+  public details() {
+    //
+    // If the current node is not collapsible and collapsed, just speak it
+    //
+    const action = this.actionable(this.current);
+    if (
+      !action ||
+      !action.getAttribute('data-collapsible') ||
+      action.getAttribute('toggle') !== '1' ||
+      this.speechType === 'z'
+    ) {
+      this.setCurrent(this.current);
+      return;
+    }
+    this.speechType = 'z';
+    //
+    // Otherwise, look for the current node in the MathML tree
+    //
+    const id = this.nodeId(this.current);
+    let current: MmlNode;
+    this.item.root.walkTree((node) => {
+      if (node.attributes.get('data-semantic-id') === id) {
+        current = node;
+      }
+    });
+    //
+    // Create a new MathML string from the subtree
+    //
+    let mml = this.item.toMathML(current, this.item);
+    if (!current.isKind('math')) {
+      mml = `<math>${mml}</math>`;
+    }
+    mml = mml.replace(
+      / (?:data-semantic-|aria-|data-speech-|data-latex).*?=".*?"/g,
+      ''
+    );
+    //
+    // Get the speech for the new subtree and speak it.
+    //
+    this.item
+      .speechFor(mml)
+      .then(([speech, braille]) => this.speak(speech, braille));
+  }
+
+  /**
    * Displays the help dialog.
    */
   protected help() {
     const adaptor = this.document.adaptor;
+    const helpBackground = adaptor.node('mjx-help-background');
+    const close = (event: Event) => {
+      helpBackground.remove();
+      this.node.focus();
+      this.stopEvent(event);
+    };
+    helpBackground.addEventListener('click', close);
     const helpSizer = adaptor.node('mjx-help-sizer', {}, [
       adaptor.node(
         'mjx-help-dialog',
@@ -732,28 +949,18 @@ export class SpeechExplorer
         ]
       ),
     ]);
-    document.body.append(helpSizer);
+    helpBackground.append(helpSizer);
     const help = helpSizer.firstChild as HTMLElement;
+    help.addEventListener('click', (event) => this.stopEvent(event));
+    help.lastChild.addEventListener('click', close);
     help.addEventListener('keydown', (event: KeyboardEvent) => {
       if (event.code === 'Escape') {
-        help.remove();
-        this.node.focus();
-        this.stopEvent(event);
+        close(event);
       }
-    });
-    help.addEventListener('focusout', () => {
-      setTimeout(() => {
-        if (!help.contains(document.activeElement)) {
-          help.remove();
-        }
-      }, 10);
-    });
-    help.lastChild.addEventListener('click', () => {
-      help.remove();
-      this.node.focus();
     });
     const [title, select] = helpData.get(context.os);
     (help.childNodes[1] as HTMLElement).innerHTML = helpMessage(title, select);
+    document.body.append(helpBackground);
     help.focus();
   }
 
@@ -789,16 +996,18 @@ export class SpeechExplorer
       if (this.document.options.a11y.tabSelects === 'last') {
         this.refocus = this.current;
       }
-      this.current = null;
       if (!node) {
+        this.lastMark = this.current;
         this.removeSpeech();
       }
+      this.current = null;
     }
     //
     // If there is a current node
     //   Select it and add its speech, if requested
     //
     this.current = node;
+    this.currentMark = -1;
     if (this.current) {
       this.current.classList.add('mjx-selected');
       this.pool.highlight([this.current]);
@@ -874,9 +1083,6 @@ export class SpeechExplorer
     ssml: string[] = null,
     description: string = this.none
   ) {
-    if (!speech) {
-      speech = 'blank';
-    }
     const oldspeech = this.speech;
     this.speech = document.createElement('mjx-speech');
     this.speech.setAttribute('role', this.role);
@@ -950,6 +1156,90 @@ export class SpeechExplorer
   /*
    * Utility functions
    */
+
+  /**
+   * @param {HTMLElement} node  The node whose ID we want
+   * @returns {string}          The node's semantic ID
+   */
+  protected nodeId(node: HTMLElement): string {
+    return node.getAttribute('data-semantic-id');
+  }
+
+  /**
+   * @param {HTMLElement} node  The node whose parent ID we want
+   * @returns {string}          The node's parent's semantic ID
+   */
+  protected parentId(node: HTMLElement): string {
+    return node.getAttribute('data-semantic-parent');
+  }
+
+  /**
+   * @param {string} id       The semantic ID of the node we want
+   * @returns {HTMLElement}   The HTML node with that id
+   */
+  protected getNode(id: string): HTMLElement {
+    return id ? this.node.querySelector(`[data-semantic-id="${id}"]`) : null;
+  }
+
+  /**
+   * @param {HTMLElement} node   The node whose child array we want
+   * @returns {string[]}         The array of semantic IDs of its children
+   */
+  protected childArray(node: HTMLElement): string[] {
+    return node ? node.getAttribute('data-semantic-children').split(/,/) : [];
+  }
+
+  /**
+   * @param {HTMLElement} node   A node that may be in a table cell
+   * @returns {HTMLElement}      The HTML node for the table cell containing it, or null
+   */
+  protected tableCell(node: HTMLElement): HTMLElement {
+    while (node && node !== this.node) {
+      if (node.getAttribute('data-semantic-role') === 'table') {
+        return node;
+      }
+      node = node.parentNode as HTMLElement;
+    }
+    return null;
+  }
+
+  /**
+   * @param {HTMLElement} node   An HTML node that is a cell of a table
+   * @returns {HTMLElement}      The HTML node for semantic table element containing the cell
+   */
+  protected cellTable(node: HTMLElement): HTMLElement {
+    while (node && node !== this.node) {
+      if (node.getAttribute('data-semantic-type') === 'table') {
+        return node;
+      }
+      node = node.parentNode as HTMLElement;
+    }
+    return null;
+  }
+
+  /**
+   * @param {HTMLElement} cell     The HTML node for a semantic table cell
+   * @returns {[number, number]}   The row and column numbers for the cell in its table (0-based)
+   */
+  protected cellPosition(cell: HTMLElement): [number, number] {
+    const row = this.getNode(this.parentId(cell));
+    const j = this.childArray(row).indexOf(this.nodeId(cell));
+    const table = this.getNode(this.parentId(row));
+    const i = this.childArray(table).indexOf(this.nodeId(row));
+    return [i, j];
+  }
+
+  /**
+   * @param {HTMLElement} table   An HTML node for a semantic table element
+   * @param {number} i            The row number of the desired cell in the table
+   * @param {number} j            The column numnber of the desired cell in the table
+   * @returns {HTMLElement}       The HTML element for the (i,j)-th cell of the table
+   */
+  protected cellAt(table: HTMLElement, i: number, j: number): HTMLElement {
+    const row = this.getNode(this.childArray(table)[i]);
+    const cell = this.getNode(this.childArray(row)[j]);
+    return cell;
+  }
 
   /**
    * Navigate one step to the right on the same level.

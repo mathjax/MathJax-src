@@ -73,6 +73,12 @@ export interface SpeechMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
    * @param {MathDocument} document The MathDocument for the MathItem
    */
   detachSpeech(document: MathDocument<N, T, D>): void;
+
+  /**
+   * @param {string} mml The MathML whose speech is needed.
+   * @returns {Promise<[string,string]>}  A promise for the speech and braille strings
+   */
+  speechFor(mml: string): Promise<[string, string]>;
 }
 
 /**
@@ -132,6 +138,16 @@ export function SpeechMathItemMixin<
      */
     public detachSpeech(document: SpeechMathDocument<N, T, D>) {
       document.webworker.Detach(this);
+    }
+
+    /**
+     * @param {string} mml The MathML whose speech is needed.
+     * @returns {Promise<[string,string]>}  A promise for the speech and braille strings
+     */
+    public async speechFor(mml: string): Promise<[string, string]> {
+      mml = this.toEnriched(mml);
+      const data = await this.generatorPool.SpeechFor(this, mml);
+      return [data.label, data.braillelabel];
     }
 
     /**

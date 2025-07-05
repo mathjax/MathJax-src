@@ -463,6 +463,32 @@ export function ExplorerMathDocumentMixin<
       'mjx-help-dialog > input': {
         margin: '.5em 2em',
       },
+      'mjx-help-dialog kbd': {
+        display: 'inline-block',
+        padding: '3px 5px',
+        'font-size': '11px',
+        'line-height': '10px',
+        color: '#444d56',
+        'vertical-align': 'middle',
+        'background-color': '#fafbfc',
+        border: 'solid 1.5px #c6cbd1',
+        'border-bottom-color': '#959da5',
+        'border-radius': '3px',
+        'box-shadow': 'inset -.5px -1px 0 #959da5',
+      },
+      'mjx-help-dialog ul': {
+        'list-style-type': 'none',
+      },
+      'mjx-help-dialog li': {
+        'margin-bottom': '.5em',
+      },
+      'mjx-help-background': {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      },
     };
 
     /**
