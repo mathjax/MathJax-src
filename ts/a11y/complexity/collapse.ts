@@ -195,6 +195,7 @@ export class Collapse {
       (node, complexity) => {
         complexity = this.uncollapseChild(complexity, node, 0);
         if (complexity > (this.cutoff.sqrt as number)) {
+          node.setProperty('collapse-variant', true);
           complexity = this.recordCollapse(
             node,
             complexity,
@@ -209,6 +210,7 @@ export class Collapse {
       (node, complexity) => {
         complexity = this.uncollapseChild(complexity, node, 0, 2);
         if (complexity > (this.cutoff.sqrt as number)) {
+          node.setProperty('collapse-variant', true);
           complexity = this.recordCollapse(
             node,
             complexity,
@@ -582,6 +584,9 @@ export class Collapse {
     const factory = this.complexity.factory;
     const marker = node.getProperty('collapse-marker') as string;
     const parent = node.parent;
+    const variant = node.getProperty('collapse-variant')
+      ? { mathvariant: '-tex-variant' }
+      : {};
     const maction = factory.create(
       'maction',
       {
@@ -594,7 +599,7 @@ export class Collapse {
         ),
       },
       [
-        factory.create('mtext', { mathcolor: 'blue' }, [
+        factory.create('mtext', { mathcolor: 'blue', ...variant }, [
           (factory.create('text') as TextNode).setText(marker),
         ]),
       ]
