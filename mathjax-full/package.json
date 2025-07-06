@@ -1,0 +1,58 @@
+{
+  "name": "mathjax-full",
+  "version": "4.0.0-rc.4",
+  "description": "Beautiful and accessible math in all browsers. MathJax is an open-source JavaScript display engine for LaTeX, MathML, and AsciiMath notation that works in all browsers and in server-side node applications. This package includes the source code as well as the packaged components.",
+  "keywords": [
+    "MathJax",
+    "math",
+    "svg",
+    "HTML",
+    "MathML",
+    "TeX",
+    "AsciiMath"
+  ],
+  "license": "Apache-2.0",
+  "maintainers": [
+    "MathJax Consortium <info@mathjax.org> (http://www.mathjax.org)"
+  ],
+  "bugs": {
+    "url": "http://github.com/mathjax/MathJax/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mathjax/Mathjax-src/"
+  },
+  "type": "module",
+  "main": "@mathjax/src/components/mjs/node-main/node-main.js",
+  "exports": {
+    ".": {
+      "import": "./@mathjax/src/bundle/node-main.mjs",
+      "require": "./@mathjax/src/bundle/node-main.cjs"
+    },
+    "./source": {
+      "import": "./@mathjax/src/components/mjs/node-main/node-main.mjs",
+      "require": "./@mathjax/src/components/cjs/node-main/node-main.cjs"
+    },
+    "./js/*": {
+      "import": "./@mathjax/src/mjs/*",
+      "require": "./@mathjax/src/cjs/*"
+    },
+    "./components/src/*": {
+      "import": "./@mathjax/src/components/mjs/*",
+      "require": "./@mathjax/src/components/cjs/*"
+    },
+    "./components/js/*": {
+      "import": "./@mathjax/src/components/mjs/*",
+      "require": "./components/cjs/*"
+    },
+    "./es5/*": "./@mathjax/src/bundle/*",
+    "./*": "./@mathjax/src/*"
+  },
+  "scripts": {
+    "install": "node link-mathjax.cjs"
+  },
+  "dependencies": {
+    "@mathjax/mathjax-newcm-font": "4.0.0-rc.4",
+    "@mathjax/src": "4.0.0-rc.4"
+  }
+}
