@@ -35,7 +35,7 @@ import {LiteAdaptor} from '../liteAdaptor.js';
  */
 export namespace PATTERNS {
   export const TAGNAME = '[a-z][^\\s\\n>]*';
-  export const ATTNAME = '[a-z][^\\s\\n>=]*';
+  export const ATTNAME = '[^\\s"\'<>/=]+';
   export const VALUE =  `(?:'[^']*'|"[^"]*"|[^\\s\\n]+)`;
   export const VALUESPLIT =  `(?:'([^']*)'|"([^"]*)"|([^\\s\\n]+))`;
   export const SPACE = '(?:\\s|\\n)+';
