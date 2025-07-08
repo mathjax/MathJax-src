@@ -170,8 +170,8 @@ const allExplorers: { [options: string]: ExplorerInit } = {
       pool,
       doc.explorerRegions.tooltip3,
       node,
-      (x: HTMLElement) => x.hasAttribute('data-semantic-prefix'),
-      (x: HTMLElement) => x.getAttribute('data-semantic-prefix')
+      (x: HTMLElement) => x.hasAttribute?.('data-semantic-prefix-none'),
+      (x: HTMLElement) => x.getAttribute?.('data-semantic-prefix-none')
     ),
   flame: (
     doc: ExplorerMathDocument,

@@ -323,7 +323,7 @@ export class ToolTip extends StringRegion {
       height: 'auto',
       opacity: 1,
       'text-align': 'center',
-      'border-radius': '6px',
+      'border-radius': '4px',
       padding: 0,
       'border-bottom': '1px dotted black',
       position: 'absolute',
@@ -331,6 +331,10 @@ export class ToolTip extends StringRegion {
       'background-color': 'white',
       'z-index': 202,
     },
+    ['.' + ToolTip.className + ' > div']: {
+      'border-radius': 'inherit',
+      padding: '0 2px',
+    }
   });
 }
 

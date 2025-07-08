@@ -831,7 +831,6 @@ export class Menu {
               this.checkbox('Role', 'Role', 'infoRole'),
               this.checkbox('Prefix', 'Prefix', 'infoPrefix'),
             ],
-            true
           ),
           this.rule(),
           this.submenu('Role Description', 'Describe math as', [
