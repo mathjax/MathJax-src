@@ -35,7 +35,7 @@ const DIRNAME = __dirname;
  * @return {string}        The string with regex special characters escaped
  */
 function quoteRE(string) {
-  return string.replace(/([\\.{}[\]()?*^$])/g, '\\$1');
+  return string.replace(/([\\.{}[\]()?*+^$])/g, '\\$1');
 }
 
 /****************************************************************/
