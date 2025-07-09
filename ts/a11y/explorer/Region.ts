@@ -334,7 +334,7 @@ export class ToolTip extends StringRegion {
     ['.' + ToolTip.className + ' > div']: {
       'border-radius': 'inherit',
       padding: '0 2px',
-    }
+    },
   });
 }
 
