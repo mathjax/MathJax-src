@@ -425,7 +425,11 @@ export abstract class CommonOutputJax<
     }
     const makeBreaks = this.options.linebreaks.inline && !math.display;
     let inlineMarked = !!math.root.getProperty('inlineMarked');
-    if (inlineMarked &&  (!makeBreaks || this.forceInlineBreaks !== math.root.getProperty('inlineForced'))) {
+    if (
+      inlineMarked &&
+      (!makeBreaks ||
+        this.forceInlineBreaks !== math.root.getProperty('inlineForced'))
+    ) {
       this.unmarkInlineBreaks(math.root);
       math.root.removeProperty('inlineMarked');
       math.root.removeProperty('inlineForced');
