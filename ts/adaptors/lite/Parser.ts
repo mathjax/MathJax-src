@@ -32,12 +32,13 @@ import { LiteAdaptor } from '../liteAdaptor.js';
 /**
  * Patterns used in parsing serialized HTML
  */
-const TAGNAME = '[a-z][^\\s\\n>]*';
-const ATTNAME = '[a-z][^\\s\\n>=]*';
-const VALUE = `(?:'[^']*'|"[^"]*"|[^\\s\\n]+)`;
-const VALUESPLIT = `(?:'([^']*)'|"([^"]*)"|([^\\s\\n]+))`;
-const SPACE = '(?:\\s|\\n)+';
-const OPTIONALSPACE = '(?:\\s|\\n)*';
+
+const SPACE = '[ \\n]+';
+const OPTIONALSPACE = '[ \\n]*';
+const TAGNAME = `[A-Za-z][^\u0000-\u001F "'>/=\u007F-\u009F]*`;
+const ATTNAME = `[^\u0000-\u001F "'>/=\u007F-\u009F]+`;
+const VALUE = `(?:'[^']*'|"[^"]*"|${SPACE})`;
+const VALUESPLIT = `(?:'([^']*)'|"([^"]*)"|(${SPACE}))`;
 const ATTRIBUTE = `${ATTNAME}(?:${OPTIONALSPACE}=${OPTIONALSPACE}${VALUE})?`;
 const ATTRIBUTESPLIT = `(${ATTNAME})(?:${OPTIONALSPACE}=${OPTIONALSPACE}${VALUESPLIT})?`;
 const TAG =
@@ -45,9 +46,9 @@ const TAG =
   `${OPTIONALSPACE}/?|/${TAGNAME}|!--[^]*?--|![^]*?)(?:>|$))`;
 
 export const PATTERNS = {
-  tag: new RegExp(TAG, 'i'),
-  attr: new RegExp(ATTRIBUTE, 'i'),
-  attrsplit: new RegExp(ATTRIBUTESPLIT, 'i'),
+  tag: new RegExp(TAG, 'u'),
+  attr: new RegExp(ATTRIBUTE, 'u'),
+  attrsplit: new RegExp(ATTRIBUTESPLIT, 'u'),
 };
 
 /************************************************************/
