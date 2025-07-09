@@ -114,8 +114,7 @@ declare const SRE: any;
     global.isLab
       ? import(/* webpackIgnore: true */ './sre-lab.js') // for use in the lab
       : import('./sre.js')
-  )
-    .then((SRE) => (global.SRE = SRE));
+  ).then((SRE) => (global.SRE = SRE));
 
   /*****************************************************************/
 
