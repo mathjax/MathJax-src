@@ -27,8 +27,10 @@ import '../core/core.js';
 import '../adaptors/liteDOM/liteDOM.js';
 import {source} from '../source.js';
 
-const path = eval('require("path")');          // get path from node, not webpack
-const dir = global.MathJax.config.__dirname;   // set up by node-main.mjs or node-main.cjs
+const MathJax = global.MathJax;
+
+const path = eval('require("path")');   // get path from node, not webpack
+const dir = MathJax.config.__dirname;   // set up by node-main.mjs or node-main.cjs
 
 /*
  * Set up the initial configuration
@@ -78,7 +80,7 @@ MathJax._.mathjax.mathjax.asyncLoad = function (name) {
  * The init() function returns a promise that is resolved when MathJax is loaded and ready, and that
  * is passed the MathJax global variable when it is called.
  */
-const init = (config = {}) => {
+const init = MathJax.init = (config = {}) => {
   combineConfig(MathJax.config, config);
   return Loader.load(...CONFIG.load)
     .then(() => CONFIG.ready())
@@ -87,6 +89,6 @@ const init = (config = {}) => {
 }
 
 /*
- * Export the init() function
+ * Export MathJax (with its init() function)
  */
-export {init};
+export {MathJax};
