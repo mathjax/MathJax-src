@@ -278,10 +278,16 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    *  Add any elements needed for the document
    */
   protected addPageElements() {
-    const body = this.adaptor.body(this.document);
+    const adaptor = this.adaptor;
+    const body = adaptor.body(this.document);
     const node = this.documentPageElements();
     if (node) {
-      this.adaptor.append(body, node);
+      const child = adaptor.firstChild(body);
+      if (child) {
+        adaptor.insert(node, child);
+      } else {
+        adaptor.append(body, node);
+      }
     }
   }
 
