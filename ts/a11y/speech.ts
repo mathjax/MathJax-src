@@ -316,7 +316,7 @@ export function SpeechMathDocumentMixin<
      * @override
      */
     public async done() {
-      await this.webworker.Stop();
+      await this.webworker?.Stop();
       return super.done();
     }
   };

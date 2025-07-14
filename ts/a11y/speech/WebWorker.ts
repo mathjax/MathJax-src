@@ -468,8 +468,10 @@ export class WorkerHandler<N, T, D> {
 
   /**
    * Terminates the worker.
+   *
+   * @returns {Promise<any>}  The promise for the worker termination.
    */
-  public Terminate() {
+  public Terminate(): Promise<any> | void {
     this.debug('Terminating pending tasks');
     for (const task of this.tasks) {
       task.reject(
@@ -478,18 +480,18 @@ export class WorkerHandler<N, T, D> {
     }
     this.tasks = [];
     this.debug('Terminating worker');
-    this.worker.terminate();
+    return this.worker.terminate();
   }
 
   /**
    * Stop the worker and clear the values so that the worker can be
    * restarted, if desired.
    */
-  public Stop() {
+  public async Stop() {
     if (!this.worker) {
       throw Error('Worker has not been started');
     }
-    this.Terminate();
+    await this.Terminate();
     this.worker = null;
     this.ready = false;
   }
