@@ -161,7 +161,17 @@ export class SerializedMmlVisitor extends MmlVisitor {
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
-      .replace(/[\uD800-\uDBFF]./g, toEntity)
-      .replace(/[\u0080-\uD7FF\uE000-\uFFFF]/g, toEntity);
+      .replace(/[\uD800-\uDBFF]./g, this.toEntity)
+      .replace(/[\u0080-\uD7FF\uE000-\uFFFF]/g, this.toEntity);
+  }
+
+  /**
+   * Access to the toEntity() function that can be overridden in subclasses.
+   *
+   * @param {string} c   The character to encode.
+   * @returns {string}   The numeric entity for the character.
+   */
+  protected toEntity(c: string): string {
+    return toEntity(c);
   }
 }
