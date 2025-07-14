@@ -129,7 +129,10 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   /**
    * The default options for the input jax
    */
-  public static OPTIONS: OptionList = {};
+  public static OPTIONS: OptionList = {
+    preFilters: [],
+    postFilters: [],
+  };
 
   /**
    * The actual options supplied to the input jax
@@ -163,8 +166,8 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   constructor(options: OptionList = {}) {
     const CLASS = this.constructor as typeof AbstractInputJax;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
-    this.preFilters = new FunctionList();
-    this.postFilters = new FunctionList();
+    this.preFilters = new FunctionList(this.options.preFilters);
+    this.postFilters = new FunctionList(this.options.postFilters);
   }
 
   /**

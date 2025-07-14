@@ -157,13 +157,15 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     userOptions(parseOptions.options, rest);
     configuration.config(this);
     TeX.tags(parseOptions, configuration);
-    this.postFilters.add(FilterUtil.cleanSubSup, -7);
-    this.postFilters.add(FilterUtil.setInherited, -6);
-    this.postFilters.add(FilterUtil.checkScriptlevel, -5);
-    this.postFilters.add(FilterUtil.moveLimits, -4);
-    this.postFilters.add(FilterUtil.cleanStretchy, -3);
-    this.postFilters.add(FilterUtil.cleanAttributes, -2);
-    this.postFilters.add(FilterUtil.combineRelations, -1);
+    this.postFilters.addList([
+      [FilterUtil.cleanSubSup, -7],
+      [FilterUtil.setInherited, -6],
+      [FilterUtil.checkScriptlevel, -5],
+      [FilterUtil.moveLimits, -4],
+      [FilterUtil.cleanStretchy, -3],
+      [FilterUtil.cleanAttributes, -2],
+      [FilterUtil.combineRelations, -1],
+    ]);
   }
 
   /**

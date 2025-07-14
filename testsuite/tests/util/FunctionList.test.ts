@@ -1,5 +1,5 @@
 import { describe, test, expect } from '@jest/globals';
-import {FunctionList} from '#js/util/FunctionList.js';
+import {FunctionList, AnyFunction} from '#js/util/FunctionList.js';
 
 //
 //  Set up a function list with 6 functions that captures output
@@ -41,6 +41,15 @@ describe('FunctionList functionality', () => {
     const item = list.add(fn);
     expect(Array.from(list)).toEqual([{item: item, priority: 5}]);
     expect(item).toBe(fn);
+  });
+
+  test('Adding a list of items', () => {
+    const fns = [(_: any) => {}, [(_: any) => {}, 1]] as [AnyFunction, [AnyFunction, number]];
+    const list = new FunctionList(fns);
+    expect(Array.from(list)).toEqual([
+      {item: fns[1][0], priority: 1},
+      {item: fns[0], priority: 5},
+    ]);
   });
 
   test('Removing one item', () => {
