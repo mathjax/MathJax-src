@@ -109,7 +109,8 @@ export function SpeechMathItemMixin<
       this.state(STATE.ATTACHSPEECH);
       if (
         this.isEscaped ||
-        !(document.options.enableSpeech || document.options.enableBraille)
+        !(document.options.enableSpeech || document.options.enableBraille) ||
+        !document.options.enableEnrichment
       ) {
         return;
       }
@@ -274,7 +275,8 @@ export function SpeechMathDocumentMixin<
      */
     public attachSpeech(): SpeechMathDocument<N, T, D> {
       if (!this.processed.isSet('attach-speech')) {
-        if (this.options.enableSpeech || this.options.enableBraille) {
+        const options = this.options;
+        if (options.enableEnrichment && (options.enableSpeech || options.enableBraille)) {
           this.getWebworker();
           for (const math of this.math) {
             (math as SpeechMathItem<N, T, D>).attachSpeech(this);
