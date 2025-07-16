@@ -268,8 +268,8 @@ export const Loader = {
       return result;
     });
     //
-    // Add this load promise to the lsits for any parent load() call that are
-    // pending when this this load() was performed, then return the load promise.
+    // Add this load promise to the lists for any parent load() call that are
+    // pending when this load() was performed, then return the load promise.
     //
     this.nestedLoads
       .slice(1)
