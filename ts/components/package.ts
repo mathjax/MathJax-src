@@ -159,9 +159,9 @@ export class Package {
    */
   public static loadPromise(name: string): Promise<void> {
     const config = (CONFIG[name] || {}) as PackageConfig;
-    const promise = Promise.all(
-      (config.extraLoads || []).map((name) => Loader.load(name))
-    );
+    const promise = config.extraLoads
+      ? Loader.load(...config.extraLoads)
+      : Promise.resolve();
     const checkReady = config.checkReady || (() => Promise.resolve());
     return promise.then(() => checkReady()) as Promise<void>;
   }
