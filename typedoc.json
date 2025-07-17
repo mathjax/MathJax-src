@@ -1,0 +1,9 @@
+{
+  "entryPoints": ["ts"],
+  "tsconfig": "tsconfig/docs.json",
+  "excludeNotDocumented": true,
+  "includeVersion": false,
+  "plugin": [],
+  "entryPointStrategy": "expand"
+}
+
