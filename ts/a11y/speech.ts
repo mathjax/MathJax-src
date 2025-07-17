@@ -276,7 +276,10 @@ export function SpeechMathDocumentMixin<
     public attachSpeech(): SpeechMathDocument<N, T, D> {
       if (!this.processed.isSet('attach-speech')) {
         const options = this.options;
-        if (options.enableEnrichment && (options.enableSpeech || options.enableBraille)) {
+        if (
+          options.enableEnrichment &&
+          (options.enableSpeech || options.enableBraille)
+        ) {
           this.getWebworker();
           for (const math of this.math) {
             (math as SpeechMathItem<N, T, D>).attachSpeech(this);
