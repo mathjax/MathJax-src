@@ -823,16 +823,11 @@ export class Menu {
               ['500%'],
             ]),
           ]),
-          this.submenu(
-            'Semantic Info',
-            'Semantic Info',
-            [
-              this.checkbox('Type', 'Type', 'infoType'),
-              this.checkbox('Role', 'Role', 'infoRole'),
-              this.checkbox('Prefix', 'Prefix', 'infoPrefix'),
-            ],
-            true
-          ),
+          this.submenu('Semantic Info', 'Semantic Info', [
+            this.checkbox('Type', 'Type', 'infoType'),
+            this.checkbox('Role', 'Role', 'infoRole'),
+            this.checkbox('Prefix', 'Prefix', 'infoPrefix'),
+          ]),
           this.rule(),
           this.submenu('Role Description', 'Describe math as', [
             this.radioGroup('roleDescription', [
