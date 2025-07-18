@@ -25,9 +25,7 @@
 import { MmlVisitor } from './MmlVisitor.js';
 import { MmlNode, TextNode, XMLNode } from './MmlNode.js';
 import { HtmlNode } from './MmlNodes/HtmlNode.js';
-
-export const toEntity = (c: string) =>
-  '&#x' + c.codePointAt(0).toString(16).toUpperCase() + ';';
+import { toEntity } from '../../util/string.js';
 
 /*****************************************************************/
 /**

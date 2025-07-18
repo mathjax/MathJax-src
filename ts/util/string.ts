@@ -100,3 +100,13 @@ export function replaceUnicode(text: string): string {
     (_m, pre, h1, h2) => pre + String.fromCodePoint(parseInt(h1 || h2, 16))
   );
 }
+
+/**
+ * Turn a character into its numeric entity for HTML
+ *
+ * @param {string} c   The character to convert
+ * @returns {string}   The entity string for the character
+ */
+export function toEntity(c: string): string {
+  return `&#x${c.codePointAt(0).toString(16).toUpperCase()};`;
+}
