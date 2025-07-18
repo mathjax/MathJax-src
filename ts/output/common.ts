@@ -423,13 +423,22 @@ export abstract class CommonOutputJax<
     if (linebreak) {
       this.getLinebreakWidth();
     }
-    const inlineMarked = !!math.root.getProperty('inlineMarked');
-    if (this.options.linebreaks.inline && !math.display && !inlineMarked) {
+    const makeBreaks = this.options.linebreaks.inline && !math.display;
+    let inlineMarked = !!math.root.getProperty('inlineMarked');
+    if (
+      inlineMarked &&
+      (!makeBreaks ||
+        this.forceInlineBreaks !== math.root.getProperty('inlineForced'))
+    ) {
+      this.unmarkInlineBreaks(math.root);
+      math.root.removeProperty('inlineMarked');
+      math.root.removeProperty('inlineForced');
+      inlineMarked = false;
+    }
+    if (makeBreaks && !inlineMarked) {
       this.markInlineBreaks(math.root.childNodes?.[0]);
       math.root.setProperty('inlineMarked', true);
-    } else if (!this.options.linebreaks.inline && inlineMarked) {
-      this.unmarkInlineBreaks(math.root);
-      math.root.setProperty('inlineMarked', false);
+      math.root.setProperty('inlineForced', this.forceInlineBreaks);
     }
     math.root.setTeXclass(null);
     const wrapper = this.factory.wrap(math.root);
