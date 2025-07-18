@@ -14,7 +14,7 @@ if (MathJax.loader) {
   } else {
     const REQUIRE = typeof require !== 'undefined' ? require : MathJax.config.loader.require;
     if (REQUIRE?.resolve) {
-      path = REQUIRE.resolve(`${path}/package.json`).replace(/\/[^\/]*$/, '');
+      path = REQUIRE.resolve(`${path}/require.mjs`).replace(/\/[^\/]*$/, '');
       maps = REQUIRE.resolve(`${maps}/base.json`).replace(/\/[^\/]*$/, '');
     } else {
       path = maps = '';

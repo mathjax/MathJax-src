@@ -627,12 +627,12 @@ export class HTMLAdaptor<
     const file = `${path}/${worker}`;
     const content = `
       self.maps = '${quoted(maps)}';
-      import('${quoted(file)}');
+      importScripts('${quoted(file)}');
     `;
     const url = URL.createObjectURL(
       new Blob([content], { type: 'text/javascript' })
     );
-    const webworker = new Worker(url, { type: 'module' });
+    const webworker = new Worker(url);
     webworker.onmessage = listener;
     URL.revokeObjectURL(url);
     return webworker;
