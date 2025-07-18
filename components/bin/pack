@@ -42,7 +42,7 @@ const bundle = (process.argv[3] || 'bundle');
  * @return {RegExp}        The regular expression for the name,
  */
 function fileRegExp(name) {
-  return new RegExp(name.replace(/([\\.{}[\]()?*^$])/g, '\\$1'), 'g');
+  return new RegExp(name.replace(/([\\.{}[\]()?*+^$])/g, '\\$1'), 'g');
 }
 
 /**
