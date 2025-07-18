@@ -82,6 +82,7 @@ const init = (config = {}) => {
   combineConfig(MathJax.config, config);
   return Loader.load(...CONFIG.load)
     .then(() => CONFIG.ready())
+    .then(() => MathJax.startup.promise)    // Wait for MathJax to finish starting up
     .then(() => MathJax)                    // Pass MathJax global as argument to subsequent .then() calls
     .catch(error => CONFIG.failed(error));
 }
