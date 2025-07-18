@@ -113,7 +113,10 @@ export function handleRetriesFor(code: () => any): Promise<any> {
  *                            actions will continue
  */
 export function retryAfter(promise: Promise<any>) {
-  const err = new Error('MathJax retry') as RetryError;
+  const err = new Error(
+    'MathJax retry -- an asynchronous action is required; ' +
+      'try using one of the promise-based functions and await its resolution.'
+  ) as RetryError;
   err.retry = promise;
   throw err;
 }
