@@ -606,8 +606,9 @@ export class LiteBase extends AbstractDOMAdaptor<
    * @override
    */
   public addClass(node: LiteElement, name: string) {
-    const classes = ((node.attributes['class'] as string) || '').split(/ /);
-    if (!classes.find((n) => n === name)) {
+    const classString = node.attributes['class'] as string;
+    const classes = classString?.split(/ /) || [];
+    if (!classes.includes(name)) {
       classes.push(name);
       node.attributes['class'] = classes.join(' ');
     }
@@ -617,8 +618,9 @@ export class LiteBase extends AbstractDOMAdaptor<
    * @override
    */
   public removeClass(node: LiteElement, name: string) {
-    const classes = ((node.attributes['class'] as string) || '').split(/ /);
-    const i = classes.findIndex((n) => n === name);
+    const classString = node.attributes['class'] as string;
+    const classes = classString?.split(/ /) || [];
+    const i = classes.indexOf(name);
     if (i >= 0) {
       classes.splice(i, 1);
       node.attributes['class'] = classes.join(' ');
@@ -630,7 +632,7 @@ export class LiteBase extends AbstractDOMAdaptor<
    */
   public hasClass(node: LiteElement, name: string) {
     const classes = ((node.attributes['class'] as string) || '').split(/ /);
-    return !!classes.find((n) => n === name);
+    return classes.includes(name);
   }
 
   /**
