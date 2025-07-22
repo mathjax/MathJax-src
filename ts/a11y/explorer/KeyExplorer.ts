@@ -399,6 +399,11 @@ export class SpeechExplorer
    */
   protected pendingIndex: number[] = [];
 
+  /**
+   * The possible types for a "table" cell
+   */
+  protected cellTypes: string[] = ['cell', 'line'];
+
   /********************************************************************/
   /*
    * The event handlers
@@ -1182,6 +1187,14 @@ export class SpeechExplorer
   }
 
   /**
+   * @param {HTMLElement} node   The HTML node whose parent is to be found
+   * @returns {HTMLElement}      The HTML node of the parent node
+   */
+  protected getParent(node: HTMLElement): HTMLElement {
+    return this.getNode(this.parentId(node));
+  }
+
+  /**
    * @param {HTMLElement} node   The node whose child array we want
    * @returns {string[]}         The array of semantic IDs of its children
    */
@@ -1190,12 +1203,30 @@ export class SpeechExplorer
   }
 
   /**
+   * @param {HTMLElement} node   The node to check for being a cell node
+   * @returns {boolean}          True if the node is a cell node
+   */
+  protected isCell(node: HTMLElement): boolean {
+    return (
+      !!node && this.cellTypes.includes(node.getAttribute('data-semantic-type'))
+    );
+  }
+
+  /**
+   * @param {HTMLElement} node   The node to check for being a row node
+   * @returns {boolean}          True if the node is a row node
+   */
+  protected isRow(node: HTMLElement): boolean {
+    return !!node && node.getAttribute('data-semantic-type') === 'row';
+  }
+
+  /**
    * @param {HTMLElement} node   A node that may be in a table cell
    * @returns {HTMLElement}      The HTML node for the table cell containing it, or null
    */
   protected tableCell(node: HTMLElement): HTMLElement {
     while (node && node !== this.node) {
-      if (node.getAttribute('data-semantic-role') === 'table') {
+      if (this.isCell(node)) {
         return node;
       }
       node = node.parentNode as HTMLElement;
@@ -1204,17 +1235,12 @@ export class SpeechExplorer
   }
 
   /**
-   * @param {HTMLElement} node   An HTML node that is a cell of a table
+   * @param {HTMLElement} cell   An HTML node that is a cell of a table
    * @returns {HTMLElement}      The HTML node for semantic table element containing the cell
    */
-  protected cellTable(node: HTMLElement): HTMLElement {
-    while (node && node !== this.node) {
-      if (node.getAttribute('data-semantic-type') === 'table') {
-        return node;
-      }
-      node = node.parentNode as HTMLElement;
-    }
-    return null;
+  protected cellTable(cell: HTMLElement): HTMLElement {
+    const row = this.getParent(cell);
+    return this.isRow(row) ? this.getParent(row) : row;
   }
 
   /**
@@ -1222,9 +1248,12 @@ export class SpeechExplorer
    * @returns {[number, number]}   The row and column numbers for the cell in its table (0-based)
    */
   protected cellPosition(cell: HTMLElement): [number, number] {
-    const row = this.getNode(this.parentId(cell));
+    const row = this.getParent(cell);
     const j = this.childArray(row).indexOf(this.nodeId(cell));
-    const table = this.getNode(this.parentId(row));
+    if (!this.isRow(row)) {
+      return [j, 1];
+    }
+    const table = this.getParent(row);
     const i = this.childArray(table).indexOf(this.nodeId(row));
     return [i, j];
   }
@@ -1237,6 +1266,9 @@ export class SpeechExplorer
    */
   protected cellAt(table: HTMLElement, i: number, j: number): HTMLElement {
     const row = this.getNode(this.childArray(table)[i]);
+    if (!this.isRow(row)) {
+      return j === 1 ? row : null;
+    }
     const cell = this.getNode(this.childArray(row)[j]);
     return cell;
   }
