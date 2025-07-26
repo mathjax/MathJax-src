@@ -1059,6 +1059,8 @@ export class CommonWrapper<
     if (!parent || !parent.isKind('mrow') || parent.childNodes.length === 1) {
       return;
     }
+    const n = parent.childIndex(child);
+    if (n === null) return;
     //
     // Get the lspace and rspace
     //
@@ -1075,8 +1077,7 @@ export class CommonWrapper<
     // If there are two adjacent <mo>, use enough left space to make it
     //   the maximum of the rspace of the first and lspace of the second
     //
-    const n = parent.childIndex(child);
-    if (n === 0) return;
+    if (!n) return;
     const prev = parent.childNodes[n - 1] as AbstractMmlNode;
     if (!prev.isEmbellished) return;
     const bbox = this.jax.nodeMap.get(prev).getBBox();
