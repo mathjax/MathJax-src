@@ -1303,9 +1303,14 @@ export class SpeechExplorer
       ?.getAttribute('data-semantic-postfix')
       ?.match(/(^| )link($| )/);
     if (focus) {
-      node.parentNode.dispatchEvent(new MouseEvent('click'));
-      setTimeout(() => this.FocusOut(null), 50);
-      return true;
+      while (node && node !== this.node) {
+        if (node instanceof HTMLAnchorElement) {
+          node.dispatchEvent(new MouseEvent('click'));
+          setTimeout(() => this.FocusOut(null), 50);
+          return true;
+        }
+        node = node.parentNode as HTMLElement;
+      }
     }
     return false;
   }
