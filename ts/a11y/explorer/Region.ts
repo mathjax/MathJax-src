@@ -413,7 +413,12 @@ export class SpeechRegion extends LiveRegion {
   /**
    * Have we already requested voices from the browser?
    */
-  private voiceRequest = false;
+  private voiceRequest: boolean = false;
+
+  /**
+   * Has the auto voicing been cancelled?
+   */
+  private voiceCancelled: boolean = false;
 
   /**
    * @override
@@ -467,6 +472,7 @@ export class SpeechRegion extends LiveRegion {
    * @param {string} locale The locale to use.
    */
   protected makeUtterances(ssml: SsmlElement[], locale: string) {
+    this.voiceCancelled = false;
     let utterance = null;
     for (const utter of ssml) {
       if (utter.mark) {
@@ -476,7 +482,9 @@ export class SpeechRegion extends LiveRegion {
           continue;
         }
         utterance.addEventListener('end', (_event: Event) => {
-          this.highlightNode(utter.mark);
+          if (!this.voiceCancelled) {
+            this.highlightNode(utter.mark);
+          }
         });
         continue;
       }
@@ -515,8 +523,17 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Hide() {
-    speechSynthesis.cancel();
+    this.cancelVoice();
     super.Hide();
+  }
+
+  /**
+   * Cancel the auto-voicing
+   */
+  public cancelVoice() {
+    this.voiceCancelled = true;
+    speechSynthesis.cancel();
+    this.highlighter.unhighlight();
   }
 
   /**

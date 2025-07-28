@@ -274,6 +274,29 @@ export class WorkerHandler<N, T, D> {
   }
 
   /**
+   * Return speech structure for an arbitrary MathML string
+   *
+   * @param {string} math The linearized mml expression.
+   * @param {OptionList} options The options list.
+   * @param {SpeechMathItem} item The mathitem for reattaching the speech.
+   * @returns {Promise<Structure>} A promise that resolves when the command completes
+   */
+  public async speechFor(
+    math: string,
+    options: OptionList,
+    item: SpeechMathItem<N, T, D>
+  ): Promise<Structure> {
+    const data = await this.Post(
+      {
+        cmd: 'speech',
+        data: { mml: math, options: options },
+      },
+      item
+    );
+    return JSON.parse(data);
+  }
+
+  /**
    * Attach the speech structure to an item's DOM
    *
    * @param {SpeechMathItem} item       The SpeechMathItem to attach to
@@ -350,7 +373,8 @@ export class WorkerHandler<N, T, D> {
   ) {
     const adaptor = this.adaptor;
     const id = adaptor.getAttribute(node, 'data-semantic-id');
-    if (speech) {
+    adaptor.removeAttribute(node, 'data-speech-node');
+    if (speech && data.speech[id]['speech-none']) {
       adaptor.setAttribute(node, 'data-speech-node', 'true');
       for (let [key, value] of Object.entries(data.speech[id])) {
         key = key.replace(/-ssml$/, '');
@@ -359,9 +383,9 @@ export class WorkerHandler<N, T, D> {
         }
       }
     }
-    if (braille && data.braille?.[id]) {
+    if (braille && data.braille?.[id]?.['braille-none']) {
       adaptor.setAttribute(node, 'data-speech-node', 'true');
-      const value = data.braille[id]['braille-none'] || '';
+      const value = data.braille[id]['braille-none'];
       adaptor.setAttribute(node, SemAttr.BRAILLE, value);
     }
   }

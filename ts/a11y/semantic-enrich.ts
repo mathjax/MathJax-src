@@ -122,6 +122,12 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
    * @param {MathDocument} document   The MathDocument for the MathItem
    */
   unEnrich(document: MathDocument<N, T, D>): void;
+
+  /**
+   * @param {string} mml  The MathML string to enrich
+   * @returns {string}    The enriched MathML
+   */
+  toEnriched(mml: string): string;
 }
 
 /**
@@ -212,6 +218,14 @@ export function EnrichedMathItemMixin<
         }
       }
       this.state(STATE.ENRICHED);
+    }
+
+    /**
+     * @param {string} mml  The MathML string to enrich
+     * @returns {string}    The enriched MathML
+     */
+    public toEnriched(mml: string): string {
+      return this.serializeMml(Sre.toEnriched(mml));
     }
 
     /**
