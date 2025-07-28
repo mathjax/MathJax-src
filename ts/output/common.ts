@@ -414,6 +414,7 @@ export abstract class CommonOutputJax<
     this.math = math;
     this.container = node;
     this.pxPerEm = math.metrics.ex / this.font.params.x_height;
+    this.executeFilters(this.preFilters, math, html, node);
     this.nodeMap = new Map<MmlNode, WW>();
     math.root.attributes.getAllInherited().overflow =
       this.options.displayOverflow;

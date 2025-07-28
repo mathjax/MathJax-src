@@ -57,6 +57,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
   public static OPTIONS: OptionList = defaultOptions({
     parseAs: 'html',         // Whether to use HTML or XML parsing for the MathML string
     forceReparse: false,     // Whether to force the string to be reparsed, or use the one from the document DOM
+    mmlFilters: [],          // Filters to add to the mmlFilters lost
     FindMathML: null,        // The FindMathML instance to override the default one
     MathMLCompile: null,     // The MathMLCompile instance to override the default one
     /*
@@ -92,11 +93,10 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
       MathMLCompile.OPTIONS
     );
     super(mml);
-    this.findMathML =
-      this.options['FindMathML'] || new FindMathML<N, T, D>(find);
+    this.findMathML = this.options.FindMathML || new FindMathML<N, T, D>(find);
     this.mathml =
-      this.options['MathMLCompile'] || new MathMLCompile<N, T, D>(compile);
-    this.mmlFilters = new FunctionList();
+      this.options.MathMLCompile || new MathMLCompile<N, T, D>(compile);
+    this.mmlFilters = new FunctionList(this.options.mmlFilters);
   }
 
   /**
