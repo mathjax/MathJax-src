@@ -47,12 +47,12 @@ export interface OutputJax<N, T, D> {
   options: OptionList;
 
   /**
-   * Lists of pre-filters to call after typesetting the math
+   * List of pre-filters to call after typesetting the math
    */
   preFilters: FunctionList;
 
   /**
-   * Lists of post-filters to call before typesetting the math
+   * List of post-filters to call before typesetting the math
    */
   postFilters: FunctionList;
 
