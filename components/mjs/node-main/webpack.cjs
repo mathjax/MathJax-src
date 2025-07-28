@@ -1,8 +1,8 @@
 module.exports = (pkg) => {
   pkg.output.library = {
-    name: 'init',
+    name: 'MathJax',
     type: 'commonjs',
-    export: 'init'
+    export: ['MathJax'],
   }
   return pkg;
 }
