@@ -59,4 +59,8 @@ describe('string functions', () => {
     expect(string.replaceUnicode(String.raw`x\\\\\U{61}`)).toBe(String.raw`x\\\\a`);
   });
 
+  test('toEntity()', () => {
+    expect(string.toEntity('\u200B')).toBe('&#x200B;');
+  });
+
 });
