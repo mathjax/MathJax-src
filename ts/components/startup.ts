@@ -457,11 +457,11 @@ export abstract class Startup {
   ) {
     const name = iname + '2' + oname;
     MathJax[name] = (math: string, options: OptionList = {}) => {
-      options.format = input.name;
+      options = { ...options, format: input.name };
       return Startup.document.convert(math, options);
     };
     MathJax[name + 'Promise'] = (math: string, options: OptionList = {}) => {
-      options.format = input.name;
+      options = { ...options, format: input.name };
       return Startup.document.convertPromise(math, options);
     };
     MathJax[oname + 'Stylesheet'] = () =>
@@ -487,16 +487,14 @@ export abstract class Startup {
   public static makeMmlMethods(name: string, input: INPUTJAX) {
     const STATE = MathJax._.core.MathItem.STATE;
     MathJax[name + '2mml'] = (math: string, options: OptionList = {}) => {
-      options.end = STATE.CONVERT;
-      options.format = input.name;
+      options = { ...options, end: STATE.CONVERT, format: input.name };
       return Startup.toMML(Startup.document.convert(math, options));
     };
     MathJax[name + '2mmlPromise'] = async (
       math: string,
       options: OptionList = {}
     ) => {
-      options.end = STATE.CONVERT;
-      options.format = input.name;
+      options = { ...options, end: STATE.CONVERT, format: input.name };
       const node = await Startup.document.convertPromise(math, options);
       return Startup.toMML(node);
     };
