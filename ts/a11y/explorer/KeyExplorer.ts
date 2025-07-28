@@ -582,7 +582,7 @@ export class SpeechExplorer
       this.FocusOut(null);
     } else {
       this.stopEvent(event);
-      this.refocus = this.node.querySelector(nav);
+      this.refocus = this.firstNode(this.node);
       this.Start();
     }
   }
@@ -649,7 +649,7 @@ export class SpeechExplorer
    * Select top-level of expression
    */
   protected homeKey() {
-    this.setCurrent(this.node.querySelector(nav));
+    this.setCurrent(this.firstNode(this.node));
   }
 
   /**
@@ -661,7 +661,7 @@ export class SpeechExplorer
   protected moveDown(shift: boolean): boolean | void {
     return shift
       ? this.moveToNeighborCell(1, 0)
-      : this.moveTo(this.current.querySelector(nav));
+      : this.moveTo(this.firstNode(this.current));
   }
 
   /**
@@ -760,7 +760,7 @@ export class SpeechExplorer
   protected prevMark() {
     if (this.currentMark < 0) {
       if (this.marks.length === 0) {
-        this.setCurrent(this.lastMark || this.node.querySelector(nav));
+        this.setCurrent(this.lastMark || this.firstNode(this.node));
         return;
       }
       this.currentMark = this.marks.length - 1;
@@ -996,7 +996,9 @@ export class SpeechExplorer
     //   (i.e., we are focusing out)
     //
     if (this.current) {
-      this.current.classList.remove('mjx-selected');
+      for (const part of this.getSplitNodes(this.current)) {
+        part.classList.remove('mjx-selected');
+      }
       this.pool.unhighlight();
       if (this.document.options.a11y.tabSelects === 'last') {
         this.refocus = this.current;
@@ -1014,14 +1016,31 @@ export class SpeechExplorer
     this.current = node;
     this.currentMark = -1;
     if (this.current) {
-      this.current.classList.add('mjx-selected');
-      this.pool.highlight([this.current]);
+      const parts = this.getSplitNodes(this.current);
+      for (const part of parts) {
+        part.classList.add('mjx-selected');
+      }
+      this.pool.highlight(parts);
       this.addSpeech(node, addDescription);
     }
     //
     // Done making changes
     //
     this.node.removeAttribute('aria-busy');
+  }
+
+  /**
+   * Get all nodes with the same semantic id (multiple nodes if there are line breaks).
+   *
+   * @param {HTMLElement} node  The node to check if it is split
+   * @returns {HTMLElement[]}   All the nodes for the given id
+   */
+  protected getSplitNodes(node: HTMLElement): HTMLElement[] {
+    const id = this.nodeId(node);
+    if (!id) {
+      return [node];
+    }
+    return Array.from(this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
   }
 
   /**
@@ -1274,51 +1293,43 @@ export class SpeechExplorer
   }
 
   /**
+   * Get an element's first speech child.
+   *
+   * @param {HTMLElement} node   The parent element to get a child from
+   * @returns {HTMLElement}      The first speech child of the node
+   */
+  protected firstNode(node: HTMLElement): HTMLElement {
+    return node.querySelector(nav) as HTMLElement;
+  }
+
+  /**
    * Navigate one step to the right on the same level.
    *
-   * @param {HTMLElement} el The current element.
-   * @returns {HTMLElement} The next element.
+   * @param {HTMLElement} node   The current element.
+   * @returns {HTMLElement}      The next element.
    */
-  protected nextSibling(el: HTMLElement): HTMLElement {
-    if (!this.current.getAttribute('data-semantic-parent')) {
-      return null;
-    }
-    const sib = el.nextElementSibling as HTMLElement;
-    if (sib) {
-      if (sib.matches(nav)) {
-        return sib;
-      }
-      const sibChild = sib.querySelector(nav) as HTMLElement;
-      return sibChild ?? this.nextSibling(sib);
-    }
-    if (!isContainer(el) && !el.parentElement.matches(nav)) {
-      return this.nextSibling(el.parentElement);
-    }
-    return null;
+  protected nextSibling(node: HTMLElement): HTMLElement {
+    const id = this.parentId(node);
+    if (!id) return null;
+    const owns = this.getNode(id).getAttribute('data-semantic-owns')?.split(/ /);
+    if (!owns) return null;
+    const i = owns.indexOf(this.nodeId(node));
+    return this.getNode(owns[i + 1]);
   }
 
   /**
    * Navigate one step to the left on the same level.
    *
-   * @param {HTMLElement} el The current element.
-   * @returns {HTMLElement} The next element.
+   * @param {HTMLElement} node   The current element.
+   * @returns {HTMLElement}      The next element.
    */
-  protected prevSibling(el: HTMLElement): HTMLElement {
-    if (!this.current.getAttribute('data-semantic-parent')) {
-      return null;
-    }
-    const sib = el.previousElementSibling as HTMLElement;
-    if (sib) {
-      if (sib.matches(nav)) {
-        return sib;
-      }
-      const sibChild = sib.querySelector(nav) as HTMLElement;
-      return sibChild ?? this.prevSibling(sib);
-    }
-    if (!isContainer(el) && !el.parentElement.matches(nav)) {
-      return this.prevSibling(el.parentElement);
-    }
-    return null;
+  protected prevSibling(node: HTMLElement): HTMLElement {
+    const id = this.parentId(node);
+    if (!id) return null;
+    const owns = this.getNode(id).getAttribute('data-semantic-owns')?.split(/ /);
+    if (!owns) return null;
+    const i = owns.indexOf(this.nodeId(node));
+    return this.getNode(owns[i - 1]);
   }
 
   /**
@@ -1487,7 +1498,7 @@ export class SpeechExplorer
     // current node (which creates the speech) and start the explorer.
     //
     const node = this.findStartNode();
-    this.setCurrent(node || this.node.querySelector(nav), !node);
+    this.setCurrent(node || this.firstNode(this.node), !node);
     super.Start();
     //
     // Show any needed regions
