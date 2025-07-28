@@ -935,7 +935,7 @@ export abstract class AbstractMathDocument<N, T, D>
    * @override
    */
   public whenReady(action: () => any): Promise<any> {
-    return (this._readyPromise = this._readyPromise.then(() => {
+    return (this._readyPromise = this._readyPromise.catch((_) => {}).then(() => {
       //
       // Cache old _readyPromise and replace it with a resolved
       // promise in case action() calls whenReady(), so we don't get
