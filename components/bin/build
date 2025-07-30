@@ -297,6 +297,7 @@ function processGlobal() {
       prefix + indent + packages.join(',\n' + indent) + postfix,
     '}});'
   );
+  makeDir('');
   fs.writeFileSync(path.join(LIB, COMPONENT + '.js'), lines.join('\n') + '\n');
 }
 
