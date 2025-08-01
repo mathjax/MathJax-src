@@ -71,7 +71,7 @@ export interface MathJaxConfig extends MJConfig {
 /**
  * Generic types for the standard MathJax objects
  */
-export type MATHDOCUMENT = MathDocument<any, any, any>;
+export type MATHDOCUMENT = MathDocument<any, any, any> & {menu?: {loadingPromise: Promise<void>}};
 export type HANDLER = Handler<any, any, any>;
 export type DOMADAPTOR = DOMAdaptor<any, any, any>;
 export type INPUTJAX = InputJax<any, any, any>;
@@ -325,6 +325,7 @@ export abstract class Startup {
         ? (Startup.output as COMMONJAX).font.loadDynamicFiles()
         : Promise.resolve()
     )
+      .then(() => Startup.document.menu?.loadingPromise)
       .then(
         CONFIG.typeset && MathJax.typesetPromise
           ? () => Startup.typesetPromise(CONFIG.elements)
