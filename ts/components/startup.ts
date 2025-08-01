@@ -71,7 +71,9 @@ export interface MathJaxConfig extends MJConfig {
 /**
  * Generic types for the standard MathJax objects
  */
-export type MATHDOCUMENT = MathDocument<any, any, any> & {menu?: {loadingPromise: Promise<void>}};
+export type MATHDOCUMENT = MathDocument<any, any, any> & {
+  menu?: { loadingPromise: Promise<void> };
+};
 export type HANDLER = Handler<any, any, any>;
 export type DOMADAPTOR = DOMAdaptor<any, any, any>;
 export type INPUTJAX = InputJax<any, any, any>;
