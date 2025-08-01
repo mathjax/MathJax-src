@@ -172,7 +172,7 @@ export const Loader = {
   /**
    * Array of nested load promises so if component performs additional
    * loads (like an output jax with an alternate font), then the
-   * outer load promises wont resolve until the inner ones are complete.
+   * outer load promises won't resolve until the inner ones are complete.
    */
   nestedLoads: [] as Promise<any[]>[],
 
@@ -216,7 +216,7 @@ export const Loader = {
       //
       // Collect the promises for all the named packages,
       // creating the package if needed, and add checks
-      // for the verions numbers used in the components.
+      // for the version numbers used in the components.
       //
       const promises = [];
       for (const name of names) {
