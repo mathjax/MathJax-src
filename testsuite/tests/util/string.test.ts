@@ -48,15 +48,16 @@ describe('string functions', () => {
     expect(string.replaceUnicode(String.raw`\U006d`)).toBe('m');
     expect(string.replaceUnicode(String.raw`\U{6D}`)).toBe('m');
     expect(string.replaceUnicode(String.raw`\U{6d}`)).toBe('m');
+    expect(string.replaceUnicode(String.raw`\U{6d}\U{6d}`)).toBe('mm');
     expect(string.replaceUnicode(String.raw`a \U{62} c`)).toBe('a b c');
-    expect(string.replaceUnicode(String.raw`\\U{61}`)).toBe(String.raw`\\U{61}`);
-    expect(string.replaceUnicode(String.raw`\\\U{61}`)).toBe(String.raw`\\a`);
-    expect(string.replaceUnicode(String.raw`\\\\U{61}`)).toBe(String.raw`\\\\U{61}`);
-    expect(string.replaceUnicode(String.raw`\\\\\U{61}`)).toBe(String.raw`\\\\a`);
-    expect(string.replaceUnicode(String.raw`x\\U{61}`)).toBe(String.raw`x\\U{61}`);
-    expect(string.replaceUnicode(String.raw`x\\\U{61}`)).toBe(String.raw`x\\a`);
-    expect(string.replaceUnicode(String.raw`x\\\\U{61}`)).toBe(String.raw`x\\\\U{61}`);
-    expect(string.replaceUnicode(String.raw`x\\\\\U{61}`)).toBe(String.raw`x\\\\a`);
+    expect(string.replaceUnicode(String.raw`\\U{61}`)).toBe(String.raw`\U{61}`);
+    expect(string.replaceUnicode(String.raw`\\\U{61}`)).toBe(String.raw`\a`);
+    expect(string.replaceUnicode(String.raw`\\\\U{61}`)).toBe(String.raw`\\U{61}`);
+    expect(string.replaceUnicode(String.raw`\\\\\U{61}`)).toBe(String.raw`\\a`);
+    expect(string.replaceUnicode(String.raw`x\\U{61}`)).toBe(String.raw`x\U{61}`);
+    expect(string.replaceUnicode(String.raw`x\\\U{61}`)).toBe(String.raw`x\a`);
+    expect(string.replaceUnicode(String.raw`x\\\\U{61}`)).toBe(String.raw`x\\U{61}`);
+    expect(string.replaceUnicode(String.raw`x\\\\\U{61}`)).toBe(String.raw`x\\a`);
   });
 
   test('toEntity()', () => {

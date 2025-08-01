@@ -42,7 +42,7 @@ export function sortLength(a: string, b: string): number {
  * Quote a string for use in regular expressions
  *
  * @param {string} text  The text whose regex characters are to be quoted
- * @returns {string}  The quoted string
+ * @returns {string}     The quoted string
  */
 export function quotePattern(text: string): string {
   return text.replace(/([\^$(){}.+*?\-|[\]:\\])/g, '\\$1');
@@ -52,7 +52,7 @@ export function quotePattern(text: string): string {
  * Convert a UTF-8 string to an array of unicode code points
  *
  * @param {string} text  The string to be turned into unicode positions
- * @returns {number[]}  Array of numbers representing the string's unicode character positions
+ * @returns {number[]}   Array of numbers representing the string's unicode character positions
  */
 export function unicodeChars(text: string): number[] {
   return Array.from(text).map((c) => c.codePointAt(0));
@@ -62,7 +62,7 @@ export function unicodeChars(text: string): number[] {
  * Convert an array of unicode code points to a string
  *
  * @param {number[]} data   The array of unicode code points
- * @returns {string}         The string consisting of the characters at those points
+ * @returns {string}        The string consisting of the characters at those points
  */
 export function unicodeString(data: number[]): string {
   return String.fromCodePoint(...data);
@@ -71,7 +71,7 @@ export function unicodeString(data: number[]): string {
 /**
  * Test if a value is a percentage
  *
- * @param {string} x   The string to test
+ * @param {string} x    The string to test
  * @returns {boolean}   True if the string ends with a percent sign
  */
 export function isPercent(x: string): boolean {
@@ -81,7 +81,7 @@ export function isPercent(x: string): boolean {
 /**
  * Split a space-separated string of values
  *
- * @param {string} x   The string to be split
+ * @param {string} x    The string to be split
  * @returns {string[]}  The list of white-space-separated "words" in the string
  */
 export function split(x: string): string[] {
@@ -89,15 +89,16 @@ export function split(x: string): string[] {
 }
 
 /**
- * Replace \U{...} with the specified unicode character
+ * Replace \U{...} with the specified unicode character and \\ with \
  *
- * @param {string} text   The string to be scanned for \U{...}
- * @returns {string}       The string with the unicode characters in place of \U{...}
+ * @param {string} text   The string to be scanned for \U{...} and \\
+ * @returns {string}      The string with the unicode characters in place of \U{...}
  */
 export function replaceUnicode(text: string): string {
   return text.replace(
-    /((?:^|[^\\])(?:\\\\)*)\\U(?:([0-9A-Fa-f]{4})|\{\s*([0-9A-Fa-f]{1,6})\s*\})/g,
-    (_m, pre, h1, h2) => pre + String.fromCodePoint(parseInt(h1 || h2, 16))
+    /\\U(?:([0-9A-Fa-f]{4})|\{\s*([0-9A-Fa-f]{1,6})\s*\})|\\./g,
+    (m, h1, h2) =>
+      m === '\\\\' ? '\\' : String.fromCodePoint(parseInt(h1 || h2, 16))
   );
 }
 
