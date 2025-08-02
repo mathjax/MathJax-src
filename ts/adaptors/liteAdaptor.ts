@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { AbstractDOMAdaptor, minWorker } from '../core/DOMAdaptor.js';
+import { AbstractDOMAdaptor } from '../core/DOMAdaptor.js';
 import { NodeMixin, Constructor } from './NodeMixin.js';
 import { LiteDocument } from './lite/Document.js';
 import { LiteElement, LiteNode } from './lite/Element.js';
@@ -31,17 +31,6 @@ import { LiteWindow } from './lite/Window.js';
 import { LiteParser } from './lite/Parser.js';
 import { Styles } from '../util/Styles.js';
 import { OptionList } from '../util/Options.js';
-
-import { asyncLoad } from '../util/AsyncLoad.js';
-
-/**
- * A minimal worker thread interface
- */
-export interface WebWorker {
-  on(kind: string, listener: (event: Event) => void): void;
-  postMessage(msg: any): void;
-  terminate(): void;
-}
 
 /************************************************************/
 
@@ -710,36 +699,12 @@ export class LiteBase extends AbstractDOMAdaptor<
   }
 
   /**
+   * This will be overridden by the NodeMixin below.
+   *
    * @override
    */
-  public async createWorker(
-    listener: (event: any) => void,
-    options: OptionList
-  ): Promise<minWorker> {
-    const { Worker } = await asyncLoad('node:worker_threads');
-    class LiteWorker {
-      protected worker: WebWorker;
-      constructor(url: string, options: OptionList = {}) {
-        this.worker = new Worker(url, options);
-      }
-      addEventListener(kind: string, listener: (event: any) => void) {
-        this.worker.on(kind, listener);
-      }
-      postMessage(msg: any) {
-        this.worker.postMessage({ data: msg });
-      }
-      terminate() {
-        this.worker.terminate();
-      }
-    }
-    const { path, maps } = options;
-    const url = `${path}/${options.worker}`;
-    const worker = new LiteWorker(url, {
-      type: 'module',
-      workerData: { maps },
-    });
-    worker.addEventListener('message', listener);
-    return worker;
+  public async createWorker(): Promise<any> {
+    return null;
   }
 }
 
