@@ -19,6 +19,8 @@ import {src} from '#source/source.cjs';
 
 export const source = {
   'core': `${src}/core/core.js`,
+  'adaptors/jsdom': `${src}/adaptors/jsdom/jsdom.js`,
+  'adaptors/linkedom': `${src}/adaptors/linkedom/linkedom.js`,
   'adaptors/liteDOM': `${src}/adaptors/liteDOM/liteDOM.js`,
   'input/tex': `${src}/input/tex/tex.js`,
   'input/tex-base': `${src}/input/tex-base/tex-base.js`,
