@@ -5,7 +5,6 @@ import {hasWindow} from '#js/util/context.js';
 export const FONTPATH = hasWindow ?
                         'https://cdn.jsdelivr.net/npm/@mathjax/%%FONT%%-font':
                         '@mathjax/%%FONT%%-font';
-
 export const OutputUtil = {
   config(jax, jaxClass, defaultFont, fontClass) {
 
@@ -14,7 +13,7 @@ export const OutputUtil = {
       combineDefaults(MathJax.config, jax, MathJax.config.output || {});
 
       let config = MathJax.config[jax];
-      let font = config.font || defaultFont;
+      let font = config.font || config.fontData || defaultFont;
       if (typeof(font) !== 'string') {
         config.fontData = font;
         config.font = font = font.NAME;
@@ -30,7 +29,7 @@ export const OutputUtil = {
       }
       const name = font.substring(1, font.length - 1);
 
-      if (name !== defaultFont) {
+      if (name !== defaultFont || !fontClass) {
 
         MathJax.loader.addPackageData(`output/${jax}`, {extraLoads: [`${font}/${jax}`]});
 

@@ -84,13 +84,11 @@ const PLUGINS = function (js, dir, target, font, jax, name) {
   // Replace default font with the no-font file
   //
   if (!font) {
-    const jax = (name.match(/chtml|svg/) || ['chtml'])[0];
-    const nofont = path.resolve(DIRNAME, target, 'output', jax, 'nofont.js');
     plugins.push(
       new webpack.NormalModuleReplacementPlugin(
-        /DefaultFont.js/,
+        /-font\/.*?\/default\.js/,
         function (resource) {
-          resource.request = path.relative(resource.context, nofont).replace(/^([^.])/, './$1');
+          resource.request = resource.request.replace(/\/.*?\/default\.js/, '/nofont.js');
         }
       )
     );
