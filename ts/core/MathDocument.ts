@@ -935,37 +935,39 @@ export abstract class AbstractMathDocument<N, T, D>
    * @override
    */
   public whenReady(action: () => any): Promise<any> {
-    return (this._readyPromise = this._readyPromise.then(() => {
-      //
-      // Cache old _readyPromise and replace it with a resolved
-      // promise in case action() calls whenReady(), so we don't get
-      // a circular dependency where the action is waiting on itself.
-      //
-      const ready = this._readyPromise;
-      this._readyPromise = Promise.resolve();
-      //
-      // Do the action and save its result.
-      //
-      const result = action();
-      //
-      // Get a promise that returns the result after
-      // any new _readyPromise resolves (in case action
-      // called whenReady() or another function that does).
-      //
-      const promise = this._readyPromise.then(() => result);
-      //
-      // Put back the original promise.
-      //
-      this._readyPromise = ready;
-      //
-      // Return promise that returns the result.  The original
-      // _readyPromise will wait on it to complete before it resolves,
-      // since promises that return promises automatically chain.
-      // This inserts any new _readyPromise promises into the
-      // original _readyPromise chain at this point.
-      //
-      return promise;
-    }));
+    return (this._readyPromise = this._readyPromise
+      .catch((_) => {})
+      .then(() => {
+        //
+        // Cache old _readyPromise and replace it with a resolved
+        // promise in case action() calls whenReady(), so we don't get
+        // a circular dependency where the action is waiting on itself.
+        //
+        const ready = this._readyPromise;
+        this._readyPromise = Promise.resolve();
+        //
+        // Do the action and save its result.
+        //
+        const result = action();
+        //
+        // Get a promise that returns the result after
+        // any new _readyPromise resolves (in case action
+        // called whenReady() or another function that does).
+        //
+        const promise = this._readyPromise.then(() => result);
+        //
+        // Put back the original promise.
+        //
+        this._readyPromise = ready;
+        //
+        // Return promise that returns the result.  The original
+        // _readyPromise will wait on it to complete before it resolves,
+        // since promises that return promises automatically chain.
+        // This inserts any new _readyPromise promises into the
+        // original _readyPromise chain at this point.
+        //
+        return promise;
+      }));
   }
 
   /**
