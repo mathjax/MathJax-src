@@ -1,5 +1,0 @@
-{
-  "id": "[tex]/cases",
-  "component": "input/tex/extensions/cases",
-  "targets": ["input/tex/cases"]
-}

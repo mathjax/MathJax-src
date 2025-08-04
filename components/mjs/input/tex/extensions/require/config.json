@@ -1,0 +1,15 @@
+{
+  "build": {
+    "id": "[tex]/require",
+    "component": "input/tex/extensions/require",
+    "targets": ["input/tex/require"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/require",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib",
+      "components/src/startup/lib"
+    ]
+  }
+}

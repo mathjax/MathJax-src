@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Map: '\u2905',
     Mcy: '\u041C',
     MediumSpace: '\u205F',
@@ -51,5 +52,7 @@ Entities.add({
     models: '\u22A7',
     mp: '\u2213',
     mstpos: '\u223E',
-    mumap: '\u22B8'
-}, 'm');
+    mumap: '\u22B8',
+  },
+  'm'
+);

@@ -1,0 +1,19 @@
+{
+  "build": {
+    "component": "output/svg",
+    "targets": [
+      "output/svg.ts",
+      "output/svg",
+      "output/common.ts",
+      "output/common"
+    ]
+  },
+  "webpack": {
+    "name": "output/svg",
+    "libs": [
+      "components/src/core/lib",
+      "components/src/startup/lib"
+    ],
+    "font": false
+  }
+}

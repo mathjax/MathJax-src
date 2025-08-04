@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMalignmark node
+ * @file  Implements the MmlMalignmark node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlNode} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlNode } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,13 +30,12 @@ import {AbstractMmlNode} from '../MmlNode.js';
  */
 
 export class MmlMalignmark extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlNode.defaults,
-    edge: 'left'
+    edge: 'left',
   };
 
   /**
@@ -48,6 +47,7 @@ export class MmlMalignmark extends AbstractMmlNode {
 
   /**
    * No children allowed
+   *
    * @override
    */
   public get arity() {
@@ -56,10 +56,10 @@ export class MmlMalignmark extends AbstractMmlNode {
 
   /**
    * <malignmark> is space-like
+   *
    * @override
    */
   public get isSpacelike() {
     return true;
   }
-
 }

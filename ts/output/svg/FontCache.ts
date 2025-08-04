@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2022 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,17 +16,21 @@
  */
 
 /**
- * @fileoverview  Implements the FontCache object for SVG output
+ * @file  Implements the FontCache object for SVG output
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVG} from '../svg.js';
+import { SVG } from '../svg.js';
 
+/**
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class FontCache<N, T, D> {
-
   /**
-   * The SVG jax that owsn this cache
+   * The SVG jax that owns this cache
    */
   protected jax: SVG<N, T, D>;
 
@@ -63,13 +67,21 @@ export class FontCache<N, T, D> {
    * @param {string} variant   The variant name for the character
    * @param {string} C         The character to be cached
    * @param {string} path      The SVG path data for the character
-   * @return {string}          The id for the cached <path> element
+   * @returns {string}          The id for the cached <path> element
    */
   public cachePath(variant: string, C: string, path: string): string {
-    const id = 'MJX-' + this.localID + (this.jax.font.getVariant(variant).cacheID || '') + '-' + C;
+    const id =
+      'MJX-' +
+      this.localID +
+      (this.jax.font.getVariant(variant).cacheID || '') +
+      '-' +
+      C;
     if (!this.cache.has(id)) {
       this.cache.set(id, path);
-      this.jax.adaptor.append(this.defs, this.jax.svg('path', {id: id, d: path}));
+      this.jax.adaptor.append(
+        this.defs,
+        this.jax.svg('path', { id: id, d: path })
+      );
     }
     return id;
   }
@@ -84,6 +96,8 @@ export class FontCache<N, T, D> {
   /**
    * Use a localID (for font-specific caching), either with a specific string,
    * or from the nextID number.
+   *
+   * @param {string} id The prefix for the id
    */
   public useLocalID(id: string = null) {
     this.localID = (id == null ? ++this.nextID : id) + (id === '' ? '' : '-');
@@ -99,9 +113,10 @@ export class FontCache<N, T, D> {
 
   /**
    * Return the font cache <defs> element
+   *
+   * @returns {N} The definitions
    */
-  public getCache() {
+  public getCache(): N {
     return this.defs;
   }
-
 }

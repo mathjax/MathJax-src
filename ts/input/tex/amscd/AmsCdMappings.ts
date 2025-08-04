@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,24 +15,23 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Symbol mappings for the AMScd package.
+ * @file Token mappings for the AMScd package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as sm from '../SymbolMap.js';
+import * as tm from '../TokenMap.js';
 import ParseMethods from '../ParseMethods.js';
 import AmsCdMethods from './AmsCdMethods.js';
 
+new tm.EnvironmentMap('amscd_environment', ParseMethods.environment, {
+  CD: AmsCdMethods.CD,
+});
 
-new sm.EnvironmentMap('amscd_environment', ParseMethods.environment,
-                      {CD: 'CD'}, AmsCdMethods);
+new tm.CommandMap('amscd_macros', {
+  minCDarrowwidth: AmsCdMethods.minCDarrowwidth,
+  minCDarrowheight: AmsCdMethods.minCDarrowheight,
+});
 
-new sm.CommandMap('amscd_macros', {
-  minCDarrowwidth: 'minCDarrowwidth',
-  minCDarrowheight: 'minCDarrowheight',
-}, AmsCdMethods);
-
-new sm.MacroMap('amscd_special', {'@': 'arrow'}, AmsCdMethods);
+new tm.MacroMap('amscd_special', { '@': AmsCdMethods.arrow });

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2022 The MathJax Consortium
+ *  Copyright (c) 2009-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,34 +15,31 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Stack items for the physics package.
+ * @file Stack items for the physics package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
-import {CheckType, BaseItem, StackItem} from '../StackItem.js';
-import ParseUtil from '../ParseUtil.js';
+import { CheckType, BaseItem, StackItem } from '../StackItem.js';
+import { ParseUtil } from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
-import {AbstractMmlTokenNode} from '../../../core/MmlTree/MmlNode.js';
+import { AbstractMmlTokenNode } from '../../../core/MmlTree/MmlNode.js';
 
 export class AutoOpen extends BaseItem {
-
   /**
    * @override
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
-    'stop': ['ExtraOrMissingDelims', 'Extra open or missing close delimiter']
+    stop: ['ExtraOrMissingDelims', 'Extra open or missing close delimiter'],
   });
 
   /**
    * The number of unpaired open delimiters that need to be matched before
    *   a close delimiter will close this item. (#2831)
    */
-  protected openCount: number = 0;
+  public openCount: number = 0;
 
   /**
    * @override
@@ -51,7 +48,6 @@ export class AutoOpen extends BaseItem {
     return 'auto open';
   }
 
-
   /**
    * @override
    */
@@ -59,26 +55,35 @@ export class AutoOpen extends BaseItem {
     return true;
   }
 
-
   /**
    * @override
    */
-  public toMml() {
+  public toMml(inferred: boolean = true, forceRow?: boolean) {
+    if (!inferred) {
+      //
+      // When toMml() is being called from processing an \over item, we don't want to
+      // add the delimiters, so just do the super toMml() method. (Issue #3000)
+      //
+      return super.toMml(inferred, forceRow);
+    }
     // Smash and right/left
-    let parser = this.factory.configuration.parser;
-    let right = this.getProperty('right') as string;
+    const parser = this.factory.configuration.parser;
+    const right = this.getProperty('right') as string;
     if (this.getProperty('smash')) {
-      let mml = super.toMml();
-      const smash = parser.create('node', 'mpadded', [mml],
-                                  {height: 0, depth: 0});
+      const mml = super.toMml();
+      const smash = parser.create('node', 'mpadded', [mml], {
+        height: 0,
+        depth: 0,
+      });
       this.Clear();
       this.Push(parser.create('node', 'TeXAtom', [smash]));
     }
     if (right) {
-      this.Push(new TexParser(right, parser.stack.env,
-                              parser.configuration).mml());
+      this.Push(
+        new TexParser(right, parser.stack.env, parser.configuration).mml()
+      );
     }
-    let mml = ParseUtil.fenced(
+    const mml = ParseUtil.fenced(
       this.factory.configuration,
       this.getProperty('open') as string,
       super.toMml(),
@@ -94,27 +99,51 @@ export class AutoOpen extends BaseItem {
   }
 
   /**
+   * Test whether a fence is a closing one for this item,
+   * decrementing the open count if appropriate.
+   *
+   * @param {string} fence The fence character.
+   * @returns {boolean} True if the fence is the appropriate closing one.
+   */
+  public closing(fence: string): boolean {
+    return fence === this.getProperty('close') && !this.openCount--;
+  }
+
+  /**
    * @override
    */
   public checkItem(item: StackItem): CheckType {
     //
-    //  Check for nested open delimiters (#2831)
+    // If we are closing \over items, we are done
     //
-    if (item.isKind('mml') && item.Size() === 1) {
-      const mml = item.toMml();
-      if (mml.isKind('mo') && (mml as AbstractMmlTokenNode).getText() === this.getProperty('open')) {
-        this.openCount++;
-      }
+    if (item.getProperty('pre-autoclose')) {
+      return BaseItem.fail;
     }
-    let close = item.getProperty('autoclose');
-    if (close && close === this.getProperty('close') && !this.openCount--) {
+    //
+    // If this is the closing fence, produce the proper output
+    //
+    if (item.getProperty('autoclose')) {
       if (this.getProperty('ignore')) {
         this.Clear();
         return [[], true];
       }
       return [[this.toMml()], true];
     }
+    //
+    //  Check for nested open delimiters (#2831)
+    //
+    if (item.isKind('mml') && item.Size() === 1) {
+      const mml = item.toMml();
+      if (
+        mml.isKind('mo') &&
+        (mml as AbstractMmlTokenNode).getText() === this.getProperty('open')
+      ) {
+        this.openCount++;
+      }
+    }
+    //
+    // Do the default check
+    //
     return super.checkItem(item);
   }
-
 }

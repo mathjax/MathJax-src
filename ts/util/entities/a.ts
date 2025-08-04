@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     AElig: '\u00C6',
     AMP: '\u0026',
     Aacute: '\u00C1',
@@ -79,5 +80,7 @@ Entities.add({
     atilde: '\u00E3',
     auml: '\u00E4',
     awconint: '\u2233',
-    awint: '\u2A11'
-}, 'a');
+    awint: '\u2A11',
+  },
+  'a'
+);

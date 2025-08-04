@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Wcirc: '\u0174',
     wcirc: '\u0175',
     wedbar: '\u2A5F',
@@ -25,5 +26,7 @@ Entities.add({
     wedgeq: '\u2259',
     wp: '\u2118',
     wr: '\u2240',
-    wreath: '\u2240'
-}, 'w');
+    wreath: '\u2240',
+  },
+  'w'
+);

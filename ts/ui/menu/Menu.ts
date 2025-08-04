@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2022 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,42 +16,39 @@
  */
 
 /**
- * @fileoverview  Implements a subclass of ContextMenu specific to MathJax
+ * @file  Implements a subclass of ContextMenu specific to MathJax
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {mathjax} from '../../mathjax.js';
+import { mathjax } from '../../mathjax.js';
 
-import {MathItem, STATE} from '../../core/MathItem.js';
-import {OutputJax} from '../../core/OutputJax.js';
-import {MathJax as MJX} from '../../components/global.js';
-import {MathJaxObject as StartupObject} from '../../components/startup.js';
-import {MathJaxObject as LoaderObject} from '../../components/loader.js';
-import {OptionList, userOptions, defaultOptions, expandable} from '../../util/Options.js';
+import { MathItem, STATE } from '../../core/MathItem.js';
+import { OutputJax } from '../../core/OutputJax.js';
+import { MathJax as MJX } from '../../components/global.js';
+import { MathJaxObject as StartupObject } from '../../components/startup.js';
+import { MathJaxObject as LoaderObject } from '../../components/loader.js';
+import {
+  OptionList,
+  userOptions,
+  defaultOptions,
+  expandable,
+} from '../../util/Options.js';
+import { ExplorerMathItem } from '../../a11y/explorer.js';
 
-import {MJContextMenu} from './MJContextMenu.js';
-import {MmlVisitor} from './MmlVisitor.js';
-import {SelectableInfo} from './SelectableInfo.js';
-import {MenuMathDocument} from './MenuHandler.js';
+import { SVG } from '../../output/svg.js';
 
-import {Info} from 'mj-context-menu/js/info.js';
-import {Parser} from 'mj-context-menu/js/parse.js';
-import {Rule} from 'mj-context-menu/js/item_rule.js';
-import {CssStyles} from 'mj-context-menu/js/css_util.js';
-import {Submenu} from 'mj-context-menu/js/item_submenu.js';
+import * as AnnotationMenu from './AnnotationMenu.js';
+import { MJContextMenu } from './MJContextMenu.js';
+import { RadioCompare } from './RadioCompare.js';
+import { MmlVisitor } from './MmlVisitor.js';
+import { SelectableInfo } from './SelectableInfo.js';
+import { MenuMathDocument } from './MenuHandler.js';
+import * as MenuUtil from './MenuUtil.js';
 
-import Sre from '../../a11y/sre.js';
-
+import { Info, Parser, Rule, CssStyles, Submenu } from './mj-context-menu.js';
 
 /*==========================================================================*/
-
-/**
- * Declare the MathJax global and the navigator object (to check platform for MacOS)
- */
-declare namespace window {
-  const navigator: {platform: string};
-}
 
 /**
  * The global MathJax object
@@ -59,10 +56,9 @@ declare namespace window {
 const MathJax = MJX as StartupObject & LoaderObject;
 
 /**
- * True when platform is a Mac (so we can enable CMD menu item for zoom trigger)
+ * The XML indentifiaction string
  */
-const isMac = (typeof window !== 'undefined' &&
-               window.navigator && window.navigator.platform.substr(0, 3) === 'Mac');
+const XMLDECLARATION = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>';
 
 /*==========================================================================*/
 
@@ -70,6 +66,8 @@ const isMac = (typeof window !== 'undefined' &&
  * The various values that are stored in the menu
  */
 export interface MenuSettings {
+  showSRE: boolean;
+  showTex: boolean;
   texHints: boolean;
   semantics: boolean;
   zoom: string;
@@ -80,22 +78,25 @@ export interface MenuSettings {
   ctrl: boolean;
   shift: boolean;
   scale: string;
+  overflow: string;
+  breakInline: boolean;
   autocollapse: boolean;
   collapsible: boolean;
+  enrich: boolean;
   inTabOrder: boolean;
   assistiveMml: boolean;
   // A11y settings
   backgroundColor: string;
   backgroundOpacity: string;
   braille: boolean;
-  explorer: boolean;
+  brailleCode: string;
   foregroundColor: string;
   foregroundOpacity: string;
   highlight: string;
-  locale: string;
   infoPrefix: boolean;
   infoRole: boolean;
   infoType: boolean;
+  locale: string;
   magnification: string;
   magnify: string;
   speech: boolean;
@@ -103,9 +104,17 @@ export interface MenuSettings {
   subtitles: boolean;
   treeColoring: boolean;
   viewBraille: boolean;
+  voicing: boolean;
+  help: boolean;
+  roleDescription: string;
+  tabSelects: string;
 }
 
 export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
+
+export type JaxList = {
+  [name: string]: OutputJax<HTMLElement, Text, Document>;
+};
 
 /*==========================================================================*/
 
@@ -113,7 +122,6 @@ export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
  * The Menu object that handles the MathJax contextual menu and its actions
  */
 export class Menu {
-
   /**
    * The key for the localStorage for the menu settings
    */
@@ -125,6 +133,8 @@ export class Menu {
    */
   public static OPTIONS: OptionList = {
     settings: {
+      showSRE: false,
+      showTex: false,
       texHints: true,
       semantics: false,
       zoom: 'NoZoom',
@@ -135,24 +145,45 @@ export class Menu {
       ctrl: false,
       shift: false,
       scale: 1,
+      overflow: 'Scroll',
+      breakInline: true,
       autocollapse: false,
       collapsible: false,
+      enrich: true,
       inTabOrder: true,
-      assistiveMml: true,
-      explorer: false
+      assistiveMml: false,
+      speech: true,
+      braille: true,
+      brailleCode: 'nemeth',
+      speechRules: 'clearspeak-default',
+      roleDescription: 'math',
+      tabSelects: 'all',
     },
     jax: {
       CHTML: null,
-      SVG: null
+      SVG: null,
     },
     annotationTypes: expandable({
       TeX: ['TeX', 'LaTeX', 'application/x-tex'],
       StarMath: ['StarMath 5.0'],
       Maple: ['Maple'],
       ContentMathML: ['MathML-Content', 'application/mathml-content+xml'],
-      OpenMath: ['OpenMath']
-    })
+      OpenMath: ['OpenMath'],
+    }),
   };
+
+  /**
+   * The CSS to include in SVG images
+   */
+  public static SvgCss: string = [
+    'svg a{fill:blue;stroke:blue}',
+    '[data-mml-node="merror"]>g{fill:red;stroke:red}',
+    '[data-mml-node="merror"]>rect[data-background]{fill:yellow;stroke:none}',
+    '[data-frame],[data-line]{stroke-width:70px;fill:none}',
+    '.mjx-dashed{stroke-dasharray:140}',
+    '.mjx-dotted{stroke-linecap:round;stroke-dasharray:0,140}',
+    'use[data-c]{stroke-width:3px}',
+  ].join('');
 
   /**
    * The number of startup modules that are currently being loaded
@@ -172,11 +203,11 @@ export class Menu {
   /**
    * Function used to resolve the _loadingPromise
    */
-  protected static _loadingOK: Function = null;
+  protected static _loadingOK: () => void = null;
   /**
    * Function used to reject the _loadingPromise
    */
-  protected static _loadingFailed: Function = null;
+  protected static _loadingFailed: (err: Error) => void = null;
 
   /**
    * The options for this menu
@@ -199,6 +230,11 @@ export class Menu {
   public menu: MJContextMenu = null;
 
   /**
+   * The current element being explored
+   */
+  public current: HTMLElement = null;
+
+  /**
    * A MathML serializer that has options corresponding to the menu settings
    */
   public MmlVisitor = new MmlVisitor<HTMLElement, Text, Document>();
@@ -211,15 +247,20 @@ export class Menu {
   /**
    * Instances of the various output jax that we can switch to
    */
-  protected jax: {[name: string]: OutputJax<HTMLElement, Text, Document>} = {
+  protected jax: JaxList = {
     CHTML: null,
-    SVG: null
+    SVG: null,
   };
 
   /**
    * The minium initial state for pending rerender requests (so final rerender gets the right start)
    */
   protected rerenderStart: number = STATE.LAST;
+
+  /**
+   * List of font extensions that were loaded via \require
+   */
+  public requiredExtensions: string[] = [];
 
   /**
    * @returns {boolean}   true when the menu is loading some component
@@ -253,7 +294,9 @@ export class Menu {
     '<b style="font-size:120%;">MathJax</b> v' + mathjax.version,
     () => {
       const lines = [] as string[];
-      lines.push('Input Jax: ' + this.document.inputJax.map(jax => jax.name).join(', '));
+      lines.push(
+        'Input Jax: ' + this.document.inputJax.map((jax) => jax.name).join(', ')
+      );
       lines.push('Output Jax: ' + this.document.outputJax.name);
       lines.push('Document Type: ' + this.document.kind);
       return lines.join('<br/>');
@@ -270,36 +313,37 @@ export class Menu {
       return [
         '<p><b>MathJax</b> is a JavaScript library that allows page',
         ' authors to include mathematics within their web pages.',
-        ' As a reader, you don\'t need to do anything to make that happen.</p>',
+        " As a reader, you don't need to do anything to make that happen.</p>",
         '<p><b>Browsers</b>: MathJax works with all modern browsers including',
         ' Edge, Firefox, Chrome, Safari, Opera, and most mobile browsers.</p>',
         '<p><b>Math Menu</b>: MathJax adds a contextual menu to equations.',
         ' Right-click or CTRL-click on any mathematics to access the menu.</p>',
         '<div style="margin-left: 1em;">',
-        '<p><b>Show Math As:</b> These options allow you to view the formula\'s',
+        "<p><b>Show Math As:</b> These options allow you to view the formula's",
         ' source markup (as MathML or in its original format).</p>',
-        '<p><b>Copy to Clipboard:</b> These options copy the formula\'s source markup,',
+        "<p><b>Copy to Clipboard:</b> These options copy the formula's source markup,",
         ' as MathML or in its original format, to the clipboard',
         ' (in browsers that support that).</p>',
         '<p><b>Math Settings:</b> These give you control over features of MathJax,',
-        ' such the size of the mathematics, and the mechanism used',
-        ' to display equations.</p>',
+        ' such the size of the mathematics, the mechanism used to display equations,',
+        ' how to handle equations that are too wide, and the language to use for',
+        " MathJax's menus and error messages (not yet implemented in v4).",
+        '</p>',
         '<p><b>Accessibility</b>: MathJax can work with screen',
         ' readers to make mathematics accessible to the visually impaired.',
-        ' Turn on the explorer to enable generation of speech strings',
-        ' and the ability to investigate expressions interactively.</p>',
-        '<p><b>Language</b>: This menu lets you select the language used by MathJax',
-        ' for its menus and warning messages. (Not yet implemented in version 3.)</p>',
+        ' Turn on speech or braille generation to enable creation of speech strings',
+        ' and the ability to investigate expressions interactively.  You can control',
+        ' the style of the explorer in its menu.</p>',
         '</div>',
         '<p><b>Math Zoom</b>: If you are having difficulty reading an',
         ' equation, MathJax can enlarge it to help you see it better, or',
-        ' you can scall all the math on the page to make it larger.',
+        ' you can scale all the math on the page to make it larger.',
         ' Turn these features on in the <b>Math Settings</b> menu.</p>',
-        '<p><b>Preferences</b>: MathJax uses your browser\'s localStorage database',
+        "<p><b>Preferences</b>: MathJax uses your browser's localStorage database",
         ' to save the preferences set via this menu locally in your browser.  These',
         ' are not used to track you, and are not transferred or used remotely by',
-        ' MathJax in any way.</p>'
-      ]. join('\n');
+        ' MathJax in any way.</p>',
+      ].join('\n');
     },
     '<a href="https://www.mathjax.org">www.mathjax.org</a>'
   );
@@ -325,7 +369,11 @@ export class Menu {
     () => {
       if (!this.menu.mathItem) return '';
       const text = this.menu.mathItem.math;
-      return '<pre style="font-size:125%; margin:0">' + this.formatSource(text) + '</pre>';
+      return (
+        '<pre style="font-size:125%; margin:0">' +
+        this.formatSource(text) +
+        '</pre>'
+      );
     },
     ''
   );
@@ -333,12 +381,80 @@ export class Menu {
   /**
    * The "Show As Annotation" info box
    */
-  protected annotationText = new SelectableInfo(
+  protected annotationBox = new SelectableInfo(
     'MathJax Annotation Text',
     () => {
+      const text = AnnotationMenu.annotation;
+      return (
+        '<pre style="font-size:125%; margin:0">' +
+        this.formatSource(text) +
+        '</pre>'
+      );
+    },
+    ''
+  );
+
+  /**
+   * The "Show As SVG Image" info box
+   */
+  protected svgImage = new SelectableInfo(
+    'MathJax SVG Image',
+    () => {
+      //
+      // SVG image inserted after it is created
+      //
+      return (
+        '<div id="svg-image" style="font-family: monospace; font-size:125%; margin:0">' +
+        'Generative SVG Image...</div>'
+      );
+    },
+    ''
+  );
+
+  /**
+   * The "Show As Speech Text" info box
+   */
+  protected speechText = new SelectableInfo(
+    'MathJax Speech Text',
+    () => {
       if (!this.menu.mathItem) return '';
-      const text = this.menu.annotation;
-      return '<pre style="font-size:125%; margin:0">' + this.formatSource(text) + '</pre>';
+      return (
+        '<div style="font-size:125%; margin:0">' +
+        this.formatSource(this.menu.mathItem.outputData.speech) +
+        '</div>'
+      );
+    },
+    ''
+  );
+
+  /**
+   * The "Show As Speech Text" info box
+   */
+  protected brailleText = new SelectableInfo(
+    'MathJax Braille Code',
+    () => {
+      if (!this.menu.mathItem) return '';
+      return (
+        '<div style="font-size:125%; margin:0">' +
+        this.formatSource(this.menu.mathItem.outputData.braille) +
+        '</div>'
+      );
+    },
+    ''
+  );
+
+  /**
+   * The "Show As Error Message" info box
+   */
+  protected errorMessage = new SelectableInfo(
+    'MathJax Error Message',
+    () => {
+      if (!this.menu.mathItem) return '';
+      return (
+        '<pre style="font-size:125%; margin:0">' +
+        this.formatSource(this.menu.errorMsg) +
+        '</pre>'
+      );
     },
     ''
   );
@@ -350,13 +466,24 @@ export class Menu {
     'MathJax Zoomed Expression',
     () => {
       if (!this.menu.mathItem) return '';
-      const element = (this.menu.mathItem.typesetRoot as any).cloneNode(true) as HTMLElement;
+      const element = (this.menu.mathItem.typesetRoot as any).cloneNode(
+        true
+      ) as HTMLElement;
       element.style.margin = '0';
-      const scale = 1.25 * parseFloat(this.settings.zscale);  // 1.25 is to reverse the default 80% font-size
-      return '<div style="font-size: ' + scale + '%">' + element.outerHTML + '</div>';
+      const scale = 1.25 * parseFloat(this.settings.zscale); // 1.25 is to reverse the default 80% font-size
+      return (
+        '<div style="font-size: ' + scale + '%">' + element.outerHTML + '</div>'
+      );
     },
     ''
   );
+
+  protected postInfo(dialog: Info) {
+    if (this.menu.mathItem) {
+      this.menu.nofocus = !!this.menu.mathItem.outputData.nofocus;
+    }
+    dialog.post();
+  }
 
   /*======================================================================*/
 
@@ -370,7 +497,10 @@ export class Menu {
    */
   constructor(document: MenuMathDocument, options: OptionList = {}) {
     this.document = document;
-    this.options = userOptions(defaultOptions({}, (this.constructor as typeof Menu).OPTIONS), options);
+    this.options = userOptions(
+      defaultOptions({}, (this.constructor as typeof Menu).OPTIONS),
+      options
+    );
     this.initSettings();
     this.mergeUserSettings();
     this.initMenu();
@@ -386,184 +516,395 @@ export class Menu {
     const jax = this.document.outputJax;
     this.jax[jax.name] = jax;
     this.settings.renderer = jax.name;
-    if (MathJax._.a11y && MathJax._.a11y.explorer) {
-      Object.assign(this.settings, this.document.options.a11y);
-    }
     this.settings.scale = jax.options.scale;
-    this.defaultSettings = Object.assign({}, this.settings);
+    if (jax.options.displayOverflow) {
+      this.settings.overflow =
+        jax.options.displayOverflow.substring(0, 1).toUpperCase() +
+        jax.options.displayOverflow.substring(1).toLowerCase();
+    }
+    this.settings.breakInline = jax.options.linebreaks?.inline;
+    this.defaultSettings = Object.assign(
+      {},
+      this.document.options.a11y,
+      this.settings
+    );
+    this.setA11y({ roleDescription: this.settings.roleDescription });
   }
 
   /**
    * Create the menu object, attach the info boxes to it, and output any CSS needed for it
    */
   protected initMenu() {
-    let parser = new Parser([['contextMenu', MJContextMenu.fromJson.bind(MJContextMenu)]]);
+    const parser = new Parser([
+      ['contextMenu', MJContextMenu.fromJson.bind(MJContextMenu)],
+      ['radioCompare', RadioCompare.fromJson.bind(RadioCompare)],
+    ]);
     this.menu = parser.parse({
       type: 'contextMenu',
       id: 'MathJax_Menu',
       pool: [
+        this.variable<boolean>('showSRE'),
+        this.variable<boolean>('showTex'),
         this.variable<boolean>('texHints'),
         this.variable<boolean>('semantics'),
-        this.variable<string> ('zoom'),
-        this.variable<string> ('zscale'),
-        this.variable<string> ('renderer', jax => this.setRenderer(jax)),
+        this.variable<string>('zoom'),
+        this.variable<string>('zscale'),
+        this.variable<string>('renderer', (jax) => this.setRenderer(jax)),
+        this.variable<string>('overflow', (overflow) =>
+          this.setOverflow(overflow)
+        ),
+        this.variable<boolean>('breakInline', (breaks) =>
+          this.setInlineBreaks(breaks)
+        ),
         this.variable<boolean>('alt'),
         this.variable<boolean>('cmd'),
         this.variable<boolean>('ctrl'),
         this.variable<boolean>('shift'),
-        this.variable<string> ('scale', scale => this.setScale(scale)),
-        this.variable<boolean>('explorer', explore => this.setExplorer(explore)),
-        this.a11yVar<string> ('highlight'),
-        this.a11yVar<string> ('backgroundColor'),
-        this.a11yVar<string> ('backgroundOpacity'),
-        this.a11yVar<string> ('foregroundColor'),
-        this.a11yVar<string> ('foregroundOpacity'),
-        this.a11yVar<boolean>('speech'),
+        this.variable<string>('scale', (scale) => this.setScale(scale)),
+        this.a11yVar<boolean>('speech', (speech) => this.setSpeech(speech)),
+        this.a11yVar<boolean>('braille', (braille) => this.setBraille(braille)),
+        this.variable<string>('brailleCode', (code) =>
+          this.setBrailleCode(code)
+        ),
+        this.a11yVar<string>('highlight', (value) => this.setHighlight(value)),
+        this.a11yVar<string>('backgroundColor'),
+        this.a11yVar<string>('backgroundOpacity'),
+        this.a11yVar<string>('foregroundColor'),
+        this.a11yVar<string>('foregroundOpacity'),
         this.a11yVar<boolean>('subtitles'),
-        this.a11yVar<boolean>('braille'),
         this.a11yVar<boolean>('viewBraille'),
-        this.a11yVar<string>('locale', value => Sre.setupEngine({locale: value as string})),
-        this.a11yVar<string> ('speechRules', value => {
+        this.a11yVar<boolean>('voicing'),
+        this.a11yVar<string>('roleDescription', () =>
+          this.setRoleDescription()
+        ),
+        this.a11yVar<boolean>('help'),
+        this.a11yVar<string>('locale', (locale) => this.setLocale(locale)),
+        this.variable<string>('speechRules', (value) => {
           const [domain, style] = value.split('-');
           this.document.options.sre.domain = domain;
           this.document.options.sre.style = style;
+          this.rerender(STATE.COMPILED);
         }),
-        this.a11yVar<string> ('magnification'),
-        this.a11yVar<string> ('magnify'),
+        this.a11yVar<string>('magnification'),
+        this.a11yVar<string>('magnify'),
         this.a11yVar<boolean>('treeColoring'),
         this.a11yVar<boolean>('infoType'),
         this.a11yVar<boolean>('infoRole'),
         this.a11yVar<boolean>('infoPrefix'),
         this.variable<boolean>('autocollapse'),
-        this.variable<boolean>('collapsible', collapse => this.setCollapsible(collapse)),
-        this.variable<boolean>('inTabOrder', tab => this.setTabOrder(tab)),
-        this.variable<boolean>('assistiveMml', mml => this.setAssistiveMml(mml))
+        this.variable<boolean>('collapsible', (collapse) =>
+          this.setCollapsible(collapse)
+        ),
+        this.variable<boolean>('enrich', (enrich) =>
+          this.setEnrichment(enrich)
+        ),
+        this.variable<boolean>('inTabOrder', (tab) => this.setTabOrder(tab)),
+        this.a11yVar<string>('tabSelects'),
+        this.variable<boolean>('assistiveMml', (mml) =>
+          this.setAssistiveMml(mml)
+        ),
       ],
       items: [
         this.submenu('Show', 'Show Math As', [
-          this.command('MathMLcode', 'MathML Code', () => this.mathmlCode.post()),
-          this.command('Original', 'Original Form', () => this.originalText.post()),
-          this.submenu('Annotation', 'Annotation')
+          this.command('MathMLcode', 'MathML Code', () =>
+            this.postInfo(this.mathmlCode)
+          ),
+          this.command('Original', 'Original Form', () =>
+            this.postInfo(this.originalText)
+          ),
+          this.rule(),
+          this.command(
+            'Speech',
+            'Speech Text',
+            () => this.postInfo(this.speechText),
+            {
+              disabled: true,
+            }
+          ),
+          this.command(
+            'Braille',
+            'Braille Code',
+            () => this.postInfo(this.brailleText),
+            { disabled: true }
+          ),
+          this.command('SVG', 'SVG Image', () => this.postSvgImage(), {
+            disabled: true,
+          }),
+          this.submenu('ShowAnnotation', 'Annotation'),
+          this.rule(),
+          this.command(
+            'Error',
+            'Error Message',
+            () => this.postInfo(this.errorMessage),
+            { disabled: true }
+          ),
         ]),
         this.submenu('Copy', 'Copy to Clipboard', [
           this.command('MathMLcode', 'MathML Code', () => this.copyMathML()),
           this.command('Original', 'Original Form', () => this.copyOriginal()),
-          this.submenu('Annotation', 'Annotation')
+          this.rule(),
+          this.command('Speech', 'Speech Text', () => this.copySpeechText(), {
+            disabled: true,
+          }),
+          this.command(
+            'Braille',
+            'Braille Code',
+            () => this.copyBrailleText(),
+            { disabled: true }
+          ),
+          this.command('SVG', 'SVG Image', () => this.copySvgImage(), {
+            disabled: true,
+          }),
+          this.submenu('CopyAnnotation', 'Annotation'),
+          this.rule(),
+          this.command(
+            'Error',
+            'Error Message',
+            () => this.copyErrorMessage(),
+            { disabled: true }
+          ),
         ]),
         this.rule(),
         this.submenu('Settings', 'Math Settings', [
-          this.submenu('Renderer', 'Math Renderer', this.radioGroup('renderer', [['CHTML'], ['SVG']])),
+          this.submenu(
+            'Renderer',
+            'Math Renderer',
+            this.radioGroup('renderer', [['CHTML'], ['SVG']])
+          ),
+          this.submenu('Overflow', 'Wide Expressions', [
+            this.radioGroup('overflow', [
+              ['Overflow'],
+              ['Scroll'],
+              ['Linebreak'],
+              ['Scale'],
+              ['Truncate'],
+              ['Elide'],
+            ]),
+            this.rule(),
+            this.checkbox('BreakInline', 'Allow In-line Breaks', 'breakInline'),
+          ]),
+          this.rule(),
+          this.submenu('MathmlIncludes', 'MathML/SVG has', [
+            this.checkbox('showSRE', 'Semantic attributes', 'showSRE'),
+            this.checkbox('showTex', 'LaTeX attributes', 'showTex'),
+            this.checkbox('texHints', 'TeX hints', 'texHints'),
+            this.checkbox('semantics', 'Original as annotation', 'semantics'),
+          ]),
+          this.submenu('Language', 'Language'),
           this.rule(),
           this.submenu('ZoomTrigger', 'Zoom Trigger', [
-            this.command('ZoomNow', 'Zoom Once Now', () => this.zoom(null, '', this.menu.mathItem)),
+            this.command('ZoomNow', 'Zoom Once Now', () =>
+              this.zoom(null, '', this.menu.mathItem)
+            ),
             this.rule(),
             this.radioGroup('zoom', [
-              ['Click'], ['DoubleClick', 'Double-Click'], ['NoZoom', 'No Zoom']
+              ['Click'],
+              ['DoubleClick', 'Double-Click'],
+              ['NoZoom', 'No Zoom'],
             ]),
             this.rule(),
             this.label('TriggerRequires', 'Trigger Requires:'),
-            this.checkbox((isMac ? 'Option' : 'Alt'), (isMac ? 'Option' : 'Alt'), 'alt'),
-            this.checkbox('Command', 'Command', 'cmd', {hidden: !isMac}),
-            this.checkbox('Control', 'Control', 'ctrl', {hiddne: isMac}),
-            this.checkbox('Shift', 'Shift', 'shift')
+            this.checkbox(
+              MenuUtil.isMac ? 'Option' : 'Alt',
+              MenuUtil.isMac ? 'Option' : 'Alt',
+              'alt'
+            ),
+            this.checkbox('Command', 'Command', 'cmd', {
+              hidden: !MenuUtil.isMac,
+            }),
+            this.checkbox('Control', 'Control', 'ctrl', {
+              hiddne: MenuUtil.isMac,
+            }),
+            this.checkbox('Shift', 'Shift', 'shift'),
           ]),
-          this.submenu('ZoomFactor', 'Zoom Factor', this.radioGroup('zscale', [
-            ['150%'], ['175%'], ['200%'], ['250%'], ['300%'], ['400%']
-          ])),
+          this.submenu(
+            'ZoomFactor',
+            'Zoom Factor',
+            this.radioGroup('zscale', [
+              ['150%'],
+              ['175%'],
+              ['200%'],
+              ['250%'],
+              ['300%'],
+              ['400%'],
+            ])
+          ),
           this.rule(),
           this.command('Scale', 'Scale All Math...', () => this.scaleAllMath()),
           this.rule(),
-          this.checkbox('texHints', 'Add TeX hints to MathML', 'texHints'),
-          this.checkbox('semantics', 'Add original as annotation', 'semantics'),
-          this.rule(),
-          this.command('Reset', 'Reset to defaults', () => this.resetDefaults())
+          this.command('Reset', 'Reset to defaults', () =>
+            this.resetDefaults()
+          ),
         ]),
-        this.submenu('Accessibility', 'Accessibility', [
-          this.checkbox('Activate', 'Activate', 'explorer'),
-          this.submenu('Speech', 'Speech', [
-            this.checkbox('Speech', 'Speech Output', 'speech'),
-            this.checkbox('Subtitles', 'Speech Subtitles', 'subtitles'),
-            this.checkbox('Braille', 'Braille Output', 'braille'),
-            this.checkbox('View Braille', 'Braille Subtitles', 'viewBraille'),
-            this.rule(),
-            this.submenu('A11yLanguage', 'Language'),
-            this.rule(),
-            this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechRules', [
+        this.rule(),
+        this.label('Accessibility', '\xA0\xA0 Accessibility:'),
+        this.submenu('Speech', '\xA0 \xA0 Speech', [
+          this.checkbox('Generate', 'Generate', 'speech'),
+          this.checkbox('Subtitles', 'Show Subtitles', 'subtitles'),
+          this.checkbox('Auto Voicing', 'Auto Voicing', 'voicing'),
+          this.rule(),
+          this.label('Rules', 'Rules:'),
+          this.submenu(
+            'Mathspeak',
+            'Mathspeak',
+            this.radioGroup('speechRules', [
               ['mathspeak-default', 'Verbose'],
               ['mathspeak-brief', 'Brief'],
-              ['mathspeak-sbrief', 'Superbrief']
-            ])),
-            this.submenu('Clearspeak', 'Clearspeak Rules', this.radioGroup('speechRules', [
-              ['clearspeak-default', 'Auto']
-            ])),
-            this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechRules', [
-              ['chromevox-default', 'Standard'],
-              ['chromevox-alternative', 'Alternative']
-            ]))
+              ['mathspeak-sbrief', 'Superbrief'],
+            ])
+          ),
+          this.submenu(
+            'Clearspeak',
+            'Clearspeak',
+            this.radioGroup('speechRules', [['clearspeak-default', 'Auto']])
+          ),
+          this.rule(),
+          this.submenu('A11yLanguage', 'Language'),
+        ]),
+        this.submenu('Braille', '\xA0 \xA0 Braille', [
+          this.checkbox('Generate', 'Generate', 'braille'),
+          this.checkbox('Subtitles', 'Show Subtitles', 'viewBraille'),
+          this.rule(),
+          this.label('Code', 'Code Format:'),
+          this.radioGroup('brailleCode', [
+            ['nemeth', 'Nemeth'],
+            ['ueb', 'UEB'],
+            ['euro', 'Euro'],
           ]),
+        ]),
+        this.submenu('Explorer', '\xA0 \xA0 Explorer', [
           this.submenu('Highlight', 'Highlight', [
-            this.submenu('Background', 'Background', this.radioGroup('backgroundColor', [
-              ['Blue'], ['Red'], ['Green'], ['Yellow'], ['Cyan'], ['Magenta'], ['White'], ['Black']
-            ])),
-            {'type': 'slider',
-             'variable': 'backgroundOpacity',
-             'content': ' '
-            },
-            this.submenu('Foreground', 'Foreground', this.radioGroup('foregroundColor', [
-              ['Black'], ['White'], ['Magenta'], ['Cyan'], ['Yellow'], ['Green'], ['Red'], ['Blue']
-            ])),
-            {'type': 'slider',
-             'variable': 'foregroundOpacity',
-             'content': ' '
-            },
+            this.submenu(
+              'Background',
+              'Background',
+              this.radioGroup('backgroundColor', [
+                ['Blue'],
+                ['Red'],
+                ['Green'],
+                ['Yellow'],
+                ['Cyan'],
+                ['Magenta'],
+                ['White'],
+                ['Black'],
+              ])
+            ),
+            { type: 'slider', variable: 'backgroundOpacity', content: ' ' },
+            this.submenu(
+              'Foreground',
+              'Foreground',
+              this.radioGroup('foregroundColor', [
+                ['Black'],
+                ['White'],
+                ['Magenta'],
+                ['Cyan'],
+                ['Yellow'],
+                ['Green'],
+                ['Red'],
+                ['Blue'],
+              ])
+            ),
+            { type: 'slider', variable: 'foregroundOpacity', content: ' ' },
             this.rule(),
-            this.radioGroup('highlight', [
-              ['None'], ['Hover'], ['Flame']
-            ]),
+            this.radioGroup('highlight', [['None'], ['Hover'], ['Flame']]),
             this.rule(),
-            this.checkbox('TreeColoring', 'Tree Coloring', 'treeColoring')
+            this.checkbox('TreeColoring', 'Tree Coloring', 'treeColoring'),
           ]),
           this.submenu('Magnification', 'Magnification', [
             this.radioGroup('magnification', [
-              ['None'], ['Keyboard'], ['Mouse']
+              ['None'],
+              ['Keyboard'],
+              ['Mouse'],
             ]),
             this.rule(),
             this.radioGroup('magnify', [
-              ['200%'], ['300%'], ['400%'], ['500%']
-            ])
+              ['200%'],
+              ['300%'],
+              ['400%'],
+              ['500%'],
+            ]),
           ]),
           this.submenu('Semantic Info', 'Semantic Info', [
             this.checkbox('Type', 'Type', 'infoType'),
             this.checkbox('Role', 'Role', 'infoRole'),
-            this.checkbox('Prefix', 'Prefix', 'infoPrefix')
-          ], true),
+            this.checkbox('Prefix', 'Prefix', 'infoPrefix'),
+          ]),
           this.rule(),
+          this.submenu('Role Description', 'Describe math as', [
+            this.radioGroup('roleDescription', [
+              ['MathJax expression'],
+              ['MathJax'],
+              ['math'],
+              ['clickable math'],
+              ['explorable math'],
+              ['none'],
+            ]),
+          ]),
+          this.checkbox('Math Help', 'Help message on focus', 'help'),
+        ]),
+        this.submenu('Options', '\xA0 \xA0 Options', [
+          this.checkbox('Enrich', 'Semantic Enrichment', 'enrich'),
           this.checkbox('Collapsible', 'Collapsible Math', 'collapsible'),
-          this.checkbox('AutoCollapse', 'Auto Collapse', 'autocollapse', {disabled: true}),
+          this.checkbox('AutoCollapse', 'Auto Collapse', 'autocollapse', {
+            disabled: true,
+          }),
           this.rule(),
           this.checkbox('InTabOrder', 'Include in Tab Order', 'inTabOrder'),
-          this.checkbox('AssistiveMml', 'Include Hidden MathML', 'assistiveMml')
+          this.submenu('TabSelects', 'Tabbing Focuses on', [
+            this.radioGroup('tabSelects', [
+              ['all', 'Whole Expression'],
+              ['last', 'Last Explored Node'],
+            ]),
+          ]),
+          this.rule(),
+          this.checkbox(
+            'AssistiveMml',
+            'Include Hidden MathML',
+            'assistiveMml'
+          ),
         ]),
-        this.submenu('Language', 'Language'),
         this.rule(),
-        this.command('About', 'About MathJax', () => this.about.post()),
-        this.command('Help', 'MathJax Help', () => this.help.post())
-      ]
+        this.command('About', 'About MathJax', () => this.postInfo(this.about)),
+        this.command('Help', 'MathJax Help', () => this.postInfo(this.help)),
+      ],
     }) as MJContextMenu;
     const menu = this.menu;
+    menu.settings = this.settings;
+    menu.findID('Settings', 'Overflow', 'Elide').disable();
+    menu.findID('Braille', 'ueb').hide();
+    menu.setJax(this.jax);
+    this.attachDialogMenus(menu);
+    this.checkLoadableItems();
+    const cache: [string, string][] = [];
+    MJContextMenu.DynamicSubmenus.set('ShowAnnotation', [
+      AnnotationMenu.showAnnotations(
+        this.annotationBox,
+        this.options.annotationTypes,
+        cache
+      ),
+      '',
+    ]);
+    MJContextMenu.DynamicSubmenus.set('CopyAnnotation', [
+      AnnotationMenu.copyAnnotations(cache),
+      '',
+    ]);
+    CssStyles.addInfoStyles(this.document.document as any);
+    CssStyles.addMenuStyles(this.document.document as any);
+  }
+
+  /**
+   * @param {MJContextMenu} menu   The menu to attach
+   */
+  protected attachDialogMenus(menu: MJContextMenu) {
     this.about.attachMenu(menu);
     this.help.attachMenu(menu);
     this.originalText.attachMenu(menu);
-    this.annotationText.attachMenu(menu);
     this.mathmlCode.attachMenu(menu);
+    this.originalText.attachMenu(menu);
+    this.svgImage.attachMenu(menu);
+    this.speechText.attachMenu(menu);
+    this.brailleText.attachMenu(menu);
+    this.errorMessage.attachMenu(menu);
     this.zoomBox.attachMenu(menu);
-    this.checkLoadableItems();
-    this.enableExplorerItems(this.settings.explorer);
-    menu.showAnnotation = this.annotationText;
-    menu.copyAnnotation = this.copyAnnotation.bind(this);
-    menu.annotationTypes = this.options.annotationTypes;
-    CssStyles.addInfoStyles(this.document.document as any);
-    CssStyles.addMenuStyles(this.document.document as any);
   }
 
   /**
@@ -574,13 +915,20 @@ export class Menu {
    */
   protected checkLoadableItems() {
     if (MathJax && MathJax._ && MathJax.loader && MathJax.startup) {
-      if (this.settings.collapsible && (!MathJax._.a11y || !MathJax._.a11y.complexity)) {
-        this.loadA11y('complexity');
-      }
-      if (this.settings.explorer && (!MathJax._.a11y || !MathJax._.a11y.explorer)) {
+      const settings = this.settings;
+      const options = this.document.options;
+      if (
+        (settings.enrich ||
+          (settings.speech && options.enableSpeech) ||
+          (settings.braille && options.enableBraille)) &&
+        !MathJax._?.a11y?.explorer
+      ) {
         this.loadA11y('explorer');
       }
-      if (this.settings.assistiveMml && (!MathJax._.a11y || !MathJax._.a11y['assistive-mml'])) {
+      if (settings.collapsible && !MathJax._?.a11y?.complexity) {
+        this.loadA11y('complexity');
+      }
+      if (settings.assistiveMml && !MathJax._?.a11y?.['assistive-mml']) {
         this.loadA11y('assistive-mml');
       }
     } else {
@@ -590,24 +938,30 @@ export class Menu {
           menu.findID('Settings', 'Renderer', name).disable();
         }
       }
-      menu.findID('Accessibility', 'Activate').disable();
-      menu.findID('Accessibility', 'AutoCollapse').disable();
-      menu.findID('Accessibility', 'Collapsible').disable();
+      menu.findID('Speech').disable();
+      menu.findID('Braille').disable();
+      menu.findID('Explorer').disable();
+      menu.findID('Options', 'AutoCollapse').disable();
+      menu.findID('Options', 'Collapsible').disable();
+      menu.findID('Options', 'Enrich').disable();
+      menu.findID('Options', 'AssistiveMml').disable();
     }
   }
 
   /**
-   * Enable/disable the Explorer submenu items
+   * Enable/disable an assistive submenu's items
    *
+   * @param {string} name The name of the item
    * @param {boolean} enable  True to enable, false to disable
    */
-  protected enableExplorerItems(enable: boolean) {
-    const menu = (this.menu.findID('Accessibility', 'Activate') as Submenu).menu;
+  protected enableAccessibilityItems(name: string, enable: boolean) {
+    const menu = (this.menu.findID(name) as Submenu).submenu;
     for (const item of menu.items.slice(1)) {
-      if (item instanceof Rule) break;
-      enable ? item.enable() : item.disable();
+      if (item instanceof Rule) continue;
+      enable && (!(item instanceof Submenu) || item.submenu.items.length)
+        ? item.enable()
+        : item.disable();
     }
-
   }
 
   /*======================================================================*/
@@ -630,7 +984,7 @@ export class Menu {
    * Save any non-default menu settings in localStorage
    */
   protected saveUserSettings() {
-    const settings = {} as {[key: string]: any};
+    const settings = {} as { [key: string]: any };
     for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
       if (this.settings[name] !== this.defaultSettings[name]) {
         settings[name] = this.settings[name];
@@ -649,28 +1003,29 @@ export class Menu {
 
   /**
    * Merge menu settings into the a11y document options.
-   * @param {[key: string]: any} options The options.
+   *
+   * @param {{[key: string]: any}} options The options.
    */
-  protected setA11y(options: {[key: string]: any}) {
-    if (MathJax._.a11y && MathJax._.a11y.explorer) {
+  protected setA11y(options: { [key: string]: any }) {
+    if (MathJax._?.a11y?.explorer) {
       MathJax._.a11y.explorer_ts.setA11yOptions(this.document, options);
     }
   }
 
   /**
    * Get the the value of an a11y option
+   *
    * @param {string} option   The name of the ptions to get
-   * @return {any}            The value of the option
+   * @returns {any}            The value of the option
    */
   protected getA11y(option: string): any {
-    if (MathJax._.a11y && MathJax._.a11y.explorer) {
+    if (MathJax._?.a11y?.explorer) {
       if (this.document.options.a11y[option] !== undefined) {
         return this.document.options.a11y[option];
       }
       return this.document.options.sre[option];
     }
   }
-
 
   /*======================================================================*/
 
@@ -679,10 +1034,48 @@ export class Menu {
    */
   protected applySettings() {
     this.setTabOrder(this.settings.inTabOrder);
-    this.document.options.enableAssistiveMml = this.settings.assistiveMml;
-    this.document.outputJax.options.scale = parseFloat(this.settings.scale);
-    if (this.settings.renderer !== this.defaultSettings.renderer) {
-      this.setRenderer(this.settings.renderer);
+    const options = this.document.options;
+    options.enableAssistiveMml = this.settings.assistiveMml;
+    this.enableAccessibilityItems('Speech', this.settings.speech);
+    this.enableAccessibilityItems('Braille', this.settings.braille);
+    this.setAccessibilityMenus();
+    const renderer =
+      this.settings.renderer.replace(/[^a-zA-Z0-9]/g, '') || 'CHTML';
+    (Menu._loadingPromise || Promise.resolve()).then(() => {
+      const settings = this.settings;
+      const options = this.document.outputJax.options;
+      options.scale = parseFloat(settings.scale);
+      options.displayOverflow = settings.overflow.toLowerCase();
+      if (options.linebreaks) {
+        options.linebreaks.inline = settings.breakInline;
+      }
+      if (!settings.speechRules) {
+        const sre = this.document.options.sre;
+        settings.speechRules = `${sre.domain || 'clearspeak'}-${sre.style || 'default'}`;
+      }
+      if (renderer !== this.defaultSettings.renderer) {
+        this.document.whenReady(() => this.setRenderer(renderer, false));
+      }
+    });
+  }
+
+  /**
+   * @param {string} overflow   The new overflow value
+   */
+  protected setOverflow(overflow: string) {
+    this.document.outputJax.options.displayOverflow = overflow.toLowerCase();
+    if (!Menu.loading) {
+      this.document.rerenderPromise();
+    }
+  }
+
+  /**
+   * @param {boolean} breaks   The new in-line break value
+   */
+  protected setInlineBreaks(breaks: boolean) {
+    this.document.outputJax.options.linebreaks.inline = breaks;
+    if (!Menu.loading) {
+      this.document.rerenderPromise();
     }
   }
 
@@ -691,46 +1084,93 @@ export class Menu {
    */
   protected setScale(scale: string) {
     this.document.outputJax.options.scale = parseFloat(scale);
-    this.document.rerender();
+    if (!Menu.loading) {
+      this.document.rerenderPromise();
+    }
   }
 
   /**
    * If the jax is already on record, just use it, otherwise load the new one
    *
-   * @param {string} jax   The name of the jax to switch to
+   * @param {string} jax         The name of the jax to switch to
+   * @param {boolean} rerender   True if the document should be rerendered
+   * @returns {Promise}           A promise that is resolved when the renderer is set
+   *                               and rerendering complete
    */
-  protected setRenderer(jax: string) {
-    if (this.jax[jax]) {
-      this.setOutputJax(jax);
-    } else {
-      const name = jax.toLowerCase();
+  protected setRenderer(jax: string, rerender: boolean = true): Promise<void> {
+    if (Object.hasOwn(this.jax, jax) && this.jax[jax]) {
+      return this.setOutputJax(jax, rerender);
+    }
+    const name = jax.toLowerCase();
+    return new Promise<void>((ok, fail) => {
       this.loadComponent('output/' + name, () => {
         const startup = MathJax.startup;
-        if (name in startup.constructors) {
-          startup.useOutput(name, true);
-          startup.output = startup.getOutputJax();
-          this.jax[jax] = startup.output;
-          this.setOutputJax(jax);
+        if (!(name in startup.constructors)) {
+          return fail(new Error(`Component ${name} not loaded`));
         }
+        startup.useOutput(name, true);
+        startup.output = startup.getOutputJax();
+        startup.output.setAdaptor(this.document.adaptor);
+        startup.output.initialize();
+        this.jax[jax] = startup.output;
+        this.setOutputJax(jax, rerender)
+          .then(() => ok())
+          .catch((err) => fail(err));
       });
-    }
+    });
   }
 
   /**
-   * Set up the new jax and link it to the document, then rerender the math
+   * Set up the new jax and link it to the document,
+   * load any needed extensions, and then rerender the math, if needed
    *
-   * @param {string} jax   The name of the jax to switch to
+   * @param {string} jax         The name of the jax to switch to
+   * @param {boolean} rerender   True if the document should be rerendered
+   * @returns {Promise}           A promise that is resolved when the renderer is set
+   *                               and rerendering complete
    */
-  protected setOutputJax(jax: string) {
+  protected setOutputJax(jax: string, rerender: boolean = true): Promise<void> {
     this.jax[jax].setAdaptor(this.document.adaptor);
     this.document.outputJax = this.jax[jax];
-    this.rerender();
+    const promise = this.loadRequiredExtensions();
+    return rerender
+      ? promise.then(() => mathjax.handleRetriesFor(() => this.rerender()))
+      : promise.then(() => {});
+  }
+
+  /**
+   * Load the required extensions into the new output jax
+   *
+   * @returns {Promise} The promise combining all loading promises
+   */
+  protected loadRequiredExtensions(): Promise<string[]> {
+    const jax = this.document.outputJax.name.toLowerCase();
+    const promises = [];
+    for (const path of this.requiredExtensions) {
+      promises.push(MathJax.loader.load(`[${path}]/${jax}`));
+    }
+    this.requiredExtensions = [];
+    return Promise.all(promises);
+  }
+
+  /**
+   * Add extensions that need to be loaded when the renderer changes
+   *
+   * @param {string[]} extensions The list of extensions
+   */
+  public addRequiredExtensions(extensions: string[]) {
+    if (extensions) {
+      const set = new Set<string>([...this.requiredExtensions, ...extensions]);
+      this.requiredExtensions = [...set];
+    }
   }
 
   /**
    * @param {boolean} tab   True for including math in the tab order, false for not
    */
   protected setTabOrder(tab: boolean) {
+    const menu = this.menu.findID('Options', 'TabSelects');
+    tab ? menu.enable() : menu.disable();
     this.menu.store.inTaborder(tab);
   }
 
@@ -739,7 +1179,7 @@ export class Menu {
    */
   protected setAssistiveMml(mml: boolean) {
     this.document.options.enableAssistiveMml = mml;
-    if (!mml || (MathJax._.a11y && MathJax._.a11y['assistive-mml'])) {
+    if (!mml || MathJax._?.a11y?.['assistive-mml']) {
       this.rerender();
     } else {
       this.loadA11y('assistive-mml');
@@ -747,13 +1187,82 @@ export class Menu {
   }
 
   /**
-   * @param {boolean} explore   True to enable the explorer, false to not
+   * Enable/disable assistive menus based on enrichment setting
    */
-  protected setExplorer(explore: boolean) {
-    this.enableExplorerItems(explore);
-    this.document.options.enableExplorer = explore;
-    if (!explore || (MathJax._.a11y && MathJax._.a11y.explorer)) {
-      this.rerender(this.settings.collapsible ? STATE.RERENDER : STATE.COMPILED);
+  protected setAccessibilityMenus() {
+    const enable = this.settings.enrich;
+    const method = enable ? 'enable' : 'disable';
+    ['Speech', 'Braille', 'Explorer'].forEach((id) =>
+      this.menu.findID(id)[method]()
+    );
+    const options = this.document.options;
+    options.enableSpeech =
+      options.enableBraille =
+      options.enableExplorer =
+        enable;
+    if (!enable) {
+      this.settings.collapsible = false;
+      this.document.options.enableCollapsible = false;
+    }
+  }
+
+  /**
+   * @param {boolean} speech   True to enable speech, false to not
+   */
+  protected setSpeech(speech: boolean) {
+    this.enableAccessibilityItems('Speech', speech);
+    this.document.options.enableSpeech = speech;
+    if (!speech || MathJax._?.a11y?.explorer) {
+      this.rerender(STATE.COMPILED);
+    } else {
+      this.loadA11y('explorer');
+    }
+  }
+
+  /**
+   * @param {boolean} braille   True to enable braille, false to not
+   */
+  protected setBraille(braille: boolean) {
+    this.enableAccessibilityItems('Braille', braille);
+    this.document.options.enableBraille = braille;
+    if (!braille || MathJax._?.a11y?.explorer) {
+      this.rerender(STATE.COMPILED);
+    } else {
+      this.loadA11y('explorer');
+    }
+  }
+
+  /**
+   * @param {string} code  The Braille code format (nemeth or euro)
+   */
+  protected setBrailleCode(code: string) {
+    this.document.options.sre.braille = code;
+    this.rerender(STATE.COMPILED);
+  }
+
+  /**
+   * @param {string} locale  The speech locale
+   */
+  protected setLocale(locale: string) {
+    this.document.options.sre.locale = locale;
+    this.rerender(STATE.COMPILED);
+  }
+
+  /**
+   * Rerender when the role description changes
+   */
+  protected setRoleDescription() {
+    this.rerender(STATE.COMPILED);
+  }
+
+  /**
+   * @param {boolean} enrich   True to enable enriched math, false to not
+   */
+  protected setEnrichment(enrich: boolean) {
+    this.document.options.enableEnrichment = enrich;
+    this.setAccessibilityMenus();
+    if (!enrich || MathJax._?.a11y?.explorer) {
+      this.rerender(STATE.COMPILED);
     } else {
       this.loadA11y('explorer');
     }
@@ -764,10 +1273,38 @@ export class Menu {
    */
   protected setCollapsible(collapse: boolean) {
     this.document.options.enableComplexity = collapse;
-    if (!collapse || (MathJax._.a11y && MathJax._.a11y.complexity)) {
+    if (collapse && !this.settings.enrich) {
+      this.settings.enrich = this.document.options.enableEnrichment = true;
+      this.setAccessibilityMenus();
+    }
+    if (!collapse) {
+      this.menu.pool.lookup('highlight').setValue('None');
+    }
+    if (!collapse || MathJax._?.a11y?.complexity) {
       this.rerender(STATE.COMPILED);
     } else {
       this.loadA11y('complexity');
+      if (!MathJax._?.a11y?.explorer) {
+        this.loadA11y('explorer');
+      }
+    }
+  }
+
+  /**
+   * @param {string} value   The value that highlighting should have
+   */
+  protected setHighlight(value: string) {
+    if (value === 'None') return;
+    if (!this.settings.collapsible) {
+      //
+      //  Turn on collapsible math if it isn't already
+      //
+      const variable = this.menu.pool.lookup('collapsible');
+      variable.setValue(true);
+      (variable as any).items[0]?.executeCallbacks_?.();
+    }
+    if (!Menu.loadingPromises.has('a11y/complexity')) {
+      this.rerender(STATE.COMPILED);
     }
   }
 
@@ -775,8 +1312,18 @@ export class Menu {
    * Request the scaling value from the user and save it in the settings
    */
   protected scaleAllMath() {
-    const scale = (parseFloat(this.settings.scale) * 100).toFixed(1).replace(/.0$/, '');
-    const percent = prompt('Scale all mathematics (compared to surrounding text) by', scale + '%');
+    const scale = (parseFloat(this.settings.scale) * 100)
+      .toFixed(1)
+      .replace(/.0$/, '');
+    const percent = prompt(
+      'Scale all mathematics (compared to surrounding text) by',
+      scale + '%'
+    );
+    if (this.current) {
+      const speech = (this.menu.mathItem as ExplorerMathItem).explorers.speech;
+      speech.refocus = this.current;
+      speech.focus();
+    }
     if (percent) {
       if (percent.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
         const scale = parseFloat(percent) / 100;
@@ -795,18 +1342,20 @@ export class Menu {
    * Reset all menu settings to the (page) defaults
    */
   protected resetDefaults() {
-    Menu.loading++;    // pretend we're loading, to suppress rerendering for each variable change
+    Menu.loading++; // pretend we're loading, to suppress rerendering for each variable change
     const pool = this.menu.pool;
     const settings = this.defaultSettings;
-    for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
+    for (const name of Object.keys(settings) as (keyof MenuSettings)[]) {
       const variable = pool.lookup(name);
       if (variable) {
-        variable.setValue(settings[name] as (string | boolean));
-        const item = (variable as any).items[0];
-        if (item) {
-          item.executeCallbacks_();
+        if (variable.getValue() !== settings[name]) {
+          variable.setValue(settings[name] as string | boolean);
+          const item = (variable as any).items[0];
+          if (item) {
+            item.executeCallbacks_();
+          }
         }
-      } else {
+      } else if (Object.hasOwn(this.settings, name)) {
         (this.settings as any)[name] = settings[name];
       }
     }
@@ -830,28 +1379,34 @@ export class Menu {
 
   /**
    * Attempt to load a component and perform a callback when done
+   *
+   * @param {string} name The name of the component to load
+   * @param {() => void} callback The callback for after loading
    */
   protected loadComponent(name: string, callback: () => void) {
     if (Menu.loadingPromises.has(name)) return;
     const loader = MathJax.loader;
     if (!loader) return;
     Menu.loading++;
-    const promise = loader.load(name).then(() => {
-      Menu.loading--;
-      Menu.loadingPromises.delete(name);
-      callback();
-      if (Menu.loading === 0 && Menu._loadingPromise) {
-        Menu._loadingPromise = null;
-        Menu._loadingOK();
-      }
-    }).catch((err) => {
-      if (Menu._loadingPromise) {
-        Menu._loadingPromise = null;
-        Menu._loadingFailed(err);
-      } else {
-        console.log(err);
-      }
-    });
+    const promise = loader
+      .load(name)
+      .then(() => {
+        Menu.loading--;
+        Menu.loadingPromises.delete(name);
+        if (Menu.loading === 0 && Menu._loadingPromise) {
+          Menu._loadingPromise = null;
+          Menu._loadingOK();
+        }
+        callback();
+      })
+      .catch((err) => {
+        if (Menu._loadingPromise) {
+          Menu._loadingPromise = null;
+          Menu._loadingFailed(err);
+        } else {
+          console.log(err);
+        }
+      });
     Menu.loadingPromises.set(name, promise);
   }
 
@@ -879,27 +1434,43 @@ export class Menu {
       //
       const document = this.document;
       this.document = startup.document = startup.getDocument();
+      this.document.processed = document.processed;
       this.document.menu = this;
+      if (document.webworker) {
+        this.document.webworker = document.webworker;
+      }
+      this.setA11y(this.settings);
+      this.defaultSettings = Object.assign(
+        {},
+        this.document.options.a11y,
+        MathJax.config?.options?.a11y || {},
+        this.defaultSettings
+      );
       this.document.outputJax.reset();
       this.transferMathList(document);
       this.document.processed = document.processed;
       if (!Menu._loadingPromise) {
         this.document.outputJax.reset();
-        this.rerender(component === 'complexity' || noEnrich ? STATE.COMPILED : STATE.TYPESET);
+        mathjax.handleRetriesFor(() => {
+          this.rerender(
+            component === 'complexity' || noEnrich
+              ? STATE.COMPILED
+              : STATE.TYPESET
+          );
+        });
       }
     });
   }
-
 
   /**
    * @param {MenuMathDocument} document  The original document whose list is to be transferred
    */
   protected transferMathList(document: MenuMathDocument) {
-    const MathItem = this.document.options.MathItem;  // This has been updated by the new handler
+    const MathItem = this.document.options.MathItem; // This has been updated by the new handler
     for (const item of document.math) {
-      const math = new MathItem();    // Make a new MathItem
-      Object.assign(math, item);      // Copy the old data to the new math item
-      this.document.math.push(math);  // Add it to the current document
+      const math = new MathItem(); // Make a new MathItem
+      Object.assign(math, item); // Copy the old data to the new math item
+      this.document.math.push(math); // Add it to the current document
     }
   }
 
@@ -908,17 +1479,128 @@ export class Menu {
    * @returns {string}      The text with HTML specials being escaped
    */
   protected formatSource(text: string): string {
-    return text.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return text
+      .trim()
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   }
 
   /**
    * @param {HTMLMATHITEM} math   The MathItem to serialize as MathML
-   * @returns {string}        The serialized version of the internal MathML
+   * @returns {string}            The serialized version of the internal MathML
    */
   protected toMML(math: HTMLMATHITEM): string {
     return this.MmlVisitor.visitTree(math.root, math, {
+      filterSRE: !this.settings.showSRE,
+      filterTex: !this.settings.showTex,
       texHints: this.settings.texHints,
-      semantics: (this.settings.semantics && math.inputJax.name !== 'MathML')
+      semantics: this.settings.semantics && math.inputJax.name !== 'MathML',
+    });
+  }
+
+  /**
+   * @param {HTMLMATHITEM} math   The MathItem to serialize as SVG
+   * @returns {Promise<string>}   A promise returning the serialized SVG
+   */
+  protected toSVG(math: HTMLMATHITEM): Promise<string> {
+    const jax = this.jax.SVG;
+    if (!jax)
+      return Promise.resolve(
+        "SVG can't be produced.<br>Try switching to SVG output first."
+      );
+    const adaptor = jax.adaptor;
+    const cache = jax.options.fontCache;
+    const breaks = !!math.root.getProperty('process-breaks');
+    if (
+      cache !== 'global' &&
+      (math.display || !breaks) &&
+      adaptor.getAttribute(math.typesetRoot, 'jax') === 'SVG'
+    ) {
+      for (const child of adaptor.childNodes(math.typesetRoot)) {
+        if (adaptor.kind(child) === 'svg') {
+          return Promise.resolve(
+            this.formatSvg(adaptor.serializeXML(child as HTMLElement))
+          );
+        }
+      }
+    }
+    return this.typesetSVG(math, cache, breaks);
+  }
+
+  /**
+   * @param {HTMLMATHITEM} math   The MathItem to serialize as SVG
+   * @param {string} cache        The SVG font cache type
+   * @param {boolean} breaks      True if there are inline breaks
+   * @returns {Promise<string>}   A promise returning the serialized SVG
+   */
+  protected async typesetSVG(
+    math: HTMLMATHITEM,
+    cache: string,
+    breaks: boolean
+  ): Promise<string> {
+    const jax = this.jax.SVG as SVG<HTMLElement, Text, Document>;
+    const div = jax.html('div');
+    if (cache === 'global') {
+      jax.options.fontCache = 'local';
+    }
+    const root = math.root;
+    math.root = root.copy(true);
+    math.root.setInheritedAttributes({}, math.display, 0, false);
+    if (breaks) {
+      jax.unmarkInlineBreaks(math.root);
+      math.root.setProperty('inlineMarked', false);
+    }
+    const promise = mathjax.handleRetriesFor(() => {
+      jax.toDOM(math, div, jax.document);
+    });
+    return promise.then(() => {
+      math.root = root;
+      jax.options.fontCache = cache;
+      return this.formatSvg(jax.adaptor.innerHTML(div));
+    });
+  }
+
+  /**
+   * @param {string} svg   The serialzied SVG to adjust
+   * @returns {string} The adjusted SVG string
+   */
+  protected formatSvg(svg: string): string {
+    const css = (this.constructor as typeof Menu).SvgCss;
+    svg = svg.match(/^<svg.*?><defs>/)
+      ? svg.replace(/<defs>/, `<defs><style>${css}</style>`)
+      : svg.replace(/^(<svg.*?>)/, `$1<defs><style>${css}</style></defs>`);
+    svg = svg
+      .replace(/ (?:role|focusable)=".*?"/g, '')
+      .replace(/"currentColor"/g, '"black"');
+    if (!this.settings.showSRE) {
+      svg = svg.replace(
+        / (?:data-semantic-.*?|data-speech-node|role|aria-(?:level|posinset|setsize|owns))=".*?"/g,
+        ''
+      );
+    }
+    if (!this.settings.showTex) {
+      svg = svg.replace(/ data-latex(?:-item)?=".*?"/g, '');
+    }
+    if (!this.settings.texHints) {
+      svg = svg
+        .replace(
+          / data-mjx-(?:texclass|alternate|variant|pseudoscript|smallmatrix|mathaccent|auto-op|script-align|vbox)=".*?"/g,
+          ''
+        )
+        .replace(/ data-mml-node="TeXAtom"/g, '');
+    }
+    return `${XMLDECLARATION}\n${svg}`;
+  }
+
+  /**
+   * Get the SVG image and post it
+   */
+  public postSvgImage() {
+    this.postInfo(this.svgImage);
+    this.toSVG(this.menu.mathItem).then((svg) => {
+      const html = this.svgImage.html.querySelector('#svg-image');
+      html.innerHTML = this.formatSource(svg).replace(/\n/g, '<br>');
     });
   }
 
@@ -940,37 +1622,42 @@ export class Menu {
         //
         this.menu.post(event);
       }
-      this.zoomBox.post();
+      this.postInfo(this.zoomBox);
     }
   }
 
   /**
-   * @param {MouseEvent} Event   The event triggering the zoom action
+   * @param {MouseEvent} event   The event triggering the zoom action
    * @param {string} zoom        The type of event (click, dblclick) that occurred
    * @returns {boolean}          True if the event is the right type and has the needed modifiers
    */
   protected isZoomEvent(event: MouseEvent, zoom: string): boolean {
-    return (this.settings.zoom === zoom &&
-            (!this.settings.alt   || event.altKey) &&
-            (!this.settings.ctrl  || event.ctrlKey) &&
-            (!this.settings.cmd   || event.metaKey) &&
-            (!this.settings.shift || event.shiftKey));
+    return (
+      this.settings.zoom === zoom &&
+      (!this.settings.alt || event.altKey) &&
+      (!this.settings.ctrl || event.ctrlKey) &&
+      (!this.settings.cmd || event.metaKey) &&
+      (!this.settings.shift || event.shiftKey)
+    );
   }
 
   /**
    * Rerender the output if we aren't in the middle of loading a new component
-   *   (in which case, we will rerender in the callback performed  after it is loaded)
+   *   (in which case, we will rerender in the callback performed after it is loaded)
    *
    * @param {number=} start   The state at which to start rerendering
    */
   protected rerender(start: number = STATE.TYPESET) {
     this.rerenderStart = Math.min(start, this.rerenderStart);
-    if (!Menu.loading) {
-      if (this.rerenderStart <= STATE.COMPILED) {
-        this.document.reset({inputJax: []});
-      }
-      this.document.rerender(this.rerenderStart);
-      this.rerenderStart = STATE.LAST;
+    const startup = MathJax.startup;
+    if (!Menu.loading && startup.hasTypeset) {
+      startup.document.whenReady(async () => {
+        if (this.rerenderStart <= STATE.COMPILED) {
+          this.document.reset({ inputJax: [] });
+        }
+        await this.document.rerenderPromise(this.rerenderStart);
+        this.rerenderStart = STATE.LAST;
+      });
     }
   }
 
@@ -978,39 +1665,44 @@ export class Menu {
    * Copy the serialzied MathML to the clipboard
    */
   protected copyMathML() {
-    this.copyToClipboard(this.toMML(this.menu.mathItem));
+    MenuUtil.copyToClipboard(this.toMML(this.menu.mathItem));
   }
 
   /**
    * Copy the original form to the clipboard
    */
   protected copyOriginal() {
-    this.copyToClipboard(this.menu.mathItem.math.trim());
+    MenuUtil.copyToClipboard(this.menu.mathItem.math.trim());
   }
 
   /**
-   * Copy the original annotation text to the clipboard
+   * Copy the SVG image to the clipboard
    */
-  public copyAnnotation() {
-    this.copyToClipboard(this.menu.annotation.trim());
+  protected copySvgImage() {
+    this.toSVG(this.menu.mathItem).then((svg) => {
+      MenuUtil.copyToClipboard(svg);
+    });
   }
 
   /**
-   * @param {string} text   The text to be copied ot the clopboard
+   * Copy the speech text to the clipboard
    */
-  protected copyToClipboard(text: string) {
-    const input = document.createElement('textarea');
-    input.value = text;
-    input.setAttribute('readonly', '');
-    input.style.cssText = 'height: 1px; width: 1px; padding: 1px; position: absolute; left: -10px';
-    document.body.appendChild(input);
-    input.select();
-    try {
-      document.execCommand('copy');
-    } catch (error) {
-      alert('Can\'t copy to clipboard: ' + error.message);
-    }
-    document.body.removeChild(input);
+  protected copySpeechText() {
+    MenuUtil.copyToClipboard(this.menu.mathItem.outputData.speech);
+  }
+
+  /**
+   * Copy the speech text to the clipboard
+   */
+  protected copyBrailleText() {
+    MenuUtil.copyToClipboard(this.menu.mathItem.outputData.braille);
+  }
+
+  /**
+   * Copy the error message to the clipboard
+   */
+  protected copyErrorMessage() {
+    MenuUtil.copyToClipboard(this.menu.errorMsg.trim());
   }
 
   /*======================================================================*/
@@ -1019,12 +1711,44 @@ export class Menu {
    * @param {HTMLMATHITEM} math   The math to attach the context menu and zoom triggers to
    */
   public addMenu(math: HTMLMATHITEM) {
-    const element = math.typesetRoot;
-    element.addEventListener('contextmenu', () => this.menu.mathItem = math, true);
-    element.addEventListener('keydown', () => this.menu.mathItem = math, true);
-    element.addEventListener('click', event => this.zoom(event, 'Click', math), true);
-    element.addEventListener('dblclick', event => this.zoom(event, 'DoubleClick', math), true);
-    this.menu.store.insert(element);
+    this.addEvents(math);
+    this.menu.store.insert(math.typesetRoot);
+    math.typesetRoot.tabIndex = this.settings.inTabOrder ? 0 : -1;
+  }
+
+  public addEvents(math: HTMLMATHITEM) {
+    const node = math.typesetRoot;
+    node.addEventListener(
+      'mousedown',
+      () => {
+        this.menu.mathItem = math;
+        this.current = (math as any).explorers?.speech?.current;
+      },
+      true
+    );
+    node.addEventListener(
+      'contextmenu',
+      () => {
+        this.menu.mathItem = math;
+        const speech = (math as any).explorers?.speech;
+        if (speech) {
+          math.outputData.nofocus = !this.current;
+          speech.refocus = this.current;
+        }
+      },
+      true
+    );
+    node.addEventListener('keydown', () => (this.menu.mathItem = math), true);
+    node.addEventListener(
+      'click',
+      (event) => this.zoom(event, 'Click', math),
+      true
+    );
+    node.addEventListener(
+      'dblclick',
+      (event) => this.zoom(event, 'DoubleClick', math),
+      true
+    );
   }
 
   /**
@@ -1040,20 +1764,25 @@ export class Menu {
    * Create JSON for a variable controlling a menu setting
    *
    * @param {keyof MenuSettings} name   The setting for which to make a variable
-   * @param {(T) => void} action        Optional function to perform after setting the value
-   * @returns {Object}                  The JSON for the variable
+   * @param {(value: T) => void} action Optional function to perform after setting the value
+   * @returns {object}                  The JSON for the variable
    *
-   * @tempate T    The type of variable being defined
+   * @template T    The type of variable being defined
    */
-  public variable<T extends (string | boolean)>(name: keyof MenuSettings, action?: (value: T) => void): Object {
+  public variable<T extends string | boolean>(
+    name: keyof MenuSettings,
+    action?: (value: T) => void
+  ): object {
     return {
       name: name,
       getter: () => this.settings[name],
       setter: (value: T) => {
         (this.settings as any)[name] = value;
-        action && action(value);
+        if (action) {
+          action(value);
+        }
         this.saveUserSettings();
-      }
+      },
     };
   }
 
@@ -1061,22 +1790,27 @@ export class Menu {
    * Create JSON for an a11y specific variable.
    *
    * @param {keyof MenuSettings} name   The setting for which to make a variable
-   * @returns {Object}                  The JSON for the variable
+   * @param {(value: T) => void} action The action to perform when the variable
+   *                                      is updated
+   * @returns {object}                  The JSON for the variable
    *
-   * @tempate T    The type of variable being defined
+   * @template T    The type of variable being defined
    */
-  public a11yVar<T extends (string | boolean)>(name: keyof MenuSettings, action?: (value: T) => void): Object {
+  public a11yVar<T extends string | boolean>(
+    name: keyof MenuSettings,
+    action?: (value: T) => void
+  ): object {
     return {
       name: name,
       getter: () => this.getA11y(name),
       setter: (value: T) => {
         (this.settings as any)[name] = value;
-        let options: {[key: string]: any} = {};
-        options[name] = value;
-        this.setA11y(options);
-        action && action(value);
+        this.setA11y({ [name]: value });
+        if (action) {
+          action(value);
+        }
         this.saveUserSettings();
-      }
+      },
     };
   }
 
@@ -1087,10 +1821,15 @@ export class Menu {
    * @param {string} content      The content for the item
    * @param {any[]} entries       The JSON for the entries
    * @param {boolean=} disabled   True if this item is diabled initially
-   * @returns {Object}            The JSON for the submenu item
+   * @returns {object}            The JSON for the submenu item
    */
-  public submenu(id: string, content: string, entries: any[] = [], disabled: boolean = false): Object {
-    let items = [] as Array<Object>;
+  public submenu(
+    id: string,
+    content: string,
+    entries: any[] = [],
+    disabled: boolean = false
+  ): object {
+    let items = [] as Array<object>;
     for (const entry of entries) {
       if (Array.isArray(entry)) {
         items = items.concat(entry);
@@ -1098,7 +1837,13 @@ export class Menu {
         items.push(entry);
       }
     }
-    return {type: 'submenu', id, content, menu: {items}, disabled: (items.length === 0) || disabled};
+    return {
+      type: 'submenu',
+      id,
+      content,
+      menu: { items },
+      disabled: items.length === 0 || disabled,
+    };
   }
 
   /**
@@ -1107,11 +1852,16 @@ export class Menu {
    * @param {string} id           The id for the item
    * @param {string} content      The content for the item
    * @param {() => void} action   The action function for the command
-   * @param {Object} other        Other values to include in the generated JSON object
-   * @returns {Object}            The JSON for the command item
+   * @param {object} other        Other values to include in the generated JSON object
+   * @returns {object}            The JSON for the command item
    */
-  public command(id: string, content: string, action: () => void, other: Object = {}): Object {
-    return Object.assign({type: 'command', id, content, action}, other);
+  public command(
+    id: string,
+    content: string,
+    action: () => void,
+    other: object = {}
+  ): object {
+    return Object.assign({ type: 'command', id, content, action }, other);
   }
 
   /**
@@ -1120,11 +1870,16 @@ export class Menu {
    * @param {string} id           The id for the item
    * @param {string} content      The content for the item
    * @param {string} variable     The (pool) variable to attach to this checkbox
-   * @param {Object} other        Other values to include in the generated JSON object
-   * @returns {Object}            The JSON for the checkbox item
+   * @param {object} other        Other values to include in the generated JSON object
+   * @returns {object}            The JSON for the checkbox item
    */
-  public checkbox(id: string, content: string, variable: string, other: Object = {}): Object {
-    return Object.assign({type: 'checkbox', id, content, variable}, other);
+  public checkbox(
+    id: string,
+    content: string,
+    variable: string,
+    other: object = {}
+  ): object {
+    return Object.assign({ type: 'checkbox', id, content, variable }, other);
   }
 
   /**
@@ -1133,10 +1888,10 @@ export class Menu {
    * @param {string} variable     The (pool) variable to attach to each radio button
    * @param {string[][]} radios   An array of [string] or [string, string], giving the id and content
    *                                for each radio button (if only one string is given it is used for both)
-   * @returns {Object[]}          An array of JSON objects for radion buttons
+   * @returns {object[]}          An array of JSON objects for radion buttons
    */
-  public radioGroup(variable: string, radios: string[][]): Object[] {
-    return radios.map(def => this.radio(def[0], def[1] || def[0], variable));
+  public radioGroup(variable: string, radios: string[][]): object[] {
+    return radios.map((def) => this.radio(def[0], def[1] || def[0], variable));
   }
 
   /**
@@ -1145,11 +1900,16 @@ export class Menu {
    * @param {string} id           The id for the item
    * @param {string} content      The content for the item
    * @param {string} variable     The (pool) variable to attach to this radio button
-   * @param {Object} other        Other values to include in the generated JSON object
-   * @returns {Object}            The JSON for the radio button item
+   * @param {object} other        Other values to include in the generated JSON object
+   * @returns {object}            The JSON for the radio button item
    */
-  public radio(id: string, content: string, variable: string, other: Object = {}): Object {
-    return Object.assign({type: 'radio', id, content, variable}, other);
+  public radio(
+    id: string,
+    content: string,
+    variable: string,
+    other: object = {}
+  ): object {
+    return Object.assign({ type: 'radio', id, content, variable }, other);
   }
 
   /**
@@ -1157,21 +1917,20 @@ export class Menu {
    *
    * @param {string} id           The id for the item
    * @param {string} content      The content for the item
-   * @returns {Object}            The JSON for the label item
+   * @returns {object}            The JSON for the label item
    */
-  public label(id: string, content: string): Object {
-    return {type: 'label', id, content};
+  public label(id: string, content: string): object {
+    return { type: 'label', id, content };
   }
 
   /**
    * Create JSON for a menu rule
    *
-   * @returns {Object}            The JSON for the rule item
+   * @returns {object}            The JSON for the rule item
    */
-  public rule(): Object {
-    return {type: 'rule'};
+  public rule(): object {
+    return { type: 'rule' };
   }
 
   /*======================================================================*/
-
 }

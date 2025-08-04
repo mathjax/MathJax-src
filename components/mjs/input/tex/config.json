@@ -1,0 +1,25 @@
+{
+  "build": {
+    "component": "input/tex",
+    "targets": [
+      "input/tex.ts",
+      "input/tex",
+      "input/tex/base",
+      "input/tex/ams",
+      "input/tex/newcommand",
+      "input/tex/textmacros",
+      "input/tex/noundefined",
+      "input/tex/require",
+      "input/tex/autoload",
+      "input/tex/configmacros"
+    ],
+    "excludeSubdirs": true
+  },
+  "webpack": {
+    "name": "input/tex",
+    "libs": [
+      "components/src/startup/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

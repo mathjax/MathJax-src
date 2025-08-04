@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Pcy: '\u041F',
     Poincareplane: '\u210C',
     Pr: '\u2ABB',
@@ -74,5 +75,7 @@ Entities.add({
     propto: '\u221D',
     prsim: '\u227E',
     prurel: '\u22B0',
-    puncsp: '\u2008'
-}, 'p');
+    puncsp: '\u2008',
+  },
+  'p'
+);

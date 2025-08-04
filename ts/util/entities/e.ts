@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     ENG: '\u014A',
     ETH: '\u00D0',
     Eacute: '\u00C9',
@@ -82,5 +83,7 @@ Entities.add({
     excl: '\u0021',
     exist: '\u2203',
     expectation: '\u2130',
-    exponentiale: '\u2147'
-}, 'e');
+    exponentiale: '\u2147',
+  },
+  'e'
+);

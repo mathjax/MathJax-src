@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
  */
 
 /**
- * @fileoverview  Implements the HTMLHandler class
+ * @file  Implements the HTMLHandler class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractHandler} from '../../core/Handler.js';
-import {MinHTMLAdaptor} from '../../adaptors/HTMLAdaptor.js';
-import {HTMLDocument} from './HTMLDocument.js';
-import {OptionList} from '../../util/Options.js';
+import { AbstractHandler } from '../../core/Handler.js';
+import { MinHTMLAdaptor } from '../../adaptors/HTMLAdaptor.js';
+import { HTMLDocument } from './HTMLDocument.js';
+import { OptionList } from '../../util/Options.js';
 
 /*****************************************************************/
 /**
@@ -35,11 +35,10 @@ import {OptionList} from '../../util/Options.js';
  * @template D  The Document class
  */
 export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
-
   /**
    * The DOMAdaptor for the document being handled
    */
-  public adaptor: MinHTMLAdaptor<N, T, D>;  // declare a more specific adaptor type
+  public adaptor: MinHTMLAdaptor<N, T, D>; // declare a more specific adaptor type
 
   /**
    * @override
@@ -51,14 +50,18 @@ export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
    */
   public handlesDocument(document: any) {
     const adaptor = this.adaptor;
-    if (typeof(document) === 'string') {
+    if (typeof document === 'string') {
       try {
         document = adaptor.parse(document, 'text/html');
-      } catch (err) {}
+      } catch (_err) {
+        // continue regardless of error
+      }
     }
-    if (document instanceof adaptor.window.Document ||
-        document instanceof adaptor.window.HTMLElement ||
-        document instanceof adaptor.window.DocumentFragment) {
+    if (
+      document instanceof adaptor.window.Document ||
+      document instanceof adaptor.window.HTMLElement ||
+      document instanceof adaptor.window.DocumentFragment
+    ) {
       return true;
     }
     return false;
@@ -72,15 +75,16 @@ export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
    */
   public create(document: any, options: OptionList) {
     const adaptor = this.adaptor;
-    if (typeof(document) === 'string') {
+    if (typeof document === 'string') {
       document = adaptor.parse(document, 'text/html');
-    } else if (document instanceof adaptor.window.HTMLElement ||
-               document instanceof adaptor.window.DocumentFragment) {
-      let child = document as N;
+    } else if (
+      document instanceof adaptor.window.HTMLElement ||
+      document instanceof adaptor.window.DocumentFragment
+    ) {
+      const child = document as N;
       document = adaptor.parse('', 'text/html');
       adaptor.append(adaptor.body(document), child);
     }
     return super.create(document, options) as HTMLDocument<N, T, D>;
   }
-
 }

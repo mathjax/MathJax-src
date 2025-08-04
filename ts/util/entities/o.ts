@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     OElig: '\u0152',
     Oacute: '\u00D3',
     Ocirc: '\u00D4',
@@ -80,5 +81,7 @@ Entities.add({
     otimes: '\u2297',
     otimesas: '\u2A36',
     ouml: '\u00F6',
-    ovbar: '\u233D'
-}, 'o');
+    ovbar: '\u233D',
+  },
+  'o'
+);

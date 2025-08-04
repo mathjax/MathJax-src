@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     SHCHcy: '\u0429',
     SHcy: '\u0428',
     SOFTcy: '\u042C',
@@ -160,5 +161,7 @@ Entities.add({
     swarhk: '\u2926',
     swarrow: '\u2199',
     swnwar: '\u292A',
-    szlig: '\u00DF'
-}, 's');
+    szlig: '\u00DF',
+  },
+  's'
+);

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,42 +16,150 @@
  */
 
 /**
- * @fileoverview  Implements the CommonTextNode wrapper mixin for the TextNode object
+ * @file  Implements the CommonTextNode wrapper mixin for the TextNode object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {BBox} from '../../../util/BBox.js';
-import {TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { BBox } from '../../../util/BBox.js';
+import { TextNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
 
 /*****************************************************************/
 /**
  * The CommonTextNode interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonTextNode extends AnyWrapper {
+export interface CommonTextNode<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
   /**
    * @param {string} text     The text to remap
    * @param {string} variant  The variant for the character
-   * @return {number[]}       The unicode points for the (remapped) text
+   * @returns {number[]}       The unicode points for the (remapped) text
    */
   remappedText(text: string, variant: string): number[];
 }
 
 /**
- * Shorthand for the CommonTextNode constructor
+ * The CommonTextNodeClass interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type TextNodeConstructor = Constructor<CommonTextNode>;
+export interface CommonTextNodeClass<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
- *  The CommonTextNode wrapper mixin for the TextNode object
+ * The CommonTextNode wrapper mixin for the TextNode object
  *
- * @template T  The Wrapper class constructor type
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
-export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): TextNodeConstructor & T {
+export function CommonTextNodeMixin<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonTextNodeMixin
+    extends Base
+    implements CommonTextNode<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
+    /**
+     * @override
+     */
+    public remappedText(text: string, variant: string): number[] {
+      const c = this.parent.stretch.c;
+      return c ? [c] : this.parent.remapChars(this.unicodeChars(text, variant));
+    }
 
-  return class extends Base {
+    /******************************************************/
 
     /**
      * @override
@@ -64,37 +172,49 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
         // Measure the size of the text (using the DOM if possible)
         //
         const font = this.jax.getFontData(this.parent.styles);
-        const {w, h, d} = this.jax.measureText(text, variant, font);
+        const { w, h, d } = this.jax.measureText(text, variant, font);
         bbox.h = h;
         bbox.d = d;
         bbox.w = w;
       } else {
         const chars = this.remappedText(text, variant);
+        let utext = '';
         bbox.empty();
         //
         // Loop through the characters and add them in one by one
         //
-        for (const char of chars) {
-          let [h, d, w, data] = this.getVariantChar(variant, char);
+        for (let i = 0; i < chars.length; i++) {
+          const [h, d, w, data] = this.getVariantChar(variant, chars[i]);
           if (data.unknown) {
+            utext += String.fromCodePoint(chars[i]);
+          } else {
+            utext = this.addUtextBBox(bbox, utext, variant);
             //
-            // Measure unknown characters using the DOM (if possible)
+            // Update the bounding box
             //
-            const cbox = this.jax.measureText(String.fromCodePoint(char), variant);
-            w = cbox.w;
-            h = cbox.h;
-            d = cbox.d;
+            this.updateBBox(bbox, h, d, w);
+            bbox.ic = data.ic || 0;
+            bbox.sk = data.sk || 0;
+            bbox.dx = data.dx || 0;
+            if (!data.oc || i < chars.length - 1) continue;
+            const children = this.parent.childNodes;
+            if (this.node !== children[children.length - 1].node) continue;
+            const parent = this.parent.parent.node;
+            let next =
+              parent.isKind('mrow') || parent.isInferred
+                ? parent.childNodes[parent.childIndex(this.parent.node) + 1]
+                : null;
+            if (next?.isKind('mo') && (next as MmlMo).getText() === '\u2062') {
+              next = parent.childNodes[parent.childIndex(next) + 1];
+            }
+            if (!next || next.attributes.get('mathvariant') !== variant) {
+              bbox.ic = data.oc;
+            } else {
+              bbox.oc = data.oc;
+            }
           }
-          //
-          // Update the bounding box
-          //
-          bbox.w += w;
-          if (h > bbox.h) bbox.h = h;
-          if (d > bbox.d) bbox.d = d;
-          bbox.ic = data.ic || 0;
-          bbox.sk = data.sk || 0;
-          bbox.dx = data.dx || 0;
         }
+        this.addUtextBBox(bbox, utext, variant);
         if (chars.length > 1) {
           bbox.sk = 0;
         }
@@ -103,13 +223,33 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
     }
 
     /**
-     * @param {string} text     The text to remap
-     * @param {string} variant  The variant for the character
-     * @return {number[]}       The unicode points for the (remapped) text
+     * @param {BBox} bbox        The bounding box to update
+     * @param {string} utext     The text whose size is to be added to the bbox
+     * @param {string} variant   The mathvariant for the text
+     * @returns {string}          The new utext (blank)
      */
-    public remappedText(text: string, variant: string): number[] {
-      const c = this.parent.stretch.c;
-      return (c ? [c] : this.parent.remapChars(this.unicodeChars(text, variant)));
+    protected addUtextBBox(bbox: BBox, utext: string, variant: string): string {
+      if (utext) {
+        const { h, d, w } = this.jax.measureText(utext, variant);
+        this.updateBBox(bbox, h, d, w);
+      }
+      return '';
+    }
+
+    /**
+     * @param {BBox} bbox        The bounding box to update
+     * @param {number} h         The height to use
+     * @param {number} d         The depth to use
+     * @param {number} w         The width to add
+     */
+    protected updateBBox(bbox: BBox, h: number, d: number, w: number) {
+      bbox.w += w;
+      if (h > bbox.h) {
+        bbox.h = h;
+      }
+      if (d > bbox.d) {
+        bbox.d = d;
+      }
     }
 
     /******************************************************/
@@ -137,7 +277,5 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
      * @override
      */
     public getSpace() {}
-
-  };
-
+  } as any as B;
 }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2021-2022 The MathJax Consortium
+ *  Copyright (c) 2021-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,26 +15,26 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Configuration file for the gensymb package.
+ * @file Configuration file for the gensymb package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
-import {Symbol} from '../Symbol.js';
-import {TexConstant} from '../TexConstants.js';
-import {CharacterMap} from '../SymbolMap.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
+import { Token } from '../Token.js';
+import { TexConstant } from '../TexConstants.js';
+import { CharacterMap } from '../TokenMap.js';
 import TexParser from '../TexParser.js';
-
 
 /**
  * Handle characters that are known units.
+ *
  * @param {TexParser} parser The current tex parser.
- * @param {Symbol} mchar The parsed symbol.
+ * @param {Token} mchar The parsed token.
  */
-function mathcharUnit(parser: TexParser, mchar: Symbol) {
+function mathcharUnit(parser: TexParser, mchar: Token) {
   const def = mchar.attributes || {};
   def.mathvariant = TexConstant.Variant.NORMAL;
   def.class = 'MathML-Unit';
@@ -42,22 +42,17 @@ function mathcharUnit(parser: TexParser, mchar: Symbol) {
   parser.Push(node);
 }
 
-
 /**
  * gensymb units.
  */
 new CharacterMap('gensymb-symbols', mathcharUnit, {
-  ohm:            '\u2126',
-  degree:         '\u00B0',
-  celsius:        '\u2103',
-  perthousand:    '\u2030',
-  micro:          '\u00B5'
+  ohm: '\u2126',
+  degree: '\u00B0',
+  celsius: '\u2103',
+  perthousand: '\u2030',
+  micro: '\u00B5',
 });
 
-
-export const GensymbConfiguration = Configuration.create(
-  'gensymb', {
-    handler: {macro: ['gensymb-symbols']},
-  }
-);
-
+export const GensymbConfiguration = Configuration.create('gensymb', {
+  [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['gensymb-symbols'] },
+});

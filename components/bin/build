@@ -2,7 +2,7 @@
 
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,21 +35,31 @@ const INDENT = '  ';
 /**
  * The pattern to use when looking for explort commands to process
  */
-const EXPORTPATTERN = /(^export(?:\s+default)?(?:\s+abstract)?\s+[^ {*}]+\s+[a-zA-Z0-9_.$]+)/m;
+const EXPORTPATTERN =
+      /(^export(?:\s+(?:default|abstract|async))?\s+(?:[^ {*}]+\s+(?:enum\s+)?[a-zA-Z0-9_.$]+|\{.* as .*\}))/m;
 
 const EXPORT_IGNORE = ['type', 'interface'];
-const EXPORT_PROCESS = ['let', 'const', 'var', 'function', 'class', 'namespace'];
+const EXPORT_PROCESS = ['let', 'const', 'var', 'function', 'class', 'namespace', 'enum', 'as'];
 
 /**
- * The relative path to the MathJax directory
+ * The module type to use ('cjs' or 'mjs')
  */
-const mjPath = path.relative(process.cwd(), path.resolve(__dirname, '..', '..', 'js'));
-const mjGlobal = path.join('..', mjPath, 'components', 'global.js');
+const target = (process.argv[2] || 'mjs');
 
 /**
  * Read the configuration for the component
  */
-const config = JSON.parse(fs.readFileSync(process.argv[2] || 'build.json'));
+const json = path.resolve(process.argv[3] || '.', 'config.json');
+const config = require(json).build;
+if (!config) process.exit()
+process.chdir(path.dirname(json));
+
+
+/**
+ * The relative path to the MathJax directory
+ */
+const mjPath = path.relative(process.cwd(), path.resolve(__dirname, '..', '..', target));
+const mjGlobal = path.join('..', mjPath, 'components', 'global.js');
 
 function getType() {
   const component = config.component || 'part';
@@ -66,13 +76,14 @@ const COMPONENT = path.basename(config.component || 'part');                // n
 const ID = config.id || config.component || 'part';                         // the ID of the component
 const TARGETS = config.targets || [];                                       // the files to include in the component
 const EXCLUDE = new Map((config.exclude || []).map(name => [name, true]));  // files to exclude from the component
-const EXCLUDESUBDIRS = config.excludeSubdirs === 'true';                    // exclude subdirectories or not
+const EXCLUDESUBDIRS = !!config.excludeSubdirs;                             // exclude subdirectories or not
 const JS = config.js || config.mathjax || mjPath;                           // path to the compiled .js files
 const LIB = config.lib || './lib';                                          // path to the lib directory to create
-const TS = config.ts || JS.replace(/js$/, 'ts');                            // path to the .ts files
+const TS = config.ts || path.join(JS, '..', 'ts');                          // path to the .ts files
 const GLOBAL = config.global || mjGlobal;                                   // path to the global.js file
 const VERSION = config.version || mjGlobal.replace(/global/, 'version');    // path to the version.js file
 const TYPE = config.type || getType();                                      // the module type
+const PREFIX = config.prefix || '';                                         // directories to add to any ts files
 
 /**
  * The list of files that need to be added to the lib directory
@@ -96,7 +107,7 @@ function processList(base, dir, list, top = true) {
         if (top || !EXCLUDESUBDIRS) {
           processDir(base, file);
         }
-      } else if (file.match(/\.ts$/)) {
+      } else if (file.match(/(?<!\.d)\.ts$/)) {
         processFile(base, file);
       }
     }
@@ -147,8 +158,9 @@ function processParts(parts) {
   const objects = [];
   for (let i = 1; i < parts.length; i += 2) {
     const words = parts[i].split(/\s+/);
-    const type = words[words.length - 2];
-    const name = words[words.length - 1];
+    const n = words.length;
+    const type = (words[n - 2] === 'enum' && n > 3 ? words[n - 3] : words[n - 2]);
+    const name = words[n - 1].replace(/\}$/, '');
 
     if (words[1] === 'default' || type === 'default') {
       objects.push('default');
@@ -165,24 +177,31 @@ function processParts(parts) {
  * Create the lines of the lib file using the object names from the file.
  *
  * @param {string} name       The path of the file relative to the root .ts directory
- * @param {string[]} objects  Array of names of the object exported by the file
+ * @param {string[]} objects  Array of names of the objects exported by the file
  * @return {string[]}         Array of lines for the contents of the library file
  */
 function processLines(file, objects) {
   if (objects.length === 0) return [];
-  const dir = path.dirname(file).replace(/^\.$/, '');
+  const base = path.dirname(file).replace(/^\.$/, '');
+  const dir = (PREFIX ? path.join(PREFIX, base) : base);
   const dots = dir.replace(/[^\/]+/g, '..') || '.';
   const relative = path.join(dots, '..', JS, dir, path.basename(file)).replace(/\.ts$/, '.js');
   const name = path.parse(file).name;
-  const lines = [
+  const lines = (target === 'mjs' ? [] : [
     '"use strict";',
-    `Object.defineProperty(exports, '__esModule', {value: true});`
-  ];
+    `Object.defineProperty(exports, '__esModule', {value: true});`,
+  ]);
   let source = ((dir.replace(/\//g, '.') + '.' + name).replace(/^\./, '')
                 + (exists(path.resolve(JS, file.replace(/\.ts$/, ''))) ? '_ts' : ''))
-      .replace(/\.[^.]*/g, (x) => (x.substr(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substr(1) + '\']' : x));
+      .replace(/\.[^.]*/g, (x) => (x.substring(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substring(1) + '\']' : x));
+  lines.push(
+    objects.indexOf('MathJax') >= 0 ?
+      `const g = (typeof window !== 'undefined' ? window : global);\nconst def = g.MathJax._.${source};` :
+      `const def = MathJax._.${source};`
+  );
   for (const id of objects) {
-    lines.push(`exports.${id} = MathJax._.${source}.${id};`);
+    lines.push(target === 'cjs' ? `exports.${id} = def.${id};` :
+               id === 'default' ? `export default def.${id};` : `export const ${id} = def.${id};`);
   }
   return lines;
 }
@@ -221,9 +240,29 @@ function makeDir(dir) {
  */
 function makeFile(file, lines) {
   if (!lines.length) return;
-  const [dir, name] = [path.dirname(file), path.basename(file)];
+  const basedir = path.dirname(file);
+  const [dir, name] = [PREFIX ? path.join(PREFIX, basedir) : basedir, path.basename(file)];
   makeDir(dir);
   fs.writeFileSync(path.resolve(LIB, dir, name.replace(/\.ts$/, '.js')), lines.join('\n') + '\n');
+}
+
+/**
+ * @return {[string, string, string]}  The needed nesting data for handking extra directories from a prefix
+ */
+function getExtraDirectories() {
+  if (PREFIX === '') return ['', INDENT, ''];
+  let prefix = '';
+  let indent = INDENT;
+  let postfix = '';
+  for (let name of PREFIX.split(/\//)) {
+    if (name.match(/[^a-zA-Z0-9]/)) {
+      name = `"${name}"`;
+    }
+    prefix += indent + name + ': {\n';
+    postfix = '\n' + indent + '}' + postfix;
+    indent += INDENT;
+  }
+  return [prefix, indent, postfix];
 }
 
 /**
@@ -231,16 +270,21 @@ function makeFile(file, lines) {
  */
 function processGlobal() {
   console.info('  ' + COMPONENT + '.ts');
-  const lines = [
+  const lines = (target === 'cjs' ? [
+    `const {combineWithMathJax} = require('${GLOBAL}')`,
+    `const {VERSION} = require('${VERSION}');`,
+    '',
+  ] : [
     `import {combineWithMathJax} from '${GLOBAL}';`,
     `import {VERSION} from '${VERSION}';`,
     '',
-  ];
+  ]);
+  const [prefix, indent, postfix] = getExtraDirectories();
   const packages = [];
   PACKAGE = PACKAGE.sort(sortDir);
   while (PACKAGE.length) {
     const dir = path.dirname(PACKAGE[0]).split(path.sep)[0];
-    packages.push(processPackage(lines, INDENT, dir));
+    packages.push(processPackage(lines, indent, dir));
   }
   const name = (ID.match(/[^a-zA-Z0-9_]/) ? `"${ID}"` : ID);
   lines.push(
@@ -250,9 +294,10 @@ function processGlobal() {
     '}',
     '',
     `combineWithMathJax({_: {`,
-      INDENT + packages.join(',\n' + INDENT),
+      prefix + indent + packages.join(',\n' + indent) + postfix,
     '}});'
   );
+  makeDir('');
   fs.writeFileSync(path.join(LIB, COMPONENT + '.js'), lines.join('\n') + '\n');
 }
 
@@ -279,12 +324,12 @@ function processPackage(lines, space, dir) {
   //
   //  Loop through the lines that are in the current directory
   //
-  while (PACKAGE.length && (PACKAGE[0].substr(0, dir.length) === dir || dir === '.')) {
+  while (PACKAGE.length && (PACKAGE[0].substring(0, dir.length) === dir || dir === '.')) {
     //
     // If the current package is in this directory (not a subdirectory)
     //   Get the location of transpiled mathjax file
     //   Get the name to use for the data from that file
-    //   Create an entry for the file in the MathJax global that loads the reuired component
+    //   Create an entry for the file in the MathJax global that loads the required component
     // Otherwise (its in a subdirectory)
     //   Get the subdirectory name
     //   Process the subdirectory using an additional indentation
@@ -292,9 +337,13 @@ function processPackage(lines, space, dir) {
     if (path.dirname(PACKAGE[0]) === dir) {
       const file = PACKAGE.shift();
       const name = path.basename(file);
-      const relativefile = path.join('..', JS, dir, name).replace(/\.ts$/, '.js');
+      let relativefile = path.join('..', JS, dir, name).replace(/\.ts$/, '.js')
       const component = 'module' + (++importCount);
-      lines.push(`import * as ${component} from '${relativefile}';`);
+      lines.push(
+        target === 'cjs' ?
+          `const ${component} = require('${relativefile}');` :
+          `import * as ${component} from '${relativefile}';`
+      );
       let property = name.replace(/\.ts$/, '');
       if (property !== name && exists(path.resolve(JS, file.replace(/\.ts$/, '')))) {
         property += '_ts';
@@ -315,7 +364,11 @@ function processPackage(lines, space, dir) {
   // Create the string defining the object that loads all the needed files into the proper places
   //
   if (dir === '.') return packages.join(',\n    ');
-  return path.basename(dir) + ': {\n' + INDENT + space + packages.join(',\n' + INDENT + space) + '\n' + space + '}';
+  let name = path.basename(dir);
+  if (name.match(/[^a-zA-Z0-9]/)) {
+    name = `"${name}"`;
+  }
+  return name + ': {\n' + INDENT + space + packages.join(',\n' + INDENT + space) + '\n' + space + '}';
 }
 
 /**

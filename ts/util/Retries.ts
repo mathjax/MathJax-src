@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,19 +16,21 @@
  */
 
 /**
- * @fileoverview  Implements methods for handling asynchronous actions
+ * @file  Implements methods for handling asynchronous actions
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
-
 
 /*****************************************************************/
 /*
  *  The legacy MathJax object  (FIXME: remove this after all v2 code is gone)
  */
 
-declare var MathJax: {Callback: {After: Function}};
-
+declare const MathJax: {
+  Callback: {
+    After: (cb1: () => void, cb2: () => void) => Promise<any>;
+  };
+};
 
 /*****************************************************************/
 /**
@@ -62,25 +64,41 @@ export interface RetryError extends Error {
  *     });
  *
  * @param {Function} code  The code to run that might cause retries
- * @return {Promise}       A promise that is satisfied when the code
+ * @returns {Promise}       A promise that is satisfied when the code
  *                         runs completely, and fails if the code
  *                         generates an error (that is not a retry).
  */
-
-export function handleRetriesFor(code: Function): Promise<any> {
-  return new Promise(function run(ok: Function, fail: Function) {
-    try {
-      ok(code());
-    } catch (err) {
-      if (err.retry && err.retry instanceof Promise) {
-        err.retry.then(() => run(ok, fail))
-                 .catch((perr: Error) => fail(perr));
-      } else if (err.restart && err.restart.isCallback) {
+export function handleRetriesFor(code: () => any): Promise<any> {
+  return new Promise(function run(ok, fail) {
+    //
+    // Process an error (retry or actual error)
+    //
+    const handleRetry = (err: any) => {
+      if (err.retry instanceof Promise) {
+        err.retry.then(() => run(ok, fail)).catch((e: any) => fail(e));
+      } else if (err.restart?.isCallback) {
         // FIXME: Remove this branch when all legacy code is gone
         MathJax.Callback.After(() => run(ok, fail), err.restart);
       } else {
         fail(err);
       }
+    };
+    //
+    // Run the user code
+    //   If it returns a promise, wait on it
+    //     when done, resolve the original promise with its returned value,
+    //     or if it errors, handle a retry or fail with the error.
+    //   Otherwise resolve the original promise with the result.
+    // If there was an error, handle a retry otherwise fail with the error.
+    try {
+      const result = code();
+      if (result instanceof Promise) {
+        result.then((value) => ok(value)).catch((err) => handleRetry(err));
+      } else {
+        ok(result);
+      }
+    } catch (err) {
+      handleRetry(err);
     }
   });
 }
@@ -94,9 +112,11 @@ export function handleRetriesFor(code: Function): Promise<any> {
  * @param {Promise} promise  The promise that must be satisfied before
  *                            actions will continue
  */
-
 export function retryAfter(promise: Promise<any>) {
-  let err = new Error('MathJax retry') as RetryError;
+  const err = new Error(
+    'MathJax retry -- an asynchronous action is required; ' +
+      'try using one of the promise-based functions and await its resolution.'
+  ) as RetryError;
   err.retry = promise;
   throw err;
 }

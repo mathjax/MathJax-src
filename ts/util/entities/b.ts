@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Barv: '\u2AE7',
     Barwed: '\u2306',
     Bcy: '\u0411',
@@ -106,5 +107,7 @@ Entities.add({
     bump: '\u224E',
     bumpE: '\u2AAE',
     bumpe: '\u224F',
-    bumpeq: '\u224F'
-}, 'b');
+    bumpeq: '\u224F',
+  },
+  'b'
+);

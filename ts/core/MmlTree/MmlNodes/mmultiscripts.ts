@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMmultiscripts node
+ * @file  Implements the MmlMmultiscripts node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlNode, AttributeList} from '../MmlNode.js';
-import {MmlMsubsup} from './msubsup.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlNode, AttributeList } from '../MmlNode.js';
+import { MmlMsubsup } from './msubsup.js';
 
 /*****************************************************************/
 /**
@@ -31,12 +31,11 @@ import {MmlMsubsup} from './msubsup.js';
  */
 
 export class MmlMmultiscripts extends MmlMsubsup {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...MmlMsubsup.defaults
+    ...MmlMsubsup.defaults,
   };
 
   /**
@@ -48,6 +47,7 @@ export class MmlMmultiscripts extends MmlMsubsup {
 
   /**
    * <mmultiscripts> requires at least one child (the base)
+   *
    * @override
    */
   public get arity() {
@@ -62,30 +62,45 @@ export class MmlMmultiscripts extends MmlMsubsup {
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-    this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
+    this.childNodes[0].setInheritedAttributes(
+      attributes,
+      display,
+      level,
+      prime
+    );
     let prescripts = false;
     for (let i = 1, n = 0; i < this.childNodes.length; i++) {
-      let child = this.childNodes[i];
+      const child = this.childNodes[i];
       if (child.isKind('mprescripts')) {
         if (!prescripts) {
           prescripts = true;
           if (i % 2 === 0) {
-            let mrow = this.factory.create('mrow');
-            this.childNodes.splice(i, 0, mrow);
-            mrow.parent = this;
+            const none = this.factory.create('none');
+            this.childNodes.splice(i, 0, none);
+            none.parent = this;
             i++;
           }
         }
       } else {
-        let primestyle = prime || (n % 2 === 0);
+        const primestyle = prime || n % 2 === 0;
         child.setInheritedAttributes(attributes, false, level + 1, primestyle);
         n++;
       }
     }
     if (this.childNodes.length % 2 === (prescripts ? 1 : 0)) {
-      this.appendChild(this.factory.create('mrow'));
-      this.childNodes[this.childNodes.length - 1].setInheritedAttributes(attributes, false, level + 1, prime);
+      this.appendChild(this.factory.create('none'));
+      this.childNodes[this.childNodes.length - 1].setInheritedAttributes(
+        attributes,
+        false,
+        level + 1,
+        prime
+      );
     }
   }
 
@@ -96,26 +111,35 @@ export class MmlMmultiscripts extends MmlMsubsup {
    */
   protected verifyChildren(options: PropertyList) {
     let prescripts = false;
-    let fix = options['fixMmultiscripts'];
+    const fix = options['fixMmultiscripts'];
     for (let i = 0; i < this.childNodes.length; i++) {
-      let child = this.childNodes[i];
+      const child = this.childNodes[i];
       if (child.isKind('mprescripts')) {
         if (prescripts) {
-          child.mError(child.kind + ' can only appear once in ' + this.kind, options, true);
+          child.mError(
+            child.kind + ' can only appear once in ' + this.kind,
+            options,
+            true
+          );
         } else {
           prescripts = true;
           if (i % 2 === 0 && !fix) {
-            this.mError('There must be an equal number of prescripts of each type', options);
+            this.mError(
+              'There must be an equal number of prescripts of each type',
+              options
+            );
           }
         }
       }
     }
     if (this.childNodes.length % 2 === (prescripts ? 1 : 0) && !fix) {
-      this.mError('There must be an equal number of scripts of each type', options);
+      this.mError(
+        'There must be an equal number of scripts of each type',
+        options
+      );
     }
     super.verifyChildren(options);
   }
-
 }
 
 /*****************************************************************/
@@ -124,23 +148,22 @@ export class MmlMmultiscripts extends MmlMsubsup {
  */
 
 export class MmlMprescripts extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlNode.defaults
+    ...AbstractMmlNode.defaults,
   };
 
   /**
-   * @return {string}  The mprescripts kind
+   * @returns {string}  The mprescripts kind
    */
   public get kind(): string {
     return 'mprescripts';
   }
 
   /**
-   * @return {number}  <mprescripts> can have no children
+   * @returns {number}  <mprescripts> can have no children
    */
   public get arity(): number {
     return 0;
@@ -154,10 +177,13 @@ export class MmlMprescripts extends AbstractMmlNode {
   public verifyTree(options: PropertyList) {
     super.verifyTree(options);
     if (this.parent && !this.parent.isKind('mmultiscripts')) {
-      this.mError(this.kind + ' must be a child of mmultiscripts', options, true);
+      this.mError(
+        this.kind + ' must be a child of mmultiscripts',
+        options,
+        true
+      );
     }
   }
-
 }
 
 /*****************************************************************/
@@ -166,23 +192,22 @@ export class MmlMprescripts extends AbstractMmlNode {
  */
 
 export class MmlNone extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlNode.defaults
+    ...AbstractMmlNode.defaults,
   };
 
   /**
-   * @return {string}  The none kind
+   * @returns {string}  The none kind
    */
   public get kind(): string {
     return 'none';
   }
 
   /**
-   * @return {number}  <none> can have no children
+   * @returns {number}  <none> can have no children
    */
   public get arity(): number {
     return 0;
@@ -196,8 +221,11 @@ export class MmlNone extends AbstractMmlNode {
   public verifyTree(options: PropertyList) {
     super.verifyTree(options);
     if (this.parent && !this.parent.isKind('mmultiscripts')) {
-      this.mError(this.kind + ' must be a child of mmultiscripts', options, true);
+      this.mError(
+        this.kind + ' must be a child of mmultiscripts',
+        options,
+        true
+      );
     }
   }
-
 }

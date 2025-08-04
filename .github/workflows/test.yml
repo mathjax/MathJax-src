@@ -1,0 +1,49 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    name: Compile and test MathJax
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
+
+      - name: Install packages
+        run: |
+          pnpm -r i
+          pnpm -s link:src
+
+      - name: Compile MathJax
+        run: |
+          pnpm -s mjs:compile
+          components/bin/makeAll --mjs --terse --build components/mjs
+          pnpm -s cjs:compile
+          pnpm -s cjs:components:src:build
+          components/bin/makeAll --cjs --terse --build components/cjs
+          pnpm -s copy:pkg cjs
+
+      - name: Build tests
+        run: pnpm tsc -p testsuite/tsconfig.json
+          
+      - name: Run tests
+        run: pnpm -s test:gh
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: mathjax/MathJax-src

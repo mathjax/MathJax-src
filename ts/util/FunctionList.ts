@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,26 +16,55 @@
  */
 
 /**
- * @fileoverview  Implement FunctionList object
+ * @file  Implement FunctionList object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PrioritizedList, PrioritizedListItem} from './PrioritizedList.js';
+import { PrioritizedList, PrioritizedListItem } from './PrioritizedList.js';
+
+export type AnyFunction = (...args: unknown[]) => unknown;
+export type AnyFunctionDef = AnyFunction | [AnyFunction, number];
+export type AnyFunctionList = AnyFunctionDef[];
 
 /*****************************************************************/
 /**
  *  The FunctionListItem interface (extends PrioritizedListItem<Function>)
  */
 
-export interface FunctionListItem extends PrioritizedListItem<Function> {}
+export interface FunctionListItem extends PrioritizedListItem<AnyFunction> {}
 
 /*****************************************************************/
 /**
  *  Implements the FunctionList class (extends PrioritizedList<Function>)
  */
 
-export class FunctionList extends PrioritizedList<Function> {
+export class FunctionList extends PrioritizedList<AnyFunction> {
+  /**
+   * @override
+   * @param {AnyFunctionList} list   The initial list of functions to add
+   */
+  constructor(list: AnyFunctionList = null) {
+    super();
+    if (list) {
+      this.addList(list);
+    }
+  }
+
+  /**
+   * Add a list of filter functions, possibly with priorities.
+   *
+   * @param {AnyFunctionList} list   The list of functions to add
+   */
+  public addList(list: AnyFunctionList) {
+    for (const item of list) {
+      if (Array.isArray(item)) {
+        this.add(item[0], item[1]);
+      } else {
+        this.add(item);
+      }
+    }
+  }
 
   /**
    * Executes the functions in the list (in prioritized order),
@@ -43,12 +72,12 @@ export class FunctionList extends PrioritizedList<Function> {
    *   false, the list is terminated.
    *
    * @param {any[]} data  The array of arguments to pass to the functions
-   * @return {boolean}    False if any function stopped the list by
+   * @returns {boolean}    False if any function stopped the list by
    *                       returning false, true otherwise
    */
   public execute(...data: any[]): boolean {
     for (const item of this) {
-      let result = item.item(...data);
+      const result = item.item(...data);
       if (result === false) {
         return false;
       }
@@ -68,20 +97,20 @@ export class FunctionList extends PrioritizedList<Function> {
    *   and passes true.
    *
    * @param {any[]} data  The array of arguments to pass to the functions
-   * @return {Promise}    The promise that is satisfied when the function
+   * @returns {Promise}    The promise that is satisfied when the function
    *                       list completes (with argument true or false
    *                       depending on whether some function returned
    *                       false or not).
    */
-  public asyncExecute(...data: any[]): Promise<void> {
+  public asyncExecute(...data: any[]): Promise<boolean> {
     let i = -1;
-    let items = this.items;
-    return new Promise((ok: Function, fail: Function) => {
+    const items = this.items;
+    return new Promise((ok, fail) => {
       (function execute() {
         while (++i < items.length) {
-          let result = items[i].item(...data);
+          const result = items[i].item(...data);
           if (result instanceof Promise) {
-            result.then(execute).catch(err => fail(err));
+            result.then(execute).catch((err) => fail(err));
             return;
           }
           if (result === false) {
@@ -93,5 +122,4 @@ export class FunctionList extends PrioritizedList<Function> {
       })();
     });
   }
-
 }

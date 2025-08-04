@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 Omar Al-Ithawi and The MathJax Consortium
+ *  Copyright (c) 2018-2025 Omar Al-Ithawi and The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,53 +16,54 @@
  */
 
 /**
- * @fileoverview Configuration file for the color package.
+ * @file Configuration file for the color package.
  *
  * @author i@omardo.com (Omar Al-Ithawi)
  */
 
-
-import {CommandMap} from '../SymbolMap.js';
-import {Configuration, ParserConfiguration} from '../Configuration.js';
-import {ColorMethods} from './ColorMethods.js';
-import {ColorModel} from './ColorUtil.js';
-import {TeX} from '../../tex.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { CommandMap } from '../TokenMap.js';
+import { Configuration, ParserConfiguration } from '../Configuration.js';
+import { ColorMethods } from './ColorMethods.js';
+import { ColorModel } from './ColorUtil.js';
+import { TeX } from '../../tex.js';
 
 /**
  * The color macros
  */
 new CommandMap('color', {
-  color: 'Color',
-  textcolor: 'TextColor',
-  definecolor: 'DefineColor',
-  colorbox: 'ColorBox',
-  fcolorbox: 'FColorBox'
-}, ColorMethods);
+  color: ColorMethods.Color,
+  textcolor: ColorMethods.TextColor,
+  definecolor: ColorMethods.DefineColor,
+  colorbox: ColorMethods.ColorBox,
+  fcolorbox: ColorMethods.FColorBox,
+});
 
 /**
  * Config method for Color package.
  *
- * @param {Configuration} config The current configuration.
+ * @param {Configuration} _config The current configuration.
  * @param {TeX} jax              The TeX jax having that configuration
  */
-const config = function(_config: ParserConfiguration, jax: TeX<any, any, any>) {
-  jax.parseOptions.packageData.set('color', {model: new ColorModel()});
+const config = function (
+  _config: ParserConfiguration,
+  jax: TeX<any, any, any>
+) {
+  jax.parseOptions.packageData.set('color', { model: new ColorModel() });
 };
 
 /**
  * The configuration for the color macros
  */
-export const ColorConfiguration = Configuration.create(
-  'color', {
-    handler: {
-      macro: ['color'],
+export const ColorConfiguration = Configuration.create('color', {
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.MACRO]: ['color'],
+  },
+  [ConfigurationType.OPTIONS]: {
+    color: {
+      padding: '5px',
+      borderWidth: '2px',
     },
-    options: {
-      color: {
-        padding: '5px',
-        borderWidth: '2px'
-      }
-    },
-    config: config
-  }
-);
+  },
+  [ConfigurationType.CONFIG]: config,
+});

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a lite CssStyleDeclaration replacement
+ * @file  Implements a lite CssStyleDeclaration replacement
  *                (very limited in scope)
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -25,11 +25,12 @@
 /**
  * An object contining name: value pairs
  */
-export type StyleList = {[name: string]: string};
+export type StyleList = { [name: string]: string };
 
 /**
  * Data for how to map a combined style (like border) to its children
  */
+/* prettier-ignore */
 export type connection = {
   children: string[],               // suffix names to add to the base name
   split: (name: string) => void,    // function to split the value for the children
@@ -39,20 +40,20 @@ export type connection = {
 /**
  * A collection of connections
  */
-export type connections = {[name: string]: connection};
+export type connections = { [name: string]: connection };
 
 /*********************************************************/
 /**
  * Some common children arrays
  */
-const TRBL = ['top', 'right', 'bottom', 'left'];
-const WSC = ['width', 'style', 'color'];
+export const TRBL = ['top', 'right', 'bottom', 'left'];
+export const WSC = ['width', 'style', 'color'];
 
 /**
  * Split a style at spaces (taking quotation marks and commas into account)
  *
  * @param {string} text  The combined styles to be split at spaces
- * @return {string[]}    Array of parts of the style (separated by spaces)
+ * @returns {string[]}    Array of parts of the style (separated by spaces)
  */
 function splitSpaces(text: string): string[] {
   const parts = text.split(/((?:'[^']*'|"[^"]*"|,[\s\n]|[^\s\n])*)/g);
@@ -75,7 +76,6 @@ function splitSpaces(text: string): string[] {
  *
  * @param {string} name   The style to be processed
  */
-
 function splitTRBL(name: string) {
   const parts = splitSpaces(this.styles[name]);
   if (parts.length === 0) {
@@ -158,9 +158,10 @@ function combineSame(name: string) {
 /**
  * Patterns for the parts of a boarder
  */
-const BORDER: {[name: string]: RegExp} = {
+const BORDER: { [name: string]: RegExp } = {
   width: /^(?:[\d.]+(?:[a-z]+)|thin|medium|thick|inherit|initial|unset)$/,
-  style: /^(?:none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|inherit|initial|unset)$/
+  style:
+    /^(?:none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|inherit|initial|unset)$/,
 };
 
 /**
@@ -169,7 +170,7 @@ const BORDER: {[name: string]: RegExp} = {
  * @param {string} name   The style to be processed
  */
 function splitWSC(name: string) {
-  let parts = {width: '', style: '', color: ''} as StyleList;
+  const parts = { width: '', style: '', color: '' } as StyleList;
   for (const part of splitSpaces(this.styles[name])) {
     if (part.match(BORDER.width) && parts.width === '') {
       parts.width = part;
@@ -185,7 +186,7 @@ function splitWSC(name: string) {
 }
 
 /**
- * Combine with-style-color border definition from children
+ * Combine width-style-color border definition from children
  *
  * @param {string} name   The style to be processed
  */
@@ -208,34 +209,48 @@ function combineWSC(name: string) {
 /**
  * Patterns for the parts of a font declaration
  */
-const FONT: {[name: string]: RegExp} = {
+const FONT: { [name: string]: RegExp } = {
   style: /^(?:normal|italic|oblique|inherit|initial|unset)$/,
-  variant: new RegExp('^(?:' +
-                      ['normal|none',
-                       'inherit|initial|unset',
-                       'common-ligatures|no-common-ligatures',
-                       'discretionary-ligatures|no-discretionary-ligatures',
-                       'historical-ligatures|no-historical-ligatures',
-                       'contextual|no-contextual',
-                       '(?:stylistic|character-variant|swash|ornaments|annotation)\\([^)]*\\)',
-                       'small-caps|all-small-caps|petite-caps|all-petite-caps|unicase|titling-caps',
-                       'lining-nums|oldstyle-nums|proportional-nums|tabular-nums',
-                       'diagonal-fractions|stacked-fractions',
-                       'ordinal|slashed-zero',
-                       'jis78|jis83|jis90|jis04|simplified|traditional',
-                       'full-width|proportional-width',
-                       'ruby'].join('|') + ')$'),
+  variant: new RegExp(
+    '^(?:' +
+      [
+        'normal|none',
+        'inherit|initial|unset',
+        'common-ligatures|no-common-ligatures',
+        'discretionary-ligatures|no-discretionary-ligatures',
+        'historical-ligatures|no-historical-ligatures',
+        'contextual|no-contextual',
+        '(?:stylistic|character-variant|swash|ornaments|annotation)\\([^)]*\\)',
+        'small-caps|all-small-caps|petite-caps|all-petite-caps|unicase|titling-caps',
+        'lining-nums|oldstyle-nums|proportional-nums|tabular-nums',
+        'diagonal-fractions|stacked-fractions',
+        'ordinal|slashed-zero',
+        'jis78|jis83|jis90|jis04|simplified|traditional',
+        'full-width|proportional-width',
+        'ruby',
+      ].join('|') +
+      ')$'
+  ),
   weight: /^(?:normal|bold|bolder|lighter|[1-9]00|inherit|initial|unset)$/,
-  stretch: new RegExp('^(?:' +
-                      ['normal',
-                       '(?:(?:ultra|extra|semi)-)?condensed',
-                       '(?:(?:semi|extra|ulta)-)?expanded',
-                       'inherit|initial|unset']. join('|') + ')$'),
-  size: new RegExp('^(?:' +
-                   ['xx-small|x-small|small|medium|large|x-large|xx-large|larger|smaller',
-                    '[\d.]+%|[\d.]+[a-z]+',
-                    'inherit|initial|unset'].join('|') + ')' +
-                   '(?:\/(?:normal|[\d.\+](?:%|[a-z]+)?))?$')
+  stretch: new RegExp(
+    '^(?:' +
+      [
+        'normal',
+        '(?:(?:ultra|extra|semi)-)?(?:condensed|expanded)',
+        'inherit|initial|unset',
+      ].join('|') +
+      ')$'
+  ),
+  size: new RegExp(
+    '^(?:' +
+      [
+        'xx-small|x-small|small|medium|large|x-large|xx-large|larger|smaller',
+        '[\\d.]+%|[\\d.]+[a-z]+',
+        'inherit|initial|unset',
+      ].join('|') +
+      ')' +
+      '(?:/(?:normal|[\\d.]+(?:%|[a-z]+)?))?$'
+  ),
 };
 
 /**
@@ -249,13 +264,26 @@ function splitFont(name: string) {
   //  The parts found (array means can be more than one word)
   //
   const value = {
-    style: '', variant: [], weight: '', stretch: '',
-    size: '', family: '', 'line-height': ''
-  } as {[name: string]: string | string[]};
+    style: '',
+    variant: [],
+    weight: '',
+    stretch: '',
+    size: '',
+    family: '',
+    'line-height': '',
+  } as { [name: string]: string | string[] };
   for (const part of parts) {
-    value.family = part; // assume it is family unless otherwise (family must be present)
+    if (!value.family) {
+      value.family = part; // assume it is family unless otherwise (family must be present)
+    }
     for (const name of Object.keys(FONT)) {
-      if ((Array.isArray(value[name]) || value[name] === '') && part.match(FONT[name])) {
+      if (
+        (Array.isArray(value[name]) || value[name] === '') &&
+        part.match(FONT[name])
+      ) {
+        if (value.family === part) {
+          value.family = '';
+        }
         if (name === 'size') {
           //
           // Handle size/line-height
@@ -271,14 +299,14 @@ function splitFont(name: string) {
           //
           if (Array.isArray(value[name])) {
             (value[name] as string[]).push(part);
-          } else {
+          } else if (value[name] === '') {
             value[name] = part;
           }
         }
       }
     }
   }
-  saveFontParts(name, value);
+  saveFontParts.call(this, name, value);
   delete this.styles[name]; // only use the parts, not the font declaration itself
 }
 
@@ -286,7 +314,10 @@ function splitFont(name: string) {
  * @param {string} name   The style to be processed
  * @param {{[name: string]: string | string[]}} value  The list of parts detected above
  */
-function saveFontParts(name: string, value: {[name: string]: string | string[]}) {
+function saveFontParts(
+  name: string,
+  value: { [name: string]: string | string[] }
+) {
   for (const child of Styles.connect[name].children) {
     const cname = this.childName(name, child);
     if (Array.isArray(value[child])) {
@@ -294,7 +325,7 @@ function saveFontParts(name: string, value: {[name: string]: string | string[]})
       if (values.length) {
         this.styles[cname] = values.join(' ');
       }
-    } else  if (value[child] !== '') {
+    } else if (value[child] !== '') {
       this.styles[cname] = value[child];
     }
   }
@@ -302,6 +333,8 @@ function saveFontParts(name: string, value: {[name: string]: string | string[]})
 
 /**
  * Combine font parts into one (we don't actually do that)
+ *
+ * @param {string} _name The font name
  */
 function combineFont(_name: string) {}
 
@@ -310,13 +343,16 @@ function combineFont(_name: string) {}
  * Implements the Styles object (lite version of CssStyleDeclaration)
  */
 export class Styles {
-
   /**
    * Patterns for style values and comments
    */
-  public static pattern: {[name: string]: RegExp} = {
-    style: /([-a-z]+)[\s\n]*:[\s\n]*((?:'[^']*'|"[^"]*"|\n|.)*?)[\s\n]*(?:;|$)/g,
-    comment: /\/\*[^]*?\*\//g
+  public static pattern: { [name: string]: RegExp } = {
+    sanitize: /['";]/,
+    value:
+      /^((:?'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^'";])*?)[\s\n]*(?:;|$).*/,
+    style:
+      /([-a-z]+)[\s\n]*:[\s\n]*((?:'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^'";])*?)[\s\n]*(?:;|$)/g,
+    comment: /\/\*[^]*?\*\//g,
   };
 
   /**
@@ -326,55 +362,63 @@ export class Styles {
     padding: {
       children: TRBL,
       split: splitTRBL,
-      combine: combineTRBL
+      combine: combineTRBL,
     },
 
     border: {
       children: TRBL,
       split: splitSame,
-      combine: combineSame
+      combine: combineSame,
     },
     'border-top': {
       children: WSC,
       split: splitWSC,
-      combine: combineWSC
+      combine: combineWSC,
     },
     'border-right': {
       children: WSC,
       split: splitWSC,
-      combine: combineWSC
+      combine: combineWSC,
     },
     'border-bottom': {
       children: WSC,
       split: splitWSC,
-      combine: combineWSC
+      combine: combineWSC,
     },
     'border-left': {
       children: WSC,
       split: splitWSC,
-      combine: combineWSC
+      combine: combineWSC,
     },
     'border-width': {
       children: TRBL,
       split: splitTRBL,
-      combine: null      // means its children combine to a different parent
+      combine: null, // means its children combine to a different parent
     },
     'border-style': {
       children: TRBL,
       split: splitTRBL,
-      combine: null      // means its children combine to a different parent
+      combine: null, // means its children combine to a different parent
     },
     'border-color': {
       children: TRBL,
       split: splitTRBL,
-      combine: null      // means its children combine to a different parent
+      combine: null, // means its children combine to a different parent
     },
 
     font: {
-      children: ['style', 'variant', 'weight', 'stretch', 'line-height', 'size', 'family'],
+      children: [
+        'style',
+        'variant',
+        'weight',
+        'stretch',
+        'line-height',
+        'size',
+        'family',
+      ],
       split: splitFont,
-      combine: combineFont
-    }
+      combine: combineFont,
+    },
   };
 
   /**
@@ -384,24 +428,56 @@ export class Styles {
 
   /**
    * @param {string} cssText  The initial definition for the style
-   * @constructor
+   * @class
    */
   constructor(cssText: string = '') {
     this.parse(cssText);
   }
 
   /**
-   * @return {string}  The CSS string for the styles currently defined
+   * @param {string} text  The value to be sanitized
+   * @returns {string}     The sanitized value
+   *                         (removes ; and anything past that, and balances quotation marks)
+   */
+  protected sanitizeValue(text: string): string {
+    const PATTERN = (this.constructor as typeof Styles).pattern;
+    if (!text.match(PATTERN.sanitize)) {
+      return text;
+    }
+    text = text.replace(PATTERN.value, '$1');
+    const test = text
+      .replace(/\\./g, '')
+      .replace(/(['"]).*?\1/g, '')
+      .replace(/[^'"]/g, '');
+    if (test.length) {
+      text += test.charAt(0);
+    }
+    return text;
+  }
+
+  /**
+   * @returns {string}  The CSS string for the styles currently defined
    */
   public get cssText(): string {
     const styles = [] as string[];
     for (const name of Object.keys(this.styles)) {
       const parent = this.parentName(name);
-      if (!this.styles[parent]) {
-        styles.push(name + ': ' + this.styles[name] + ';');
+      const cname = name.replace(/.*-/, '');
+      if (
+        !this.styles[parent] ||
+        !Styles.connect[parent]?.children?.includes(cname)
+      ) {
+        styles.push(`${name}: ${this.styles[name]};`);
       }
     }
     return styles.join(' ');
+  }
+
+  /**
+   * @returns {StyleList} The object to map style names to the values
+   */
+  public get styleList(): StyleList {
+    return { ...this.styles };
   }
 
   /**
@@ -410,9 +486,9 @@ export class Styles {
    */
   public set(name: string, value: string | number | boolean) {
     name = this.normalizeName(name);
-    this.setStyle(name, value as string);
+    this.setStyle(name, String(value));
     //
-    // If there is no combine function ,the children combine to
+    // If there is no combine function, the children combine to
     // a separate parent (e.g., border-width sets border-top-width, etc.
     // and combines to border-top)
     //
@@ -425,19 +501,27 @@ export class Styles {
     // it with its parent's other children
     //
     while (name.match(/-/)) {
+      const cname = name;
       name = this.parentName(name);
-      if (!Styles.connect[name]) break;
+      if (
+        !Styles.connect[cname] &&
+        !Styles.connect[name]?.children?.includes(
+          cname.substring(name.length + 1)
+        )
+      ) {
+        break;
+      }
       Styles.connect[name].combine.call(this, name);
     }
   }
 
   /**
    * @param {string} name  The name of the style to get
-   * @return {string}      The value of the style (or empty string if not defined)
+   * @returns {string}      The value of the style (or empty string if not defined)
    */
   public get(name: string): string {
     name = this.normalizeName(name);
-    return (this.styles.hasOwnProperty(name) ? this.styles[name] : '');
+    return Object.hasOwn(this.styles, name) ? this.styles[name] : '';
   }
 
   /**
@@ -445,7 +529,7 @@ export class Styles {
    * @param {string} value  The value to set it to
    */
   protected setStyle(name: string, value: string) {
-    this.styles[name] = value;
+    this.styles[name] = this.sanitizeValue(value);
     if (Styles.connect[name] && Styles.connect[name].children) {
       Styles.connect[name].split.call(this, name);
     }
@@ -467,21 +551,21 @@ export class Styles {
 
   /**
    * @param {string} name   The name of the style whose parent style is to be found
-   * @return {string}       The name of the parent, or '' if none
+   * @returns {string}      The name of the parent, or '' if none
    */
   protected parentName(name: string): string {
     const parent = name.replace(/-[^-]*$/, '');
-    return (name === parent ? '' : parent);
+    return name === parent ? '' : parent;
   }
 
   /**
    * @param {string} name   The name of the parent style
    * @param {string} child  The suffix to be added to the parent
-   * @preturn {string}      The combined name
+   * @returns {string}      The combined name
    */
-  protected childName(name: string, child: string) {
+  protected childName(name: string, child: string): string {
     //
-    // If the child contains a dash, it is already the fill name
+    // If the child contains a dash, it is already the full name
     //
     if (child.match(/-/)) {
       return child;
@@ -499,10 +583,10 @@ export class Styles {
 
   /**
    * @param {string} name  The name of a style to normalize
-   * @return {string}      The name converted from CamelCase to lowercase with dashes
+   * @returns {string}      The name converted from CamelCase to lowercase with dashes
    */
   protected normalizeName(name: string): string {
-    return name.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
+    return name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase());
   }
 
   /**
@@ -511,14 +595,16 @@ export class Styles {
    *                           as well as the merged style shorthands)
    */
   protected parse(cssText: string = '') {
-    let PATTERN = (this.constructor as typeof Styles).pattern;
+    const PATTERN = (this.constructor as typeof Styles).pattern;
     this.styles = {};
-    const parts = cssText.replace(PATTERN.comment, '').split(PATTERN.style);
+    const parts = cssText
+      .replace(/\n/g, ' ')
+      .replace(PATTERN.comment, '')
+      .split(PATTERN.style);
     while (parts.length > 1) {
-      let [space, name, value] = parts.splice(0, 3);
-      if (space.match(/[^\s\n]/)) return;
+      const [space, name, value] = parts.splice(0, 3);
+      if (space.match(/[^\s\n;]/)) return;
       this.set(name, value);
     }
   }
-
 }

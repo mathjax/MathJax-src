@@ -1,0 +1,17 @@
+{
+  "build": {
+    "component": "a11y/semantic-enrich",
+    "targets": [
+      "a11y/semantic-enrich.ts"
+    ]
+  },
+  "webpack": {
+    "name": "a11y/semantic-enrich",
+    "libs": [
+      "components/src/input/mml/lib",
+      "components/src/core/lib",
+      "components/src/a11y/sre/lib",
+      "components/src/loader/lib"
+    ]
+  }
+}

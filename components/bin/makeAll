@@ -2,7 +2,7 @@
 
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,38 +29,120 @@ const fs = require('fs');
 const path = require('path');
 const {execSync} = require('child_process');
 
+/**
+ *  The default options
+ */
 const options = {
-  recursive: true
+  build: true,
+  copy: true,
+  pack: true,
+  recursive: true,
+  verbose: true,
+  target: 'mjs',
+  bundle: ''
 };
 
 /**
- * Get the directories to process and check for options
+ * Get the directories to process
  */
 const dirs = process.argv.slice(2);
 
-if (dirs[0] === '--no-subdirs') {
-  dirs.shift();
-  options.recursive = false;
+/**
+ * The options and their actions
+ */
+const optionActions = new Map([
+  ['no-subdirs', () => {options.recursive = false}],
+  ['cjs', () => {options.target = 'cjs'}],
+  ['mjs', () => {options.target = 'mjs'}],
+  ['terse', () => {options.verbose = false}],
+  ['bundle-cjs', () => {options.bundle = 'bundle-cjs'}],
+  ['build', () => {
+    options.build = 1;
+    if (options.copy === true) {
+      options.copy = false;
+    }
+    if (options.pack === true) {
+      options.pack = false;
+    }
+  }],
+  ['copy', () => {
+    options.copy = 1;
+    if (options.build === true) {
+      options.build = false;
+    }
+    if (options.pack === true) {
+      options.pack = false;
+    }
+  }],
+  ['pack', () => {
+    options.pack = 1;
+    if (options.build === true) {
+      options.build = false;
+    }
+    if (options.copy === true) {
+      options.copy = false;
+    }
+  }]
+]);
+
+/**
+ * Check for options
+ */
+while (dirs[0] && dirs[0].substring(0, 2) === '--') {
+  const option = dirs.shift().substring(2);
+  if (option === '') {
+    break;
+  }
+  const action = optionActions.get(option);
+  if (!action) {
+    console.error(`Invalid option --${option}`);
+    process.exit();
+  }
+  action();
 }
 
+/**
+ * Make sure there is at least one directory
+ */
 if (dirs.length === 0) {
   dirs.push('.');
 }
 
 /**
- * The commads to runb the bin/build scripts
- *  (on Unix, could be done without the 'node ' prefix, but
- *   for Windows, these are needed.)
+ * The commads to run the various scripts
+ *  (on Unix, could be done without the 'node ' prefix, but for Windows, these are needed.)
  */
-const build = `node '${path.join(__dirname, 'build')}'`;
-const copy = `node '${path.join(__dirname, 'copy')}'`;
-const pack = `node '${path.join(__dirname, 'pack')}'`;
+const build = `node '${path.join(__dirname, 'build')}' '${options.target}'`;
+const copy = `node '${path.join(__dirname, 'copy')}' '${options.target}' '${options.bundle}'`;
+const pack = `node '${path.join(__dirname, 'pack')}' '${options.target}' '${options.bundle}'`;
+
+/**
+ * @param {string} name    The file name to turn into a Regular expression
+ * @return {RegExp}        The regular expression for the name,
+ */
+function fileRegExp(name) {
+  return new RegExp(name.replace(/([\\.{}[\]()?*^$])/g, '\\$1'), 'g');
+}
+
+/**
+ * Get the current working directory
+ */
+const root = process.cwd();
 
 /**
  * Regular expression for the components directory
  */
-const compRE = new RegExp(path.dirname(__dirname).replace(/([\\.{}[\]()?*^$])/g, '\\$1'));
-const dirRE = new RegExp(process.cwd().replace(/([\\.{}[\]()?*^$])/g, '\\$1'));
+const compRE = fileRegExp(path.dirname(__dirname));
+const dirRE = fileRegExp(root);
+
+
+/**
+ * Read and process a configuration file
+ */
+function getConfig(dir) {
+  const file = path.join(dir, 'config.json');
+  return fs.existsSync(file) ? JSON.parse(String(fs.readFileSync(file))) : null;
+}
 
 /**
  * Process the contents of an array of directories
@@ -69,10 +151,11 @@ const dirRE = new RegExp(process.cwd().replace(/([\\.{}[\]()?*^$])/g, '\\$1'));
  */
 function processList(dirs) {
   for (const dir of dirs) {
-    const fulldir = path.resolve(dir);
-    processDir(fulldir, buildLib);
-    processDir(fulldir, webpackLib);
-    processDir(fulldir, copyLib);
+    const fulldir = path.resolve(root, dir);
+    const config = getConfig(fulldir);
+    processDir(fulldir, buildLib, config);
+    processDir(fulldir, copyLib, config);
+    processDir(fulldir, webpackLib, config);
   }
 }
 
@@ -81,9 +164,12 @@ function processList(dirs) {
  *
  * @param {string} dir        The directory to process
  * @param {Function} action   The action to take
+ * @param {Object} config     The configuration json data
  */
-function processDir(dir, action) {
-  action(dir);
+function processDir(dir, action, config) {
+  if (config) {
+    action(dir, config);
+  }
   if (options.recursive) {
     processSubdirs(dir, action);
   }
@@ -94,69 +180,77 @@ function processDir(dir, action) {
  *
  * @param {string} dir        The directory whose subdirectories are to be processed
  * @param {Function} action   The action to take
+ * @param {Object} config     The configuration json data
  */
-function processSubdirs(dir, action) {
+function processSubdirs(dir, action, config) {
   for (const name of fs.readdirSync(dir)) {
     const file = path.join(dir, name);
     if (fs.lstatSync(file).isDirectory()) {
-      processDir(file, action);
+      const config = getConfig(file);
+      processDir(file, action, config);
     }
   }
 }
 
 /**
+ * Run a command on a given directory
+ */
+function run(cmd, dir) {
+  return execSync(cmd + ` '${path.relative('.', dir).replace(/'/g, '\\\'')}'`);
+}
+
+/**
  * Run bin/build if there is a configuration file for it
  *
- * @param {string} dir   The directory to check
+ * @param {string} dir      The directory to check
+ * @param {Object} config   The configuration json data
  */
-function buildLib(dir) {
-  const file = path.join(dir, 'build.json');
-  if (!fs.existsSync(file)) return;
+function buildLib(dir, config) {
+  if (!config.build || !options.build) return;
   console.info('Building ' + dir.replace(compRE, '').replace(dirRE, '.'));
-  const wd = process.cwd();
   try {
-    process.chdir(dir);
-    const result = execSync(build);
-    console.info('    ' + String(result).replace(/\n/g, '\n    '));
+    const result = run(build, dir);
+    if (options.verbose) {
+      console.info('    ' + String(result).replace(/\n/g, '\n    '));
+    }
   } catch (err) {
     console.info('    ' + err.message);
   }
-  process.chdir(wd);
 }
 
 /**
  * Run webpack if there is a configuration file for it
  *
- * @param {string} dir   The directory to check
+ * @param {string} dir      The directory to check
+ * @param {Object} config   The configuration json data
  */
-function webpackLib(dir) {
-  const file = path.join(dir, 'webpack.config.js');
-  if (!fs.existsSync(file)) return;
+function webpackLib(dir, config) {
+  if (!config.webpack || !options.pack) return;
   console.info('Webpacking ' + dir.replace(compRE, '').replace(dirRE, '.'));
-  const wd = process.cwd();
   try {
-    process.chdir(dir);
-    const result = execSync(pack);
-    console.info('    ' + String(result).replace(/\n/g, '\n    '));
+    const result = run(pack, dir);
+    if (options.verbose) {
+      console.info('    ' + String(result).replace(/\n/g, '\n    '));
+    }
   } catch (err) {
     console.info('    ' + err.message);
   }
-  process.chdir(wd);
 }
 
 /**
  * Copy the designated files if there is a configurtion file for it
  *
- * @param {string} dir   The directory to check
+ * @param {string} dir      The directory to check
+ * @param {Object} config   The configuration json data
  */
-function copyLib(dir) {
-  const file = path.join(dir, 'copy.json');
-  if (!fs.existsSync(file)) return;
-  console.info('Copying ' + dir.replace(compRE, ''));
+function copyLib(dir, config) {
+  if (!config.copy || !options.copy) return;
+  console.info('Copying ' + dir.replace(compRE, '').replace(dirRE, '.'));
   try {
-    process.chdir(dir);
-    const result = execSync(copy);
-    console.info('    ' + String(result).replace(/\n/g, '\n    '));
+    const result = run(copy, dir);
+    if (options.verbose) {
+      console.info('    ' + String(result).replace(/\n/g, '\n    '));
+    }
   } catch (err) {
     console.info('    ' + err.message);
   }

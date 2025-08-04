@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,21 +16,25 @@
  */
 
 /**
- * @fileoverview  Implements the MathML InputJax object
+ * @file  Implements the MathML InputJax object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractInputJax} from '../core/InputJax.js';
-import {defaultOptions, separateOptions, OptionList} from '../util/Options.js';
-import {FunctionList} from '../util/FunctionList.js';
-import {MathDocument} from '../core/MathDocument.js';
-import {MathItem} from '../core/MathItem.js';
-import {DOMAdaptor} from '../core/DOMAdaptor.js';
-import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
+import { AbstractInputJax } from '../core/InputJax.js';
+import {
+  defaultOptions,
+  separateOptions,
+  OptionList,
+} from '../util/Options.js';
+import { FunctionList } from '../util/FunctionList.js';
+import { MathDocument } from '../core/MathDocument.js';
+import { MathItem } from '../core/MathItem.js';
+import { DOMAdaptor } from '../core/DOMAdaptor.js';
+import { MmlFactory } from '../core/MmlTree/MmlFactory.js';
 
-import {FindMathML} from './mathml/FindMathML.js';
-import {MathMLCompile} from './mathml/MathMLCompile.js';
+import { FindMathML } from './mathml/FindMathML.js';
+import { MathMLCompile } from './mathml/MathMLCompile.js';
 
 /*****************************************************************/
 /**
@@ -41,7 +45,6 @@ import {MathMLCompile} from './mathml/MathMLCompile.js';
  * @template D  The Document class
  */
 export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
-
   /**
    * The name of this input jax
    */
@@ -50,9 +53,11 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
   /**
    * @override
    */
+  /* prettier-ignore */
   public static OPTIONS: OptionList = defaultOptions({
     parseAs: 'html',         // Whether to use HTML or XML parsing for the MathML string
     forceReparse: false,     // Whether to force the string to be reparsed, or use the one from the document DOM
+    mmlFilters: [],          // Filters to add to the mmlFilters lost
     FindMathML: null,        // The FindMathML instance to override the default one
     MathMLCompile: null,     // The MathMLCompile instance to override the default one
     /*
@@ -82,11 +87,16 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
    * @override
    */
   constructor(options: OptionList = {}) {
-    let [mml, find, compile] = separateOptions(options, FindMathML.OPTIONS, MathMLCompile.OPTIONS);
+    const [mml, find, compile] = separateOptions(
+      options,
+      FindMathML.OPTIONS,
+      MathMLCompile.OPTIONS
+    );
     super(mml);
-    this.findMathML = this.options['FindMathML'] || new FindMathML<N, T, D>(find);
-    this.mathml = this.options['MathMLCompile'] || new MathMLCompile<N, T, D>(compile);
-    this.mmlFilters = new FunctionList();
+    this.findMathML = this.options.FindMathML || new FindMathML<N, T, D>(find);
+    this.mathml =
+      this.options.MathMLCompile || new MathMLCompile<N, T, D>(compile);
+    this.mmlFilters = new FunctionList(this.options.mmlFilters);
   }
 
   /**
@@ -135,30 +145,52 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   public compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>) {
     let mml = math.start.node;
-    if (!mml || !math.end.node || this.options['forceReparse'] || this.adaptor.kind(mml) === '#text') {
-      let mathml = this.executeFilters(this.preFilters, math, document, (math.math || '<math></math>').trim());
-      let doc = this.checkForErrors(this.adaptor.parse(mathml, 'text/' + this.options['parseAs']));
-      let body = this.adaptor.body(doc);
+    if (
+      !mml ||
+      !math.end.node ||
+      this.options['forceReparse'] ||
+      this.adaptor.kind(mml) === '#text'
+    ) {
+      let mathml = this.executeFilters(
+        this.preFilters,
+        math,
+        document,
+        (math.math || '<math></math>').trim()
+      );
+      if (this.options['parseAs'] === 'html') {
+        mathml = `<html><head></head><body>${mathml}</body></html>`;
+      }
+      const doc = this.checkForErrors(
+        this.adaptor.parse(mathml, 'text/' + this.options['parseAs'])
+      );
+      const body = this.adaptor.body(doc);
       if (this.adaptor.childNodes(body).length !== 1) {
         this.error('MathML must consist of a single element');
       }
       mml = this.adaptor.remove(this.adaptor.firstChild(body)) as N;
       if (this.adaptor.kind(mml).replace(/^[a-z]+:/, '') !== 'math') {
-        this.error('MathML must be formed by a <math> element, not <' + this.adaptor.kind(mml) + '>');
+        this.error(
+          'MathML must be formed by a <math> element, not <' +
+            this.adaptor.kind(mml) +
+            '>'
+        );
       }
     }
     mml = this.executeFilters(this.mmlFilters, math, document, mml);
-    return this.executeFilters(this.postFilters, math, document, this.mathml.compile(mml as N));
+    let root = this.mathml.compile(mml as N);
+    root = this.executeFilters(this.postFilters, math, document, root);
+    math.display = root.attributes.get('display') === 'block';
+    return root;
   }
 
   /**
    * Check a parsed MathML string for errors.
    *
    * @param {D} doc  The document returns from the DOMParser
-   * @return {D}     The document
+   * @returns {D}     The document
    */
   protected checkForErrors(doc: D): D {
-    let err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
+    const err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
     if (err) {
       if (this.adaptor.textContent(err) === '') {
         this.error('Error processing MathML');
@@ -183,5 +215,4 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
   public findMath(node: N) {
     return this.findMathML.findMath(node);
   }
-
 }

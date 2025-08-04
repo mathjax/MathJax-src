@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,26 +15,27 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Configuration file for the AMS package.
+ * @file Configuration file for the AMS package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
 
 /**
  * Generates a red version of the undefined control sequence, instead of
  * throwing an error.
+ *
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
 function noUndefined(parser: TexParser, name: string) {
   const textNode = parser.create('text', '\\' + name);
-  const options = parser.options.noundefined || {};
-  const def = {} as {[name: string]: string};
+  const options = parser.options.noundefined;
+  const def = {} as { [name: string]: string };
   for (const id of ['color', 'background', 'size']) {
     if (options[id]) {
       def['math' + id] = options[id];
@@ -43,18 +44,14 @@ function noUndefined(parser: TexParser, name: string) {
   parser.Push(parser.create('node', 'mtext', [], def, textNode));
 }
 
-export const NoUndefinedConfiguration = Configuration.create(
-  'noundefined', {
-    fallback: {macro: noUndefined},
-    options: {
-      noundefined: {
-        color: 'red',
-        background: '',
-        size: ''
-      }
+export const NoUndefinedConfiguration = Configuration.create('noundefined', {
+  [ConfigurationType.FALLBACK]: { [HandlerType.MACRO]: noUndefined },
+  [ConfigurationType.OPTIONS]: {
+    noundefined: {
+      color: 'red',
+      background: '',
+      size: '',
     },
-    priority: 3
-  }
-);
-
-
+  },
+  [ConfigurationType.PRIORITY]: 3,
+});

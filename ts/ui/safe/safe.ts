@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2022 The MathJax Consortium
+ *  Copyright (c) 2020-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,19 +16,18 @@
  */
 
 /**
- * @fileoverview  Support for the safe extension
+ * @file  Support for the safe extension
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Property} from '../../core/Tree/Node.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {MathItem} from '../../core/MathItem.js';
-import {MathDocument} from '../../core/MathDocument.js';
-import {OptionList, expandable} from '../../util/Options.js';
-import {DOMAdaptor} from '../../core/DOMAdaptor.js';
-import {SafeMethods} from './SafeMethods.js';
-
+import { Property } from '../../core/Tree/Node.js';
+import { MmlNode } from '../../core/MmlTree/MmlNode.js';
+import { MathItem } from '../../core/MathItem.js';
+import { MathDocument } from '../../core/MathDocument.js';
+import { OptionList, expandable } from '../../util/Options.js';
+import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+import { SafeMethods } from './SafeMethods.js';
 
 /**
  * Function type for filtering attributes
@@ -37,7 +36,11 @@ import {SafeMethods} from './SafeMethods.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export type FilterFunction<N, T, D> = (safe: Safe<N, T, D>, value: Property, ...args: any[]) => Property;
+export type FilterFunction<N, T, D> = (
+  safe: Safe<N, T, D>,
+  value: Property,
+  ...args: any[]
+) => Property;
 
 /**
  * The Safe object for sanitizing the internal MathML representation of an expression
@@ -47,7 +50,6 @@ export type FilterFunction<N, T, D> = (safe: Safe<N, T, D>, value: Property, ...
  * @template D  The Document class
  */
 export class Safe<N, T, D> {
-
   /**
    * The options controlling the handling of the safe extension
    */
@@ -56,10 +58,10 @@ export class Safe<N, T, D> {
       //
       //  Values can be "all", "safe", or "none"
       //
-      URLs:    'safe',   // safe are in safeProtocols below
-      classes: 'safe',   // safe start with mjx- (can be set by pattern below)
-      cssIDs:  'safe',   // safe start with mjx- (can be set by pattern below)
-      styles:  'safe'    // safe are in safeStyles below
+      URLs: 'safe', // safe are in safeProtocols below
+      classes: 'safe', // safe start with mjx- (can be set by pattern below)
+      cssIDs: 'safe', // safe start with mjx- (can be set by pattern below)
+      styles: 'safe', // safe are in safeStyles below
     },
     //
     // Largest padding/border/margin, etc. in em's
@@ -68,7 +70,7 @@ export class Safe<N, T, D> {
     //
     // Valid range for scriptsizemultiplier
     //
-    scriptsizemultiplierRange: [.6, 1],
+    scriptsizemultiplierRange: [0.6, 1],
     //
     // Valid range for scriptlevel
     //
@@ -93,7 +95,7 @@ export class Safe<N, T, D> {
       https: true,
       file: true,
       javascript: false,
-      data: false
+      data: false,
     }),
     //
     //  Which styles are allowed
@@ -111,7 +113,7 @@ export class Safe<N, T, D> {
       fontStyle: true,
       fontWeight: true,
       opacity: true,
-      outline: true
+      outline: true,
     }),
     //
     //  CSS styles that have Top/Right/Bottom/Left versions
@@ -120,7 +122,7 @@ export class Safe<N, T, D> {
       border: true,
       padding: true,
       margin: true,
-      outline: true
+      outline: true,
     }),
     //
     //  CSS styles that are lengths needing max/min testing
@@ -145,8 +147,8 @@ export class Safe<N, T, D> {
       outlineRight: true,
       outlineBottom: true,
       outlineLeft: true,
-      fontSize: [.707, 1.44]
-    })
+      fontSize: [0.707, 1.44],
+    }),
   };
 
   /**
@@ -157,7 +159,7 @@ export class Safe<N, T, D> {
     //  Methods called for MathML attribute processing
     //
     ['href', 'filterURL'],
-    ['src',  'filterURL'],
+    ['src', 'filterURL'],
     ['altimg', 'filterURL'],
     ['class', 'filterClassList'],
     ['style', 'filterStyles'],
@@ -167,7 +169,7 @@ export class Safe<N, T, D> {
     ['scriptminsize', 'filterFontSize'],
     ['scriptsizemultiplier', 'filterSizeMultiplier'],
     ['scriptlevel', 'filterScriptLevel'],
-    ['data-', 'filterData']
+    ['data-', 'filterData'],
   ]);
 
   /**
@@ -188,8 +190,8 @@ export class Safe<N, T, D> {
   /**
    * The methods for filtering the MathML attributes
    */
-  public filterMethods: {[name: string]: FilterFunction<N, T, D>} = {
-    ...SafeMethods
+  public filterMethods: { [name: string]: FilterFunction<N, T, D> } = {
+    ...SafeMethods,
   };
 
   /**
@@ -228,7 +230,12 @@ export class Safe<N, T, D> {
       if (method) {
         const value = this.filterMethods[method](this, attributes[id]);
         if (value) {
-          if (value !== (typeof value === 'number' ? parseFloat(attributes[id] as string) : attributes[id])) {
+          if (
+            value !==
+            (typeof value === 'number'
+              ? parseFloat(attributes[id] as string)
+              : attributes[id])
+          ) {
             attributes[id] = value;
           }
         } else {
@@ -243,28 +250,34 @@ export class Safe<N, T, D> {
    *
    * @param {string} id      The name of the attribute
    * @param {string} value   The value of the attribute
-   * @return {string|null}   The sanitized value
+   * @returns {string|null}   The sanitized value
    */
   public mmlAttribute(id: string, value: string): string | null {
     if (id === 'class') return null;
     const method = this.filterAttributes.get(id);
-    const filter = (method || (id.substr(0, 5) === 'data-' ? this.filterAttributes.get('data-') : null));
+    const filter =
+      method ||
+      (id.substring(0, 5) === 'data-'
+        ? this.filterAttributes.get('data-')
+        : null);
     if (!filter) {
       return value;
     }
     const result = this.filterMethods[filter](this, value, id);
-    return (typeof result === 'number' || typeof result === 'boolean' ? String(result) : result);
+    return typeof result === 'number' || typeof result === 'boolean'
+      ? String(result)
+      : result;
   }
 
   /**
    * Sanitize a list of class names
    *
    * @param {string[]} list   The list of class names
-   * @return {string[]}       The sanitized list
+   * @returns {string[]}       The sanitized list
    */
   public mmlClassList(list: string[]): string[] {
-    return list.map((name) => this.filterMethods.filterClass(this, name) as string)
-               .filter((value) => value !== null);
+    return list
+      .map((name) => this.filterMethods.filterClass(this, name) as string)
+      .filter((value) => value !== null);
   }
-
 }

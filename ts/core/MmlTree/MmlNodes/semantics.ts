@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlSemantics, MmlAnnotation, and MmlAnnotationXML nodes
+ * @file  Implements the MmlSemantics, MmlAnnotation, and MmlAnnotationXML nodes
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlNode, AbstractMmlBaseNode} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlNode, AbstractMmlBaseNode } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,14 +30,13 @@ import {AbstractMmlNode, AbstractMmlBaseNode} from '../MmlNode.js';
  */
 
 export class MmlSemantics extends AbstractMmlBaseNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlBaseNode.defaults,
     definitionUrl: null,
-    encoding: null
+    encoding: null,
   };
 
   /**
@@ -49,6 +48,7 @@ export class MmlSemantics extends AbstractMmlBaseNode {
 
   /**
    * <semantics> requires at least one node
+   *
    * @override
    */
   public get arity() {
@@ -57,12 +57,12 @@ export class MmlSemantics extends AbstractMmlBaseNode {
 
   /**
    * Ignore <semantics> when looking for partent node
+   *
    * @override
    */
   public get notParent() {
     return true;
   }
-
 }
 
 /*****************************************************************/
@@ -71,7 +71,6 @@ export class MmlSemantics extends AbstractMmlBaseNode {
  */
 
 export class MmlAnnotationXML extends AbstractMmlNode {
-
   /**
    * @override
    */
@@ -81,7 +80,7 @@ export class MmlAnnotationXML extends AbstractMmlNode {
     encoding: null,
     cd: 'mathmlkeys',
     name: '',
-    src: null
+    src: null,
   };
 
   /**
@@ -93,10 +92,10 @@ export class MmlAnnotationXML extends AbstractMmlNode {
 
   /**
    * Children are XMLNodes, so don't bother inheritting to them
+   *
    * @override
    */
   protected setChildInheritedAttributes() {}
-
 }
 
 /*****************************************************************/
@@ -105,19 +104,18 @@ export class MmlAnnotationXML extends AbstractMmlNode {
  */
 
 export class MmlAnnotation extends MmlAnnotationXML {
-
   /**
    * @override
    */
   public static defaults = {
-    ...MmlAnnotationXML.defaults
+    ...MmlAnnotationXML.defaults,
   };
 
   /**
    * Extra properties for this node
    */
   public properties = {
-    isChars: true
+    isChars: true,
   };
 
   /**
@@ -126,5 +124,4 @@ export class MmlAnnotation extends MmlAnnotationXML {
   public get kind() {
     return 'annotation';
   }
-
 }

@@ -1,0 +1,19 @@
+{
+  "build": {
+    "component": "output/chtml",
+    "targets": [
+      "output/chtml.ts",
+      "output/chtml",
+      "output/common.ts",
+      "output/common"
+    ]
+  },
+  "webpack": {
+    "name": "output/chtml",
+    "libs": [
+      "components/src/core/lib",
+      "components/src/startup/lib"
+    ],
+    "font": false
+  }
+}

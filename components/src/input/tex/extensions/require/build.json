@@ -1,5 +1,0 @@
-{
-  "id": "[tex]/require",
-  "component": "input/tex/extensions/require",
-  "targets": ["input/tex/require"]
-}

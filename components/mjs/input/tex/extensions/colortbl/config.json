@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/colortbl",
+    "component": "input/tex/extensions/colortbl",
+    "targets": ["input/tex/colortbl"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/colortbl",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

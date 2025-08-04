@@ -1,0 +1,15 @@
+{
+  "build": {
+    "component": "ui/menu",
+    "targets": ["ui/menu", "a11y/speech/SpeechMenu.ts"],
+    "excludeSubdirs": true
+  },
+  "webpack": {
+    "name": "ui/menu",
+    "libs": [
+      "components/src/core/lib",
+      "components/src/a11y/sre/lib",
+      "node_modules/mj-context-menu/js"
+    ]
+  }
+}

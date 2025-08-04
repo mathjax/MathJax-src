@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,18 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMsqrt node
+ * @file  Implements the MmlMsqrt node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import {
+  MmlNode,
+  AbstractMmlNode,
+  AttributeList,
+  TEXCLASS,
+} from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,12 +35,12 @@ import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMsqrt extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlNode.defaults
+    ...AbstractMmlNode.defaults,
+    'data-vertical-align': 'bottom',
   };
 
   /**
@@ -52,6 +57,7 @@ export class MmlMsqrt extends AbstractMmlNode {
 
   /**
    * <msqrt> has an inferred mrow
+   *
    * @override
    */
   public get arity() {
@@ -60,6 +66,7 @@ export class MmlMsqrt extends AbstractMmlNode {
 
   /**
    * <msqrt> can contain line breaks
+   *
    * @override
    */
   public get linebreakContainer() {
@@ -80,8 +87,12 @@ export class MmlMsqrt extends AbstractMmlNode {
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, _prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    _prime: boolean
+  ) {
     this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
   }
-
 }

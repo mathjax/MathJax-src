@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2022 The MathJax Consortium
+ *  Copyright (c) 2020-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,9 +15,8 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview  The TextParser class for the textmacros package
+ * @file  The TextParser class for the textmacros package
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -25,18 +24,17 @@
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import ParseOptions from '../ParseOptions.js';
-import ParseUtil from '../ParseUtil.js';
-import {StackItem} from '../StackItem.js';
-import {MmlNode, AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {EnvList} from '../StackItem.js';
+import { ParseUtil } from '../ParseUtil.js';
+import { StackItem } from '../StackItem.js';
+import { MmlNode, AbstractMmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { EnvList } from '../StackItem.js';
 import NodeUtil from '../NodeUtil.js';
-import {StopItem, StyleItem} from '../base/BaseItems.js';
+import { StopItem, StyleItem } from '../base/BaseItems.js';
 
 /**
  * Subclass of the TexParser but for handling text-mode material
  */
 export class TextParser extends TexParser {
-
   /**
    * The accumulated text material to go into an mtext element
    */
@@ -59,8 +57,10 @@ export class TextParser extends TexParser {
 
   /**
    * Short-hand for obtaining the saved TexParser
+   *
+   * @returns {TexParser} The saved TexParser
    */
-  public get texParser() {
+  public get texParser(): TexParser {
     return this.configuration.packageData.get('textmacros').texParser;
   }
 
@@ -73,9 +73,14 @@ export class TextParser extends TexParser {
 
   /**
    * @override
-   * @constructor
+   * @class
    */
-  constructor(text: string, env: EnvList, configuration: ParseOptions, level?: number | string) {
+  constructor(
+    text: string,
+    env: EnvList,
+    configuration: ParseOptions,
+    level?: number | string
+  ) {
     super(text, env, configuration);
     this.level = level;
   }
@@ -86,9 +91,29 @@ export class TextParser extends TexParser {
    * @override
    */
   public mml() {
-    return (this.level != null ?
-            this.create('node', 'mstyle', this.nodes, {displaystyle: false, scriptlevel: this.level}) :
-            this.nodes.length === 1 ? this.nodes[0] : this.create('node', 'mrow', this.nodes));
+    this.copyLists();
+    this.configuration.popParser();
+    return this.level != null
+      ? this.create('node', 'mstyle', this.nodes, {
+          displaystyle: false,
+          scriptlevel: this.level,
+        })
+      : this.nodes.length === 1
+        ? this.nodes[0]
+        : this.create('node', 'mrow', this.nodes);
+  }
+
+  /**
+   * Copy the node list from the text parser to the TeX parser
+   */
+  protected copyLists() {
+    const parseOptions = this.texParser.configuration;
+    for (const [name, list] of Object.entries(this.configuration.nodeLists)) {
+      for (const node of list) {
+        parseOptions.addNode(name, node);
+      }
+    }
+    this.configuration.nodeLists = {};
   }
 
   /**
@@ -107,7 +132,11 @@ export class TextParser extends TexParser {
   public saveText() {
     if (this.text) {
       const mathvariant = this.stack.env.mathvariant;
-      const text = ParseUtil.internalText(this, this.text, mathvariant ? {mathvariant} : {});
+      const text = ParseUtil.internalText(
+        this,
+        this.text,
+        mathvariant ? { mathvariant } : {}
+      );
       this.text = '';
       this.Push(text);
     }
@@ -141,11 +170,8 @@ export class TextParser extends TexParser {
    */
   public PushMath(mml: MmlNode) {
     const env = this.stack.env;
-    if (!mml.isKind('TeXAtom')) {
-      mml = this.create('node', 'TeXAtom', [mml]);  // make sure the math is an ORD
-    }
     for (const name of ['mathsize', 'mathcolor']) {
-      if (env[name] && !mml.attributes.getExplicit(name)) {
+      if (env[name] && !mml.attributes.hasExplicit(name)) {
         if (!mml.isToken && !mml.isKind('mstyle')) {
           mml = this.create('node', 'mstyle', [mml]);
         }
@@ -154,6 +180,9 @@ export class TextParser extends TexParser {
     }
     if (mml.isInferred) {
       mml = this.create('node', 'mrow', mml.childNodes);
+    }
+    if (!mml.isKind('TeXAtom')) {
+      mml = this.create('node', 'TeXAtom', [mml]); // make sure the math is an ORD
     }
     this.nodes.push(mml);
   }
@@ -168,7 +197,7 @@ export class TextParser extends TexParser {
     const env = this.stack.env;
     if (!mml.isToken) return;
     for (const name of ['mathsize', 'mathcolor', 'mathvariant']) {
-      if (env[name] && !mml.attributes.getExplicit(name)) {
+      if (env[name] && !mml.attributes.hasExplicit(name)) {
         NodeUtil.setAttribute(mml, name, env[name]);
       }
     }
@@ -179,11 +208,12 @@ export class TextParser extends TexParser {
    *
    * @param {string} name   The macro that is calling for a parameter
    * @param {EnvList} env   The environment to use
+   * @returns {MmlNode}  The node with the parsed text element
    */
-  public ParseTextArg(name: string, env: EnvList) {
+  public ParseTextArg(name: string, env: EnvList): MmlNode {
     const text = this.GetArgument(name);
     env = Object.assign(Object.assign({}, this.stack.env), env);
-    return (new TextParser(text, env, this.configuration)).mml();
+    return new TextParser(text, env, this.configuration).mml();
   }
 
   /**
@@ -192,7 +222,11 @@ export class TextParser extends TexParser {
    * @override
    */
   public ParseArg(name: string) {
-    return (new TextParser(this.GetArgument(name), this.stack.env, this.configuration)).mml();
+    return new TextParser(
+      this.GetArgument(name),
+      this.stack.env,
+      this.configuration
+    ).mml();
   }
 
   /**
@@ -205,5 +239,4 @@ export class TextParser extends TexParser {
   public Error(id: string, message: string, ...args: string[]) {
     throw new TexError(id, message, ...args);
   }
-
 }

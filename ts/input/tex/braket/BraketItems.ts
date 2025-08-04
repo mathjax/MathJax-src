@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2022 The MathJax Consortium
+ *  Copyright (c) 2009-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,18 +15,18 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Stack items for parsing the braket package.
+ * @file Stack items for parsing the braket package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import { CheckType, BaseItem, StackItem } from '../StackItem.js';
+import { TEXCLASS, MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { ParseUtil } from '../ParseUtil.js';
+import { MATHSPACE, em } from '../../../util/lengths.js';
 
-import {CheckType, BaseItem, StackItem} from '../StackItem.js';
-import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
-import ParseUtil from '../ParseUtil.js';
-
+const THINSPACE = em(MATHSPACE.thinmathspace);
 
 /**
  * A bra-ket command. Collates elements from the opening brace to the closing
@@ -34,7 +34,6 @@ import ParseUtil from '../ParseUtil.js';
  * set). To finalise it adds the surrounding angle brackets or braces.
  */
 export class BraketItem extends BaseItem {
-
   /**
    * @override
    */
@@ -50,10 +49,20 @@ export class BraketItem extends BaseItem {
   }
 
   /**
+   * The MathML nodes that appear before the latest bar (so that \over can be handled properly).
+   */
+  public barNodes: MmlNode[] = [];
+
+  /**
    * @override
    */
   public checkItem(item: StackItem): CheckType {
     if (item.isKind('close')) {
+      if (item.getProperty('braketbar')) {
+        this.barNodes.push(...super.toMml(true, true).childNodes);
+        this.Clear();
+        return BaseItem.fail;
+      }
       return [[this.factory.create('mml', this.toMml())], true];
     }
     if (item.isKind('mml')) {
@@ -66,24 +75,52 @@ export class BraketItem extends BaseItem {
     return super.checkItem(item);
   }
 
-
   /**
    * @override
    */
-  public toMml() {
-    let inner = super.toMml();
-    let open = this.getProperty('open') as string;
-    let close = this.getProperty('close') as string;
+  public toMml(inferred: boolean = true, forceRow?: boolean) {
+    let inner = super.toMml(inferred, forceRow);
+    if (!inferred) {
+      //
+      // When toMml() is being called from processing an \over item, we don't want to
+      // add the delimiters, so just do the super toMml() method.  (Issue #3000)
+      //
+      return inner;
+    }
+    const open = this.getProperty('open') as string;
+    const close = this.getProperty('close') as string;
+    //
+    // Add any saved bar nodes
+    //
+    if (this.barNodes.length) {
+      inner = this.create('node', 'inferredMrow', [...this.barNodes, inner]);
+    }
     if (this.getProperty('stretchy')) {
+      //
+      //  Add spacing, if requested
+      //
+      if (this.getProperty('space')) {
+        inner = this.create('node', 'inferredMrow', [
+          this.create('token', 'mspace', { width: THINSPACE }),
+          inner,
+          this.create('token', 'mspace', { width: THINSPACE }),
+        ]);
+      }
       return ParseUtil.fenced(this.factory.configuration, open, inner, close);
     }
-    let attrs = {fence: true, stretchy: false, symmetric: true, texClass: TEXCLASS.OPEN};
-    let openNode = this.create('token', 'mo', attrs, open);
+    const attrs = {
+      fence: true,
+      stretchy: false,
+      symmetric: true,
+      texClass: TEXCLASS.OPEN,
+    };
+    const openNode = this.create('token', 'mo', attrs, open);
     attrs.texClass = TEXCLASS.CLOSE;
-    let closeNode = this.create('token', 'mo', attrs, close);
-    let mrow = this.create('node', 'mrow', [openNode, inner, closeNode],
-                         {open: open, close: close, texClass: TEXCLASS.INNER});
+    const closeNode = this.create('token', 'mo', attrs, close);
+    const mrow = this.create('node', 'mrow', [openNode, inner, closeNode], {
+      open: open,
+      close: close,
+    });
     return mrow;
   }
-
 }

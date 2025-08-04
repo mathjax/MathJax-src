@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,29 +16,33 @@
  */
 
 /**
- * @fileoverview  Implements functions for handling option lists
+ * @file  Implements functions for handling option lists
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-
 /*****************************************************************/
-/* tslint:disable-next-line:jsdoc-require */
 const OBJECT = {}.constructor;
 
 /**
  *  Check if an object is an object literal (as opposed to an instance of a class)
+ *
+ * @param {any} obj A javascript entity
+ * @returns {boolean} True if entity is really an object
  */
-export function isObject(obj: any) {
-  return typeof obj === 'object' && obj !== null &&
-    (obj.constructor === OBJECT || obj.constructor === Expandable);
+export function isObject(obj: any): boolean {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    (obj.constructor === OBJECT || obj.constructor === Expandable)
+  );
 }
 
 /*****************************************************************/
 /**
  * Generic list of options
  */
-export type OptionList = {[name: string]: any};
+export type OptionList = { [name: string]: any };
 
 /*****************************************************************/
 /**
@@ -68,26 +72,24 @@ export const APPEND = '[+]';
  */
 export const REMOVE = '[-]';
 
-
 /**
  *  Provides options for the option utlities.
  */
 export const OPTIONS = {
-  invalidOption: 'warn' as ('fatal' | 'warn'),
+  invalidOption: 'warn' as 'fatal' | 'warn',
   /**
    * Function to report messages for invalid options
    *
    * @param {string} message   The message for the invalid parameter.
-   * @param {string} key       The invalid key itself.
+   * @param {string} _key      The invalid key itself.
    */
   optionError: (message: string, _key: string) => {
     if (OPTIONS.invalidOption === 'fatal') {
       throw new Error(message);
     }
     console.warn('MathJax: ' + message);
-  }
+  },
 };
-
 
 /**
  * A Class to use for options that should not produce warnings if an undefined key is used
@@ -98,30 +100,27 @@ export class Expandable {}
  * Produces an instance of Expandable with the given values (to be used in defining options
  * that can use keys that don't have default values).  E.g., default options of the form:
  *
- *  OPTIONS = {
- *     types: expandable({
- *       a: 1,
- *       b: 2
- *     })
- *  }
+ * `OPTIONS = { types: expandable({ a: 1, b: 2 }) }`
  *
- *  would allow user options of
+ * would allow user options of
  *
- *  {
- *     types: {
- *       c: 3
- *     }
- *  }
+ * `{ types: { c: 3 } }`
  *
- *  without reporting an error.
+ * without reporting an error.
+ *
+ * @param {OptionList} def The options list
+ * @returns {OptionList} The augmented options list
  */
-export function expandable(def: OptionList) {
+export function expandable(def: OptionList): OptionList {
   return Object.assign(Object.create(Expandable.prototype), def);
 }
 
 /*****************************************************************/
 /**
  *  Make sure an option is an Array
+ *
+ * @param {any} x The object to turn into an array
+ * @returns {any[]} The array object containing x
  */
 export function makeArray(x: any): any[] {
   return Array.isArray(x) ? x : [x];
@@ -131,14 +130,16 @@ export function makeArray(x: any): any[] {
 /**
  * Get all keys and symbols from an object
  *
- * @param {Optionlist} def        The object whose keys are to be returned
- * @return {(string | symbol)[]}  The list of keys for the object
+ * @param {OptionList} def        The object whose keys are to be returned
+ * @returns {(string | symbol)[]}  The list of keys for the object
  */
 export function keys(def: OptionList): (string | symbol)[] {
   if (!def) {
     return [];
   }
-  return (Object.keys(def) as (string | symbol)[]).concat(Object.getOwnPropertySymbols(def));
+  return (Object.keys(def) as (string | symbol)[]).concat(
+    Object.getOwnPropertySymbols(def)
+  );
 }
 
 /*****************************************************************/
@@ -146,13 +147,13 @@ export function keys(def: OptionList): (string | symbol)[] {
  * Make a deep copy of an object
  *
  * @param {OptionList} def  The object to be copied
- * @return {OptionList}     The copy of the object
+ * @returns {OptionList}     The copy of the object
  */
 export function copy(def: OptionList): OptionList {
-  let props: OptionList = {};
+  const props: OptionList = {};
   for (const key of keys(def)) {
-    let prop = Object.getOwnPropertyDescriptor(def, key);
-    let value = prop.value;
+    const prop = Object.getOwnPropertyDescriptor(def, key);
+    const value = prop.value;
     if (Array.isArray(value)) {
       prop.value = insert([], value, false);
     } else if (isObject(value)) {
@@ -162,7 +163,10 @@ export function copy(def: OptionList): OptionList {
       props[key as string] = prop;
     }
   }
-  return Object.defineProperties(def.constructor === Expandable ? expandable({}) : {}, props);
+  return Object.defineProperties(
+    def.constructor === Expandable ? expandable({}) : {},
+    props
+  );
 }
 
 /*****************************************************************/
@@ -173,9 +177,13 @@ export function copy(def: OptionList): OptionList {
  * @param {OptionList} dst  The option list to merge into
  * @param {OptionList} src  The options to be merged
  * @param {boolean} warn    True if a warning should be issued for a src option that isn't already in dst
- * @return {OptionList}     The modified destination option list (dst)
+ * @returns {OptionList}     The modified destination option list (dst)
  */
-export function insert(dst: OptionList, src: OptionList, warn: boolean = true): OptionList {
+export function insert(
+  dst: OptionList,
+  src: OptionList,
+  warn: boolean = true
+): OptionList {
   for (let key of keys(src) as string[]) {
     //
     // Check if the key is valid (i.e., is in the defaults or in an expandable block)
@@ -190,13 +198,17 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true): 
     //
     // Shorthands for the source and destination values
     //
-    let sval = src[key], dval = dst[key];
+    const sval = src[key];
+    let dval = dst[key];
     //
     // If the source is an object literal and the destination exists and is either an
     //   object or a function (so can have properties added to it)...
     //
-    if (isObject(sval) && dval !== null &&
-        (typeof dval === 'object' || typeof dval === 'function')) {
+    if (
+      isObject(sval) &&
+      dval !== null &&
+      (typeof dval === 'object' || typeof dval === 'function')
+    ) {
       const ids = keys(sval);
       //
       // Check for APPEND or REMOVE objects:
@@ -206,24 +218,26 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true): 
         // If the destination value is an array...
         //
         Array.isArray(dval) &&
-          (
-            //
-            // If there is only one key and it is APPEND or REMOVE and the keys value is an array...
-            //
-            (ids.length === 1 && (ids[0] === APPEND || ids[0] === REMOVE) && Array.isArray(sval[ids[0]])) ||
-              //
-              // Or if there are two keys and they are APPEND and REMOVE and both keys' values
-              //   are arrays...
-              //
-              (ids.length === 2 && ids.sort().join(',') === APPEND + ',' + REMOVE &&
-               Array.isArray(sval[APPEND]) && Array.isArray(sval[REMOVE]))
-          )
+        //
+        // If there is only one key and it is APPEND or REMOVE and the keys value is an array...
+        //
+        ((ids.length === 1 &&
+          (ids[0] === APPEND || ids[0] === REMOVE) &&
+          Array.isArray(sval[ids[0]])) ||
+          //
+          // Or if there are two keys and they are APPEND and REMOVE and both keys' values
+          //   are arrays...
+          //
+          (ids.length === 2 &&
+            ids.sort().join(',') === APPEND + ',' + REMOVE &&
+            Array.isArray(sval[APPEND]) &&
+            Array.isArray(sval[REMOVE])))
       ) {
         //
         // Then remove any values to be removed
         //
         if (sval[REMOVE]) {
-          dval = dst[key] = dval.filter(x => sval[REMOVE].indexOf(x) < 0);
+          dval = dst[key] = dval.filter((x) => sval[REMOVE].indexOf(x) < 0);
         }
         //
         // And append any values to be added (make a copy so as not to modify the original)
@@ -266,10 +280,13 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true): 
  *
  * @param {OptionList} options  The option list to be merged into
  * @param {OptionList[]} defs   The option lists to merge into the first one
- * @return {OptionList}         The modified options list
+ * @returns {OptionList}         The modified options list
  */
-export function defaultOptions(options: OptionList, ...defs: OptionList[]): OptionList {
-  defs.forEach(def => insert(options, def, false));
+export function defaultOptions(
+  options: OptionList,
+  ...defs: OptionList[]
+): OptionList {
+  defs.forEach((def) => insert(options, def, false));
   return options;
 }
 
@@ -280,10 +297,13 @@ export function defaultOptions(options: OptionList, ...defs: OptionList[]): Opti
  *
  * @param {OptionList} options  The option list to be merged into
  * @param {OptionList[]} defs   The option lists to merge into the first one
- * @return {OptionList}         The modified options list
+ * @returns {OptionList}         The modified options list
  */
-export function userOptions(options: OptionList, ...defs: OptionList[]): OptionList {
-  defs.forEach(def => insert(options, def, true));
+export function userOptions(
+  options: OptionList,
+  ...defs: OptionList[]
+): OptionList {
+  defs.forEach((def) => insert(options, def, true));
   return options;
 }
 
@@ -293,12 +313,15 @@ export function userOptions(options: OptionList, ...defs: OptionList[]): OptionL
  *
  * @param {OptionList} options  The option list from which option values will be taken
  * @param {string[]} keys       The names of the options to extract
- * @return {OptionList}         The option list consisting of only the ones whose keys were given
+ * @returns {OptionList}         The option list consisting of only the ones whose keys were given
  */
-export function selectOptions(options: OptionList, ...keys: string[]): OptionList {
-  let subset: OptionList = {};
+export function selectOptions(
+  options: OptionList,
+  ...keys: string[]
+): OptionList {
+  const subset: OptionList = {};
   for (const key of keys) {
-    if (options.hasOwnProperty(key)) {
+    if (Object.hasOwn(options, key)) {
       subset[key] = options[key];
     }
   }
@@ -311,10 +334,13 @@ export function selectOptions(options: OptionList, ...keys: string[]): OptionLis
  *
  * @param {OptionList} options  The option list from which the option values will be taken
  * @param {OptionList} object   The option list whose keys will be used to select the options
- * @return {OptionList}         The option list consisting of the option values from the first
+ * @returns {OptionList}         The option list consisting of the option values from the first
  *                               list whose keys are those from the second list.
  */
-export function selectOptionsFromKeys(options: OptionList, object: OptionList): OptionList {
+export function selectOptionsFromKeys(
+  options: OptionList,
+  object: OptionList
+): OptionList {
   return selectOptions(options, ...Object.keys(object));
 }
 
@@ -328,15 +354,19 @@ export function selectOptionsFromKeys(options: OptionList, object: OptionList): 
  * @param {OptionList} options    The option list to be split into parts
  * @param {OptionList[]} objects  The list of option lists whose keys are used to break up
  *                                 the original options into separate pieces.
- * @return {OptionList[]}         The option lists taken from the original based on the
+ * @returns {OptionList[]}         The option lists taken from the original based on the
  *                                 keys of the other objects.  The first one in the list
  *                                 consists of the values not appearing in any of the others
  *                                 (i.e., whose keys were not in any of the others).
  */
-export function separateOptions(options: OptionList, ...objects: OptionList[]): OptionList[] {
-  let results: OptionList[] = [];
+export function separateOptions(
+  options: OptionList,
+  ...objects: OptionList[]
+): OptionList[] {
+  const results: OptionList[] = [];
   for (const object of objects) {
-    let exists: OptionList = {}, missing: OptionList = {};
+    const exists: OptionList = {},
+      missing: OptionList = {};
     for (const key of Object.keys(options || {})) {
       (object[key] === undefined ? missing : exists)[key] = options[key];
     }
@@ -347,7 +377,6 @@ export function separateOptions(options: OptionList, ...objects: OptionList[]): 
   return results;
 }
 
-
 /*****************************************************************/
 /**
  *  Look up a value from object literal, being sure it is an
@@ -356,8 +385,8 @@ export function separateOptions(options: OptionList, ...objects: OptionList[]): 
  * @param {string} name         The name of the key to look up.
  * @param {OptionList} lookup   The list of options to check.
  * @param {any} def             The default value if the key isn't found.
+ * @returns {any}               The value for the key.
  */
-export function lookup(name: string, lookup: OptionList, def: any = null) {
-  return (lookup.hasOwnProperty(name) ? lookup[name] : def);
+export function lookup(name: string, lookup: OptionList, def: any = null): any {
+  return Object.hasOwn(lookup, name) ? lookup[name] : def;
 }
-

@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/braket",
+    "component": "input/tex/extensions/braket",
+    "targets": ["input/tex/braket"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/braket",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "webpack": {
+    "name": "mml-svg-nofont",
+    "font": false
+  }
+}

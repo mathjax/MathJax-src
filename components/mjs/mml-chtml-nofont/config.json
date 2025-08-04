@@ -1,0 +1,6 @@
+{
+  "webpack": {
+    "name": "mml-chtml-nofont",
+    "font": false
+  }
+}

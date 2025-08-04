@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,49 +16,62 @@
  */
 
 /**
- * @fileoverview Generic WrapperFactory class for creating Wrapper objects
+ * @file Generic WrapperFactory class for creating Wrapper objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node} from './Node.js';
-import {Wrapper, WrapperClass} from './Wrapper.js';
-import {Factory, AbstractFactory} from './Factory.js';
+import { Node, NodeClass } from './Node.js';
+import { Wrapper, WrapperClass } from './Wrapper.js';
+import { Factory, AbstractFactory } from './Factory.js';
 
 /*****************************************************************/
 /**
  * The generic WrapperFactory class
  *
- * @template N  The Node type being created by the factory
- * @template W  The Wrapper type being produced (instance type)
- * @template C  The Wrapper class (for static values)
+ * @template N   The Node type being created by the factory
+ * @template C   The NodeClass for the nodes being created
+ * @template WW  The Wrapper type being produced (instance type)
+ * @template WC  The Wrapper class (for static values)
  */
-export interface WrapperFactory<N extends Node, W extends Wrapper<N, W>, C extends WrapperClass<N, W>>
-extends Factory<W, C> {
+export interface WrapperFactory<
+  N extends Node<N, C>,
+  C extends NodeClass<N, C>,
+  WW extends Wrapper<N, C, WW>,
+  WC extends WrapperClass<N, C, WW>,
+> extends Factory<WW, WC> {
   /**
-   * @param {N} node  The node to be wrapped
+   * @template TT The type to use for the wrappedd node
+   *
+   * @param {N} node      The node to be wrapped
    * @param {any[]} args  Any additional arguments needed when wrapping the node
-   * @return {W}  The newly wrapped node
+   * @returns {TT}         The newly wrapped node
    */
-  wrap(node: N, ...args: any[]): W;
+  wrap<TT extends WW = WW>(node: N, ...args: any[]): TT;
 }
 
 /*****************************************************************/
 /**
  * The generic WrapperFactory class
  *
- * @template N  The Node type being created by the factory
- * @template W  The Wrapper type being produced (instance type)
- * @template C  The Wrapper class (for static values)
+ * @template N   The Node type being created by the factory
+ * @template C   The NodeClass for the nodes being created
+ * @template WW  The Wrapper type being produced (instance type)
+ * @template WC  The Wrapper class (for static values)
  */
-export abstract class AbstractWrapperFactory<N extends Node, W extends Wrapper<N, W>, C extends WrapperClass<N, W>>
-extends AbstractFactory<W, C> implements WrapperFactory<N, W, C> {
+export abstract class AbstractWrapperFactory<
+    N extends Node<N, C>,
+    C extends NodeClass<N, C>,
+    WW extends Wrapper<N, C, WW>,
+    WC extends WrapperClass<N, C, WW>,
+  >
+  extends AbstractFactory<WW, WC>
+  implements WrapperFactory<N, C, WW, WC>
+{
   /**
-   * @param {N} node  The node to be wrapped
-   * @param {any[]} args  Any additional arguments needed when wrapping the node
-   * @return {W}  The newly wrapped node
+   * @override
    */
-  public wrap(node: N, ...args: any[]): W {
-    return this.create(node.kind, node, ...args);
+  public wrap<TT extends WW = WW>(node: N, ...args: any[]): TT {
+    return this.create(node.kind, node, ...args) as TT;
   }
 }

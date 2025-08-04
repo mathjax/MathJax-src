@@ -1,0 +1,15 @@
+{
+  "build": {
+    "component": "input/tex-base",
+    "targets": [
+      "input/tex.ts",
+      "input/tex",
+      "input/tex/base"
+    ],
+    "excludeSubdirs": true
+  },
+  "webpack": {
+    "name": "input/tex-base",
+    "libs": ["components/src/core/lib"]
+  }
+}

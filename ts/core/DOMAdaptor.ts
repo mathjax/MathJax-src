@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,31 +16,39 @@
  */
 
 /**
- * @fileoverview  The DOMAdaptor interface and abstract class
+ * @file  The DOMAdaptor interface and abstract class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {OptionList} from '../util/Options.js';
+import { OptionList } from '../util/Options.js';
 
 /**
  * The data for an attribute
  */
 export type AttributeData = {
-  name: string,
-  value: string
+  name: string;
+  value: string;
 };
 
 /**
  * The data for an elements page-based bounding box
  */
 export type PageBBox = {
-  left: number,
-  right: number,
-  top: number,
-  bottom: number
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
 };
 
+/**
+ * A minimal webworker interface
+ */
+export interface minWorker {
+  addEventListener(kind: string, listener: (event: Event) => void): void;
+  postMessage(msg: any): void;
+  terminate(): Promise<any> | void;
+}
 
 /*****************************************************************/
 /**
@@ -57,9 +65,14 @@ export interface DOMAdaptor<N, T, D> {
   document: D;
 
   /**
+   * True when the adaptor can measure DOM node sizes
+   */
+  canMeasureNodes: boolean;
+
+  /**
    * @param {string} text    The serialized document to be parsed
    * @param {string} format  The format (e.g., 'text/html' or 'text/xhtml')
-   * @return {D}             The parsed document
+   * @returns {D}             The parsed document
    */
   parse(text: string, format?: string): D;
 
@@ -68,45 +81,45 @@ export interface DOMAdaptor<N, T, D> {
    * @param {OptionList} def   The properties to set for the created node
    * @param {(N|T)[]} children The child nodes for the created HTML node
    * @param {string} ns        The namespace in which to create the node
-   * @return {N}               The generated HTML tree
+   * @returns {N}               The generated HTML tree
    */
   node(kind: string, def?: OptionList, children?: (N | T)[], ns?: string): N;
 
   /**
    * @param {string} text   The text from which to create an HTML text node
-   * @return {T}            The generated text node with the given text
+   * @returns {T}            The generated text node with the given text
    */
   text(text: string): T;
 
   /**
    * @param {D} doc   The document whose head is to be obtained
-   * @return {N}      The document.head element
+   * @returns {N}      The document.head element
    */
-  head(doc: D): N;
+  head(doc?: D): N;
 
   /**
    * @param {D} doc   The document whose body is to be obtained
-   * @return {N}      The document.body element
+   * @returns {N}      The document.body element
    */
-  body(doc: D): N;
+  body(doc?: D): N;
 
   /**
    * @param {D} doc   The document whose documentElement is to be obtained
-   * @return {N}      The documentElement
+   * @returns {N}      The documentElement
    */
-  root(doc: D): N;
+  root(doc?: D): N;
 
   /**
    * @param {D} doc     The document whose doctype is to be obtained
-   * @return {string}   The DOCTYPE comment
+   * @returns {string}   The DOCTYPE comment
    */
-  doctype(doc: D): string;
+  doctype(doc?: D): string;
 
   /**
    * @param {N} node        The node to search for tags
    * @param {string} name   The name of the tag to search for
    * @param {string} ns     The namespace to search in (or null for no namespace)
-   * @return {N[]}          The list of tags found
+   * @returns {N[]}          The list of tags found
    */
   tags(node: N, name: string, ns?: string): N[];
 
@@ -116,29 +129,38 @@ export interface DOMAdaptor<N, T, D> {
    *
    * @param {(string | N | N[])[]} nodes  The array of items to make into a container list
    * @param {D} document                  The document in which to search
-   * @return {N[]}                        The array of containers to search
+   * @returns {N[]}                        The array of containers to search
    */
   getElements(nodes: (string | N | N[])[], document: D): N[];
+
+  /**
+   * Get an element specified by CSS selector.
+   *
+   * @param {string} selector   The selector to locate
+   * @param {D | N} node        The document or element in which to search
+   * @returns {N | null}        The first matching element
+   */
+  getElement(selector: string, node?: D | N): N | null;
 
   /**
    * Determine if a container node contains a given node somewhere in its DOM tree
    *
    * @param {N} container  The container to search
    * @param {N|T} node     The node to look for
-   * @return {boolean}     True if the node is in the container's DOM tree
+   * @returns {boolean}     True if the node is in the container's DOM tree
    */
   contains(container: N, node: N | T): boolean;
 
   /**
    * @param {N|T} node  The HTML node whose parent is to be obtained
-   * @return {N}        The parent node of the given one
+   * @returns {N}        The parent node of the given one
    */
   parent(node: N | T): N;
 
   /**
    * @param {N} node     The HTML node to be appended to
    * @param {N|T} child  The node or text to be appended
-   * @return {N|T}       The appended node
+   * @returns {N|T}       The appended node
    */
   append(node: N, child: N | T): N | T;
 
@@ -150,22 +172,23 @@ export interface DOMAdaptor<N, T, D> {
 
   /**
    * @param {N|T} child  The node or text to be removed from its parent
-   * @return {N|T}       The removed node
+   * @returns {N|T}       The removed node
    */
   remove(child: N | T): N | T;
 
   /**
    * @param {N|T} nnode  The node to replace with
    * @param {N|T} onode  The child to be replaced
-   * @return {N|T}       The removed node
+   * @returns {N|T}       The removed node
    */
   replace(nnode: N | T, onode: N | T): N | T;
 
   /**
-   * @param {N} node   The HTML node to be cloned
-   * @return {N}       The copied node
+   * @param {N} node         The HTML node to be cloned
+   * @param {boolean} deep   True if children should be cloned
+   * @returns {N}             The copied node
    */
-  clone(node: N): N;
+  clone(node: N, deep?: boolean): N;
 
   /**
    * @param {T} node    The HTML text node to be split
@@ -175,76 +198,90 @@ export interface DOMAdaptor<N, T, D> {
 
   /**
    * @param {N|T} node   The HTML node whose sibling is to be obtained
-   * @return {N|T}       The node following the given one (or null)
+   * @returns {N|T}       The node following the given one (or null)
    */
   next(node: N | T): N | T;
 
   /**
    * @param {N|T} node   The HTML node whose sibling is to be obtained
-   * @return {N|T}       The node preceding the given one (or null)
+   * @returns {N|T}       The node preceding the given one (or null)
    */
   previous(node: N | T): N | T;
 
   /**
    * @param {N} node   The HTML node whose child is to be obtained
-   * @return {N|T}     The first child of the given node (or null)
+   * @returns {N|T}     The first child of the given node (or null)
    */
   firstChild(node: N): N | T;
 
   /**
    * @param {N} node   The HTML node whose child is to be obtained
-   * @return {N}       The last child of the given node (or null)
+   * @returns {N}       The last child of the given node (or null)
    */
   lastChild(node: N): N | T;
 
   /**
    * @param {N} node    The HTML node whose children are to be obtained
-   * @return {(N|T)[]}  Array of children for the given node (not a live list)
+   * @returns {(N|T)[]}  Array of children for the given node (not a live list)
    */
   childNodes(node: N): (N | T)[];
 
   /**
    * @param {N} node    The HTML node whose child is to be obtained
    * @param {number} i  The index of the child to return
-   * @return {N|T}      The i-th child node of the given node (or null)
+   * @returns {N|T}      The i-th child node of the given node (or null)
    */
   childNode(node: N, i: number): N | T;
 
   /**
    * @param {N | T} node   The HTML node whose tag or node name is to be obtained
-   * @return {string}      The tag or node name of the given node
+   * @returns {string}      The tag or node name of the given node
    */
   kind(node: N | T): string;
 
   /**
    * @param {N|T} node  The HTML node whose value is to be obtained
-   * @return {string}   The value of the given node
+   * @returns {string}   The value of the given node
    */
   value(node: N | T): string;
 
   /**
    * @param {N} node    The HTML node whose text content is to be obtained
-   * @return {string}   The text content of the given node
+   * @returns {string}   The text content of the given node
    */
   textContent(node: N): string;
 
   /**
    * @param {N} node   The HTML node whose inner HTML string is to be obtained
-   * @return {string}  The serialized content of the node
+   * @returns {string}  The serialized content of the node
    */
   innerHTML(node: N): string;
 
   /**
    * @param {N} node   The HTML node whose outer HTML string is to be obtained
-   * @return {string}  The serialized node and its content
+   * @returns {string}  The serialized node and its content
    */
   outerHTML(node: N): string;
 
   /**
    * @param {N} node   The HTML node whose serialized string is to be obtained
-   * @return {string}  The serialized node and its content
+   * @returns {string}  The serialized node and its content
    */
   serializeXML(node: N): string;
+
+  /**
+   * @param {N} node        The HTML node whose property is to be set
+   * @param {string} name   The property to set
+   * @param {any} value     The property's new value
+   */
+  setProperty(node: N, name: string, value: any): void;
+
+  /**
+   * @param {N} node        The HTML node whose property is to be retrieved
+   * @param {string} name   The property to get
+   * @returns {any}         The property's value
+   */
+  getProperty(node: N, name: string): any;
 
   /**
    * @param {N} node               The HTML node whose attribute is to be set
@@ -252,7 +289,12 @@ export interface DOMAdaptor<N, T, D> {
    * @param {string} value         The new value of the attribute
    * @param {string=} ns           The namespace to use for the attribute
    */
-  setAttribute(node: N, name: string, value: string | number, ns?: string): void;
+  setAttribute(
+    node: N,
+    name: string,
+    value: string | number,
+    ns?: string
+  ): void;
 
   /**
    * @param {N} node           The HTML element whose attributes are to be set
@@ -263,7 +305,7 @@ export interface DOMAdaptor<N, T, D> {
   /**
    * @param {N} node        The HTML node whose attribute is to be obtained
    * @param {string} name   The name of the attribute to get
-   * @return {string}       The value of the given attribute of the given node
+   * @returns {string}       The value of the given attribute of the given node
    */
   getAttribute(node: N, name: string): string;
 
@@ -276,13 +318,13 @@ export interface DOMAdaptor<N, T, D> {
   /**
    * @param {N} node        The HTML node whose attribute is to be tested
    * @param {string} name   The name of the attribute to test
-   * @return {boolean}      True of the node has the given attribute defined
+   * @returns {boolean}      True of the node has the given attribute defined
    */
   hasAttribute(node: N, name: string): boolean;
 
   /**
    * @param {N} node           The HTML node whose attributes are to be returned
-   * @return {AttributeData[]} The list of attributes
+   * @returns {AttributeData[]} The list of attributes
    */
   allAttributes(node: N): AttributeData[];
 
@@ -301,13 +343,13 @@ export interface DOMAdaptor<N, T, D> {
   /**
    * @param {N} node        The HTML node whose class is to be tested
    * @param {string} name   The class to test
-   * @return {boolean}      True if the node has the given class
+   * @returns {boolean}      True if the node has the given class
    */
   hasClass(node: N, name: string): boolean;
 
   /**
    * @param {N} node        The HTML node whose class list is needed
-   * @return {string[]}     An array of the class names for this node
+   * @returns {string[]}     An array of the class names for this node
    */
   allClasses(node: N): string[];
 
@@ -321,13 +363,13 @@ export interface DOMAdaptor<N, T, D> {
   /**
    * @param {N} node        The HTML node whose style is to be obtained
    * @param {string} name   The style to be obtained
-   * @return {string}       The value of the style
+   * @returns {string}       The value of the style
    */
   getStyle(node: N, name: string): string;
 
   /**
    * @param {N} node        The HTML node whose styles are to be returned
-   * @return {string}       The cssText for the styles
+   * @returns {string}       The cssText for the styles
    */
   allStyles(node: N): string;
 
@@ -338,14 +380,20 @@ export interface DOMAdaptor<N, T, D> {
   insertRules(node: N, rules: string[]): void;
 
   /**
+   * @param {N} node        The stylesheet node whose rules are to be returned
+   * @returns {string}       The string version of the stylesheet rules
+   */
+  cssText(node: N): string;
+
+  /**
    * @param {N} node        The HTML node whose font size is to be determined
-   * @return {number}       The font size (in pixels) of the node
+   * @returns {number}       The font size (in pixels) of the node
    */
   fontSize(node: N): number;
 
   /**
    * @param {N} node        The HTML node whose font family is to be determined
-   * @return {string}       The font family
+   * @returns {string}       The font family
    */
   fontFamily(node: N): string;
 
@@ -353,16 +401,25 @@ export interface DOMAdaptor<N, T, D> {
    * @param {N} node            The HTML node whose dimensions are to be determined
    * @param {number} em         The number of pixels in an em
    * @param {boolean} local     True if local coordinates are to be used in SVG elements
-   * @return {[number, number]} The width and height (in ems) of the element
+   * @returns {[number, number]} The width and height (in ems) of the element
    */
   nodeSize(node: N, em?: number, local?: boolean): [number, number];
 
-
   /**
    * @param {N} node            The HTML node whose BBox is to be determined
-   * @return {PageBBox}         BBox as {left, right, top, bottom} position on the page (in pixels)
+   * @returns {PageBBox}         BBox as {left, right, top, bottom} position on the page (in pixels)
    */
   nodeBBox(node: N): PageBBox;
+
+  /**
+   * @param {(event: any) => void} listener  The event listener for messages from the worker
+   * @param {OptionList} options             The worker options (for path and worker name)
+   * @returns {Promise<minWorker>}           A promise for the worker instance that was created
+   */
+  createWorker(
+    listener: (event: any) => void,
+    options: OptionList
+  ): Promise<minWorker>;
 }
 
 /*****************************************************************/
@@ -373,16 +430,22 @@ export interface DOMAdaptor<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D> {
-
+export abstract class AbstractDOMAdaptor<N, T, D>
+  implements DOMAdaptor<N, T, D>
+{
   /**
    * The document in which the HTML nodes will be created
    */
   public document: D;
 
   /**
+   * True when the adaptor can measure DOM node sizes
+   */
+  public canMeasureNodes: boolean = true;
+
+  /**
    * @param {D} document  The document in which the nodes will be created
-   * @constructor
+   * @class
    */
   constructor(document: D = null) {
     this.document = document;
@@ -396,7 +459,12 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
-  public node(kind: string, def: OptionList = {}, children: (N | T)[] = [], ns?: string) {
+  public node(
+    kind: string,
+    def: OptionList = {},
+    children: (N | T)[] = [],
+    ns?: string
+  ) {
     const node = this.create(kind, ns);
     this.setAttributes(node, def);
     for (const child of children) {
@@ -408,7 +476,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @param {string} kind  The type of the node to create
    * @param {string} ns    The optional namespace in which to create the node
-   * @return {N}           The created node
+   * @returns {N}           The created node
    */
   protected abstract create(kind: string, ns?: string): N;
 
@@ -418,22 +486,43 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   public abstract text(text: string): T;
 
   /**
+   * @override
+   */
+  public setProperty(node: N, name: string, value: any) {
+    (node as any)[name] = value;
+  }
+
+  /**
+   * @override
+   */
+  public getProperty(node: N, name: string): any {
+    return (node as any)[name];
+  }
+
+  /**
    * @param {N} node           The HTML element whose attributes are to be set
    * @param {OptionList} def   The attributes to set on that node
    */
   public setAttributes(node: N, def: OptionList) {
-    if (def.style && typeof(def.style) !== 'string') {
-      for (let key of Object.keys(def.style)) {
-        this.setStyle(node, key.replace(/-([a-z])/g, (_m, c) => c.toUpperCase()), def.style[key]);
+    if (def.style && typeof def.style !== 'string') {
+      for (const key of Object.keys(def.style)) {
+        this.setStyle(
+          node,
+          key.replace(/-([a-z])/g, (_m, c) => c.toUpperCase()),
+          def.style[key]
+        );
       }
     }
     if (def.properties) {
-      for (let key of Object.keys(def.properties)) {
+      for (const key of Object.keys(def.properties)) {
         (node as OptionList)[key] = def.properties[key];
       }
     }
-    for (let key of Object.keys(def)) {
-      if ((key !== 'style' || typeof(def.style) === 'string') && key !== 'properties') {
+    for (const key of Object.keys(def)) {
+      if (
+        (key !== 'style' || typeof def.style === 'string') &&
+        key !== 'properties'
+      ) {
         this.setAttribute(node, key, def[key]);
       }
     }
@@ -442,22 +531,22 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
-  public abstract head(doc: D): N;
+  public abstract head(doc?: D): N;
 
   /**
    * @override
    */
-  public abstract body(doc: D): N;
+  public abstract body(doc?: D): N;
 
   /**
    * @override
    */
-  public abstract root(doc: D): N;
+  public abstract root(doc?: D): N;
 
   /**
    * @override
    */
-  public abstract doctype(doc: D): string;
+  public abstract doctype(doc?: D): string;
 
   /**
    * @override
@@ -468,6 +557,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract getElements(nodes: (string | N | N[])[], document: D): N[];
+
+  /**
+   * @override
+   */
+  public abstract getElement(selector: string, node?: D | N): N;
 
   /**
    * @override
@@ -506,7 +600,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
-  public abstract clone(node: N):  N;
+  public abstract clone(node: N, deep: boolean): N;
 
   /**
    * @override
@@ -578,7 +672,12 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
-  public abstract setAttribute(node: N, name: string, value: string, ns?: string): void;
+  public abstract setAttribute(
+    node: N,
+    name: string,
+    value: string,
+    ns?: string
+  ): void;
 
   /**
    * @override
@@ -594,7 +693,6 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract hasAttribute(node: N, name: string): boolean;
-
 
   /**
    * @override
@@ -621,8 +719,13 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    */
   public allClasses(node: N) {
     const classes = this.getAttribute(node, 'class');
-    return (!classes ? [] as string[] :
-            classes.replace(/  +/g, ' ').replace(/^ /, '').replace(/ $/, '').split(/ /));
+    return !classes
+      ? ([] as string[])
+      : classes
+          .replace(/  +/g, ' ')
+          .replace(/^ /, '')
+          .replace(/ $/, '')
+          .split(/ /);
   }
 
   /**
@@ -648,6 +751,13 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
+  public cssText(node: N) {
+    return this.kind(node) === 'style' ? this.textContent(node) : '';
+  }
+
+  /**
+   * @override
+   */
   public abstract fontSize(node: N): number;
 
   /**
@@ -658,11 +768,22 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
-  public abstract nodeSize(node: N, em?: number, local?: boolean): [number, number];
+  public abstract nodeSize(
+    node: N,
+    em?: number,
+    local?: boolean
+  ): [number, number];
 
   /**
    * @override
    */
   public abstract nodeBBox(node: N): PageBBox;
 
+  /**
+   * @override
+   */
+  public abstract createWorker(
+    listener: (event: any) => void,
+    options: OptionList
+  ): Promise<minWorker>;
 }

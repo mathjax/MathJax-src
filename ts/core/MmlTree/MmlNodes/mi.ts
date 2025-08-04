@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,18 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMi node
+ * @file  Implements the MmlMi node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlTokenNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import {
+  AbstractMmlTokenNode,
+  AbstractMmlNode,
+  AttributeList,
+  TEXCLASS,
+} from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,12 +35,11 @@ import {AbstractMmlTokenNode, AbstractMmlNode, AttributeList, TEXCLASS} from '..
  */
 
 export class MmlMi extends AbstractMmlTokenNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlTokenNode.defaults
+    ...AbstractMmlTokenNode.defaults,
   };
 
   /**
@@ -66,10 +70,14 @@ export class MmlMi extends AbstractMmlTokenNode {
    *
    * @override
    */
-  public setInheritedAttributes(attributes: AttributeList = {},
-                                display: boolean = false, level: number = 0, prime: boolean = false) {
+  public setInheritedAttributes(
+    attributes: AttributeList = {},
+    display: boolean = false,
+    level: number = 0,
+    prime: boolean = false
+  ) {
     super.setInheritedAttributes(attributes, display, level, prime);
-    let text = this.getText();
+    const text = this.getText();
     if (text.match(MmlMi.singleCharacter) && !attributes.mathvariant) {
       this.attributes.setInherited('mathvariant', 'italic');
     }
@@ -82,15 +90,17 @@ export class MmlMi extends AbstractMmlTokenNode {
    */
   public setTeXclass(prev: AbstractMmlNode) {
     this.getPrevClass(prev);
-    let name = this.getText();
-    if (name.length > 1 && name.match(MmlMi.operatorName) &&
-        this.attributes.get('mathvariant') === 'normal' &&
-        this.getProperty('autoOP') === undefined &&
-        this.getProperty('texClass') === undefined) {
+    const name = this.getText();
+    if (
+      name.length > 1 &&
+      name.match(MmlMi.operatorName) &&
+      this.attributes.get('mathvariant') === 'normal' &&
+      this.getProperty('autoOP') === undefined &&
+      this.getProperty('texClass') === undefined
+    ) {
       this.texClass = TEXCLASS.OP;
       this.setProperty('autoOP', true);
     }
     return this;
   }
-
 }

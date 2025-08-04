@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,49 +16,126 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLTeXAtom wrapper for the MmlTeXAtom object
+ * @file  Implements the ChtmlTeXAtom wrapper for the MmlTeXAtom object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonTeXAtomMixin} from '../../common/Wrappers/TeXAtom.js';
-import {TeXAtom} from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
-import {TEXCLASS, TEXCLASSNAMES} from '../../../core/MmlTree/MmlNode.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonTeXAtom,
+  CommonTeXAtomClass,
+  CommonTeXAtomMixin,
+} from '../../common/Wrappers/TeXAtom.js';
+import { TeXAtom } from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
+import { MmlNode, TEXCLASSNAMES } from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
- * The CHTMLTeXAtom wrapper for the TeXAtom object
+ * The ChtmlTeXAtom interface for the CHTML TeXAtom wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-// @ts-ignore
-export class CHTMLTeXAtom<N, T, D> extends
-CommonTeXAtomMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+export interface ChtmlTeXAtomNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonTeXAtom<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
-  /**
-   * The TeXAtom wrapper
-   */
-  public static kind = TeXAtom.prototype.kind;
-
-  /**
-   * @override
-   */
-  public toCHTML(parent: N) {
-    super.toCHTML(parent);
-    this.adaptor.setAttribute(this.chtml, 'texclass', TEXCLASSNAMES[this.node.texClass]);
-    //
-    // Center VCENTER atoms vertically
-    //
-    if (this.node.texClass === TEXCLASS.VCENTER) {
-      const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
-      const {h, d} = bbox;
-      const a = this.font.params.axis_height;
-      const dh = ((h + d) / 2 + a) - h;  // new height minus old height
-      this.adaptor.setStyle(this.chtml, 'verticalAlign', this.em(dh));
-    }
-  }
-
+/**
+ * The ChtmlTeXAtomClass interface for the CHTML TeXAtom wrapper
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface ChtmlTeXAtomClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonTeXAtomClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlTeXAtomNTD<N, T, D>;
 }
+
+/*****************************************************************/
+
+/**
+ * The ChtmlTeXAtom wrapper class for the MmlTeXAtom class
+ */
+export const ChtmlTeXAtom = (function <N, T, D>(): ChtmlTeXAtomClass<N, T, D> {
+  const Base = CommonTeXAtomMixin<
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlTeXAtomClass<N, T, D>
+  >(ChtmlWrapper);
+
+  // Avoid message about base constructors not having the same type
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
+  return class ChtmlTeXAtom extends Base implements ChtmlTeXAtomNTD<N, T, D> {
+    /**
+     * @override
+     */
+    public static kind = TeXAtom.prototype.kind;
+
+    /**
+     * @override
+     */
+    public toCHTML(parents: N[]) {
+      super.toCHTML(parents);
+      this.dom.forEach((dom) =>
+        this.adaptor.setAttribute(
+          dom,
+          'texclass',
+          TEXCLASSNAMES[this.node.texClass]
+        )
+      );
+    }
+  };
+})<any, any, any>();

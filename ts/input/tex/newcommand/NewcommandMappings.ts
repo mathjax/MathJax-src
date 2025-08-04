@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,27 +15,23 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Mappings for TeX parsing for definitorial commands.
+ * @file Mappings for TeX parsing for definitorial commands.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
 import NewcommandMethods from './NewcommandMethods.js';
-import {CommandMap} from '../SymbolMap.js';
-
+import { CommandMap } from '../TokenMap.js';
 
 /**
  * Macros for newcommand etc.
  */
 new CommandMap('Newcommand-macros', {
-  newcommand:       'NewCommand',
-  renewcommand:     'NewCommand',
-  newenvironment:   'NewEnvironment',
-  renewenvironment: 'NewEnvironment',
-  def:              'MacroDef',
-  'let':            'Let'
-}, NewcommandMethods);
-
-
+  newcommand: NewcommandMethods.NewCommand,
+  renewcommand: NewcommandMethods.NewCommand,
+  newenvironment: NewcommandMethods.NewEnvironment,
+  renewenvironment: NewcommandMethods.NewEnvironment,
+  def: NewcommandMethods.MacroDef,
+  let: NewcommandMethods.Let,
+});

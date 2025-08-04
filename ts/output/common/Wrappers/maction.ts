@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,33 +16,127 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMaction wrapper mixin for the MmlMaction object
+ * @file  Implements the CommonMaction wrapper mixin for the MmlMaction object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
-import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
-import {BBox} from '../../../util/BBox.js';
-import {split} from '../../../util/string.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMaction } from '../../../core/MmlTree/MmlNodes/maction.js';
+import { BBox } from '../../../util/BBox.js';
+import { split } from '../../../util/string.js';
 
 /*****************************************************************/
 /**
  * The types needed to define the actiontypes
  *
- * @template W  The maction wrapper type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template MA  The Maction type
  */
-export type ActionData = {[name: string]: any};
-export type ActionHandler<W extends AnyWrapper> = (node: W, data?: ActionData) => void;
-export type ActionPair<W extends AnyWrapper> = [ActionHandler<W>, ActionData];
-export type ActionMap<W extends AnyWrapper> = Map<string, ActionPair<W>>;
-export type ActionDef<W extends AnyWrapper> = [string, [ActionHandler<W>, ActionData]];
+export type ActionData = { [name: string]: any };
+
+export type ActionHandler<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  MA extends CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+> = (node: MA, data?: ActionData) => void;
+
+export type ActionPair<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  MA extends CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+> = [
+  ActionHandler<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, MA>,
+  ActionData,
+];
+
+export type ActionMap<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  MA extends CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+> = Map<string, ActionPair<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, MA>>;
+
+export type ActionDef<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  MA extends CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+> = [
+  string,
+  [ActionHandler<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, MA>, ActionData],
+];
 
 export type EventHandler = (event: Event) => void;
 
 /**
  * Data used for tooltip actions
  */
+/* prettier-ignore */
 export const TooltipData = {
   dx: '.2em',          // x-offset of tooltip from right side of maction bbox
   dy: '.1em',          // y-offset of tooltip from bottom of maction bbox
@@ -73,86 +167,196 @@ export const TooltipData = {
 /**
  * The CommonMaction interface
  *
- * @template W  The maction wrapper type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMaction<W extends AnyWrapper> extends AnyWrapper {
+export interface CommonMaction<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
   /**
    * The handler for the specified actiontype
    */
-  action: ActionHandler<W>;
+  /* prettier-ignore */
+  action: ActionHandler<
+    N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+    CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  >;
+  /**
+   * The data for the specified actiontype
+   */
   data: ActionData;
 
   /**
-   * Tooltip offsets
+   * The x-offset for tooltips
    */
-  dx: number;
-  dy: number;
+  tipDx: number;
+  /**
+   * The y-offset for tooltips
+   */
+  tipDy: number;
 
   /**
    * The selected child wrapper
    */
-  readonly selected: W;
+  readonly selected: WW;
 
+  /**
+   * Look up attribute parameters
+   */
+  getParameters(): void;
 }
 
 /**
  * The CommonMaction class interface
  *
- * @template W  The maction wrapper type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMactionClass<W extends AnyWrapper> extends AnyWrapperClass {
+export interface CommonMactionClass<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
   /**
    * The valid action types and their handlers
    */
-  actions: ActionMap<W>;
+  /* prettier-ignore */
+  actions: ActionMap<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+    CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  >;
 }
-
-/**
- * Shorthand for the CommonMaction constructor
- *
- * @template W  The maction wrapper type
- */
-export type MactionConstructor<W extends AnyWrapper> = Constructor<CommonMaction<W>>;
 
 /*****************************************************************/
 /**
  * The CommonMaction wrapper mixin for the MmlMaction object
  *
- * @template W  The maction wrapper type
- * @template T  The Wrapper class constructor type
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
 export function CommonMactionMixin<
-  W extends AnyWrapper,
-  T extends WrapperConstructor
->(Base: T): MactionConstructor<W> & T {
-
-  return class extends Base {
-
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMactionMixin
+    extends Base
+    implements CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
-     * The handler for the specified actiontype
+     * @override
      */
-    public action: ActionHandler<W>;
+    /* prettier-ignore */
+    public static actions: ActionMap<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD,
+      FC, CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+    >;
+
     /**
-     * The data for the specified actiontype
+     * @override
+     */
+    /* prettier-ignore */
+    public action: ActionHandler<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+      CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+    >;
+
+    /**
+     * @override
      */
     public data: ActionData;
 
     /**
-     * The x-offset for tooltips
+     * @override
      */
-    public dx: number;
+    public tipDx: number;
     /**
-     * The y-offset for tooltips
+     * @override
      */
-    public dy: number;
+    public tipDy: number;
 
     /**
-     * @return {W}  The selected child wrapper
+     * @override
      */
-    public get selected(): W {
+    public get selected(): WW {
       const selection = this.node.attributes.get('selection') as number;
       const i = Math.max(1, Math.min(this.childNodes.length, selection)) - 1;
-      return this.childNodes[i] || this.wrap((this.node as MmlMaction).selected);
+      return (
+        this.childNodes[i] || this.wrap((this.node as MmlMaction).selected)
+      );
+    }
+
+    /**
+     * @override
+     */
+    public getParameters() {
+      const offsets = this.node.attributes.get('data-offsets') as string;
+      const [dx, dy] = split(offsets || '');
+      this.tipDx = this.length2em(dx || TooltipData.dx);
+      this.tipDy = this.length2em(dy || TooltipData.dy);
     }
 
     /*************************************************************/
@@ -160,24 +364,26 @@ export function CommonMactionMixin<
     /**
      * @override
      */
-    constructor(...args: any[]) {
-      super(...args);
-      const actions = (this.constructor as CommonMactionClass<W>).actions;
+    constructor(factory: WF, node: MmlNode, parent: WW = null) {
+      super(factory, node, parent);
+      const actions =
+        /* prettier-ignore */
+        (this.constructor as
+         CommonMactionClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>)
+        .actions;
       const action = this.node.attributes.get('actiontype') as string;
-      const [handler, data] = actions.get(action) || [((_node, _data) => {}) as ActionHandler<W>, {}];
+      const [handler, data] =
+        /* prettier-ignore */
+        actions.get(action) || [
+          ((_node, _data) => {}) as ActionHandler<
+            N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+            CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+          >,
+          {},
+        ];
       this.action = handler;
       this.data = data;
       this.getParameters();
-    }
-
-    /**
-     * Look up attribute parameters
-     */
-    public getParameters() {
-      const offsets = this.node.attributes.get('data-offsets') as string;
-      let [dx, dy] = split(offsets || '');
-      this.dx = this.length2em(dx || TooltipData.dx);
-      this.dy = this.length2em(dy || TooltipData.dy);
     }
 
     /**
@@ -188,6 +394,20 @@ export function CommonMactionMixin<
       this.selected.setChildPWidths(recompute);
     }
 
-  };
+    /**
+     * @override
+     */
+    get breakCount() {
+      return this.node.isEmbellished
+        ? this.selected.coreMO().embellishedBreakCount
+        : this.selected.breakCount;
+    }
 
+    /**
+     * @override
+     */
+    public computeLineBBox(i: number) {
+      return this.getChildLineBBox(this.selected, i);
+    }
+  } as any as B;
 }

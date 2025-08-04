@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,79 +16,85 @@
  */
 
 /**
- * @fileoverview  An object listing all the SVGWrapper classes
+ * @file  An object listing all the SvgWrapper classes
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {WrapperConstructor} from '../common/Wrapper.js';
-import {SVGWrapper} from './Wrapper.js';
-import {SVGmath} from './Wrappers/math.js';
-import {SVGmrow, SVGinferredMrow} from './Wrappers/mrow.js';
-import {SVGmi} from './Wrappers/mi.js';
-import {SVGmo} from './Wrappers/mo.js';
-import {SVGmn} from './Wrappers/mn.js';
-import {SVGms} from './Wrappers/ms.js';
-import {SVGmtext} from './Wrappers/mtext.js';
-import {SVGmerror} from './Wrappers/merror.js';
-import {SVGmspace} from './Wrappers/mspace.js';
-import {SVGmpadded} from './Wrappers/mpadded.js';
-import {SVGmphantom} from './Wrappers/mphantom.js';
-import {SVGmfrac} from './Wrappers/mfrac.js';
-import {SVGmsqrt} from './Wrappers/msqrt.js';
-import {SVGmroot} from './Wrappers/mroot.js';
-import {SVGmfenced} from './Wrappers/mfenced.js';
-import {SVGmsub, SVGmsup, SVGmsubsup} from './Wrappers/msubsup.js';
-import {SVGmover, SVGmunder, SVGmunderover} from './Wrappers/munderover.js';
-import {SVGmmultiscripts} from './Wrappers/mmultiscripts.js';
+import { SvgWrapper, SvgWrapperClass } from './Wrapper.js';
+import { SvgMath } from './Wrappers/math.js';
+import { SvgMrow, SvgInferredMrow } from './Wrappers/mrow.js';
+import { SvgMi } from './Wrappers/mi.js';
+import { SvgMo } from './Wrappers/mo.js';
+import { SvgMn } from './Wrappers/mn.js';
+import { SvgMs } from './Wrappers/ms.js';
+import { SvgMtext } from './Wrappers/mtext.js';
+import { SvgMerror } from './Wrappers/merror.js';
+import { SvgMspace } from './Wrappers/mspace.js';
+import { SvgMpadded } from './Wrappers/mpadded.js';
+import { SvgMphantom } from './Wrappers/mphantom.js';
+import { SvgMfrac } from './Wrappers/mfrac.js';
+import { SvgMsqrt } from './Wrappers/msqrt.js';
+import { SvgMroot } from './Wrappers/mroot.js';
+import { SvgMfenced } from './Wrappers/mfenced.js';
+import { SvgMsub, SvgMsup, SvgMsubsup } from './Wrappers/msubsup.js';
+import { SvgMover, SvgMunder, SvgMunderover } from './Wrappers/munderover.js';
+import { SvgMmultiscripts } from './Wrappers/mmultiscripts.js';
 
-import {SVGmtable} from './Wrappers/mtable.js';
-import {SVGmtr, SVGmlabeledtr} from './Wrappers/mtr.js';
-import {SVGmtd} from './Wrappers/mtd.js';
+import { SvgMtable } from './Wrappers/mtable.js';
+import { SvgMtr, SvgMlabeledtr } from './Wrappers/mtr.js';
+import { SvgMtd } from './Wrappers/mtd.js';
 
-import {SVGmaction} from './Wrappers/maction.js';
-import {SVGmenclose} from './Wrappers/menclose.js';
-import {SVGsemantics, SVGannotation, SVGannotationXML, SVGxml} from './Wrappers/semantics.js';
-import {SVGmglyph} from './Wrappers/mglyph.js';
-import {SVGTeXAtom} from './Wrappers/TeXAtom.js';
-import {SVGTextNode} from './Wrappers/TextNode.js';
+import { SvgMaction } from './Wrappers/maction.js';
+import { SvgMenclose } from './Wrappers/menclose.js';
+import {
+  SvgSemantics,
+  SvgAnnotation,
+  SvgAnnotationXML,
+  SvgXmlNode,
+} from './Wrappers/semantics.js';
+import { SvgMglyph } from './Wrappers/mglyph.js';
+import { SvgTeXAtom } from './Wrappers/TeXAtom.js';
+import { SvgTextNode } from './Wrappers/TextNode.js';
+import { SvgHtmlNode } from './Wrappers/HtmlNode.js';
 
-export const SVGWrappers: {[kind: string]: WrapperConstructor}  = {
-  [SVGmath.kind]: SVGmath,
-  [SVGmrow.kind]: SVGmrow,
-  [SVGinferredMrow.kind]: SVGinferredMrow,
-  [SVGmi.kind]: SVGmi,
-  [SVGmo.kind]: SVGmo,
-  [SVGmn.kind]: SVGmn,
-  [SVGms.kind]: SVGms,
-  [SVGmtext.kind]: SVGmtext,
-  [SVGmerror.kind]: SVGmerror,
-  [SVGmspace.kind]: SVGmspace,
-  [SVGmpadded.kind]: SVGmpadded,
-  [SVGmphantom.kind]: SVGmphantom,
-  [SVGmfrac.kind]: SVGmfrac,
-  [SVGmsqrt.kind]: SVGmsqrt,
-  [SVGmroot.kind]: SVGmroot,
-  [SVGmfenced.kind]: SVGmfenced,
-  [SVGmsub.kind]: SVGmsub,
-  [SVGmsup.kind]: SVGmsup,
-  [SVGmsubsup.kind]: SVGmsubsup,
-  [SVGmunder.kind]: SVGmunder,
-  [SVGmover.kind]: SVGmover,
-  [SVGmunderover.kind]: SVGmunderover,
-  [SVGmmultiscripts.kind]: SVGmmultiscripts,
-  [SVGmtable.kind]: SVGmtable,
-  [SVGmtr.kind]: SVGmtr,
-  [SVGmlabeledtr.kind]: SVGmlabeledtr,
-  [SVGmtd.kind]: SVGmtd,
-  [SVGmaction.kind]: SVGmaction,
-  [SVGmenclose.kind]: SVGmenclose,
-  [SVGsemantics.kind]: SVGsemantics,
-  [SVGannotation.kind]: SVGannotation,
-  [SVGannotationXML.kind]: SVGannotationXML,
-  [SVGxml.kind]: SVGxml,
-  [SVGmglyph.kind]: SVGmglyph,
-  [SVGTeXAtom.kind]: SVGTeXAtom,
-  [SVGTextNode.kind]: SVGTextNode,
-  [SVGWrapper.kind]: SVGWrapper
+export const SvgWrappers: { [kind: string]: SvgWrapperClass<any, any, any> } = {
+  [SvgMath.kind]: SvgMath,
+  [SvgMrow.kind]: SvgMrow,
+  [SvgInferredMrow.kind]: SvgInferredMrow,
+  [SvgMi.kind]: SvgMi,
+  [SvgMo.kind]: SvgMo,
+  [SvgMn.kind]: SvgMn,
+  [SvgMs.kind]: SvgMs,
+  [SvgMtext.kind]: SvgMtext,
+  [SvgMerror.kind]: SvgMerror,
+  [SvgMspace.kind]: SvgMspace,
+  [SvgMpadded.kind]: SvgMpadded,
+  [SvgMphantom.kind]: SvgMphantom,
+  [SvgMfrac.kind]: SvgMfrac,
+  [SvgMsqrt.kind]: SvgMsqrt,
+  [SvgMroot.kind]: SvgMroot,
+  [SvgMfenced.kind]: SvgMfenced,
+  [SvgMsub.kind]: SvgMsub,
+  [SvgMsup.kind]: SvgMsup,
+  [SvgMsubsup.kind]: SvgMsubsup,
+  [SvgMunder.kind]: SvgMunder,
+  [SvgMover.kind]: SvgMover,
+  [SvgMunderover.kind]: SvgMunderover,
+  [SvgMmultiscripts.kind]: SvgMmultiscripts,
+  [SvgMtable.kind]: SvgMtable,
+  [SvgMtr.kind]: SvgMtr,
+  [SvgMlabeledtr.kind]: SvgMlabeledtr,
+  [SvgMtd.kind]: SvgMtd,
+  [SvgMaction.kind]: SvgMaction,
+  [SvgMenclose.kind]: SvgMenclose,
+  [SvgSemantics.kind]: SvgSemantics,
+  [SvgAnnotation.kind]: SvgAnnotation,
+  [SvgAnnotationXML.kind]: SvgAnnotationXML,
+  [SvgXmlNode.kind]: SvgXmlNode,
+  [SvgMglyph.kind]: SvgMglyph,
+  [SvgTeXAtom.kind]: SvgTeXAtom,
+  [SvgTextNode.kind]: SvgTextNode,
+  [SvgHtmlNode.kind]: SvgHtmlNode,
+  [SvgWrapper.kind]: SvgWrapper,
 };

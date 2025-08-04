@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,32 +15,29 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Items for TeX parsing of bussproofs.
+ * @file Items for TeX parsing of bussproofs.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
 import TexError from '../TexError.js';
-import {BaseItem, CheckType, StackItem} from '../StackItem.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import { BaseItem, CheckType, StackItem } from '../StackItem.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import Stack from '../Stack.js';
 import * as BussproofsUtil from './BussproofsUtil.js';
 
-
 export class ProofTreeItem extends BaseItem {
-
-
   /**
    * The current left label.
+   *
    * @type {MmlNode[]}
    */
   public leftLabel: MmlNode[] = null;
 
   /**
    * The current right label.
+   *
    * @type {MmlNode[]}
    */
   public rigthLabel: MmlNode[] = null;
@@ -54,13 +51,12 @@ export class ProofTreeItem extends BaseItem {
     return 'proofTree';
   }
 
-
   /**
    * @override
    */
   public checkItem(item: StackItem): CheckType {
     if (item.isKind('end') && item.getName() === 'prooftree') {
-      let node = this.toMml();
+      const node = this.toMml();
       BussproofsUtil.setProperty(node, 'proof', true);
       return [[this.factory.create('mml', node), item], true];
     }
@@ -70,7 +66,6 @@ export class ProofTreeItem extends BaseItem {
     this.innerStack.Push(item);
     return BaseItem.fail;
   }
-
 
   /**
    * @override
@@ -82,7 +77,7 @@ export class ProofTreeItem extends BaseItem {
       return tree;
     }
     this.innerStack.Push(this.factory.create('stop'));
-    let prefix = this.innerStack.Top().toMml();
+    const prefix = this.innerStack.Top().toMml();
     return this.create('node', 'mrow', [prefix, tree], {});
   }
 }

@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/textmacros",
+    "component": "input/tex/extensions/textmacros",
+    "targets": ["input/tex/textmacros"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/textmacros",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

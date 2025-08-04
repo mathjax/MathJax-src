@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     NJcy: '\u040A',
     Nacute: '\u0143',
     Ncaron: '\u0147',
@@ -210,5 +211,7 @@ Entities.add({
     nwArr: '\u21D6',
     nwarhk: '\u2923',
     nwarrow: '\u2196',
-    nwnear: '\u2927'
-}, 'n');
+    nwnear: '\u2927',
+  },
+  'n'
+);

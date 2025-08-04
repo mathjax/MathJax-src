@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,20 +16,20 @@
  */
 
 /**
- * @fileoverview  Implements a bounding-box object and operations on it
+ * @file  Implements a bounding-box object and operations on it
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {BIGDIMEN} from './lengths.js';
+import { BIGDIMEN } from './lengths.js';
 
 /**
  *  The data used to initialize a BBox
  */
 export type BBoxData = {
-  w?: number,
-  h?: number,
-  d?: number
+  w?: number;
+  h?: number;
+  d?: number;
 };
 
 /*****************************************************************/
@@ -44,45 +44,40 @@ export class BBox {
   public static fullWidth = '100%';
 
   /**
-   *  CSS styles that affect BBoxes
+   * The side names, indices, and which dimension they affect
    */
-  public static StyleAdjust: [string, string, number?][] = [
-    ['borderTopWidth', 'h'],
-    ['borderRightWidth', 'w'],
-    ['borderBottomWidth', 'd'],
-    ['borderLeftWidth', 'w', 0],
-    ['paddingTop', 'h'],
-    ['paddingRight', 'w'],
-    ['paddingBottom', 'd'],
-    ['paddingLeft', 'w', 0]
+  public static boxSides: [string, number, string][] = [
+    ['Top', 0, 'h'],
+    ['Right', 1, 'w'],
+    ['Bottom', 2, 'd'],
+    ['Left', 3, 'w'],
   ];
 
   /**
    *  These are the data stored for a bounding box
    */
-  /* tslint:disable:jsdoc-require */
   public w: number;
   public h: number;
   public d: number;
   public scale: number;
   public rscale: number; // scale relative to the parent's scale
-  public L: number;      // extra space on the left
-  public R: number;      // extra space on the right
+  public L: number; // extra space on the left
+  public R: number; // extra space on the right
   public pwidth: string; // percentage width (for tables)
-  public ic: number;     // italic correction
-  public sk: number;     // skew
-  public dx: number;     // offset for combining characters as accents
-  /* tslint:enable */
+  public ic: number; // italic correction
+  public oc: number; // alternate italic correction for -tex-mit variant
+  public sk: number; // skew
+  public dx: number; // offset for combining characters as accents
 
   /**
-   * @return {BBox}  A BBox initialized to zeros
+   * @returns {BBox}  A BBox initialized to zeros
    */
   public static zero(): BBox {
-    return new BBox({h: 0, d: 0, w: 0});
+    return new BBox({ h: 0, d: 0, w: 0 });
   }
 
   /**
-   * @return {BBox}  A BBox with height and depth not set
+   * @returns {BBox}  A BBox with height and depth not set
    */
   public static empty(): BBox {
     return new BBox();
@@ -91,20 +86,21 @@ export class BBox {
   /**
    * @param {BBoxData} def  The data with which to initialize the BBox
    *
-   * @constructor
+   * @class
    */
-  constructor(def: BBoxData = {w: 0, h: -BIGDIMEN, d: -BIGDIMEN}) {
+  constructor(def: BBoxData = { w: 0, h: -BIGDIMEN, d: -BIGDIMEN }) {
     this.w = def.w || 0;
-    this.h = ('h' in def ? def.h : -BIGDIMEN);
-    this.d = ('d' in def ? def.d : -BIGDIMEN);
-    this.L = this.R = this.ic = this.sk = this.dx = 0;
+    this.h = 'h' in def ? def.h : -BIGDIMEN;
+    this.d = 'd' in def ? def.d : -BIGDIMEN;
+    this.L = this.R = this.ic = this.oc = this.sk = this.dx = 0;
     this.scale = this.rscale = 1;
     this.pwidth = '';
   }
 
   /**
    * Set up a bbox for append() and combine() operations
-   * @return {BBox}  the boox itself (for chaining calls)
+   *
+   * @returns {BBox}  the bbox itself (for chaining calls)
    */
   public empty(): BBox {
     this.w = 0;
@@ -115,7 +111,7 @@ export class BBox {
   /**
    * Convert any unspecified values into zeros
    */
-  public clean () {
+  public clean() {
     if (this.w === -BIGDIMEN) this.w = 0;
     if (this.h === -BIGDIMEN) this.h = 0;
     if (this.d === -BIGDIMEN) this.d = 0;
@@ -136,10 +132,10 @@ export class BBox {
    * @param {number} y   A y-offset for the child bounding box
    */
   public combine(cbox: BBox, x: number = 0, y: number = 0) {
-    let rscale = cbox.rscale;
-    let w = x + rscale * (cbox.w + cbox.L + cbox.R);
-    let h = y + rscale * cbox.h;
-    let d = rscale * cbox.d - y;
+    const rscale = cbox.rscale;
+    const w = x + rscale * (cbox.w + cbox.L + cbox.R);
+    const h = y + rscale * cbox.h;
+    const d = rscale * cbox.d - y;
     if (w > this.w) this.w = w;
     if (h > this.h) this.h = h;
     if (d > this.d) this.d = d;
@@ -149,7 +145,7 @@ export class BBox {
    * @param {BBox} cbox  A bounding box to be added to the right of this one
    */
   public append(cbox: BBox) {
-    let scale = cbox.rscale;
+    const scale = cbox.rscale;
     this.w += scale * (cbox.w + cbox.L + cbox.R);
     if (scale * cbox.h > this.h) {
       this.h = scale * cbox.h;
@@ -171,4 +167,12 @@ export class BBox {
     }
   }
 
+  /**
+   * @returns {BBox}   A copy of the current BBox
+   */
+  public copy(): BBox {
+    const bbox = new BBox();
+    Object.assign(bbox, this);
+    return bbox;
+  }
 }

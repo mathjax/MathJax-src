@@ -1,0 +1,22 @@
+{
+  "build": {
+    "id": "[mml]/mml3",
+    "component": "input/mml/extensions/mml3",
+    "targets": ["input/mathml/mml3"],
+    "excludeSubdirs": true
+  },
+  "copy": {
+    "to": "../../../../../../bundle/input/mml/extensions",
+    "from": "../../../../../../ts/input/mathml/mml3",
+    "copy": [
+      "mml3.sef.json"
+    ]
+  },
+  "webpack": {
+    "name": "input/mml/extensions/mml3",
+    "libs": [
+      "components/src/input/mml/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

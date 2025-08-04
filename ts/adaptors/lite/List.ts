@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
  */
 
 /**
- * @fileoverview  Implements a lightweight DOM adaptor
+ * @file  Implements a lightweight DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {LiteNode} from './Element.js';
+import { LiteNode } from './Element.js';
 
 /************************************************************/
 /**
@@ -37,7 +37,7 @@ export class LiteList<N> {
 
   /**
    * @param {N[]} children  The children for the fragment
-   * @constructor
+   * @class
    */
   constructor(children: N[]) {
     this.nodes = [...children];
@@ -52,19 +52,20 @@ export class LiteList<N> {
 
   /**
    * Make this class iterable (so it can be used with Array.from())
+   *
+   * @returns {Iterator<LiteNode>} The iterator.
    */
   public [Symbol.iterator](): Iterator<LiteNode> {
     let i = 0;
     return {
       /**
-       * @return {IteratorResult<LiteNode>}
+       * @returns {IteratorResult<LiteNode>} The next iterator.
        */
       next(): IteratorResult<LiteNode> {
-        return (i === this.nodes.length ?
-                {value: null, done: true} :
-                {value: this.nodes[i++], done: false});
-      }
+        return i === this.nodes.length
+          ? { value: null, done: true }
+          : { value: this.nodes[i++], done: false };
+      },
     };
   }
-
 }

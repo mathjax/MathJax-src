@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,33 +16,63 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMo wrapper mixin for the MmlMo object
+ * @file  Implements the CommonMo wrapper mixin for the MmlMo object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
-import {BBox} from '../../../util/BBox.js';
-import {unicodeChars} from '../../../util/string.js';
-import {DelimiterData} from '../FontData.js';
-import {DIRECTION, NOSTRETCH} from '../FontData.js';
-
-/*****************************************************************/
-/**
- * Convert direction to letter
- */
-export const DirectionVH: {[n: number]: string} = {
-  [DIRECTION.Vertical]: 'v',
-  [DIRECTION.Horizontal]: 'h'
-};
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { MmlNode, TEXCLASS } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
+import { BBox } from '../../../util/BBox.js';
+import { LineBBox } from '../LineBBox.js';
+import { unicodeChars } from '../../../util/string.js';
+import { DIRECTION, NOSTRETCH } from '../FontData.js';
 
 /*****************************************************************/
 /**
  * The CommonMo interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMo extends AnyWrapper {
-
+export interface CommonMo<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
   /**
    * The font size that a stretched operator uses.
    * If -1, then stretch arbitrarily, and bbox gives the actual height, depth, width
@@ -55,6 +85,26 @@ export interface CommonMo extends AnyWrapper {
   isAccent: boolean;
 
   /**
+   * The linebreak style
+   */
+  breakStyle: string;
+
+  /**
+   * The linebreakmultchar used for breaking an invisible times
+   */
+  multChar: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+
+  /**
+   * Value is 1 if this embellished mo is a breakpoint, 0 otherwise
+   */
+  embellishedBreakCount: number;
+
+  /**
+   * The break style string for this embellished operator
+   */
+  embellishedBreakStyle: string;
+
+  /**
    * Get the (unmodified) bbox of the contents (before centering or setting accents to width 0)
    *
    * @param {BBox} bbox   The bbox to fill
@@ -62,20 +112,27 @@ export interface CommonMo extends AnyWrapper {
   protoBBox(bbox: BBox): void;
 
   /**
-   * @return {number}    Offset to the left by half the actual width of the accent
+   * @param {number} i       The line to get the LineBBox for
+   * @param {string} style   The linebreakstyle to use
+   * @param {BBox} obox      The bounding box of the embellished operator that is breaking
+   */
+  moLineBBox(i: number, style: string, obox?: BBox): LineBBox;
+
+  /**
+   * @returns {number}    Offset to the left by half the actual width of the accent
    */
   getAccentOffset(): number;
 
   /**
    * @param {BBox} bbox   The bbox to center, or null to compute the bbox
-   * @return {number}     The offset to move the glyph to center it
+   * @returns {number}     The offset to move the glyph to center it
    */
   getCenterOffset(bbox?: BBox): number;
 
   /**
    * Determint variant for vertically/horizontally stretched character
    *
-   * @param {number[]} WH  size to stretch to, either [W] or [H, D]
+   * @param {number[]} WH    Size to stretch to, either [W] or [H, D]
    * @param {boolean} exact  True if not allowed to use delimiter factor and shortfall
    */
   getStretchedVariant(WH: number[], exact?: boolean): void;
@@ -83,13 +140,13 @@ export interface CommonMo extends AnyWrapper {
   /**
    * @param {string} name   The name of the attribute to get
    * @param {number} value  The default value to use
-   * @return {number}       The size in em's of the attribute (or the default value)
+   * @returns {number}       The size in em's of the attribute (or the default value)
    */
   getSize(name: string, value: number): number;
 
   /**
    * @param {number[]} WH  Either [W] for width, [H, D] for height and depth, or [] for min/max size
-   * @return {number}      Either the width or the total height of the character
+   * @returns {number}      Either the width or the total height of the character
    */
   getWH(WH: number[]): number;
 
@@ -104,7 +161,7 @@ export interface CommonMo extends AnyWrapper {
    * @param {number[]} WHD     The [H, D] being requested from the parent mrow
    * @param {number} HD        The full height (including symmetry, etc)
    * @param {DelimiterData} C  The delimiter data for the stretchy character
-   * @return {number[]}        The height and depth for the vertically stretched delimiter
+   * @returns {number[]}        The height and depth for the vertically stretched delimiter
    */
   getBaseline(WHD: number[], HD: number, C: DelimiterData): number[];
 
@@ -113,80 +170,173 @@ export interface CommonMo extends AnyWrapper {
    *
    * @param {number} D          The requested size of the delimiter
    * @param {DelimiterData} C   The data for the delimiter
-   * @return {number}           The final size of the assembly
+   * @returns {number}           The final size of the assembly
    */
   checkExtendedHeight(D: number, C: DelimiterData): number;
 
+  /**
+   * Set a breakpoint to the given type
+   *
+   * @param {string} linebreak   The type of linebreak to set
+   */
+  setBreakStyle(linebreak?: string): void;
+
+  /**
+   * Get the breakstyle of the mo
+   *
+   * @param {string} linebreak   Force style to be the given one
+   * @returns {string}            The linebreak style of the node
+   */
+  getBreakStyle(linebreak?: string): string;
+
+  /**
+   * Create the mo wrapper for the linebreakmultchar
+   */
+  getMultChar(): void;
 }
 
 /**
- * Shorthand for the CommonMo constructor
+ * The CommonMoClass interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type MoConstructor = Constructor<CommonMo>;
+export interface CommonMoClass<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommomMo wrapper mixin for the MmlMo object
  *
- * @template T  The Wrapper class constructor type
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
-export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstructor & T {
-
-  return class extends Base {
-
+export function CommonMoMixin<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMoMixin
+    extends Base
+    implements CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
-     * The font size that a stretched operator uses.
-     * If -1, then stretch arbitrarily, and bbox gives the actual height, depth, width
+     * @override
      */
     public size: number = null;
 
     /**
-     * True if used as an accent in an munderover construct
+     * @override
      */
     public isAccent: boolean;
 
     /**
      * @override
      */
-    constructor(...args: any[]) {
-      super(...args);
-      this.isAccent = (this.node as MmlMo).isAccent;
+    public breakStyle: string;
+
+    /**
+     * The linebreakmultchar used for breaking an invisible times
+     */
+    public multChar: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+
+    /**
+     * @override
+     */
+    get breakCount() {
+      return this.breakStyle ? 1 : 0;
     }
 
     /**
      * @override
      */
-    public computeBBox(bbox: BBox, _recompute: boolean = false) {
-      this.protoBBox(bbox);
-      if (this.node.attributes.get('symmetric') &&
-          this.stretch.dir !== DIRECTION.Horizontal) {
-        const d = this.getCenterOffset(bbox);
-        bbox.h += d;
-        bbox.d -= d;
-      }
-      if (this.node.getProperty('mathaccent') &&
-          (this.stretch.dir === DIRECTION.None || this.size >= 0)) {
-        bbox.w = 0;
-      }
+    get embellishedBreakCount() {
+      return this.embellishedBreakStyle ? 1 : 0;
     }
 
     /**
-     * Get the (unmodified) bbox of the contents (before centering or setting accents to width 0)
-     *
-     * @param {BBox} bbox   The bbox to fill
+     * @override
+     */
+    get embellishedBreakStyle() {
+      return this.breakStyle || this.getBreakStyle();
+    }
+
+    /**
+     * @override
      */
     public protoBBox(bbox: BBox) {
-      const stretchy = (this.stretch.dir !== DIRECTION.None);
+      const stretchy = this.stretch.dir !== DIRECTION.None;
       if (stretchy && this.size === null) {
         this.getStretchedVariant([0]);
       }
       if (stretchy && this.size < 0) return;
       super.computeBBox(bbox);
+      //
+      //  Check for a null delimiter and add the null-delimiter space
+      //
+      if (
+        bbox.w === 0 &&
+        this.node.attributes.hasExplicit('fence') &&
+        (this.node as MmlMo).getText() === '' &&
+        (this.node.texClass === TEXCLASS.OPEN ||
+          this.node.texClass === TEXCLASS.CLOSE) &&
+        !this.jax.options.mathmlSpacing
+      ) {
+        bbox.R = this.font.params.nulldelimiterspace;
+      }
       this.copySkewIC(bbox);
     }
 
     /**
-     * @return {number}    Offset to the left by half the actual width of the accent
+     * @override
      */
     public getAccentOffset(): number {
       const bbox = BBox.empty();
@@ -195,54 +345,18 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
     }
 
     /**
-     * @param {BBox} bbox   The bbox to center, or null to compute the bbox
-     * @return {number}     The offset to move the glyph to center it
+     * @override
      */
     public getCenterOffset(bbox: BBox = null): number {
       if (!bbox) {
         bbox = BBox.empty();
         super.computeBBox(bbox);
       }
-      return ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
+      return (bbox.h + bbox.d) / 2 + this.font.params.axis_height - bbox.h;
     }
 
     /**
      * @override
-     */
-    public getVariant() {
-      if (this.node.attributes.get('largeop')) {
-        this.variant = (this.node.attributes.get('displaystyle') ? '-largeop' : '-smallop');
-        return;
-      }
-      if (!this.node.attributes.getExplicit('mathvariant') &&
-          this.node.getProperty('pseudoscript') === false) {
-        this.variant = '-tex-variant';
-        return;
-      }
-      super.getVariant();
-    }
-
-    /**
-     * @override
-     */
-    public canStretch(direction: DIRECTION) {
-      if (this.stretch.dir !== DIRECTION.None) {
-        return this.stretch.dir === direction;
-      }
-      const attributes = this.node.attributes;
-      if (!attributes.get('stretchy')) return false;
-      const c = this.getText();
-      if (Array.from(c).length !== 1) return false;
-      const delim = this.font.getDelimiter(c.codePointAt(0));
-      this.stretch = (delim && delim.dir === direction ? delim : NOSTRETCH);
-      return this.stretch.dir !== DIRECTION.None;
-    }
-
-    /**
-     * Determint variant for vertically/horizontally stretched character
-     *
-     * @param {number[]} WH  size to stretch to, either [W] or [H, D]
-     * @param {boolean} exact  True if not allowed to use delimiter factor and shortfall
      */
     public getStretchedVariant(WH: number[], exact: boolean = false) {
       if (this.stretch.dir !== DIRECTION.None) {
@@ -257,7 +371,12 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         D = Math.max(min, Math.min(max, D));
         const df = this.font.params.delimiterfactor / 1000;
         const ds = this.font.params.delimitershortfall;
-        const m = (min || exact ? D : mathaccent ? Math.min(D / df, D + ds) :  Math.max(D * df, D - ds));
+        const m =
+          min || exact
+            ? D
+            : mathaccent
+              ? Math.min(D / df, D + ds)
+              : Math.max(D * df, D - ds);
         //
         //  Look through the delimiter sizes for one that matches
         //
@@ -270,11 +389,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
               if (mathaccent && i) {
                 i--;
               }
-              this.variant = this.font.getSizeVariant(c, i);
-              this.size = i;
-              if (delim.schar && delim.schar[i]) {
-                this.stretch = {...this.stretch, c: delim.schar[i]};
-              }
+              this.setDelimSize(c, i);
               return;
             }
             i++;
@@ -289,19 +404,31 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
           this.invalidateBBox();
           this.getStretchBBox(WH, this.checkExtendedHeight(D, delim), delim);
         } else {
-          this.variant = this.font.getSizeVariant(c, i - 1);
-          this.size = i - 1;
+          this.setDelimSize(c, i - 1);
         }
       }
     }
 
     /**
-     * @param {string} name   The name of the attribute to get
-     * @param {number} value  The default value to use
-     * @return {number}       The size in em's of the attribute (or the default value)
+     * @param {number} c     The character being set
+     * @param {number} i     The size for that character
+     */
+    protected setDelimSize(c: number, i: number) {
+      const delim = this.stretch;
+      this.variant = this.font.getSizeVariant(c, i);
+      this.size = i;
+      const schar = delim.schar
+        ? delim.schar[Math.min(i, delim.schar.length - 1)] || c
+        : c;
+      this.stretch = { ...delim, c: schar };
+      this.childNodes[0].invalidateBBox();
+    }
+
+    /**
+     * @override
      */
     public getSize(name: string, value: number): number {
-      let attributes = this.node.attributes;
+      const attributes = this.node.attributes;
       if (attributes.isSet(name)) {
         value = this.length2em(attributes.get(name), 1, 1); // FIXME: should use height of actual character
       }
@@ -309,24 +436,23 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
     }
 
     /**
-     * @param {number[]} WH  Either [W] for width, [H, D] for height and depth, or [] for min/max size
-     * @return {number}      Either the width or the total height of the character
+     * @override
      */
     public getWH(WH: number[]): number {
       if (WH.length === 0) return 0;
       if (WH.length === 1) return WH[0];
-      let [H, D] = WH;
+      const [H, D] = WH;
       const a = this.font.params.axis_height;
-      return (this.node.attributes.get('symmetric') ? 2 * Math.max(H - a, D + a) : H + D);
+      return this.node.attributes.get('symmetric')
+        ? 2 * Math.max(H - a, D + a)
+        : H + D;
     }
 
     /**
-     * @param {number[]} WHD     The [W] or [H, D] being requested from the parent mrow
-     * @param {number} D         The full dimension (including symmetry, etc)
-     * @param {DelimiterData} C  The delimiter data for the stretchy character
+     * @override
      */
     public getStretchBBox(WHD: number[], D: number, C: DelimiterData) {
-      if (C.hasOwnProperty('min') && C.min > D) {
+      if (Object.hasOwn(C, 'min') && C.min > D) {
         D = C.min;
       }
       let [h, d, w] = C.HDW;
@@ -334,6 +460,17 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         [h, d] = this.getBaseline(WHD, D, C);
       } else {
         w = D;
+        if (this.stretch.hd && !this.jax.options.mathmlSpacing) {
+          //
+          // Interpolate between full character height/depth and that of the extender,
+          //   which is what TeX uses, but TeX's fonts are set up to have extra height
+          //   or depth for some extenders, so this factor helps get spacing that is closer
+          //   to TeX spacing.
+          //
+          const t = this.font.params.extender_factor;
+          h = h * (1 - t) + this.stretch.hd[0] * t;
+          d = d * (1 - t) + this.stretch.hd[1] * t;
+        }
       }
       this.bbox.h = h;
       this.bbox.d = d;
@@ -341,15 +478,16 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
     }
 
     /**
-     * @param {number[]} WHD     The [H, D] being requested from the parent mrow
-     * @param {number} HD        The full height (including symmetry, etc)
-     * @param {DelimiterData} C  The delimiter data for the stretchy character
-     * @return {[number, number]}        The height and depth for the vertically stretched delimiter
+     * @override
      */
-    public getBaseline(WHD: number[], HD: number, C: DelimiterData): [number, number] {
-      const hasWHD = (WHD.length === 2 && WHD[0] + WHD[1] === HD);
+    public getBaseline(
+      WHD: number[],
+      HD: number,
+      C: DelimiterData
+    ): [number, number] {
+      const hasWHD = WHD.length === 2 && WHD[0] + WHD[1] === HD;
       const symmetric = this.node.attributes.get('symmetric');
-      const [H, D] = (hasWHD ? WHD : [HD, 0]);
+      const [H, D] = hasWHD ? WHD : [HD, 0];
       let [h, d] = [H + D, 0];
       if (symmetric) {
         //
@@ -370,7 +508,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         //  Use depth proportional to the normal-size character
         //  (when stretching for minsize or maxsize by itself)
         //
-        let [ch, cd] = (C.HDW || [.75, .25]);
+        const [ch, cd] = C.HDW || [0.75, 0.25];
         d = cd * (h / (ch + cd));
       }
       return [h - d, d];
@@ -391,6 +529,163 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
     /**
      * @override
      */
+    public setBreakStyle(linebreak: string = '') {
+      this.breakStyle =
+        this.node.parent.isEmbellished && !linebreak
+          ? ''
+          : this.getBreakStyle(linebreak);
+      if (!this.breakCount) return;
+      if (this.multChar) {
+        //
+        //  Update the spacing between the multchar and the next item
+        //
+        const i = this.parent.node.childIndex(this.node);
+        const next = this.parent.node.childNodes[i + 1];
+        if (next) {
+          next.setTeXclass(this.multChar.node);
+        }
+      }
+    }
+
+    /**
+     * @override
+     */
+    public getBreakStyle(linebreak: string = '') {
+      const attributes = this.node.attributes;
+      let style =
+        linebreak ||
+        (attributes.get('linebreak') === 'newline' ||
+        this.node.getProperty('forcebreak')
+          ? (attributes.get('linebreakstyle') as string)
+          : '');
+      if (style === 'infixlinebreakstyle') {
+        style = attributes.get(style) as string;
+      }
+      return style;
+    }
+
+    /**
+     * @override
+     */
+    getMultChar() {
+      const multChar = this.node.attributes.get('linebreakmultchar') as string;
+      if (multChar && this.getText() === '\u2062' && multChar !== '\u2062') {
+        this.multChar = this.createMo(multChar);
+      }
+    }
+
+    /***************************************************/
+
+    /**
+     * @override
+     */
+    constructor(factory: WF, node: MmlNode, parent: WW = null) {
+      super(factory, node, parent);
+      this.isAccent = (this.node as MmlMo).isAccent;
+      this.getMultChar();
+      this.setBreakStyle();
+    }
+
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox, _recompute: boolean = false) {
+      this.protoBBox(bbox);
+      if (
+        this.node.attributes.get('symmetric') &&
+        this.stretch.dir !== DIRECTION.Horizontal
+      ) {
+        const d = this.getCenterOffset(bbox);
+        bbox.h += d;
+        bbox.d -= d;
+      }
+      if (
+        this.node.getProperty('mathaccent') &&
+        (this.stretch.dir === DIRECTION.None || this.size >= 0)
+      ) {
+        bbox.w = 0;
+      }
+    }
+
+    /**
+     * @override
+     */
+    public computeLineBBox(i: number): LineBBox {
+      return this.moLineBBox(i, this.breakStyle);
+    }
+
+    /**
+     * @override
+     */
+    public moLineBBox(i: number, style: string, obox: BBox = null) {
+      const leadingString = this.node.attributes.get('lineleading') as string;
+      const leading = this.length2em(
+        leadingString,
+        this.linebreakOptions.lineleading
+      );
+      if (i === 0 && style === 'before') {
+        const bbox = LineBBox.from(BBox.zero(), leading);
+        bbox.originalL = this.bbox.L;
+        this.bbox.L = 0;
+        return bbox;
+      }
+      let bbox = LineBBox.from(obox || this.getOuterBBox(), leading);
+      if (i === 1) {
+        if (style === 'after') {
+          bbox.w = bbox.h = bbox.d = 0;
+          bbox.isFirst = true;
+          this.bbox.R = 0;
+        } else if (style === 'duplicate') {
+          bbox.L = 0;
+        } else if (this.multChar) {
+          bbox = LineBBox.from(this.multChar.getOuterBBox(), leading);
+        }
+        bbox.getIndentData(this.node);
+      }
+      return bbox;
+    }
+
+    /**
+     * @override
+     */
+    public canStretch(direction: string) {
+      if (this.stretch.dir !== DIRECTION.None) {
+        return this.stretch.dir === direction;
+      }
+      const attributes = this.node.attributes;
+      if (!attributes.get('stretchy')) return false;
+      const c = this.getText();
+      if (Array.from(c).length !== 1) return false;
+      const delim = this.font.getDelimiter(c.codePointAt(0));
+      this.stretch = (
+        delim && delim.dir === direction ? delim : NOSTRETCH
+      ) as DD;
+      return this.stretch.dir !== DIRECTION.None;
+    }
+
+    /**
+     * @override
+     */
+    public getVariant() {
+      if (this.node.attributes.get('largeop')) {
+        this.variant = this.node.attributes.get('displaystyle')
+          ? '-largeop'
+          : '-smallop';
+        return;
+      }
+      if (
+        !this.node.attributes.hasExplicit('mathvariant') &&
+        this.node.getProperty('pseudoscript') === false
+      ) {
+        this.variant = '-tex-variant';
+        return;
+      }
+      super.getVariant();
+    }
+
+    /**
+     * @override
+     */
     public remapChars(chars: number[]) {
       const primes = this.node.getProperty('primes') as string;
       if (primes) {
@@ -399,7 +694,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
       if (chars.length === 1) {
         const parent = (this.node as MmlMo).coreParent().parent;
         const isAccent = this.isAccent && !parent.isKind('mrow');
-        const map = (isAccent ? 'accent' : 'mo');
+        const map = isAccent ? 'accent' : 'mo';
         const text = this.font.getRemappedChar(map, chars[0]);
         if (text) {
           chars = this.unicodeChars(text, this.variant);
@@ -407,7 +702,5 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
       }
       return chars;
     }
-
-  };
-
+  } as any as B;
 }

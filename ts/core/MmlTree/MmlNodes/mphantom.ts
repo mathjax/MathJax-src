@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMphantom node
+ * @file  Implements the MmlMphantom node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlLayoutNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlLayoutNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,12 +30,11 @@ import {AbstractMmlLayoutNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMphantom extends AbstractMmlLayoutNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlLayoutNode.defaults
+    ...AbstractMmlLayoutNode.defaults,
   };
 
   /**
@@ -49,5 +48,4 @@ export class MmlMphantom extends AbstractMmlLayoutNode {
   public get kind() {
     return 'mphantom';
   }
-
 }

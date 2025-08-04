@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMerror node
+ * @file  Implements the MmlMerror node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,12 +30,11 @@ import {AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMerror extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlNode.defaults
+    ...AbstractMmlNode.defaults,
   };
 
   /**
@@ -52,6 +51,7 @@ export class MmlMerror extends AbstractMmlNode {
 
   /**
    * <merror> gets an inferred mrow
+   *
    * @override
    */
   public get arity() {
@@ -60,10 +60,10 @@ export class MmlMerror extends AbstractMmlNode {
 
   /**
    * <merror> can contain line breaks
+   *
    * @override
    */
   public get linebreakContainer() {
     return true;
   }
-
 }

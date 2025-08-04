@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2022 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
  */
 
 /**
- * @fileoverview Configuration file for the v2-compatible color package.
+ * @file Configuration file for the v2-compatible color package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {CommandMap} from '../SymbolMap.js';
-import {Configuration} from '../Configuration.js';
-import {ParseMethod} from '../Types.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { CommandMap } from '../TokenMap.js';
+import { Configuration } from '../Configuration.js';
+import { ParseMethod } from '../Types.js';
 import TexParser from '../TexParser.js';
 
-export const ColorV2Methods: Record<string, ParseMethod> = {
-
+const ColorV2Methods: { [key: string]: ParseMethod } = {
   /**
    * Implements the v2 color macro
    *
@@ -45,20 +45,19 @@ export const ColorV2Methods: Record<string, ParseMethod> = {
     } else {
       delete parser.stack.env['color'];
     }
-    const node = parser.create('node', 'mstyle', [math], {mathcolor: color});
+    const node = parser.create('node', 'mstyle', [math], { mathcolor: color });
     parser.Push(node);
-  }
-
+  },
 };
 
 /**
  * The color macros
  */
-new CommandMap('colorv2', {color: 'Color'}, ColorV2Methods);
+new CommandMap('colorv2', { color: ColorV2Methods.Color });
 
 /**
  * The configuration for the color macros
  */
-export const ColorConfiguration = Configuration.create(
-  'colorv2', {handler: {macro: ['colorv2']}}
-);
+export const ColorConfiguration = Configuration.create('colorv2', {
+  [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['colorv2'] },
+});

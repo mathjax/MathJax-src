@@ -1,0 +1,9 @@
+const fs = require('fs');
+const path = require('path');
+
+const dir = path.join(__dirname, '..', '..');
+const src = path.join(dir, 'node_modules', '@mathjax', 'src');
+
+if (fs.existsSync(path.join(dir, 'node_modules')) && !fs.existsSync(src)) {
+  fs.symlinkSync(dir, src);
+}

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,17 +16,24 @@
  */
 
 /**
- * @fileoverview  Implementation of the Compile function for the MathML input jax
+ * @file  Implementation of the Compile function for the MathML input jax
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
-import {MmlNode, TextNode, XMLNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS}
-from '../../core/MmlTree/MmlNode.js';
-import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
+import { MmlFactory } from '../../core/MmlTree/MmlFactory.js';
+import {
+  MmlNode,
+  TextNode,
+  XMLNode,
+  AbstractMmlNode,
+  AbstractMmlTokenNode,
+  TEXCLASS,
+} from '../../core/MmlTree/MmlNode.js';
+import { HtmlNode } from '../../core/MmlTree/MmlNodes/HtmlNode.js';
+import { userOptions, defaultOptions, OptionList } from '../../util/Options.js';
 import * as Entities from '../../util/Entities.js';
-import {DOMAdaptor} from '../../core/DOMAdaptor.js';
+import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 
 /********************************************************************/
 /**
@@ -38,12 +45,13 @@ import {DOMAdaptor} from '../../core/DOMAdaptor.js';
  * @template D  The Document class
  */
 export class MathMLCompile<N, T, D> {
-
   /**
    *  The default options for this object
    */
+  /* prettier-ignore */
   public static OPTIONS: OptionList = {
     MmlFactory: null,                   // The MmlFactory to use (defaults to a new MmlFactory)
+    allowHtmlInTokenNodes: false,       // True if HTML is allowed in token nodes
     fixMisplacedChildren: true,         // True if we want to use heuristics to try to fix
                                         //   problems with the tree based on HTML not handling
                                         //   self-closing tags properly
@@ -61,11 +69,11 @@ export class MathMLCompile<N, T, D> {
   /**
    *  The instance of the MmlFactory object and
    */
-  protected factory: MmlFactory;
+  public factory: MmlFactory;
   /**
    *  The options (the defaults with the user options merged in)
    */
-  protected options: OptionList;
+  public options: OptionList;
 
   /**
    *  Merge the user options into the defaults, and save them
@@ -79,7 +87,7 @@ export class MathMLCompile<N, T, D> {
   }
 
   /**
-   * @param{MmlFactory} mmlFactory   The MathML factory to use for new nodes
+   * @param {MmlFactory} mmlFactory   The MathML factory to use for new nodes
    */
   public setMmlFactory(mmlFactory: MmlFactory) {
     this.factory = mmlFactory;
@@ -89,10 +97,10 @@ export class MathMLCompile<N, T, D> {
    * Convert a MathML DOM tree to internal MmlNodes
    *
    * @param {N} node     The <math> node to convert to MmlNodes
-   * @return {MmlNode}   The MmlNode at the root of the converted tree
+   * @returns {MmlNode}   The MmlNode at the root of the converted tree
    */
   public compile(node: N): MmlNode {
-    let mml = this.makeNode(node);
+    const mml = this.makeNode(node);
     mml.verifyTree(this.options['verify']);
     mml.setInheritedAttributes({}, false, 0, false);
     mml.walkTree(this.markMrows);
@@ -106,12 +114,12 @@ export class MathMLCompile<N, T, D> {
    *  FIXME: we should use data-* attributes rather than classes for these
    *
    * @param {N} node     The node to convert to an MmlNode
-   * @return {MmlNode}   The converted MmlNode
+   * @returns {MmlNode}   The converted MmlNode
    */
   public makeNode(node: N): MmlNode {
     const adaptor = this.adaptor;
     let limits = false;
-    let kind = adaptor.kind(node).replace(/^.*:/, '');
+    const kind = adaptor.kind(node).replace(/^.*:/, '');
     let texClass = adaptor.getAttribute(node, 'data-mjx-texclass') || '';
     if (texClass) {
       texClass = this.filterAttribute('data-mjx-texclass', texClass) || '';
@@ -119,26 +127,67 @@ export class MathMLCompile<N, T, D> {
     let type = texClass && kind === 'mrow' ? 'TeXAtom' : kind;
     for (const name of this.filterClassList(adaptor.allClasses(node))) {
       if (name.match(/^MJX-TeXAtom-/) && kind === 'mrow') {
-        texClass = name.substr(12);
+        texClass = name.substring(12);
         type = 'TeXAtom';
       } else if (name === 'MJX-fixedlimits') {
         limits = true;
       }
     }
-    this.factory.getNodeClass(type) || this.error('Unknown node type "' + type + '"');
-    let mml = this.factory.create(type);
+    if (!this.factory.getNodeClass(type)) {
+      return this.unknownNode(type, node);
+    }
+    return this.createMml(type, node, texClass, limits);
+  }
+
+  /**
+   * Create an actual MmlNode tree from a given DOM node.
+   *
+   * @param {string} type      The type of MmlNode to create
+   * @param {N} node           The original DOM node that is being transcribed
+   * @param {string} texClass  The texClass specified on the node, if any
+   * @param {boolean} limits   True if fixed limits are to be used
+   * @returns {MmlNode}         The final MmlNode tree
+   */
+  protected createMml(
+    type: string,
+    node: N,
+    texClass: string,
+    limits: boolean
+  ): MmlNode {
+    const mml = this.factory.create(type);
     if (type === 'TeXAtom' && texClass === 'OP' && !limits) {
       mml.setProperty('movesupsub', true);
       mml.attributes.setInherited('movablelimits', true);
     }
     if (texClass) {
-      mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
+      mml.texClass = (TEXCLASS as { [name: string]: number })[texClass];
       mml.setProperty('texClass', mml.texClass);
     }
     this.addAttributes(mml, node);
     this.checkClass(mml, node);
     this.addChildren(mml, node);
     return mml;
+  }
+
+  /**
+   * Handle unknown node by either creating an HTML node, or throwing an error.
+   *
+   * @param {string} type   The type of node being requested
+   * @param {N} node        The HTML node used to create it.
+   * @returns {MmlNode}      The HtmlNode holding the node (or null)
+   */
+  protected unknownNode(type: string, node: N): MmlNode {
+    if (
+      this.factory.getNodeClass('html') &&
+      this.options.allowHtmlInTokenNodes
+    ) {
+      return (this.factory.create('html') as HtmlNode<N>).setHTML(
+        node,
+        this.adaptor
+      );
+    }
+    this.error('Unknown node type "' + type + '"');
+    return null;
   }
 
   /**
@@ -150,36 +199,43 @@ export class MathMLCompile<N, T, D> {
   protected addAttributes(mml: MmlNode, node: N) {
     let ignoreVariant = false;
     for (const attr of this.adaptor.allAttributes(node)) {
-      let name = attr.name;
-      let value = this.filterAttribute(name, attr.value);
+      const name = attr.name;
+      const value = this.filterAttribute(name, attr.value);
       if (value === null || name === 'xmlns') {
         continue;
       }
-      if (name.substr(0, 9) === 'data-mjx-') {
-        switch (name.substr(9)) {
-        case 'alternate':
-          mml.setProperty('variantForm', true);
-          break;
-        case 'variant':
-          mml.attributes.set('mathvariant', value);
-          ignoreVariant = true;
-          break;
-        case 'smallmatrix':
-          mml.setProperty('scriptlevel', 1);
-          mml.setProperty('useHeight', false);
-          break;
-        case 'accent':
-          mml.setProperty('mathaccent', value === 'true');
-          break;
-        case 'auto-op':
-          mml.setProperty('autoOP', value === 'true');
-          break;
-        case 'script-align':
-          mml.setProperty('scriptalign', value);
-          break;
+      if (name.substring(0, 9) === 'data-mjx-') {
+        switch (name.substring(9)) {
+          case 'alternate':
+            mml.setProperty('variantForm', true);
+            break;
+          case 'variant':
+            mml.attributes.set('mathvariant', value);
+            mml.setProperty('ignore-variant', true);
+            ignoreVariant = true;
+            break;
+          case 'smallmatrix':
+            mml.setProperty('smallmatrix', true);
+            mml.setProperty('useHeight', false);
+            break;
+          case 'mathaccent':
+            mml.setProperty('mathaccent', value === 'true');
+            break;
+          case 'auto-op':
+            mml.setProperty('autoOP', value === 'true');
+            break;
+          case 'script-align':
+            mml.setProperty('scriptalign', value);
+            break;
+          case 'vbox':
+            mml.setProperty('vbox', value);
+            break;
+          default:
+            mml.attributes.set(name, value);
+            break;
         }
       } else if (name !== 'class') {
-        let val = value.toLowerCase();
+        const val = value.toLowerCase();
         if (val === 'true' || val === 'false') {
           mml.attributes.set(name, val === 'true');
         } else if (!ignoreVariant || name !== 'mathvariant') {
@@ -192,10 +248,11 @@ export class MathMLCompile<N, T, D> {
   /**
    * Provide a hook for the Safe extension to filter attribute values.
    *
-   * @param {string} name   The name of an attribute to filter
+   * @param {string} _name  The name of an attribute to filter
    * @param {string} value  The value to filter
+   * @returns {string} The filtered value.
    */
-  protected filterAttribute(_name: string, value: string) {
+  protected filterAttribute(_name: string, value: string): string {
     return value;
   }
 
@@ -203,6 +260,7 @@ export class MathMLCompile<N, T, D> {
    * Provide a hook for the Safe extension to filter class names.
    *
    * @param {string[]} list   The list of class names to filter
+   * @returns {string[]}      The list of filtered class names
    */
   protected filterClassList(list: string[]) {
     return list;
@@ -227,18 +285,30 @@ export class MathMLCompile<N, T, D> {
       if (name === '#text') {
         this.addText(mml, child);
       } else if (mml.isKind('annotation-xml')) {
-        mml.appendChild((this.factory.create('XML') as XMLNode).setXML(child, adaptor));
+        mml.appendChild(
+          (this.factory.create('XML') as XMLNode).setXML(child, adaptor)
+        );
       } else {
-        let childMml = mml.appendChild(this.makeNode(child)) as MmlNode;
-        if (childMml.arity === 0 && adaptor.childNodes(child).length) {
+        const childMml = mml.appendChild(this.makeNode(child));
+        if (
+          childMml.arity === 0 &&
+          adaptor.childNodes(child).length &&
+          !childMml.isKind('html')
+        ) {
           if (this.options['fixMisplacedChildren']) {
             this.addChildren(mml, child);
           } else {
-            childMml.mError('There should not be children for ' + childMml.kind + ' nodes',
-                            this.options['verify'], true);
+            childMml.mError(
+              'There should not be children for ' + childMml.kind + ' nodes',
+              this.options['verify'],
+              true
+            );
           }
         }
       }
+    }
+    if (mml.isToken) {
+      this.trimSpace(mml);
     }
   }
 
@@ -253,7 +323,7 @@ export class MathMLCompile<N, T, D> {
     if ((mml.isToken || mml.getProperty('isChars')) && mml.arity) {
       if (mml.isToken) {
         text = Entities.translate(text);
-        text = this.trimSpace(text);
+        text = this.normalizeSpace(text);
       }
       mml.appendChild((this.factory.create('text') as TextNode).setText(text));
     } else if (text.match(/\S/)) {
@@ -268,13 +338,16 @@ export class MathMLCompile<N, T, D> {
    * @param {N} node  The MathML node whose class is to be processed
    */
   protected checkClass(mml: MmlNode, node: N) {
-    let classList = [];
+    const classList = [];
     for (const name of this.filterClassList(this.adaptor.allClasses(node))) {
-      if (name.substr(0, 4) === 'MJX-') {
+      if (name.substring(0, 4) === 'MJX-') {
         if (name === 'MJX-variant') {
           mml.setProperty('variantForm', true);
-        } else if (name.substr(0, 11) !== 'MJX-TeXAtom') {
-          mml.attributes.set('mathvariant', this.fixCalligraphic(name.substr(3)));
+        } else if (name.substring(0, 11) !== 'MJX-TeXAtom') {
+          mml.attributes.set(
+            'mathvariant',
+            this.fixCalligraphic(name.substring(3))
+          );
         }
       } else {
         classList.push(name);
@@ -289,7 +362,7 @@ export class MathMLCompile<N, T, D> {
    * Fix the old incorrect spelling of calligraphic.
    *
    * @param {string} variant  The mathvariant name
-   * @return {string}         The corrected variant
+   * @returns {string}         The corrected variant
    */
   protected fixCalligraphic(variant: string): string {
     return variant.replace(/caligraphic/, 'calligraphic');
@@ -302,10 +375,16 @@ export class MathMLCompile<N, T, D> {
    */
   protected markMrows(mml: MmlNode) {
     if (mml.isKind('mrow') && !mml.isInferred && mml.childNodes.length >= 2) {
-      let first = mml.childNodes[0] as MmlNode;
-      let last = mml.childNodes[mml.childNodes.length - 1] as MmlNode;
-      if (first.isKind('mo') && first.attributes.get('fence') && first.attributes.get('stretchy') &&
-          last.isKind('mo') && last.attributes.get('fence') && last.attributes.get('stretchy')) {
+      const first = mml.childNodes[0];
+      const last = mml.childNodes[mml.childNodes.length - 1];
+      if (
+        first.isKind('mo') &&
+        first.attributes.get('fence') &&
+        first.attributes.get('stretchy') &&
+        last.isKind('mo') &&
+        last.attributes.get('fence') &&
+        last.attributes.get('stretchy')
+      ) {
         if (first.childNodes.length) {
           mml.setProperty('open', (first as AbstractMmlTokenNode).getText());
         }
@@ -317,16 +396,29 @@ export class MathMLCompile<N, T, D> {
   }
 
   /**
-   * @param {string} text  The text to have leading/trailing spaced removed
-   * @return {string}      The trimmed text
+   * @param {string} text  The text to have spacing normalized
+   * @returns {string}      The trimmed text
    */
-  protected trimSpace(text: string): string {
-    return text.replace(/[\t\n\r]/g, ' ')    // whitespace to spaces
-               .replace(/^ +/, '')           // initial whitespace
-               .replace(/ +$/, '')           // trailing whitespace
-               .replace(/  +/g, ' ');        // internal multiple whitespace
+  protected normalizeSpace(text: string): string {
+    return text
+      .replace(/[\t\n\r]/g, ' ') // whitespace to spaces
+      .replace(/  +/g, ' '); // internal multiple whitespace
   }
 
+  /**
+   * @param {MmlNode} mml  The token node whose leading/trailing spaces should be removed
+   */
+  protected trimSpace(mml: MmlNode) {
+    let child = mml.childNodes[0] as TextNode;
+    if (!child) return;
+    if (child.isKind('text')) {
+      child.setText(child.getText().replace(/^ +/, ''));
+    }
+    child = mml.childNodes[mml.childNodes.length - 1] as TextNode;
+    if (child.isKind('text')) {
+      child.setText(child.getText().replace(/ +$/, ''));
+    }
+  }
   /**
    * @param {string} message  The error message to produce
    */

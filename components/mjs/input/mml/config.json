@@ -1,0 +1,14 @@
+{
+  "build": {
+    "component": "input/mml",
+    "targets": [
+      "input/mathml.ts",
+      "input/mathml"
+    ],
+    "excludeSubdirs": true
+  },
+  "webpack": {
+    "name": "input/mml",
+    "libs": ["components/src/core/lib"]
+  }
+}

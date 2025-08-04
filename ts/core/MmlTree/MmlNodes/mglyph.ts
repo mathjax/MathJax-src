@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMglyph node
+ * @file  Implements the MmlMglyph node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlTokenNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,7 +30,6 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMglyph extends AbstractMmlTokenNode {
-
   /**
    * @override
    */
@@ -41,7 +40,7 @@ export class MmlMglyph extends AbstractMmlTokenNode {
     index: '',
     width: 'auto',
     height: 'auto',
-    valign: '0em'
+    valign: '0em',
   };
 
   /**
@@ -60,12 +59,19 @@ export class MmlMglyph extends AbstractMmlTokenNode {
    * @override
    */
   public verifyAttributes(options: PropertyList) {
-    const {src, fontfamily, index} = this.attributes.getList('src', 'fontfamily', 'index');
+    const { src, fontfamily, index } = this.attributes.getList(
+      'src',
+      'fontfamily',
+      'index'
+    );
     if (src === '' && (fontfamily === '' || index === '')) {
-      this.mError('mglyph must have either src or fontfamily and index attributes', options, true);
+      this.mError(
+        'mglyph must have either src or fontfamily and index attributes',
+        options,
+        true
+      );
     } else {
       super.verifyAttributes(options);
     }
   }
-
 }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMs node
+ * @file  Implements the MmlMs node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlTokenNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,14 +30,13 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMs extends AbstractMmlTokenNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlTokenNode.defaults,
     lquote: '"',
-    rquote: '"'
+    rquote: '"',
   };
 
   /**
@@ -51,5 +50,4 @@ export class MmlMs extends AbstractMmlTokenNode {
   public get kind() {
     return 'ms';
   }
-
 }

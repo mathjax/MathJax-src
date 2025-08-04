@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMsubsup, MmlMsub, and MmlMsup nodes
+ * @file  Implements the MmlMsubsup, MmlMsub, and MmlMsup nodes
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlBaseNode, AttributeList } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,14 +30,13 @@ import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
  */
 
 export class MmlMsubsup extends AbstractMmlBaseNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlBaseNode.defaults,
     subscriptshift: '',
-    superscriptshift: ''
+    superscriptshift: '',
   };
 
   /**
@@ -49,6 +48,7 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
 
   /**
    * <msubsup> requires three children
+   *
    * @override
    */
   public get arity() {
@@ -56,21 +56,21 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
   }
 
   /**
-   * @return {number}  The position of the base element
+   * @returns {number}  The position of the base element
    */
   public get base(): number {
     return 0;
   }
 
   /**
-   * @return {number}  The position of the subscript (overridden in msup below)
+   * @returns {number}  The position of the subscript (overridden in msup below)
    */
   public get sub(): number {
     return 1;
   }
 
   /**
-   * @return {number}  The position of the superscript (overridden in msup below)
+   * @returns {number}  The position of the superscript (overridden in msup below)
    */
   public get sup(): number {
     return 2;
@@ -81,16 +81,30 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-    let nodes = this.childNodes;
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
+    const nodes = this.childNodes;
     nodes[0].setInheritedAttributes(attributes, display, level, prime);
-    nodes[1].setInheritedAttributes(attributes, false, level + 1, prime || this.sub === 1);
+    nodes[1].setInheritedAttributes(
+      attributes,
+      false,
+      level + 1,
+      prime || this.sub === 1
+    );
     if (!nodes[2]) {
       return;
     }
-    nodes[2].setInheritedAttributes(attributes, false, level + 1, prime || this.sub === 2);
+    nodes[2].setInheritedAttributes(
+      attributes,
+      false,
+      level + 1,
+      prime || this.sub === 2
+    );
   }
-
 }
 
 /*****************************************************************/
@@ -99,12 +113,11 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
  */
 
 export class MmlMsub extends MmlMsubsup {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...MmlMsubsup.defaults
+    ...MmlMsubsup.defaults,
   };
 
   /**
@@ -116,12 +129,12 @@ export class MmlMsub extends MmlMsubsup {
 
   /**
    * <msub> only gets two children
+   *
    * @override
    */
   public get arity() {
     return 2;
   }
-
 }
 
 /*****************************************************************/
@@ -130,12 +143,11 @@ export class MmlMsub extends MmlMsubsup {
  */
 
 export class MmlMsup extends MmlMsubsup {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...MmlMsubsup.defaults
+    ...MmlMsubsup.defaults,
   };
 
   /**
@@ -147,6 +159,7 @@ export class MmlMsup extends MmlMsubsup {
 
   /**
    * <msup> only gets two children
+   *
    * @override
    */
   get arity() {
@@ -155,6 +168,7 @@ export class MmlMsup extends MmlMsubsup {
 
   /**
    * child 1 is superscript
+   *
    * @override
    */
   get sup() {
@@ -163,11 +177,10 @@ export class MmlMsup extends MmlMsubsup {
 
   /**
    * child 2 is null (no subscript)
+   *
    * @override
    */
   get sub() {
     return 2;
   }
-
 }
-

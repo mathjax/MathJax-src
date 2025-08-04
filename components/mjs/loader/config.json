@@ -1,0 +1,13 @@
+{
+  "build": {
+    "component": "loader",
+    "targets": [
+      "components/loader.ts",
+      "components/package.ts"
+    ],
+    "excludeSubdirs": true
+  },
+  "webpack": {
+    "name": "loader"
+  }
+}

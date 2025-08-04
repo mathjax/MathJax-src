@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  The generic NodeFactory class for creating Node objects
+ * @file  The generic NodeFactory class for creating Node objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node, PropertyList} from './Node.js';
-import {Factory, FactoryNodeClass, AbstractFactory} from './Factory.js';
+import { Node, PropertyList } from './Node.js';
+import { Factory, FactoryNodeClass, AbstractFactory } from './Factory.js';
 
 /*****************************************************************/
 /**
@@ -31,12 +31,15 @@ import {Factory, FactoryNodeClass, AbstractFactory} from './Factory.js';
  * @template N  The node type created by the factory
  * @template C  The class of the node being constructed (for access to static properties)
  */
-export interface NodeFactory<N extends Node, C extends FactoryNodeClass<N>> extends Factory<N, C> {
+export interface NodeFactory<
+  N extends Node<N, C>,
+  C extends FactoryNodeClass<N>,
+> extends Factory<N, C> {
   /**
    * @param {string} kind  The kind of node to create
    * @param {PropertyList} properties  The list of initial properties for the node (if any)
    * @param {N[]} children  The array of initial child nodes (if any)
-   * @return {N}  The newly created node of the given kind
+   * @returns {N}  The newly created node of the given kind
    */
   create(kind: string, properties?: PropertyList, children?: N[]): N;
 }
@@ -48,12 +51,18 @@ export interface NodeFactory<N extends Node, C extends FactoryNodeClass<N>> exte
  * @template N  The node type created by the factory
  * @template C  The class of the node being constructed (for access to static properties)
  */
-export abstract class AbstractNodeFactory<N extends Node, C extends FactoryNodeClass<N>> extends AbstractFactory<N, C> {
+export abstract class AbstractNodeFactory<
+  N extends Node<N, C>,
+  C extends FactoryNodeClass<N>,
+> extends AbstractFactory<N, C> {
   /**
    * @override
    */
-  public create(kind: string, properties: PropertyList = {}, children: N[] = []) {
+  public create(
+    kind: string,
+    properties: PropertyList = {},
+    children: N[] = []
+  ) {
     return this.node[kind](properties, children);
   }
-
 }

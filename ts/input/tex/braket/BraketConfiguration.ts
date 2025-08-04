@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,28 +15,24 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Configuration file for the Braket package.
+ * @file Configuration file for the Braket package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
-import {BraketItem} from './BraketItems.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
+import { BraketItem } from './BraketItems.js';
 import './BraketMappings.js';
 
-
-export const BraketConfiguration = Configuration.create(
-  'braket', {
-    handler: {
-      character: ['Braket-characters'],
-      macro: ['Braket-macros']
-    },
-    items: {
-      [BraketItem.prototype.kind]: BraketItem,
-    }
-  }
-);
-
-
+export const BraketConfiguration = Configuration.create('braket', {
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.CHARACTER]: ['Braket-characters'],
+    [HandlerType.MACRO]: ['Braket-macros'],
+  },
+  [ConfigurationType.ITEMS]: {
+    [BraketItem.prototype.kind]: BraketItem,
+  },
+  [ConfigurationType.PRIORITY]: 3, // must come before base configuration
+});

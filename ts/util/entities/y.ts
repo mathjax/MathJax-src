@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     YAcy: '\u042F',
     YIcy: '\u0407',
     YUcy: '\u042E',
@@ -31,5 +32,7 @@ Entities.add({
     ycy: '\u044B',
     yicy: '\u0457',
     yucy: '\u044E',
-    yuml: '\u00FF'
-}, 'y');
+    yuml: '\u00FF',
+  },
+  'y'
+);

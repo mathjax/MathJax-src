@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2022 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,21 +16,32 @@
  */
 
 /**
- * @fileoverview  Implements asynchronous loading for use with node applications
+ * @file  Implements asynchronous loading for use with node applications
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {mathjax} from '../../mathjax.js';
+import { mathjax } from '../../mathjax.js';
 import * as path from 'path';
+import { src } from '#source/source.cjs';
 
-declare var require: (name: string) => any;
-declare var __dirname: string;
+declare const require: (name: string) => any;
 
-const root = path.dirname(path.dirname(__dirname));
+let root = path.resolve(src, '..', '..', 'cjs');
 
 if (!mathjax.asyncLoad && typeof require !== 'undefined') {
   mathjax.asyncLoad = (name: string) => {
     return require(name.charAt(0) === '.' ? path.resolve(root, name) : name);
   };
+  mathjax.asyncIsSynchronous = true;
+}
+
+/**
+ * @param {string} URL   the base URL to use for loading relative paths
+ */
+export function setBaseURL(URL: string) {
+  root = URL;
+  if (!root.match(/\/$/)) {
+    root += '/';
+  }
 }

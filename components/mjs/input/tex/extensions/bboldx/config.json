@@ -1,0 +1,15 @@
+{
+  "build": {
+    "id": "[tex]/bboldx",
+    "component": "input/tex/extensions/bboldx",
+    "targets": ["input/tex/bboldx"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/bboldx",
+    "libs": [
+      "components/src/input/tex/extensions/textmacros/lib",
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

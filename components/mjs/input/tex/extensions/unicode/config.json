@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/unicode",
+    "component": "input/tex/extensions/unicode",
+    "targets": ["input/tex/unicode"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/unicode",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

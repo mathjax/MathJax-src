@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMfrac node
+ * @file  Implements the MmlMfrac node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { MmlNode, AbstractMmlBaseNode, AttributeList } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,7 +30,6 @@ import {MmlNode, AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
  */
 
 export class MmlMfrac extends AbstractMmlBaseNode {
-
   /**
    * @override
    */
@@ -39,7 +38,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
     linethickness: 'medium',
     numalign: 'center',
     denomalign: 'center',
-    bevelled: false
+    bevelled: false,
   };
 
   /**
@@ -51,6 +50,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
 
   /**
    * <mfrac> requires two children
+   *
    * @override
    */
   public get arity() {
@@ -59,6 +59,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
 
   /**
    * The children of <mfrac> can include line breaks
+   *
    * @override
    */
   public get linebreakContainer() {
@@ -66,7 +67,17 @@ export class MmlMfrac extends AbstractMmlBaseNode {
   }
 
   /**
+   * Alignment is handled separately for the child nodes
+   *
+   * @override
+   */
+  public get linebreakAlign() {
+    return '';
+  }
+
+  /**
    * Update the children separately
+   *
    * @override
    */
   public setTeXclass(prev: MmlNode) {
@@ -79,14 +90,53 @@ export class MmlMfrac extends AbstractMmlBaseNode {
 
   /**
    * Adjust the display level, and use prime style in denominator
+   *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
     if (!display || level > 0) {
       level++;
     }
-    this.childNodes[0].setInheritedAttributes(attributes, false, level, prime);
-    this.childNodes[1].setInheritedAttributes(attributes, false, level, true);
+    const numalign = this.attributes.get('numalign');
+    const denalign = this.attributes.get('denomalign');
+    const numAttributes = this.addInheritedAttributes(
+      { ...attributes },
+      {
+        numalign,
+        indentshift: '0',
+        indentalignfirst: numalign,
+        indentshiftfirst: '0',
+        indentalignlast: 'indentalign',
+        indentshiftlast: 'indentshift',
+      }
+    );
+    const denAttributes = this.addInheritedAttributes(
+      { ...attributes },
+      {
+        denalign,
+        indentshift: '0',
+        indentalignfirst: denalign,
+        indentshiftfirst: '0',
+        indentalignlast: 'indentalign',
+        indentshiftlast: 'indentshift',
+      }
+    );
+    this.childNodes[0].setInheritedAttributes(
+      numAttributes,
+      false,
+      level,
+      prime
+    );
+    this.childNodes[1].setInheritedAttributes(
+      denAttributes,
+      false,
+      level,
+      true
+    );
   }
-
 }

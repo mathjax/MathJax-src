@@ -1,0 +1,4 @@
+{
+  "extends": "./mjs.json",
+  "exclude": ["./components", "./mjs", "./cjs", "./testing"]
+}

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,53 +15,76 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Configuration file for the Newcommand package.
+ * @file Configuration file for the Newcommand package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration, ParserConfiguration} from '../Configuration.js';
-import {BeginEnvItem} from './NewcommandItems.js';
-import NewcommandUtil from './NewcommandUtil.js';
+import { TeX } from '../../tex.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration, ParserConfiguration } from '../Configuration.js';
+import { BeginEnvItem } from './NewcommandItems.js';
+import { NewcommandTables, NewcommandPriority } from './NewcommandUtil.js';
 import './NewcommandMappings.js';
 import ParseMethods from '../ParseMethods.js';
-import * as sm from '../SymbolMap.js';
-
+import * as sm from '../TokenMap.js';
 
 /**
- * Init method for Newcommand package.
- * @param {Configuration} config The current configuration.
+ * Initialize the newcommand maps for delimiters, commands, and environments,
+ * if they aren't already in place.
+ *
+ * @param {ParserConfiguration} _config  The parser configuration (ignored)
+ * @param {TeX} jax                      The TeX input jax
  */
-let init = function(config: ParserConfiguration) {
-  new sm.DelimiterMap(NewcommandUtil.NEW_DELIMITER,
-                      ParseMethods.delimiter, {});
-  new sm.CommandMap(NewcommandUtil.NEW_COMMAND, {}, {});
-  new sm.EnvironmentMap(NewcommandUtil.NEW_ENVIRONMENT,
-                        ParseMethods.environment, {}, {});
-  config.append(Configuration.local(
-    {handler: {character: [],
-               delimiter: [NewcommandUtil.NEW_DELIMITER],
-               macro: [NewcommandUtil.NEW_DELIMITER,
-                       NewcommandUtil.NEW_COMMAND],
-               environment: [NewcommandUtil.NEW_ENVIRONMENT]
-              },
-     priority: -1}));
-};
-
-
-export const NewcommandConfiguration = Configuration.create(
-  'newcommand', {
-    handler: {
-      macro: ['Newcommand-macros']
-    },
-    items: {
-      [BeginEnvItem.prototype.kind]: BeginEnvItem,
-    },
-    options: {maxMacros: 1000},
-    init: init
+export function NewcommandConfig(
+  _config: ParserConfiguration,
+  jax: TeX<any, any, any>
+) {
+  //
+  //  Check if we are already initialzied (since other packages call this)
+  //
+  if (jax.parseOptions.packageData.has('newcommand')) {
+    return;
   }
-);
+  jax.parseOptions.packageData.set('newcommand', {});
 
+  new sm.DelimiterMap(
+    NewcommandTables.NEW_DELIMITER,
+    ParseMethods.delimiter,
+    {}
+  );
+  new sm.CommandMap(NewcommandTables.NEW_COMMAND, {});
+  new sm.EnvironmentMap(
+    NewcommandTables.NEW_ENVIRONMENT,
+    ParseMethods.environment,
+    {}
+  );
+  jax.parseOptions.handlers.add(
+    {
+      [HandlerType.CHARACTER]: [],
+      [HandlerType.DELIMITER]: [NewcommandTables.NEW_DELIMITER],
+      [HandlerType.MACRO]: [
+        NewcommandTables.NEW_DELIMITER,
+        NewcommandTables.NEW_COMMAND,
+      ],
+      [HandlerType.ENVIRONMENT]: [NewcommandTables.NEW_ENVIRONMENT],
+    },
+    {},
+    NewcommandPriority
+  );
+}
 
+export const NewcommandConfiguration = Configuration.create('newcommand', {
+  [ConfigurationType.HANDLER]: {
+    macro: ['Newcommand-macros'],
+  },
+  [ConfigurationType.ITEMS]: {
+    [BeginEnvItem.prototype.kind]: BeginEnvItem,
+  },
+  [ConfigurationType.OPTIONS]: {
+    maxMacros: 1000,
+    protectedMacros: ['begingroupSandbox'],
+  },
+  [ConfigurationType.CONFIG]: NewcommandConfig,
+});

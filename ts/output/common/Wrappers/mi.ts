@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,36 +16,132 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMi wrapper mixin for the MmlMi object
+ * @file  Implements the CommonMi wrapper mixin for the MmlMi object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {BBox} from '../../../util/BBox.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { BBox } from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
  * The CommonMi interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMi extends AnyWrapper {
-}
+export interface CommonMi<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /**
- * Shorthand for the CommonMi constructor
+ * The CommonMiClass interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type MiConstructor = Constructor<CommonMi>;
+export interface CommonMiClass<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
- *  The CommonMi wrapper mixin for the MmlMi object
+ * The CommonMi wrapper mixin for the MmlMi object
  *
- * @template T  The Wrapper class constructor type
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
-export function CommonMiMixin<T extends WrapperConstructor>(Base: T): MiConstructor & T {
-
-  return class extends Base {
-
+export function CommonMiMixin<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMiMixin
+    extends Base
+    implements CommonMi<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -53,6 +149,5 @@ export function CommonMiMixin<T extends WrapperConstructor>(Base: T): MiConstruc
       super.computeBBox(bbox);
       this.copySkewIC(bbox);
     }
-  };
-
+  } as any as B;
 }

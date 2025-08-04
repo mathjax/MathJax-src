@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Ascr: '\uD835\uDC9C',
     Bscr: '\u212C',
     Cscr: '\uD835\uDC9E',
@@ -69,5 +70,7 @@ Entities.add({
     wscr: '\uD835\uDCCC',
     xscr: '\uD835\uDCCD',
     yscr: '\uD835\uDCCE',
-    zscr: '\uD835\uDCCF'
-}, 'scr');
+    zscr: '\uD835\uDCCF',
+  },
+  'scr'
+);

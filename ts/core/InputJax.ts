@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
  */
 
 /**
- * @fileoverview  Implements the interface and abstract class for the InputJax
+ * @file  Implements the interface and abstract class for the InputJax
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathDocument} from './MathDocument.js';
-import {MathItem, ProtoItem} from './MathItem.js';
-import {MmlNode} from './MmlTree/MmlNode.js';
-import {MmlFactory} from './MmlTree/MmlFactory.js';
-import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
-import {FunctionList} from '../util/FunctionList.js';
-import {DOMAdaptor} from '../core/DOMAdaptor.js';
+import { MathDocument } from './MathDocument.js';
+import { MathItem, ProtoItem } from './MathItem.js';
+import { MmlNode } from './MmlTree/MmlNode.js';
+import { MmlFactory } from './MmlTree/MmlFactory.js';
+import { userOptions, defaultOptions, OptionList } from '../util/Options.js';
+import { FunctionList } from '../util/FunctionList.js';
+import { DOMAdaptor } from '../core/DOMAdaptor.js';
 
 /*****************************************************************/
 /**
@@ -97,7 +97,7 @@ export interface InputJax<N, T, D> {
    *
    * @param {N | string[]} which   The element or array of strings to be searched for math
    * @param {OptionList} options   The options for the search, if any
-   * @return {ProtoItem[]}         Array of proto math items found (further processed by the
+   * @returns {ProtoItem[]}         Array of proto math items found (further processed by the
    *                                handler to produce actual MathItem objects)
    */
   findMath(which: N | string[], options?: OptionList): ProtoItem<N, T>[];
@@ -107,7 +107,7 @@ export interface InputJax<N, T, D> {
    *
    * @param {MathItem} math  The MathItem whose math content is to processed
    * @param {MathDocument} document The MathDocument for this input jax.
-   * @return {MmlNode}       The resulting internal node tree for the math
+   * @returns {MmlNode}       The resulting internal node tree for the math
    */
   compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>): MmlNode;
 }
@@ -121,7 +121,6 @@ export interface InputJax<N, T, D> {
  * @template D  The Document class
  */
 export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
-
   /**
    * The name of the input jax
    */
@@ -130,7 +129,10 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   /**
    * The default options for the input jax
    */
-  public static OPTIONS: OptionList = {};
+  public static OPTIONS: OptionList = {
+    preFilters: [],
+    postFilters: [],
+  };
 
   /**
    * The actual options supplied to the input jax
@@ -150,26 +152,26 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   /**
    * The DOMAdaptor for the MathDocument for this input jax
    */
-  public adaptor: DOMAdaptor<N, T, D> = null;  // set by the handler
+  public adaptor: DOMAdaptor<N, T, D> = null; // set by the handler
   /**
    * The MathML node factory
    */
-  public mmlFactory: MmlFactory = null;        // set by the handler
+  public mmlFactory: MmlFactory = null; // set by the handler
 
   /**
    * @param {OptionList} options  The options to apply to this input jax
    *
-   * @constructor
+   * @class
    */
   constructor(options: OptionList = {}) {
-    let CLASS = this.constructor as typeof AbstractInputJax;
+    const CLASS = this.constructor as typeof AbstractInputJax;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
-    this.preFilters = new FunctionList();
-    this.postFilters = new FunctionList();
+    this.preFilters = new FunctionList(this.options.preFilters);
+    this.postFilters = new FunctionList(this.options.postFilters);
   }
 
   /**
-   * @return {string}  The name of this input jax class
+   * @returns {string}  The name of this input jax class
    */
   public get name(): string {
     return (this.constructor as typeof AbstractInputJax).NAME;
@@ -192,17 +194,15 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   /**
    * @override
    */
-  public initialize() {
-  }
+  public initialize() {}
 
   /**
    * @override
    */
-  public reset(..._args: any[]) {
-  }
+  public reset(..._args: any[]) {}
 
   /**
-   * @return {boolean}  True means find math in string array, false means in DOM element
+   * @returns {boolean}  True means find math in string array, false means in DOM element
    */
   public get processStrings(): boolean {
     return true;
@@ -218,7 +218,10 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   /**
    * @override
    */
-  public abstract compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>): MmlNode;
+  public abstract compile(
+    math: MathItem<N, T, D>,
+    document: MathDocument<N, T, D>
+  ): MmlNode;
 
   /**
    * Execute a set of filters, passing them the MathItem and any needed data,
@@ -228,15 +231,16 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
    * @param {MathItem} math          The math item that is being processed
    * @param {MathDocument} document  The math document containg the math item
    * @param {any} data               Whatever other data is needed
-   * @return {any}                   The (possibly modified) data
+   * @returns {any}                   The (possibly modified) data
    */
   protected executeFilters(
-    filters: FunctionList, math: MathItem<N, T, D>,
-    document: MathDocument<N, T, D>, data: any
+    filters: FunctionList,
+    math: MathItem<N, T, D>,
+    document: MathDocument<N, T, D>,
+    data: any
   ): any {
-    let args = {math: math, document: document, data: data};
+    const args = { math: math, document: document, data: data };
     filters.execute(args);
     return args.data;
   }
-
 }

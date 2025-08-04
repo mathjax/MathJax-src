@@ -1,5 +1,11 @@
 *~
 node_modules
-components/src/**/lib
-js
-es5
+coverage
+/components/mjs/**/lib
+/components/cjs
+/cjs
+/mjs
+/bundle
+/bundle-cjs
+/testsuite/js
+/lab/sre.js

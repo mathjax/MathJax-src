@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the interface and abstract class for MathList objects
+ * @file  Implements the interface and abstract class for MathList objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {LinkedList} from '../util/LinkedList.js';
-import {MathItem} from './MathItem.js';
+import { LinkedList } from '../util/LinkedList.js';
+import { MathItem } from './MathItem.js';
 
 /*****************************************************************/
 /**
@@ -50,14 +50,17 @@ export interface MathList<N, T, D> extends LinkedList<MathItem<N, T, D>> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export abstract class AbstractMathList<N, T, D> extends
-LinkedList<MathItem<N, T, D>> implements MathList<N, T, D> {
-
+export abstract class AbstractMathList<N, T, D>
+  extends LinkedList<MathItem<N, T, D>>
+  implements MathList<N, T, D>
+{
   /**
    * @override
    */
   public isBefore(a: MathItem<N, T, D>, b: MathItem<N, T, D>) {
-    return (a.start.i < b.start.i || (a.start.i === b.start.i && a.start.n < b.start.n));
+    return (
+      a.start.i < b.start.i ||
+      (a.start.i === b.start.i && a.start.n < b.start.n)
+    );
   }
-
 }

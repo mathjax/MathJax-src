@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,18 @@
  */
 
 /**
- * @fileoverview  Implements the HTML DOM adaptor
+ * @file  Implements the HTML DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {OptionList} from '../util/Options.js';
-import {AttributeData, AbstractDOMAdaptor, DOMAdaptor, PageBBox} from '../core/DOMAdaptor.js';
+import { OptionList } from '../util/Options.js';
+import {
+  AttributeData,
+  AbstractDOMAdaptor,
+  DOMAdaptor,
+  PageBBox,
+} from '../core/DOMAdaptor.js';
 
 /*****************************************************************/
 /**
@@ -36,13 +41,14 @@ export interface MinDocument<N, T> {
   head: N;
   body: N;
   title: string;
-  doctype: {name: string};
-  /* tslint:disable:jsdoc-require */
+  doctype: { name: string };
+  defaultView: MinWindow<N, MinDocument<N, T>>;
+  location: { protocol: string; host: string };
   createElement(kind: string): N;
   createElementNS(ns: string, kind: string): N;
   createTextNode(text: string): T;
   querySelectorAll(selector: string): ArrayLike<N>;
-  /* tslint:enable */
+  querySelector(selector: string): N | null;
 }
 
 /*****************************************************************/
@@ -69,18 +75,22 @@ export interface MinHTMLElement<N, T> {
   className: string;
   classList: DOMTokenList;
   style: OptionList;
-  sheet?: {insertRule: (rule: string, index?: number) => void};
-
+  sheet?: {
+    insertRule: (rule: string, index?: number) => void;
+    cssRules: Array<{ cssText: string }>;
+  };
   childNodes: (N | T)[] | NodeList;
   firstChild: N | T | Node;
   lastChild: N | T | Node;
-  /* tslint:disable:jsdoc-require */
   getElementsByTagName(name: string): N[] | HTMLCollectionOf<Element>;
-  getElementsByTagNameNS(ns: string, name: string): N[] | HTMLCollectionOf<Element>;
+  getElementsByTagNameNS(
+    ns: string,
+    name: string
+  ): N[] | HTMLCollectionOf<Element>;
   contains(child: N | T): boolean;
   appendChild(child: N | T): N | T | Node;
-  removeChild(child: N | T): N | T  | Node;
-  replaceChild(nnode: N | T, onode: N | T): N | T  | Node;
+  removeChild(child: N | T): N | T | Node;
+  replaceChild(nnode: N | T, onode: N | T): N | T | Node;
   insertBefore(nchild: N | T, ochild: N | T): void;
   cloneNode(deep: boolean): N | Node;
   setAttribute(name: string, value: string): void;
@@ -88,9 +98,10 @@ export interface MinHTMLElement<N, T> {
   getAttribute(name: string): string;
   removeAttribute(name: string): void;
   hasAttribute(name: string): boolean;
-  getBoundingClientRect(): Object;
-  getBBox?(): {x: number, y: number, width: number, height: number};
-  /* tslint:endable */
+  getBoundingClientRect(): object;
+  getBBox?(): { x: number; y: number; width: number; height: number };
+  querySelector(selector: string): N | null;
+  src?: string;
 }
 
 /*****************************************************************/
@@ -140,10 +151,10 @@ export interface MinXMLSerializer<N> {
 export interface MinWindow<N, D> {
   document: D;
   DOMParser: {
-    new(): MinDOMParser<D>
+    new (): MinDOMParser<D>;
   };
   XMLSerializer: {
-    new(): MinXMLSerializer<N>;
+    new (): MinXMLSerializer<N>;
   };
   NodeList: any;
   HTMLCollection: any;
@@ -151,6 +162,8 @@ export interface MinWindow<N, D> {
   DocumentFragment: any;
   Document: any;
   getComputedStyle(node: N): any;
+  addEventListener(kind: string, listener: (event: any) => void): void;
+  postMessage(msg: any, domain: string): void;
 }
 
 /*****************************************************************/
@@ -178,8 +191,19 @@ export interface MinHTMLAdaptor<N, T, D> extends DOMAdaptor<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class HTMLAdaptor<N extends MinHTMLElement<N, T>, T extends MinText<N, T>, D extends MinDocument<N, T>> extends
-AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
+export class HTMLAdaptor<
+    N extends MinHTMLElement<N, T>,
+    T extends MinText<N, T>,
+    D extends MinDocument<N, T>,
+  >
+  extends AbstractDOMAdaptor<N, T, D>
+  implements MinHTMLAdaptor<N, T, D>
+{
+  /**
+   * The HTML adaptor can measure DOM node sizes
+   */
+  public canMeasureNodes: boolean = true;
+
   /**
    * The window object for this adaptor
    */
@@ -192,7 +216,7 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
 
   /**
    * @override
-   * @constructor
+   * @class
    */
   constructor(window: MinWindow<N, D>) {
     super(window.document);
@@ -211,9 +235,9 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   protected create(kind: string, ns?: string) {
-    return (ns ?
-            this.document.createElementNS(ns, kind) :
-            this.document.createElement(kind));
+    return ns
+      ? this.document.createElementNS(ns, kind)
+      : this.document.createElement(kind);
   }
 
   /**
@@ -226,36 +250,38 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
   /**
    * @override
    */
-  public head(doc: D) {
+  public head(doc: D = this.document) {
     return doc.head || (doc as any as N);
   }
 
   /**
    * @override
    */
-  public body(doc: D) {
+  public body(doc: D = this.document) {
     return doc.body || (doc as any as N);
   }
 
   /**
    * @override
    */
-  public root(doc: D) {
+  public root(doc: D = this.document) {
     return doc.documentElement || (doc as any as N);
   }
 
   /**
    * @override
    */
-  public doctype(doc: D) {
-    return (doc.doctype ? `<!DOCTYPE ${doc.doctype.name}>` : '');
+  public doctype(doc: D = this.document) {
+    return doc.doctype ? `<!DOCTYPE ${doc.doctype.name}>` : '';
   }
 
   /**
    * @override
    */
   public tags(node: N, name: string, ns: string = null) {
-    let nodes = (ns ? node.getElementsByTagNameNS(ns, name) : node.getElementsByTagName(name));
+    const nodes = ns
+      ? node.getElementsByTagNameNS(ns, name)
+      : node.getElementsByTagName(name);
     return Array.from(nodes as N[]) as N[];
   }
 
@@ -265,17 +291,29 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
   public getElements(nodes: (string | N | N[])[], _document: D) {
     let containers: N[] = [];
     for (const node of nodes) {
-      if (typeof(node) === 'string') {
-        containers = containers.concat(Array.from(this.document.querySelectorAll(node)));
+      if (typeof node === 'string') {
+        containers = containers.concat(
+          Array.from(this.document.querySelectorAll(node))
+        );
       } else if (Array.isArray(node)) {
         containers = containers.concat(Array.from(node) as N[]);
-      } else if (node instanceof this.window.NodeList || node instanceof this.window.HTMLCollection) {
+      } else if (
+        node instanceof this.window.NodeList ||
+        node instanceof this.window.HTMLCollection
+      ) {
         containers = containers.concat(Array.from(node as any as N[]));
       } else {
         containers.push(node);
       }
     }
     return containers;
+  }
+
+  /**
+   * @override
+   */
+  public getElement(selector: string, node: D | N = this.document): N {
+    return node.querySelector(selector);
   }
 
   /**
@@ -323,8 +361,8 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
   /**
    * @override
    */
-  public clone(node: N) {
-    return node.cloneNode(true) as N;
+  public clone(node: N, deep: boolean = true) {
+    return node.cloneNode(deep) as N;
   }
 
   /**
@@ -381,7 +419,7 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    */
   public kind(node: N | T) {
     const n = node.nodeType;
-    return (n === 1 || n === 3 || n === 8 ? node.nodeName.toLowerCase() : '');
+    return n === 1 || n === 3 || n === 8 ? node.nodeName.toLowerCase() : '';
   }
 
   /**
@@ -412,6 +450,9 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     return node.outerHTML;
   }
 
+  /**
+   * @override
+   */
   public serializeXML(node: N) {
     const serializer = new this.window.XMLSerializer();
     return serializer.serializeToString(node) as string;
@@ -453,11 +494,9 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public allAttributes(node: N) {
-    return Array.from(node.attributes).map(
-      (x: AttributeData) => {
-        return {name: x.name, value: x.value} as AttributeData;
-      }
-    );
+    return Array.from(node.attributes).map((x: AttributeData) => {
+      return { name: x.name, value: x.value } as AttributeData;
+    });
   }
 
   /**
@@ -478,7 +517,10 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     if (node.classList) {
       node.classList.remove(name);
     } else {
-      node.className = node.className.split(/ /).filter((c) => c !== name).join(' ');
+      node.className = node.className
+        .split(/ /)
+        .filter((c) => c !== name)
+        .join(' ');
     }
   }
 
@@ -489,7 +531,7 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     if (node.classList) {
       return node.classList.contains(name);
     }
-    return node.className.split(/ /).indexOf(name) >= 0;
+    return node.className.split(/ /).includes(name);
   }
 
   /**
@@ -517,13 +559,25 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public insertRules(node: N, rules: string[]) {
-    for (const rule of rules.reverse()) {
+    for (const rule of rules) {
       try {
-        node.sheet.insertRule(rule, 0);
+        node.sheet.insertRule(rule, node.sheet.cssRules.length);
       } catch (e) {
         console.warn(`MathJax: can't insert css rule '${rule}': ${e.message}`);
       }
     }
+  }
+
+  /**
+   * @override
+   */
+  public cssText(node: N) {
+    if (this.kind(node) !== 'style') {
+      return '';
+    }
+    return Array.from(node.sheet.cssRules)
+      .map((rule) => rule.cssText)
+      .join('\n');
   }
 
   /**
@@ -547,8 +601,8 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    */
   public nodeSize(node: N, em: number = 1, local: boolean = false) {
     if (local && node.getBBox) {
-      let {width, height} = node.getBBox();
-      return [width / em , height / em] as [number, number];
+      const { width, height } = node.getBBox();
+      return [width / em, height / em] as [number, number];
     }
     return [node.offsetWidth / em, node.offsetHeight / em] as [number, number];
   }
@@ -557,7 +611,51 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public nodeBBox(node: N) {
-    const {left, right, top, bottom} = node.getBoundingClientRect() as PageBBox;
-    return {left, right, top, bottom};
+    const { left, right, top, bottom } =
+      node.getBoundingClientRect() as PageBBox;
+    return { left, right, top, bottom };
   }
+
+  /**
+   * @override
+   */
+  public async createWorker(
+    listener: (event: any) => void,
+    options: OptionList
+  ) {
+    const { path, maps, worker } = options;
+    const file = `${path}/${worker}`;
+    const content = `
+      self.maps = '${quoted(maps)}';
+      importScripts('${quoted(file)}');
+    `;
+    const url = URL.createObjectURL(
+      new Blob([content], { type: 'text/javascript' })
+    );
+    const webworker = new Worker(url);
+    webworker.onmessage = listener;
+    URL.revokeObjectURL(url);
+    return webworker;
+  }
+}
+
+/**
+ * Quote any backslashes or single quotes, and turn non-ASCII
+ * characters into \u{...}  so that the result can be inserted into
+ * single quotes and return the original string when evaluated.
+ *
+ * @param {string} text   The text to be quoted
+ * @returns {string}      The quoted text
+ */
+function quoted(text: string): string {
+  return [...text]
+    .map((c) => {
+      if (c === '\\' || c === "'") {
+        c = '\\' + c;
+      } else if (c < ' ' || c > '\u007e') {
+        c = `\\u{${c.codePointAt(0).toString(16)}}`;
+      }
+      return c;
+    })
+    .join('');
 }

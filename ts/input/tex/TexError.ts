@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2022 The MathJax Consortium
+ *  Copyright (c) 2009-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,71 +15,81 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Error class for the TeX parser.
+ * @file Error class for the TeX parser.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
 export default class TexError {
-
   private static pattern =
-    /%(\d+|\{\d+\}|\{[a-z]+:\%\d+(?:\|(?:%\{\d+\}|%.|[^\}])*)+\}|.)/g;
+    /%(\d+|\{\d+\}|\{[a-z]+:%\d+(?:\|(?:%\{\d+\}|%.|[^}])*)+\}|.)/g;
 
   /**
    * Default error message.
+   *
    * @type {string}
    */
   public message: string;
 
   /**
    * The old MathJax processing function.
+   *
    * @param {string} str The basic error message.
    * @param {string[]} args The arguments to be replaced in the error message.
-   * @return {string} The processed error string.
+   * @returns {string} The processed error string.
    */
   private static processString(str: string, args: string[]): string {
-    let parts = str.split(TexError.pattern);
+    const parts = str.split(TexError.pattern);
     for (let i = 1, m = parts.length; i < m; i += 2) {
-      let c = parts[i].charAt(0);  // first char will be { or \d or a char to be
-                                   // kept literally
-      if (c >= '0' && c <= '9') {    // %n
+      let c = parts[i].charAt(0); // first char will be { or \d or a char to be
+      // kept literally
+      if (c >= '0' && c <= '9') {
+        // %n
         parts[i] = args[parseInt(parts[i], 10) - 1];
         if (typeof parts[i] === 'number') {
           parts[i] = parts[i].toString();
         }
-      } else if (c === '{') {        // %{n} or %{plural:%n|...}
-        c = parts[i].substr(1);
-        if (c >= '0' && c <= '9') {  // %{n}
-          parts[i] = args[parseInt(parts[i].substr(1, parts[i].length - 2), 10) - 1];
+      } else if (c === '{') {
+        // %{n} or %{plural:%n|...}
+        c = parts[i].substring(1);
+        if (c >= '0' && c <= '9') {
+          // %{n}
+          parts[i] =
+            args[
+              parseInt(
+                // parts[i] = %{n}
+                parts[i].substring(1, parts[i].length - 1),
+                10
+              ) - 1
+            ];
           if (typeof parts[i] === 'number') {
             parts[i] = parts[i].toString();
           }
-        } else {                     // %{plural:%n|...}
-          let match = parts[i].match(/^\{([a-z]+):%(\d+)\|(.*)\}$/);
+        } else {
+          // %{plural:%n|...}
+          const match = parts[i].match(/^\{([a-z]+):%(\d+)\|(.*)\}$/);
           if (match) {
             // Removed plural here.
             parts[i] = '%' + parts[i];
           }
         }
       }
-      if (parts[i] == null) {
-        parts[i] = '???';
-      }
     }
     return parts.join('');
   }
 
   /**
-   * @constructor
-   * @param{string} id        message id (for localization)
-   * @param{string} message   text of English message
-   * @param{string[]=} rest   any substitution arguments
+   * @class
+   * @param {string} id        message id (for localization)
+   * @param {string} message   text of English message
+   * @param {string[]=} rest   any substitution arguments
    */
-  constructor(public id: string, message: string, ...rest: string[]) {
+  constructor(
+    public id: string,
+    message: string,
+    ...rest: string[]
+  ) {
     this.message = TexError.processString(message, rest);
   }
-
 }

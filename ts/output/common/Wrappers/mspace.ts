@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,35 +16,192 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMspace wrapper mixin for the MmlMspace object
+ * @file  Implements the CommonMspace wrapper mixin for the MmlMspace object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {BBox} from '../../../util/BBox.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMspace } from '../../../core/MmlTree/MmlNodes/mspace.js';
+import { BBox } from '../../../util/BBox.js';
+import { LineBBox } from '../LineBBox.js';
 
 /*****************************************************************/
 /**
  * The CommonMspance interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMspace extends AnyWrapper {
+export interface CommonMspace<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+  /**
+   * True when mspace is allowed to break
+   */
+  canBreak: boolean;
+
+  /**
+   * The linebreak style
+   */
+  breakStyle: string;
+
+  /**
+   * Set a breakpoint to the given type
+   *
+   * @param {string} linebreak   The type of linebreak to set
+   */
+  setBreakStyle(linebreak?: string): void;
 }
 
 /**
- * Shorthand for the CommonMspace constructor
+ * The CommonMspaceClass interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type MspaceConstructor = Constructor<CommonMspace>;
+export interface CommonMspaceClass<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMspace wrapper mixin for the MmlMspace object
  *
- * @template T  The Wrapper class constructor type
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
-export function CommonMspaceMixin<T extends WrapperConstructor>(Base: T): MspaceConstructor & T {
+export function CommonMspaceMixin<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMspaceMixin
+    extends Base
+    implements CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
+    /**
+     * @override
+     */
+    get canBreak() {
+      return (this.node as MmlMspace).canBreak;
+    }
 
-  return class extends Base {
+    /**
+     * @override
+     */
+    public breakStyle: string;
+
+    /**
+     * @override
+     */
+    get breakCount() {
+      return this.breakStyle ? 1 : 0;
+    }
+
+    /**
+     * @override
+     */
+    public setBreakStyle(linebreak: string = '') {
+      this.breakStyle =
+        linebreak ||
+        ((this.node as MmlMspace).hasNewline ||
+        this.node.getProperty('forcebreak')
+          ? 'before'
+          : '');
+    }
+
+    /***************************************************/
+
+    /**
+     * @override
+     */
+    constructor(factory: WF, node: MmlNode, parent: WW = null) {
+      super(factory, node, parent);
+      this.setBreakStyle();
+    }
 
     /**
      * @override
@@ -57,13 +214,23 @@ export function CommonMspaceMixin<T extends WrapperConstructor>(Base: T): Mspace
     }
 
     /**
-     * No contents, so no need for variant class
-     *
      * @override
      */
-    public handleVariant() {
+    public computeLineBBox(i: number): LineBBox {
+      const leadingString = this.node.attributes.get(
+        'data-lineleading'
+      ) as string;
+      const leading = this.length2em(
+        leadingString,
+        this.linebreakOptions.lineleading
+      );
+      const bbox = LineBBox.from(BBox.zero(), leading);
+      if (i === 1) {
+        bbox.getIndentData(this.node);
+        bbox.w = this.getBBox().w;
+        bbox.isFirst = bbox.w === 0;
+      }
+      return bbox;
     }
-
-  };
-
+  } as any as B;
 }

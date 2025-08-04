@@ -1,5 +1,5 @@
 /*************************************************************
- *  Copyright (c) 2020-2022 MathJax Consortium
+ *  Copyright (c) 2020-2025 MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@
  */
 
 /**
- * @fileoverview    Macro and environment mappings for the mathtools package.
+ * @file    Macro and environment mappings for the mathtools package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
 import ParseMethods from '../ParseMethods.js';
-import {CommandMap, EnvironmentMap, DelimiterMap} from '../SymbolMap.js';
-import {TexConstant} from '../TexConstants.js';
+import { CommandMap, EnvironmentMap, DelimiterMap } from '../TokenMap.js';
+import { TexConstant } from '../TexConstants.js';
 
-import {MathtoolsMethods} from './MathtoolsMethods.js';
+import { MathtoolsMethods } from './MathtoolsMethods.js';
 
 //
 //  Mathtools macros that are not implemented:
@@ -45,162 +45,226 @@ import {MathtoolsMethods} from './MathtoolsMethods.js';
  * The macros for this package.
  */
 new CommandMap('mathtools-macros', {
+  shoveleft: [MathtoolsMethods.HandleShove, TexConstant.Align.LEFT], // override AMS version
+  shoveright: [MathtoolsMethods.HandleShove, TexConstant.Align.RIGHT], // override AMS version
 
-  shoveleft:  ['HandleShove', TexConstant.Align.LEFT],    // override AMS version
-  shoveright: ['HandleShove', TexConstant.Align.RIGHT],   // override AMS version
+  xleftrightarrow: [MathtoolsMethods.xArrow, 0x2194, 10, 10],
+  xLeftarrow: [MathtoolsMethods.xArrow, 0x21d0, 12, 7],
+  xRightarrow: [MathtoolsMethods.xArrow, 0x21d2, 7, 12],
+  xLeftrightarrow: [MathtoolsMethods.xArrow, 0x21d4, 12, 12],
+  xhookleftarrow: [MathtoolsMethods.xArrow, 0x21a9, 10, 5],
+  xhookrightarrow: [MathtoolsMethods.xArrow, 0x21aa, 5, 10],
+  xmapsto: [MathtoolsMethods.xArrow, 0x21a6, 10, 10],
+  xrightharpoondown: [MathtoolsMethods.xArrow, 0x21c1, 5, 10],
+  xleftharpoondown: [MathtoolsMethods.xArrow, 0x21bd, 10, 5],
+  xrightleftharpoons: [MathtoolsMethods.xArrow, 0x21cc, 10, 10],
+  xrightharpoonup: [MathtoolsMethods.xArrow, 0x21c0, 5, 10],
+  xleftharpoonup: [MathtoolsMethods.xArrow, 0x21bc, 10, 5],
+  xleftrightharpoons: [MathtoolsMethods.xArrow, 0x21cb, 10, 10],
+  xlongrightarrow: [MathtoolsMethods.xArrow, 0x27f6, 7, 12, 1.45],
+  xlongleftarrow: [MathtoolsMethods.xArrow, 0x27f5, 12, 7, 1.45],
+  xLongrightarrow: [MathtoolsMethods.xArrow, 0x27f9, 7, 12, 1.45],
+  xLongleftarrow: [MathtoolsMethods.xArrow, 0x27f8, 12, 7, 1.45],
 
-  xleftrightarrow:    ['xArrow', 0x2194, 10, 10],
-  xLeftarrow:         ['xArrow', 0x21D0, 12, 7],
-  xRightarrow:        ['xArrow', 0x21D2, 7, 12],
-  xLeftrightarrow:    ['xArrow', 0x21D4, 12, 12],
-  xhookleftarrow:     ['xArrow', 0x21A9, 10, 5],
-  xhookrightarrow:    ['xArrow', 0x21AA, 5, 10],
-  xmapsto:            ['xArrow', 0x21A6, 10, 10],
-  xrightharpoondown:  ['xArrow', 0x21C1, 5, 10],
-  xleftharpoondown:   ['xArrow', 0x21BD, 10, 5],
-  xrightleftharpoons: ['xArrow', 0x21CC, 10, 10],
-  xrightharpoonup:    ['xArrow', 0x21C0, 5, 10],
-  xleftharpoonup:     ['xArrow', 0x21BC, 10, 5],
-  xleftrightharpoons: ['xArrow', 0x21CB, 10, 10],
+  mathllap: [MathtoolsMethods.MathLap, 'l', false],
+  mathrlap: [MathtoolsMethods.MathLap, 'r', false],
+  mathclap: [MathtoolsMethods.MathLap, 'c', false],
+  clap: [MathtoolsMethods.MtLap, 'c'],
+  textllap: [MathtoolsMethods.MtLap, 'l'],
+  textrlap: [MathtoolsMethods.MtLap, 'r'],
+  textclap: [MathtoolsMethods.MtLap, 'c'],
 
-  mathllap: ['MathLap', 'l', false],
-  mathrlap: ['MathLap', 'r', false],
-  mathclap: ['MathLap', 'c', false],
-  clap:     ['MtLap', 'c'],
-  textllap: ['MtLap', 'l'],
-  textrlap: ['MtLap', 'r'],
-  textclap: ['MtLap', 'c'],
+  cramped: MathtoolsMethods.Cramped,
+  crampedllap: [MathtoolsMethods.MathLap, 'l', true],
+  crampedrlap: [MathtoolsMethods.MathLap, 'r', true],
+  crampedclap: [MathtoolsMethods.MathLap, 'c', true],
+  crampedsubstack: [
+    MathtoolsMethods.Macro,
+    '\\begin{crampedsubarray}{c}#1\\end{crampedsubarray}',
+    1,
+  ],
 
-  cramped: 'Cramped',
-  crampedllap: ['MathLap', 'l', true],
-  crampedrlap: ['MathLap', 'r', true],
-  crampedclap: ['MathLap', 'c', true],
-  crampedsubstack: ['Macro', '\\begin{crampedsubarray}{c}#1\\end{crampedsubarray}', 1],
+  mathmbox: MathtoolsMethods.MathMBox,
+  mathmakebox: MathtoolsMethods.MathMakeBox,
 
-  mathmbox:    'MathMBox',
-  mathmakebox: 'MathMakeBox',
+  overbracket: MathtoolsMethods.UnderOverBracket,
+  underbracket: MathtoolsMethods.UnderOverBracket,
 
-  overbracket:  'UnderOverBracket',
-  underbracket: 'UnderOverBracket',
+  refeq: MathtoolsMethods.HandleRef,
 
-  refeq: 'HandleRef',
+  MoveEqLeft: [
+    MathtoolsMethods.Macro,
+    '\\hspace{#1em}&\\hspace{-#1em}',
+    1,
+    '2',
+  ],
+  Aboxed: MathtoolsMethods.Aboxed,
+  MakeAboxedCommand: MathtoolsMethods.MakeAboxedCommand,
 
-  MoveEqLeft: ['Macro', '\\hspace{#1em}&\\hspace{-#1em}', 1, '2'],
-  Aboxed: 'Aboxed',
+  ArrowBetweenLines: MathtoolsMethods.ArrowBetweenLines,
+  vdotswithin: MathtoolsMethods.VDotsWithin,
+  shortvdotswithin: MathtoolsMethods.ShortVDotsWithin,
+  MTFlushSpaceAbove: MathtoolsMethods.FlushSpaceAbove,
+  MTFlushSpaceBelow: MathtoolsMethods.FlushSpaceBelow,
 
-  ArrowBetweenLines: 'ArrowBetweenLines',
-  vdotswithin: 'VDotsWithin',
-  shortvdotswithin: 'ShortVDotsWithin',
-  MTFlushSpaceAbove: 'FlushSpaceAbove',
-  MTFlushSpaceBelow: 'FlushSpaceBelow',
-
-  DeclarePairedDelimiter:     'DeclarePairedDelimiter',
-  DeclarePairedDelimiterX:    'DeclarePairedDelimiterX',
-  DeclarePairedDelimiterXPP:  'DeclarePairedDelimiterXPP',
+  DeclarePairedDelimiter: MathtoolsMethods.DeclarePairedDelimiter,
+  DeclarePairedDelimiterX: MathtoolsMethods.DeclarePairedDelimiterX,
+  DeclarePairedDelimiterXPP: MathtoolsMethods.DeclarePairedDelimiterXPP,
 
   //
   //  Typos from initial release -- kept for backward compatibility for now
   //
-  DeclarePairedDelimiters:    'DeclarePairedDelimiter',
-  DeclarePairedDelimitersX:   'DeclarePairedDelimiterX',
-  DeclarePairedDelimitersXPP: 'DeclarePairedDelimiterXPP',
+  DeclarePairedDelimiters: MathtoolsMethods.DeclarePairedDelimiter,
+  DeclarePairedDelimitersX: MathtoolsMethods.DeclarePairedDelimiterX,
+  DeclarePairedDelimitersXPP: MathtoolsMethods.DeclarePairedDelimiterXPP,
 
-  centercolon: ['CenterColon', true, true],
-  ordinarycolon: ['CenterColon', false],
-  MTThinColon: ['CenterColon', true, true, true],
+  vcentercolon: [MathtoolsMethods.CenterColon, true, true],
+  ordinarycolon: [MathtoolsMethods.CenterColon, false],
+  MTThinColon: [MathtoolsMethods.CenterColon, true, true, true],
 
-  coloneqq:    ['Relation', ':=', '\u2254'],
-  Coloneqq:    ['Relation', '::=', '\u2A74'],
-  coloneq:     ['Relation', ':-'],
-  Coloneq:     ['Relation', '::-'],
-  eqqcolon:    ['Relation', '=:', '\u2255'],
-  Eqqcolon:    ['Relation', '=::'],
-  eqcolon:     ['Relation', '-:', '\u2239'],
-  Eqcolon:     ['Relation', '-::'],
-  colonapprox: ['Relation', ':\\approx'],
-  Colonapprox: ['Relation', '::\\approx'],
-  colonsim:    ['Relation', ':\\sim'],
-  Colonsim:    ['Relation', '::\\sim'],
-  dblcolon:    ['Relation', '::', '\u2237'],
+  coloneqq: [MathtoolsMethods.Relation, ':=', '\u2254'],
+  Coloneqq: [MathtoolsMethods.Relation, '::=', '\u2A74'],
+  coloneq: [MathtoolsMethods.Relation, ':=', '\u2254'],
+  Coloneq: [MathtoolsMethods.Relation, '::=', '\u2A7A'],
+  eqqcolon: [MathtoolsMethods.Relation, '=:', '\u2255'],
+  Eqqcolon: [MathtoolsMethods.Relation, '=::'],
+  eqcolon: [MathtoolsMethods.Relation, '=:', '\u2255'],
+  Eqcolon: [MathtoolsMethods.Relation, '=::'],
+  colonapprox: [MathtoolsMethods.Relation, ':\\approx'],
+  Colonapprox: [MathtoolsMethods.Relation, '::\\approx'],
+  colonsim: [MathtoolsMethods.Relation, ':\\sim'],
+  Colonsim: [MathtoolsMethods.Relation, '::\\sim'],
+  dblcolon: [MathtoolsMethods.Relation, '::', '\u2237'],
+  approxcolon: [MathtoolsMethods.Relation, '\\approx:'],
+  Approxcolon: [MathtoolsMethods.Relation, '\\approx::'],
+  simcolon: [MathtoolsMethods.Relation, '\\sim:'],
+  Simcolon: [MathtoolsMethods.Relation, '\\sim::'],
+  colondash: [MathtoolsMethods.Relation, ':-'],
+  Colondash: [MathtoolsMethods.Relation, '::-'],
+  dashcolon: [MathtoolsMethods.Relation, '-:', '\u2239'],
+  Dashcolon: [MathtoolsMethods.Relation, '-::'],
 
-  nuparrow:   ['NArrow', '\u2191', '.06em'],
-  ndownarrow: ['NArrow', '\u2193', '.25em'],
-  bigtimes:   ['Macro', '\\mathop{\\Large\\kern-.1em\\boldsymbol{\\times}\\kern-.1em}'],
-
-  splitfrac:  ['SplitFrac', false],
-  splitdfrac: ['SplitFrac', true],
-
-  xmathstrut: 'XMathStrut',
-
-  prescript: 'Prescript',
-
-  newtagform: ['NewTagForm', false],
-  renewtagform: ['NewTagForm', true],
-  usetagform: 'UseTagForm',
-
-  adjustlimits: [
-    'MacroWithTemplate',
-    '\\mathop{{#1}\\vphantom{{#3}}}_{{#2}\\vphantom{{#4}}}\\mathop{{#3}\\vphantom{{#1}}}_{{#4}\\vphantom{{#2}}}',
-    4, , '_', , '_'
+  nuparrow: [MathtoolsMethods.NArrow, '\u2191', '.06em'],
+  ndownarrow: [MathtoolsMethods.NArrow, '\u2193', '.25em'],
+  bigtimes: [
+    MathtoolsMethods.Macro,
+    '\\mathop{\\Large\\kern-.1em\\boldsymbol{\\times}\\kern-.1em}',
   ],
 
-  mathtoolsset: 'SetOptions'
+  splitfrac: [MathtoolsMethods.SplitFrac, false],
+  splitdfrac: [MathtoolsMethods.SplitFrac, true],
 
-}, MathtoolsMethods);
+  xmathstrut: MathtoolsMethods.XMathStrut,
+
+  prescript: MathtoolsMethods.Prescript,
+
+  newtagform: [MathtoolsMethods.NewTagForm, false],
+  renewtagform: [MathtoolsMethods.NewTagForm, true],
+  usetagform: MathtoolsMethods.UseTagForm,
+
+  /* eslint-disable no-sparse-arrays */
+  adjustlimits: [
+    MathtoolsMethods.MacroWithTemplate,
+    '\\mathop{{#1}\\vphantom{{#3}}}_{{#2}\\vphantom{{#4}}}\\mathop{{#3}\\vphantom{{#1}}}_{{#4}\\vphantom{{#2}}}',
+    4,
+    ,
+    '_',
+    ,
+    '_',
+  ],
+
+  mathtoolsset: MathtoolsMethods.SetOptions,
+});
+
+new CommandMap('mathtools-legacycolonsymbols', {
+  coloneq: [MathtoolsMethods.Relation, ':-'],
+  Coloneq: [MathtoolsMethods.Relation, '::-'],
+  eqcolon: [MathtoolsMethods.Relation, '-:', '\u2239'],
+  Eqcolon: [MathtoolsMethods.Relation, '-::'],
+});
 
 /**
  *  The environments for this package.
  */
 new EnvironmentMap('mathtools-environments', ParseMethods.environment, {
-  dcases:  ['Array', null, '\\{', '', 'll', null, '.2em', 'D'],
-  rcases:  ['Array', null, '', '\\}', 'll', null, '.2em'],
-  drcases: ['Array', null, '', '\\}', 'll', null, '.2em', 'D'],
-  'dcases*':  ['Cases', null, '{', '', 'D'],
-  'rcases*':  ['Cases', null, '', '}'],
-  'drcases*': ['Cases', null, '', '}', 'D'],
-  'cases*':   ['Cases', null, '{', ''],
+  dcases: [MathtoolsMethods.Array, null, '\\{', '', 'll', null, '.2em', 'D'],
+  rcases: [MathtoolsMethods.Array, null, '', '\\}', 'll', null, '.2em'],
+  drcases: [MathtoolsMethods.Array, null, '', '\\}', 'll', null, '.2em', 'D'],
+  'dcases*': [MathtoolsMethods.Cases, null, '{', '', 'D'],
+  'rcases*': [MathtoolsMethods.Cases, null, '', '}'],
+  'drcases*': [MathtoolsMethods.Cases, null, '', '}', 'D'],
+  'cases*': [MathtoolsMethods.Cases, null, '{', ''],
 
-  'matrix*':  ['MtMatrix', null, null, null],
-  'pmatrix*': ['MtMatrix', null, '(', ')'],
-  'bmatrix*': ['MtMatrix', null, '[', ']'],
-  'Bmatrix*': ['MtMatrix', null, '\\{', '\\}'],
-  'vmatrix*': ['MtMatrix', null, '\\vert', '\\vert'],
-  'Vmatrix*': ['MtMatrix', null, '\\Vert', '\\Vert'],
+  'matrix*': [MathtoolsMethods.MtMatrix, null, null, null],
+  'pmatrix*': [MathtoolsMethods.MtMatrix, null, '(', ')'],
+  'bmatrix*': [MathtoolsMethods.MtMatrix, null, '[', ']'],
+  'Bmatrix*': [MathtoolsMethods.MtMatrix, null, '\\{', '\\}'],
+  'vmatrix*': [MathtoolsMethods.MtMatrix, null, '\\vert', '\\vert'],
+  'Vmatrix*': [MathtoolsMethods.MtMatrix, null, '\\Vert', '\\Vert'],
 
-  'smallmatrix*':  ['MtSmallMatrix', null, null, null],
-  psmallmatrix:    ['MtSmallMatrix', null, '(', ')', 'c'],
-  'psmallmatrix*': ['MtSmallMatrix', null, '(', ')'],
-  bsmallmatrix:    ['MtSmallMatrix', null, '[', ']', 'c'],
-  'bsmallmatrix*': ['MtSmallMatrix', null, '[', ']'],
-  Bsmallmatrix:    ['MtSmallMatrix', null, '\\{', '\\}', 'c'],
-  'Bsmallmatrix*': ['MtSmallMatrix', null, '\\{', '\\}'],
-  vsmallmatrix:    ['MtSmallMatrix', null, '\\vert', '\\vert', 'c'],
-  'vsmallmatrix*': ['MtSmallMatrix', null, '\\vert', '\\vert'],
-  Vsmallmatrix:    ['MtSmallMatrix', null, '\\Vert', '\\Vert', 'c'],
-  'Vsmallmatrix*': ['MtSmallMatrix', null, '\\Vert', '\\Vert'],
+  'smallmatrix*': [MathtoolsMethods.MtSmallMatrix, null, null, null],
+  psmallmatrix: [MathtoolsMethods.MtSmallMatrix, null, '(', ')', 'c'],
+  'psmallmatrix*': [MathtoolsMethods.MtSmallMatrix, null, '(', ')'],
+  bsmallmatrix: [MathtoolsMethods.MtSmallMatrix, null, '[', ']', 'c'],
+  'bsmallmatrix*': [MathtoolsMethods.MtSmallMatrix, null, '[', ']'],
+  Bsmallmatrix: [MathtoolsMethods.MtSmallMatrix, null, '\\{', '\\}', 'c'],
+  'Bsmallmatrix*': [MathtoolsMethods.MtSmallMatrix, null, '\\{', '\\}'],
+  vsmallmatrix: [MathtoolsMethods.MtSmallMatrix, null, '\\vert', '\\vert', 'c'],
+  'vsmallmatrix*': [MathtoolsMethods.MtSmallMatrix, null, '\\vert', '\\vert'],
+  Vsmallmatrix: [MathtoolsMethods.MtSmallMatrix, null, '\\Vert', '\\Vert', 'c'],
+  'Vsmallmatrix*': [MathtoolsMethods.MtSmallMatrix, null, '\\Vert', '\\Vert'],
 
-  crampedsubarray: ['Array', null, null, null, null, '0em', '0.1em', 'S\'', 1],
+  crampedsubarray: [
+    MathtoolsMethods.Array,
+    null,
+    null,
+    null,
+    null,
+    '0em',
+    '0.1em',
+    "S'",
+    1,
+  ],
 
-  multlined: 'MtMultlined',
+  multlined: MathtoolsMethods.MtMultlined,
 
-  spreadlines: ['SpreadLines', true],
+  spreadlines: [MathtoolsMethods.SpreadLines, true],
 
-  lgathered: ['AmsEqnArray', null, null, null, 'l', null, '.5em', 'D'],
-  rgathered: ['AmsEqnArray', null, null, null, 'r', null, '.5em', 'D'],
-
-}, MathtoolsMethods);
+  lgathered: [
+    MathtoolsMethods.AmsEqnArray,
+    null,
+    null,
+    null,
+    'l',
+    't',
+    null,
+    '.5em',
+    'D',
+  ],
+  rgathered: [
+    MathtoolsMethods.AmsEqnArray,
+    null,
+    null,
+    null,
+    'r',
+    't',
+    null,
+    '.5em',
+    'D',
+  ],
+});
 
 /**
  * The delimiters for this package.
  */
 new DelimiterMap('mathtools-delimiters', ParseMethods.delimiter, {
   '\\lparen': '(',
-  '\\rparen': ')'
+  '\\rparen': ')',
 });
 
 /**
  * The special characters for this package.
  */
 new CommandMap('mathtools-characters', {
-  ':' : ['CenterColon', true]
-}, MathtoolsMethods);
+  ':': [MathtoolsMethods.CenterColon, true],
+});

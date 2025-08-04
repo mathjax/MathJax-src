@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,17 +15,15 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Constant definitions for the TeX Parser. These should
+ * @file Constant definitions for the TeX Parser. These should
  *     eventually be combined with the MathML structure.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-export namespace TexConstant {
-
-  export const Variant = {
+export const TexConstant = {
+  Variant: {
     NORMAL: 'normal',
     BOLD: 'bold',
     ITALIC: 'italic',
@@ -48,50 +46,50 @@ export namespace TexConstant {
     BOLDCALLIGRAPHIC: '-tex-bold-calligraphic',
     OLDSTYLE: '-tex-oldstyle',
     BOLDOLDSTYLE: '-tex-bold-oldstyle',
-    MATHITALIC: '-tex-mathit'
-  };
+    MATHITALIC: '-tex-mathit',
+  },
 
-  export const Form = {
+  Form: {
     PREFIX: 'prefix',
     INFIX: 'infix',
-    POSTFIX: 'postfix'
-  };
+    POSTFIX: 'postfix',
+  },
 
-  export const LineBreak = {
+  LineBreak: {
     AUTO: 'auto',
     NEWLINE: 'newline',
     NOBREAK: 'nobreak',
     GOODBREAK: 'goodbreak',
-    BADBREAK: 'badbreak'
-  };
+    BADBREAK: 'badbreak',
+  },
 
-  export const LineBreakStyle = {
+  LineBreakStyle: {
     BEFORE: 'before',
     AFTER: 'after',
     DUPLICATE: 'duplicate',
-    INFIXLINBREAKSTYLE: 'infixlinebreakstyle'
-  };
+    INFIXLINBREAKSTYLE: 'infixlinebreakstyle',
+  },
 
-  export const IndentAlign = {
+  IndentAlign: {
     LEFT: 'left',
     CENTER: 'center',
     RIGHT: 'right',
     AUTO: 'auto',
     ID: 'id',
-    INDENTALIGN: 'indentalign'
-  };
+    INDENTALIGN: 'indentalign',
+  },
 
-  export const IndentShift = {
-    INDENTSHIFT: 'indentshift'
-  };
+  IndentShift: {
+    INDENTSHIFT: 'indentshift',
+  },
 
-  export const LineThickness = {
+  LineThickness: {
     THIN: 'thin',
     MEDIUM: 'medium',
-    THICK: 'thick'
-  };
+    THICK: 'thick',
+  },
 
-  export const Notation = {
+  Notation: {
     LONGDIV: 'longdiv',
     ACTUARIAL: 'actuarial',
     PHASORANGLE: 'phasorangle',
@@ -109,53 +107,53 @@ export namespace TexConstant {
     HORIZONTALSTRIKE: 'horizontalstrike',
     NORTHEASTARROW: 'northeastarrow',
     MADRUWB: 'madruwb',
-    UPDIAGONALARROW: 'updiagonalarrow'
-  };
+    UPDIAGONALARROW: 'updiagonalarrow',
+  },
 
-  export const Align = {
+  Align: {
     TOP: 'top',
     BOTTOM: 'bottom',
     CENTER: 'center',
     BASELINE: 'baseline',
     AXIS: 'axis',
     LEFT: 'left',
-    RIGHT: 'right'
-  };
+    RIGHT: 'right',
+  },
 
-  export const Lines = {
+  Lines: {
     NONE: 'none',
     SOLID: 'solid',
-    DASHED: 'dashed'
-  };
+    DASHED: 'dashed',
+  },
 
-  export const Side = {
+  Side: {
     LEFT: 'left',
     RIGHT: 'right',
     LEFTOVERLAP: 'leftoverlap',
-    RIGHTOVERLAP: 'rightoverlap'
-  };
+    RIGHTOVERLAP: 'rightoverlap',
+  },
 
-  export const Width = {
+  Width: {
     AUTO: 'auto',
-    FIT: 'fit'
-  };
+    FIT: 'fit',
+  },
 
-  export const Actiontype = {
+  Actiontype: {
     TOGGLE: 'toggle',
     STATUSLINE: 'statusline',
     TOOLTIP: 'tooltip',
-    INPUT: 'input'
-  };
+    INPUT: 'input',
+  },
 
-  export const Overflow = {
+  Overflow: {
     LINBREAK: 'linebreak',
     SCROLL: 'scroll',
     ELIDE: 'elide',
     TRUNCATE: 'truncate',
-    SCALE: 'scale'
-  };
+    SCALE: 'scale',
+  },
 
-  export const Unit = {
+  Unit: {
     EM: 'em',
     EX: 'ex',
     PX: 'px',
@@ -163,7 +161,11 @@ export namespace TexConstant {
     CM: 'cm',
     MM: 'mm',
     PT: 'pt',
-    PC: 'pc'
-  };
+    PC: 'pc',
+  },
 
-}
+  Attr: {
+    LATEX: 'data-latex',
+    LATEXITEM: 'data-latex-item',
+  },
+};

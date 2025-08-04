@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Fcy: '\u0424',
     FilledSmallSquare: '\u25FC',
     Fouriertrf: '\u2131',
@@ -50,5 +51,7 @@ Entities.add({
     frac56: '\u215A',
     frac58: '\u215D',
     frac78: '\u215E',
-    frasl: '\u2044'
-}, 'f');
+    frasl: '\u2044',
+  },
+  'f'
+);

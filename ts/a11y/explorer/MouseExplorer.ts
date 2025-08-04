@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2022 The MathJax Consortium
+ *  Copyright (c) 2009-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,57 +15,56 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Explorers based on mouse events.
+ * @file Explorers based on mouse events.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
-import {A11yDocument, DummyRegion, Region} from './Region.js';
-import {Explorer, AbstractExplorer} from './Explorer.js';
+import { A11yDocument, DummyRegion, Region } from './Region.js';
+import { Explorer, AbstractExplorer } from './Explorer.js';
+import { ExplorerPool } from './ExplorerPool.js';
 import '../sre.js';
-
 
 /**
  * Interface for mouse explorers. Adds the necessary mouse events.
+ *
  * @interface
- * @extends {Explorer}
+ * @augments {Explorer}
  */
 export interface MouseExplorer extends Explorer {
-
   /**
    * Function to be executed on mouse over.
+   *
    * @param {MouseEvent} event The mouse event.
    */
   MouseOver(event: MouseEvent): void;
 
   /**
    * Function to be executed on mouse out.
+   *
    * @param {MouseEvent} event The mouse event.
    */
   MouseOut(event: MouseEvent): void;
-
 }
 
-
 /**
- * @constructor
- * @extends {AbstractExplorer}
+ * @class
+ * @augments {AbstractExplorer}
  *
  * @template T  The type that is consumed by the Region of this explorer.
  */
-export abstract class AbstractMouseExplorer<T> extends AbstractExplorer<T> implements MouseExplorer {
-
+export abstract class AbstractMouseExplorer<T>
+  extends AbstractExplorer<T>
+  implements MouseExplorer
+{
   /**
    * @override
    */
-  protected events: [string, (x: Event) => void][] =
-    super.Events().concat([
-      ['mouseover', this.MouseOver.bind(this)],
-      ['mouseout', this.MouseOut.bind(this)]
-    ]);
+  protected events: [string, (x: Event) => void][] = super.Events().concat([
+    ['mouseover', this.MouseOver.bind(this)],
+    ['mouseout', this.MouseOut.bind(this)],
+  ]);
 
   /**
    * @override
@@ -74,75 +73,63 @@ export abstract class AbstractMouseExplorer<T> extends AbstractExplorer<T> imple
     this.Start();
   }
 
-
   /**
    * @override
    */
   public MouseOut(_event: MouseEvent) {
     this.Stop();
   }
-
 }
-
 
 /**
  * Exploration via hovering.
- * @constructor
- * @extends {AbstractMouseExplorer}
+ *
+ * @class
+ * @augments {AbstractMouseExplorer}
+ *
+ * @template T
  */
 export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
-
   /**
-   * Remember the last position to avoid flickering.
-   * @type {[number, number]}
-   */
-  protected coord: [number, number];
-
-  /**
-   * @constructor
-   * @extends {AbstractMouseExplorer<T>}
+   * @class
+   * @augments {AbstractMouseExplorer<T>}
    *
    * @param {A11yDocument} document The current document.
+   * @param {ExplorerPool} pool The explorer pool.
    * @param {Region<T>} region A region to display results.
    * @param {HTMLElement} node The node on which the explorer works.
    * @param {(node: HTMLElement) => boolean} nodeQuery Predicate on nodes that
    *    will fire the hoverer.
    * @param {(node: HTMLElement) => T} nodeAccess Accessor to extract node value
    *    that is passed to the region.
-   *
-   * @template T
    */
-  protected constructor(public document: A11yDocument,
-                        protected region: Region<T>,
-                        protected node: HTMLElement,
-                        protected nodeQuery: (node: HTMLElement) => boolean,
-                        protected nodeAccess: (node: HTMLElement) => T) {
-    super(document, region, node);
+  protected constructor(
+    public document: A11yDocument,
+    public pool: ExplorerPool,
+    public region: Region<T>,
+    protected node: HTMLElement,
+    protected nodeQuery: (node: HTMLElement) => boolean,
+    protected nodeAccess: (node: HTMLElement) => T
+  ) {
+    super(document, pool, region, node);
   }
-
 
   /**
    * @override
    */
   public MouseOut(event: MouseEvent) {
-    if (event.clientX === this.coord[0] &&
-        event.clientY === this.coord[1]) {
-      return;
-    }
     this.highlighter.unhighlight();
     this.region.Hide();
     super.MouseOut(event);
   }
-
 
   /**
    * @override
    */
   public MouseOver(event: MouseEvent) {
     super.MouseOver(event);
-    let target = event.target as HTMLElement;
-    this.coord = [event.clientX, event.clientY];
-    let [node, kind] = this.getNode(target);
+    const target = event.target as HTMLElement;
+    const [node, kind] = this.getNode(target);
     if (!node) {
       return;
     }
@@ -152,7 +139,6 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     this.region.Show(node, this.highlighter);
   }
 
-
   /**
    * Retrieves the closest node on which the node query fires. Thereby closest
    * is defined as:
@@ -161,10 +147,10 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * 3. Otherwise fails.
    *
    * @param {HTMLElement} node The node on which the mouse event fired.
-   * @return {[HTMLElement, T]} Node and output pair if successful.
+   * @returns {[HTMLElement, T]} Node and output pair if successful.
    */
   public getNode(node: HTMLElement): [HTMLElement, T] {
-    let original = node;
+    const original = node;
     while (node && node !== this.node) {
       if (this.nodeQuery(node)) {
         return [node, this.nodeAccess(node)];
@@ -176,49 +162,55 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
       if (this.nodeQuery(node)) {
         return [node, this.nodeAccess(node)];
       }
-      let child = node.childNodes[0] as HTMLElement;
-      node = (child && child.tagName === 'defs') ? // This is for SVG.
-      node.childNodes[1] as HTMLElement : child;
+      const child = node.childNodes[0] as HTMLElement;
+      node =
+        child && child.tagName === 'defs' // This is for SVG.
+          ? (node.childNodes[1] as HTMLElement)
+          : child;
     }
     return [null, null];
   }
-
 }
-
 
 /**
  * Hoverer that displays information on nodes (e.g., as tooltips).
- * @constructor
- * @extends {Hoverer}
+ *
+ * @class
+ * @augments {Hoverer}
  */
-export class ValueHoverer extends Hoverer<string> { }
-
+export class ValueHoverer extends Hoverer<string> {}
 
 /**
  * Hoverer that displays node content (e.g., for magnification).
- * @constructor
- * @extends {Hoverer}
+ *
+ * @class
+ * @augments {Hoverer}
  */
-export class ContentHoverer extends Hoverer<HTMLElement> { }
-
+export class ContentHoverer extends Hoverer<HTMLElement> {}
 
 /**
  * Highlights maction nodes on hovering.
- * @constructor
- * @extends {Hoverer}
+ *
+ * @class
+ * @augments {Hoverer}
  */
 export class FlameHoverer extends Hoverer<void> {
-
   /**
    * @override
    */
   protected constructor(
     public document: A11yDocument,
+    public pool: ExplorerPool,
     _ignore: any,
-    protected node: HTMLElement) {
-    super(document, new DummyRegion(document), node,
-          x => this.highlighter.isMactionNode(x),
-          () => {});
+    protected node: HTMLElement
+  ) {
+    super(
+      document,
+      pool,
+      new DummyRegion(document),
+      node,
+      (x) => this.highlighter.isMactionNode(x),
+      () => {}
+    );
   }
-
 }

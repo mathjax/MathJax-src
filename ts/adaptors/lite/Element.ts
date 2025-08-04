@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
  */
 
 /**
- * @fileoverview  Implements a lightweight HTML Element replacement
+ * @file  Implements a lightweight HTML Element replacement
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {OptionList} from '../../util/Options.js';
-import {Styles} from '../../util/Styles.js';
-import {LiteText} from './Text.js';
+import { OptionList } from '../../util/Options.js';
+import { Styles } from '../../util/Styles.js';
+import { LiteText } from './Text.js';
 
 /**
  * Type for attribute lists
@@ -34,7 +34,6 @@ export type LiteAttributeList = OptionList;
  * Type for generic nodes in LiteAdaptor
  */
 export type LiteNode = LiteElement | LiteText;
-
 
 /************************************************************/
 /**
@@ -70,11 +69,15 @@ export class LiteElement {
    * @param {string} kind  The type of node to create
    * @param {LiteAttributeList} attributes  The list of attributes to set (if any)
    * @param {LiteNode[]} children  The children for the node (if any)
-   * @constructor
+   * @class
    */
-  constructor(kind: string, attributes: LiteAttributeList = {}, children: LiteNode[] = []) {
+  constructor(
+    kind: string,
+    attributes: LiteAttributeList = {},
+    children: LiteNode[] = []
+  ) {
     this.kind = kind;
-    this.attributes = {...attributes};
+    this.attributes = { ...attributes };
     this.children = [...children];
     for (const child of this.children) {
       child.parent = this;

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2022 The MathJax Consortium
+ *  Copyright (c) 2020-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,23 +16,26 @@
  */
 
 /**
- * @fileoverview  MathItem, MathDocument, and Handler for the safe extension
+ * @file  MathItem, MathDocument, and Handler for the safe extension
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathItem} from '../../core/MathItem.js';
-import {MathDocument, MathDocumentConstructor} from '../../core/MathDocument.js';
-import {Handler} from '../../core/Handler.js';
+import { MathItem } from '../../core/MathItem.js';
+import {
+  MathDocument,
+  MathDocumentConstructor,
+} from '../../core/MathDocument.js';
+import { Handler } from '../../core/Handler.js';
 
-import {Safe} from './safe.js';
+import { Safe } from './safe.js';
 
 /*==========================================================================*/
 
 /**
  * Generic constructor for Mixins
  */
-export type Constructor<T> = new(...args: any[]) => T;
+export type Constructor<T> = new (...args: any[]) => T;
 
 /*==========================================================================*/
 
@@ -40,27 +43,30 @@ export type Constructor<T> = new(...args: any[]) => T;
  * The properties needed in the MathDocument for sanitizing the internal MathML
  */
 export interface SafeMathDocument<N, T, D> extends MathDocument<N, T, D> {
-
   /**
    * The Safe object for this document
    */
   safe: Safe<N, T, D>;
-
 }
-
 
 /**
  * The mixin for adding safe render action to MathDocuments
  *
  * @param {B} BaseDocument             The MathDocument class to be extended
- * @return {SafeMathDocument<N,T,D>}   The extended MathDocument class
+ * @returns {SafeMathDocument<N,T,D>}   The extended MathDocument class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ * @template B  The Base document
  */
-export function SafeMathDocumentMixin<N, T, D, B extends MathDocumentConstructor<MathDocument<N, T, D>>>(
-  BaseDocument: B
-): Constructor<SafeMathDocument<N, T, D>> & B {
-
+export function SafeMathDocumentMixin<
+  N,
+  T,
+  D,
+  B extends MathDocumentConstructor<MathDocument<N, T, D>>,
+>(BaseDocument: B): Constructor<SafeMathDocument<N, T, D>> & B {
   return class extends BaseDocument {
-
     /**
      * @override
      */
@@ -69,7 +75,7 @@ export function SafeMathDocumentMixin<N, T, D, B extends MathDocumentConstructor
       safeOptions: {
         ...Safe.OPTIONS,
       },
-      SafeClass: Safe
+      SafeClass: Safe,
     };
 
     /**
@@ -81,19 +87,19 @@ export function SafeMathDocumentMixin<N, T, D, B extends MathDocumentConstructor
      * Extend the MathItem class used for this MathDocument
      *
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
       this.safe = new this.options.SafeClass(this, this.options.safeOptions);
-      const ProcessBits = (this.constructor as typeof BaseDocument).ProcessBits;
-      if (!ProcessBits.has('safe')) {
-        ProcessBits.allocate('safe');
-      }
       for (const jax of this.inputJax) {
         if (jax.name.match(/MathML/)) {
-          (jax as any).mathml.filterAttribute = this.safe.mmlAttribute.bind(this.safe);
-          (jax as any).mathml.filterClassList = this.safe.mmlClassList.bind(this.safe);
+          (jax as any).mathml.filterAttribute = this.safe.mmlAttribute.bind(
+            this.safe
+          );
+          (jax as any).mathml.filterClassList = this.safe.mmlClassList.bind(
+            this.safe
+          );
         } else if (jax.name.match(/TeX/)) {
           jax.postFilters.add(this.sanitize.bind(jax), -5.5);
         }
@@ -101,17 +107,20 @@ export function SafeMathDocumentMixin<N, T, D, B extends MathDocumentConstructor
     }
 
     /**
-     * @param {{document:SafeDocument<N,T,D>}} data   The document to use for the filter
-     *                                                (note: this has been bound to the input jax)
+     * @param {object} data The argument containing math item and document
+     * @param {MathItem<N, T, D>} data.math The math item to sanitize
+     * @param {SafeMathDocument<N, T, D>} data.document The document to use for the
+     *     filter (note: this has been bound to the input jax)
      */
-    protected sanitize(data: {math: MathItem<N, T, D>, document: SafeMathDocument<N, T, D>}) {
+    protected sanitize(data: {
+      math: MathItem<N, T, D>;
+      document: SafeMathDocument<N, T, D>;
+    }) {
       data.math.root = (this as any).parseOptions.root;
       data.document.safe.sanitize(data.math, data.document);
     }
   };
-
 }
-
 
 /*==========================================================================*/
 
@@ -119,9 +128,11 @@ export function SafeMathDocumentMixin<N, T, D, B extends MathDocumentConstructor
  * Add context-menu support to a Handler instance
  *
  * @param {Handler} handler   The Handler instance to enhance
- * @return {Handler}          The handler that was modified (for purposes of chaining extensions)
+ * @returns {Handler}          The handler that was modified (for purposes of chaining extensions)
  */
-export function SafeHandler<N, T, D>(handler: Handler<N, T, D>): Handler<N, T, D> {
+export function SafeHandler<N, T, D>(
+  handler: Handler<N, T, D>
+): Handler<N, T, D> {
   handler.documentClass = SafeMathDocumentMixin(handler.documentClass);
   return handler;
 }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
  */
 
 /**
- * @fileoverview  Implements the browser DOM adaptor
+ * @file  Implements the browser DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {HTMLAdaptor} from './HTMLAdaptor.js';
+import { HTMLAdaptor } from './HTMLAdaptor.js';
 
 //
 //  Let Typescript know about these
@@ -41,7 +41,7 @@ declare global {
 /**
  * Function to create an HTML adpator for browsers
  *
- * @return {HTMLAdaptor}  The newly created adaptor
+ * @returns {HTMLAdaptor}  The newly created adaptor
  */
 export function browserAdaptor(): HTMLAdaptor<HTMLElement, Text, Document> {
   return new HTMLAdaptor<HTMLElement, Text, Document>(window);

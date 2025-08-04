@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/upgreek",
+    "component": "input/tex/extensions/upgreek",
+    "targets": ["input/tex/upgreek"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/upgreek",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

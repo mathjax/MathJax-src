@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2022 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,29 +16,32 @@
  */
 
 /**
- * @fileoverview  Implements asynchronous loading for use with SystemJS
+ * @file  Implements asynchronous loading for use with SystemJS
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {mathjax} from '../../mathjax.js';
+import { mathjax } from '../../mathjax.js';
 
-declare var System: {import: (name: string, url?: string) => any};
-declare var __dirname: string;
+declare const System: { import: (name: string, url?: string) => any };
+declare const __dirname: string;
 
-let root = 'file://' + __dirname.replace(/\/\/[^\/]*$/, '/');
+let root = 'file://' + __dirname.replace(/\/[^/]*\/[^/]*$/, '/');
 
 if (!mathjax.asyncLoad && typeof System !== 'undefined' && System.import) {
   mathjax.asyncLoad = (name: string) => {
-    return System.import(name, root);
+    const file = (
+      name.charAt(0) === '.' ? new URL(name, root) : new URL(name, 'file://')
+    ).href;
+    return System.import(file).then((result: any) => result.default ?? result);
   };
 }
 
 /**
- * @param {string} URL   the base URL to use for loading relative paths
+ * @param {string} url   the base URL to use for loading relative paths
  */
-export function setBaseURL(URL: string) {
-  root = URL;
+export function setBaseURL(url: string) {
+  root = new URL(url, 'file://').href;
   if (!root.match(/\/$/)) {
     root += '/';
   }

@@ -1,0 +1,19 @@
+{
+  "extends": "./common.json",
+  "compilerOptions": {
+    "target": "ES6",
+    "outDir": "../mjs",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "paths": {
+      "#js/*": ["../mjs/*"],
+      "#source/*": ["../components/mjs/*"],
+      "#root/*": ["../ts/components/mjs/*"],
+      "#menu/*": ["../node_modules/mj-context-menu/js/*"],
+      "#sre/*": ["../node_modules/speech-rule-engine/js/*"],
+      "#mhchem/*": ["../node_modules/mhchemparser/esm/*"],
+      "#default-font/*": ["../node_modules/@mathjax/mathjax-newcm-font/mjs/*"]
+    }
+  },
+  "exclude": ["../ts/**/cjs/*"]
+}

@@ -1,5 +1,0 @@
-{
-  "id": "[tex]/setoptions",
-  "component": "input/tex/extensions/setoptions",
-  "targets": ["input/tex/setoptions"]
-}

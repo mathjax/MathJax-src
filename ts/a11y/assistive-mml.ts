@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2022 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,23 +16,31 @@
  */
 
 /**
- * @fileoverview  Mixin that adds hidden MathML to the output
+ * @file  Mixin that adds hidden MathML to the output
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Handler} from '../core/Handler.js';
-import {MathDocument, AbstractMathDocument, MathDocumentConstructor} from '../core/MathDocument.js';
-import {MathItem, AbstractMathItem, STATE, newState} from '../core/MathItem.js';
-import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
-import {OptionList, expandable} from '../util/Options.js';
-import {StyleList} from '../util/StyleList.js';
+import { Handler } from '../core/Handler.js';
+import {
+  MathDocument,
+  AbstractMathDocument,
+  MathDocumentConstructor,
+} from '../core/MathDocument.js';
+import {
+  MathItem,
+  AbstractMathItem,
+  STATE,
+  newState,
+} from '../core/MathItem.js';
+import { MmlNode } from '../core/MmlTree/MmlNode.js';
+import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
+import { OptionList, expandable } from '../util/Options.js';
+import { StyleJson } from '../util/StyleJson.js';
 
 /*==========================================================================*/
 
 export class LimitedMmlVisitor extends SerializedMmlVisitor {
-
   /**
    * @override
    */
@@ -42,13 +50,12 @@ export class LimitedMmlVisitor extends SerializedMmlVisitor {
      */
     return super.getAttributes(node).replace(/ ?id=".*?"/, '');
   }
-
 }
 
 /**
  * Generic constructor for Mixins
  */
-export type Constructor<T> = new(...args: any[]) => T;
+export type Constructor<T> = new (...args: any[]) => T;
 
 /*==========================================================================*/
 
@@ -76,54 +83,70 @@ export interface AssistiveMmlMathItem<N, T, D> extends MathItem<N, T, D> {
  * The mixin for adding assistive MathML to MathItems
  *
  * @param {B} BaseMathItem      The MathItem class to be extended
- * @return {AssistiveMathItem}  The augmented MathItem class
+ * @returns {AssistiveMmlMathItem}  The augmented MathItem class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  * @template B  The MathItem class to extend
  */
-export function AssistiveMmlMathItemMixin<N, T, D, B extends Constructor<AbstractMathItem<N, T, D>>>(
-  BaseMathItem: B
-): Constructor<AssistiveMmlMathItem<N, T, D>> & B {
-
+export function AssistiveMmlMathItemMixin<
+  N,
+  T,
+  D,
+  B extends Constructor<AbstractMathItem<N, T, D>>,
+>(BaseMathItem: B): Constructor<AssistiveMmlMathItem<N, T, D>> & B {
   return class extends BaseMathItem {
-
     /**
      * @param {MathDocument} document   The MathDocument for the MathItem
      * @param {boolean} force           True to force assistive MathML evenif enableAssistiveMml is false
      */
-    public assistiveMml(document: AssistiveMmlMathDocument<N, T, D>, force: boolean = false) {
+    public assistiveMml(
+      document: AssistiveMmlMathDocument<N, T, D>,
+      force: boolean = false
+    ) {
       if (this.state() >= STATE.ASSISTIVEMML) return;
       if (!this.isEscaped && (document.options.enableAssistiveMml || force)) {
         const adaptor = document.adaptor;
         //
         // Get the serialized MathML
         //
-        const mml = document.toMML(this.root).replace(/\n */g, '').replace(/<!--.*?-->/g, '');
+        const mml = document
+          .toMML(this.root)
+          .replace(/\n */g, '')
+          .replace(/<!--.*?-->/g, '');
         //
         // Parse is as HTML and retrieve the <math> element
         //
-        const mmlNodes = adaptor.firstChild(adaptor.body(adaptor.parse(mml, 'text/html')));
+        const mmlNodes = adaptor.firstChild(
+          adaptor.body(adaptor.parse(mml, 'text/html'))
+        );
         //
         // Create a container for the hidden MathML
         //
-        const node = adaptor.node('mjx-assistive-mml', {
-          unselectable: 'on', display: (this.display ? 'block' : 'inline')
-        }, [mmlNodes]);
+        const node = adaptor.node(
+          'mjx-assistive-mml',
+          {
+            unselectable: 'on',
+            display: this.display ? 'block' : 'inline',
+          },
+          [mmlNodes]
+        );
         //
         // Hide the typeset math from assistive technology and append the MathML that is visually
         //   hidden from other users
         //
-        adaptor.setAttribute(adaptor.firstChild(this.typesetRoot) as N, 'aria-hidden', 'true');
+        adaptor.setAttribute(
+          adaptor.firstChild(this.typesetRoot) as N,
+          'aria-hidden',
+          'true'
+        );
         adaptor.setStyle(this.typesetRoot, 'position', 'relative');
         adaptor.append(this.typesetRoot, node);
       }
       this.state(STATE.ASSISTIVEMML);
     }
-
   };
-
 }
 
 /*==========================================================================*/
@@ -135,41 +158,42 @@ export function AssistiveMmlMathItemMixin<N, T, D, B extends Constructor<Abstrac
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface AssistiveMmlMathDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
-
+export interface AssistiveMmlMathDocument<N, T, D>
+  extends AbstractMathDocument<N, T, D> {
   /**
    * @param {MmlNode} node   The node to be serializes
-   * @return {string}        The serialization of the node
+   * @returns {string}        The serialization of the node
    */
   toMML: (node: MmlNode) => string;
 
   /**
    * Add assistive MathML to the MathItems in the MathDocument
    *
-   * @return {AssistiveMmlMathDocument}   The MathDocument (so calls can be chained)
+   * @returns {AssistiveMmlMathDocument}   The MathDocument (so calls can be chained)
    */
   assistiveMml(): AssistiveMmlMathDocument<N, T, D>;
-
 }
 
 /**
  * The mixin for adding assistive MathML to MathDocuments
  *
  * @param {B} BaseDocument         The MathDocument class to be extended
- * @return {AssistiveMmlMathDocument}  The Assistive MathML MathDocument class
+ * @returns {AssistiveMmlMathDocument}  The Assistive MathML MathDocument class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  * @template B  The MathDocument class to extend
  */
-export function AssistiveMmlMathDocumentMixin<N, T, D,
-B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
+export function AssistiveMmlMathDocumentMixin<
+  N,
+  T,
+  D,
+  B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>,
+>(
   BaseDocument: B
 ): MathDocumentConstructor<AssistiveMmlMathDocument<N, T, D>> & B {
-
   return class BaseClass extends BaseDocument {
-
     /**
      * @override
      */
@@ -178,23 +202,28 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
       enableAssistiveMml: true,
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
-        assistiveMml: [STATE.ASSISTIVEMML]
-      })
+        assistiveMml: [STATE.ASSISTIVEMML],
+      }),
     };
 
     /**
      * styles needed for the hidden MathML
      */
-    public static assistiveStyles: StyleList = {
+    public static assistiveStyles: StyleJson = {
       'mjx-assistive-mml': {
         position: 'absolute !important',
-        top: '0px', left: '0px',
+        top: '0px',
+        left: '0px',
+        bottom: '0px',
+        right: '0px',
         clip: 'rect(1px, 1px, 1px, 1px)',
+        'clip-path': 'polygon(0 0, 0 1px, 1px 1px, 1px 0)',
         padding: '1px 0px 0px 0px !important',
         border: '0px !important',
         display: 'block !important',
         width: 'auto !important',
         overflow: 'hidden !important',
+        'text-indent': '0px ! important',
         /*
          *  Don't allow the assistive MathML to become part of the selection
          */
@@ -203,11 +232,11 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
         '-khtml-user-select': 'none',
         '-moz-user-select': 'none',
         '-ms-user-select': 'none',
-        'user-select': 'none'
+        'user-select': 'none',
       },
       'mjx-assistive-mml[display="block"]': {
-        width: '100% !important'
-      }
+        width: '100% !important',
+      },
     };
 
     /**
@@ -219,20 +248,22 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
      * Augment the MathItem class used for this MathDocument, and create the serialization visitor.
      *
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
-      const CLASS = (this.constructor as typeof BaseClass);
+      const CLASS = this.constructor as typeof BaseClass;
       const ProcessBits = CLASS.ProcessBits;
       if (!ProcessBits.has('assistive-mml')) {
         ProcessBits.allocate('assistive-mml');
       }
       this.visitor = new LimitedMmlVisitor(this.mmlFactory);
-      this.options.MathItem =
-        AssistiveMmlMathItemMixin<N, T, D, Constructor<AbstractMathItem<N, T, D>>>(
-          this.options.MathItem
-        );
+      this.options.MathItem = AssistiveMmlMathItemMixin<
+        N,
+        T,
+        D,
+        Constructor<AbstractMathItem<N, T, D>>
+      >(this.options.MathItem);
       if ('addStyles' in this) {
         (this as any).addStyles(CLASS.assistiveStyles);
       }
@@ -240,7 +271,7 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
 
     /**
      * @param {MmlNode} node   The node to be serializes
-     * @return {string}        The serialization of the node
+     * @returns {string}        The serialization of the node
      */
     public toMML(node: MmlNode): string {
       return this.visitor.visitTree(node);
@@ -248,8 +279,10 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
 
     /**
      * Add assistive MathML to the MathItems in this MathDocument
+     *
+     * @returns {AssistiveMmlMathDocument<N, T, D>} The assistive mml document.
      */
-    public assistiveMml() {
+    public assistiveMml(): AssistiveMmlMathDocument<N, T, D> {
       if (!this.processed.isSet('assistive-mml')) {
         for (const math of this.math) {
           (math as AssistiveMmlMathItem<N, T, D>).assistiveMml(this);
@@ -269,9 +302,7 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
       }
       return this;
     }
-
   };
-
 }
 
 /*==========================================================================*/
@@ -280,16 +311,20 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
  * Add assitive MathML support a Handler instance
  *
  * @param {Handler} handler   The Handler instance to enhance
- * @return {Handler}          The handler that was modified (for purposes of chainging extensions)
+ * @returns {Handler}          The handler that was modified (for purposes of chainging extensions)
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export function AssistiveMmlHandler<N, T, D>(handler: Handler<N, T, D>): Handler<N, T, D> {
-  handler.documentClass =
-    AssistiveMmlMathDocumentMixin<N, T, D, MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
-      handler.documentClass
-    );
+export function AssistiveMmlHandler<N, T, D>(
+  handler: Handler<N, T, D>
+): Handler<N, T, D> {
+  handler.documentClass = AssistiveMmlMathDocumentMixin<
+    N,
+    T,
+    D,
+    MathDocumentConstructor<AbstractMathDocument<N, T, D>>
+  >(handler.documentClass);
   return handler;
 }

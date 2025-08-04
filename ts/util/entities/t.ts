@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     THORN: '\u00DE',
     TRADE: '\u2122',
     TSHcy: '\u040B',
@@ -76,5 +77,7 @@ Entities.add({
     tstrok: '\u0167',
     twixt: '\u226C',
     twoheadleftarrow: '\u219E',
-    twoheadrightarrow: '\u21A0'
-}, 't');
+    twoheadrightarrow: '\u21A0',
+  },
+  't'
+);

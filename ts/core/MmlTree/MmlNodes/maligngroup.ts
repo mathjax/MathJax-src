@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMaligngroup node
+ * @file  Implements the MmlMaligngroup node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlLayoutNode, AttributeList} from '../MmlNode.js';
-import {INHERIT} from '../Attributes.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlLayoutNode, AttributeList } from '../MmlNode.js';
+import { INHERIT } from '../Attributes.js';
 
 /*****************************************************************/
 /**
@@ -31,13 +31,12 @@ import {INHERIT} from '../Attributes.js';
  */
 
 export class MmlMaligngroup extends AbstractMmlLayoutNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlLayoutNode.defaults,
-    groupalign: INHERIT
+    groupalign: INHERIT,
   };
 
   /**
@@ -49,6 +48,7 @@ export class MmlMaligngroup extends AbstractMmlLayoutNode {
 
   /**
    * <maligngroup> is space-like
+   *
    * @override
    */
   public get isSpacelike() {
@@ -57,11 +57,19 @@ export class MmlMaligngroup extends AbstractMmlLayoutNode {
 
   /**
    * Children can inherit from <maligngroup>
+   *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-    attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
+    attributes = this.addInheritedAttributes(
+      attributes,
+      this.attributes.getAllAttributes()
+    );
     super.setChildInheritedAttributes(attributes, display, level, prime);
   }
-
 }

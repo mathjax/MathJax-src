@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,20 +16,25 @@
  */
 
 /**
- * @fileoverview  Implements the HTMLDocument class
+ * @file  Implements the HTMLDocument class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractMathDocument} from '../../core/MathDocument.js';
-import {userOptions, separateOptions, OptionList, expandable} from '../../util/Options.js';
-import {HTMLMathItem} from './HTMLMathItem.js';
-import {HTMLMathList} from './HTMLMathList.js';
-import {HTMLDomStrings} from './HTMLDomStrings.js';
-import {DOMAdaptor} from '../../core/DOMAdaptor.js';
-import {InputJax} from '../../core/InputJax.js';
-import {STATE, ProtoItem, Location} from '../../core/MathItem.js';
-import {StyleList} from '../../util/StyleList.js';
+import { AbstractMathDocument } from '../../core/MathDocument.js';
+import {
+  userOptions,
+  separateOptions,
+  OptionList,
+  expandable,
+} from '../../util/Options.js';
+import { HTMLMathItem } from './HTMLMathItem.js';
+import { HTMLMathList } from './HTMLMathList.js';
+import { HTMLDomStrings } from './HTMLDomStrings.js';
+import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+import { InputJax } from '../../core/InputJax.js';
+import { STATE, newState, ProtoItem, Location } from '../../core/MathItem.js';
+import { StyleJson } from '../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -44,6 +49,11 @@ import {StyleList} from '../../util/StyleList.js';
  */
 export type HTMLNodeArray<N, T> = [N | T, number][][];
 
+/**
+ * Add STATE value for adding the stylesheets (after INSERTED)
+ */
+newState('STYLES', STATE.INSERTED + 1);
+
 /*****************************************************************/
 /**
  *  The HTMLDocument class (extends AbstractMathDocument)
@@ -53,7 +63,6 @@ export type HTMLNodeArray<N, T> = [N | T, number][][];
  * @template D  The Document class
  */
 export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
-
   /**
    * The kind of document
    */
@@ -62,11 +71,12 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   /**
    * The default options for HTMLDocument
    */
+  /* prettier-ignore */
   public static OPTIONS: OptionList = {
     ...AbstractMathDocument.OPTIONS,
     renderActions: expandable({
       ...AbstractMathDocument.OPTIONS.renderActions,
-      styles: [STATE.INSERTED + 1, '', 'updateStyleSheet', false]  // update styles on a rerender() call
+      styles: [STATE.STYLES, '', 'updateStyleSheet', false]  // update styles on a rerender() call
     }),
     MathList: HTMLMathList,           // Use the HTMLMathList for MathLists
     MathItem: HTMLMathItem,           // Use the HTMLMathItem for MathItem
@@ -76,7 +86,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   /**
    * Extra styles to be included in the document's stylesheet (added by extensions)
    */
-  protected styles: StyleList[];
+  protected styles: StyleJson[];
 
   /**
    * The DomString parser for locating the text in DOM trees
@@ -85,13 +95,18 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
 
   /**
    * @override
-   * @constructor
-   * @extends {AbstractMathDocument}
+   * @class
+   * @augments {AbstractMathDocument}
    */
-  constructor(document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList) {
-    let [html, dom] = separateOptions(options, HTMLDomStrings.OPTIONS);
+  constructor(
+    document: any,
+    adaptor: DOMAdaptor<N, T, D>,
+    options: OptionList
+  ) {
+    const [html, dom] = separateOptions(options, HTMLDomStrings.OPTIONS);
     super(document, adaptor, html);
-    this.domStrings = this.options['DomStrings'] || new HTMLDomStrings<N, T, D>(dom);
+    this.domStrings =
+      this.options['DomStrings'] || new HTMLDomStrings<N, T, D>(dom);
     this.domStrings.adaptor = adaptor;
     this.styles = [];
   }
@@ -105,18 +120,25 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    * @param {number} index         The position within the N's string that needs to be found
    * @param {string} delim         The delimiter for this position
    * @param {HTMLNodeArray} nodes  The list of node lists representing the string array
-   * @return {Location}            The Location object for the position of the delimiter in the document
+   * @returns {Location}           The Location object for the position of the delimiter in the document
    */
-  protected findPosition(N: number, index: number, delim: string, nodes: HTMLNodeArray<N, T>): Location<N, T> {
+  protected findPosition(
+    N: number,
+    index: number,
+    delim: string,
+    nodes: HTMLNodeArray<N, T>
+  ): Location<N, T> {
     const adaptor = this.adaptor;
-    for (const list of nodes[N]) {
-      let [node, n] = list;
+    const inc = 1 / (nodes[N].length || 1);
+    let i = N;
+    for (const [node, n] of nodes[N]) {
       if (index <= n && adaptor.kind(node) === '#text') {
-        return {node: node, n: Math.max(index, 0), delim: delim};
+        return { i, node, n: Math.max(index, 0), delim };
       }
       index -= n;
+      i += inc;
     }
-    return {node: null, n: 0, delim: delim};
+    return { node: null, n: 0, delim };
   }
 
   /**
@@ -126,15 +148,24 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    * @param {ProtoItem} item       The proto math item to turn into an actual MathItem
    * @param {InputJax} jax         The input jax to use for the MathItem
    * @param {HTMLNodeArray} nodes  The array of node lists that produced the string array
-   * @return {HTMLMathItem}        The MathItem for the given proto item
+   * @returns {HTMLMathItem}       The MathItem for the given proto item
    */
-  protected mathItem(item: ProtoItem<N, T>, jax: InputJax<N, T, D>,
-                     nodes: HTMLNodeArray<N, T>): HTMLMathItem<N, T, D> {
-                       let math = item.math;
-                       let start = this.findPosition(item.n, item.start.n, item.open, nodes);
-                       let end = this.findPosition(item.n, item.end.n, item.close, nodes);
-                       return new this.options.MathItem(math, jax, item.display, start, end) as HTMLMathItem<N, T, D>;
-                     }
+  protected mathItem(
+    item: ProtoItem<N, T>,
+    jax: InputJax<N, T, D>,
+    nodes: HTMLNodeArray<N, T>
+  ): HTMLMathItem<N, T, D> {
+    const math = item.math;
+    const start = this.findPosition(item.n, item.start.n, item.open, nodes);
+    const end = this.findPosition(item.n, item.end.n, item.close, nodes);
+    return new this.options.MathItem(
+      math,
+      jax,
+      item.display,
+      start,
+      end
+    ) as HTMLMathItem<N, T, D>;
+  }
 
   /**
    * Find math within the document:
@@ -156,31 +187,78 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   public findMath(options: OptionList) {
     if (!this.processed.isSet('findMath')) {
       this.adaptor.document = this.document;
-      options = userOptions({elements: this.options.elements || [this.adaptor.body(this.document)]}, options);
-      for (const container of this.adaptor.getElements(options['elements'], this.document)) {
-        let [strings, nodes] = [null, null] as [string[], HTMLNodeArray<N, T>];
-        for (const jax of this.inputJax) {
-          let list = new (this.options['MathList'])();
-          if (jax.processStrings) {
-            if (strings === null) {
-              [strings, nodes] = this.domStrings.find(container);
-            }
-            for (const math of jax.findMath(strings)) {
-              list.push(this.mathItem(math, jax, nodes));
-            }
-          } else {
-            for (const math of jax.findMath(container)) {
-              let item: HTMLMathItem<N, T, D> =
-                new this.options.MathItem(math.math, jax, math.display, math.start, math.end);
-              list.push(item);
-            }
-          }
-          this.math.merge(list);
-        }
+      options = userOptions(
+        {
+          elements: this.options.elements || [this.adaptor.body(this.document)],
+        },
+        options
+      );
+      const containers = this.adaptor.getElements(
+        options.elements,
+        this.document
+      );
+      for (const jax of this.inputJax) {
+        const list = jax.processStrings
+          ? this.findMathFromStrings(jax, containers)
+          : this.findMathFromDOM(jax, containers);
+        this.math.merge(list);
       }
       this.processed.set('findMath');
     }
     return this;
+  }
+
+  /**
+   * Get the MathItems from the containers by searching DOM strings
+   *
+   * @param {InputJax<N,T,D>} jax    The jax being used
+   * @param {N[]} containers         The containers to be searched in order
+   * @returns {HTMLMathList<N,T,D>}  The list of MathItems found
+   */
+  protected findMathFromStrings(
+    jax: InputJax<N, T, D>,
+    containers: N[]
+  ): HTMLMathList<N, T, D> {
+    const strings = [] as string[];
+    const nodes = [] as HTMLNodeArray<N, T>;
+    for (const container of containers) {
+      const [slist, nlist] = this.domStrings.find(container);
+      strings.push(...slist);
+      nodes.push(...nlist);
+    }
+    const list = new this.options.MathList() as HTMLMathList<N, T, D>;
+    for (const math of jax.findMath(strings)) {
+      list.push(this.mathItem(math, jax, nodes));
+    }
+    return list;
+  }
+
+  /**
+   * Get the MathItems from the containers by searching DOM elements themselves
+   *
+   * @param {InputJax<N,T,D>} jax    The jax being used
+   * @param {N[]} containers         The containers to be searched in order
+   * @returns {HTMLMathList<N,T,D>}  The list of MathItems found
+   */
+  protected findMathFromDOM(
+    jax: InputJax<N, T, D>,
+    containers: N[]
+  ): HTMLMathList<N, T, D> {
+    const items = [] as HTMLMathItem<N, T, D>[];
+    for (const container of containers) {
+      for (const math of jax.findMath(container)) {
+        items.push(
+          new this.options.MathItem(
+            math.math,
+            jax,
+            math.display,
+            math.start,
+            math.end
+          )
+        );
+      }
+    }
+    return new this.options.MathList(...items) as HTMLMathList<N, T, D>;
   }
 
   /**
@@ -200,10 +278,16 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    *  Add any elements needed for the document
    */
   protected addPageElements() {
-    const body = this.adaptor.body(this.document);
+    const adaptor = this.adaptor;
+    const body = adaptor.body(this.document);
     const node = this.documentPageElements();
     if (node) {
-      this.adaptor.append(body, node);
+      const child = adaptor.firstChild(body);
+      if (child) {
+        adaptor.insert(node, child);
+      } else {
+        adaptor.append(body, node);
+      }
     }
   }
 
@@ -215,7 +299,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     const adaptor = this.adaptor;
     if (sheet && !adaptor.parent(sheet)) {
       const head = adaptor.head(this.document);
-      let styles = this.findSheet(head, adaptor.getAttribute(sheet, 'id'));
+      const styles = this.findSheet(head, adaptor.getAttribute(sheet, 'id'));
       if (styles) {
         adaptor.replace(sheet, styles);
       } else {
@@ -227,9 +311,9 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   /**
    * @param {N} head     The document <head>
    * @param {string} id  The id of the stylesheet to find
-   * @param {N|null}     The stylesheet with the given ID
+   * @returns {N|null}   The stylesheet with the given ID
    */
-  protected findSheet(head: N, id: string) {
+  protected findSheet(head: N, id: string): N {
     if (id) {
       for (const sheet of this.adaptor.tags(head, 'style')) {
         if (this.adaptor.getAttribute(sheet, 'id') === id) {
@@ -272,17 +356,19 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   /**
    * Add styles to be included in the document's stylesheet
    *
-   * @param {StyleList} styles   The styles to include
+   * @param {StyleJson} styles   The styles to include
    */
-  public addStyles(styles: StyleList) {
+  public addStyles(styles: StyleJson) {
     this.styles.push(styles);
+    if ('insertStyles' in this.outputJax) {
+      (this.outputJax as any).insertStyles(styles);
+    }
   }
 
   /**
-   * Get the array of document-specific styles
+   * @returns {StyleJson[]}   The array of document-specific styles
    */
-  public getStyles() {
+  public getStyles(): StyleJson[] {
     return this.styles;
   }
-
 }

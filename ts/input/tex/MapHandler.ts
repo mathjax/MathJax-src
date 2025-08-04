@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,74 +15,71 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Singleton class for handling symbol maps.
+ * @file Singleton class for handling symbol maps.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
-import {ParseInput, ParseResult, ParseMethod} from './Types.js';
-// import {ParserConfiguration} from './Configuration.js';
-import {PrioritizedList} from '../../util/PrioritizedList.js';
-import {FunctionList} from '../../util/FunctionList.js';
+import { HandlerType } from './HandlerTypes.js';
+import { AbstractTokenMap, TokenMap, CharacterMap } from './TokenMap.js';
+import { ParseInput, ParseResult, ParseMethod } from './Types.js';
+import { PrioritizedList } from '../../util/PrioritizedList.js';
+import { FunctionList } from '../../util/FunctionList.js';
 
+export type HandlerConfig = { [P in HandlerType]?: string[] };
+export type FallbackConfig = { [P in HandlerType]?: ParseMethod };
 
-export type HandlerType = 'delimiter' | 'macro' | 'character' | 'environment';
+const maps: Map<string, TokenMap> = new Map();
 
-export type HandlerConfig = {[P in HandlerType]?: string[]};
-export type FallbackConfig = {[P in HandlerType]?: ParseMethod};
-
-
-export namespace MapHandler {
-
-  let maps: Map<string, SymbolMap> = new Map();
-
+export const MapHandler = {
   /**
-   * Adds a new symbol map to the map handler. Might overwrite an existing
-   * symbol map of the same name.
+   * Adds a new token map to the map handler. Might overwrite an existing
+   * token map of the same name.
    *
-   * @param {SymbolMap} map Registers a new symbol map.
+   * @param {TokenMap} map Registers a new token map.
    */
-  export let register = function(map: SymbolMap): void {
+  register(map: TokenMap): void {
     maps.set(map.name, map);
-  };
-
+  },
 
   /**
-   * Looks up a symbol map if it exists.
+   * Looks up a token map if it exists.
    *
-   * @param {string} name The name of the symbol map.
-   * @return {SymbolMap} The symbol map with the given name or null.
+   * @param {string} name The name of the token map.
+   * @returns {TokenMap} The token map with the given name or null.
    */
-  export let getMap = function(name: string): SymbolMap {
+  getMap(name: string): TokenMap {
     return maps.get(name);
-  };
-
-}
-
+  },
+};
 
 /**
- * Class of symbol mappings that are active in a configuration.
+ * Class of token mappings that are active in a configuration.
  */
 export class SubHandler {
+  public static FALLBACK = Symbol('fallback');
 
-  private _configuration: PrioritizedList<SymbolMap> = new PrioritizedList<SymbolMap>();
+  private _configuration: PrioritizedList<TokenMap> =
+    new PrioritizedList<TokenMap>();
   private _fallback: FunctionList = new FunctionList();
 
   /**
-   * Adds a list of symbol maps to the handler.
-   * @param {string[]} maps The names of the symbol maps to add.
+   * Adds a list of token maps to the handler.
+   *
+   * @param {string[]} maps The names of the token maps to add.
    * @param {ParseMethod} fallback A fallback method.
    * @param {number} priority Optionally a priority.
    */
-  public add(maps: string[], fallback: ParseMethod,
-             priority: number = PrioritizedList.DEFAULTPRIORITY) {
+  public add(
+    maps: string[],
+    fallback: ParseMethod,
+    priority: number = PrioritizedList.DEFAULTPRIORITY
+  ) {
     for (const name of maps.slice().reverse()) {
-      let map = MapHandler.getMap(name);
+      const map = MapHandler.getMap(name);
       if (!map) {
-        this.warn('Configuration ' + name + ' not found! Omitted.');
+        this.warn(`Configuration '${name}' not found! Omitted.`);
         return;
       }
       this._configuration.add(map, priority);
@@ -93,80 +90,105 @@ export class SubHandler {
   }
 
   /**
-   * Parses the given input with the first applicable symbol map.
+   * Removes a list of token maps from the handler
+   *
+   * @param {string[]} maps          The names of the token maps to remove.
+   * @param {ParseMethod} fallback   A fallback method to remove.
+   */
+  public remove(maps: string[], fallback: ParseMethod = null) {
+    for (const name of maps) {
+      const map = this.retrieve(name);
+      if (map) {
+        this._configuration.remove(map);
+      }
+    }
+    if (fallback) {
+      this._fallback.remove(fallback);
+    }
+  }
+
+  /**
+   * Parses the given input with the first applicable token map.
+   *
    * @param {ParseInput} input The input for the parser.
-   * @return {ParseResult} The output of the parsing function.
+   * @returns {ParseResult} The output of the parsing function.
    */
   public parse(input: ParseInput): ParseResult {
-    for (let {item: map} of this._configuration) {
+    for (const { item: map } of this._configuration) {
       const result = map.parse(input);
+      if (result === SubHandler.FALLBACK) {
+        break;
+      }
       if (result) {
         return result;
       }
     }
-    let [env, symbol] = input;
-    Array.from(this._fallback)[0].item(env, symbol);
+    const [env, token] = input;
+    Array.from(this._fallback)[0].item(env, token);
+    return;
   }
 
-
   /**
-   * Maps a symbol to its "parse value" if it exists.
+   * Maps a token to its "parse value" if it exists.
    *
-   * @param {string} symbol The symbol to parse.
-   * @return {T} A boolean, Character, or Macro.
+   * @param {string} token The token to parse.
+   * @returns {T} A boolean, Character, or Macro.
+   *
+   * @template T
    */
-  public lookup<T>(symbol: string): T {
-    let map = this.applicable(symbol) as AbstractSymbolMap<T>;
-    return map ? map.lookup(symbol) : null;
+  public lookup<T>(token: string): T {
+    const map = this.applicable(token) as AbstractTokenMap<T>;
+    return map ? map.lookup(token) : null;
   }
 
-
   /**
-   * Checks if a symbol is contained in one of the symbol mappings of this
+   * Checks if a token is contained in one of the token mappings of this
    * configuration.
    *
-   * @param {string} symbol The symbol to parse.
-   * @return {boolean} True if the symbol is contained in the mapping.
+   * @param {string} token The token to parse.
+   * @returns {boolean} True if the token is contained in the mapping.
    */
-  public contains(symbol: string): boolean {
-    return this.applicable(symbol) ? true : false;
+  public contains(token: string): boolean {
+    const map = this.applicable(token);
+    return (
+      !!map && !(map instanceof CharacterMap && map.lookup(token).char === null)
+    );
   }
-
 
   /**
    * @override
    */
   public toString(): string {
-    let names = [];
-    for (let {item: map} of this._configuration) {
+    const names = [];
+    for (const { item: map } of this._configuration) {
       names.push(map.name);
     }
     return names.join(', ');
   }
 
-
   /**
-   * Retrieves the first applicable symbol map in the configuration.
-   * @param {string} symbol The symbol to parse.
-   * @return {SymbolMap} A map that can parse the symbol.
+   * Retrieves the first applicable token map in the configuration.
+   *
+   * @param {string} token The token to parse.
+   * @returns {TokenMap} A map that can parse the token.
    */
-  public applicable(symbol: string): SymbolMap {
-    for (let {item: map} of this._configuration) {
-      if (map.contains(symbol)) {
+  public applicable(token: string): TokenMap {
+    for (const { item: map } of this._configuration) {
+      if (map.contains(token)) {
         return map;
       }
     }
     return null;
   }
 
-
   /**
    * Retrieves the map of the given name.
-   * @param {string} name Name of the symbol map.
-   * @return {SymbolMap} The map if it exists.
+   *
+   * @param {string} name Name of the token map.
+   * @returns {TokenMap} The map if it exists.
    */
-  public retrieve(name: string): SymbolMap {
-    for (let {item: map} of this._configuration) {
+  public retrieve(name: string): TokenMap {
+    for (const { item: map } of this._configuration) {
       if (map.name === name) {
         return map;
       }
@@ -174,30 +196,33 @@ export class SubHandler {
     return null;
   }
 
-
   /**
    * Prints a warning message.
+   *
    * @param {string} message The warning.
    */
   private warn(message: string) {
     console.log('TexParser Warning: ' + message);
   }
-
 }
 
-
 export class SubHandlers {
-
   private map = new Map<HandlerType, SubHandler>();
 
   /**
-   * Adds a symbol map to the configuration if it exists.
-   * @param {string} name of the symbol map.
+   * Adds subhandlers and fallbacks to the map.
+   *
+   * @param {HandlerConfig} handlers A handler configuration.
+   * @param {FallbackConfig} fallbacks A configuration of fallback functions.
+   * @param {number=} priority The priority of the handlers.
    */
-  public add(handlers: HandlerConfig, fallbacks: FallbackConfig,
-             priority: number = PrioritizedList.DEFAULTPRIORITY): void {
+  public add(
+    handlers: HandlerConfig,
+    fallbacks: FallbackConfig,
+    priority: number = PrioritizedList.DEFAULTPRIORITY
+  ): void {
     for (const key of Object.keys(handlers)) {
-      let name = key as HandlerType;
+      const name = key as HandlerType;
       let subHandler = this.get(name);
       if (!subHandler) {
         subHandler = new SubHandler();
@@ -207,9 +232,24 @@ export class SubHandlers {
     }
   }
 
+  /**
+   * Removes subhandlers and fallbacks from the map.
+   *
+   * @param {HandlerConfig} handlers     A handler configuration to remove
+   * @param {FallbackConfig} fallbacks   A configuration of fallback functions to remove
+   */
+  public remove(handlers: HandlerConfig, fallbacks: FallbackConfig) {
+    for (const name of Object.keys(handlers) as HandlerType[]) {
+      const subHandler = this.get(name);
+      if (subHandler) {
+        subHandler.remove(handlers[name], fallbacks[name]);
+      }
+    }
+  }
 
   /**
    * Setter for subhandlers.
+   *
    * @param {HandlerType} name The name of the subhandler.
    * @param {SubHandler} subHandler The subhandler.
    */
@@ -217,25 +257,25 @@ export class SubHandlers {
     this.map.set(name, subHandler);
   }
 
-
   /**
    * Getter for subhandler.
+   *
    * @param {HandlerType} name Name of the subhandler.
-   * @return {SubHandler} The subhandler by that name if it exists.
+   * @returns {SubHandler} The subhandler by that name if it exists.
    */
   public get(name: HandlerType): SubHandler {
     return this.map.get(name);
   }
 
-
   /**
-   * Retrieves a symbol map of the given name.
-   * @param {string} name Name of the symbol map.
-   * @return {SymbolMap} The map if it exists. O/w null.
+   * Retrieves a token map of the given name.
+   *
+   * @param {string} name Name of the token map.
+   * @returns {TokenMap} The map if it exists. O/w null.
    */
-  public retrieve(name: string): SymbolMap {
+  public retrieve(name: string): TokenMap {
     for (const handler of this.map.values()) {
-      let map = handler.retrieve(name);
+      const map = handler.retrieve(name);
       if (map) {
         return map;
       }
@@ -243,13 +283,12 @@ export class SubHandlers {
     return null;
   }
 
-
   /**
    * All names of registered subhandlers.
-   * @return {IterableIterator<string>} Iterable list of keys.
+   *
+   * @returns {IterableIterator<string>} Iterable list of keys.
    */
   public keys(): IterableIterator<string> {
     return this.map.keys();
   }
-
 }

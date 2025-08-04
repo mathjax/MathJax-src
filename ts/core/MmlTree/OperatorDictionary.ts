@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,19 +16,19 @@
  */
 
 /**
- * @fileoverview  Defines the operator dictionary structure
+ * @file  Defines the operator dictionary structure
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../Tree/Node.js';
-import {TEXCLASS} from './MmlNode.js';
+import { PropertyList } from '../Tree/Node.js';
+import { TEXCLASS } from './MmlNode.js';
 
 /**
  * Types needed for the operator dictionary
  */
 export type OperatorDef = [number, number, number, PropertyList];
-export type OperatorList = {[name: string]: OperatorDef};
+export type OperatorList = { [name: string]: OperatorDef };
 export type RangeDef = [number, number, number, string, string?];
 
 /**
@@ -36,110 +36,131 @@ export type RangeDef = [number, number, number, string, string?];
  * @param {number} rspace            The operator's MathML right-hand spacing
  * @param {number} texClass          The default TeX class for the operator
  * @param {PropertyList} properties  Any default properties from the operator dictionary
- * @return {OperatorDef}             The operator definition array
+ * @returns {OperatorDef}             The operator definition array
  */
-export function OPDEF(lspace: number, rspace: number, texClass: number = TEXCLASS.BIN,
-                      properties: PropertyList = null): OperatorDef {
-                        return [lspace, rspace, texClass, properties] as OperatorDef;
-                      }
+export function OPDEF(
+  lspace: number,
+  rspace: number,
+  texClass: number = TEXCLASS.BIN,
+  properties: PropertyList = null
+): OperatorDef {
+  return [lspace, rspace, texClass, properties] as OperatorDef;
+}
 
 /**
  *  The various kinds of operators in the dictionary
  */
 export const MO = {
-  ORD:        OPDEF(0, 0, TEXCLASS.ORD),
-  ORD11:      OPDEF(1, 1, TEXCLASS.ORD),
-  ORD21:      OPDEF(2, 1, TEXCLASS.ORD),
-  ORD02:      OPDEF(0, 2, TEXCLASS.ORD),
-  ORD55:      OPDEF(5, 5, TEXCLASS.ORD),
-  NONE:       OPDEF(0, 0, TEXCLASS.NONE),
-  OP:         OPDEF(1, 2, TEXCLASS.OP, {largeop: true, movablelimits: true, symmetric: true}),
-  OPFIXED:    OPDEF(1, 2, TEXCLASS.OP, {largeop: true, movablelimits: true}),
-  INTEGRAL:   OPDEF(0, 1, TEXCLASS.OP, {largeop: true, symmetric: true}),
-  INTEGRAL2:  OPDEF(1, 2, TEXCLASS.OP, {largeop: true, symmetric: true}),
-  BIN3:       OPDEF(3, 3, TEXCLASS.BIN),
-  BIN4:       OPDEF(4, 4, TEXCLASS.BIN),
-  BIN01:      OPDEF(0, 1, TEXCLASS.BIN),
-  BIN5:       OPDEF(5, 5, TEXCLASS.BIN),
-  TALLBIN:    OPDEF(4, 4, TEXCLASS.BIN, {stretchy: true}),
-  BINOP:      OPDEF(4, 4, TEXCLASS.BIN, {largeop: true, movablelimits: true}),
-  REL:        OPDEF(5, 5, TEXCLASS.REL),
-  REL1:       OPDEF(1, 1, TEXCLASS.REL, {stretchy: true}),
-  REL4:       OPDEF(4, 4, TEXCLASS.REL),
-  RELSTRETCH: OPDEF(5, 5, TEXCLASS.REL, {stretchy: true}),
-  RELACCENT:  OPDEF(5, 5, TEXCLASS.REL, {accent: true}),
-  WIDEREL:    OPDEF(5, 5, TEXCLASS.REL, {accent: true, stretchy: true}),
-  OPEN:       OPDEF(0, 0, TEXCLASS.OPEN, {fence: true, stretchy: true, symmetric: true}),
-  CLOSE:      OPDEF(0, 0, TEXCLASS.CLOSE, {fence: true, stretchy: true, symmetric: true}),
-  INNER:      OPDEF(0, 0, TEXCLASS.INNER),
-  PUNCT:      OPDEF(0, 3, TEXCLASS.PUNCT),
-  ACCENT:     OPDEF(0, 0, TEXCLASS.ORD, {accent: true}),
-  WIDEACCENT: OPDEF(0, 0, TEXCLASS.ORD, {accent: true, stretchy: true})
+  ORD: OPDEF(0, 0, TEXCLASS.ORD),
+  ORD11: OPDEF(1, 1, TEXCLASS.ORD),
+  ORD21: OPDEF(2, 1, TEXCLASS.ORD),
+  ORD02: OPDEF(0, 2, TEXCLASS.ORD),
+  ORD55: OPDEF(5, 5, TEXCLASS.ORD),
+  NONE: OPDEF(0, 0, TEXCLASS.NONE),
+  OP: OPDEF(1, 2, TEXCLASS.OP, {
+    largeop: true,
+    movablelimits: true,
+    symmetric: true,
+  }),
+  OPFIXED: OPDEF(1, 2, TEXCLASS.OP, { largeop: true, movablelimits: true }),
+  INTEGRAL: OPDEF(0, 1, TEXCLASS.OP, { largeop: true, symmetric: true }),
+  INTEGRAL2: OPDEF(1, 2, TEXCLASS.OP, { largeop: true, symmetric: true }),
+  BIN3: OPDEF(3, 3, TEXCLASS.BIN),
+  BIN4: OPDEF(4, 4, TEXCLASS.BIN),
+  BIN01: OPDEF(0, 1, TEXCLASS.BIN),
+  BIN5: OPDEF(5, 5, TEXCLASS.BIN),
+  TALLBIN: OPDEF(4, 4, TEXCLASS.BIN, { stretchy: true }),
+  BINOP: OPDEF(4, 4, TEXCLASS.BIN, { largeop: true, movablelimits: true }),
+  REL: OPDEF(5, 5, TEXCLASS.REL),
+  REL1: OPDEF(1, 1, TEXCLASS.REL, { stretchy: true }),
+  REL4: OPDEF(4, 4, TEXCLASS.REL),
+  RELSTRETCH: OPDEF(5, 5, TEXCLASS.REL, { stretchy: true }),
+  RELACCENT: OPDEF(5, 5, TEXCLASS.REL, { accent: true }),
+  WIDEREL: OPDEF(5, 5, TEXCLASS.REL, { accent: true, stretchy: true }),
+  OPEN: OPDEF(0, 0, TEXCLASS.OPEN, {
+    fence: true,
+    stretchy: true,
+    symmetric: true,
+  }),
+  CLOSE: OPDEF(0, 0, TEXCLASS.CLOSE, {
+    fence: true,
+    stretchy: true,
+    symmetric: true,
+  }),
+  INNER: OPDEF(0, 0, TEXCLASS.INNER),
+  PUNCT: OPDEF(0, 3, TEXCLASS.PUNCT),
+  ACCENT: OPDEF(0, 0, TEXCLASS.ORD, { accent: true }),
+  WIDEACCENT: OPDEF(0, 0, TEXCLASS.ORD, { accent: true, stretchy: true }),
 };
 
 /**
  *  The default TeX classes for the various unicode blocks, and their names
  */
 export const RANGES: RangeDef[] = [
-  [0x0020, 0x007F, TEXCLASS.REL, 'mo'], // Basic Latin
-  [0x00A0, 0x00BF, TEXCLASS.ORD, 'mo'], // Latin-1 Supplement symbols
-  [0x00C0, 0x024F, TEXCLASS.ORD, 'mi'], // Latin-1 Supplement, Latin Extended-A, Latin Extended-B
-  [0x02B0, 0x036F, TEXCLASS.ORD, 'mo'], // Spacing modifier letters, Combining Diacritical Marks
-  [0x0370, 0x1A20, TEXCLASS.ORD, 'mi'], // Greek and Coptic (through) Tai Tham
-  [0x1AB0, 0x1AFF, TEXCLASS.ORD, 'mo'], // Combining Diacritical Marks Extended
-  [0x1B00, 0x1DBF, TEXCLASS.ORD, 'mi'], // Balinese (through) Phonetic Extensions Supplement
-  [0x1DC0, 0x1DFF, TEXCLASS.ORD, 'mo'], // Combining Diacritical Marks Supplement
-  [0x1E00, 0x1FFF, TEXCLASS.ORD, 'mi'], // Latin Extended Additional, Greek Extended
-  [0x2000, 0x206F, TEXCLASS.ORD, 'mo'], // General Punctuation
-  [0x2070, 0x209F, TEXCLASS.ORD, 'mo'], // Superscript and Subscripts (through) Combining Diacritical Marks for Symbols
-  [0x2100, 0x214F, TEXCLASS.ORD, 'mi'], // Letterlike Symbols
-  [0x2150, 0x218F, TEXCLASS.ORD, 'mn'], // Number Forms
-  [0x2190, 0x21FF, TEXCLASS.REL, 'mo'], // Arrows
-  [0x2200, 0x22FF, TEXCLASS.BIN, 'mo'], // Mathematical Operators
-  [0x2300, 0x23FF, TEXCLASS.ORD, 'mo'], // Miscellaneous Technical
-  [0x2460, 0x24FF, TEXCLASS.ORD, 'mn'], // Enclosed Alphanumerics
-  [0x2500, 0x27EF, TEXCLASS.ORD, 'mo'], // Box Drawing (though) Miscellaneous Math Symbols-A
-  [0x27F0, 0x27FF, TEXCLASS.REL, 'mo'], // Supplemental Arrows-A
-  [0x2800, 0x28FF, TEXCLASS.ORD, 'mtext'], // Braille Patterns
-  [0x2900, 0x297F, TEXCLASS.REL, 'mo'], // Supplemental Arrows-B
-  [0x2980, 0x29FF, TEXCLASS.ORD, 'mo'], // Miscellaneous Math Symbols-B
-  [0x2A00, 0x2AFF, TEXCLASS.BIN, 'mo'], // Supplemental Math Operators
-  [0x2B00, 0x2B2F, TEXCLASS.ORD, 'mo'], // Miscellaneous Symbols and Arrows
-  [0x2B30, 0x2B4F, TEXCLASS.REL, 'mo'], //   Arrows from above
-  [0x2B50, 0x2BFF, TEXCLASS.ORD, 'mo'], //   Rest of above
-  [0x2C00, 0x2DE0, TEXCLASS.ORD, 'mi'], // Glagolitic (through) Ethipoc Extended
-  [0x2E00, 0x2E7F, TEXCLASS.ORD, 'mo'], // Supplemental Punctuation
-  [0x2E80, 0x2FDF, TEXCLASS.ORD, 'mi', 'normal'], // CJK Radicals Supplement (through) Kangxi Radicals
-  [0x2FF0, 0x303F, TEXCLASS.ORD, 'mo'], // Ideographic Desc. Characters, CJK Symbols and Punctuation
-  [0x3040, 0xA49F, TEXCLASS.ORD, 'mi', 'normal'], // Hiragana (through) Yi Radicals
-  [0xA4D0, 0xA82F, TEXCLASS.ORD, 'mi'], // Lisu (through) Syloti Nagri
-  [0xA830, 0xA83F, TEXCLASS.ORD, 'mn'], // Common Indic Number FormsArabic Presentation Forms-A
-  [0xA840, 0xD7FF, TEXCLASS.ORD, 'mi'], // Phags-pa (though) Hangul Jamo Extended-B
-  [0xF900, 0xFAFF, TEXCLASS.ORD, 'mi', 'normal'], // CJK Compatibility Ideographs
-  [0xFB00, 0xFDFF, TEXCLASS.ORD, 'mi'], // Alphabetic Presentation Forms (though) Arabic Presentation Forms-A
-  [0xFE00, 0xFE6F, TEXCLASS.ORD, 'mo'], // Variation Selector (through) Small Form Variants
-  [0xFE70, 0x100FF, TEXCLASS.ORD, 'mi'], // Arabic Presentation Forms-B (through) Linear B Ideograms
-  [0x10100, 0x1018F, TEXCLASS.ORD, 'mn'], // Aegean Numbers, Ancient Greek Numbers
-  [0x10190, 0x123FF, TEXCLASS.ORD, 'mi', 'normal'], // Ancient Symbols (through) Cuneiform
-  [0x12400, 0x1247F, TEXCLASS.ORD, 'mn'], // Cuneiform Numbers and Punctuation
-  [0x12480, 0x1BC9F, TEXCLASS.ORD, 'mi', 'normal'], // Early Dynastic Cuneiform (through) Duployan
-  [0x1BCA0, 0x1D25F, TEXCLASS.ORD, 'mo'], // Shorthand Format Controls (through) TaiXuan Jing Symbols
-  [0x1D360, 0x1D37F, TEXCLASS.ORD, 'mn'], // Counting Rod Numerals
-  [0x1D400, 0x1D7CD, TEXCLASS.ORD, 'mi'], // Math Alphanumeric Symbols
-  [0x1D7CE, 0x1D7FF, TEXCLASS.ORD, 'mn'], //   Numerals from above
-  [0x1DF00, 0x1F7FF, TEXCLASS.ORD, 'mo'], // Mahjong Tiles (through) Geometric Shapes Extended
-  [0x1F800, 0x1F8FF, TEXCLASS.REL, 'mo'], // Supplemental Arrows-C
-  [0x1F900, 0x1F9FF, TEXCLASS.ORD, 'mo'], // Supplemental Symbols and Pictographs
-  [0x20000, 0x2FA1F, TEXCLASS.ORD, 'mi', 'normnal'], // CJK Unified Ideographs Ext. B (through) CJK Sompatibility Ideographs Supp.
+  [0x0020, 0x007f, TEXCLASS.REL, 'mo'], // Basic Latin
+  [0x00a0, 0x00bf, TEXCLASS.ORD, 'mo'], // Latin-1 Supplement symbols
+  [0x00c0, 0x024f, TEXCLASS.ORD, 'mi'], // Latin-1 Supplement, Latin Extended-A, Latin Extended-B
+  [0x02b0, 0x036f, TEXCLASS.ORD, 'mo'], // Spacing modifier letters, Combining Diacritical Marks
+  [0x0370, 0x1a20, TEXCLASS.ORD, 'mi'], // Greek and Coptic (through) Tai Tham
+  [0x1ab0, 0x1aff, TEXCLASS.ORD, 'mo'], // Combining Diacritical Marks Extended
+  [0x1b00, 0x1dbf, TEXCLASS.ORD, 'mi'], // Balinese (through) Phonetic Extensions Supplement
+  [0x1dc0, 0x1dff, TEXCLASS.ORD, 'mo'], // Combining Diacritical Marks Supplement
+  [0x1e00, 0x1fff, TEXCLASS.ORD, 'mi'], // Latin Extended Additional, Greek Extended
+  [0x2000, 0x206f, TEXCLASS.ORD, 'mo'], // General Punctuation
+  [0x2070, 0x209f, TEXCLASS.ORD, 'mo'], // Superscript and Subscripts (through) Combining Diacritical Marks for Symbols
+  [0x2100, 0x214f, TEXCLASS.ORD, 'mi'], // Letterlike Symbols
+  [0x2150, 0x218f, TEXCLASS.ORD, 'mn'], // Number Forms
+  [0x2190, 0x21ff, TEXCLASS.REL, 'mo'], // Arrows
+  [0x2200, 0x22ff, TEXCLASS.BIN, 'mo'], // Mathematical Operators
+  [0x2300, 0x23ff, TEXCLASS.ORD, 'mo'], // Miscellaneous Technical
+  [0x2460, 0x24ff, TEXCLASS.ORD, 'mn'], // Enclosed Alphanumerics
+  [0x2500, 0x27ef, TEXCLASS.ORD, 'mo'], // Box Drawing (though) Miscellaneous Math Symbols-A
+  [0x27f0, 0x27ff, TEXCLASS.REL, 'mo'], // Supplemental Arrows-A
+  [0x2800, 0x28ff, TEXCLASS.ORD, 'mtext'], // Braille Patterns
+  [0x2900, 0x297f, TEXCLASS.REL, 'mo'], // Supplemental Arrows-B
+  [0x2980, 0x29ff, TEXCLASS.ORD, 'mo'], // Miscellaneous Math Symbols-B
+  [0x2a00, 0x2aff, TEXCLASS.BIN, 'mo'], // Supplemental Math Operators
+  [0x2b00, 0x2b2f, TEXCLASS.ORD, 'mo'], // Miscellaneous Symbols and Arrows
+  [0x2b30, 0x2b4f, TEXCLASS.REL, 'mo'], //   Arrows from above
+  [0x2b50, 0x2bff, TEXCLASS.ORD, 'mo'], //   Rest of above
+  [0x2c00, 0x2de0, TEXCLASS.ORD, 'mi'], // Glagolitic (through) Ethipoc Extended
+  [0x2e00, 0x2e7f, TEXCLASS.ORD, 'mo'], // Supplemental Punctuation
+  [0x2e80, 0x2fdf, TEXCLASS.ORD, 'mi', 'normal'], // CJK Radicals Supplement (through) Kangxi Radicals
+  [0x2ff0, 0x303f, TEXCLASS.ORD, 'mo'], // Ideographic Desc. Characters, CJK Symbols and Punctuation
+  [0x3040, 0xa49f, TEXCLASS.ORD, 'mi', 'normal'], // Hiragana (through) Yi Radicals
+  [0xa4d0, 0xa82f, TEXCLASS.ORD, 'mi'], // Lisu (through) Syloti Nagri
+  [0xa830, 0xa83f, TEXCLASS.ORD, 'mn'], // Common Indic Number FormsArabic Presentation Forms-A
+  [0xa840, 0xd7ff, TEXCLASS.ORD, 'mi'], // Phags-pa (though) Hangul Jamo Extended-B
+  [0xf900, 0xfaff, TEXCLASS.ORD, 'mi', 'normal'], // CJK Compatibility Ideographs
+  [0xfb00, 0xfdff, TEXCLASS.ORD, 'mi'], // Alphabetic Presentation Forms (though) Arabic Presentation Forms-A
+  [0xfe00, 0xfe6f, TEXCLASS.ORD, 'mo'], // Variation Selector (through) Small Form Variants
+  [0xfe70, 0x100ff, TEXCLASS.ORD, 'mi'], // Arabic Presentation Forms-B (through) Linear B Ideograms
+  [0x10100, 0x1018f, TEXCLASS.ORD, 'mn'], // Aegean Numbers, Ancient Greek Numbers
+  [0x10190, 0x123ff, TEXCLASS.ORD, 'mi', 'normal'], // Ancient Symbols (through) Cuneiform
+  [0x12400, 0x1247f, TEXCLASS.ORD, 'mn'], // Cuneiform Numbers and Punctuation
+  [0x12480, 0x1bc9f, TEXCLASS.ORD, 'mi', 'normal'], // Early Dynastic Cuneiform (through) Duployan
+  [0x1bca0, 0x1d25f, TEXCLASS.ORD, 'mo'], // Shorthand Format Controls (through) TaiXuan Jing Symbols
+  [0x1d360, 0x1d37f, TEXCLASS.ORD, 'mn'], // Counting Rod Numerals
+  [0x1d400, 0x1d7cd, TEXCLASS.ORD, 'mi'], // Math Alphanumeric Symbols
+  [0x1d7ce, 0x1d7ff, TEXCLASS.ORD, 'mn'], //   Numerals from above
+  [0x1df00, 0x1f7ff, TEXCLASS.ORD, 'mo'], // Mahjong Tiles (through) Geometric Shapes Extended
+  [0x1f800, 0x1f8ff, TEXCLASS.REL, 'mo'], // Supplemental Arrows-C
+  [0x1f900, 0x1f9ff, TEXCLASS.ORD, 'mo'], // Supplemental Symbols and Pictographs
+  [0x20000, 0x2fa1f, TEXCLASS.ORD, 'mi', 'normal'], // CJK Unified Ideographs Ext. B (through) CJK Sompatibility Ideographs Supp.
 ];
 
 /**
  * Get the Unicode range for the first character of a string
  *
- * @param {string} text      The character to check
- * @return {RangeDef|null}   The range containing that character, or null
+ * @param {string} text   The character to check
+ * @returns {RangeDef}     The range containing that character, or null
  */
-export function getRange(text: string): RangeDef | null {
+export function getRange(text: string): RangeDef {
+  const def =
+    OPTABLE.infix[text] || OPTABLE.prefix[text] || OPTABLE.postfix[text];
+  if (def) {
+    return [0, 0, def[2], 'mo'];
+  }
   const n = text.codePointAt(0);
   for (const range of RANGES) {
     if (n <= range[1]) {
@@ -149,25 +170,26 @@ export function getRange(text: string): RangeDef | null {
       break;
     }
   }
-  return null;
+  return [0, 0, TEXCLASS.REL, 'mo'];
 }
 
 /**
  * The default MathML spacing for the various TeX classes.
  */
 export const MMLSPACING = [
-  [0, 0],  // ORD
-  [1, 2],  // OP
-  [3, 3],  // BIN
-  [4, 4],  // REL
-  [0, 0],  // OPEN
-  [0, 0],  // CLOSE
-  [0, 3]   // PUNCT
+  [0, 0], // ORD
+  [1, 2], // OP
+  [3, 3], // BIN
+  [4, 4], // REL
+  [0, 0], // OPEN
+  [0, 0], // CLOSE
+  [0, 3], // PUNCT
 ];
 
 /**
  *  The operator dictionary, with sections for the three forms:  prefix, postfix, and infix
  */
+/* prettier-ignore */
 export const OPTABLE: {[form: string]: OperatorList} = {
   prefix: {
     '(': MO.OPEN,            // left parenthesis
@@ -321,13 +343,13 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u201E': MO.ACCENT,     // double low-9 quotation mark
     '\u201F': MO.ACCENT,     // double high-reversed-9 quotation mark
     '\u2032': MO.ORD,        // prime
-    '\u2033': MO.ACCENT,     // double prime
-    '\u2034': MO.ACCENT,     // triple prime
-    '\u2035': MO.ACCENT,     // reversed prime
-    '\u2036': MO.ACCENT,     // reversed double prime
-    '\u2037': MO.ACCENT,     // reversed triple prime
+    '\u2033': MO.ORD,        // double prime
+    '\u2034': MO.ORD,        // triple prime
+    '\u2035': MO.ORD,        // reversed prime
+    '\u2036': MO.ORD,        // reversed double prime
+    '\u2037': MO.ORD,        // reversed triple prime
     '\u203E': MO.WIDEACCENT, // overline
-    '\u2057': MO.ACCENT,     // quadruple prime
+    '\u2057': MO.ORD,        // quadruple prime
     '\u20DB': MO.ACCENT,     // combining three dots above
     '\u20DC': MO.ACCENT,     // combining four dots above
     '\u2309': MO.CLOSE,      // right ceiling
@@ -412,7 +434,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '-': MO.BIN4,            // hyphen-minus
     '-=': MO.BIN4,           // multiple character operator: -=
     '->': MO.BIN5,           // multiple character operator: ->
-    '.': [0, 3, TEXCLASS.PUNCT, {separator: true}], // \ldotp
+    '.': [0, 3, TEXCLASS.PUNCT, {linebreakstyle: 'after', separator: true}], // \ldotp
     '/': MO.ORD11,           // solidus
     '//': OPDEF(1, 1),       // multiple character operator: //
     '/=': MO.BIN4,           // multiple character operator: /=

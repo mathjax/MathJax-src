@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,24 +16,16 @@
  */
 
 /**
- * @fileoverview  Chooses between jdsom and browser DOM adaptors
+ * @file  Chooses between jdsom and browser DOM adaptors
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {liteAdaptor} from './liteAdaptor.js';
-import {browserAdaptor} from './browserAdaptor.js';
-
-let choose;
-
-try {
-  document;  // errors if not in browser
-  choose = browserAdaptor;
-} catch (e) {
-  choose = liteAdaptor;
-}
+import { liteAdaptor } from './liteAdaptor.js';
+import { browserAdaptor } from './browserAdaptor.js';
+import { context } from '../util/context.js';
 
 /**
- * Function to select which adaptor to use (depending on whether we are in a browser or node.js)
+ *  Select which adaptor to use (depending on whether we are in a browser or node.js)
  */
-export const chooseAdaptor = choose;
+export const chooseAdaptor = context.document ? browserAdaptor : liteAdaptor;

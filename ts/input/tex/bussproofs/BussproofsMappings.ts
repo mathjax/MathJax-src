@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,71 +15,68 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Mappings for TeX parsing for Bussproofs package commands.
+ * @file Mappings for TeX parsing for Bussproofs package commands.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
 import BussproofsMethods from './BussproofsMethods.js';
 import ParseMethods from '../ParseMethods.js';
-import {CommandMap, EnvironmentMap} from '../SymbolMap.js';
-
+import { CommandMap, EnvironmentMap } from '../TokenMap.js';
 
 /**
  * Macros for bussproofs etc.
  */
 new CommandMap('Bussproofs-macros', {
-  AxiomC:           'Axiom',
-  UnaryInfC:        ['Inference', 1],
-  BinaryInfC:       ['Inference', 2],
-  TrinaryInfC:      ['Inference', 3],
-  QuaternaryInfC:   ['Inference', 4],
-  QuinaryInfC:      ['Inference', 5],
-  RightLabel:       ['Label', 'right'],
-  LeftLabel:        ['Label', 'left'],
+  AxiomC: BussproofsMethods.Axiom,
+  UnaryInfC: [BussproofsMethods.Inference, 1],
+  BinaryInfC: [BussproofsMethods.Inference, 2],
+  TrinaryInfC: [BussproofsMethods.Inference, 3],
+  QuaternaryInfC: [BussproofsMethods.Inference, 4],
+  QuinaryInfC: [BussproofsMethods.Inference, 5],
+  RightLabel: [BussproofsMethods.Label, 'right'],
+  LeftLabel: [BussproofsMethods.Label, 'left'],
   // Abbreviations are automatically enabled
-  AXC:              'Axiom',
-  UIC:              ['Inference', 1],
-  BIC:              ['Inference', 2],
-  TIC:              ['Inference', 3],
-  RL:               ['Label', 'right'],
-  LL:               ['Label', 'left'],
+  AXC: BussproofsMethods.Axiom,
+  UIC: [BussproofsMethods.Inference, 1],
+  BIC: [BussproofsMethods.Inference, 2],
+  TIC: [BussproofsMethods.Inference, 3],
+  RL: [BussproofsMethods.Label, 'right'],
+  LL: [BussproofsMethods.Label, 'left'],
 
-  noLine:           ['SetLine', 'none', false],
-  singleLine:       ['SetLine', 'solid', false],
-  solidLine:        ['SetLine', 'solid', false],
-  dashedLine:       ['SetLine', 'dashed', false],
+  noLine: [BussproofsMethods.SetLine, 'none', false],
+  singleLine: [BussproofsMethods.SetLine, 'solid', false],
+  solidLine: [BussproofsMethods.SetLine, 'solid', false],
+  dashedLine: [BussproofsMethods.SetLine, 'dashed', false],
   // Not yet implemented in CSS!
-  // doubleLine:       ['SetLine', 'double', false],
-  // dottedLine:       ['SetLine', 'dotted', false],
+  // doubleLine:       [BussproofsMethods.SetLine, 'double', false],
+  // dottedLine:       [BussproofsMethods.SetLine, 'dotted', false],
 
-  alwaysNoLine:           ['SetLine', 'none', true],
-  alwaysSingleLine:       ['SetLine', 'solid', true],
-  alwaysSolidLine:        ['SetLine', 'solid', true],
-  alwaysDashedLine:       ['SetLine', 'dashed', true],
+  alwaysNoLine: [BussproofsMethods.SetLine, 'none', true],
+  alwaysSingleLine: [BussproofsMethods.SetLine, 'solid', true],
+  alwaysSolidLine: [BussproofsMethods.SetLine, 'solid', true],
+  alwaysDashedLine: [BussproofsMethods.SetLine, 'dashed', true],
   // Not yet implemented in CSS!
-  // alwaysDoubleLine:       ['SetLine', 'double', true],
-  // alwaysDottedLine:       ['SetLine', 'dotted', true],
+  // alwaysDoubleLine:       [BussproofsMethods.SetLine, 'double', true],
+  // alwaysDottedLine:       [BussproofsMethods.SetLine, 'dotted', true],
 
-  rootAtTop: ['RootAtTop', true],
-  alwaysRootAtTop: ['RootAtTop', true],
+  rootAtTop: [BussproofsMethods.RootAtTop, true],
+  alwaysRootAtTop: [BussproofsMethods.RootAtTop, true],
 
-  rootAtBottom: ['RootAtTop', false],
-  alwaysRootAtBottom: ['RootAtTop', false],
+  rootAtBottom: [BussproofsMethods.RootAtTop, false],
+  alwaysRootAtBottom: [BussproofsMethods.RootAtTop, false],
   // TODO: always commands should be persistent.
 
-  fCenter:         'FCenter',
-  Axiom:           'AxiomF',
-  UnaryInf:        ['InferenceF', 1],
-  BinaryInf:        ['InferenceF', 2],
-  TrinaryInf:        ['InferenceF', 3],
-  QuaternaryInf:        ['InferenceF', 4],
-  QuinaryInf:        ['InferenceF', 5]
-}, BussproofsMethods);
-
+  fCenter: BussproofsMethods.FCenter,
+  Axiom: BussproofsMethods.AxiomF,
+  UnaryInf: [BussproofsMethods.InferenceF, 1],
+  BinaryInf: [BussproofsMethods.InferenceF, 2],
+  TrinaryInf: [BussproofsMethods.InferenceF, 3],
+  QuaternaryInf: [BussproofsMethods.InferenceF, 4],
+  QuinaryInf: [BussproofsMethods.InferenceF, 5],
+});
 
 new EnvironmentMap('Bussproofs-environments', ParseMethods.environment, {
-  prooftree:        ['Prooftree', null, false]
-}, BussproofsMethods);
+  prooftree: [BussproofsMethods.Prooftree, null, false],
+});

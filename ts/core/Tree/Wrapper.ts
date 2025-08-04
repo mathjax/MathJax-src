@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview Generic Wrapper class for adding methods to a Node class for visitors
+ * @file Generic Wrapper class for adding methods to a Node class for visitors
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node} from './Node.js';
-import {WrapperFactory} from './WrapperFactory.js';
+import { Node, NodeClass } from './Node.js';
+import { WrapperFactory } from './WrapperFactory.js';
 
 /*********************************************************/
 /**
@@ -31,18 +31,43 @@ import {WrapperFactory} from './WrapperFactory.js';
  *  It points to a Node object.  Subclasses add methods for the visitor to call.
  *
  * @template N  The Node type being wrapped
+ * @template C  The NodeClass for the nodes being created
  * @template W  The Wrapper type being produced
  */
-export interface Wrapper<N extends Node, W extends Wrapper<N, W>> {
-  node: N;
+export interface Wrapper<
+  N extends Node<N, C>,
+  C extends NodeClass<N, C>,
+  W extends Wrapper<N, C, W>,
+> {
+  /**
+   * The kind of this wrapper
+   */
   readonly kind: string;
 
   /**
-   * @param {Node} node  A node to be wrapped
-   * @param {any[]} args  Any additional arguments needed when creating the wrapper
-   * @return {Wrapper}   The wrapped node
+   * The Node object associated with this instance
    */
-  wrap(node: N, ...args: any[]): W;
+  node: N;
+
+  /**
+   * The wrapped child nodes for the wrapped node
+   */
+  childNodes: W[];
+
+  /**
+   * @template T   The class to use for the wrapped node (defaults to W)
+   *
+   * @param {Node} node   A node to be wrapped
+   * @param {any[]} args  Any additional arguments needed when creating the wrapper
+   * @returns {T}         The wrapped node
+   */
+  wrap<T extends W = W>(node: N, ...args: any[]): T;
+
+  /**
+   * @param {Function} func  A function to apply to each wrapper in the tree rooted at this node
+   * @param {any} data       Data to pass to the function (as state information)
+   */
+  walkTree(func: (node: W, data?: any) => void, data?: any): void;
 }
 
 /*********************************************************/
@@ -50,16 +75,25 @@ export interface Wrapper<N extends Node, W extends Wrapper<N, W>> {
  *  The Wrapper class interface
  *
  * @template N  The Node type being wrapped
+ * @template C  The NodeClass for the nodes being created
  * @template W  The Wrapper type being produced
  */
-export interface WrapperClass<N extends Node, W extends Wrapper<N, W>> {
+export interface WrapperClass<
+  N extends Node<N, C>,
+  C extends NodeClass<N, C>,
+  W extends Wrapper<N, C, W>,
+> {
   /**
    * @param {WrapperFactory} factory  The factory used to create more wrappers
    * @param {N} node  The node to be wrapped
    * @param {any[]} args  Any additional arguments needed when creating the wrapper
-   * @return {W}  The wrapped node
+   * @returns {W}  The wrapped node
    */
-  new(factory: WrapperFactory<N, W, WrapperClass<N, W>>, node: N, ...args: any[]): W;
+  new (
+    factory: WrapperFactory<N, C, W, WrapperClass<N, C, W>>,
+    node: N,
+    ...args: any[]
+  ): W;
 }
 
 /*********************************************************/
@@ -67,21 +101,32 @@ export interface WrapperClass<N extends Node, W extends Wrapper<N, W>> {
  *  The abstract Wrapper class
  *
  * @template N  The Node type being created by the factory
+ * @template C  The NodeClass for the nodes being created
  * @template W  The Wrapper type being produced
  */
-export class AbstractWrapper<N extends Node, W extends Wrapper<N, W>> implements Wrapper<N, W> {
+export class AbstractWrapper<
+  N extends Node<N, C>,
+  C extends NodeClass<N, C>,
+  W extends Wrapper<N, C, W>,
+> implements Wrapper<N, C, W>
+{
   /**
-   * The Node object associated with this instance
+   * @override
    */
   public node: N;
 
   /**
-   * The WrapperFactory to use to wrap child nodes, as needed
+   * @override
    */
-  protected factory: WrapperFactory<N, W, WrapperClass<N, W>>;
+  public childNodes: W[];
 
   /**
-   * The kind of this wrapper
+   * The WrapperFactory to use to wrap child nodes, as needed
+   */
+  protected factory: WrapperFactory<N, C, W, WrapperClass<N, C, W>>;
+
+  /**
+   * @override
    */
   get kind() {
     return this.node.kind;
@@ -91,10 +136,13 @@ export class AbstractWrapper<N extends Node, W extends Wrapper<N, W>> implements
    * @param {WrapperFactory} factory  The WrapperFactory to use to wrap child nodes when needed
    * @param {Node} node               The node to wrap
    *
-   * @constructor
+   * @class
    * @implements {Wrapper}
    */
-  constructor(factory: WrapperFactory<N, W, WrapperClass<N, W>>, node: N) {
+  constructor(
+    factory: WrapperFactory<N, C, W, WrapperClass<N, C, W>>,
+    node: N
+  ) {
     this.factory = factory;
     this.node = node;
   }
@@ -102,8 +150,22 @@ export class AbstractWrapper<N extends Node, W extends Wrapper<N, W>> implements
   /**
    * @override
    */
-  public wrap(node: N) {
-    return this.factory.wrap(node);
+  public wrap<T extends W = W>(node: N) {
+    return this.factory.wrap(node) as T;
   }
 
+  /**
+   * @override
+   */
+  public walkTree(func: (node: W, data?: any) => void, data?: any) {
+    func(this as any as W, data);
+    if ('childNodes' in this) {
+      for (const child of this.childNodes) {
+        if (child) {
+          child.walkTree(func, data);
+        }
+      }
+    }
+    return data;
+  }
 }

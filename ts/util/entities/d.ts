@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     DD: '\u2145',
     DDotrahd: '\u2911',
     DJcy: '\u0402',
@@ -102,5 +103,7 @@ Entities.add({
     duhar: '\u296F',
     dwangle: '\u29A6',
     dzcy: '\u045F',
-    dzigrarr: '\u27FF'
-}, 'd');
+    dzigrarr: '\u27FF',
+  },
+  'd'
+);

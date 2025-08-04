@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     GJcy: '\u0403',
     GT: '\u003E',
     Gammad: '\u03DC',
@@ -73,5 +74,7 @@ Entities.add({
     gtrless: '\u2277',
     gtrsim: '\u2273',
     gvertneqq: '\u2269\uFE00',
-    gvnE: '\u2269\uFE00'
-}, 'g');
+    gvnE: '\u2269\uFE00',
+  },
+  'g'
+);

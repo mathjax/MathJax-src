@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,21 +16,60 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMglyph wrapper mixin for the MmlMglyph object
+ * @file  Implements the CommonMglyph wrapper mixin for the MmlMglyph object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {CommonTextNode} from './TextNode.js';
-import {TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {BBox} from '../../../util/BBox.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { CommonTextNode } from './TextNode.js';
+import { MmlNode, TextNode } from '../../../core/MmlTree/MmlNode.js';
+import { BBox } from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
  * The CommonMglyph interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMglyph extends AnyWrapper {
+export interface CommonMglyph<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
   /**
    * The image's width converted to em's
    */
@@ -47,7 +86,7 @@ export interface CommonMglyph extends AnyWrapper {
   /**
    * TextNode used for deprecated fontfamily/index use case
    */
-  charWrapper: CommonTextNode;
+  charWrapper: CommonTextNode<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
 
   /**
    * Obtain the width, height, and valign.
@@ -60,20 +99,78 @@ export interface CommonMglyph extends AnyWrapper {
 }
 
 /**
- * Shorthand for the CommonMglyph constructor
+ * The CommonMglyphClass interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type MglyphConstructor = Constructor<CommonMglyph>;
+export interface CommonMglyphClass<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMglyph wrapper mixin for the MmlMglyph object
  *
- * @template T  The Wrapper class constructor type
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
-export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): MglyphConstructor & T {
-
-  return class extends Base {
-
+export function CommonMglyphMixin<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMglyphMixin
+    extends Base
+    implements CommonMglyph<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -90,14 +187,16 @@ export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): Mglyph
     /**
      * @override
      */
-    public charWrapper: CommonTextNode;
+    /* prettier-ignore */
+    public charWrapper:
+      CommonTextNode<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
 
     /**
      * @override
-     * @constructor
+     * @class
      */
-    constructor(...args: any[]) {
-      super(...args);
+    constructor(factory: WF, node: MmlNode, parent: WW = null) {
+      super(factory, node, parent);
       this.getParameters();
     }
 
@@ -105,17 +204,25 @@ export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): Mglyph
      * @override
      */
     public getParameters() {
-      const {width, height, valign, src, index} =
-        this.node.attributes.getList('width', 'height', 'valign', 'src', 'index');
+      const { width, height, valign, src, index } =
+        this.node.attributes.getList(
+          'width',
+          'height',
+          'valign',
+          'src',
+          'index'
+        );
       if (src) {
-        this.width = (width === 'auto' ? 1 : this.length2em(width));
-        this.height = (height === 'auto' ? 1 : this.length2em(height));
+        this.width = width === 'auto' ? 1 : this.length2em(width);
+        this.height = height === 'auto' ? 1 : this.length2em(height);
         this.valign = this.length2em(valign || '0');
       } else {
         const text = String.fromCodePoint(parseInt(index as string));
         const mmlFactory = this.node.factory;
-        this.charWrapper = this.wrap((mmlFactory.create('text') as TextNode).setText(text));
-        this.charWrapper.parent = this as any as AnyWrapper;
+        this.charWrapper = this.wrap(
+          (mmlFactory.create('text') as TextNode).setText(text)
+        );
+        this.charWrapper.parent = this as any as WW;
       }
     }
 
@@ -131,7 +238,5 @@ export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): Mglyph
         bbox.d = -this.valign;
       }
     }
-
-  };
-
+  } as any as B;
 }

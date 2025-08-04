@@ -1,0 +1,12 @@
+{
+  "type": "commonjs",
+  "imports": {
+    "#js/*": "@mathjax/src/cjs/*",
+    "#source/*": "@mathjax/src/components/cjs/*",
+    "#root/*": "@mathjax/src/cjs/components/cjs/*",
+    "#menu/*": "mj-context-menu/cjs/*",
+    "#sre/*": "speech-rule-engine/cjs/*",
+    "#mhchem/*": "mhchemparser/dist/*",
+    "#default-font/*": "@mathjax/mathjax-newcm-font/cjs/*"
+  }
+}

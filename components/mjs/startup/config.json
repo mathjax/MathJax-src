@@ -1,0 +1,14 @@
+{
+  "build": {
+    "component": "startup",
+    "targets": [
+      "components/loader.ts",
+      "components/package.ts",
+      "components/startup.ts"
+    ],
+    "excludeSubdirs": true
+  },
+  "webpack": {
+    "name": "startup"
+  }
+}

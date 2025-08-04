@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,14 +16,15 @@
  */
 
 /**
- * @fileoverview  Implements the HTMLMathItem class
+ * @file  Implements the HTMLMathItem class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractMathItem, Location, STATE} from '../../core/MathItem.js';
-import {InputJax} from '../../core/InputJax.js';
-import {HTMLDocument} from './HTMLDocument.js';
+import { AbstractMathItem, Location, STATE } from '../../core/MathItem.js';
+import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+import { InputJax } from '../../core/InputJax.js';
+import { HTMLDocument } from './HTMLDocument.js';
 
 /*****************************************************************/
 /**
@@ -34,20 +35,23 @@ import {HTMLDocument} from './HTMLDocument.js';
  * @template D  The Document class
  */
 export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
-
   /**
-   * Easy access to DOM adaptor
+   * @returns {DOMAdaptor<N, T, D>} Easy access to DOM adaptor
    */
-  get adaptor() {
+  get adaptor(): DOMAdaptor<N, T, D> {
     return this.inputJax.adaptor;
   }
 
   /**
    * @override
    */
-  constructor(math: string, jax: InputJax<N, T, D>, display: boolean = true,
-              start: Location<N, T> = {node: null, n: 0, delim: ''},
-              end: Location<N, T> = {node: null, n: 0, delim: ''}) {
+  constructor(
+    math: string,
+    jax: InputJax<N, T, D>,
+    display: boolean = true,
+    start: Location<N, T> = { node: null, n: 0, delim: '' },
+    end: Location<N, T> = { node: null, n: 0, delim: '' }
+  ) {
     super(math, jax, display, start, end);
   }
 
@@ -70,7 +74,10 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
       if (this.inputJax.processStrings) {
         let node = this.start.node as T;
         if (node === this.end.node) {
-          if (this.end.n && this.end.n < this.adaptor.value(this.end.node).length) {
+          if (
+            this.end.n &&
+            this.end.n < this.adaptor.value(this.end.node).length
+          ) {
             this.adaptor.split(this.end.node, this.end.n);
           }
           if (this.start.n) {
@@ -82,7 +89,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
             node = this.adaptor.split(node, this.start.n);
           }
           while (node !== this.end.node) {
-            let next = this.adaptor.next(node) as T;
+            const next = this.adaptor.next(node) as T;
             this.adaptor.remove(node);
             node = next;
           }
@@ -117,12 +124,13 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
    * @override
    */
   public removeFromDocument(restore: boolean = false) {
+    super.removeFromDocument(restore);
     if (this.state() >= STATE.TYPESET) {
       const adaptor = this.adaptor;
-      let node = this.start.node;
+      const node = this.start.node;
       let math: N | T = adaptor.text('');
       if (restore) {
-        let text = this.start.delim + this.math + this.end.delim;
+        const text = this.start.delim + this.math + this.end.delim;
         if (this.inputJax.processStrings) {
           math = adaptor.text(text);
         } else {
@@ -137,5 +145,4 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
       this.start.n = this.end.n = 0;
     }
   }
-
 }

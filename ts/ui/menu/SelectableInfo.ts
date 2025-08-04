@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2022 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,12 @@
  */
 
 /**
- * @fileoverview  An info box that allows text selection and has copy-to-clipboard functions
+ * @file  An info box that allows text selection and has copy-to-clipboard functions
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Info} from 'mj-context-menu/js/info.js';
-import {HtmlClasses} from 'mj-context-menu/js/html_classes.js';
+import { Info, HtmlClasses } from './mj-context-menu.js';
 
 /*==========================================================================*/
 
@@ -30,20 +29,19 @@ import {HtmlClasses} from 'mj-context-menu/js/html_classes.js';
  * The SelectableInfo class definition
  */
 export class SelectableInfo extends Info {
-
   /**
-   * Add a keypress event to handle "select all" so that only
-   * the info-box's text is selected (not the whole page)
+   * Handle "select all" so that only the info-box's text is selected
+   * (not the whole page)
    *
    * @override
    */
-  public addEvents(element: HTMLElement) {
-    element.addEventListener('keypress', (event: KeyboardEvent) => {
-      if (event.key === 'a' && (event.ctrlKey || event.metaKey)) {
-        this.selectAll();
-        this.stop(event);
-      }
-    });
+  public keydown(event: KeyboardEvent) {
+    if (event.key === 'a' && (event.ctrlKey || event.metaKey)) {
+      this.selectAll();
+      this.stop(event);
+      return;
+    }
+    super.keydown(event);
   }
 
   /**
@@ -51,7 +49,9 @@ export class SelectableInfo extends Info {
    */
   public selectAll() {
     const selection = document.getSelection();
-    selection.selectAllChildren(this.html.querySelector('pre'));
+    selection.selectAllChildren(
+      this.html.querySelector('.CtxtMenu_InfoContent').firstChild
+    );
   }
 
   /**
@@ -62,7 +62,7 @@ export class SelectableInfo extends Info {
     try {
       document.execCommand('copy');
     } catch (err) {
-      alert('Can\'t copy to clipboard: ' + err.message);
+      alert(`Can't copy to clipboard: ${err.message}`);
     }
     document.getSelection().removeAllRanges();
   }
@@ -72,11 +72,14 @@ export class SelectableInfo extends Info {
    */
   public generateHtml() {
     super.generateHtml();
-    const footer = this.html.querySelector('span.' + HtmlClasses['INFOSIGNATURE']);
+    const footer = this.html.querySelector(
+      'span.' + HtmlClasses['INFOSIGNATURE']
+    );
     const button = footer.appendChild(document.createElement('input'));
     button.type = 'button';
     button.value = 'Copy to Clipboard';
-    button.addEventListener('click', (_event: MouseEvent) => this.copyToClipboard());
+    button.addEventListener('click', (_event: MouseEvent) =>
+      this.copyToClipboard()
+    );
   }
-
 }

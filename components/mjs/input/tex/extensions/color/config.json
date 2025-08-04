@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/color",
+    "component": "input/tex/extensions/color",
+    "targets": ["input/tex/color"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/color",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

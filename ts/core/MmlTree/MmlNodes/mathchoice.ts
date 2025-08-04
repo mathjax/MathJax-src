@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MathChoice node
+ * @file  Implements the MathChoice node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlBaseNode, AttributeList } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -33,12 +33,11 @@ import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
  */
 
 export class MathChoice extends AbstractMmlBaseNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlBaseNode.defaults
+    ...AbstractMmlBaseNode.defaults,
   };
 
   /**
@@ -50,6 +49,7 @@ export class MathChoice extends AbstractMmlBaseNode {
 
   /**
    * 4 children (display, text, script, and scriptscript styles)
+   *
    * @override
    */
   public get arity() {
@@ -58,6 +58,7 @@ export class MathChoice extends AbstractMmlBaseNode {
 
   /**
    * This element is not considered a MathML container
+   *
    * @override
    */
   public get notParent() {
@@ -70,11 +71,15 @@ export class MathChoice extends AbstractMmlBaseNode {
    *
    * @override
    */
-  public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-    const selection = (display ? 0 : Math.max(0, Math.min(level, 2)) + 1);
+  public setInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
+    const selection = display ? 0 : Math.max(0, Math.min(level, 2)) + 1;
     const child = this.childNodes[selection] || this.factory.create('mrow');
     this.parent.replaceChild(child, this);
     child.setInheritedAttributes(attributes, display, level, prime);
   }
-
 }

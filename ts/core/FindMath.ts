@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Interfaces and abstract classes for FindMath objects
+ * @file  Interfaces and abstract classes for FindMath objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
-import {ProtoItem} from './MathItem.js';
+import { userOptions, defaultOptions, OptionList } from '../util/Options.js';
+import { ProtoItem } from './MathItem.js';
 
 /*****************************************************************/
 /**
@@ -38,13 +38,13 @@ export interface FindMath<N, T, _D> {
    *   or look through an array of strings for delimited math.
    *
    * @param {N} node   The node to search for math
-   * @return {ProtoItem<N, T>[]}
+   * @returns {ProtoItem<N, T>[]}
    */
   findMath(node: N): ProtoItem<N, T>[];
   /**
    *
    * @param {string[]} strings    The strings to search for math
-   * @return {ProtoItem<N, T>[]}
+   * @returns {ProtoItem<N, T>[]}
    */
   findMath(strings: string[]): ProtoItem<N, T>[];
 }
@@ -60,7 +60,6 @@ export interface FindMath<N, T, _D> {
  * @template D  The Document class
  */
 export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
-
   /**
    * The default options for FindMath
    */
@@ -75,7 +74,7 @@ export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
    * @param {OptionList} options  The user options for this instance
    */
   constructor(options: OptionList) {
-    let CLASS = this.constructor as typeof AbstractFindMath;
+    const CLASS = this.constructor as typeof AbstractFindMath;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
   }
 
@@ -83,8 +82,7 @@ export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
    * Locate math in an Element or a string array;
    *
    * @param {Element | string[]} where  The node or string array to search for math
-   * @return {ProtoItem[]}              The array of proto math items found
+   * @returns {ProtoItem[]}              The array of proto math items found
    */
   public abstract findMath(where: N | string[]): ProtoItem<N, T>[];
-
 }

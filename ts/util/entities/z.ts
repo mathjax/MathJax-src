@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     ZHcy: '\u0416',
     Zacute: '\u0179',
     Zcaron: '\u017D',
@@ -32,5 +33,7 @@ Entities.add({
     zeetrf: '\u2128',
     zhcy: '\u0436',
     zwj: '\u200D',
-    zwnj: '\u200C'
-}, 'z');
+    zwnj: '\u200C',
+  },
+  'z'
+);

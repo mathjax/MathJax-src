@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
  */
 
 /**
- * @fileoverview  Implements the MmlFactory to create Mml Nodes
+ * @file  Implements the MmlFactory to create Mml Nodes
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractNodeFactory} from '../Tree/NodeFactory.js';
-import {MmlNode, MmlNodeClass} from './MmlNode.js';
-import {MML} from './MML.js';
+import { AbstractNodeFactory } from '../Tree/NodeFactory.js';
+import { MmlNode, MmlNodeClass } from './MmlNode.js';
+import { MML } from './MML.js';
 
 /*****************************************************************/
 /**
@@ -31,18 +31,16 @@ import {MML} from './MML.js';
  */
 
 export class MmlFactory extends AbstractNodeFactory<MmlNode, MmlNodeClass> {
-
   /**
    * The default node-creation functions
    */
   public static defaultNodes = MML;
 
   /**
-   * @return {Object}  The list of node-creation functions (similar to the
+   * @returns {object}  The list of node-creation functions (similar to the
    *                   MML object from MathJax v2).
    */
-  get MML(): Object {
+  get MML(): object {
     return this.node;
   }
-
 }

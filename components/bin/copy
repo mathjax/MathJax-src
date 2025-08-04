@@ -2,7 +2,7 @@
 
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,9 +33,26 @@ const path = require('path');
 const INDENT = '  ';
 
 /**
- * The configuration data for the copy operation
+ * The module type to use ('cjs' or 'mjs')
  */
-const config = JSON.parse(fs.readFileSync(process.argv[2] || 'copy.json'));
+const target = (process.argv[2] || 'mjs');
+
+/**
+ * The bundle directory name
+ */
+const bundle = (process.argv[3] || 'bundle');
+
+/**
+ * The configuration data for the copy operation(s)
+ */
+const json = path.resolve(process.argv[4] || '.', 'config.json');
+let configs = require(json).copy;
+if (!configs) process.exit();
+const wd = path.dirname(json);
+process.chdir(wd);
+if (!Array.isArray(configs)) {
+  configs = [configs];
+}
 
 /**
  * Get the directory for node modules (either the parent of the MathJax directory,
@@ -68,11 +85,23 @@ function copyFile(from, to, name, space) {
 }
 
 /**
- * Copy the given files
+ * Handle the copying for a given configuration
+ *
+ * @param {{from: string, to: string, copy: string[]}} config  The configuration for the copy operation
  */
-const wd = process.cwd();
-const to = path.resolve(wd, config.to);
-const from = path.resolve(wd, config.from.replace(/\[node\]/, nodeDir));
-for (const name of config.copy) {
-  copyFile(from, to, name, '');
+function processConfig(config) {
+  const to = path.resolve(wd, config.to.replace(/\/bundle(\/|$)/, '/' + bundle + '$1'));
+  const from = path.resolve(wd, config.from.replace(/\[node\]/, nodeDir));
+  for (const name of config.copy) {
+    copyFile(from, to, name, '');
+  }
 }
+
+/**
+ * Process all the configurations
+ */
+for (const config of configs) {
+  processConfig(config);
+}
+
+

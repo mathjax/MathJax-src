@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMpadded node
+ * @file  Implements the MmlMpadded node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlLayoutNode} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlLayoutNode, TEXCLASS, MmlNode } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,7 +30,6 @@ import {AbstractMmlLayoutNode} from '../MmlNode.js';
  */
 
 export class MmlMpadded extends AbstractMmlLayoutNode {
-
   /**
    * @override
    */
@@ -40,7 +39,7 @@ export class MmlMpadded extends AbstractMmlLayoutNode {
     height: '',
     depth: '',
     lspace: 0,
-    voffset: 0
+    voffset: 0,
   };
 
   /**
@@ -50,4 +49,23 @@ export class MmlMpadded extends AbstractMmlLayoutNode {
     return 'mpadded';
   }
 
+  /**
+   * @override
+   */
+  public get linebreakContainer() {
+    return true;
+  }
+
+  /**
+   * @override
+   */
+  public setTeXclass(prev: MmlNode): MmlNode {
+    if (!this.getProperty('vbox')) {
+      return super.setTeXclass(prev);
+    }
+    this.getPrevClass(prev);
+    this.texClass = TEXCLASS.ORD;
+    this.childNodes[0].setTeXclass(null);
+    return this;
+  }
 }

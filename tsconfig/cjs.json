@@ -1,0 +1,22 @@
+{
+  "extends": "./common.json",
+  "compilerOptions": {
+    "target": "ES5",
+    "outDir": "../cjs",
+    "module": "CommonJS",
+    "paths": {
+      "#js/*": ["../cjs/*"],
+      "#source/*": ["../components/cjs/*"],
+      "#root/*": ["../ts/components/cjs/*"],
+      "#menu/*": ["../node_modules/mj-context-menu/cjs/*"],
+      "#sre/*": ["../node_modules/speech-rule-engine/cjs/*"],
+      "#mhchem/*": ["../node_modules/mhchemparser/dist/*"],
+      "#default-font/*": ["../node_modules/@mathjax/mathjax-newcm-font/cjs/*"]
+    }
+  },
+  "exclude": [
+    "../ts/**/mjs/*",
+    "../ts/util/asyncLoad/esm.ts",
+    "../ts/a11y/sre/speech-worker.ts"
+  ]
+}

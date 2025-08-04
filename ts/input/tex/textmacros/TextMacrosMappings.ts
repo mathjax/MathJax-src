@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2022 The MathJax Consortium
+ *  Copyright (c) 2020-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,137 +15,154 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview  Character and Macro mappings for the textmacros package
+ * @file  Character and Macro mappings for the textmacros package
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {MacroMap, CommandMap} from '../SymbolMap.js';
-import {TexConstant} from '../TexConstants.js';
-import {TextMacrosMethods} from './TextMacrosMethods.js';
-import {MATHSPACE} from '../../../util/lengths.js';
+import { MacroMap, CommandMap } from '../TokenMap.js';
+import { TexConstant } from '../TexConstants.js';
+import { TextMacrosMethods } from './TextMacrosMethods.js';
+import { MATHSPACE } from '../../../util/lengths.js';
+
+const VARIANT = TexConstant.Variant;
 
 //
 //  The special characters in text-mode
 //
 new MacroMap('text-special', {
-  '$':          'Math',
-  '%':          'Comment',
-  '^':          'MathModeOnly',
-  '_':          'MathModeOnly',
-  '&':          'Misplaced',
-  '#':          'Misplaced',
-  '~':          'Tilde',
-  ' ':          'Space',
-  '\t':         'Space',
-  '\r':         'Space',
-  '\n':         'Space',
-  '\u00A0':     'Tilde',
-  '{':          'OpenBrace',
-  '}':          'CloseBrace',
-  '`':          'OpenQuote',
-  '\'':         'CloseQuote'
-}, TextMacrosMethods);
+  $: TextMacrosMethods.Math,
+  '%': TextMacrosMethods.Comment,
+  '^': TextMacrosMethods.MathModeOnly,
+  _: TextMacrosMethods.MathModeOnly,
+  '&': TextMacrosMethods.Misplaced,
+  '#': TextMacrosMethods.Misplaced,
+  '~': TextMacrosMethods.Tilde,
+  ' ': TextMacrosMethods.Space,
+  '\t': TextMacrosMethods.Space,
+  '\r': TextMacrosMethods.Space,
+  '\n': TextMacrosMethods.Space,
+  '\u00A0': TextMacrosMethods.Tilde,
+  '{': TextMacrosMethods.OpenBrace,
+  '}': TextMacrosMethods.CloseBrace,
+  '`': TextMacrosMethods.OpenQuote,
+  "'": TextMacrosMethods.CloseQuote,
+});
 
 //
 //  The text-mode macro mappings
 //
 new CommandMap('text-macros', {
-  '(':          'Math',
+  '(': TextMacrosMethods.Math,
 
-  '$':          'SelfQuote',
-  '_':          'SelfQuote',
-  '%':          'SelfQuote',
-  '{':          'SelfQuote',
-  '}':          'SelfQuote',
-  ' ':          'SelfQuote',
-  '&':          'SelfQuote',
-  '#':          'SelfQuote',
-  '\\':         'SelfQuote',
+  $: TextMacrosMethods.SelfQuote,
+  _: TextMacrosMethods.SelfQuote,
+  '%': TextMacrosMethods.SelfQuote,
+  '{': TextMacrosMethods.SelfQuote,
+  '}': TextMacrosMethods.SelfQuote,
+  ' ': TextMacrosMethods.SelfQuote,
+  '&': TextMacrosMethods.SelfQuote,
+  '#': TextMacrosMethods.SelfQuote,
+  '\\': [TextMacrosMethods.Macro, '$\\\\$'],
 
-  '\'':         ['Accent', '\u00B4'],
-  '\u2019':     ['Accent', '\u00B4'],
-  '`':          ['Accent', '\u0060'],
-  '\u2018':     ['Accent', '\u0060'],
-  '^':          ['Accent', '^'],
-  '\"':         ['Accent', '\u00A8'],
-  '~':          ['Accent', '~'],
-  '=':          ['Accent', '\u00AF'],
-  '.':          ['Accent', '\u02D9'],
-  'u':          ['Accent', '\u02D8'],
-  'v':          ['Accent', '\u02C7'],
+  "'": [TextMacrosMethods.Accent, '\u00B4'],
+  '\u2019': [TextMacrosMethods.Accent, '\u00B4'],
+  '`': [TextMacrosMethods.Accent, '\u0060'],
+  '\u2018': [TextMacrosMethods.Accent, '\u0060'],
+  '^': [TextMacrosMethods.Accent, '^'],
+  '"': [TextMacrosMethods.Accent, '\u00A8'],
+  '~': [TextMacrosMethods.Accent, '~'],
+  '=': [TextMacrosMethods.Accent, '\u00AF'],
+  '.': [TextMacrosMethods.Accent, '\u02D9'],
+  u: [TextMacrosMethods.Accent, '\u02D8'],
+  v: [TextMacrosMethods.Accent, '\u02C7'],
 
-  emph:         'Emph',
-  rm:           ['SetFont', TexConstant.Variant.NORMAL],
-  mit:          ['SetFont', TexConstant.Variant.ITALIC],
-  oldstyle:     ['SetFont', TexConstant.Variant.OLDSTYLE],
-  cal:          ['SetFont', TexConstant.Variant.CALLIGRAPHIC],
-  it:           ['SetFont', '-tex-mathit'], // needs special handling
-  bf:           ['SetFont', TexConstant.Variant.BOLD],
-  bbFont:       ['SetFont', TexConstant.Variant.DOUBLESTRUCK],
-  scr:          ['SetFont', TexConstant.Variant.SCRIPT],
-  frak:         ['SetFont', TexConstant.Variant.FRAKTUR],
-  sf:           ['SetFont', TexConstant.Variant.SANSSERIF],
-  tt:           ['SetFont', TexConstant.Variant.MONOSPACE],
+  emph: TextMacrosMethods.Emph,
+  rm: [TextMacrosMethods.SetFont, VARIANT.NORMAL],
+  mit: [TextMacrosMethods.SetFont, VARIANT.ITALIC],
+  oldstyle: [TextMacrosMethods.SetFont, VARIANT.OLDSTYLE],
+  cal: [TextMacrosMethods.SetFont, VARIANT.CALLIGRAPHIC],
+  it: [TextMacrosMethods.SetFont, '-tex-mathit'], // needs special handling
+  bf: [TextMacrosMethods.SetFont, VARIANT.BOLD],
+  sf: [TextMacrosMethods.SetFont, VARIANT.SANSSERIF],
+  tt: [TextMacrosMethods.SetFont, VARIANT.MONOSPACE],
 
-  tiny:         ['SetSize', 0.5],
-  Tiny:         ['SetSize', 0.6],  // non-standard
-  scriptsize:   ['SetSize', 0.7],
-  small:        ['SetSize', 0.85],
-  normalsize:   ['SetSize', 1.0],
-  large:        ['SetSize', 1.2],
-  Large:        ['SetSize', 1.44],
-  LARGE:        ['SetSize', 1.73],
-  huge:         ['SetSize', 2.07],
-  Huge:         ['SetSize', 2.49],
+  frak: [TextMacrosMethods.TextFont, VARIANT.FRAKTUR],
+  Bbb: [TextMacrosMethods.TextFont, VARIANT.DOUBLESTRUCK],
 
-  Bbb:          ['Macro', '{\\bbFont #1}', 1],
-  textnormal:   ['Macro', '{\\rm #1}', 1],
-  textup:       ['Macro', '{\\rm #1}', 1],
-  textrm:       ['Macro', '{\\rm #1}', 1],
-  textit:       ['Macro', '{\\it #1}', 1],
-  textbf:       ['Macro', '{\\bf #1}', 1],
-  textsf:       ['Macro', '{\\sf #1}', 1],
-  texttt:       ['Macro', '{\\tt #1}', 1],
+  tiny: [TextMacrosMethods.SetSize, 0.5],
+  Tiny: [TextMacrosMethods.SetSize, 0.6], // non-standard
+  scriptsize: [TextMacrosMethods.SetSize, 0.7],
+  small: [TextMacrosMethods.SetSize, 0.85],
+  normalsize: [TextMacrosMethods.SetSize, 1.0],
+  large: [TextMacrosMethods.SetSize, 1.2],
+  Large: [TextMacrosMethods.SetSize, 1.44],
+  LARGE: [TextMacrosMethods.SetSize, 1.73],
+  huge: [TextMacrosMethods.SetSize, 2.07],
+  Huge: [TextMacrosMethods.SetSize, 2.49],
 
-  dagger:       ['Insert', '\u2020'],
-  ddagger:      ['Insert', '\u2021'],
-  S:            ['Insert', '\u00A7'],
+  textnormal: [TextMacrosMethods.Macro, '{\\rm #1}', 1],
+  textup: [TextMacrosMethods.Macro, '{\\rm #1}', 1],
+  textrm: [TextMacrosMethods.Macro, '{\\rm #1}', 1],
+  textit: [TextMacrosMethods.Macro, '{\\it #1}', 1],
+  textbf: [TextMacrosMethods.Macro, '{\\bf #1}', 1],
+  textsf: [TextMacrosMethods.Macro, '{\\sf #1}', 1],
+  texttt: [TextMacrosMethods.Macro, '{\\tt #1}', 1],
 
-  ',':          ['Spacer', MATHSPACE.thinmathspace],
-  ':':          ['Spacer', MATHSPACE.mediummathspace],
-  '>':          ['Spacer', MATHSPACE.mediummathspace],
-  ';':          ['Spacer', MATHSPACE.thickmathspace],
-  '!':          ['Spacer', MATHSPACE.negativethinmathspace],
-  enspace:      ['Spacer', .5],
-  quad:         ['Spacer', 1],
-  qquad:        ['Spacer', 2],
-  thinspace:    ['Spacer', MATHSPACE.thinmathspace],
-  negthinspace: ['Spacer', MATHSPACE.negativethinmathspace],
+  dagger: [TextMacrosMethods.Insert, '\u2020'],
+  ddagger: [TextMacrosMethods.Insert, '\u2021'],
+  S: [TextMacrosMethods.Insert, '\u00A7'],
+  AA: [TextMacrosMethods.Insert, '\u212B'],
+  ldots: [TextMacrosMethods.Insert, '\u2026'],
+  vdots: [TextMacrosMethods.Insert, '\u22EE'],
 
-  hskip:        'Hskip',
-  hspace:       'Hskip',
-  kern:         'Hskip',
-  mskip:        'Hskip',
-  mspace:       'Hskip',
-  mkern:        'Hskip',
-  rule:         'rule',
-  Rule:         ['Rule'],
-  Space:        ['Rule', 'blank'],
+  ',': [TextMacrosMethods.Spacer, MATHSPACE.thinmathspace],
+  ':': [TextMacrosMethods.Spacer, MATHSPACE.mediummathspace],
+  '>': [TextMacrosMethods.Spacer, MATHSPACE.mediummathspace],
+  ';': [TextMacrosMethods.Spacer, MATHSPACE.thickmathspace],
+  '!': [TextMacrosMethods.Spacer, MATHSPACE.negativethinmathspace],
+  enspace: [TextMacrosMethods.Spacer, 0.5],
+  quad: [TextMacrosMethods.Spacer, 1],
+  qquad: [TextMacrosMethods.Spacer, 2],
+  thinspace: [TextMacrosMethods.Spacer, MATHSPACE.thinmathspace],
+  negthinspace: [TextMacrosMethods.Spacer, MATHSPACE.negativethinmathspace],
 
-  color:        'CheckAutoload',
-  textcolor:    'CheckAutoload',
-  colorbox:     'CheckAutoload',
-  fcolorbox:    'CheckAutoload',
-  href:         'CheckAutoload',
-  style:        'CheckAutoload',
-  class:        'CheckAutoload',
-  cssId:        'CheckAutoload',
-  unicode:      'CheckAutoload',
+  hskip: TextMacrosMethods.Hskip,
+  hspace: TextMacrosMethods.Hskip,
+  kern: TextMacrosMethods.Hskip,
+  mskip: TextMacrosMethods.Hskip,
+  mspace: TextMacrosMethods.Hskip,
+  mkern: TextMacrosMethods.Hskip,
+  rule: TextMacrosMethods.rule,
+  Rule: [TextMacrosMethods.Rule],
+  Space: [TextMacrosMethods.Rule, 'blank'],
 
-  ref:          ['HandleRef', false],
-  eqref:        ['HandleRef', true],
+  color: TextMacrosMethods.CheckAutoload,
+  textcolor: TextMacrosMethods.CheckAutoload,
+  colorbox: TextMacrosMethods.CheckAutoload,
+  fcolorbox: TextMacrosMethods.CheckAutoload,
+  href: TextMacrosMethods.CheckAutoload,
+  style: TextMacrosMethods.CheckAutoload,
+  class: TextMacrosMethods.CheckAutoload,
+  data: TextMacrosMethods.CheckAutoload,
+  cssId: TextMacrosMethods.CheckAutoload,
+  unicode: TextMacrosMethods.CheckAutoload,
+  U: TextMacrosMethods.CheckAutoload,
+  char: TextMacrosMethods.CheckAutoload,
 
-}, TextMacrosMethods);
+  ref: [TextMacrosMethods.HandleRef, false],
+  eqref: [TextMacrosMethods.HandleRef, true],
+
+  underline: [TextMacrosMethods.UnderOver, '2015'],
+
+  llap: TextMacrosMethods.Lap,
+  rlap: TextMacrosMethods.Lap,
+
+  phantom: TextMacrosMethods.Phantom,
+  vphantom: [TextMacrosMethods.Phantom, 1, 0],
+  hphantom: [TextMacrosMethods.Phantom, 0, 1],
+  smash: TextMacrosMethods.Smash,
+
+  mmlToken: TextMacrosMethods.MmlToken,
+});

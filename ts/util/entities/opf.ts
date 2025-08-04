@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Aopf: '\uD835\uDD38',
     Bopf: '\uD835\uDD39',
     Copf: '\u2102',
@@ -69,5 +70,7 @@ Entities.add({
     wopf: '\uD835\uDD68',
     xopf: '\uD835\uDD69',
     yopf: '\uD835\uDD6A',
-    zopf: '\uD835\uDD6B'
-}, 'opf');
+    zopf: '\uD835\uDD6B',
+  },
+  'opf'
+);

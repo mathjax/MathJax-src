@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
  */
 
 /**
- * @fileoverview  Implements the TeXAtom node
+ * @file  Implements the TeXAtom node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlFactory} from '../MmlFactory.js';
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlBaseNode, MmlNode, TEXCLASS} from '../MmlNode.js';
-import {MmlMo} from './mo.js';
+import { MmlFactory } from '../MmlFactory.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlBaseNode, MmlNode, TEXCLASS } from '../MmlNode.js';
+import { MmlMo } from './mo.js';
 
 /*****************************************************************/
 /**
@@ -32,12 +32,11 @@ import {MmlMo} from './mo.js';
  */
 
 export class TeXAtom extends AbstractMmlBaseNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlBaseNode.defaults
+    ...AbstractMmlBaseNode.defaults,
   };
 
   /**
@@ -54,6 +53,7 @@ export class TeXAtom extends AbstractMmlBaseNode {
 
   /**
    * Inferred mrow with any number of children
+   *
    * @override
    */
   public get arity() {
@@ -62,18 +62,23 @@ export class TeXAtom extends AbstractMmlBaseNode {
 
   /**
    * This element is not considered a MathML container
+   *
    * @override
    */
   public get notParent() {
-    return this.childNodes[0] && this.childNodes[0].childNodes.length === 1;
+    return true;
   }
 
   /**
    * @override
    */
-  constructor(factory: MmlFactory, attributes: PropertyList, children: MmlNode[]) {
+  constructor(
+    factory: MmlFactory,
+    attributes: PropertyList,
+    children: MmlNode[]
+  ) {
     super(factory, attributes, children);
-    this.setProperty('texClass', this.texClass);   // needed for serialization to include the texClass
+    this.setProperty('texClass', this.texClass); // needed for serialization to include the texClass
   }
 
   /**
@@ -92,7 +97,6 @@ export class TeXAtom extends AbstractMmlBaseNode {
   public adjustTeXclass(prev: MmlNode) {
     return prev;
   }
-
 }
 /**
  *  Use the method from the MmlMo class

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMrow node
+ * @file  Implements the MmlMrow node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { MmlNode, AbstractMmlNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,12 +30,11 @@ import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMrow extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlNode.defaults
+    ...AbstractMmlNode.defaults,
   };
 
   /**
@@ -111,7 +110,7 @@ export class MmlMrow extends AbstractMmlNode {
   }
 
   /**
-   * @return {number}  The number of non-spacelike child nodes
+   * @returns {number}  The number of non-spacelike child nodes
    */
   public nonSpaceLength(): number {
     let n = 0;
@@ -124,7 +123,7 @@ export class MmlMrow extends AbstractMmlNode {
   }
 
   /**
-   * @return {MmlNode|null}  The first non-space-like child node
+   * @returns {MmlNode|null}  The first non-space-like child node
    */
   public firstNonSpace(): MmlNode | null {
     for (const child of this.childNodes) {
@@ -136,12 +135,12 @@ export class MmlMrow extends AbstractMmlNode {
   }
 
   /**
-   * @return {MmlNode|null}  The last non-space-like child node
+   * @returns {MmlNode|null}  The last non-space-like child node
    */
   public lastNonSpace(): MmlNode | null {
     let i = this.childNodes.length;
     while (--i >= 0) {
-      let child = this.childNodes[i];
+      const child = this.childNodes[i];
       if (child && !child.isSpacelike) {
         return child;
       }
@@ -152,7 +151,7 @@ export class MmlMrow extends AbstractMmlNode {
   /**
    * @override
    */
-  public setTeXclass(prev: MmlNode) {
+  public setTeXclass(prev: MmlNode): MmlNode {
     if (this.getProperty('open') != null || this.getProperty('close') != null) {
       //
       // <mrow> looks like it came from \left...\right
@@ -169,22 +168,20 @@ export class MmlMrow extends AbstractMmlNode {
       if (this.texClass == null) {
         this.texClass = TEXCLASS.INNER;
       }
-    } else {
-      //
-      //  Normal <mrow>, so treat as though mrow is not there
-      //
-      for (const child of this.childNodes) {
-        prev = child.setTeXclass(prev);
-      }
-      if (this.childNodes[0]) {
-        this.updateTeXclass(this.childNodes[0]);
-      }
+      return this;
+    }
+    //
+    //  Normal <mrow>, so treat as though mrow is not there
+    //
+    for (const child of this.childNodes) {
+      prev = child.setTeXclass(prev);
+    }
+    if (this.childNodes[0]) {
+      this.updateTeXclass(this.childNodes[0]);
     }
     return prev;
   }
-
 }
-
 
 /*****************************************************************/
 /**
@@ -192,21 +189,20 @@ export class MmlMrow extends AbstractMmlNode {
  */
 
 export class MmlInferredMrow extends MmlMrow {
-
   /**
    * @override
    */
   public static defaults: PropertyList = MmlMrow.defaults;
 
   /**
-   * @return {string}  The inferred-mrow kind
+   * @returns {string}  The inferred-mrow kind
    */
   public get kind(): string {
     return 'inferredMrow';
   }
 
   /**
-   * @return {boolean}  This is inferred
+   * @returns {boolean}  This is inferred
    */
   public get isInferred(): boolean {
     return true;
@@ -221,9 +217,10 @@ export class MmlInferredMrow extends MmlMrow {
 
   /**
    * Show the child nodes in brackets
+   *
+   * @returns {string} The child nodes string
    */
   public toString() {
     return '[' + this.childNodes.join(',') + ']';
   }
-
 }

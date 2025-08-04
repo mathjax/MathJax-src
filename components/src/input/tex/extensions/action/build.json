@@ -1,5 +1,0 @@
-{
-  "id": "[tex]/action",
-  "component": "input/tex/extensions/action",
-  "targets": ["input/tex/action"]
-}

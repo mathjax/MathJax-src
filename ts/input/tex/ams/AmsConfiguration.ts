@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,72 +15,54 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Configuration file for the AMS package.
+ * @file Configuration file for the AMS package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration, ParserConfiguration} from '../Configuration.js';
-import {MultlineItem, FlalignItem} from './AmsItems.js';
-import {AbstractTags} from '../Tags.js';
-import {NEW_OPS} from './AmsMethods.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
+import { MultlineItem, FlalignItem } from './AmsItems.js';
+import { AbstractTags } from '../Tags.js';
 import './AmsMappings.js';
-import {CommandMap} from '../SymbolMap.js';
-
+import { NewcommandConfig } from '../newcommand/NewcommandConfiguration.js';
 
 /**
  * Standard AMS style tagging.
- * @constructor
- * @extends {AbstractTags}
+ *
+ * @class
+ * @augments {AbstractTags}
  */
-export class AmsTags extends AbstractTags { }
+export class AmsTags extends AbstractTags {}
 
-
-/**
- * Init method for AMS package.
- * @param {ParserConfiguration} config The current configuration.
- */
-let init = function(config: ParserConfiguration) {
-  new CommandMap(NEW_OPS, {}, {});
-  config.append(Configuration.local({handler: {macro: [NEW_OPS]},
-                                    priority: -1}));
-};
-
-export const AmsConfiguration = Configuration.create(
-  'ams', {
-    handler: {
-      character: ['AMSmath-operatorLetter'],
-      delimiter: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
-      macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0mo',
-              'AMSsymbols-delimiter', 'AMSsymbols-macros',
-              'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
-      environment: ['AMSmath-environment']
+export const AmsConfiguration = Configuration.create('ams', {
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.CHARACTER]: ['AMSmath-operatorLetter'],
+    [HandlerType.DELIMITER]: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
+    [HandlerType.MACRO]: [
+      'AMSsymbols-mathchar0mi',
+      'AMSsymbols-mathchar0mo',
+      'AMSsymbols-delimiter',
+      'AMSsymbols-macros',
+      'AMSmath-mathchar0mo',
+      'AMSmath-macros',
+      'AMSmath-delimiter',
+    ],
+    [HandlerType.ENVIRONMENT]: ['AMSmath-environment'],
+  },
+  [ConfigurationType.ITEMS]: {
+    [MultlineItem.prototype.kind]: MultlineItem,
+    [FlalignItem.prototype.kind]: FlalignItem,
+  },
+  [ConfigurationType.TAGS]: { ams: AmsTags },
+  [ConfigurationType.OPTIONS]: {
+    multlineWidth: '',
+    ams: {
+      operatornamePattern: /^[-*a-zA-Z]+/, // multiLetterIdentifier for \operatorname
+      multlineWidth: '100%', // The width to use for multline environments.
+      multlineIndent: '1em', // The margin to use on both sides of multline environments.
     },
-    items: {
-      [MultlineItem.prototype.kind]: MultlineItem,
-      [FlalignItem.prototype.kind]: FlalignItem,
-    },
-    tags: {'ams': AmsTags},
-    init: init,
-    config: (_config: ParserConfiguration, jax: any)  => {
-      //
-      //  Move multlineWidth from old location to ams block (remove in next version)
-      //
-      if (jax.parseOptions.options.multlineWidth) {
-        jax.parseOptions.options.ams.multlineWidth = jax.parseOptions.options.multlineWidth;
-      }
-      delete jax.parseOptions.options.multlineWidth;
-    },
-    options: {
-      multlineWidth: '',
-      ams: {
-        multlineWidth: '100%',  // The width to use for multline environments.
-        multlineIndent: '1em',  // The margin to use on both sides of multline environments.
-      }
-    }
-  }
-);
-
-
+  },
+  [ConfigurationType.CONFIG]: NewcommandConfig,
+});

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a list sorted by a numeric priority
+ * @file  Implements a list sorted by a numeric priority
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -29,7 +29,6 @@
  */
 
 export interface PrioritizedListItem<DataClass> {
-
   /**
    * The priority of this item
    */
@@ -47,9 +46,7 @@ export interface PrioritizedListItem<DataClass> {
  *
  * @template DataClass   The class of data stored in the list
  */
-
 export class PrioritizedList<DataClass> {
-
   /**
    * The default priority for items added to the list
    */
@@ -61,7 +58,7 @@ export class PrioritizedList<DataClass> {
   protected items: PrioritizedListItem<DataClass>[] = [];
 
   /**
-   * @constructor
+   * @class
    */
   constructor() {
     this.items = [];
@@ -70,16 +67,15 @@ export class PrioritizedList<DataClass> {
   /**
    * Make the list iterable, and return the data for the items in the list
    *
-   * @return {{next: Function}}  The object containing the iterator's next() function
+   * @returns {{next: Function}}  The object containing the iterator's next() function
    */
   public [Symbol.iterator](): Iterator<PrioritizedListItem<DataClass>> {
     let i = 0;
-    let items = this.items;
+    const items = this.items;
     return {
-      /* tslint:disable-next-line:jsdoc-require */
       next(): IteratorResult<PrioritizedListItem<DataClass>> {
-        return {value: items[i++], done: (i > items.length)};
-      }
+        return { value: items[i++], done: i > items.length };
+      },
     };
   }
 
@@ -88,23 +84,27 @@ export class PrioritizedList<DataClass> {
    *
    * @param {DataClass} item   The data for the item to be added
    * @param {number} priority  The priority for the item
-   * @return {DataClass}       The data itself
+   * @returns {DataClass}       The data itself
    */
-  public add(item: DataClass, priority: number = PrioritizedList.DEFAULTPRIORITY): DataClass {
+  public add(
+    item: DataClass,
+    priority: number = PrioritizedList.DEFAULTPRIORITY
+  ): DataClass {
     let i = this.items.length;
     do {
       i--;
     } while (i >= 0 && priority < this.items[i].priority);
-    this.items.splice(i + 1, 0, {item: item, priority: priority});
+    this.items.splice(i + 1, 0, { item: item, priority: priority });
     return item;
   }
 
   /**
    * Remove an item from the list
    *
-   * @param {DataClass} item   The data for the item to be removed
+   * @param {DataClass} item    The data for the item to be removed
+   * @returns {PrioritizedList}  The list (for chaining of calls)
    */
-  public remove(item: DataClass) {
+  public remove(item: DataClass): PrioritizedList<DataClass> {
     let i = this.items.length;
     do {
       i--;
@@ -112,5 +112,6 @@ export class PrioritizedList<DataClass> {
     if (i >= 0) {
       this.items.splice(i, 1);
     }
+    return this;
   }
 }

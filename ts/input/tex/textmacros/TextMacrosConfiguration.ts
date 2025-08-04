@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2022 The MathJax Consortium
+ *  Copyright (c) 2020-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,22 +15,22 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Configuration file for the textmacros package
+ * @file Configuration file for the textmacros package
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {TeX} from '../../tex.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { TeX } from '../../tex.js';
 import TexParser from '../TexParser.js';
-import {Configuration, ParserConfiguration} from '../Configuration.js';
+import { Configuration, ParserConfiguration } from '../Configuration.js';
 import ParseOptions from '../ParseOptions.js';
-import {TagsFactory} from '../Tags.js';
-import {StartItem, StopItem, MmlItem, StyleItem} from '../base/BaseItems.js';
-import {TextParser} from './TextParser.js';
-import {TextMacrosMethods} from './TextMacrosMethods.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import { TagsFactory } from '../Tags.js';
+import { StartItem, StopItem, MmlItem, StyleItem } from '../base/BaseItems.js';
+import { TextParser } from './TextParser.js';
+import { TextMacrosMethods } from './TextMacrosMethods.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 
 import './TextMacrosMappings.js';
 
@@ -38,16 +38,17 @@ import './TextMacrosMappings.js';
  *  The base text macro configuration (used in the TextParser)
  */
 export const TextBaseConfiguration = Configuration.create('text-base', {
-  parser: 'text',
-  handler: {
-    character: ['command', 'text-special'],
-    macro: ['text-macros']
+  [ConfigurationType.PARSER]: 'text',
+  [ConfigurationType.PRIORITY]: 1,
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.CHARACTER]: ['command', 'text-special'],
+    [HandlerType.MACRO]: ['text-macros'],
   },
-  fallback: {
+  [ConfigurationType.FALLBACK]: {
     //
     // Unknown characters are added to the text verbatim
     //
-    character: (parser: TextParser, c: string) => {
+    [HandlerType.CHARACTER]: (parser: TextParser, c: string) => {
       parser.text += c;
     },
     //
@@ -57,21 +58,25 @@ export const TextBaseConfiguration = Configuration.create('text-base', {
     //   produces the error as configured in the main TeX parser, so
     //   this will respect the noundefined package, if loaded).
     //
-    macro: (parser: TextParser, name: string) => {
+    [HandlerType.MACRO]: (parser: TextParser, name: string) => {
       const texParser = parser.texParser;
-      const macro = texParser.lookup('macro', name);
+      const macro = texParser.lookup(HandlerType.MACRO, name);
       if (macro && macro._func !== TextMacrosMethods.Macro) {
-        parser.Error('MathMacro', '%1 is only supported in math mode', '\\' + name);
+        parser.Error(
+          'MathMacro',
+          '%1 is only supported in math mode',
+          '\\' + name
+        );
       }
-      texParser.parse('macro', [parser, name]);
-    }
+      texParser.parse(HandlerType.MACRO, [parser, name]);
+    },
   },
-  items: {
+  [ConfigurationType.ITEMS]: {
     [StartItem.prototype.kind]: StartItem,
     [StopItem.prototype.kind]: StopItem,
     [MmlItem.prototype.kind]: MmlItem,
-    [StyleItem.prototype.kind]: StyleItem     // needed for \color
-  }
+    [StyleItem.prototype.kind]: StyleItem, // needed for \color
+  },
 });
 
 /**
@@ -81,33 +86,53 @@ export const TextBaseConfiguration = Configuration.create('text-base', {
  * @param {string} text           The text-mode string to be processed
  * @param {number|string} level   The scriptlevel of the text
  * @param {string} mathvariant    The mathvariant for the text
- * @return {MmlNode[]}            The final MmlNode generated for the text
+ * @returns {MmlNode[]}            The final MmlNode generated for the text
  */
-function internalMath(parser: TexParser, text: string, level?: number | string, mathvariant?: string): MmlNode[] {
+function internalMath(
+  parser: TexParser,
+  text: string,
+  level?: number | string,
+  mathvariant?: string
+): MmlNode[] {
   const config = parser.configuration.packageData.get('textmacros');
   if (!(parser instanceof TextParser)) {
     config.texParser = parser;
   }
-  return [(new TextParser(text, mathvariant ? {mathvariant} : {}, config.parseOptions, level)).mml()];
+  config.parseOptions.clear();
+  return [
+    new TextParser(
+      text,
+      mathvariant ? { mathvariant } : {},
+      config.parseOptions,
+      level
+    ).mml(),
+  ];
 }
 
 //
 //  The textmacros package configuration
 //
 export const TextMacrosConfiguration = Configuration.create('textmacros', {
+  [ConfigurationType.PRIORITY]: 1,
   /**
-   * @param {ParserConfiguration} config   The configuration object we are being configured within
+   * @param {ParserConfiguration} _config  The configuration object we are being configured within
    * @param {TeX<any,any,any>} jax         The TeX input jax in which we are running
    */
-  config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
+  [ConfigurationType.CONFIG]: (
+    _config: ParserConfiguration,
+    jax: TeX<any, any, any>
+  ) => {
     //
     //  Create the configuration and parseOptions objects for the
     //    internal TextParser and add the textBase configuration.
     //
-    const textConf = new ParserConfiguration(jax.parseOptions.options.textmacros.packages, ['tex', 'text']);
+    const textConf = new ParserConfiguration(
+      jax.parseOptions.options.textmacros.packages,
+      ['tex', 'text']
+    );
     textConf.init();
     const parseOptions = new ParseOptions(textConf, []);
-    parseOptions.options = jax.parseOptions.options;      // share the TeX options
+    parseOptions.options = jax.parseOptions.options; // share the TeX options
     textConf.config(jax);
     TagsFactory.addTags(textConf.tags);
     parseOptions.tags = TagsFactory.getDefault();
@@ -119,20 +144,27 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
     //   and replace the internalMath function with our own.
     //
     parseOptions.packageData = jax.parseOptions.packageData;
-    parseOptions.packageData.set('textmacros', {parseOptions, jax, texParser: null});
+    parseOptions.packageData.set('textmacros', {
+      textConf,
+      parseOptions,
+      jax,
+      texParser: null,
+    });
     parseOptions.options.internalMath = internalMath;
   },
-  preprocessors: [(data: {data: ParseOptions}) => {
-    //
-    //  Set the MmlFactory for the nodeFactory, since it was not available
-    //  durring configuration above.
-    //
-    const config = data.data.packageData.get('textmacros');
-    config.parseOptions.nodeFactory.setMmlFactory(config.jax.mmlFactory);
-  }],
-  options: {
+  [ConfigurationType.PREPROCESSORS]: [
+    (data: { data: ParseOptions }) => {
+      //
+      //  Set the MmlFactory for the nodeFactory, since it was not available
+      //  durring configuration above.
+      //
+      const config = data.data.packageData.get('textmacros');
+      config.parseOptions.nodeFactory.setMmlFactory(config.jax.mmlFactory);
+    },
+  ],
+  [ConfigurationType.OPTIONS]: {
     textmacros: {
-      packages: ['text-base']    // textmacro packages to load
-    }
-  }
+      packages: ['text-base'], // textmacro packages to load
+    },
+  },
 });

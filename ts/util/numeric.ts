@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
  */
 
 /**
- * @fileoverview  Implements some numeric utility functions
+ * @file  Implements some numeric utility functions
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 /**
  * @param {number[]} A  The array to sum
- * @return {number}     The summ of the elements in A
+ * @returns {number}     The summ of the elements in A
  */
 export function sum(A: number[]): number {
   return A.reduce((a, b) => a + b, 0);
@@ -31,7 +31,7 @@ export function sum(A: number[]): number {
 
 /**
  * @param {number[]} A  The array whose maximum entry is sought
- * @return {number}     The largest entry in the array
+ * @returns {number}     The largest entry in the array
  */
 export function max(A: number[]): number {
   return A.reduce((a, b) => Math.max(a, b), 0);

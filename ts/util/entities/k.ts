@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     KHcy: '\u0425',
     KJcy: '\u040C',
     Kappa: '\u039A',
@@ -27,5 +28,7 @@ Entities.add({
     kcy: '\u043A',
     kgreen: '\u0138',
     khcy: '\u0445',
-    kjcy: '\u045C'
-}, 'k');
+    kjcy: '\u045C',
+  },
+  'k'
+);

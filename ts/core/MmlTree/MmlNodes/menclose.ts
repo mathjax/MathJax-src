@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMenclose node
+ * @file  Implements the MmlMenclose node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { MmlNode, AbstractMmlNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,13 +30,12 @@ import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMenclose extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlNode.defaults,
-    notation: 'longdiv'
+    notation: 'longdiv',
   };
 
   /**
@@ -46,6 +45,7 @@ export class MmlMenclose extends AbstractMmlNode {
 
   /**
    * The menclose kind
+   *
    * @override
    */
   public get kind() {
@@ -54,6 +54,7 @@ export class MmlMenclose extends AbstractMmlNode {
 
   /**
    * <menclose> has an inferred mrow
+   *
    * @override
    */
   public get arity() {
@@ -62,9 +63,10 @@ export class MmlMenclose extends AbstractMmlNode {
 
   /**
    * <menclose> is a linebreak container
+   *
    * @override
    */
-  public get linebreakContininer() {
+  public get linebreakContainer() {
     return true;
   }
 
@@ -76,5 +78,4 @@ export class MmlMenclose extends AbstractMmlNode {
     this.updateTeXclass(this.childNodes[0]);
     return prev;
   }
-
 }

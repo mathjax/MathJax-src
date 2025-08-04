@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,12 @@
  */
 
 /**
- * @fileoverview  Implements bit-fields with extendable field names
+ * @file  Implements bit-fields with extendable field names
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 export class BitField {
-
   /**
    * The largest bit available
    */
@@ -61,7 +60,7 @@ export class BitField {
 
   /**
    * @param {string} name   The name of the bit to check for being defined
-   * @return {boolean}      True if the named bit is already allocated
+   * @returns {boolean}      True if the named bit is already allocated
    */
   public static has(name: string): boolean {
     return this.names.has(name);
@@ -83,7 +82,7 @@ export class BitField {
 
   /**
    * @param {string} name   The name of the bit to check if set
-   * @return {boolean}      True if the named bit is set
+   * @returns {boolean}      True if the named bit is set
    */
   public isSet(name: string): boolean {
     return !!(this.bits & this.getBit(name));
@@ -98,7 +97,7 @@ export class BitField {
 
   /**
    * @param {string} name   The name whose bit position is needed (error if not defined)
-   * @return {number}       The position of the named bit
+   * @returns {number}       The position of the named bit
    */
   protected getBit(name: string): number {
     const bit = (this.constructor as typeof BitField).names.get(name);
@@ -107,15 +106,14 @@ export class BitField {
     }
     return bit;
   }
-
 }
 
 /**
  * @param {string[]} names    The name of the positions to allocate initially
- * @return {typeof AbstractBitField}  The bit-field class with names allocated
+ * @returns {typeof BitField}  The bit-field class with names allocated
  */
 export function BitFieldClass(...names: string[]): typeof BitField {
-  const Bits = class extends BitField {};
-  Bits.allocate(...names);
-  return Bits;
+  const bits = class extends BitField {};
+  bits.allocate(...names);
+  return bits;
 }

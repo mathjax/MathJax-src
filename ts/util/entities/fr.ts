@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Afr: '\uD835\uDD04',
     Bfr: '\uD835\uDD05',
     Cfr: '\u212D',
@@ -69,5 +70,7 @@ Entities.add({
     wfr: '\uD835\uDD34',
     xfr: '\uD835\uDD35',
     yfr: '\uD835\uDD36',
-    zfr: '\uD835\uDD37'
-}, 'fr');
+    zfr: '\uD835\uDD37',
+  },
+  'fr'
+);

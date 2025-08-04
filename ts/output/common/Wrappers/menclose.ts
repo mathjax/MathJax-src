@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,43 +16,91 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMenclose wrapper mixin for the MmlMenclose object
+ * @file  Implements the CommonMenclose wrapper mixin for the MmlMenclose object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { CommonMsqrt } from './msqrt.js';
 import * as Notation from '../Notation.js';
-import {CommonMsqrt} from './msqrt.js';
-import {BBox} from '../../../util/BBox.js';
-import {AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {split} from '../../../util/string.js';
+import { BBox } from '../../../util/BBox.js';
+import { MmlNode, AbstractMmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { split } from '../../../util/string.js';
 
 /*****************************************************************/
 /**
  * The CommonMenclose interface
  *
- * @template W  The menclose wrapper type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template S   The msqrt wrapper type
  */
-export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> extends AnyWrapper {
+export interface CommonMenclose<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  S extends CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
   /**
-   *  The notations active on this menclose, and the one to use for the child, if any
+   * The notations active on this menclose, if any
    */
-  notations: Notation.List<W, N>;
-  renderChild: Notation.Renderer<W, N>;
+  notations: Notation.List<WW, N>;
+  /**
+   * The notation to use for the child, if any
+   */
+  renderChild: Notation.Renderer<WW, N>;
 
   /**
-   * fake msqrt for radial notation (if used)
+   * A fake msqrt for radial notation (if used)
    */
   msqrt: S;
 
   /**
-   * The padding, thickness, and shape of the arrow head
-   *   (may be overridden using data-padding, data-thickness, and data-arrowhead attibutes)
+   * The padding of the arrow head (may be overridden using data-padding attibute)
    */
   padding: number;
+  /**
+   * The thickness of the arrow head (may be overridden using data-thickness attibute)
+   */
   thickness: number;
-  arrowhead: {x: number, y: number, dx: number};
+  /**
+   * The shape of the arrow head (may be overridden using data-arrowhead attibutes)
+   */
+  arrowhead: { x: number; y: number; dx: number };
 
   /**
    * The top, right, bottom, and left padding, added by notations
@@ -81,12 +129,12 @@ export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> 
   initializeNotations(): void;
 
   /**
-   * @return {Notation.PaddingData}  Array of the maximum extra space from the notations along each side
+   * @returns {Notation.PaddingData}  Array of the maximum extra space from the notations along each side
    */
   getBBoxExtenders(): Notation.PaddingData;
 
   /**
-   * @return {Notation.PaddingData}  Array of padding (i.e., BBox minus border) along each side
+   * @returns {Notation.PaddingData}  Array of padding (i.e., BBox minus border) along each side
    */
   getPadding(): Notation.PaddingData;
 
@@ -102,14 +150,14 @@ export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> 
    * Get the offset amount for the given direction for vertical and horizontal centering
    *
    * @param {string} direction    The direction 'X' or 'Y' for the offset
-   * @return {number}             The amount of offset in that direction
+   * @returns {number}             The amount of offset in that direction
    */
   getOffset(direction: string): number;
 
   /**
    * @param {number} w    The width of the box whose diagonal is needed
    * @param {number} h    The height of the box whose diagonal is needed
-   * @return {number[]}   The angle and width of the diagonal of the box
+   * @returns {number[]}   The angle and width of the diagonal of the box
    */
   getArgMod(w: number, h: number): [number, number];
 
@@ -121,20 +169,26 @@ export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> 
    * @param {boolean} double   True if this is a double-headed arrow
    * @param {string} offset    'X' for vertical arrow, 'Y' for horizontal
    * @param {number} trans     Distance to translate in the offset direction
-   * @return {N}               The newly created arrow
+   * @returns {N}               The newly created arrow
    */
-  arrow(w: number, a: number, double: boolean, offset?: string, trans?: number): N;
+  arrow(
+    w: number,
+    a: number,
+    double: boolean,
+    offset?: string,
+    trans?: number
+  ): N;
 
   /**
    * Get the angle and width of a diagonal arrow, plus the x and y extension
    *   past the content bounding box
    */
-  arrowData(): {a: number, W: number, x: number, y: number};
+  arrowData(): { a: number; W: number; x: number; y: number };
 
   /**
    * Get the angle and width for a diagonal arrow
    *
-   * @return {[number, number]}   The angle and width
+   * @returns {[number, number]}   The angle and width
    */
   arrowAW(): [number, number];
 
@@ -144,13 +198,13 @@ export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> 
    *   but without changing the parent pointer, so as not to detach it from
    *   the menclose (which would desrtoy the original MathML tree).
    *
-   * @param {W} child   The inferred mrow that is the child of this menclose
-   * @return {S}        The newly created (but detached) msqrt wrapper
+   * @param {WW} child   The inferred mrow that is the child of this menclose
+   * @returns {S}         The newly created (but detached) msqrt wrapper
    */
-  createMsqrt(child: W): S;
+  createMsqrt(child: WW): S;
 
   /**
-   * @return {number[]}  The differences between the msqrt bounding box
+   * @returns {number[]}  The differences between the msqrt bounding box
    *                     and its child bounding box (i.e., the extra space
    *                     created by the radical symbol).
    */
@@ -160,89 +214,122 @@ export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> 
 /**
  * The CommonMenclose class interface
  *
- * @template W  The menclose wrapper type
- * @templare N  The DOM node class
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMencloseClass<W extends AnyWrapper, N> extends AnyWrapperClass {
+export interface CommonMencloseClass<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
   /**
    *  The definitions of the various notations
    */
-  notations: Notation.DefList<W, N>;
+  notations: Notation.DefList<WW, N>;
 }
-
-/**
- * Shorthand for the CommonMenclose constructor
- *
- * @template W  The menclose wrapper type
- */
-export type MencloseConstructor<W extends AnyWrapper, S extends CommonMsqrt, N> = Constructor<CommonMenclose<W, S, N>>;
 
 /*****************************************************************/
 /**
  * The CommonMenclose wrapper mixin for the MmlMenclose object
  *
- * @template W  The menclose wrapper type
- * @templare N  The DOM node class
- * @templare S  The msqrt wrapper class
- * @template T  The Wrapper class constructor type
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template S   The msqrt wrapper class
+ * @template B   The mixin interface to create
  */
 export function CommonMencloseMixin<
-  W extends AnyWrapper,
-  S extends CommonMsqrt,
   N,
-  T extends WrapperConstructor
->(Base: T): MencloseConstructor<W, S, N> & T {
-
-  return class extends Base {
-
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  S extends CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMencloseMixin
+    extends Base
+    implements CommonMenclose<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, S>
+  {
     /**
-     *  The notations active on this menclose, if any
+     * @override
      */
-    public notations: Notation.List<W, N> = {};
+    public notations: Notation.List<WW, N> = {};
 
     /**
-     *  The notation to use for the child, if any
+     * @override
      */
-    public renderChild: Notation.Renderer<W, N> = null;
+    public renderChild: Notation.Renderer<WW, N> = null;
 
     /**
-     * fake msqrt for radial notation (if used)
+     * @override
      */
     public msqrt: S = null;
 
     /**
-     * The padding of the arrow head (may be overridden using data-padding attibute)
+     * @override
      */
     public padding: number = Notation.PADDING;
     /**
-     * The thickness of the arrow head (may be overridden using data-thickness attibute)
+     * @override
      */
     public thickness: number = Notation.THICKNESS;
     /**
-     * The shape of the arrow head (may be overridden using data-arrowhead attibutes)
+     * @override
      */
-    public arrowhead = {x: Notation.ARROWX, y: Notation.ARROWY, dx: Notation.ARROWDX};
+    public arrowhead = {
+      x: Notation.ARROWX,
+      y: Notation.ARROWY,
+      dx: Notation.ARROWDX,
+    };
 
     /**
-     * The top, right, bottom, and left padding (added by notations)
+     * @override
      */
     public TRBL: Notation.PaddingData = [0, 0, 0, 0];
 
     /**
      * @override
-     * @constructor
-     */
-    constructor(...args: any[]) {
-      super(...args);
-      this.getParameters();
-      this.getNotations();
-      this.removeRedundantNotations();
-      this.initializeNotations();
-      this.TRBL = this.getBBoxExtenders();
-    }
-
-    /**
-     * Look up the data-* attributes and override the default values
      */
     public getParameters() {
       const attributes = this.node.attributes;
@@ -256,22 +343,28 @@ export function CommonMencloseMixin<
       }
       const arrowhead = attributes.get('data-arrowhead') as string;
       if (arrowhead !== undefined) {
-        let [x, y, dx] = split(arrowhead);
+        const [x, y, dx] = split(arrowhead);
         this.arrowhead = {
-          x: (x ? parseFloat(x) : Notation.ARROWX),
-          y: (y ? parseFloat(y) : Notation.ARROWY),
-          dx: (dx ? parseFloat(dx) : Notation.ARROWDX)
+          x: x ? parseFloat(x) : Notation.ARROWX,
+          y: y ? parseFloat(y) : Notation.ARROWY,
+          dx: dx ? parseFloat(dx) : Notation.ARROWDX,
         };
       }
     }
 
     /**
-     *  Get the notations given in the notation attribute
-     *    and check if any are used to render the child nodes
+     * @override
      */
     public getNotations() {
-      const Notations = (this.constructor as CommonMencloseClass<W, N>).notations;
-      for (const name of split(this.node.attributes.get('notation') as string)) {
+      /* prettier-ignore */
+      const Notations = (
+        this.constructor as CommonMencloseClass<
+          N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+        >
+      ).notations;
+      for (const name of split(
+        this.node.attributes.get('notation') as string
+      )) {
         const notation = Notations.get(name);
         if (notation) {
           this.notations[name] = notation;
@@ -283,7 +376,7 @@ export function CommonMencloseMixin<
     }
 
     /**
-     *  Remove any redundant notations
+     * @override
      */
     public removeRedundantNotations() {
       for (const name of Object.keys(this.notations)) {
@@ -297,12 +390,14 @@ export function CommonMencloseMixin<
     }
 
     /**
-     *  Run any initialization needed by notations in use
+     * @override
      */
     public initializeNotations() {
       for (const name of Object.keys(this.notations)) {
         const init = this.notations[name].init;
-        init && init(this as any);
+        if (init) {
+          init(this as any);
+        }
       }
     }
 
@@ -311,24 +406,8 @@ export function CommonMencloseMixin<
     /**
      * @override
      */
-    public computeBBox(bbox: BBox, recompute: boolean = false) {
-      //
-      //  Combine the BBox from the child and add the extenders
-      //
-      let [T, R, B, L] = this.TRBL;
-      const child = this.childNodes[0].getBBox();
-      bbox.combine(child, L, 0);
-      bbox.h += T;
-      bbox.d += B;
-      bbox.w += R;
-      this.setChildPWidths(recompute);
-    }
-
-    /**
-     * @return {Notation.PaddingData}  Array of the maximum extra space from the notations along each side
-     */
     public getBBoxExtenders(): Notation.PaddingData {
-      let TRBL = [0, 0, 0, 0] as Notation.PaddingData;
+      const TRBL = [0, 0, 0, 0] as Notation.PaddingData;
       for (const name of Object.keys(this.notations)) {
         this.maximizeEntries(TRBL, this.notations[name].bbox(this as any));
       }
@@ -336,24 +415,23 @@ export function CommonMencloseMixin<
     }
 
     /**
-     * @return {Notation.PaddingData}  Array of padding (i.e., BBox minus border) along each side
+     * @override
      */
     public getPadding(): Notation.PaddingData {
-      let BTRBL = [0, 0, 0, 0] as Notation.PaddingData;
+      const BTRBL = [0, 0, 0, 0] as Notation.PaddingData;
       for (const name of Object.keys(this.notations)) {
         const border = this.notations[name].border;
         if (border) {
           this.maximizeEntries(BTRBL, border(this as any));
         }
       }
-      return [0, 1, 2, 3].map(i => this.TRBL[i] - BTRBL[i]) as Notation.PaddingData;
+      return [0, 1, 2, 3].map(
+        (i) => this.TRBL[i] - BTRBL[i]
+      ) as Notation.PaddingData;
     }
 
     /**
-     * Each entry in X gets replaced by the corresponding one in Y if it is larger
-     *
-     * @param {Notation.PaddingData} X   An array of numbers
-     * @param {Notation.PaddingData} Y   An array of numbers that replace smaller ones in X
+     * @override
      */
     public maximizeEntries(X: Notation.PaddingData, Y: Notation.PaddingData) {
       for (let i = 0; i < X.length; i++) {
@@ -366,65 +444,54 @@ export function CommonMencloseMixin<
     /********************************************************/
 
     /**
-     * Get the offset amount for the given direction for vertical and horizontal centering
-     *
-     * @param {string} direction    The direction 'X' or 'Y' for the offset
-     * @return {number}             The amount of offset in that direction
+     * @override
      */
     public getOffset(direction: string): number {
-      let [T, R, B, L] = this.TRBL;
+      const [T, R, B, L] = this.TRBL;
       const d = (direction === 'X' ? R - L : B - T) / 2;
-      return (Math.abs(d) > .001 ? d : 0);
+      return Math.abs(d) > 0.001 ? d : 0;
     }
 
     /**
-     * @param {number} w    The width of the box whose diagonal is needed
-     * @param {number} h    The height of the box whose diagonal is needed
-     * @return {number[]}   The angle and width of the diagonal of the box
+     * @override
      */
     public getArgMod(w: number, h: number): [number, number] {
       return [Math.atan2(h, w), Math.sqrt(w * w + h * h)];
     }
 
     /**
-     * Create an arrow using an svg element
-     *
-     * @param {number} w        The length of the arrow
-     * @param {number} a        The angle for the arrow
-     * @param {boolean} double  True if this is a double-headed arrow
-     * @param {string} offset   'X' for vertical arrow, 'Y' for horizontal
-     * @param {number} dist     Distance to translate in the offset direction
-     * @return {N}              The newly created arrow
+     * @override
      */
-    public arrow(_w: number, _a: number, _double: boolean, _offset: string = '', _dist: number = 0): N {
+    public arrow(
+      _w: number,
+      _a: number,
+      _double: boolean,
+      _offset: string = '',
+      _dist: number = 0
+    ): N {
       return null as N;
     }
 
     /**
-     * Get the angle and width of a diagonal arrow, plus the x and y extension
-     *   past the content bounding box
-     *
-     * @return {Object}  The angle, width, and x and y extentions
+     * @override
      */
-    public arrowData(): {a: number, W: number, x: number, y: number} {
+    public arrowData(): { a: number; W: number; x: number; y: number } {
       const [p, t] = [this.padding, this.thickness];
       const r = t * (this.arrowhead.x + Math.max(1, this.arrowhead.dx));
-      const {h, d, w} = this.childNodes[0].getBBox();
+      const { h, d, w } = this.childNodes[0].getBBox();
       const H = h + d;
       const R = Math.sqrt(H * H + w * w);
-      const x = Math.max(p, r * w / R);
-      const y = Math.max(p, r * H / R);
+      const x = Math.max(p, (r * w) / R);
+      const y = Math.max(p, (r * H) / R);
       const [a, W] = this.getArgMod(w + 2 * x, H + 2 * y);
-      return {a, W, x, y};
+      return { a, W, x, y };
     }
 
     /**
-     * Get the angle and width for a diagonal arrow
-     *
-     * @return {[number, number]}   The angle and width
+     * @override
      */
     public arrowAW(): [number, number] {
-      const {h, d, w} = this.childNodes[0].getBBox();
+      const { h, d, w } = this.childNodes[0].getBBox();
       const [T, R, B, L] = this.TRBL;
       return this.getArgMod(L + w + R, T + h + d + B);
     }
@@ -432,28 +499,20 @@ export function CommonMencloseMixin<
     /********************************************************/
 
     /**
-     * Create an unattached msqrt wrapper to render the 'radical' notation.
-     *   We replace the inferred mrow of the msqrt with the one from the menclose
-     *   but without changing the parent pointer, so as not to detach it from
-     *   the menclose (which would desrtoy the original MathML tree).
-     *
-     * @param {W} child   The inferred mrow that is the child of this menclose
-     * @return {S}        The newly created (but detached) msqrt wrapper
+     * @override
      */
-    public createMsqrt(child: W): S {
+    public createMsqrt(child: WW): S {
       const mmlFactory = (this.node as AbstractMmlNode).factory;
       const mml = mmlFactory.create('msqrt');
       mml.inheritAttributesFrom(this.node);
       mml.childNodes[0] = child.node;
-      const node = this.wrap(mml) as S;
-      node.parent = this;
+      const node = this.wrap(mml) as any as S;
+      node.parent = this as any as WW;
       return node;
     }
 
     /**
-     * @return {number[]}  The differences between the msqrt bounding box
-     *                     and its child bounding box (i.e., the extra space
-     *                     created by the radical symbol).
+     * @override
      */
     public sqrtTRBL(): [number, number, number, number] {
       const bbox = this.msqrt.getBBox();
@@ -461,5 +520,35 @@ export function CommonMencloseMixin<
       return [bbox.h - cbox.h, 0, bbox.d - cbox.d, bbox.w - cbox.w];
     }
 
-  };
+    /********************************************************/
+
+    /**
+     * @override
+     * @class
+     */
+    constructor(factory: WF, node: MmlNode, parent: WW = null) {
+      super(factory, node, parent);
+      this.getParameters();
+      this.getNotations();
+      this.removeRedundantNotations();
+      this.initializeNotations();
+      this.TRBL = this.getBBoxExtenders();
+    }
+
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox, recompute: boolean = false) {
+      //
+      //  Combine the BBox from the child and add the extenders
+      //
+      const [T, R, B, L] = this.TRBL;
+      const child = this.childNodes[0].getBBox();
+      bbox.combine(child, L, 0);
+      bbox.h += T;
+      bbox.d += B;
+      bbox.w += R;
+      this.setChildPWidths(recompute);
+    }
+  } as any as B;
 }

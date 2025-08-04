@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/verb",
+    "component": "input/tex/extensions/verb",
+    "targets": ["input/tex/verb"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/verb",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

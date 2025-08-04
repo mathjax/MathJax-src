@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
  */
 
 /**
- * @fileoverview  Implements the HTMLMathList object
+ * @file  Implements the HTMLMathList object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractMathList} from '../../core/MathList.js';
+import { AbstractMathList } from '../../core/MathList.js';
 
 /*****************************************************************/
 /**
@@ -31,5 +31,4 @@ import {AbstractMathList} from '../../core/MathList.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class HTMLMathList<N, T, D> extends AbstractMathList<N, T, D> {
-}
+export class HTMLMathList<N, T, D> extends AbstractMathList<N, T, D> {}

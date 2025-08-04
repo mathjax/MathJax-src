@@ -1,0 +1,16 @@
+{
+  "build": {
+    "id": "[tex]/extpfeil",
+    "component": "input/tex/extensions/extpfeil",
+    "targets": ["input/tex/extpfeil"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/extpfeil",
+    "libs": [
+      "components/src/input/tex/extensions/ams/lib",
+      "components/src/input/tex/extensions/newcommand/lib",
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

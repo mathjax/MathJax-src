@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,19 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMfenced node
+ * @file  Implements the MmlMfenced node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, TextNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import {
+  MmlNode,
+  TextNode,
+  AbstractMmlNode,
+  AttributeList,
+  TEXCLASS,
+} from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,15 +36,14 @@ import {MmlNode, TextNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../Mm
  */
 
 export class MmlMfenced extends AbstractMmlNode {
-
   /**
-   * @overeride
+   * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlNode.defaults,
     open: '(',
     close: ')',
-    separators: ','
+    separators: ',',
   };
 
   /**
@@ -101,7 +106,12 @@ export class MmlMfenced extends AbstractMmlNode {
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
     this.addFakeNodes();
     for (const child of [this.open, this.close].concat(this.separators)) {
       if (child) {
@@ -115,8 +125,11 @@ export class MmlMfenced extends AbstractMmlNode {
    * Create <mo> elements for the open and close delimiters, and for the separators (if any)
    */
   protected addFakeNodes() {
-    let {open, close, separators} = this.attributes.getList('open', 'close', 'separators') as
-    {open: string, close: string, separators: string};
+    let { open, close, separators } = this.attributes.getList(
+      'open',
+      'close',
+      'separators'
+    ) as { open: string; close: string; separators: string };
     open = open.replace(/[ \t\n\r]/g, '');
     close = close.replace(/[ \t\n\r]/g, '');
     separators = separators.replace(/[ \t\n\r]/g, '');
@@ -124,7 +137,11 @@ export class MmlMfenced extends AbstractMmlNode {
     // Create open node
     //
     if (open) {
-      this.open = this.fakeNode(open, {fence: true, form: 'prefix'}, TEXCLASS.OPEN);
+      this.open = this.fakeNode(
+        open,
+        { fence: true, form: 'prefix' },
+        TEXCLASS.OPEN
+      );
     }
     //
     // Create nodes for the separators
@@ -144,7 +161,11 @@ export class MmlMfenced extends AbstractMmlNode {
     //  Create close node
     //
     if (close) {
-      this.close = this.fakeNode(close, {fence: true, form: 'postfix'}, TEXCLASS.CLOSE);
+      this.close = this.fakeNode(
+        close,
+        { fence: true, form: 'postfix' },
+        TEXCLASS.CLOSE
+      );
     }
   }
 
@@ -152,14 +173,17 @@ export class MmlMfenced extends AbstractMmlNode {
    * @param {string} c                 The character for the text of the node
    * @param {PropertyList} properties  The attributes for the node
    * @param {number} texClass          The TeX class for the node
-   * @return {MmlNode}                 The generated <mo> node
+   * @returns {MmlNode}                 The generated <mo> node
    */
-  protected fakeNode(c: string, properties: PropertyList = {}, texClass: number = null): MmlNode {
-    let text = (this.factory.create('text') as TextNode).setText(c);
-    let node = this.factory.create('mo', properties, [text]);
+  protected fakeNode(
+    c: string,
+    properties: PropertyList = {},
+    texClass: number = null
+  ): MmlNode {
+    const text = (this.factory.create('text') as TextNode).setText(c);
+    const node = this.factory.create('mo', properties, [text]);
     node.texClass = texClass;
     node.parent = this;
     return node;
   }
-
 }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  The generic Factory class for creating arbitrary objects
+ * @file  The generic Factory class for creating arbitrary objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -37,9 +37,9 @@ export interface FactoryNodeClass<N extends FactoryNode> {
   /**
    * @param {Factory<N, FactoryNodeClass<N>>} factory  The factory for creating more nodes
    * @param {any[]} args  Any additional arguments needed by the node
-   * @return {N}  The newly created node
+   * @returns {N}  The newly created node
    */
-  new(factory: Factory<N, FactoryNodeClass<N>>, ...args: any[]): N;
+  new (factory: Factory<N, FactoryNodeClass<N>>, ...args: any[]): N;
 }
 
 /*****************************************************************/
@@ -59,7 +59,7 @@ export interface FactoryNodeClass<N extends FactoryNode> {
 export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
   /**
    * @param {string} kind  The kind of node to create
-   * @return {N}  The newly created node of the given kind
+   * @returns {N}  The newly created node of the given kind
    */
   create(kind: string): N;
 
@@ -73,7 +73,7 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
 
   /**
    * @param {string} kind  The kind of node whose class is to be returned
-   * @return {C}  The class object for the given kind
+   * @returns {C}  The class object for the given kind
    */
   getNodeClass(kind: string): C;
 
@@ -85,16 +85,15 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
   /**
    * @param {N} node  The node to test if it is of a given kind
    * @param {string} kind  The kind to test for
-   * @return {boolean}  True if the node is of the given kind, false otherwise
+   * @returns {boolean}  True if the node is of the given kind, false otherwise
    */
   nodeIsKind(node: N, kind: string): boolean;
 
   /**
-   * @return {string[]}  The names of all the available kinds of nodes
+   * @returns {string[]}  The names of all the available kinds of nodes
    */
   getKinds(): string[];
 }
-
 
 /*****************************************************************/
 /**
@@ -104,10 +103,13 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
  * @template N  The node type created by the factory
  * @template C  The class of the node being constructed (for access to static properties)
  */
-interface AbstractFactoryClass<N extends FactoryNode, C extends FactoryNodeClass<N>> extends Function {
-  defaultNodes: {[kind: string]: C};
+interface AbstractFactoryClass<
+  N extends FactoryNode,
+  C extends FactoryNodeClass<N>,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+> extends Function {
+  defaultNodes: { [kind: string]: C };
 }
-
 
 /*****************************************************************/
 /**
@@ -116,8 +118,11 @@ interface AbstractFactoryClass<N extends FactoryNode, C extends FactoryNodeClass
  * @template N  The node type created by the factory
  * @template C  The class of the node being constructed (for access to static properties)
  */
-export abstract class AbstractFactory<N extends FactoryNode, C extends FactoryNodeClass<N>> implements Factory<N, C> {
-
+export abstract class AbstractFactory<
+  N extends FactoryNode,
+  C extends FactoryNodeClass<N>,
+> implements Factory<N, C>
+{
   /**
    * The default collection of objects to use for the node map
    */
@@ -136,12 +141,12 @@ export abstract class AbstractFactory<N extends FactoryNode, C extends FactoryNo
   /**
    * An object containing functions for creating the various node kinds
    */
-  protected node: {[kind: string]: (...args: any[]) => N} = {};
+  protected node: { [kind: string]: (...args: any[]) => N } = {};
 
   /**
    * @override
    */
-  constructor(nodes: {[kind: string]: C} = null) {
+  constructor(nodes: { [kind: string]: C } = null) {
     if (nodes === null) {
       nodes = (this.constructor as AbstractFactoryClass<N, C>).defaultNodes;
     }
@@ -162,12 +167,12 @@ export abstract class AbstractFactory<N extends FactoryNode, C extends FactoryNo
    */
   public setNodeClass(kind: string, nodeClass: C) {
     this.nodeMap.set(kind, nodeClass);
-    let THIS = this;
-    let KIND = this.nodeMap.get(kind);
+    const KIND = this.nodeMap.get(kind);
     this.node[kind] = (...args: any[]) => {
-      return new KIND(THIS, ...args);
+      return new KIND(this, ...args);
     };
   }
+
   /**
    * @override
    */
@@ -187,7 +192,7 @@ export abstract class AbstractFactory<N extends FactoryNode, C extends FactoryNo
    * @override
    */
   public nodeIsKind(node: N, kind: string) {
-    return (node instanceof this.getNodeClass(kind));
+    return node instanceof this.getNodeClass(kind);
   }
 
   /**
@@ -196,5 +201,4 @@ export abstract class AbstractFactory<N extends FactoryNode, C extends FactoryNo
   public getKinds() {
     return Array.from(this.nodeMap.keys());
   }
-
 }

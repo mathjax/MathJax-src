@@ -1,9 +1,6 @@
 {
   "linterOptions": {
-    "exclude": [
-      "**/*.d.ts",
-      "**/fonts/tex/*.ts"
-    ]
+    "exclude": ["**/*.d.ts"]
   },
   "rulesDirectory": [
     "node_modules/tslint-jsdoc-rules/lib"
@@ -13,7 +10,6 @@
     "comment-format": [
       true,
       "check-space"
-//      "check-uppercase"
     ],
     "curly": [
       true,

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
  */
 
 /**
- * @fileoverview  Implements a lightweight Text element replacement
+ * @file  Implements a lightweight Text element replacement
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {LiteElement} from './Element.js';
+import { LiteElement } from './Element.js';
 
 /************************************************************/
 /**
@@ -40,14 +40,16 @@ export class LiteText {
 
   /**
    * The kind of node is #text
+   *
+   * @returns {string} The node kind.
    */
-  public get kind() {
+  public get kind(): string {
     return '#text';
   }
 
   /**
    * @param {string} text  The text for the node
-   * @constructor
+   * @class
    */
   constructor(text: string = '') {
     this.value = text;

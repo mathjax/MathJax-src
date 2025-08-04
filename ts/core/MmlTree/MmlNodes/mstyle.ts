@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMstyle node
+ * @file  Implements the MmlMstyle node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlLayoutNode, AttributeList} from '../MmlNode.js';
-import {INHERIT} from '../Attributes.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlLayoutNode, AttributeList } from '../MmlNode.js';
+import { INHERIT } from '../Attributes.js';
 
 /*****************************************************************/
 /**
@@ -31,7 +31,6 @@ import {INHERIT} from '../Attributes.js';
  */
 
 export class MmlMstyle extends AbstractMmlLayoutNode {
-
   /**
    * @override
    */
@@ -40,11 +39,11 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
     scriptlevel: INHERIT,
     displaystyle: INHERIT,
     scriptsizemultiplier: 1 / Math.sqrt(2),
-    scriptminsize: '8px',  // should be 8pt, but that is too large
+    scriptminsize: '.4em', // should be 8pt, but that is too large
     mathbackground: INHERIT,
     mathcolor: INHERIT,
     dir: INHERIT,
-    infixlinebreakstyle: 'before'
+    infixlinebreakstyle: 'before',
   };
 
   /**
@@ -62,11 +61,30 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
   }
 
   /**
+   * @override
+   */
+  public setInheritedAttributes(
+    attributes: AttributeList = {},
+    display: boolean = false,
+    level: number = 0,
+    prime: boolean = false
+  ) {
+    this.attributes.setInherited('displaystyle', display);
+    this.attributes.setInherited('scriptlevel', level);
+    super.setInheritedAttributes(attributes, display, level, prime);
+  }
+
+  /**
    * Handle scriptlevel changes, and add mstyle attributes to the ones being inherited.
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
     let scriptlevel = this.attributes.getExplicit('scriptlevel');
     if (scriptlevel != null) {
       scriptlevel = scriptlevel.toString();
@@ -75,19 +93,26 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
       } else {
         level = parseInt(scriptlevel);
       }
-      prime = false;  // style change resets tex prime style
+      prime = false; // style change resets tex prime style
     }
-    let displaystyle = this.attributes.getExplicit('displaystyle') as boolean;
+    const displaystyle = this.attributes.getExplicit('displaystyle') as boolean;
     if (displaystyle != null) {
-      display = (displaystyle === true);
-      prime = false;  // style change resets tex prime style
+      display = displaystyle === true;
+      prime = false; // style change resets tex prime style
     }
-    const cramped = this.attributes.getExplicit('data-cramped') as boolean;  // manual control of tex prime style
+    const cramped = this.attributes.getExplicit('data-cramped') as boolean; // manual control of tex prime style
     if (cramped != null) {
       prime = cramped;
     }
-    attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
-    this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
+    attributes = this.addInheritedAttributes(
+      attributes,
+      this.attributes.getAllAttributes()
+    );
+    this.childNodes[0].setInheritedAttributes(
+      attributes,
+      display,
+      level,
+      prime
+    );
   }
-
 }

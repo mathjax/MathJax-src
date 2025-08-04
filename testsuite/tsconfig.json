@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig/mjs.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./js",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "paths": {
+      "#js/*": ["../mjs/*"],
+      "#source/*": ["../components/mjs/*"],
+      "#src/*": ["./src/*"],
+      "#helpers": ["./js/src/index.js"]
+    },
+    "isolatedModules": true,
+    "lib": ["DOM", "es2022"]
+  },
+  "include": ["./tests/**/*.ts", "./src/*.ts"]
+}

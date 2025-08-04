@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMaction node
+ * @file  Implements the MmlMaction node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { MmlNode, AbstractMmlNode, AttributeList } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,14 +30,13 @@ import {MmlNode, AbstractMmlNode} from '../MmlNode.js';
  */
 
 export class MmlMaction extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlNode.defaults,
     actiontype: 'toggle',
-    selection: 1
+    selection: 1,
   };
 
   /**
@@ -49,6 +48,7 @@ export class MmlMaction extends AbstractMmlNode {
 
   /**
    * At least one child
+   *
    * @override
    */
   public get arity() {
@@ -56,7 +56,7 @@ export class MmlMaction extends AbstractMmlNode {
   }
 
   /**
-   * @return {MmlNode}  The selected child node (or an mrow if none selected)
+   * @returns {MmlNode}  The selected child node (or an mrow if none selected)
    */
   public get selected(): MmlNode {
     const selection = this.attributes.get('selection') as number;
@@ -97,10 +97,11 @@ export class MmlMaction extends AbstractMmlNode {
    */
   protected verifyAttributes(options: PropertyList) {
     super.verifyAttributes(options);
-    if (this.attributes.get('actiontype') !== 'toggle' &&
-        this.attributes.getExplicit('selection') !== undefined) {
-      const attributes = this.attributes.getAllAttributes();
-      delete attributes.selection;
+    if (
+      this.attributes.get('actiontype') !== 'toggle' &&
+      this.attributes.hasExplicit('selection')
+    ) {
+      this.attributes.unset('selection');
     }
   }
 
@@ -114,7 +115,7 @@ export class MmlMaction extends AbstractMmlNode {
     if (this.attributes.get('actiontype') === 'tooltip' && this.childNodes[1]) {
       this.childNodes[1].setTeXclass(null);
     }
-    let selected = this.selected;
+    const selected = this.selected;
     prev = selected.setTeXclass(prev);
     this.updateTeXclass(selected);
     return prev;
@@ -124,11 +125,37 @@ export class MmlMaction extends AbstractMmlNode {
    * Select the next child for a toggle action
    */
   public nextToggleSelection() {
-    let selection = Math.max(1, (this.attributes.get('selection') as number) + 1);
+    let selection = Math.max(
+      1,
+      parseInt(this.attributes.get('selection') as string) + 1
+    );
     if (selection > this.childNodes.length) {
       selection = 1;
     }
     this.attributes.set('selection', selection);
   }
 
+  /**
+   * @override
+   */
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
+    if (
+      (this.attributes.get('actiontype') as string).toLowerCase() !== 'tooltip'
+    ) {
+      super.setChildInheritedAttributes(attributes, display, level, prime);
+      return;
+    }
+    this.childNodes[0]?.setInheritedAttributes(
+      attributes,
+      display,
+      level,
+      prime
+    );
+    this.childNodes[1]?.setInheritedAttributes(attributes, false, 1, false);
+  }
 }

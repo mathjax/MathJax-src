@@ -2,7 +2,7 @@
 
 /*************************************************************
  *
- *  Copyright (c) 2022 The MathJax Consortium
+ *  Copyright (c) 2022-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ const version = require(package).version;
 
 const lines = `/*************************************************************
  *
- *  Copyright (c) 2022 The MathJax Consortium
+ *  Copyright (c) 2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,8 +48,8 @@ const lines = `/*************************************************************
  */
 
 /**
- * @fileoverview  The version of MathJax (used to tell what version a component
- *                was compiled against).
+ * @file  The version of MathJax (used to tell what version a component
+ *        was compiled against).
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

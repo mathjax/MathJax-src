@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,14 +16,18 @@
  */
 
 /**
- * @fileoverview  Interfaces and abstract classes for Handler objects
+ * @file  Interfaces and abstract classes for Handler objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathDocument, AbstractMathDocument, MathDocumentConstructor} from './MathDocument.js';
-import {OptionList} from '../util/Options.js';
-import {DOMAdaptor} from '../core/DOMAdaptor.js';
+import {
+  MathDocument,
+  AbstractMathDocument,
+  MathDocumentConstructor,
+} from './MathDocument.js';
+import { OptionList } from '../util/Options.js';
+import { DOMAdaptor } from '../core/DOMAdaptor.js';
 
 /*****************************************************************/
 /**
@@ -60,7 +64,7 @@ export interface Handler<N, T, D> {
    * Checks to see if the handler can process a given document
    *
    * @param {any} document  The document to be processed (string, window, etc.)
-   * @return {boolean}      True if this handler can process the given document
+   * @returns {boolean}      True if this handler can process the given document
    */
   handlesDocument(document: any): boolean;
 
@@ -69,7 +73,7 @@ export interface Handler<N, T, D> {
    *
    * @param {any} document        The document to be handled
    * @param {OptionList} options  The options for the handling of the document
-   * @return {MathDocument}       The MathDocument object that manages the processing
+   * @returns {MathDocument}       The MathDocument object that manages the processing
    */
   create(document: any, options: OptionList): MathDocument<N, T, D>;
 }
@@ -93,7 +97,6 @@ class DefaultMathDocument<N, T, D> extends AbstractMathDocument<N, T, D> {}
  * @template D  The Document class
  */
 export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
-
   /**
    * The name of this class
    */
@@ -113,12 +116,14 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
    * The class implementing the MathDocument for this handler
    *   (so it can be subclassed by extensions as needed)
    */
-  public documentClass: MathDocumentConstructor<AbstractMathDocument<N, T, D>> = DefaultMathDocument;
+  public documentClass: MathDocumentConstructor<AbstractMathDocument<N, T, D>> =
+    DefaultMathDocument;
 
   /**
+   * @param {DOMAdaptor} adaptor The DOM adaptor
    * @param {number} priority  The priority to use for this handler
    *
-   * @constructor
+   * @class
    */
   constructor(adaptor: DOMAdaptor<N, T, D>, priority: number = 5) {
     this.adaptor = adaptor;
@@ -126,7 +131,7 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
   }
 
   /**
-   * @return {string}  The name of this handler class
+   * @returns {string}  The name of this handler class
    */
   public get name(): string {
     return (this.constructor as typeof AbstractHandler).NAME;
@@ -143,7 +148,10 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
    * @override
    */
   public create(document: any, options: OptionList) {
-    return new this.documentClass(document, this.adaptor, options) as MathDocument<N, T, D>;
+    return new this.documentClass(
+      document,
+      this.adaptor,
+      options
+    ) as MathDocument<N, T, D>;
   }
-
 }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,26 +16,65 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMfenced wrapper mixin for the MmlMfenced object
+ * @file  Implements the CommonMfenced wrapper mixin for the MmlMfenced object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {CommonInferredMrow} from './mrow.js';
-import {MmlNode, AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';
-import {BBox} from '../../../util/BBox.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { CommonInferredMrow } from './mrow.js';
+import { MmlNode, AbstractMmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMfenced } from '../../../core/MmlTree/MmlNodes/mfenced.js';
+import { BBox } from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
  * The CommonMfenced interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMfenced extends AnyWrapper {
+export interface CommonMfenced<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
   /**
    * An mrow to use for the layout of the mfenced
    */
-  mrow: CommonInferredMrow;
+  mrow: CommonInferredMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
 
   /**
    * Creates the mrow wrapper to use for the layout
@@ -58,50 +97,98 @@ export interface CommonMfenced extends AnyWrapper {
 }
 
 /**
- * Shorthand for the CommonMfenced constructor
+ * The CommonMfencedClass interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type MfencedConstructor = Constructor<CommonMfenced>;
+export interface CommonMfencedClass<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMfenced wrapper mixin for the MmlMfenced object
  *
- * @template T  The Wrapper class constructor type
+ * @param {CommonWrapperConstructor} Base The constructor class
+ * @returns {B} The mixin constructor
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
-export function CommonMfencedMixin<T extends WrapperConstructor>(Base: T): MfencedConstructor & T {
-
-  return class extends Base {
-
+export function CommonMfencedMixin<
+  N,
+  T,
+  D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMfencedMixin
+    extends Base
+    implements CommonMfenced<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
-     * An mrow to use for the layout of the mfenced
+     * @override
      */
-    public mrow: CommonInferredMrow = null;
+    /* prettier-ignore */
+    public mrow:
+      CommonInferredMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> = null;
 
     /**
      * @override
-     * @constructor
-     */
-    constructor(...args: any[]) {
-      super(...args);
-      this.createMrow();
-      this.addMrowChildren();
-    }
-
-    /**
-     * Creates the mrow wrapper to use for the layout
      */
     public createMrow() {
       const mmlFactory = (this.node as AbstractMmlNode).factory;
       const mrow = mmlFactory.create('inferredMrow');
       mrow.inheritAttributesFrom(this.node);
-      this.mrow = this.wrap(mrow) as CommonInferredMrow;
-      this.mrow.parent = this;
+      this.mrow = this.wrap(mrow);
+      this.mrow.parent = this as any as WW;
     }
 
     /**
-     * Populate the mrow with wrapped mo elements interleaved
-     *   with the mfenced children (the mo's are already created
-     *   in the mfenced object)
+     * @override
      */
     public addMrowChildren() {
       const mfenced = this.node as MmlMfenced;
@@ -120,15 +207,25 @@ export function CommonMfencedMixin<T extends WrapperConstructor>(Base: T): Mfenc
     }
 
     /**
-     * Wrap an mo element and push it onto the mrow
-     *
-     * @param {MmlNode} node  The mo element to push on the mrow
+     * @override
      */
     public addMo(node: MmlNode) {
       if (!node) return;
       const mo = this.wrap(node);
       this.mrow.childNodes.push(mo);
-      mo.parent = this.mrow;
+      mo.parent = this.mrow as any as WW;
+    }
+
+    /*******************************************************/
+
+    /**
+     * @override
+     * @class
+     */
+    constructor(factory: WF, node: MmlNode, parent: WW = null) {
+      super(factory, node, parent);
+      this.createMrow();
+      this.addMrowChildren();
     }
 
     /**
@@ -139,6 +236,18 @@ export function CommonMfencedMixin<T extends WrapperConstructor>(Base: T): Mfenc
       this.setChildPWidths(recompute);
     }
 
-  };
+    /**
+     * @override
+     */
+    get breakCount() {
+      return this.mrow.breakCount;
+    }
 
+    /**
+     * @override
+     */
+    public computeLineBBox(i: number) {
+      return this.mrow.getLineBBox(i);
+    }
+  } as any as B;
 }

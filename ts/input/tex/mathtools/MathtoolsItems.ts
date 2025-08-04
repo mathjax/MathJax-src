@@ -1,5 +1,5 @@
 /*************************************************************
- *  Copyright (c) 2020-2022 MathJax Consortium
+ *  Copyright (c) 2020-2025 MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,29 +15,26 @@
  */
 
 /**
- * @fileoverview    Implementation of items for the mathtools package.
+ * @file    Implementation of items for the mathtools package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {MultlineItem} from '../ams/AmsItems.js';
+import { MultlineItem } from '../ams/AmsItems.js';
 import NodeUtil from '../NodeUtil.js';
-import {TexConstant} from '../TexConstants.js';
-
+import { TexConstant } from '../TexConstants.js';
 
 /**
  * The StackItem for the multlined environment
  */
 export class MultlinedItem extends MultlineItem {
-
   /**
    * @override
    */
   get kind() {
     return 'multlined';
   }
-
 
   /**
    * @override
@@ -49,22 +46,27 @@ export class MultlinedItem extends MultlineItem {
     }
     if (this.table.length > 1) {
       const options = this.factory.configuration.options.mathtools;
-      const gap = options.multlinegap;
+      const gap = options['multlined-gap'];
       const firstskip = options['firstline-afterskip'] || gap;
       const lastskip = options['lastline-preskip'] || gap;
       const first = NodeUtil.getChildren(this.table[0])[0];
-      if (NodeUtil.getAttribute(first, 'columnalign') !== TexConstant.Align.RIGHT) {
-        first.appendChild(this.create('node', 'mspace', [], {width: firstskip}));
+      if (
+        NodeUtil.getAttribute(first, 'columnalign') !== TexConstant.Align.RIGHT
+      ) {
+        first.appendChild(
+          this.create('node', 'mspace', [], { width: firstskip })
+        );
       }
       const last = NodeUtil.getChildren(this.table[this.table.length - 1])[0];
-      if (NodeUtil.getAttribute(last, 'columnalign') !== TexConstant.Align.LEFT) {
+      if (
+        NodeUtil.getAttribute(last, 'columnalign') !== TexConstant.Align.LEFT
+      ) {
         const top = NodeUtil.getChildren(last)[0];
         top.childNodes.unshift(null);
-        const space = this.create('node', 'mspace', [], {width: lastskip});
+        const space = this.create('node', 'mspace', [], { width: lastskip });
         NodeUtil.setChild(top, 0, space);
       }
     }
     super.EndTable.call(this);
   }
-
 }

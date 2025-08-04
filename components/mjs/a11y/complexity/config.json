@@ -1,0 +1,18 @@
+{
+  "build": {
+    "component": "a11y/complexity",
+    "targets": [
+      "a11y/complexity.ts",
+      "a11y/complexity",
+      "a11y/semantic-enrich.ts"
+    ]
+  },
+  "webpack": {
+    "name": "a11y/complexity",
+    "libs": [
+      "components/src/a11y/semantic-enrich/lib",
+      "components/src/input/mml/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

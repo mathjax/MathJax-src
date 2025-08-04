@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,17 +15,14 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Items for TeX parsing of new environments.
+ * @file Items for TeX parsing of new environments.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
 import TexError from '../TexError.js';
-import {CheckType, BaseItem, StackItem} from '../StackItem.js';
-
+import { CheckType, BaseItem, StackItem } from '../StackItem.js';
 
 /**
  * Opening Item dealing with definitions of new environments. It's pushed onto
@@ -33,7 +30,6 @@ import {CheckType, BaseItem, StackItem} from '../StackItem.js';
  * until a corresponding \\end collapses the stack.
  */
 export class BeginEnvItem extends BaseItem {
-
   /**
    * @override
    */
@@ -41,14 +37,12 @@ export class BeginEnvItem extends BaseItem {
     return 'beginEnv';
   }
 
-
   /**
    * @override
    */
   get isOpen() {
     return true;
   }
-
 
   /**
    * @override
@@ -58,8 +52,12 @@ export class BeginEnvItem extends BaseItem {
       // @test Newenvironment Empty, Newenvironment Align
       if (item.getName() !== this.getName()) {
         // @test (missing) \newenvironment{env}{aa}{bb}\begin{env}cc\end{equation}
-        throw new TexError('EnvBadEnd', '\\begin{%1} ended with \\end{%2}',
-                            this.getName(), item.getName());
+        throw new TexError(
+          'EnvBadEnd',
+          '\\begin{%1} ended with \\end{%2}',
+          this.getName(),
+          item.getName()
+        );
       }
       return [[this.factory.create('mml', this.toMml())], true];
     }
@@ -70,5 +68,4 @@ export class BeginEnvItem extends BaseItem {
     // @test Newenvironment Empty, Newenvironment Align
     return super.checkItem(item);
   }
-
 }

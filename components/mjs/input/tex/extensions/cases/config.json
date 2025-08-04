@@ -1,0 +1,16 @@
+{
+  "build": {
+    "id": "[tex]/cases",
+    "component": "input/tex/extensions/cases",
+    "targets": ["input/tex/cases"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/cases",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/input/tex/extensions/ams/lib",
+      "components/src/input/tex/extensions/empheq/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

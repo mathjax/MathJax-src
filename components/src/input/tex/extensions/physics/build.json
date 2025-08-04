@@ -1,5 +1,0 @@
-{
-  "id": "[tex]/physics",
-  "component": "input/tex/extensions/physics",
-  "targets": ["input/tex/physics"]
-}

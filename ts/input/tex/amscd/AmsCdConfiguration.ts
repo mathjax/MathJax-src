@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,32 +15,29 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Configuration file for the AMScd package.
+ * @file Configuration file for the AMScd package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
 import './AmsCdMappings.js';
 
-
-export const AmsCdConfiguration = Configuration.create(
-  'amscd', {
-    handler: {
-      character: ['amscd_special'],
-      macro: ['amscd_macros'],
-      environment: ['amscd_environment']
+export const AmsCdConfiguration = Configuration.create('amscd', {
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.CHARACTER]: ['amscd_special'],
+    [HandlerType.MACRO]: ['amscd_macros'],
+    [HandlerType.ENVIRONMENT]: ['amscd_environment'],
+  },
+  [ConfigurationType.OPTIONS]: {
+    amscd: {
+      colspace: '5pt',
+      rowspace: '5pt',
+      harrowsize: '2.75em',
+      varrowsize: '1.75em',
+      hideHorizontalLabels: false,
     },
-    options: {
-      amscd: {
-        colspace: '5pt',
-        rowspace: '5pt',
-        harrowsize: '2.75em',
-        varrowsize: '1.75em',
-        hideHorizontalLabels: false
-      }
-    }
-  }
-);
+  },
+});

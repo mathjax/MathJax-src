@@ -1,0 +1,15 @@
+{
+  "build": {
+    "id": "[tex]/cancel",
+    "component": "input/tex/extensions/cancel",
+    "targets": ["input/tex/cancel"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/cancel",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/input/tex/extensions/enclose/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

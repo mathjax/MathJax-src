@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,26 +16,25 @@
  */
 
 /**
- * @fileoverview  Converts named entities to unicode characters
+ * @file  Converts named entities to unicode characters
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {retryAfter} from './Retries.js';
-import {asyncLoad} from './AsyncLoad.js';
-import {OptionList} from './Options.js';
+import { retryAfter } from './Retries.js';
+import { asyncLoad } from './AsyncLoad.js';
+import { OptionList } from './Options.js';
 
 /**
  * The type for lists of entities
  */
-export type EntityList = {[name: string]: string};
-
+export type EntityList = { [name: string]: string };
 
 /**
  *  Options controlling the process of conversion
  */
 export const options: OptionList = {
-  loadMissingEntities: true           // True means load entity files dynamically if needed
+  loadMissingEntities: true, // True means load entity files dynamically if needed
 };
 
 /**
@@ -451,13 +450,13 @@ export const entities: EntityList = {
   //  Needed by TeX input jax
   nbsp: '\u00A0',
   rsquo: '\u2019',
-  lsquo: '\u2018'
+  lsquo: '\u2018',
 };
 
 /**
  * The files that have been loaded
  */
-const loaded: {[name: string]: boolean} = {};
+const loaded: { [name: string]: boolean } = {};
 
 /**
  * Used by entity files to add more entities to the table
@@ -481,10 +480,10 @@ export function remove(entity: string) {
 
 /**
  * @param {string} text  The text whose entities are to be replaced
- * @return {string}      The text with entries replaced
+ * @returns {string}      The text with entries replaced
  */
 export function translate(text: string): string {
-  return text.replace(/&([a-z][a-z0-9]*|#(?:[0-9]+|x[0-9a-f]+));/ig, replace);
+  return text.replace(/&([a-z][a-z0-9]*|#(?:[0-9]+|x[0-9a-f]+));/gi, replace);
 }
 
 /**
@@ -494,7 +493,7 @@ export function translate(text: string): string {
  *
  * @param {string} match   The complete entity being replaced
  * @param {string} entity  The name of the entity to be replaced
- * @return {string}        The unicode character for the entity, or the entity name (if none found)
+ * @returns {string}        The unicode character for the entity, or the entity name (if none found)
  */
 function replace(match: string, entity: string): string {
   if (entity.charAt(0) === '#') {
@@ -504,7 +503,9 @@ function replace(match: string, entity: string): string {
     return entities[entity];
   }
   if (options['loadMissingEntities']) {
-    let file = (entity.match(/^[a-zA-Z](fr|scr|opf)$/) ? RegExp.$1 : entity.charAt(0).toLowerCase());
+    const file = entity.match(/^[a-zA-Z](fr|scr|opf)$/)
+      ? RegExp.$1
+      : entity.charAt(0).toLowerCase();
     if (!loaded[file]) {
       loaded[file] = true;
       retryAfter(asyncLoad('./util/entities/' + file + '.js'));
@@ -515,11 +516,10 @@ function replace(match: string, entity: string): string {
 
 /**
  * @param {string} entity  The character code point as a string
- * @return {string}        The character(s) with the given code point
+ * @returns {string}        The character(s) with the given code point
  */
 export function numeric(entity: string): string {
-  let n = (entity.charAt(0) === 'x' ?
-           parseInt(entity.slice(1), 16) :
-           parseInt(entity));
+  const n =
+    entity.charAt(0) === 'x' ? parseInt(entity.slice(1), 16) : parseInt(entity);
   return String.fromCodePoint(n);
 }

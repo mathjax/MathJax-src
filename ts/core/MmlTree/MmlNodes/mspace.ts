@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMspace node
+ * @file  Implements the MmlMspace node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { MmlNode, AbstractMmlTokenNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,16 +30,34 @@ import {MmlNode, AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMspace extends AbstractMmlTokenNode {
+  /**
+   * Attributes that make an mpsace not spacelike
+   */
+  public static NONSPACELIKE = [
+    /* 'width' */ // spec says not to allow breaks here, but we allow it
+    'height',
+    'depth',
+    'style',
+    'mathbackground',
+    'background',
+  ];
 
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlTokenNode.defaults,
-    width:  '0em',
+    width: '0em',
     height: '0ex',
-    depth:  '0ex',
-    linebreak: 'auto'
+    depth: '0ex',
+    linebreak: 'auto',
+    indentshift: 'auto', // Use user configuration
+    indentalign: 'auto',
+    indenttarget: '',
+    indentalignfirst: 'indentalign',
+    indentshiftfirst: 'indentshift',
+    indentalignlast: 'indentalign',
+    indentshiftlast: 'indentshift',
   };
 
   /**
@@ -63,6 +81,7 @@ export class MmlMspace extends AbstractMmlTokenNode {
 
   /**
    * mspace can't have children
+   *
    * @override
    */
   public get arity() {
@@ -70,10 +89,12 @@ export class MmlMspace extends AbstractMmlTokenNode {
   }
 
   /**
+   * Only make mspace be space-like if it doesn't have certain attributes
+   *
    * @override
    */
   public get isSpacelike() {
-    return true;
+    return !this.attributes.hasExplicit('linebreak') && this.canBreak;
   }
 
   /**
@@ -82,9 +103,22 @@ export class MmlMspace extends AbstractMmlTokenNode {
    * @override
    */
   public get hasNewline() {
-    let attributes = this.attributes;
-    return (attributes.getExplicit('width') == null && attributes.getExplicit('height') == null &&
-            attributes.getExplicit('depth') == null && attributes.get('linebreak') === 'newline');
+    const linebreak = this.attributes.get('linebreak');
+    return (
+      this.canBreak &&
+      (linebreak === 'newline' || linebreak === 'indentingnewline')
+    );
   }
 
+  /**
+   * @returns {boolean}  True if mspace is allowed to break, i.e.,
+   *                     no height/depth, no styles, no background color,
+   *                     and width non-negative.
+   */
+  public get canBreak(): boolean {
+    return (
+      !this.attributes.hasOneOf(MmlMspace.NONSPACELIKE) &&
+      String(this.attributes.get('width')).trim().charAt(0) !== '-'
+    );
+  }
 }

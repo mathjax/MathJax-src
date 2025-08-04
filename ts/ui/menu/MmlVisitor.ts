@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2022 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,15 +16,16 @@
  */
 
 /**
- * @fileoverview  A visitor to serialize MathML taking menu settings into account
+ * @file  A visitor to serialize MathML taking menu settings into account
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathItem} from '../../core/MathItem.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {SerializedMmlVisitor} from '../../core/MmlTree/SerializedMmlVisitor.js';
-import {OptionList, userOptions} from '../../util/Options.js';
+import { MathItem } from '../../core/MathItem.js';
+import { MmlNode } from '../../core/MmlTree/MmlNode.js';
+import { PropertyList } from '../../core/Tree/Node.js';
+import { SerializedMmlVisitor } from '../../core/MmlTree/SerializedMmlVisitor.js';
+import { OptionList, userOptions } from '../../util/Options.js';
 
 /*==========================================================================*/
 
@@ -36,13 +37,14 @@ import {OptionList, userOptions} from '../../util/Options.js';
  * @template D  The Document class
  */
 export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
-
   /**
    * The options controlling the serialization
    */
   public options: OptionList = {
-    texHints: true,           // True means include classes for TeXAtom elements
-    semantics: false,         // True means include original form as annotation in a semantics element
+    filterSRE: true, // True means remove data-semantic, role, and aria attributes
+    filterTex: true, // True means remove data-latex and data-latexItem attributes
+    texHints: true, // True means include classes for TeXAtom elements
+    semantics: false, // True means include original form as annotation in a semantics element
   };
 
   /**
@@ -56,7 +58,11 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
    * @param {OptionList} options   The options controlling the processing
    * @override
    */
-  public visitTree(node: MmlNode, math: MathItem<N, T, D> = null, options: OptionList = {}) {
+  public visitTree(
+    node: MmlNode,
+    math: MathItem<N, T, D> = null,
+    options: OptionList = {}
+  ) {
     this.mathItem = math;
     userOptions(this.options, options);
     return this.visitNode(node, '');
@@ -67,14 +73,16 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
    */
   public visitTeXAtomNode(node: MmlNode, space: string) {
     if (this.options.texHints) {
-      return super.visitTeXAtomNode(node, space);
+      return super.visitDefault(node, space);
     }
     if (node.childNodes[0] && node.childNodes[0].childNodes.length === 1) {
       return this.visitNode(node.childNodes[0], space);
     }
-    return space + '<mrow' +  this.getAttributes(node) + '>\n'
-      + this.childNodeMml(node, space + '  ', '\n')
-      + space + '</mrow>';
+    return (
+      `${space}<mrow${this.getAttributes(node)}>\n` +
+      this.childNodeMml(node, space + '  ', '\n') +
+      `${space}</mrow>`
+    );
   }
 
   /**
@@ -86,15 +94,38 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
     if (!this.options.semantics || this.mathItem.inputJax.name !== 'TeX') {
       return super.visitDefault(node, space);
     }
-    const addRow = node.childNodes.length && node.childNodes[0].childNodes.length > 1;
-    return space + '<math' + this.getAttributes(node) + '>\n'
-                 + space + '  <semantics>\n'
-                 + (addRow ? space + '    <mrow>\n' : '')
-                 + this.childNodeMml(node, space + (addRow ? '      ' : '    '), '\n')
-                 + (addRow ? space + '    </mrow>\n' : '')
-                 + space + '    <annotation encoding="application/x-tex">' + this.mathItem.math + '</annotation>\n'
-                 + space + '  </semantics>\n'
-                 + space + '</math>';
+    const addRow =
+      node.childNodes.length && node.childNodes[0].childNodes.length > 1;
+    return (
+      `${space}<math${this.getAttributes(node)}>\n${space}  <semantics>\n` +
+      (addRow ? space + '    <mrow>\n' : '') +
+      this.childNodeMml(node, space + (addRow ? '      ' : '    '), '\n') +
+      (addRow ? space + '    </mrow>\n' : '') +
+      `${space}    <annotation encoding="application/x-tex">` +
+      this.mathItem.math +
+      `</annotation>\n${space}  </semantics>\n${space}</math>`
+    );
   }
 
+  /**
+   * @override
+   */
+  protected getAttributeList(node: MmlNode): PropertyList {
+    const list = super.getAttributeList(node);
+    if (this.options.filterTex) {
+      delete list['data-latex'];
+      delete list['data-latex-item'];
+    }
+    if (this.options.filterSRE) {
+      const keys = Object.keys(list).filter((id) =>
+        id.match(
+          /^(?:data-semantic-.*?|data-speech-node|role|aria-(?:level|posinset|setsize|owns))$/
+        )
+      );
+      for (const key of keys) {
+        delete list[key];
+      }
+    }
+    return list;
+  }
 }

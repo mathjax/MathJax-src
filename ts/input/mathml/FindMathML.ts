@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,21 +16,20 @@
  */
 
 /**
- * @fileoverview  Implements the MathML version of the FindMath object
+ * @file  Implements the MathML version of the FindMath object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractFindMath} from '../../core/FindMath.js';
-import {DOMAdaptor} from '../../core/DOMAdaptor.js';
-import {OptionList} from '../../util/Options.js';
-import {ProtoItem} from '../../core/MathItem.js';
+import { AbstractFindMath } from '../../core/FindMath.js';
+import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+import { OptionList } from '../../util/Options.js';
+import { ProtoItem } from '../../core/MathItem.js';
 
 /**
  * The MathML namespace
  */
 const NAMESPACE = 'http://www.w3.org/1998/Math/MathML';
-
 
 /*****************************************************************/
 /**
@@ -41,7 +40,6 @@ const NAMESPACE = 'http://www.w3.org/1998/Math/MathML';
  * @template D  The Document class
  */
 export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
-
   /**
    * @override
    */
@@ -60,11 +58,11 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
    * @override
    */
   public findMath(node: N) {
-    let set = new Set<N>();
+    const set = new Set<N>();
     this.findMathNodes(node, set);
     this.findMathPrefixed(node, set);
     const html = this.adaptor.root(this.adaptor.document);
-    if (this.adaptor.kind(html) === 'html' &&  set.size === 0) {
+    if (this.adaptor.kind(html) === 'html' && set.size === 0) {
       this.findMathNS(node, set);
     }
     return this.processMath(set);
@@ -86,13 +84,13 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
    * Find <m:math> tags (or whatever prefixes there are)
    *
    * @param {N} node  The container to seaerch for math
-   * @param {NodeSet} set   The set in which to store the math nodes
+   * @param {Set} set   The set in which to store the math nodes
    */
   protected findMathPrefixed(node: N, set: Set<N>) {
-    let html = this.adaptor.root(this.adaptor.document);
+    const html = this.adaptor.root(this.adaptor.document);
     for (const attr of this.adaptor.allAttributes(html)) {
-      if (attr.name.substr(0, 6) === 'xmlns:' && attr.value === NAMESPACE) {
-        let prefix = attr.name.substr(6);
+      if (attr.name.substring(0, 6) === 'xmlns:' && attr.value === NAMESPACE) {
+        const prefix = attr.name.substring(6);
         for (const math of this.adaptor.tags(node, prefix + ':math')) {
           set.add(math);
         }
@@ -103,8 +101,8 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
   /**
    * Find namespaced math in XHTML documents (is this really needed?)
    *
-   * @param {N} node  The container to seaerch for math
-   * @param {NodeSet} set   The set in which to store the math nodes
+   * @param {N} node  The container to search for math
+   * @param {Set} set   The set in which to store the math nodes
    */
   protected findMathNS(node: N, set: Set<N>) {
     for (const math of this.adaptor.tags(node, 'math', NAMESPACE)) {
@@ -114,17 +112,22 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
 
   /**
    *  Produce the array of proto math items from the node set
+   *
+   * @param {Set<N>} set The original node set
+   * @returns {ProtoItem<N, T>[]} The set of proto math items
    */
-  protected processMath(set: Set<N>) {
-    let math: ProtoItem<N, T>[] = [];
-    for (const mml of Array.from(set)) {
-      let display = (this.adaptor.getAttribute(mml, 'display') === 'block' ||
-                     this.adaptor.getAttribute(mml, 'mode') === 'display');
-      let start = {node: mml, n: 0, delim: ''};
-      let end   = {node: mml, n: 0, delim: ''};
-      math.push({math: this.adaptor.outerHTML(mml), start, end, display});
+  protected processMath(set: Set<N>): ProtoItem<N, T>[] {
+    const adaptor = this.adaptor;
+    const math: ProtoItem<N, T>[] = [];
+    for (const mml of set.values()) {
+      if (adaptor.kind(adaptor.parent(mml)) === 'mjx-assistive-mml') continue;
+      const display =
+        adaptor.getAttribute(mml, 'display') === 'block' ||
+        adaptor.getAttribute(mml, 'mode') === 'display';
+      const start = { node: mml, n: 0, delim: '' };
+      const end = { node: mml, n: 0, delim: '' };
+      math.push({ math: adaptor.outerHTML(mml), start, end, display });
     }
     return math;
   }
-
 }

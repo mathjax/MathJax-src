@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2022 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,20 +16,23 @@
  */
 
 /**
- * @fileoverview  Implements a subclass of ContextMenu specific to MathJax
+ * @file  Implements a subclass of ContextMenu specific to MathJax
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathItem} from '../../core/MathItem.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {SelectableInfo} from './SelectableInfo.js';
+import { MathItem } from '../../core/MathItem.js';
+import { OptionList } from '../../util/Options.js';
+import { JaxList } from './Menu.js';
+import { ExplorerMathItem } from '../../a11y/explorer.js';
 
-import {ContextMenu} from 'mj-context-menu/js/context_menu.js';
-import {SubMenu} from 'mj-context-menu/js/sub_menu.js';
-import {Submenu} from 'mj-context-menu/js/item_submenu.js';
-import {Menu} from 'mj-context-menu/js/menu.js';
-import {Item} from 'mj-context-menu/js/item.js';
+import {
+  ContextMenu,
+  SubMenu,
+  Submenu,
+  Menu,
+  Item,
+} from './mj-context-menu.js';
 
 /*==========================================================================*/
 
@@ -38,14 +41,22 @@ import {Item} from 'mj-context-menu/js/item.js';
  *   contextual menu (in particular, tying it to a MathItem).
  */
 export class MJContextMenu extends ContextMenu {
-
   /**
    * Static map to hold methods for re-computing dynamic submenus.
-   * @type {Map<string, (menu: MJContextMenu, sub: Submenu)}
+   *
+   * @type {Map<string, (menu: MJContextMenu, sub: Submenu) => Submenu>}
    */
-  public static DynamicSubmenus: Map<string,
-  (menu: MJContextMenu, sub: Submenu) =>
-    SubMenu> = new Map();
+  public static DynamicSubmenus: Map<
+    string,
+    [
+      (
+        menu: MJContextMenu,
+        sub: Submenu,
+        callback: (sub: SubMenu) => void
+      ) => void,
+      string,
+    ]
+  > = new Map();
 
   /**
    * The MathItem that has posted the menu
@@ -53,45 +64,46 @@ export class MJContextMenu extends ContextMenu {
   public mathItem: MathItem<HTMLElement, Text, Document> = null;
 
   /**
-   * The annotation selected in the Annotation submenu (neede for the info box to be able to show it)
+   * Records the mathItem's nofocus value when a SelectInfo dialog is opened
    */
-  public annotation: string = '';
+  public nofocus: boolean = false;
 
   /**
-   * The info box for showing annotations (created by the Menu object that contains this MJContextMenu)
+   * The document options
    */
-  public showAnnotation: SelectableInfo;
+  public settings: OptionList;
 
   /**
-   * The function to copy the selected annotation (set by the containing Menu item)
+   * The error message for the current MathItem
    */
-  public copyAnnotation: () => void;
+  public errorMsg: string = '';
 
   /**
-   * The annotation types to look for in a MathItem
+   * The jax object from the parent menu item
    */
-  public annotationTypes: {[type: string]: string[]} = {};
+  protected jax: JaxList;
 
   /*======================================================================*/
 
   /**
    * Before posting the menu, set the name for the ShowAs and CopyToClipboard menus,
-   *   enable/disable the semantics check item, and get the annotations for the MathItem
+   *   enable/disable the semantics check item, and set the dynamic submenus.
    *
    * @override
    */
   public post(x?: any, y?: number) {
     if (this.mathItem) {
+      const speech = (this.mathItem as ExplorerMathItem)?.explorers?.speech;
+      if (speech?.active) {
+        speech.restarted = speech.semanticFocus();
+      }
       if (y !== undefined) {
-        // FIXME:  handle error output jax
-        const input = this.mathItem.inputJax.name;
-        const original = this.findID('Show', 'Original');
-        original.content = (input === 'MathML' ? 'Original MathML' : input + ' Commands');
-        const clipboard = this.findID('Copy', 'Original');
-        clipboard.content = original.content;
-        const semantics = this.findID('Settings', 'semantics');
-        input === 'MathML' ? semantics.disable() : semantics.enable();
-        this.getAnnotationMenu();
+        this.getOriginalMenu();
+        this.getSemanticsMenu();
+        this.getSpeechMenu();
+        this.getBrailleMenu();
+        this.getSvgMenu();
+        this.getErrorMessage();
         this.dynamicSubmenus();
       }
       super.post(x, y);
@@ -105,7 +117,11 @@ export class MJContextMenu extends ContextMenu {
    */
   public unpost() {
     super.unpost();
+    if (this.mathItem) {
+      this.mathItem.outputData.nofocus = this.nofocus;
+    }
     this.mathItem = null;
+    this.nofocus = false;
   }
 
   /*======================================================================*/
@@ -116,15 +132,17 @@ export class MJContextMenu extends ContextMenu {
    * @param {string[]} names   The menu IDs to look for
    * @returns {Item}         The menu item (or null if not found)
    */
-  public findID(...names: string[]) {
+  public findID(...names: string[]): Item {
     let menu = this as Menu;
     let item = null as Item;
     for (const name of names) {
-      if (menu) {
-        item = menu.find(name);
-        menu = (item instanceof Submenu ? item.submenu : null);
-      } else {
-        item = null;
+      if (!menu) return null;
+      for (item of menu.items) {
+        if (item.id === name) {
+          menu = item instanceof Submenu ? item.submenu : null;
+          break;
+        }
+        menu = item = null;
       }
     }
     return item;
@@ -133,90 +151,79 @@ export class MJContextMenu extends ContextMenu {
   /*======================================================================*/
 
   /**
-   * Look up the annotations in the MathItem and set the ShowAs and CopyToClipboard menus
+   * @param {JaxList} jax   The jax being maintained by the parent Menu item
    */
-  protected getAnnotationMenu() {
-    const annotations = this.getAnnotations(this.getSemanticNode());
-    this.createAnnotationMenu('Show', annotations, () => this.showAnnotation.post());
-    this.createAnnotationMenu('Copy', annotations, () => this.copyAnnotation());
+  public setJax(jax: JaxList) {
+    this.jax = jax;
+  }
+
+  /*======================================================================*/
+
+  /**
+   * Set up original-form menu
+   */
+  protected getOriginalMenu() {
+    const input = this.mathItem.inputJax.name;
+    const original = this.findID('Show', 'Original');
+    original.content =
+      input === 'MathML' ? 'Original MathML' : input + ' Commands';
+    const clipboard = this.findID('Copy', 'Original');
+    clipboard.content = original.content;
   }
 
   /**
-   * Find the top-most semantics element that encloses the contents of the expression (if any)
-   *
-   * @returns {MmlNode | null}   The semantics node that was found (or null)
+   * Enable/disable the semantics settings item
    */
-  protected getSemanticNode(): MmlNode | null {
-    let node: MmlNode = this.mathItem.root;
-    while (node && !node.isKind('semantics'))  {
-      if (node.isToken || node.childNodes.length !== 1) return null;
-      node = node.childNodes[0] as MmlNode;
-    }
-    return node;
+  protected getSemanticsMenu() {
+    const semantics = this.findID('Settings', 'MathmlIncludes', 'semantics');
+    this.mathItem.inputJax.name === 'MathML'
+      ? semantics.disable()
+      : semantics.enable();
   }
 
   /**
-   * @param {MmlNode} node           The semantics node whose annotations are to be obtained
-   * @returns {[string, string][]}   Array of [type, text] where the type is the annotation type
-   *                                   and text is the content of the annotation of that type
+   * Enable/disable the speech menus
    */
-  protected getAnnotations(node: MmlNode): [string, string][] {
-    const annotations = [] as [string, string][];
-    if (!node) return annotations;
-    for (const child of node.childNodes as MmlNode[]) {
-      if (child.isKind('annotation')) {
-        const match = this.annotationMatch(child);
-        if (match) {
-          const value = child.childNodes.reduce((text, chars) => text + chars.toString(), '');
-          annotations.push([match, value]);
-        }
-      }
-    }
-    return annotations;
+  protected getSpeechMenu() {
+    const speech = this.mathItem.outputData.speech;
+    this.findID('Show', 'Speech')[speech ? 'enable' : 'disable']();
+    this.findID('Copy', 'Speech')[speech ? 'enable' : 'disable']();
   }
 
   /**
-   * @param {MmlNode} child    The annotation node to check if its encoding is one of the displayable ones
-   * @returns {string | null}         The annotation type if it does, or null if it doesn't
+   * Enable/disable the Braille menus
    */
-  protected annotationMatch(child: MmlNode): string | null {
-    const encoding = child.attributes.get('encoding') as string;
-    for (const type of Object.keys(this.annotationTypes)) {
-      if (this.annotationTypes[type].indexOf(encoding) >= 0) {
-        return type;
-      }
-    }
-    return null;
+  protected getBrailleMenu() {
+    const braille = this.mathItem.outputData.braille;
+    this.findID('Show', 'Braille')[braille ? 'enable' : 'disable']();
+    this.findID('Copy', 'Braille')[braille ? 'enable' : 'disable']();
   }
 
   /**
-   * Create a submenu from the available annotations and attach it to the proper menu item
-   *
-   * @param {string} id                        The id of the menu to attach to (Show or Copy)
-   * @param {[string, string][]} annotations   The annotations to use for the submenu
-   * @param {() => void} action                The action to perform when the annotation is selected
+   * Enable/disable the svg menus
    */
-  protected createAnnotationMenu(id: string, annotations: [string, string][], action: () => void) {
-    const menu = this.findID(id, 'Annotation') as Submenu;
-    menu.submenu = this.factory.get('subMenu')(this.factory, {
-      items: annotations.map(([type, value]) => {
-        return {
-          type: 'command',
-          id: type,
-          content: type,
-          action: () => {
-            this.annotation = value;
-            action();
-          }
-        };
-      }),
-      id: 'annotations'
-    }, menu);
-    if (annotations.length) {
-      menu.enable();
-    } else {
-      menu.disable();
+  protected getSvgMenu() {
+    const svg = this.jax.SVG;
+    this.findID('Show', 'SVG')[svg ? 'enable' : 'disable']();
+    this.findID('Copy', 'SVG')[svg ? 'enable' : 'disable']();
+  }
+
+  /**
+   * Get any error message and enable/disable the menu items for it
+   */
+  protected getErrorMessage() {
+    const children = this.mathItem.root.childNodes[0].childNodes;
+    let disable = true;
+    this.errorMsg = '';
+    if (children.length === 1 && children[0].isKind('merror')) {
+      const attributes = children[0].attributes;
+      this.errorMsg = (attributes.get('data-mjx-error') ||
+        attributes.get('data-mjx-message') ||
+        '') as string;
+      disable = !this.errorMsg;
     }
+    this.findID('Show', 'Error')[disable ? 'disable' : 'enable']();
+    this.findID('Copy', 'Error')[disable ? 'disable' : 'enable']();
   }
 
   /*======================================================================*/
@@ -225,17 +232,17 @@ export class MJContextMenu extends ContextMenu {
    * Renews the dynamic submenus.
    */
   public dynamicSubmenus() {
-    for (const [id, method] of MJContextMenu.DynamicSubmenus) {
+    for (const [id, [method, option]] of MJContextMenu.DynamicSubmenus) {
       const menu = this.find(id) as Submenu;
       if (!menu) continue;
-      const sub = method(this, menu);
-      menu.submenu = sub;
-      if (sub.items.length) {
-        menu.enable();
-      } else {
-        menu.disable();
-      }
+      method(this, menu, (sub: SubMenu) => {
+        menu.submenu = sub;
+        if (sub?.items?.length && (!option || this.settings[option])) {
+          menu.enable();
+        } else {
+          menu.disable();
+        }
+      });
     }
   }
-
 }
