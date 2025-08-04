@@ -582,7 +582,7 @@ export class SpeechExplorer
       this.FocusOut(null);
     } else {
       this.stopEvent(event);
-      this.refocus = this.firstNode(this.node);
+      this.refocus = this.rootNode();
       this.Start();
     }
   }
@@ -649,7 +649,7 @@ export class SpeechExplorer
    * Select top-level of expression
    */
   protected homeKey() {
-    this.setCurrent(this.firstNode(this.node));
+    this.setCurrent(this.rootNode());
   }
 
   /**
@@ -673,7 +673,7 @@ export class SpeechExplorer
   protected moveUp(shift: boolean): boolean | void {
     return shift
       ? this.moveToNeighborCell(-1, 0)
-      : this.moveTo(this.current.parentElement.closest(nav));
+      : this.moveTo(this.getParent(this.current));
   }
 
   /**
@@ -760,7 +760,7 @@ export class SpeechExplorer
   protected prevMark() {
     if (this.currentMark < 0) {
       if (this.marks.length === 0) {
-        this.setCurrent(this.lastMark || this.firstNode(this.node));
+        this.setCurrent(this.lastMark || this.rootNode());
         return;
       }
       this.currentMark = this.marks.length - 1;
@@ -1293,13 +1293,48 @@ export class SpeechExplorer
   }
 
   /**
-   * Get an element's first speech child.
+   * Get an element's first speech child. This is computed by going through the
+   * owns list until the first speech element is found.
    *
    * @param {HTMLElement} node   The parent element to get a child from
    * @returns {HTMLElement}      The first speech child of the node
    */
   protected firstNode(node: HTMLElement): HTMLElement {
+    const owns = node.getAttribute('data-semantic-owns');
+    if (!owns) {
+      return node.querySelector(nav) as HTMLElement;
+    }
+    const ownsList = owns.split(/ /);
+    for (const id of ownsList) {
+      const node = this.getNode(id);
+      if (node?.hasAttribute('data-speech-node')) {
+        return node;
+      }
+    }
     return node.querySelector(nav) as HTMLElement;
+  }
+
+  /**
+   * Get the element's semantic root node. We compute this from the root id
+   * given in the semantic structure. The semantic structure is an sexp either
+   * of the form `0` or `(0 1 (2 ...) ...)`. We can safely assume that the root
+   * node contains the speech for the entire structure.
+   *
+   * If for some reason the semantic structure is not available, we return the
+   * first speech node found in the expression.
+   *
+   * @returns {HTMLElement} The semantic root or first speech node.
+   */
+  protected rootNode(): HTMLElement {
+    const base = this.node.querySelector('[data-semantic-structure]');
+    if (!base) {
+      return this.node.querySelector(nav) as HTMLElement;
+    }
+    const id = base
+      .getAttribute('data-semantic-structure')
+      .split(/ /)[0]
+      .replace('(', '');
+    return this.getNode(id);
   }
 
   /**
@@ -1311,10 +1346,16 @@ export class SpeechExplorer
   protected nextSibling(node: HTMLElement): HTMLElement {
     const id = this.parentId(node);
     if (!id) return null;
-    const owns = this.getNode(id).getAttribute('data-semantic-owns')?.split(/ /);
+    const owns = this.getNode(id)
+      .getAttribute('data-semantic-owns')
+      ?.split(/ /);
     if (!owns) return null;
-    const i = owns.indexOf(this.nodeId(node));
-    return this.getNode(owns[i + 1]);
+    let i = owns.indexOf(this.nodeId(node));
+    let next;
+    do {
+      next = this.getNode(owns[++i]);
+    } while (next && !next.hasAttribute('data-speech-node'));
+    return next;
   }
 
   /**
@@ -1326,10 +1367,16 @@ export class SpeechExplorer
   protected prevSibling(node: HTMLElement): HTMLElement {
     const id = this.parentId(node);
     if (!id) return null;
-    const owns = this.getNode(id).getAttribute('data-semantic-owns')?.split(/ /);
+    const owns = this.getNode(id)
+      .getAttribute('data-semantic-owns')
+      ?.split(/ /);
     if (!owns) return null;
-    const i = owns.indexOf(this.nodeId(node));
-    return this.getNode(owns[i - 1]);
+    let i = owns.indexOf(this.nodeId(node));
+    let prev;
+    do {
+      prev = this.getNode(owns[--i]);
+    } while (prev && !prev.hasAttribute('data-speech-node'));
+    return prev;
   }
 
   /**
@@ -1498,7 +1545,7 @@ export class SpeechExplorer
     // current node (which creates the speech) and start the explorer.
     //
     const node = this.findStartNode();
-    this.setCurrent(node || this.firstNode(this.node), !node);
+    this.setCurrent(node || this.rootNode(), !node);
     super.Start();
     //
     // Show any needed regions
