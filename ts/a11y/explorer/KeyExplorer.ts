@@ -1311,7 +1311,7 @@ export class SpeechExplorer
         return node;
       }
     }
-    return null;
+    return node.querySelector(nav) as HTMLElement;
   }
 
   /**
@@ -1351,10 +1351,10 @@ export class SpeechExplorer
       ?.split(/ /);
     if (!owns) return null;
     let i = owns.indexOf(this.nodeId(node));
-    let next = this.getNode(owns[++i]);
-    while (next && !next.hasAttribute('data-speech-node')) {
+    let next;
+    do {
       next = this.getNode(owns[++i]);
-    }
+    } while (next && !next.hasAttribute('data-speech-node'));
     return next;
   }
 
@@ -1372,10 +1372,10 @@ export class SpeechExplorer
       ?.split(/ /);
     if (!owns) return null;
     let i = owns.indexOf(this.nodeId(node));
-    let prev = this.getNode(owns[--i]);
-    while (prev && !prev.hasAttribute('data-speech-node')) {
+    let prev;
+    do {
       prev = this.getNode(owns[--i]);
-    }
+    } while (prev && !prev.hasAttribute('data-speech-node'));
     return prev;
   }
 
