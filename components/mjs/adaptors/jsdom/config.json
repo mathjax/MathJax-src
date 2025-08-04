@@ -1,0 +1,10 @@
+{
+  "build": {
+    "component": "adaptors/jsdom",
+    "targets": ["adaptors/jsdomAdaptor.ts"]
+  },
+  "webpack": {
+    "name": "adaptors/jsdom",
+    "libs": ["components/src/core/lib"]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "build": {
+    "component": "adaptors/linkedom",
+    "targets": ["adaptors/linkedomAdaptor.ts"]
+  },
+  "webpack": {
+    "name": "adaptors/linkedom",
+    "libs": ["components/src/core/lib"]
+  }
+}
