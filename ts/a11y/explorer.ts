@@ -420,21 +420,30 @@ export function ExplorerMathDocumentMixin<
 
       'mjx-help-sizer': {
         position: 'fixed',
-        width: '40%',
+        width: '45%',
         'max-width': '30em',
         top: '3em',
         left: '50%',
       },
-      'mjx-help-dialog': {
+      'mjx-help-sizer > .mjx-help-dialog': {
         position: 'absolute',
         width: '200%',
         left: '-100%',
+        'max-width': 'initial',
+      },
+      '.mjx-help-dialog': {
+        'max-width': 'calc(min(60em, 90%))',
         border: '3px outset',
         'border-radius': '15px',
         color: 'black',
         'background-color': '#DDDDDD',
-        'z-index': '301',
+        'box-shadow': '0px 10px 20px #808080',
         'text-align': 'right',
+      },
+      '.mjx-help-dialog::backdrop': {
+        opacity: .75,
+      },
+      'mjx-help-dialog': {
         'font-style': 'normal',
         'text-indent': 0,
         'text-transform': 'none',
@@ -443,8 +452,6 @@ export function ExplorerMathDocumentMixin<
         'word-spacing': 'normal',
         'word-wrap': 'normal',
         float: 'none',
-        'box-shadow': '0px 10px 20px #808080',
-        outline: 'none',
       },
       'mjx-help-dialog > h1': {
         'font-size': '24px',
@@ -453,7 +460,7 @@ export function ExplorerMathDocumentMixin<
       },
       'mjx-help-dialog > div': {
         margin: '0 1em',
-        padding: '3px',
+        padding: '3px 10px',
         overflow: 'auto',
         height: '20em',
         border: '2px inset black',
@@ -488,6 +495,7 @@ export function ExplorerMathDocumentMixin<
         left: 0,
         right: 0,
         bottom: 0,
+        'z-index': 1001,
       },
     };
 

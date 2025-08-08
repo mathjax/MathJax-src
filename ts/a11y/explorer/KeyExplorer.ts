@@ -933,18 +933,23 @@ export class SpeechExplorer
    * Displays the help dialog.
    */
   protected help() {
+    const isDialog = !!window.HTMLDialogElement;
     const adaptor = this.document.adaptor;
-    const helpBackground = adaptor.node('mjx-help-background');
+    const helpBackground = isDialog ? null : adaptor.node('mjx-help-background');
     const close = (event: Event) => {
-      helpBackground.remove();
+      if (isDialog) {
+        helpDialog.close();
+        helpDialog.remove();
+      } else {
+        helpBackground.remove();
+      }
       this.node.focus();
       this.stopEvent(event);
     };
-    helpBackground.addEventListener('click', close);
-    const helpSizer = adaptor.node('mjx-help-sizer', {}, [
+    const helpDialog = adaptor.node('dialog', {closedby: 'any', class: 'mjx-help-dialog'}, [
       adaptor.node(
         'mjx-help-dialog',
-        { tabindex: 0, role: 'dialog', 'aria-labeledby': 'mjx-help-label' },
+        { role: 'dialog', 'aria-labeledby': 'mjx-help-label' },
         [
           adaptor.node('h1', { id: 'mjx-help-label' }, [
             adaptor.text('MathJax Expression Explorer Help'),
@@ -952,21 +957,29 @@ export class SpeechExplorer
           adaptor.node('div'),
           adaptor.node('input', { type: 'button', value: 'Close' }),
         ]
-      ),
-    ]);
-    helpBackground.append(helpSizer);
-    const help = helpSizer.firstChild as HTMLElement;
-    help.addEventListener('click', (event) => this.stopEvent(event));
+      )
+    ]) as HTMLDialogElement;
+    const help = helpDialog.firstChild as HTMLElement;
+    const [title, select] = helpData.get(context.os);
+    (help.childNodes[1] as HTMLElement).innerHTML = helpMessage(title, select);
     help.lastChild.addEventListener('click', close);
-    help.addEventListener('keydown', (event: KeyboardEvent) => {
+    helpDialog.addEventListener('keydown', (event: KeyboardEvent) => {
       if (event.code === 'Escape') {
         close(event);
       }
     });
-    const [title, select] = helpData.get(context.os);
-    (help.childNodes[1] as HTMLElement).innerHTML = helpMessage(title, select);
-    document.body.append(helpBackground);
-    help.focus();
+    if (isDialog) {
+      document.body.append(helpDialog);
+      helpDialog.showModal();
+    } else {
+      helpDialog.setAttribute('tabindex', 0);
+      help.addEventListener('click', (event) => this.stopEvent(event));
+      helpBackground.addEventListener('click', close);
+      const helpSizer = adaptor.node('mjx-help-sizer', {}, [helpDialog]);
+      helpBackground.append(helpSizer);
+      document.body.append(helpBackground);
+    }
+    helpDialog.focus();
   }
 
   /********************************************************************/
