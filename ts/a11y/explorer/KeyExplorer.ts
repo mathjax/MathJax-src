@@ -935,7 +935,9 @@ export class SpeechExplorer
   protected help() {
     const isDialog = !!window.HTMLDialogElement;
     const adaptor = this.document.adaptor;
-    const helpBackground = isDialog ? null : adaptor.node('mjx-help-background');
+    const helpBackground = isDialog
+      ? null
+      : adaptor.node('mjx-help-background');
     const close = (event: Event) => {
       if (isDialog) {
         helpDialog.close();
@@ -946,19 +948,23 @@ export class SpeechExplorer
       this.node.focus();
       this.stopEvent(event);
     };
-    const helpDialog = adaptor.node('dialog', {closedby: 'any', class: 'mjx-help-dialog'}, [
-      adaptor.node(
-        'mjx-help-dialog',
-        { role: 'dialog', 'aria-labeledby': 'mjx-help-label' },
-        [
-          adaptor.node('h1', { id: 'mjx-help-label' }, [
-            adaptor.text('MathJax Expression Explorer Help'),
-          ]),
-          adaptor.node('div'),
-          adaptor.node('input', { type: 'button', value: 'Close' }),
-        ]
-      )
-    ]) as HTMLDialogElement;
+    const helpDialog = adaptor.node(
+      'dialog',
+      { closedby: 'any', class: 'mjx-help-dialog' },
+      [
+        adaptor.node(
+          'mjx-help-dialog',
+          { role: 'dialog', 'aria-labeledby': 'mjx-help-label' },
+          [
+            adaptor.node('h1', { id: 'mjx-help-label' }, [
+              adaptor.text('MathJax Expression Explorer Help'),
+            ]),
+            adaptor.node('div'),
+            adaptor.node('input', { type: 'button', value: 'Close' }),
+          ]
+        ),
+      ]
+    ) as HTMLDialogElement;
     const help = helpDialog.firstChild as HTMLElement;
     const [title, select] = helpData.get(context.os);
     (help.childNodes[1] as HTMLElement).innerHTML = helpMessage(title, select);
@@ -972,7 +978,7 @@ export class SpeechExplorer
       document.body.append(helpDialog);
       helpDialog.showModal();
     } else {
-      helpDialog.setAttribute('tabindex', 0);
+      helpDialog.setAttribute('tabindex', '0');
       help.addEventListener('click', (event) => this.stopEvent(event));
       helpBackground.addEventListener('click', close);
       const helpSizer = adaptor.node('mjx-help-sizer', {}, [helpDialog]);
