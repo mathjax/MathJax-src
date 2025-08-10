@@ -378,6 +378,15 @@ export function ExplorerMathDocumentMixin<
       'mjx-container .mjx-selected': {
         outline: '2px solid black',
       },
+
+      'mjx-container a[data-mjx-href]': {
+        color: 'LinkText',
+        cursor: 'pointer',
+      },
+      'mjx-container a[data-mjx-href].mjx-visited': {
+        color: 'VisitedText',
+      },
+
       'mjx-container > mjx-help': {
         display: 'none',
         position: 'absolute',
