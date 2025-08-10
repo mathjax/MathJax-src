@@ -409,6 +409,11 @@ export class SpeechExplorer
    */
   protected anchors: HTMLElement[];
 
+  /**
+   * Whether the expression was focused by a back tab
+   */
+  protected backTab: boolean = false;
+
   /********************************************************************/
   /*
    * The event handlers
@@ -439,6 +444,7 @@ export class SpeechExplorer
     }
     if (!this.clicked) {
       this.Start();
+      this.backTab = _event.target === this.img;
     }
     this.clicked = null;
   }
@@ -630,13 +636,22 @@ export class SpeechExplorer
   /**
    * Tab to the next internal link, if any, and stop the event from
    * propagating, or if no more links, let it propagate so that the
-   * borser moves to the next focusable item.
+   * browser moves to the next focusable item.
    *
    * @param {KeyboardEvent} event  The event for the enter key
    * @returns {void | boolean}     False means play the honk sound
    */
   protected tabKey(event: KeyboardEvent): void | boolean {
     if (this.anchors.length === 0 || !this.current) return true;
+    if (this.backTab) {
+      if (!event.shiftKey) return true;
+      const link = this.linkFor(this.anchors[this.anchors.length - 1]);
+      if (this.anchors.length === 1 && link === this.current) {
+        return true;
+      }
+      this.setCurrent(link);
+      return;
+    }
     const [anchors, position, current] = event.shiftKey
       ? [this.anchors.slice(0).reverse(),
          Node.DOCUMENT_POSITION_PRECEDING,
@@ -1010,6 +1025,7 @@ export class SpeechExplorer
    * @param {boolean} addDescription   True if the speech node should get a description
    */
   protected setCurrent(node: HTMLElement, addDescription: boolean = false) {
+    this.backTab = false;
     this.speechType = '';
     if (!document.hasFocus()) {
       this.refocus = this.current;
@@ -1080,7 +1096,11 @@ export class SpeechExplorer
    * @param {boolean} describe   True if the description should be added
    */
   protected addSpeech(node: HTMLElement, describe: boolean) {
-    this.img?.remove();
+    if (this.anchors.length) {
+      setTimeout(() => this.img?.remove(), 10);
+    } else {
+      this.img?.remove();
+    }
     let speech = this.addComma([
       node.getAttribute(SemAttr.PREFIX),
       node.getAttribute(SemAttr.SPEECH),
@@ -1240,6 +1260,9 @@ export class SpeechExplorer
       const href = anchor.getAttribute('href');
       anchor.setAttribute('data-mjx-href', href);
       anchor.removeAttribute('href');
+    }
+    if (this.anchors.length) {
+      this.img.setAttribute('tabindex', '0');
     }
   }
 
