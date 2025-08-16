@@ -158,6 +158,7 @@ export class Menu {
       speechRules: 'clearspeak-default',
       roleDescription: 'math',
       tabSelects: 'all',
+      help: true,
     },
     jax: {
       CHTML: null,
