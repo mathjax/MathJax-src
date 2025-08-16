@@ -144,6 +144,7 @@ export abstract class CommonOutputJax<
       LinebreakVisitor: null,      // The LinebreakVisitor to use
     },
     font: '',                      // the font component to load
+    fontExtensions: [],            // the font extensions to load
     htmlHDW: 'auto',               // 'use', 'force', or 'ignore' data-mjx-hdw attributes
     wrapperFactory: null,          // The wrapper factory to use
     fontData: null,                // The FontData object to use
