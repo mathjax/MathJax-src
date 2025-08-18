@@ -177,7 +177,7 @@ export function CommonMpaddedMixin<
       if (!w.match(/^[-+]|%$/) && attributes.get('data-overflow') === 'linebreak') {
         return this.length2em(w);
       }
-      return super.containerWidth;
+      return this.parent.containerWidth;
     }
 
     /**

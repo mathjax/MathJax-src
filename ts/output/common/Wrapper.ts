@@ -456,7 +456,7 @@ export class CommonWrapper<
    *
    * @returns {number} The container width
    */
-  get containerWidth(): number {
+  public get containerWidth(): number {
     return this.parent ? this.parent.containerWidth : this.jax.containerWidth;
   }
 
