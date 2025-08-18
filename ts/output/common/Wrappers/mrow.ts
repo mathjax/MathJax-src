@@ -327,7 +327,7 @@ export function CommonMrowMixin<
         lines[n].R = this.bbox.R;
       } else {
         bbox.w = Math.max(...this.lineBBox.map((bbox) => bbox.w)); // natural width
-        this.shiftLines(bbox.w);
+        this.shiftLines(bbox);
         if (!this.jax.math.display && !this.linebreakOptions.inline) {
           bbox.pwidth = BBox.fullWidth;
           if (this.node.isInferred) {
@@ -391,11 +391,12 @@ export function CommonMrowMixin<
     }
 
     /**
-     * Handle alignment and shifting if lines
+     * Handle alignment and shifting of lines
      *
-     * @param {number} W   The width of the container
+     * @param {BBox} BBOX   The bounding box of the container
      */
-    protected shiftLines(W: number) {
+    protected shiftLines(BBOX: BBox) {
+      const W = BBOX.w;
       const lines = this.lineBBox;
       const n = lines.length - 1;
       const [alignfirst, shiftfirst] = lines[1].indentData?.[0] || [
@@ -417,6 +418,10 @@ export function CommonMrowMixin<
         );
         bbox.L = 0;
         bbox.L = this.getAlignX(W, bbox, align) + shift;
+        const w = bbox.L + bbox.w;
+        if (w > BBOX.w) {
+          BBOX.w = w;
+        }
       }
     }
 
@@ -432,7 +437,7 @@ export function CommonMrowMixin<
       if (recompute) return false;
       if (w !== null && this.bbox.w !== w) {
         this.bbox.w = w;
-        this.shiftLines(w);
+        this.shiftLines(this.bbox);
       }
       return true;
     }
