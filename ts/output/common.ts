@@ -185,6 +185,15 @@ export abstract class CommonOutputJax<
   };
 
   /**
+   * The font to use for generic extensions
+   */
+  public static genericFont: FontDataClass<
+    CharOptions,
+    VariantData<CharOptions>,
+    DelimiterData
+  >;
+
+  /**
    * Used for collecting styles needed for the output jax
    */
   public styleJson: StyleJsonSheet;
@@ -306,6 +315,8 @@ export abstract class CommonOutputJax<
     this.styleJson = this.options.styleJson || new StyleJsonSheet();
     this.font = font || new fontClass(fontOptions);
     this.font.setOptions({ mathmlSpacing: this.options.mathmlSpacing });
+    /* prettier-ignore */
+    (this.constructor as typeof CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>).genericFont = fontClass;
     this.unknownCache = new Map();
     const linebreaks = (this.options.linebreaks.LinebreakVisitor ||
       LinebreakVisitor) as typeof Linebreaks;
@@ -350,9 +361,14 @@ export abstract class CommonOutputJax<
    * @override
    */
   public typeset(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
+    /* prettier-ignore */
+    const CLASS = (this.constructor as typeof CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>);
+    const generic = CLASS.genericFont;
+    CLASS.genericFont = this.font.constructor as FontDataClass<CC, VV, DD>;
     this.setDocument(html);
     const node = this.createNode();
     this.toDOM(math, node, html);
+    CLASS.genericFont = generic;
     return node;
   }
 
