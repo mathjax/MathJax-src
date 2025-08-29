@@ -321,6 +321,7 @@ export function ExplorerMathDocumentMixin<
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
       enableExplorer: hasWindow,           // only activate in interactive contexts
+      enableExplorerHelp: true,            // help dialog is enabled
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         explorable: [STATE.EXPLORER]
