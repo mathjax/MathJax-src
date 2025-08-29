@@ -367,8 +367,12 @@ export abstract class CommonOutputJax<
     CLASS.genericFont = this.font.constructor as FontDataClass<CC, VV, DD>;
     this.setDocument(html);
     const node = this.createNode();
-    this.toDOM(math, node, html);
-    CLASS.genericFont = generic;
+    console.log('here');
+    try {
+      this.toDOM(math, node, html);
+    } finally {
+      CLASS.genericFont = generic;
+    }
     return node;
   }
 
