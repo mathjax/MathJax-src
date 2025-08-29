@@ -20,7 +20,9 @@ describe('Empheq', () => {
          <mtable displaystyle="true" columnalign="right right left" columnspacing="0em 0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a&amp;=b\\\\ c&amp;=d \\end{empheq}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mpadded height="0" depth="0" voffset="height">
@@ -32,7 +34,9 @@ describe('Empheq', () => {
                        <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top">
                          <mlabeledtr>
                            <mtd>
-                             <mtext data-latex="\\text{(1)}">(1)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{1}">1</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mi data-latex="a">a</mi>
@@ -47,7 +51,9 @@ describe('Empheq', () => {
                          </mlabeledtr>
                          <mlabeledtr>
                            <mtd>
-                             <mtext data-latex="\\text{(2)}">(2)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{2}">2</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mi data-latex="c">c</mi>
@@ -69,7 +75,9 @@ describe('Empheq', () => {
                      <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" align="baseline 1">
                        <mlabeledtr>
                          <mtd>
-                           <mtext data-latex="\\text{(1)}">(1)</mtext>
+                           <mtext data-latex="\\text{(}">(</mtext>
+                           <mtext data-latex="\\text{1}">1</mtext>
+                           <mtext data-latex="\\text{)}">)</mtext>
                          </mtd>
                          <mtd>
                            <mi data-latex="a">a</mi>
@@ -100,7 +108,9 @@ describe('Empheq', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:2">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd></mtd>
              <mtd>
@@ -128,7 +138,9 @@ describe('Empheq', () => {
          <mtable displaystyle="true" columnalign="right left left" columnspacing="0em 0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a&amp;=b\\\\ c&amp;=d \\end{empheq}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -150,7 +162,9 @@ describe('Empheq', () => {
                        <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top">
                          <mlabeledtr>
                            <mtd>
-                             <mtext data-latex="\\text{(1)}">(1)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{1}">1</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mi data-latex="a">a</mi>
@@ -165,7 +179,9 @@ describe('Empheq', () => {
                          </mlabeledtr>
                          <mlabeledtr>
                            <mtd>
-                             <mtext data-latex="\\text{(2)}">(2)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{2}">2</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mi data-latex="c">c</mi>
@@ -187,7 +203,9 @@ describe('Empheq', () => {
                      <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" align="baseline 1">
                        <mlabeledtr>
                          <mtd>
-                           <mtext data-latex="\\text{(1)}">(1)</mtext>
+                           <mtext data-latex="\\text{(}">(</mtext>
+                           <mtext data-latex="\\text{1}">1</mtext>
+                           <mtext data-latex="\\text{)}">)</mtext>
                          </mtd>
                          <mtd>
                            <mi data-latex="a">a</mi>
@@ -208,7 +226,9 @@ describe('Empheq', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:2">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="c">c</mi>
@@ -235,7 +255,9 @@ describe('Empheq', () => {
          <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{A=\\label{test}} a&amp;=b \\end{numcases}">
            <mlabeledtr data-latex-item="{A=\\label{test}}" data-latex="{A=\\label{test}}">
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mpadded height="0" depth="0" voffset="height">
@@ -249,7 +271,9 @@ describe('Empheq', () => {
                        <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
                          <mlabeledtr data-latex-item="{A=\\label{test}}" data-latex="{A=\\label{test}}">
                            <mtd>
-                             <mtext data-latex="\\text{(1)}">(1)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{1}">1</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mi data-latex="a">a</mi>
@@ -272,7 +296,9 @@ describe('Empheq', () => {
                      <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
                        <mlabeledtr data-latex-item="{A=\\label{test}}" data-latex="{A=\\label{test}}">
                          <mtd>
-                           <mtext data-latex="\\text{(1)}">(1)</mtext>
+                           <mtext data-latex="\\text{(}">(</mtext>
+                           <mtext data-latex="\\text{1}">1</mtext>
+                           <mtext data-latex="\\text{)}">)</mtext>
                          </mtd>
                          <mtd>
                            <mi data-latex="a">a</mi>
@@ -379,7 +405,9 @@ describe('Empheq', () => {
          <mtable displaystyle="true" columnalign="right left left" columnspacing="0em 0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a \\\\ b&amp;=c \\end{empheq}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -394,7 +422,9 @@ describe('Empheq', () => {
                        <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top">
                          <mlabeledtr>
                            <mtd>
-                             <mtext data-latex="\\text{(1)}">(1)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{1}">1</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mi data-latex="a">a</mi>
@@ -402,7 +432,9 @@ describe('Empheq', () => {
                          </mlabeledtr>
                          <mlabeledtr>
                            <mtd>
-                             <mtext data-latex="\\text{(2)}">(2)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{2}">2</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mi data-latex="b">b</mi>
@@ -424,7 +456,9 @@ describe('Empheq', () => {
                      <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" align="baseline 1">
                        <mlabeledtr>
                          <mtd>
-                           <mtext data-latex="\\text{(1)}">(1)</mtext>
+                           <mtext data-latex="\\text{(}">(</mtext>
+                           <mtext data-latex="\\text{1}">1</mtext>
+                           <mtext data-latex="\\text{)}">)</mtext>
                          </mtd>
                          <mtd>
                            <mi data-latex="a">a</mi>
@@ -438,7 +472,9 @@ describe('Empheq', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:2">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="b">b</mi>
@@ -465,7 +501,9 @@ describe('Empheq', () => {
          <mtable displaystyle="true" columnalign="right left right left" columnspacing="0em 0em 0em" rowspacing="3pt" data-break-align="bottom top bottom top" data-latex="\\begin{alignat}{2} a &amp; b &amp; c &amp; d \\end{empheq}">
            <mlabeledtr data-latex-item="{2}" data-latex="{2}">
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
