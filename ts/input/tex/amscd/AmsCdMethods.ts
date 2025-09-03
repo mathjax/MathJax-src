@@ -64,9 +64,11 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
    * @returns {void} No value.
    */
   arrow(parser: TexParser, name: string): void {
-    const c = parser.string.charAt(parser.i);
+    const i = parser.i;
+    const c = parser.GetNext();
     if (!c.match(/[><VA.|=]/)) {
       // TODO: This return is suspicious.
+      parser.i = i;
       return Other(parser, name);
     } else {
       parser.i++;
