@@ -653,9 +653,11 @@ export class SpeechExplorer
       return;
     }
     const [anchors, position, current] = event.shiftKey
-      ? [this.anchors.slice(0).reverse(),
-         Node.DOCUMENT_POSITION_PRECEDING,
-         this.isLink() ? this.getAnchor() : this.current]
+      ? [
+          this.anchors.slice(0).reverse(),
+          Node.DOCUMENT_POSITION_PRECEDING,
+          this.isLink() ? this.getAnchor() : this.current,
+        ]
       : [this.anchors, Node.DOCUMENT_POSITION_FOLLOWING, this.current];
     for (const anchor of anchors) {
       if (current.compareDocumentPosition(anchor) & position) {
@@ -1110,7 +1112,8 @@ export class SpeechExplorer
       .trim();
     if (describe) {
       let description =
-        (this.description === this.none ? '' : ', ' + this.description) + this.linkCount();
+        (this.description === this.none ? '' : ', ' + this.description) +
+        this.linkCount();
       if (this.document.options.a11y.help) {
         description += ', press h for help';
       }
@@ -1151,7 +1154,7 @@ export class SpeechExplorer
         return `, with ${anchors} link${anchors === 1 ? '' : 's'}`;
       }
     }
-    return  '';
+    return '';
   }
 
   /**
@@ -1568,7 +1571,9 @@ export class SpeechExplorer
    * @returns {HTMLElement}      The parent node with an href that contains the given node
    */
   protected parentLink(node: HTMLElement): HTMLElement {
-    const link = node?.closest('[data-semantic-attributes*="href:"]') as HTMLElement;
+    const link = node?.closest(
+      '[data-semantic-attributes*="href:"]'
+    ) as HTMLElement;
     return link && this.node.contains(link) ? link : null;
   }
 
