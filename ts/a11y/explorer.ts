@@ -441,7 +441,7 @@ export function ExplorerMathDocumentMixin<
         'text-align': 'right',
       },
       '.mjx-help-dialog::backdrop': {
-        opacity: .75,
+        opacity: 0.75,
       },
       'mjx-help-dialog': {
         'font-style': 'normal',
