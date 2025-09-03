@@ -788,7 +788,10 @@ export class FnItem extends BaseItem {
         }
       }
       // @test Mathop Apply, Mathop No Apply
-      if (top.isKind('TeXAtom') && top.childNodes[0]?.childNodes?.length === 0) {
+      if (
+        top.isKind('TeXAtom') &&
+        top.childNodes[0]?.childNodes?.length === 0
+      ) {
         return [[top, item], true];
       }
       // @test Named Function, Named Function Arg
