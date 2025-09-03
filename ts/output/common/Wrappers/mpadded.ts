@@ -174,7 +174,10 @@ export function CommonMpaddedMixin<
     get containerWidth(): number {
       const attributes = this.node.attributes;
       const w = attributes.get('width') as string;
-      if (!w.match(/^[-+]|%$/) && attributes.get('data-overflow') === 'linebreak') {
+      if (
+        !w.match(/^[-+]|%$/) &&
+        attributes.get('data-overflow') === 'linebreak'
+      ) {
         return this.length2em(w);
       }
       return this.parent.containerWidth;
