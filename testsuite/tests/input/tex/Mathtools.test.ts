@@ -6176,7 +6176,7 @@ describe('Mathtools options', () => {
 
   test('non-ams tags', () => {
     class myTags extends AbstractTags {
-      formatTag(tag: string) {return `[[${tag}]]`}
+      formatTag(tag: string) {return ['[[', tag, ']]']}
     };
     Configuration.create('mytags', {
       [ConfigurationType.TAGS]: {mytags: myTags},
