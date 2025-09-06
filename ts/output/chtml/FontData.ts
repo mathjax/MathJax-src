@@ -583,6 +583,7 @@ export class ChtmlFontData extends FontData<
       padding: this.padding(HDW as ChtmlCharData, w - HDW[2]),
     };
     if (part === 'ext') {
+      delete css.padding;
       if (!w && options.dx) {
         w = 2 * options.dx - 0.06;
       }
