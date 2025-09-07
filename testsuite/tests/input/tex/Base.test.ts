@@ -2503,7 +2503,7 @@ describe('MmlToken', () => {
 
   it('Token Invalid Attribute', () => {
     expectTexError('\\mmlToken{mi}[m1=true]{}')
-      .toBe('Invalid MathML attribute: m1=true');
+      .toBe('Invalid MathML attribute: m1');
   });
 
   /********************************************************************************/
