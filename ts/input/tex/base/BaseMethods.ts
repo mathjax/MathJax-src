@@ -1089,14 +1089,14 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     }
     while (attr !== '') {
       const match = attr.match(
-        /^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i
+        /^([a-z]+)\s*=\s*('[^'\n]*'|"[^"\n]*"|[^ ,\n]*)[\s\n]*,?[\s\n]*/i
       );
       if (!match) {
         // @test Token Invalid Attribute
         throw new TexError(
           'InvalidMathMLAttr',
           'Invalid MathML attribute: %1',
-          attr
+          attr.split(/[\s\n=]/)[0]
         );
       }
       if (!node.attributes.hasDefault(match[1]) && !MmlTokenAllow[match[1]]) {
