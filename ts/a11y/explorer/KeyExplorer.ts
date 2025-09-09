@@ -422,6 +422,11 @@ export class SpeechExplorer
   ]);
 
   /**
+   * Semantic id to subtee map.
+   */
+  private subtrees: Map<string, Set<string>> = new Map();
+
+  /**
    * @override
    */
   public FocusIn(_event: FocusEvent) {
@@ -1040,7 +1045,35 @@ export class SpeechExplorer
     if (!id) {
       return [node];
     }
-    return Array.from(this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
+    const parts = Array.from(
+      this.node.querySelectorAll(`[data-semantic-id="${id}"]`)
+    ) as HTMLElement[];
+    const subtree = this.subtree(id, parts);
+    return [...parts, ...subtree];
+  }
+
+  /**
+   * Retrieve the elements in the semantic subtree that are not in the DOM subtree.
+   *
+   * @param {string} id The semantic id of the root node.
+   * @param {HTMLElement[]} nodes The list of nodes corresponding to that id
+   *     (could be multiple for linebroken ones).
+   * @returns {HTMLElement[]} The list of nodes external to the DOM trees rooted
+   *     by any of the input nodes.
+   */
+  private subtree(id: string, nodes: HTMLElement[]): HTMLElement[] {
+    const sub = this.subtrees.get(id);
+    const children: Set<string> = new Set();
+    for (const node of nodes) {
+      Array.from(node.querySelectorAll(`[data-semantic-id]`)).forEach((x) =>
+        children.add(x.getAttribute('data-semantic-id'))
+      );
+    }
+    const rest = setdifference(sub, children);
+    return [...rest].map((child) => {
+      const node = this.node.querySelector(`[data-semantic-id="${child}"]`);
+      return node as HTMLElement;
+    });
   }
 
   /**
@@ -1496,6 +1529,7 @@ export class SpeechExplorer
     public item: ExplorerMathItem
   ) {
     super(document, pool, null, node);
+    this.getSubtrees();
   }
 
   /**
@@ -1730,4 +1764,93 @@ export class SpeechExplorer
     }
     return focus.join(' ');
   }
+
+  private getSubtrees() {
+    const node = this.node.querySelector('[data-semantic-structure]');
+    if (!node) return;
+    const sexp = node.getAttribute('data-semantic-structure');
+    const tokens = tokenize(sexp);
+    const tree = parse(tokens);
+    buildMap(tree, this.subtrees);
+  }
+}
+
+// Some Aux functions
+//
+type SexpTree = string | SexpTree[];
+
+// Helper to tokenize input
+/**
+ *
+ * @param str
+ */
+function tokenize(str: string): string[] {
+  return str.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').trim().split(/\s+/);
+}
+
+// Recursive parser to convert tokens into a tree
+/**
+ *
+ * @param tokens
+ */
+function parse(tokens: string[]): SexpTree {
+  if (!tokens.length) return null;
+
+  const token = tokens.shift();
+
+  if (token === '(') {
+    const node = [];
+    while (tokens[0] !== ')') {
+      node.push(parse(tokens));
+    }
+    tokens.shift(); // remove ')'
+    return node;
+  } else {
+    return token;
+  }
+}
+
+// Flatten tree and build the map
+/**
+ *
+ * @param tree
+ * @param map
+ */
+function buildMap(tree: SexpTree, map = new Map()) {
+  if (typeof tree === 'string') {
+    if (!map.has(tree)) map.set(tree, new Set());
+    return new Set();
+  }
+
+  const [root, ...children] = tree;
+  const rootId = root;
+  const descendants = new Set();
+
+  for (const child of children) {
+    const childRoot = typeof child === 'string' ? child : child[0];
+    if (!map.has(rootId)) map.set(rootId, new Set());
+
+    const childDescendants = buildMap(child, map);
+    descendants.add(childRoot);
+    childDescendants.forEach((d) => descendants.add(d));
+  }
+
+  map.set(rootId, descendants);
+  return descendants;
+}
+
+// Can be replaced with ES2024
+/**
+ *
+ * @param a
+ * @param b
+ */
+function setdifference(a: Set<string>, b: Set<string>): Set<string> {
+  if (!a) {
+    return new Set();
+  }
+  if (!b) {
+    return a;
+  }
+  return new Set([...a].filter((x) => !b.has(x)));
 }
