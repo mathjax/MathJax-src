@@ -167,8 +167,8 @@ export abstract class CommonOutputJax<
       display: 'block',
       'text-align': 'center',
       'justify-content': 'center',
-      margin: 'calc(1em - 2px) 0',
-      padding: '2px 0',
+      marign: '.7em 0',
+      padding: '.3em 2px',
     },
     'mjx-container[display][width="full"]': {
       display: 'flex',
