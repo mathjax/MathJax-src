@@ -422,7 +422,7 @@ export class SpeechExplorer
   ]);
 
   /**
-   * Semantic id to subtee map.
+   * Semantic id to subtree map.
    */
   private subtrees: Map<string, Set<string>> = new Map();
 
@@ -1765,6 +1765,9 @@ export class SpeechExplorer
     return focus.join(' ');
   }
 
+  /**
+   * Populates the subtrees map from the data-semantic-structure attribute.
+   */
   private getSubtrees() {
     const node = this.node.querySelector('[data-semantic-structure]');
     if (!node) return;
@@ -1775,23 +1778,23 @@ export class SpeechExplorer
   }
 }
 
-// Some Aux functions
+// Some Aux functions for parsing the semantic structure sexpression
 //
 type SexpTree = string | SexpTree[];
 
-// Helper to tokenize input
 /**
+ * Helper to tokenize input
  *
- * @param str
+ * @param str The semantic structure.
  */
 function tokenize(str: string): string[] {
   return str.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').trim().split(/\s+/);
 }
 
-// Recursive parser to convert tokens into a tree
 /**
+ * Recursive parser to convert tokens into a tree
  *
- * @param tokens
+ * @param tokens The tokens from the semantic structure.
  */
 function parse(tokens: string[]): SexpTree {
   if (!tokens.length) return null;
@@ -1810,11 +1813,11 @@ function parse(tokens: string[]): SexpTree {
   }
 }
 
-// Flatten tree and build the map
 /**
+ * Flattens the tree and builds the map.
  *
- * @param tree
- * @param map
+ * @param tree The sexpression tree.
+ * @param map The map to populate.
  */
 function buildMap(tree: SexpTree, map = new Map()) {
   if (typeof tree === 'string') {
@@ -1839,11 +1842,12 @@ function buildMap(tree: SexpTree, map = new Map()) {
   return descendants;
 }
 
-// Can be replaced with ES2024
+// Can be replaced with ES2024 implementation of Set.prototyp.difference
 /**
+ * Set difference between two sets A and B: A\B.
  *
- * @param a
- * @param b
+ * @param a Initial set.
+ * @param b Set to remove from A.
  */
 function setdifference(a: Set<string>, b: Set<string>): Set<string> {
   if (!a) {
