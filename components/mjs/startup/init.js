@@ -1,3 +1,4 @@
+import './hasown.js';
 import './lib/startup.js';
 
 import {combineDefaults} from '#js/components/global.js';
