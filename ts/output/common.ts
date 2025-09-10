@@ -167,7 +167,7 @@ export abstract class CommonOutputJax<
       display: 'block',
       'text-align': 'center',
       'justify-content': 'center',
-      marign: '.7em 0',
+      margin: '.7em 0',
       padding: '.3em 2px',
     },
     'mjx-container[display][width="full"]': {
@@ -374,7 +374,7 @@ export abstract class CommonOutputJax<
       this.math.display
     ) {
       const w = wrapper.getOuterBBox().w;
-      const W = this.math.metrics.containerWidth / this.pxPerEm;
+      const W = Math.max(0, this.math.metrics.containerWidth - 4) / this.pxPerEm;
       if (w > W && w) {
         scale *= W / w;
       }
