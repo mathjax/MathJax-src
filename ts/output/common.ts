@@ -374,7 +374,8 @@ export abstract class CommonOutputJax<
       this.math.display
     ) {
       const w = wrapper.getOuterBBox().w;
-      const W = Math.max(0, this.math.metrics.containerWidth - 4) / this.pxPerEm;
+      const W =
+        Math.max(0, this.math.metrics.containerWidth - 4) / this.pxPerEm;
       if (w > W && w) {
         scale *= W / w;
       }
