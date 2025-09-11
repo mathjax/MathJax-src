@@ -3781,7 +3781,7 @@ describe('Mhchem7', () => {
              </mrow>
            </msub>
            <mo stretchy="false" data-latex="\\downarrow">&#x2193;</mo>
-           <mrow data-mjx-texclass="ORD" data-latex="{}\"></mrow>
+           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
          </mrow>
        </math>`
     );

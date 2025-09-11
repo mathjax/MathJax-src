@@ -14121,7 +14121,7 @@ describe('User Defined Environments', () => {
   it('Cases star', () => {
      toXmlMatch(
        tex2mml('\\begin{mmtool} a & test a\\\\ b & test b \\end{mmtool}'),
-       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{mmtool} a &amp; test a\\\\ b &amp; test b \\end{mmtool}\" display=\"block\">
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{mmtool} a &amp; test a\\\\ b &amp; test b \\end{mmtool}" display="block">
           <mrow data-mjx-texclass="INNER" data-latex-item="{mmtool}" data-latex="\\begin{mmtool} a &amp; test a\\\\ b &amp; test b \\end{mmtool}">
             <mo data-mjx-texclass="OPEN">{</mo>
             <mtable rowspacing=".2em" columnspacing="1em" columnalign="left">
@@ -14185,7 +14185,7 @@ describe('Tagged Environments', () => {
   it('EqnTest', () => {
      toXmlMatch(
        tex2mml('\\begin{eqntest} a & b \\end{eqntest}'),
-       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqntest} a &amp; b \\end{eqntest}\" display=\"block\">
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqntest} a &amp; b \\end{eqntest}" display="block">
           <mtable displaystyle="true" columnalign="right left" columnspacing="1em" rowspacing="3pt" data-break-align="bottom top" data-latex-item="{eqntest}" data-latex="\\begin{eqntest} a &amp; b \\end{eqntest}">
             <mlabeledtr>
               <mtd id="mjx-eqn:1">
