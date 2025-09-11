@@ -2068,7 +2068,7 @@ describe('Mathtools Matrix Environments', () => {
       tex2mml('\\begin{Vmatrix*} -1 & 3 \\\\ 2 & -4 \\end{Vmatrix*}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="{Vmatrix*}" data-latex="\\begin{Vmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}">
-           <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN">&#x2016;</mo>
            <mtable columnspacing="1em" rowspacing="4pt">
              <mtr data-latex-item=" " data-latex=" ">
                <mtd>
@@ -2089,7 +2089,7 @@ describe('Mathtools Matrix Environments', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -2102,7 +2102,7 @@ describe('Mathtools Matrix Environments', () => {
       tex2mml('\\begin{Vmatrix*}[l] -1 & 3 \\\\ 2 & -4 \\end{Vmatrix*}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vmatrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="{Vmatrix*}" data-latex="\\begin{Vmatrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}">
-           <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN">&#x2016;</mo>
            <mtable columnspacing="1em" rowspacing="4pt" columnalign="left">
              <mtr data-latex-item="[l]" data-latex="[l]">
                <mtd>
@@ -2123,7 +2123,7 @@ describe('Mathtools Matrix Environments', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -2136,7 +2136,7 @@ describe('Mathtools Matrix Environments', () => {
       tex2mml('\\begin{Vmatrix*}[c] -1 & 3 \\\\ 2 & -4 \\end{Vmatrix*}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vmatrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="{Vmatrix*}" data-latex="\\begin{Vmatrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}">
-           <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN">&#x2016;</mo>
            <mtable columnspacing="1em" rowspacing="4pt">
              <mtr data-latex-item="[c]" data-latex="[c]">
                <mtd>
@@ -2157,7 +2157,7 @@ describe('Mathtools Matrix Environments', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -2170,7 +2170,7 @@ describe('Mathtools Matrix Environments', () => {
       tex2mml('\\begin{Vmatrix*}[r] -1 & 3 \\\\ 2 & -4 \\end{Vmatrix*}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vmatrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="{Vmatrix*}" data-latex="\\begin{Vmatrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}">
-           <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN">&#x2016;</mo>
            <mtable columnspacing="1em" rowspacing="4pt" columnalign="right">
              <mtr data-latex-item="[r]" data-latex="[r]">
                <mtd>
@@ -2191,7 +2191,7 @@ describe('Mathtools Matrix Environments', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -2917,7 +2917,7 @@ describe('Mathtools Small Matrix Environments', () => {
       tex2mml('\\begin{Vsmallmatrix*} -a & b \\\\ c & -d \\end{Vsmallmatrix*}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="{Vsmallmatrix*}" data-latex="\\begin{Vsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}">
-           <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN">&#x2016;</mo>
            <mstyle scriptlevel="1">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr data-latex-item=" " data-latex=" ">
@@ -2940,7 +2940,7 @@ describe('Mathtools Small Matrix Environments', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -2953,7 +2953,7 @@ describe('Mathtools Small Matrix Environments', () => {
       tex2mml('\\begin{Vsmallmatrix*}[l] -a & b \\\\ c & -d \\end{Vsmallmatrix*}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vsmallmatrix*}[l] -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="{Vsmallmatrix*}" data-latex="\\begin{Vsmallmatrix*}[l] -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}">
-           <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN">&#x2016;</mo>
            <mstyle scriptlevel="1">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left">
                <mtr data-latex-item="[l]" data-latex="[l]">
@@ -2976,7 +2976,7 @@ describe('Mathtools Small Matrix Environments', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -2989,7 +2989,7 @@ describe('Mathtools Small Matrix Environments', () => {
       tex2mml('\\begin{Vsmallmatrix*}[c] -a & b \\\\ c & -d \\end{Vsmallmatrix*}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vsmallmatrix*}[c] -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="{Vsmallmatrix*}" data-latex="\\begin{Vsmallmatrix*}[c] -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}">
-           <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN">&#x2016;</mo>
            <mstyle scriptlevel="1">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr data-latex-item="[c]" data-latex="[c]">
@@ -3012,7 +3012,7 @@ describe('Mathtools Small Matrix Environments', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -3025,7 +3025,7 @@ describe('Mathtools Small Matrix Environments', () => {
       tex2mml('\\begin{Vsmallmatrix*}[r] -a & b \\\\ c & -d \\end{Vsmallmatrix*}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vsmallmatrix*}[r] -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="{Vsmallmatrix*}" data-latex="\\begin{Vsmallmatrix*}[r] -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}">
-           <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN">&#x2016;</mo>
            <mstyle scriptlevel="1">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right">
                <mtr data-latex-item="[r]" data-latex="[r]">
@@ -3048,7 +3048,7 @@ describe('Mathtools Small Matrix Environments', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -3269,7 +3269,7 @@ describe('Mathtools Small Matrix Environments', () => {
       tex2mml('\\begin{Vsmallmatrix} -a & b \\\\ c & -d \\end{Vsmallmatrix}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vsmallmatrix} -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix}" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="{Vsmallmatrix}" data-latex="\\begin{Vsmallmatrix} -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix}">
-           <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN">&#x2016;</mo>
            <mstyle scriptlevel="1">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
@@ -3292,7 +3292,7 @@ describe('Mathtools Small Matrix Environments', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -4676,14 +4676,14 @@ describe('Mathtools Paired Delimiters', () => {
       tex2mml('\\DeclarePairedDelimiter\\abs{\\lvert}{\\rvert} \\abs[\\Bigg]{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\DeclarePairedDelimiter\\abs{\\lvert}{\\rvert} \\abs[\\Bigg]{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="OPEN" data-latex="\\Biggl\\lvert">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
          <mfrac data-latex="\\frac{a}{b}">
            <mi data-latex="a">a</mi>
            <mi data-latex="b">b</mi>
          </mfrac>
          <mrow data-mjx-texclass="CLOSE" data-latex="\\Biggr\\rvert">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -4718,11 +4718,11 @@ describe('Mathtools Paired Delimiters', () => {
       tex2mml('\\DeclarePairedDelimiterXPP\\x[1]{A}{\\lvert}{\\rvert}{B}{a#1b} \\x{X}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\DeclarePairedDelimiterXPP\\x[1]{A}{\\lvert}{\\rvert}{B}{a#1b} \\x{X}" display="block">
          <mi data-latex="A">A</mi>
-         <mo data-mjx-texclass="OPEN" fence="false" stretchy="false" data-latex="\\lvert">|</mo>
+         <mo data-mjx-texclass="OPEN" data-latex="\\lvert">|</mo>
          <mi data-latex="a">a</mi>
          <mi data-latex="X">X</mi>
          <mi data-latex="b">b</mi>
-         <mo data-mjx-texclass="CLOSE" fence="false" stretchy="false" data-latex="\\rvert">|</mo>
+         <mo data-mjx-texclass="CLOSE" data-latex="\\rvert">|</mo>
          <mi data-latex="B">B</mi>
        </math>`
     );
@@ -6222,7 +6222,7 @@ describe('Mathtools options', () => {
          <mo data-latex="[" stretchy="false">[</mo>
          <mi data-latex="x">x</mi>
          <mo data-latex="]" stretchy="false">]</mo>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mrow data-mjx-texclass="OPEN" data-latex="\\mathopen{\\left|[x]\\right|}">
            <mrow data-mjx-texclass="INNER" data-latex-item="\\left|[x]\\right|" data-latex="\\left|[x]\\right|">
              <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
@@ -6234,13 +6234,13 @@ describe('Mathtools options', () => {
          </mrow>
          <mrow data-mjx-texclass="CLOSE" data-latex="\\mathclose{}"></mrow>
          <mrow data-mjx-texclass="OPEN" data-latex="\\biggl|">
-           <mo minsize="2.047em" maxsize="2.047em">|</mo>
+           <mo minsize="2.047em" maxsize="2.047em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
          <mo data-latex="[" stretchy="false">[</mo>
          <mi data-latex="x">x</mi>
          <mo data-latex="]" stretchy="false">]</mo>
          <mrow data-mjx-texclass="CLOSE" data-latex="\\biggr|">
-           <mo minsize="2.047em" maxsize="2.047em">|</mo>
+           <mo minsize="2.047em" maxsize="2.047em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );

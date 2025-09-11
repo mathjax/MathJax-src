@@ -117,9 +117,9 @@ describe('Begingroup', () => {
       tex2mml('\\let\\x=\\| \\left\\x A\\right\\x \\begingroup \\let\\x=| \\left\\x B \\right\\x \\endgroup \\left\\x C \\right\\x'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\x=\\| \\left\\x A\\right\\x \\begingroup \\let\\x=| \\left\\x B \\right\\x \\endgroup \\left\\x C \\right\\x" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\x A\\right\\x " data-latex="\\left\\x A\\right\\x ">
-           <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\x " data-latex="\\left\\x ">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\x " data-latex="\\left\\x ">&#x2016;</mo>
            <mi data-latex="A">A</mi>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\x " data-latex="\\right\\x ">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\x " data-latex="\\right\\x ">&#x2016;</mo>
          </mrow>
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\x B \\right\\x " data-latex="\\left\\x B \\right\\x ">
            <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\x " data-latex="\\left\\x ">|</mo>
@@ -127,9 +127,9 @@ describe('Begingroup', () => {
            <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\x " data-latex="\\right\\x ">|</mo>
          </mrow>
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\x C \\right\\x" data-latex="\\left\\x C \\right\\x">
-           <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\x " data-latex="\\left\\x ">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\x " data-latex="\\left\\x ">&#x2016;</mo>
            <mi data-latex="C">C</mi>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\x" data-latex="\\right\\x">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\x" data-latex="\\right\\x">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -142,9 +142,9 @@ describe('Begingroup', () => {
       tex2mml('\\let\\x=\\| \\left\\x A\\right\\x \\begingroup \\let\\x=| \\left\\x B \\right\\x \\begingroup \\let\\x=( \\left\\x C \\right\\x \\endgroup \\left\\x D \\right\\x \\endgroup \\left\\x E \\right\\x'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\x=\\| \\left\\x A\\right\\x \\begingroup \\let\\x=| \\left\\x B \\right\\x \\begingroup \\let\\x=( \\left\\x C \\right\\x \\endgroup \\left\\x D \\right\\x \\endgroup \\left\\x E \\right\\x" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\x A\\right\\x " data-latex="\\left\\x A\\right\\x ">
-           <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\x " data-latex="\\left\\x ">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\x " data-latex="\\left\\x ">&#x2016;</mo>
            <mi data-latex="A">A</mi>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\x " data-latex="\\right\\x ">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\x " data-latex="\\right\\x ">&#x2016;</mo>
          </mrow>
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\x B \\right\\x " data-latex="\\left\\x B \\right\\x ">
            <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\x " data-latex="\\left\\x ">|</mo>
@@ -162,9 +162,9 @@ describe('Begingroup', () => {
            <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\x " data-latex="\\right\\x ">|</mo>
          </mrow>
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\x E \\right\\x" data-latex="\\left\\x E \\right\\x">
-           <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\x " data-latex="\\left\\x ">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\x " data-latex="\\left\\x ">&#x2016;</mo>
            <mi data-latex="E">E</mi>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\x" data-latex="\\right\\x">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\x" data-latex="\\right\\x">&#x2016;</mo>
          </mrow>
        </math>`
     );

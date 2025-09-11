@@ -835,7 +835,7 @@ describe('Newcommand Ams', () => {
       tex2mml('\\let\\b\\lvert\\let\\lvert\\langle\\vert\\b\\lvert'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\b\\lvert\\let\\lvert\\langle\\vert\\b\\lvert" display="block">
          <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
-         <mo data-mjx-texclass="OPEN" fence="false" stretchy="false" data-latex="\\b">|</mo>
+         <mo data-mjx-texclass="OPEN" data-latex="\\b">|</mo>
          <mo fence="false" stretchy="false" data-latex="\\lvert">&#x27E8;</mo>
        </math>`
     );
@@ -1086,9 +1086,9 @@ describe('Newcommand Overrides', () => {
       tex2mml('\\def\\test{x} \\let\\test=\\| \\left\\test X \\right\\test'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\test{x} \\let\\test=\\| \\left\\test X \\right\\test" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\test X \\right\\test" data-latex="\\def\\test{x} \\let\\test=\\| \\left\\test X \\right\\test">
-           <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\test " data-latex="\\left\\test ">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\test " data-latex="\\left\\test ">&#x2016;</mo>
            <mi data-latex="X">X</mi>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\test" data-latex="\\right\\test">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\test" data-latex="\\right\\test">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -1113,9 +1113,9 @@ describe('Newcommand Overrides', () => {
       tex2mml('\\let\\sqrt=\\| \\left\\sqrt X \\right\\sqrt'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\sqrt=\\| \\left\\sqrt X \\right\\sqrt" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\sqrt X \\right\\sqrt" data-latex="\\let\\sqrt=\\| \\left\\sqrt X \\right\\sqrt">
-           <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\sqrt " data-latex="\\left\\sqrt ">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\sqrt " data-latex="\\left\\sqrt ">&#x2016;</mo>
            <mi data-latex="X">X</mi>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\sqrt" data-latex="\\right\\sqrt">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\sqrt" data-latex="\\right\\sqrt">&#x2016;</mo>
          </mrow>
        </math>`
     );

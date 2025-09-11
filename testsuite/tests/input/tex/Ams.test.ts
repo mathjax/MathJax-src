@@ -1740,7 +1740,7 @@ describe('Ams Environments', () => {
       tex2mml('\\begin{Vmatrix} a & b \\\\ c & d \\end{Vmatrix}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vmatrix} a &amp; b \\\\ c &amp; d \\end{Vmatrix}" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="{Vmatrix}" data-latex="\\begin{Vmatrix} a &amp; b \\\\ c &amp; d \\end{Vmatrix}">
-           <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN">&#x2016;</mo>
            <mtable columnspacing="1em" rowspacing="4pt">
              <mtr>
                <mtd>
@@ -1759,7 +1759,7 @@ describe('Ams Environments', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -2950,7 +2950,7 @@ describe('Multirel', () => {
            <mo data-latex="&gt;">&gt;</mo>
          </mrow>
          <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\thickapprox\\thicksim" rspace="0pt">&#x2248;&#x223C;</mo>
-         <mo data-mjx-texclass="REL" data-latex="\\frown\\smile=\\updownarrow" lspace="0pt" stretchy="false">&#x2322;&#x2323;=&#x2195;</mo>
+         <mo data-mjx-texclass="REL" stretchy="false" data-latex="\\frown\\smile=\\updownarrow" lspace="0pt">&#x2322;&#x2323;=&#x2195;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4020,9 +4020,9 @@ describe('Ams symbols', () => {
            <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rvert " data-latex="\\right\\rvert ">|</mo>
          </mrow>
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lVert X \\right\\rVert" data-latex="\\left\\lVert X \\right\\rVert">
-           <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\lVert " data-latex="\\left\\lVert ">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lVert " data-latex="\\left\\lVert ">&#x2016;</mo>
            <mi data-latex="X">X</mi>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\rVert" data-latex="\\right\\rVert">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rVert" data-latex="\\right\\rVert">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -4378,7 +4378,7 @@ describe('Ams symbols', () => {
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Vvdash\\smallsmile\\shortmid\\smallfrown\\shortparallel\\bumpeq\\between\\Bumpeq\\pitchfork\\varpropto\\backepsilon" display="block">
          <mo data-latex="\\Vvdash" rspace="0pt">&#x22AA;</mo>
-         <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\smallsmile\\shortmid\\smallfrown\\shortparallel" lspace="0pt" rspace="0pt">&#x2323;&#x2223;&#x2322;&#x2225;</mo>
+         <mo data-mjx-alternate="1" data-mjx-texclass="REL" stretchy="false" data-latex="\\smallsmile\\shortmid\\smallfrown\\shortparallel" lspace="0pt" rspace="0pt">&#x2323;&#x2223;&#x2322;&#x2225;</mo>
          <mo data-mjx-texclass="REL" data-latex="\\bumpeq\\between\\Bumpeq\\pitchfork" lspace="0pt" rspace="0pt">&#x224F;&#x226C;&#x224E;&#x22D4;</mo>
          <mo data-mjx-alternate="1" data-latex="\\varpropto" lspace="0pt" rspace="0pt">&#x221D;</mo>
          <mo data-latex="\\backepsilon" lspace="0pt">&#x220D;</mo>
@@ -4394,9 +4394,19 @@ describe('Ams symbols', () => {
         '\\blacktriangleleft\\blacktriangleright\\therefore\\because\\eqsim\\vartriangle\\Join\\nless\\ngtr\\nleq\\ngeq'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\blacktriangleleft\\blacktriangleright\\therefore\\because\\eqsim\\vartriangle\\Join\\nless\\ngtr\\nleq\\ngeq" display="block">
-         <mo data-latex="\\blacktriangleleft">&#x25C2;</mo>
-         <mo data-latex="\\blacktriangleright">&#x25B8;</mo>
-         <mo data-mjx-texclass="REL" data-latex="\\therefore\\because\\eqsim">&#x2234;&#x2235;&#x2242;</mo>
+         <mrow data-mjx-texclass="ORD">
+           <mo data-latex="\\blacktriangleleft">&#x25C2;</mo>
+         </mrow>
+         <mrow data-mjx-texclass="ORD">
+           <mo data-latex="\\blacktriangleright">&#x25B8;</mo>
+         </mrow>
+         <mrow data-mjx-texclass="ORD">
+           <mo data-latex="\\therefore">&#x2234;</mo>
+         </mrow>
+         <mrow data-mjx-texclass="ORD">
+           <mo data-latex="\\because">&#x2235;</mo>
+         </mrow>
+         <mo data-latex="\\eqsim">&#x2242;</mo>
          <mo data-mjx-alternate="1" data-latex="\\vartriangle">&#x25B3;</mo>
          <mo data-mjx-texclass="REL" data-latex="\\Join\\nless\\ngtr\\nleq\\ngeq">&#x22C8;&#x226E;&#x226F;&#x2270;&#x2271;</mo>
        </math>`
@@ -4540,7 +4550,7 @@ describe('Ams symbols', () => {
     toXmlMatch(
       tex2mml('\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow" display="block">
-         <mo data-mjx-texclass="REL" data-latex="\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow">&#x219B;&#x21CD;&#x21CF;&#x21AE;&#x21CE;</mo>
+         <mo data-mjx-texclass="REL" stretchy="false" data-latex="\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow">&#x219B;&#x21CD;&#x21CF;&#x21AE;&#x21CE;</mo>
        </math>`
     );
   });
