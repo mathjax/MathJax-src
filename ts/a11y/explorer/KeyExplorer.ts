@@ -424,7 +424,7 @@ export class SpeechExplorer
   /**
    * Semantic id to subtree map.
    */
-  private subtrees: Map<string, Set<string>> = new Map();
+  private subtrees: Map<string, Set<string>> = null;
 
   /**
    * @override
@@ -1529,7 +1529,6 @@ export class SpeechExplorer
     public item: ExplorerMathItem
   ) {
     super(document, pool, null, node);
-    this.getSubtrees();
   }
 
   /**
@@ -1551,6 +1550,10 @@ export class SpeechExplorer
    * @override
    */
   public async Start() {
+    if (!this.subtrees) {
+      this.subtrees = new Map();
+      this.getSubtrees();
+    }
     //
     // If we aren't attached or already active, return
     //
@@ -1797,20 +1800,26 @@ function tokenize(str: string): string[] {
  * @param tokens The tokens from the semantic structure.
  */
 function parse(tokens: string[]): SexpTree {
-  if (!tokens.length) return null;
+  const stack: SexpTree[][] = [[]];
 
-  const token = tokens.shift();
-
-  if (token === '(') {
-    const node = [];
-    while (tokens[0] !== ')') {
-      node.push(parse(tokens));
+  for (const token of tokens) {
+    console.log(stack.toString());
+    if (token === '(') {
+      // Start a new nested list and push it onto the stack
+      const newNode: SexpTree = [];
+      stack[stack.length - 1].push(newNode);
+      stack.push(newNode);
+    } else if (token === ')') {
+      // Close the current list by popping from the stack
+      stack.pop();
+    } else {
+      // Add a literal token to the current list
+      stack[stack.length - 1].push(token);
     }
-    tokens.shift(); // remove ')'
-    return node;
-  } else {
-    return token;
   }
+
+  // The final result is the first (and only) element of the base list
+  return stack[0][0];
 }
 
 /**
