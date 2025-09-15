@@ -620,7 +620,7 @@ if (typeof MathJax._.startup === 'undefined') {
     typeset: true,
     ready: Startup.defaultReady.bind(Startup),
     pageReady: Startup.defaultPageReady.bind(Startup),
-    polyfillHasOwn: false,
+    polyfillHasOwn: true,
   });
   combineWithMathJax({
     startup: Startup,
