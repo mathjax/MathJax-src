@@ -1001,10 +1001,12 @@ export class SpeechExplorer
     //   (i.e., we are focusing out)
     //
     if (this.current) {
-      for (const part of this.getSplitNodes(this.current)) {
+      this.pool.unhighlight();
+      for (const part of Array.from(
+        this.node.querySelectorAll('.mjx-selected')
+      )) {
         part.classList.remove('mjx-selected');
       }
-      this.pool.unhighlight();
       if (this.document.options.a11y.tabSelects === 'last') {
         this.refocus = this.current;
       }
@@ -1022,8 +1024,11 @@ export class SpeechExplorer
     this.currentMark = -1;
     if (this.current) {
       const parts = this.getSplitNodes(this.current);
+      this.highlighter.encloseNodes(parts, this.node);
       for (const part of parts) {
-        part.classList.add('mjx-selected');
+        if (!part.getAttribute('data-mjx-enclosed')) {
+          part.classList.add('mjx-selected');
+        }
       }
       this.pool.highlight(parts);
       this.addSpeech(node, addDescription);

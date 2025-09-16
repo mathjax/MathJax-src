@@ -375,9 +375,6 @@ export function ExplorerMathDocumentMixin<
       'mjx-speech:focus': {
         outline: 'none',
       },
-      'mjx-container .mjx-selected': {
-        outline: '2px solid black',
-      },
       'mjx-container > mjx-help': {
         display: 'none',
         position: 'absolute',
