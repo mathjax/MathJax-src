@@ -37,12 +37,18 @@ describe('AmsCD', () => {
              <mtd>
                <mrow>
                  <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\rlap{b}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\rlap{b}">
-                     <mpadded width="0">
-                       <mi data-latex="b">b</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\rlap{b}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\rlap{b}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{b}">
+                           <mpadded width="0">
+                             <mi data-latex="b">b</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                </mrow>
              </mtd>
@@ -50,12 +56,18 @@ describe('AmsCD', () => {
              <mtd>
                <mrow>
                  <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\rlap{c}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\rlap{c}">
-                     <mpadded width="0">
-                       <mi data-latex="c">c</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\rlap{c}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\rlap{c}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{c}">
+                           <mpadded width="0">
+                             <mi data-latex="c">c</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                </mrow>
              </mtd>
@@ -180,40 +192,64 @@ describe('AmsCD', () => {
            <mtr>
              <mtd>
                <mrow>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\llap{l}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\llap{l}">
-                     <mpadded width="0" lspace="-1width">
-                       <mi data-latex="l">l</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\llap{l}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\llap{l}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\llap{l}">
+                           <mpadded width="0" lspace="-1width">
+                             <mi data-latex="l">l</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                  <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\rlap{r}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\rlap{r}">
-                     <mpadded width="0">
-                       <mi data-latex="r">r</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\rlap{r}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\rlap{r}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{r}">
+                           <mpadded width="0">
+                             <mi data-latex="r">r</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                </mrow>
              </mtd>
              <mtd></mtd>
              <mtd>
                <mrow>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\llap{l}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\llap{l}">
-                     <mpadded width="0" lspace="-1width">
-                       <mi data-latex="l">l</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\llap{l}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\llap{l}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\llap{l}">
+                           <mpadded width="0" lspace="-1width">
+                             <mi data-latex="l">l</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                  <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2191;</mo>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\rlap{r}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\rlap{r}">
-                     <mpadded width="0">
-                       <mi data-latex="r">r</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\rlap{r}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\rlap{r}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{r}">
+                           <mpadded width="0">
+                             <mi data-latex="r">r</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                </mrow>
              </mtd>
@@ -552,12 +588,18 @@ describe('AmsCD', () => {
              <mtd>
                <mrow>
                  <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\rlap{b}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\rlap{b}">
-                     <mpadded width="0">
-                       <mi data-latex="b">b</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\rlap{b}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\rlap{b}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{b}">
+                           <mpadded width="0">
+                             <mi data-latex="b">b</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                </mrow>
              </mtd>
@@ -565,12 +607,18 @@ describe('AmsCD', () => {
              <mtd>
                <mrow>
                  <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\rlap{c}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\rlap{c}">
-                     <mpadded width="0">
-                       <mi data-latex="c">c</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\rlap{c}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\rlap{c}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{c}">
+                           <mpadded width="0">
+                             <mi data-latex="c">c</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                </mrow>
              </mtd>
@@ -628,12 +676,18 @@ describe('AmsCD', () => {
              <mtd>
                <mrow>
                  <mo minsize="4cm" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\rlap{b}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\rlap{b}">
-                     <mpadded width="0">
-                       <mi data-latex="b">b</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\rlap{b}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\rlap{b}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{b}">
+                           <mpadded width="0">
+                             <mi data-latex="b">b</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                </mrow>
              </mtd>
@@ -641,12 +695,18 @@ describe('AmsCD', () => {
              <mtd>
                <mrow>
                  <mo minsize="4cm" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\rlap{c}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\rlap{c}">
-                     <mpadded width="0">
-                       <mi data-latex="c">c</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\rlap{c}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\rlap{c}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{c}">
+                           <mpadded width="0">
+                             <mi data-latex="c">c</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                </mrow>
              </mtd>
@@ -704,12 +764,18 @@ describe('AmsCD', () => {
              <mtd>
                <mrow>
                  <mo minsize="4cm" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\rlap{b}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\rlap{b}">
-                     <mpadded width="0">
-                       <mi data-latex="b">b</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\rlap{b}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\rlap{b}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{b}">
+                           <mpadded width="0">
+                             <mi data-latex="b">b</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                </mrow>
              </mtd>
@@ -717,12 +783,18 @@ describe('AmsCD', () => {
              <mtd>
                <mrow>
                  <mo minsize="4cm" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\rlap{c}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\rlap{c}">
-                     <mpadded width="0">
-                       <mi data-latex="c">c</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\rlap{c}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\rlap{c}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{c}">
+                           <mpadded width="0">
+                             <mi data-latex="c">c</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                </mrow>
              </mtd>
@@ -849,12 +921,18 @@ describe('AmsCD Options', () => {
              <mtd>
                <mrow>
                  <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\rlap{b}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\rlap{b}">
-                     <mpadded width="0">
-                       <mi data-latex="b">b</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\rlap{b}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\rlap{b}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{b}">
+                           <mpadded width="0">
+                             <mi data-latex="b">b</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                </mrow>
              </mtd>
@@ -862,12 +940,18 @@ describe('AmsCD Options', () => {
              <mtd>
                <mrow>
                  <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
-                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\rlap{c}">
-                   <mrow data-mjx-texclass="ORD" data-latex="\\rlap{c}">
-                     <mpadded width="0">
-                       <mi data-latex="c">c</mi>
-                     </mpadded>
-                   </mrow>
+                 <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\rlap{c}}}">
+                   <mpadded height="+.125em" depth="-.125em" voffset="+.125em" data-latex="{}">
+                     <mrow data-mjx-texclass="ORD">
+                       <mpadded data-mjx-vbox="center" data-mjx-texclass="ORD" data-vertical-align="center" data-latex="\\vcenter{\\rlap{c}}">
+                         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{c}">
+                           <mpadded width="0">
+                             <mi data-latex="c">c</mi>
+                           </mpadded>
+                         </mrow>
+                       </mpadded>
+                     </mrow>
+                   </mpadded>
                  </mstyle>
                </mrow>
              </mtd>
@@ -892,8 +976,8 @@ describe('AmsCD Options', () => {
                <mi data-latex="D">D</mi>
              </mtd>
            </mtr>
-        </mtable>
-      </math>`
+         </mtable>
+       </math>`
     );
   });
 
