@@ -163,7 +163,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
           if (a) {
             NodeUtil.appendChildren(mml, [
               new TexParser(
-                '\\scriptstyle\\llap{' + a + '}',
+                '\\scriptstyle\\raise.125em{\\vcenter{\\llap{' + a + '}}}',
                 parser.stack.env,
                 parser.configuration
               ).mml(),
@@ -174,7 +174,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
           if (b) {
             NodeUtil.appendChildren(mml, [
               new TexParser(
-                '\\scriptstyle\\rlap{' + b + '}',
+                '\\scriptstyle\\raise.125em{\\vcenter{\\rlap{' + b + '}}}',
                 parser.stack.env,
                 parser.configuration
               ).mml(),
