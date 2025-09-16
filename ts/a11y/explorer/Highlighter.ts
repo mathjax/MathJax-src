@@ -470,6 +470,7 @@ class SvgHighlighter extends AbstractHighlighter {
     const previous = node.previousSibling as HTMLElement;
     if (node.hasAttribute('data-sre-highlighter-bbox')) {
       node.remove();
+      return;
     }
     node.removeAttribute('data-mjx-enclosed');
     if (previous && previous.hasAttribute('data-sre-highlighter-added')) {
