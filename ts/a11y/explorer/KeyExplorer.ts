@@ -1070,15 +1070,14 @@ export class SpeechExplorer
     const sub = this.subtrees.get(id);
     const children: Set<string> = new Set();
     for (const node of nodes) {
-      Array.from(node.querySelectorAll(`[data-semantic-id]`)).forEach((x) =>
-        children.add(x.getAttribute('data-semantic-id'))
-      );
+      (
+        Array.from(node.querySelectorAll(`[data-semantic-id]`)) as HTMLElement[]
+      ).forEach((x) => children.add(this.nodeId(x)));
     }
     const rest = setdifference(sub, children);
-    return [...rest].map((child) => {
-      const node = this.node.querySelector(`[data-semantic-id="${child}"]`);
-      return node as HTMLElement;
-    });
+    return [...rest]
+      .map((child) => this.getNode(child))
+      .filter((node) => node !== null);
   }
 
   /**
