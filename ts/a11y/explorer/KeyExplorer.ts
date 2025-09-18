@@ -1034,6 +1034,8 @@ export class SpeechExplorer
     this.node.removeAttribute('aria-busy');
   }
 
+  private cacheParts: Map<string, HTMLElement[]> = new Map();
+
   /**
    * Get all nodes with the same semantic id (multiple nodes if there are line breaks).
    *
@@ -1045,11 +1047,16 @@ export class SpeechExplorer
     if (!id) {
       return [node];
     }
+    // Here we need to cash the subtrees.
+    if (this.cacheParts.has(id)) {
+      return this.cacheParts.get(id);
+    }
     const parts = Array.from(
       this.node.querySelectorAll(`[data-semantic-id="${id}"]`)
     ) as HTMLElement[];
     const subtree = this.subtree(id, parts);
-    return [...parts, ...subtree];
+    this.cacheParts.set(id, [...parts, ...subtree]);
+    return this.cacheParts.get(id);
   }
 
   /**
@@ -1781,6 +1788,8 @@ export class SpeechExplorer
   }
 }
 
+/**********************************************************************/
+
 // Some Aux functions for parsing the semantic structure sexpression
 //
 type SexpTree = string | SexpTree[];
@@ -1803,7 +1812,6 @@ function parse(tokens: string[]): SexpTree {
   const stack: SexpTree[][] = [[]];
 
   for (const token of tokens) {
-    console.log(stack.toString());
     if (token === '(') {
       // Start a new nested list and push it onto the stack
       const newNode: SexpTree = [];
