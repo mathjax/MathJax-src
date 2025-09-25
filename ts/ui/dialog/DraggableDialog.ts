@@ -23,6 +23,7 @@
 
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { StyleJson, StyleJsonSheet } from '../../util/StyleJson.js';
+import { context } from '../../util/context.js';
 
 export type ADAPTOR = DOMAdaptor<HTMLElement, Text, Document>;
 
@@ -49,7 +50,7 @@ export type DialogArgs = {
 /**
  * True if we can rely on an HTML dialog element.
  */
-export const isDialog: boolean = !!window.HTMLDialogElement;
+export const isDialog: boolean = !!context.window?.HTMLDialogElement;
 
 /*========================================================================*/
 
