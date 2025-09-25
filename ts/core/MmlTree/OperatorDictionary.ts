@@ -53,8 +53,8 @@ export function OPDEF(
 export const MO = {
   REL: OPDEF(5, 5, TEXCLASS.REL),
   WIDEREL: OPDEF(5, 5, TEXCLASS.REL, { accent: true, stretchy: true }),
-  RELSTRETCH: OPDEF(5, 5, TEXCLASS.REL, { stretchy: true }),
   BIN4: OPDEF(4, 4, TEXCLASS.BIN),
+  RELSTRETCH: OPDEF(5, 5, TEXCLASS.REL, { stretchy: true }),
   ORD: OPDEF(0, 0, TEXCLASS.ORD),
   BIN3: OPDEF(3, 3, TEXCLASS.BIN),
   OPEN: OPDEF(0, 0, TEXCLASS.OPEN, {
@@ -75,9 +75,7 @@ export const MO = {
     movablelimits: true,
     symmetric: true,
   }),
-  REL4: OPDEF(4, 4, TEXCLASS.REL),
   RELACCENT: OPDEF(5, 5, TEXCLASS.REL, { accent: true }),
-  OP0: OPDEF(0, 0, TEXCLASS.OP),
   BIN0: OPDEF(0, 0, TEXCLASS.BIN),
   BIN5: OPDEF(5, 5, TEXCLASS.BIN),
   FENCE: OPDEF(0, 0, TEXCLASS.ORD, {
@@ -85,18 +83,17 @@ export const MO = {
     stretchy: true,
     symmetric: true,
   }),
-  BIN30: OPDEF(3, 0, TEXCLASS.BIN),
   INNER: OPDEF(1, 1, TEXCLASS.INNER),
+  ORD30: OPDEF(3, 0, TEXCLASS.ORD),
   NONE: OPDEF(0, 0, TEXCLASS.NONE),
   ORDSTRETCH0: OPDEF(0, 0, TEXCLASS.ORD, { stretchy: true }),
   BINSTRETCH0: OPDEF(0, 0, TEXCLASS.BIN, { stretchy: true }),
   RELSTRETCH0: OPDEF(0, 0, TEXCLASS.REL, { stretchy: true }),
-  WIDEREL0: OPDEF(0, 0, TEXCLASS.REL, { accent: true, stretchy: true }),
+  CLOSE0: OPDEF(0, 0, TEXCLASS.CLOSE, { fence: true }),
   ORD3: OPDEF(3, 3, TEXCLASS.ORD),
-  ORD30: OPDEF(3, 0, TEXCLASS.ORD),
   PUNCT03: OPDEF(0, 3, TEXCLASS.PUNCT, { linebreakstyle: 'after' }),
   OPEN0: OPDEF(0, 0, TEXCLASS.OPEN, { fence: true }),
-  CLOSE0: OPDEF(0, 0, TEXCLASS.CLOSE, { fence: true }),
+  STRETCH4: OPDEF(4, 4, TEXCLASS.BIN, { stretchy: true }),
 };
 
 /**
@@ -450,7 +447,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '-': MO.BIN4,                   // hyphen-minus
     '-=': MO.BIN5,                  // multiple character operator: -=
     '->': MO.BIN5,                  // multiple character operator: ->
-    '.': [3, 3, TEXCLASS.PUNCT, {linebreakstyle: 'after'}], // full stop: \ldotp
+    '.': MO.ORD3,                   // full stop
     '..': MO.BIN3,                  // ..
     '...': MO.INNER,                // ...
     '/': [4, 4, TEXCLASS.ORD, {}],  // solidus
@@ -487,8 +484,8 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u0308': MO.ACCENT,            // \ddot
     '\u030C': MO.ACCENT,            // \check
     '\u0332': MO.WIDEACCENT,        // horizontal line
-    '\u0338': MO.REL4,              // \not
-    '\u03F6': MO.REL4,              // contains
+    '\u0338': MO.REL,               // \not
+    '\u03F6': MO.REL,               // contains
     '\u2015': MO.ORDSTRETCH0,       // horizontal line
     '\u2017': MO.ORDSTRETCH0,       // horizontal line
     '\u2020': MO.BIN3,              // \dagger
@@ -496,7 +493,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2022': MO.BIN3,              // bullet
     '\u2026': MO.INNER,             // \ldots
     '\u2043': MO.BIN3,              // hyphen bullet
-    '\u2044': [4, 4, TEXCLASS.BIN, {stretchy: true}], // fraction slash
+    '\u2044': MO.STRETCH4,          // fraction slash
     '\u2061': MO.NONE,              // function application
     '\u2062': MO.NONE,              // invisible times
     '\u2063': [0, 0, TEXCLASS.NONE, {linebreakstyle: 'after'}], // invisible separator
@@ -629,7 +626,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2212': MO.BIN4,              // minus sign
     '\u2213': MO.BIN4,              // minus-or-plus sign: \mp
     '\u2214': MO.BIN4,              // dot plus
-    '\u2215': [4, 4, TEXCLASS.BIN, {stretchy: true}], // division slash
+    '\u2215': MO.STRETCH4,          // division slash
     '\u2216': MO.BIN4,              // set minus: \setminus
     '\u2217': MO.BIN3,              // asterisk operator: \ast
     '\u2218': MO.BIN3,              // ring operator: \circ
@@ -656,7 +653,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2240': MO.BIN3,              // wreath product: \wr
     '\u2241': MO.REL,               // not tilde
     '\u2242': MO.REL,               // minus tilde
-    '\u2242\u0338': MO.REL4,        // not minus tilde
+    '\u2242\u0338': MO.REL,         // not minus tilde
     '\u2243': MO.REL,               // asymptotically equal to: \simeq
     '\u2244': MO.REL,               // not asymptotically equal to
     '\u2245': MO.REL,               // approximately equal to: \cong
@@ -693,15 +690,15 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2264': MO.REL,               // less-than or equal to: \leq
     '\u2265': MO.REL,               // greater-than or equal to: \geq
     '\u2266': MO.REL,               // less-than over equal to
-    '\u2266\u0338': MO.REL4,        // not less-htan over equal to
+    '\u2266\u0338': MO.REL,         // not less-htan over equal to
     '\u2267': MO.REL,               // greater-than over equal to
-    '\u2267\u0338': MO.REL4,        // not greater-than over equal to
+    '\u2267\u0338': MO.REL,         // not greater-than over equal to
     '\u2268': MO.REL,               // less-than but not equal to
     '\u2269': MO.REL,               // greater-than but not equal to
     '\u226A': MO.REL,               // much less-than: \ll
-    '\u226A\u0338': MO.REL4,        // not much less-than
+    '\u226A\u0338': MO.REL,         // not much less-than
     '\u226B': MO.REL,               // much greater-than: \gg
-    '\u226B\u0338': MO.REL4,        // not much greater-than
+    '\u226B\u0338': MO.REL,         // not much greater-than
     '\u226C': MO.REL,               // between
     '\u226D': MO.REL,               // not equivalent to
     '\u226E': MO.REL,               // not less-than
@@ -721,9 +718,9 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u227C': MO.REL,               // precedes or equal to
     '\u227D': MO.REL,               // succeeds or equal to
     '\u227E': MO.REL,               // precedes or equivalent to
-    '\u227E\u0338': MO.REL4,        // not precedes or equivalent to
+    '\u227E\u0338': MO.REL,         // not precedes or equivalent to
     '\u227F': MO.REL,               // succeeds or equivalent to
-    '\u227F\u0338': MO.REL4,        // not succeeds or equivalent to
+    '\u227F\u0338': MO.REL,         // not succeeds or equivalent to
     '\u2280': MO.REL,               // does not precede
     '\u2281': MO.REL,               // does not succeed
     '\u2282': MO.REL,               // subset of: \subset
@@ -740,9 +737,9 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u228D': MO.BIN4,              // multiset multiplication
     '\u228E': MO.BIN4,              // multiset union: \uplus
     '\u228F': MO.REL,               // square image of
-    '\u228F\u0338': MO.REL4,        // not square image of
+    '\u228F\u0338': MO.REL,         // not square image of
     '\u2290': MO.REL,               // square original of
-    '\u2290\u0338': MO.REL4,        // not square original of
+    '\u2290\u0338': MO.REL,         // not square original of
     '\u2291': MO.REL,               // square image of or equal to: \sqsubseteq
     '\u2292': MO.REL,               // square original of or equal to: \sqsupseteq
     '\u2293': MO.BIN4,              // square cap: \sqcap
@@ -873,7 +870,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u266D': MO.ORD,               // \flat
     '\u266E': MO.ORD,               // \natural
     '\u266F': MO.ORD,               // \sharp
-    '\u2758': [4, 4, TEXCLASS.REL, {stretchy: true, symmetric: true}], // vertical separator
+    '\u2758': [5, 5, TEXCLASS.REL, {stretchy: true, symmetric: true}], // vertical separator
     '\u2794': MO.WIDEREL,           // heavy wide-headed rightwards arrow
     '\u2795': MO.BIN4,              // heavy plus sign
     '\u2796': MO.BIN4,              // heavy minus sign
@@ -914,7 +911,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u27BD': MO.WIDEREL,           // heavy wedge-tailed rightwards arrow
     '\u27BE': MO.WIDEREL,           // open-outlined rightwards arrow
     '\u27C2': MO.REL,               // perpendicular: \perp
-    '\u27C2\u0338': MO.REL4,        // not perpendicular
+    '\u27C2\u0338': MO.REL,         // not perpendicular
     '\u27CB': MO.BIN3,              // mathematical rising diagonal
     '\u27CD': MO.BIN3,              // mathematical falling diagonal
     '\u27F0': MO.RELSTRETCH,        // upwards quadruple arrow
@@ -1197,9 +1194,9 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2A7B': MO.REL,               // less-than with question mark above
     '\u2A7C': MO.REL,               // greater-than with question mark above
     '\u2A7D': MO.REL,               // less-than or slanted equal to
-    '\u2A7D\u0338': MO.REL4,        // not less-than or slanted equal to
+    '\u2A7D\u0338': MO.REL,         // not less-than or slanted equal to
     '\u2A7E': MO.REL,               // greater-than or slanted equal to
-    '\u2A7E\u0338': MO.REL4,        // not greater-than or slanted equal to
+    '\u2A7E\u0338': MO.REL,         // not greater-than or slanted equal to
     '\u2A7F': MO.REL,               // less-than or slanted equal to with dot inside
     '\u2A80': MO.REL,               // greater-than or slanted equal to with dot inside
     '\u2A81': MO.REL,               // less-than or slanted equal to with dot above
@@ -1249,9 +1246,9 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2AAD': MO.REL,               // larger than or equal to
     '\u2AAE': MO.REL,               // equals sign with bumpy above
     '\u2AAF': MO.REL,               // precedes above single-line equals sign: \preceq
-    '\u2AAF\u0338': MO.REL4,        // not precedes above single-line equals sign
+    '\u2AAF\u0338': MO.REL,         // not precedes above single-line equals sign
     '\u2AB0': MO.REL,               // succeeds above single-line equals sign: \succeq
-    '\u2AB0\u0338': MO.REL4,        // not succeeds above single-line equals sign
+    '\u2AB0\u0338': MO.REL,         // not succeeds above single-line equals sign
     '\u2AB1': MO.REL,               // precedes above single-line not equal to
     '\u2AB2': MO.REL,               // succeeds above single-line not equal to
     '\u2AB3': MO.REL,               // precedes above equals sign
@@ -1296,7 +1293,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2ADA': MO.REL,               // pitchfork with tee top
     '\u2ADB': MO.BIN4,              // transversal intersection
     '\u2ADD': MO.BIN3,              // nonforking
-    '\u2ADD\u0338': MO.REL4,        // forking
+    '\u2ADD\u0338': MO.REL,         // forking
     '\u2ADE': MO.REL,               // short left tack
     '\u2ADF': MO.REL,               // short down tack
     '\u2AE0': MO.REL,               // short up tack
