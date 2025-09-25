@@ -2400,9 +2400,7 @@ describe('Physics2_4', () => {
       tex2mml('\\gradient '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\gradient " display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\gradient ">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
        </math>`
     );
@@ -2415,9 +2413,7 @@ describe('Physics2_4', () => {
       tex2mml('\\gradient(\\frac{a}{b})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\gradient(\\frac{a}{b})" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex=")">
@@ -2439,9 +2435,7 @@ describe('Physics2_4', () => {
       tex2mml('\\gradient[\\frac{a}{b}]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\gradient[\\frac{a}{b}]" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex="]">
@@ -2463,9 +2457,7 @@ describe('Physics2_4', () => {
       tex2mml('\\gradient{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\gradient{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2483,9 +2475,7 @@ describe('Physics2_4', () => {
       tex2mml('\\grad '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\grad " display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\grad ">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
        </math>`
     );
@@ -2498,9 +2488,7 @@ describe('Physics2_4', () => {
       tex2mml('\\grad(\\frac{a}{b})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\grad(\\frac{a}{b})" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex=")">
@@ -2522,9 +2510,7 @@ describe('Physics2_4', () => {
       tex2mml('\\grad[\\frac{a}{b}]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\grad[\\frac{a}{b}]" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex="]">
@@ -2546,9 +2532,7 @@ describe('Physics2_4', () => {
       tex2mml('\\grad{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\grad{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2590,9 +2574,7 @@ describe('Physics2_5', () => {
       tex2mml('\\divergence{\\frac{a}{b}c}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\divergence{\\frac{a}{b}c}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo mathvariant="bold" data-latex="\\vdot">&#x22C5;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2611,9 +2593,7 @@ describe('Physics2_5', () => {
       tex2mml('\\div{\\frac{a}{b}c}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\div{\\frac{a}{b}c}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo mathvariant="bold" data-latex="\\vdot">&#x22C5;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2632,9 +2612,7 @@ describe('Physics2_5', () => {
       tex2mml('\\div{(\\frac{a}{b}c)}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\div{(\\frac{a}{b}c)}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo mathvariant="bold" data-latex="\\vdot">&#x22C5;</mo>
          <mo data-latex="(" stretchy="false">(</mo>
@@ -2655,9 +2633,7 @@ describe('Physics2_5', () => {
       tex2mml('\\div(\\frac{a}{b}c)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\div(\\frac{a}{b}c)" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo mathvariant="bold" data-latex="\\vdot">&#x22C5;</mo>
          <mrow data-latex=")">
@@ -2712,9 +2688,7 @@ describe('Physics2_6', () => {
       tex2mml('\\curl '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\curl " display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-latex="\\crossproduct">&#xD7;</mo>
        </math>`
@@ -2728,9 +2702,7 @@ describe('Physics2_6', () => {
       tex2mml('\\curl(\\frac{a}{b})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\curl(\\frac{a}{b})" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-latex="\\crossproduct">&#xD7;</mo>
          <mrow data-latex=")">
@@ -2752,9 +2724,7 @@ describe('Physics2_6', () => {
       tex2mml('\\curl[\\frac{a}{b}]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\curl[\\frac{a}{b}]" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-latex="\\crossproduct">&#xD7;</mo>
          <mrow data-latex="]">
@@ -2776,9 +2746,7 @@ describe('Physics2_6', () => {
       tex2mml('\\curl{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\curl{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-latex="\\crossproduct">&#xD7;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -16165,9 +16133,7 @@ describe('Options', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vnabla" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
            <mover>
-             <mrow data-mjx-texclass="ORD">
-               <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-             </mrow>
+             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
              <mo stretchy="false">&#x2192;</mo>
            </mover>
          </mrow>

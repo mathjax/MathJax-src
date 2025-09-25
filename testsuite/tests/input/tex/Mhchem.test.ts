@@ -579,9 +579,7 @@ describe('Mhchem1', () => {
          <mrow data-mjx-texclass="ORD" data-latex="{(1/2)\\,\\mathrm{H}{\\vphantom{A}}_{\\smash[t]{2}}\\mathrm{O}}">
            <mo data-latex="(" stretchy="false">(</mo>
            <mn data-latex="1">1</mn>
-           <mrow data-mjx-texclass="ORD">
-             <mo data-latex="/">/</mo>
-           </mrow>
+           <mo data-latex="/">/</mo>
            <mn data-latex="2">2</mn>
            <mo data-latex=")" stretchy="false">)</mo>
            <mspace width="0.167em" data-latex="\\,"></mspace>
@@ -4518,9 +4516,7 @@ describe('Mhchem9', () => {
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{kJ}">
              <mi data-mjx-auto-op="false" data-latex="kJ">kJ</mi>
            </mrow>
-           <mrow data-mjx-texclass="ORD">
-             <mo data-latex="/">/</mo>
-           </mrow>
+           <mo data-latex="/">/</mo>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{mol}">
              <mi data-mjx-auto-op="false" data-latex="mol">mol</mi>
            </mrow>

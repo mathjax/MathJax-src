@@ -4684,9 +4684,7 @@ describe('Other', () => {
     toXmlMatch(
       tex2mml('$'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="$" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="$">$</mo>
-         </mrow>
+         <mo data-latex="$">$</mo>
        </math>`
     );
   });
@@ -4697,9 +4695,7 @@ describe('Other', () => {
     toXmlMatch(
       tex2mml('˦'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="&#x2E6;" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="&#x2E6;">&#x2E6;</mo>
-         </mrow>
+         <mo data-latex="&#x2E6;">&#x2E6;</mo>
        </math>`
     );
   });
@@ -4818,9 +4814,7 @@ describe('Other', () => {
       tex2mml('褯¥'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="&#x892F;&#xA5;" display="block">
          <mi mathvariant="normal" data-latex="&#x892F;">&#x892F;</mi>
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="&#xA5;">&#xA5;</mo>
-         </mrow>
+         <mo data-latex="&#xA5;">&#xA5;</mo>
        </math>`
     );
   });
@@ -6448,9 +6442,7 @@ describe('Delimiters', () => {
     toXmlMatch(
       tex2mml('/ a \\\\'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="/ a \\\\" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="/">/</mo>
-         </mrow>
+         <mo data-latex="/">/</mo>
          <mi data-latex="a">a</mi>
          <mspace linebreak="newline" data-latex="\\\\"></mspace>
        </math>`
@@ -6610,9 +6602,7 @@ describe('Delimiters', () => {
     toXmlMatch(
       tex2mml('/ a \\backslash'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="/ a \\backslash" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="/">/</mo>
-         </mrow>
+         <mo data-latex="/">/</mo>
          <mi data-latex="a">a</mi>
          <mi mathvariant="normal" data-latex="\\backslash">\\</mi>
        </math>`
@@ -7938,9 +7928,7 @@ describe('Mathchar0mo', () => {
     toXmlMatch(
       tex2mml('\\surd'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\surd" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo stretchy="false" data-latex="\\surd">&#x221A;</mo>
-         </mrow>
+         <mo stretchy="false" data-latex="\\surd">&#x221A;</mo>
        </math>`
     );
   });
@@ -9252,9 +9240,7 @@ describe('Dots', () => {
     toXmlMatch(
       tex2mml('\\vdots'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vdots" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="\\vdots">&#x22EE;</mo>
-         </mrow>
+         <mo data-latex="\\vdots">&#x22EE;</mo>
        </math>`
     );
   });
@@ -11168,9 +11154,7 @@ describe('Moving Elements', () => {
            <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\,/}">
              <mpadded width="0">
                <mspace width="0.167em" data-latex="\\,"></mspace>
-               <mrow data-mjx-texclass="ORD">
-                 <mo data-latex="/">/</mo>
-               </mrow>
+               <mo data-latex="/">/</mo>
              </mpadded>
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{=}">
@@ -11195,9 +11179,7 @@ describe('Moving Elements', () => {
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="\\llap{/\\,}">
              <mpadded width="0" lspace="-1width">
-               <mrow data-mjx-texclass="ORD">
-                 <mo data-latex="/">/</mo>
-               </mrow>
+               <mo data-latex="/">/</mo>
                <mspace width="0.167em" data-latex="\\,"></mspace>
              </mpadded>
            </mrow>
@@ -11690,9 +11672,7 @@ describe('Linebreaks', () => {
      toXmlMatch(
        tex2mml('\u2220\\goodbreak )\\goodbreak'),
        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="&#x2220;\\goodbreak )\\goodbreak" display="block">
-          <mrow data-mjx-texclass="ORD">
-            <mo data-latex="&#x2220;">&#x2220;</mo>
-          </mrow>
+          <mo data-latex="&#x2220;">&#x2220;</mo>
           <mo linebreak="goodbreak" data-latex=")" stretchy="false">)</mo>
           <mspace linebreak="goodbreak"></mspace>
         </math>`

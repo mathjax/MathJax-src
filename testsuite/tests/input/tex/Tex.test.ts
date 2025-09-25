@@ -239,9 +239,7 @@ describe('FindTeX', () => {
       await page2mml('abc \\$ def'),
       [
         `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="$">
-           <mrow data-mjx-texclass="ORD">
-             <mo data-latex="$">$</mo>
-           </mrow>
+           <mo data-latex="$">$</mo>
          </math>`
       ]
     );
