@@ -48,6 +48,14 @@ export type DialogArgs = {
 };
 
 /**
+ * Type of function that implements a key press action
+ */
+export type keyMapping = (
+  dialog: DraggableDialog,
+  event: KeyboardEvent
+) => void;
+
+/**
  * True if we can rely on an HTML dialog element.
  */
 export const isDialog: boolean = !!context.window?.HTMLDialogElement;
@@ -57,7 +65,7 @@ export const isDialog: boolean = !!context.window?.HTMLDialogElement;
 /**
  * The draggable dialog class
  */
-export abstract class DraggableDialog {
+export class DraggableDialog {
   /**
    * The minimum width of the dialog
    */
@@ -135,6 +143,18 @@ export abstract class DraggableDialog {
     ['mouseup', this.MouseUp.bind(this)],
   ];
 
+  /*
+   * Key bindings for when dialog is open
+   */
+  protected static keyActions: Map<string, keyMapping> = new Map([
+    ['Escape', (dialog, event) => dialog.escKey(event)],
+    ['a', (dialog, event) => dialog.aKey(event)],
+    ['ArrowRight', (dialog, event) => dialog.arrowKey(event, 'right')],
+    ['ArrowLeft', (dialog, event) => dialog.arrowKey(event, 'left')],
+    ['ArrowUp', (dialog, event) => dialog.arrowKey(event, 'up')],
+    ['ArrowDown', (dialog, event) => dialog.arrowKey(event, 'down')],
+  ]);
+
   /**
    * The style element ID for dialog styles
    */
@@ -143,6 +163,11 @@ export abstract class DraggableDialog {
    * The class name to use for the dialog, if any
    */
   public static className: string = '';
+
+  /**
+   * An id incremented for each instance of a dialog
+   */
+  public static id: number = 0;
 
   /**
    * The default styles for all dialogs
@@ -243,27 +268,27 @@ export abstract class DraggableDialog {
     },
 
     //
-    // The close button
+    // The dialog buttons
     //
-    'mjx-dialog-close': {
+    '.mjx-dialog-button': {
       position: 'absolute',
-      right: '6px',
       top: '6px',
+      height: '17px',
       cursor: 'default',
       display: 'block',
       border: '2px solid #AAA',
       'border-radius': '18px',
       'font-family': '"Courier New", Courier',
-      'font-size': '24px;',
+      'text-align': 'center',
       color: '#F0F0F0',
       '-webkit-user-select': 'none',
       'user-select': 'none',
     },
-    'mjx-dialog-close:hover': {
+    '.mjx-dialog-button:hover': {
       color: 'white !important',
       border: '2px solid #CCC !important',
     },
-    'mjx-dialog-close-x': {
+    '.mjx-dialog-button > mjx-dialog-icon': {
       display: 'block',
       'background-color': '#AAA',
       border: '1.5px solid',
@@ -271,8 +296,45 @@ export abstract class DraggableDialog {
       'line-height': 0,
       padding: '8px 0 6px',
     },
-    'mjx-dialog-close-x:hover': {
+    '.mjs-dialog-button > mjx-dialog-icon:hover': {
       'background-color': '#CCC !important',
+    },
+
+    //
+    // The close button
+    //
+    'mjx-dialog-close': {
+      right: '6px',
+      'font-size': '24px;',
+    },
+
+    //
+    // The help button
+    //
+    'mjx-dialog-help': {
+      left: '6px',
+      'font-size': '16px;',
+      width: '17px',
+    },
+    '.mjx-dialog-help mjx-dialog-help': {
+      display: 'none',
+    },
+
+    //
+    // Key icons in the dialogs
+    //
+    'mjx-dialog kbd': {
+      display: 'inline-block',
+      padding: '3px 5px',
+      'font-size': '11px',
+      'line-height': '10px',
+      color: '#444d56',
+      'vertical-align': 'middle',
+      'background-color': '#fafbfc',
+      border: 'solid 1.5px #c6cbd1',
+      'border-bottom-color': '#959da5',
+      'border-radius': '3px',
+      'box-shadow': 'inset -.5px -1px 0 #959da5',
     },
 
     //
@@ -344,6 +406,29 @@ export abstract class DraggableDialog {
     },
   };
 
+  protected static helpMessage: string = `
+    <p>The dialog boxes in MathJax are movable and sizeable.</p>
+
+    <p>For mouse users, dragging any of the edges will enlarge or shrink
+    the dialog box by moving that side.  Dragging any of the corners
+    changes the two sides that meet at that corner.  Dragging elsewhere on
+    the dialog frame will move the dialog without changing its size.</p>
+
+    <p>For keyboard users, to change the dialog size, hold the
+    <kbd>alt</kbd> or <kbd>option</kbd> key and press any of the arrow
+    keys to enlarge or shrink the dialog box.  Left and right move the
+    right-hand edge of the dialog, while up and down move the bottom edge
+    of the dialog.  Hold the <kbd>Win</kbd> or <kbd>Command</kbd> key and
+    press any of the arrow keys to move the dialog box in the given direction.
+    Holding a <kbd>shift</kbd> key as well will make the larger changes
+    in the size or position.</p>
+
+    <p>Use <kbd>Tab</kbd> to move among the text and buttons and links
+    within the dialog.  The <kbd>Enter</kbd> or <kbd>Space</kbd> key
+    activates the focused item.  The <kbd>Escape</kbd> key closes the
+    dialog, as does clicking outside the dialog box.</p>
+  `;
+
   /**
    * @param {DialogArgs} args   The data describing the dialog
    */
@@ -363,7 +448,10 @@ export abstract class DraggableDialog {
     this.content = this.dialog.firstChild.firstChild.nextSibling as HTMLElement;
     const close = this.dialog.lastChild;
     close.addEventListener('click', this.closeDialog.bind(this));
-    close.addEventListener('keydown', this.closeKey.bind(this));
+    close.addEventListener('keydown', this.actionKey.bind(this, this.closeDialog.bind(this)));
+    const help = this.dialog.lastChild.previousSibling;
+    help.addEventListener('click', this.helpDialog.bind(this, adaptor));
+    help.addEventListener('keydown', this.actionKey.bind(this, this.helpDialog.bind(this, adaptor)));
 
     this.noDrag = Array.from(
       this.dialog.querySelectorAll('[data-drag="none"]')
@@ -413,15 +501,16 @@ export abstract class DraggableDialog {
       extraNodes.unshift(stylesheet);
     }
     //
-    // Create the doalog HTML tree
+    // Create the dialog HTML tree
     //
+    const label = 'mjx-dialog-label-' + DraggableDialog.id++;
     const dialog = adaptor.node(
       'dialog',
       { closedby: 'any', class: ('mjx-dialog ' + className).trim() },
       [
-        adaptor.node('mjx-dialog', { 'aria-labeledby': 'mjx-dialog-label' }, [
+        adaptor.node('mjx-dialog', { 'aria-labeledby': label }, [
           adaptor.node('mjx-title', {}, [
-            adaptor.node('h1', { id: 'mjx-dialog-label', tabIndex: 0 }),
+            adaptor.node('h1', { id: label, tabIndex: 0 }),
           ]),
           adaptor.node('div', { 'data-drag': 'none', tabIndex: 0 }),
         ]),
@@ -460,15 +549,31 @@ export abstract class DraggableDialog {
           'aria-hidden': true,
         }),
         adaptor.node(
+          'mjx-dialog-help',
+          {
+            class: 'mjx-dialog-button',
+            'data-drag': 'none',
+            tabIndex: 0,
+            role: 'button',
+            'aria-label': 'Dialog Help',
+          },
+          [
+            adaptor.node('mjx-dialog-icon', { 'aria-hidden': true }, [
+              adaptor.text('?'),
+            ]),
+          ]
+        ),
+        adaptor.node(
           'mjx-dialog-close',
           {
+            class: 'mjx-dialog-button',
             'data-drag': 'none',
             tabIndex: 0,
             role: 'button',
             'aria-label': 'Close Dialog Box',
           },
           [
-            adaptor.node('mjx-dialog-close-x', { 'aria-hidden': true }, [
+            adaptor.node('mjx-dialog-icon', { 'aria-hidden': true }, [
               adaptor.text('\u00d7'),
             ]),
           ]
@@ -530,6 +635,10 @@ export abstract class DraggableDialog {
    * od the dialog.
    */
   protected actions: ActionMap = {
+    //
+    // Mouse actions
+    //
+
     down: {
       move: (d) => {
         d.dialog.classList.add('mjx-moving');
@@ -573,6 +682,38 @@ export abstract class DraggableDialog {
         dg.dialog.classList.remove('mjx-moving');
       },
     },
+
+    //
+    // Keyboard actions
+    //
+
+    keymove: {
+      left: () => [-5, 0, 0, 0],
+      right: () => [5, 0, 0, 0],
+      up: () => [0, -5, 0, 0],
+      down: () => [0, 5, 0, 0],
+    },
+
+    bigmove: {
+      left: () => [-20, 0, 0, 0],
+      right: () => [20, 0, 0, 0],
+      up: () => [0, -20, 0, 0],
+      down: () => [0, 20, 0, 0],
+    },
+
+    keysize: {
+      left: () => [-3, 0, -6, 0],
+      right: () => [3, 0, 6, 0],
+      up: () => [0, -3, 0, -6],
+      down: () => [0, 3, 0, 6],
+    },
+
+    bigsize: {
+      left: () => [-10, 0, -20, 0],
+      right: () => [10, 0, 20, 0],
+      up: () => [0, -10, 0, -20],
+      down: () => [0, 10, 0, 20],
+    },
   };
 
   /**
@@ -582,7 +723,9 @@ export abstract class DraggableDialog {
    * @param {MouseEvent} event   The event causing the action
    */
   protected dragAction(type: string, event: MouseEvent = null) {
-    this.stop(event);
+    if (event) {
+      this.stop(event);
+    }
     //
     // Get the move/resize data for the action
     //
@@ -598,7 +741,7 @@ export abstract class DraggableDialog {
     if (dw) {
       const W = this.w + dw;
       if (W >= this.minW) {
-        this.x = event.x;
+        this.x = event?.x;
         this.w = W;
         this.dialog.style.maxWidth = this.dialog.style.width = W + 'px';
       } else {
@@ -611,7 +754,7 @@ export abstract class DraggableDialog {
     if (dh) {
       const H = this.h + dh;
       if (H >= this.minH + this.title.offsetHeight) {
-        this.y = event.y;
+        this.y = event?.y;
         this.h = H;
         this.dialog.style.maxHeight = this.dialog.style.height = H + 'px';
       } else {
@@ -623,11 +766,11 @@ export abstract class DraggableDialog {
     //
     if (dx || dy) {
       if (dx) {
-        this.x = event.x;
+        this.x = event?.x;
         this.tx += dx || 0;
       }
       if (dy) {
-        this.y = event.y;
+        this.y = event?.y;
         this.ty += dy || 0;
       }
       this.dialog.style.transform = `translate(${this.tx}px, ${this.ty}px)`;
@@ -706,25 +849,63 @@ export abstract class DraggableDialog {
    * @param {KeyboardEvent} event   The key event to handle
    */
   protected KeyDown(event: KeyboardEvent) {
-    if (event.code === 'Escape') {
-      this.closeDialog(event);
-      return;
-    }
-    if (event.key === 'a' && (event.ctrlKey || event.metaKey)) {
-      this.selectAll();
-      this.stop(event);
-      return;
+    const CLASS = (this.constructor as typeof DraggableDialog);
+    const action = CLASS.keyActions.get(event.key);
+    if (action) {
+      action(this, event);
     }
   }
 
   /**
-   * Handle the enter or space key on the close icon
+   * Handle the Escape key
    *
-   * @param {KeyboardEvent} event   The event to check
+   * @param {KeyboardEvent} event   The key event to handle
    */
-  protected closeKey(event: KeyboardEvent) {
+  protected escKey(event: KeyboardEvent) {
+    this.closeDialog(event);
+  }
+
+  /**
+   * Handle the "a" key for selecting all
+   *
+   * @param {KeyboardEvent} event   The key event to handle
+   */
+  protected aKey(event: KeyboardEvent) {
+    if (event.ctrlKey || event.metaKey) {
+      this.selectAll();
+      this.stop(event);
+    }
+  }
+
+  /**
+   * Handle the arrow keys
+   *
+   * @param {KeyboardEvent} event   The key event to handle
+   * @param {string} direction      The direction of the arrow
+   */
+  protected arrowKey(event: KeyboardEvent, direction: string) {
+    if (event.ctrlKey || this.dragging) return;
+    this.action = direction;
+    this.getWH();
+    if (event.altKey) {
+      this.dragAction(event.shiftKey ? 'bigsize' : 'keysize');
+      this.stop(event);
+    } else if (event.metaKey) {
+      this.dragAction(event.shiftKey ? 'bigmove' : 'keymove');
+      this.stop(event);
+    }
+    this.action = '';
+  }
+
+  /**
+   * Handle the enter or space key on a button icon
+   *
+   * @param {(event: KeyboardEvent) => void} action   The action to take on enter or space
+   * @param {KeyboardEvent} event                     The event to check
+   */
+  protected actionKey(action: (event: KeyboardEvent) => void, event: KeyboardEvent) {
     if (event.code === 'Enter' || event.code === 'Space') {
-      this.closeDialog(event);
+      action(event);
     }
   }
 
@@ -760,8 +941,7 @@ export abstract class DraggableDialog {
     //
     this.x = event.x;
     this.y = event.y;
-    this.w = this.dialog.clientWidth - 8; // adjust for the 4px padding on all sides
-    this.h = this.dialog.clientHeight - 8;
+    this.getWH();
     this.dragging = true;
     //
     // Add the mousemove and mouseup handlers
@@ -770,6 +950,14 @@ export abstract class DraggableDialog {
     for (const [name, listener] of this.events) {
       node.addEventListener(name, listener);
     }
+  }
+
+  /**
+   * Cache the current width and height values.
+   */
+  protected getWH() {
+    this.w = this.dialog.clientWidth - 8; // adjust for the 4px padding on all sides
+    this.h = this.dialog.clientHeight - 8;
   }
 
   /**
@@ -803,6 +991,28 @@ export abstract class DraggableDialog {
       this.background.remove();
     }
     this.node?.focus();
+    this.stop(event);
+  }
+
+  /**
+   * Display the dialog help message
+   *
+   * @param {ADAPTOR} adaptor   The DOM adaptor to use
+   * @param {Event} event       The event that triggered the help
+   */
+  protected helpDialog(adaptor: ADAPTOR, event: Event) {
+    const help = new DraggableDialog({
+      title: 'MathJax Dialog Help',
+      message: (this.constructor as typeof DraggableDialog).helpMessage,
+      adaptor: adaptor,
+      className: 'mjx-dialog-help',
+      styles: {
+        '.mjx-dialog-help': {
+          'max-width': 'calc(min(50em, 80%))',
+        }
+      }
+    });
+    help.attach();
     this.stop(event);
   }
 
