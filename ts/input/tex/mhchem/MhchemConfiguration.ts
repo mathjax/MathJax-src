@@ -133,8 +133,8 @@ new CharacterMap('mhchem-chars', MhchemUtils.relmo, {
   mhchemlongRightleftharpoons: '\uE409',
   mhchemlongLeftrightharpoons: '\uE40A',
   mhchemlongleftrightarrows: '\uE42B',
-  mhchemrightarrow: '\uE42C',
-  mhchemleftarrow: '\uE42D',
+  mhchemrightarrow: '\uE42D',
+  mhchemleftarrow: '\uE42C',
   mhchemleftrightarrow: '\uE42E',
 });
 
