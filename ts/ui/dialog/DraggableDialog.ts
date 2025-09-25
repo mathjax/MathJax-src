@@ -448,10 +448,16 @@ export class DraggableDialog {
     this.content = this.dialog.firstChild.firstChild.nextSibling as HTMLElement;
     const close = this.dialog.lastChild;
     close.addEventListener('click', this.closeDialog.bind(this));
-    close.addEventListener('keydown', this.actionKey.bind(this, this.closeDialog.bind(this)));
+    close.addEventListener(
+      'keydown',
+      this.actionKey.bind(this, this.closeDialog.bind(this))
+    );
     const help = this.dialog.lastChild.previousSibling;
     help.addEventListener('click', this.helpDialog.bind(this, adaptor));
-    help.addEventListener('keydown', this.actionKey.bind(this, this.helpDialog.bind(this, adaptor)));
+    help.addEventListener(
+      'keydown',
+      this.actionKey.bind(this, this.helpDialog.bind(this, adaptor))
+    );
 
     this.noDrag = Array.from(
       this.dialog.querySelectorAll('[data-drag="none"]')
@@ -849,7 +855,7 @@ export class DraggableDialog {
    * @param {KeyboardEvent} event   The key event to handle
    */
   protected KeyDown(event: KeyboardEvent) {
-    const CLASS = (this.constructor as typeof DraggableDialog);
+    const CLASS = this.constructor as typeof DraggableDialog;
     const action = CLASS.keyActions.get(event.key);
     if (action) {
       action(this, event);
@@ -903,7 +909,10 @@ export class DraggableDialog {
    * @param {(event: KeyboardEvent) => void} action   The action to take on enter or space
    * @param {KeyboardEvent} event                     The event to check
    */
-  protected actionKey(action: (event: KeyboardEvent) => void, event: KeyboardEvent) {
+  protected actionKey(
+    action: (event: KeyboardEvent) => void,
+    event: KeyboardEvent
+  ) {
     if (event.code === 'Enter' || event.code === 'Space') {
       action(event);
     }
@@ -1009,8 +1018,8 @@ export class DraggableDialog {
       styles: {
         '.mjx-dialog-help': {
           'max-width': 'calc(min(50em, 80%))',
-        }
-      }
+        },
+      },
     });
     help.attach();
     this.stop(event);
@@ -1026,9 +1035,9 @@ export class DraggableDialog {
     if (!this.dialog.contains(event.target as HTMLElement)) {
       return false;
     }
-    const {x, y} = event;
-    const {left, right, top, bottom} = this.dialog.getBoundingClientRect();
-    return (x >= left && x <= right && y >= top && y <= bottom);
+    const { x, y } = event;
+    const { left, right, top, bottom } = this.dialog.getBoundingClientRect();
+    return x >= left && x <= right && y >= top && y <= bottom;
   }
 
   /**
