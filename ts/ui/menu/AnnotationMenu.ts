@@ -23,9 +23,12 @@
  */
 
 import { SubMenu, Submenu } from './mj-context-menu.js';
-import { MJContextMenu } from './MJContextMenu.js';
+import {
+  MJContextMenu,
+  DynamicSubmenu,
+  SubmenuCallback,
+} from './MJContextMenu.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
-import { SelectableInfo } from './SelectableInfo.js';
 import * as MenuUtil from './MenuUtil.js';
 
 /**
@@ -43,18 +46,16 @@ type AnnotationTypes = { [type: string]: string[] };
  * @param {AnnotationTypes} types The legitimate annotation types.
  * @param {[string, string][]} cache We cache annotations of a math item, so we
  *    only have to compute them once for the two annotation menus.
- * @returns {(menu: MJContextMenu, sub: Submenu) => SubMenu} Method generating
- *    the show annotations submenu.
+ * @returns {DynamicSubmenu} Method generating the show annotations submenu.
  */
 export function showAnnotations(
-  box: SelectableInfo,
+  box: () => void,
   types: AnnotationTypes,
   cache: [string, string][]
-): (menu: MJContextMenu, sub: Submenu) => SubMenu {
-  return (menu: MJContextMenu, sub: Submenu) => {
+): DynamicSubmenu {
+  return (menu: MJContextMenu, sub: Submenu, callback: SubmenuCallback) => {
     getAnnotation(getSemanticNode(menu), types, cache);
-    box.attachMenu(menu);
-    return createAnnotationMenu(menu, sub, cache, () => box.post());
+    callback(createAnnotationMenu(menu, sub, cache, box));
   };
 }
 
@@ -63,15 +64,17 @@ export function showAnnotations(
  * Clears the annotation cache parameter.
  *
  * @param {[string, string][]} cache The annotation cache.
- * @returns {(menu: MJContextMenu, sub: Submenu) => SubMenu} Method generating
+ * @returns {DynamicSubmenu} Method generating
  *    the copy annotations submenu.
  */
 export function copyAnnotations(cache: [string, string][]) {
-  return (menu: MJContextMenu, sub: Submenu) => {
+  return (menu: MJContextMenu, sub: Submenu, callback: SubmenuCallback) => {
     const annotations = cache.slice();
     cache.length = 0;
-    return createAnnotationMenu(menu, sub, annotations, () =>
-      MenuUtil.copyToClipboard(annotation.trim())
+    callback(
+      createAnnotationMenu(menu, sub, annotations, () =>
+        MenuUtil.copyToClipboard(annotation.trim())
+      )
     );
   };
 }

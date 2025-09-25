@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2023-2025 The MathJax Consortium
+ *  Copyright (c) 2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,21 +16,28 @@
  */
 
 /**
- * @file  Exports the needed pieces of mj-context-menu so that we
- *                can have ES5 and ES6 versions
+ * @file  Implements the InfoDialog class.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-export { ContextMenu } from '#menu/context_menu.js';
-export { SubMenu } from '#menu/sub_menu.js';
-export { Submenu } from '#menu/item_submenu.js';
-export { Radio } from '#menu/item_radio.js';
-export { Rule } from '#menu/item_rule.js';
-export { ParserFactory } from '#menu/parser_factory.js';
-export { Parser } from '#menu/parse.js';
-export * as CssStyles from '#menu/css_util.js';
-export { HtmlClasses } from '#menu/html_classes.js';
+import { DraggableDialog, DialogArgs } from './DraggableDialog.js';
 
-export { Menu } from '#menu/menu.js';
-export { Item } from '#menu/item.js';
+export type InfoDialogArgs = DialogArgs;
+
+/**
+ * A generic info dialog box
+ */
+export class InfoDialog extends DraggableDialog {
+  /**
+   * Create and display a dialog with the given args
+   *
+   * @param {DialogArgs} args     The data describing the dialog
+   * @returns {DraggableDialog}   The dialog instance
+   */
+  public static post(args: DialogArgs): DraggableDialog {
+    const dialog = new this(args);
+    dialog.attach();
+    return dialog;
+  }
+}
