@@ -238,8 +238,8 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2231': MO.INTEGRAL,          // clockwise integral
     '\u2232': MO.INTEGRAL,          // clockwise contour integral
     '\u2233': MO.INTEGRAL,          // anticlockwise contour integral
-    '\u2234': MO.ORD,               // therefore
-    '\u2235': MO.ORD,               // because
+    '\u2234': MO.REL,               // therefore
+    '\u2235': MO.REL,               // because
     '\u223C': [0, 0, TEXCLASS.REL, {}], // tilde operator: \sim
     '\u22BE': MO.ORD,               // right angle with arc
     '\u22BF': MO.ORD,               // right triangle
