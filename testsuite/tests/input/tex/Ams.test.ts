@@ -4396,9 +4396,7 @@ describe('Ams symbols', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\blacktriangleleft\\blacktriangleright\\therefore\\because\\eqsim\\vartriangle\\Join\\nless\\ngtr\\nleq\\ngeq" display="block">
          <mo data-latex="\\blacktriangleleft">&#x25C2;</mo>
          <mo data-latex="\\blacktriangleright">&#x25B8;</mo>
-         <mo data-latex="\\therefore">&#x2234;</mo>
-         <mo data-latex="\\because">&#x2235;</mo>
-         <mo data-latex="\\eqsim">&#x2242;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\therefore\\because\\eqsim">&#x2234;&#x2235;&#x2242;</mo>
          <mo data-mjx-alternate="1" data-latex="\\vartriangle">&#x25B3;</mo>
          <mo data-mjx-texclass="REL" data-latex="\\Join\\nless\\ngtr\\nleq\\ngeq">&#x22C8;&#x226E;&#x226F;&#x2270;&#x2271;</mo>
        </math>`
