@@ -25,10 +25,13 @@
  * The location of this file
  */
 declare const __dirname: string;
+declare const require: (file: string) => any;
 
 /**
- * @return {string}   The MathJax mjs SRE root directory
+ * @return {string}   The MathJax cjs SRE root directory
  */
 export function sreRoot(): string {
-  return __dirname.replace(/components\/[cm]js$/, 'a11y/sre');
+  return require('../../util/context.js')
+    .context.path(__dirname)
+    .replace(/components\/[cm]js$/, 'a11y/sre');
 }

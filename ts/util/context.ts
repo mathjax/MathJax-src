@@ -21,6 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+declare const process: { platform: string };
+
 /**
  * True if there is a window object
  */
@@ -49,7 +51,30 @@ export const context = {
       if (window.navigator.userAgent.includes('Android')) {
         return 'Unix';
       }
+    } else if (typeof process !== 'undefined') {
+      return (
+        {
+          linux: 'Unix',
+          android: 'Unix',
+          aix: 'Unix',
+          freebsd: 'Unix',
+          netbsd: 'Unix',
+          openbsd: 'Unix',
+          sunos: 'Unix',
+          darwin: 'MacOS',
+          win32: 'Windows',
+          cygwin: 'Windows',
+        }[process.platform] || process.platform
+      );
     }
     return 'unknown';
   })(),
+  path: (file: string) => file,
 };
+
+if (context.os === 'Windows') {
+  context.path = (file: string) =>
+    file.match(/^[/\\]?[a-zA-Z]:[/\\]/)
+      ? file.replace(/\\/g, '/').replace(/^\//, '')
+      : file;
+}

@@ -21,12 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import { context } from '../../util/context.js';
+
 /**
  * @returns {string}   The MathJax component root directory
  */
 export function mjxRoot(): string {
-  return new URL(import.meta.url).pathname.replace(
-    /[cm]js\/components\/[cm]js\/root.js$/,
-    'bundle'
-  );
+  return context
+    .path(new URL(import.meta.url).pathname)
+    .replace(/[cm]js\/components\/[cm]js\/root.js$/, 'bundle');
 }
