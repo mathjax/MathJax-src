@@ -444,11 +444,15 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
     const adaptor = this.adaptor;
     if (align === 'center' || align === 'left') {
       const L = this.getBBox().L;
-      adaptor.setStyle(chtml, 'margin-left', this.em(shift + L));
+      if (shift + L) {
+        adaptor.setStyle(chtml, 'margin-left', this.em(shift + L));
+      }
     }
     if (align === 'center' || align === 'right') {
       const R = this.getBBox().R;
-      adaptor.setStyle(chtml, 'margin-right', this.em(-shift + R));
+      if (shift + R) {
+        adaptor.setStyle(chtml, 'margin-right', this.em(-shift + R));
+      }
     }
   }
 
