@@ -1789,15 +1789,16 @@ export class SpeechExplorer
 }
 
 /**********************************************************************/
-
-// Some Aux functions for parsing the semantic structure sexpression
-//
+/*
+ * Some Aux functions for parsing the semantic structure sexpression
+ */
 type SexpTree = string | SexpTree[];
 
 /**
  * Helper to tokenize input
  *
- * @param str The semantic structure.
+ * @param {string} str The semantic structure.
+ * @returns {string[]} The tokenized list.
  */
 function tokenize(str: string): string[] {
   return str.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').trim().split(/\s+/);
@@ -1806,55 +1807,45 @@ function tokenize(str: string): string[] {
 /**
  * Recursive parser to convert tokens into a tree
  *
- * @param tokens The tokens from the semantic structure.
+ * @param {string} tokens The tokens from the semantic structure.
+ * @returns {SexpTree} Array list for the semantic structure sexpression.
  */
 function parse(tokens: string[]): SexpTree {
   const stack: SexpTree[][] = [[]];
-
   for (const token of tokens) {
     if (token === '(') {
-      // Start a new nested list and push it onto the stack
       const newNode: SexpTree = [];
       stack[stack.length - 1].push(newNode);
       stack.push(newNode);
     } else if (token === ')') {
-      // Close the current list by popping from the stack
       stack.pop();
     } else {
-      // Add a literal token to the current list
       stack[stack.length - 1].push(token);
     }
   }
-
-  // The final result is the first (and only) element of the base list
   return stack[0][0];
 }
 
 /**
  * Flattens the tree and builds the map.
  *
- * @param tree The sexpression tree.
- * @param map The map to populate.
+ * @param {SexpTree} tree The sexpression tree.
+ * @param {Map<string, Set<string>>} map The map to populate.
  */
-function buildMap(tree: SexpTree, map = new Map()) {
+function buildMap(tree: SexpTree, map: Map<string, Set<string>>) {
   if (typeof tree === 'string') {
     if (!map.has(tree)) map.set(tree, new Set());
     return new Set();
   }
-
   const [root, ...children] = tree;
-  const rootId = root;
-  const descendants = new Set();
-
+  const rootId = root as string;
+  const descendants: Set<string> = new Set();
   for (const child of children) {
     const childRoot = typeof child === 'string' ? child : child[0];
-    if (!map.has(rootId)) map.set(rootId, new Set());
-
     const childDescendants = buildMap(child, map);
-    descendants.add(childRoot);
-    childDescendants.forEach((d) => descendants.add(d));
+    descendants.add(childRoot as string);
+    childDescendants.forEach((d: string) => descendants.add(d));
   }
-
   map.set(rootId, descendants);
   return descendants;
 }
@@ -1863,8 +1854,8 @@ function buildMap(tree: SexpTree, map = new Map()) {
 /**
  * Set difference between two sets A and B: A\B.
  *
- * @param a Initial set.
- * @param b Set to remove from A.
+ * @param {Set<string>} a Initial set.
+ * @param {Set<string>} b Set to remove from A.
  */
 function setdifference(a: Set<string>, b: Set<string>): Set<string> {
   if (!a) {
