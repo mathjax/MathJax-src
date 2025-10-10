@@ -463,6 +463,9 @@ export class HTMLAdaptor<
    */
   public setAttribute(node: N, name: string, value: string, ns: string = null) {
     if (!ns) {
+      if (name === 'style') {
+        value = value.replace(/\n/g, ' ');
+      }
       return node.setAttribute(name, value);
     }
     name = ns.replace(/.*\//, '') + ':' + name.replace(/^.*:/, '');
@@ -538,14 +541,14 @@ export class HTMLAdaptor<
    * @override
    */
   public setStyle(node: N, name: string, value: string) {
-    (node.style as OptionList)[name] = value;
+    node.style[name] = String(value).replace(/\n/g, ' ');
   }
 
   /**
    * @override
    */
   public getStyle(node: N, name: string) {
-    return (node.style as OptionList)[name];
+    return node.style[name];
   }
 
   /**
