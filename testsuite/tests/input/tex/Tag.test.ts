@@ -23,7 +23,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('a'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a" display="block">
-         <mtable displaystyle="true"  data-latex="a">
+         <mtable displaystyle="true" data-latex="a">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
                <mtext data-latex="\\text{(1)}">(1)</mtext>
