@@ -752,6 +752,35 @@ describe('AmsCD', () => {
 
   /********************************************************************************/
 
+  it('Spaces', () => {
+    toXmlMatch(
+      tex2mml('\\begin{CD}A @ > x > > B \\end{CD}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @ &gt; x &gt; &gt; B \\end{CD}" display="block">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD}A @ &gt; x &gt; &gt; B \\end{CD}">
+           <mtr>
+             <mtd>
+               <mi data-latex="A">A</mi>
+               <mpadded height="8.5pt" depth="2pt"></mpadded>
+             </mtd>
+             <mtd>
+               <mover>
+                 <mo minsize="2.75em">&#x2192;</mo>
+                 <mpadded width="+.67em" lspace=".33em" voffset=".1em">
+                   <mi data-latex="x">x</mi>
+                 </mpadded>
+               </mover>
+             </mtd>
+             <mtd>
+               <mi data-latex="B">B</mi>
+             </mtd>
+           </mtr>
+         </mtable>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
   it('Suspicious Return', () => {
     toXmlMatch(
       tex2mml('\\begin{CD}A @Ra>> BaD\\end{CD}'),
