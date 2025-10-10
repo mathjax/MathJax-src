@@ -209,6 +209,7 @@ export function EnrichedMathItemMixin<
           //
           math.math = math.math
             .replace(/ role="treeitem"/g, ' data-speech-node="true"')
+            .replace(/ aria-level/g, ' data-semantic-level-number')
             .replace(/ aria-(?:posinset|owns|setsize)=".*?"/g, '');
           math.display = this.display;
           math.compile(document);

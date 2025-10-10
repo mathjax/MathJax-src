@@ -834,7 +834,7 @@ export class SpeechExplorer
     const parts = [
       [
         this.node.getAttribute('data-semantic-level') ?? 'Level',
-        this.current.getAttribute('aria-level') ?? '0',
+        this.current.getAttribute('data-semantic-level-number') ?? '0',
       ]
         .join(' ')
         .trim(),
