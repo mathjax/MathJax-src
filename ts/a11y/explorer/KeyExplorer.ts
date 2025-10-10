@@ -1047,7 +1047,7 @@ export class SpeechExplorer
     if (!id) {
       return [node];
     }
-    // Here we need to cash the subtrees.
+    // Here we need to cache the subtrees.
     if (this.cacheParts.has(id)) {
       return this.cacheParts.get(id);
     }
