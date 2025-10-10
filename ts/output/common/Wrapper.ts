@@ -709,9 +709,10 @@ export class CommonWrapper<
     if (this.node.isEmbellished) {
       return [this, this.coreMO()] as any as [WW, WW];
     }
-    const childNodes = this.childNodes[0]?.node?.isInferred
-      ? this.childNodes[0].childNodes
-      : this.childNodes;
+    const childNodes =
+      this.childNodes[0]?.node?.isInferred || this.node.isKind('semantics')
+        ? this.childNodes[0].childNodes
+        : this.childNodes;
     if (this.node.isToken || !childNodes[i]) {
       return [this, null] as any as [WW, WW];
     }
