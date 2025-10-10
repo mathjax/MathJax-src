@@ -2946,13 +2946,13 @@ describe('Mhchem6', () => {
              <mi mathvariant="normal" data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\mhchemrightarrow}">
-             <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemrightarrow">&#xE42C;</mo>
+             <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemrightarrow">&#xE42D;</mo>
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
              <mi mathvariant="normal" data-latex="B">B</mi>
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\mhchemleftarrow}">
-             <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemleftarrow">&#xE42D;</mo>
+             <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemleftarrow">&#xE42C;</mo>
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{C}">
              <mi mathvariant="normal" data-latex="C">C</mi>
