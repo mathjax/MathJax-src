@@ -7,7 +7,9 @@ export function fontExtension(id, name, pkg = `@mathjax/${name}`) {
     const path = name.replace(/-font-extension$/, '-extension');
     const jax = (MathJax.config?.startup?.output || 'chtml');
     combineDefaults(MathJax.config.loader, 'paths', {[path]: FONTPATH});
-    combineDefaults(MathJax.config.loader, 'dependencies', {[`[${path}]/${jax}`]: [`output/${jax}`]});
+    if (!MathJax._.output?.[jax]) {
+      combineDefaults(MathJax.config.loader, 'dependencies', {[`[${path}]/${jax}`]: [`output/${jax}`]});
+    }
     MathJax.loader.addPackageData(id, {
       extraLoads: [`[${path}]/${jax}`],
       rendererExtensions: [path]
