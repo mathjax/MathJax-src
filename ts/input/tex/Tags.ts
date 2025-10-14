@@ -571,7 +571,7 @@ export class AbstractTags implements Tags {
       ? format
       : format.match(/^(\(|\[|\{)(.*)(\}|\]|\))$/)?.slice(1) || [format];
     const mml = new TexParser(
-      tag.map((part) => part ? `\\text{${part}}` : '').join(''),
+      tag.map((part) => (part ? `\\text{${part}}` : '')).join(''),
       {},
       this.configuration
     ).mml();
