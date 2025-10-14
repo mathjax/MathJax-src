@@ -690,14 +690,13 @@ export function CommonMtableMixin<
         }
       }
       const count = stretchy.length;
-      const nodeCount = this.childNodes.length;
-      if (count && nodeCount > 1 && W === null) {
+      if (count && W === null) {
         W = 0;
         //
         //  If all the children are stretchy, find the largest one,
         //  otherwise, find the width of the non-stretchy children.
         //
-        const all = count > 1 && count === nodeCount;
+        const all = count === this.childNodes.length;
         for (const row of this.tableRows) {
           const cell = row.getChild(i);
           if (cell) {
@@ -716,12 +715,15 @@ export function CommonMtableMixin<
         //
         //  Stretch the stretchable children
         //
+        const TW = this.getTableData().W;
         for (const child of stretchy) {
+          const w = child.getBBox().w;
           child
             .coreMO()
-            .getStretchedVariant([
-              Math.max(W, child.getBBox().w) / child.coreRScale(),
-            ]);
+            .getStretchedVariant([Math.max(W, w) / child.coreRScale()]);
+          if (w > TW[i]) {
+            TW[i] = w;
+          }
         }
       }
     }
