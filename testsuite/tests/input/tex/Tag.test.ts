@@ -26,7 +26,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" data-latex="a">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -46,7 +48,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -76,7 +80,9 @@ describe('TagAll', () => {
            </mtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd columnalign="right">
                <mi data-latex="c">c</mi>
@@ -96,7 +102,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{}">a</mi>
@@ -116,7 +124,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -197,7 +207,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -220,7 +232,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -243,7 +257,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -266,7 +282,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex-item="{align}" data-latex="\\begin{align}a=b\\label{A}\\\\ c&amp;=d \\label{B}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -276,7 +294,9 @@ describe('TagAll', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="c">c</mi>
@@ -331,7 +351,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -351,7 +373,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{A}">a</mi>
@@ -371,7 +395,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{A}">a</mi>
@@ -379,7 +405,9 @@ describe('TagAll', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="b">b</mi>
@@ -399,7 +427,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{A}">a</mi>
@@ -407,7 +437,9 @@ describe('TagAll', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(B)}">(B)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{B}">B</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{B}">b</mi>
@@ -427,7 +459,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -447,7 +481,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -467,7 +503,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -475,7 +513,9 @@ describe('TagAll', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{B}">b</mi>
@@ -497,7 +537,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -505,7 +547,9 @@ describe('TagAll', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(B)}">(B)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{B}">B</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{B}">b</mi>
@@ -525,7 +569,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -548,7 +594,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -573,7 +621,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -581,7 +631,9 @@ describe('TagAll', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{B}">b</mi>
@@ -609,7 +661,9 @@ describe('TagAll', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -617,7 +671,9 @@ describe('TagAll', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(B)}">(B)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{B}">B</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{B}">b</mi>
@@ -664,7 +720,9 @@ describe('TagNone', () => {
          <mtable displaystyle="true" data-latex="a\\tag{0}">
            <mlabeledtr>
              <mtd id="mjx-eqn:0">
-               <mtext data-latex="\\text{(0)}">(0)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{0}">0</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{0}">a</mi>
@@ -952,7 +1010,9 @@ describe('TagNone', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{A}">a</mi>
@@ -972,7 +1032,9 @@ describe('TagNone', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{A}">a</mi>
@@ -997,7 +1059,9 @@ describe('TagNone', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{A}">a</mi>
@@ -1005,7 +1069,9 @@ describe('TagNone', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(B)}">(B)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{B}">B</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{B}">b</mi>
@@ -1042,7 +1108,9 @@ describe('TagNone', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1062,7 +1130,9 @@ describe('TagNone', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1089,7 +1159,9 @@ describe('TagNone', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1097,7 +1169,9 @@ describe('TagNone', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(B)}">(B)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{B}">B</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{B}">b</mi>
@@ -1137,7 +1211,9 @@ describe('TagNone', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1162,7 +1238,9 @@ describe('TagNone', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1195,7 +1273,9 @@ describe('TagNone', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1203,7 +1283,9 @@ describe('TagNone', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(B)}">(B)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{B}">B</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{B}">b</mi>
@@ -1250,7 +1332,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -1297,7 +1381,9 @@ describe('TagAms', () => {
            </mtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd columnalign="right">
                <mi data-latex="c">c</mi>
@@ -1317,7 +1403,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{}">a</mi>
@@ -1337,7 +1425,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1418,7 +1508,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1441,7 +1533,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1464,7 +1558,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1487,7 +1583,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex-item="{align}" data-latex="\\begin{align}a=b\\label{A}\\\\ c&amp;=d \\label{B}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -1497,7 +1595,9 @@ describe('TagAms', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="c">c</mi>
@@ -1552,7 +1652,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -1572,7 +1674,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{A}">a</mi>
@@ -1592,7 +1696,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{A}">a</mi>
@@ -1600,7 +1706,9 @@ describe('TagAms', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="b">b</mi>
@@ -1620,7 +1728,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{A}">a</mi>
@@ -1628,7 +1738,9 @@ describe('TagAms', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(B)}">(B)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{B}">B</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{B}">b</mi>
@@ -1648,7 +1760,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1668,7 +1782,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1688,7 +1804,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1696,7 +1814,9 @@ describe('TagAms', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{B}">b</mi>
@@ -1718,7 +1838,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1726,7 +1848,9 @@ describe('TagAms', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(B)}">(B)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{B}">B</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{B}">b</mi>
@@ -1746,7 +1870,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1769,7 +1895,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1794,7 +1922,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1802,7 +1932,9 @@ describe('TagAms', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{B}">b</mi>
@@ -1830,7 +1962,9 @@ describe('TagAms', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -1838,7 +1972,9 @@ describe('TagAms', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(B)}">(B)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{B}">B</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{B}">b</mi>
@@ -1877,7 +2013,9 @@ describe('Page References', () => {
            <mtable displaystyle="true" data-latex="a=b\\label{eq1}\\tag{1}">
              <mlabeledtr>
                <mtd id="mjx-eqn:eq1">
-                 <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
                </mtd>
                <mtd>
                  <mi data-latex="a">a</mi>
@@ -1909,7 +2047,9 @@ describe('Page References', () => {
            <mtable displaystyle="true" data-latex="a=b\\label{eq1}\\tag{1}">
              <mlabeledtr>
                <mtd id="mjx-eqn:eq1">
-                 <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
                </mtd>
                <mtd>
                  <mi data-latex="a">a</mi>
@@ -1931,7 +2071,9 @@ describe('Page References', () => {
          <mtable displaystyle="true" data-latex="a\\label{eq1}\\tag{1}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{1}">a</mi>

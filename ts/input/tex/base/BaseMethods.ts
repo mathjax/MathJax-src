@@ -2218,7 +2218,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       }
       ref = new Label();
     }
-    let tag = ref.tag;
+    let tag: string | string[] = ref.tag;
     if (eqref) {
       // @test Eqref
       tag = parser.tags.formatRef(tag);
@@ -2226,7 +2226,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const node = parser.create(
       'node',
       'mrow',
-      ParseUtil.internalMath(parser, tag),
+      ParseUtil.internalMath(parser, Array.isArray(tag) ? tag.join('') : tag),
       {
         href: parser.tags.formatUrl(ref.id, parser.options.baseURL),
         class: 'MathJax_ref',

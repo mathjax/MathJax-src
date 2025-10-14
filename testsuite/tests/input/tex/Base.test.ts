@@ -12509,7 +12509,9 @@ describe('Referencing', () => {
          <mtable displaystyle="true" data-latex="a\\label{A}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -12529,7 +12531,9 @@ describe('Referencing', () => {
          <mtable displaystyle="true" data-latex="a\\label{}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{}">a</mi>
@@ -12549,7 +12553,9 @@ describe('Referencing', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -12557,7 +12563,9 @@ describe('Referencing', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{B}">c</mi>
@@ -12591,7 +12599,9 @@ describe('Referencing', () => {
          <mtable displaystyle="true" data-latex="a\\label{A}\\ref{A}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -12614,7 +12624,9 @@ describe('Referencing', () => {
          <mtable displaystyle="true" data-latex="a\\label{A}\\ref{B}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -12637,7 +12649,9 @@ describe('Referencing', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -14148,7 +14162,7 @@ describe('User Defined Environments', () => {
   it('Cases star', () => {
      toXmlMatch(
        tex2mml('\\begin{mmtool} a & test a\\\\ b & test b \\end{mmtool}'),
-       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{mmtool} a &amp; test a\\\\ b &amp; test b \\end{mmtool}\" display=\"block\">
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{mmtool} a &amp; test a\\\\ b &amp; test b \\end{mmtool}" display="block">
           <mrow data-mjx-texclass="INNER" data-latex-item="{mmtool}" data-latex="\\begin{mmtool} a &amp; test a\\\\ b &amp; test b \\end{mmtool}">
             <mo data-mjx-texclass="OPEN">{</mo>
             <mtable rowspacing=".2em" columnspacing="1em" columnalign="left">
@@ -14212,11 +14226,13 @@ describe('Tagged Environments', () => {
   it('EqnTest', () => {
      toXmlMatch(
        tex2mml('\\begin{eqntest} a & b \\end{eqntest}'),
-       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqntest} a &amp; b \\end{eqntest}\" display=\"block\">
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqntest} a &amp; b \\end{eqntest}" display="block">
           <mtable displaystyle="true" columnalign="right left" columnspacing="1em" rowspacing="3pt" data-break-align="bottom top" data-latex-item="{eqntest}" data-latex="\\begin{eqntest} a &amp; b \\end{eqntest}">
             <mlabeledtr>
               <mtd id="mjx-eqn:1">
-                <mtext data-latex="\\text{(1)}">(1)</mtext>
+                <mtext data-latex="\\text{(}">(</mtext>
+                <mtext data-latex="\\text{1}">1</mtext>
+                <mtext data-latex="\\text{)}">)</mtext>
               </mtd>
               <mtd>
                 <mi data-latex="a">a</mi>
@@ -14241,7 +14257,9 @@ describe('Tagged Environments', () => {
           <mtable displaystyle="true" data-latex-item="{equation}" data-latex="\\begin{equation} x \\end{equation}">
             <mlabeledtr>
               <mtd id="mjx-eqn:1">
-                <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
               </mtd>
               <mtd>
                 <mi data-latex="x">x</mi>

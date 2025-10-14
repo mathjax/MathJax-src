@@ -28,7 +28,9 @@ describe('Setoptions', () => {
          <mtable side="left" displaystyle="true" data-latex="\\setOptions{tagSide=left} a=b\\tag{1}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>

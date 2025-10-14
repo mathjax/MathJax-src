@@ -506,7 +506,9 @@ describe('Mathtools Tagging', () => {
          <mtable displaystyle="true" data-latex="\\newtagform{brackets}{[}{]}\\usetagform{brackets} E=mc^2 \\tag{1}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{[1]}">[1]</mtext>
+               <mtext data-latex="\\text{[}">[</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{]}">]</mtext>
              </mtd>
              <mtd>
                <mi data-latex="E">E</mi>
@@ -532,7 +534,9 @@ describe('Mathtools Tagging', () => {
          <mtable displaystyle="true" data-latex="\\newtagform{bfbrackets}[\\textbf]{[}{]}\\usetagform{bfbrackets} E=mc^2 \\tag{1}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{[\\textbf{1}]}">[\\textbf{1}]</mtext>
+               <mtext data-latex="\\text{[}">[</mtext>
+               <mtext data-latex="\\text{\\textbf{1}}">\\textbf{1}</mtext>
+               <mtext data-latex="\\text{]}">]</mtext>
              </mtd>
              <mtd>
                <mi data-latex="E">E</mi>
@@ -579,7 +583,9 @@ describe('Mathtools Tagging', () => {
          <mtable displaystyle="true" data-latex="\\newtagform{a}{(}{)}\\renewtagform{a}{((}{))}\\usetagform{a} E=mc^2 \\tag{1}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{((1))}">((1))</mtext>
+               <mtext data-latex="\\text{((}">((</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{))}">))</mtext>
              </mtd>
              <mtd>
                <mi data-latex="E">E</mi>
@@ -639,7 +645,9 @@ describe('Mathtools Tagging', () => {
          <mtable displaystyle="true" data-latex="\\newtagform{bars}||\\usetagform{bars} x\\tag{1}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{|1|}">|1|</mtext>
+               <mtext data-latex="\\text{|}">|</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{|}">|</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{1}">x</mi>
@@ -6106,7 +6114,9 @@ describe('Mathtools options', () => {
          <mtable displaystyle="true" data-latex="\\usetagform{bold} a=b\\tag{x}">
            <mlabeledtr>
              <mtd id="mjx-eqn:x">
-               <mtext data-latex="\\text{[[\\mathbf{x}]]}">[[\\mathbf{x}]]</mtext>
+               <mtext data-latex="\\text{[[}">[[</mtext>
+               <mtext data-latex="\\text{\\mathbf{x}}">\\mathbf{x}</mtext>
+               <mtext data-latex="\\text{]]}">]]</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -6149,7 +6159,9 @@ describe('Mathtools options', () => {
          <mtable displaystyle="true" data-latex="\\usetagform{bold} \\usetagform{} a\\tag{1}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{1}">a</mi>
@@ -6164,7 +6176,7 @@ describe('Mathtools options', () => {
 
   test('non-ams tags', () => {
     class myTags extends AbstractTags {
-      formatTag(tag: string) {return `[[${tag}]]`}
+      formatTag(tag: string) {return ['[[', tag, ']]']}
     };
     Configuration.create('mytags', {
       [ConfigurationType.TAGS]: {mytags: myTags},
