@@ -359,13 +359,18 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
         font: TexConstant.Variant.NORMAL,
         multiLetterIdentifiers: parser.options.ams.operatornamePattern,
         operatorLetters: true,
+        noAutoOP: true,
       },
       parser.configuration
     ).mml();
     //
-    //  If we get something other than a single mi, wrap in a TeXAtom.
+    //  If we get a single mi, remove the autoOp property
+    //  (it will get that automatically if more than one letter),
+    //  otherwise wrap the results in a TeXAtom.
     //
-    if (!mml.isKind('mi')) {
+    if (mml.isKind('mi')) {
+      mml.removeProperty('autoOP');
+    } else {
       mml = parser.create('node', 'TeXAtom', [mml]);
     }
     //
