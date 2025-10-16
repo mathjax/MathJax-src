@@ -187,6 +187,7 @@ const FilterUtil = {
     const node = arg.data.root;
     node.walkTree((mml: MmlNode, _d: any) => {
       const attribs = mml.attributes;
+      if (!attribs) return;
       const keep = new Set(
         ((attribs.get('mjx-keep-attrs') as string) || '').split(/ /)
       );
