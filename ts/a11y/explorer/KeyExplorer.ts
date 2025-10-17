@@ -1112,14 +1112,11 @@ export class SpeechExplorer
       .trim();
     if (describe) {
       let description =
-        (this.description === this.none ? '' : ', ' + this.description) +
-        this.linkCount();
+        this.description === this.none ? '' : ', ' + this.description;
       if (this.document.options.a11y.help) {
         description += ', press h for help';
       }
       speech += description;
-    } else {
-      speech += this.linkCount();
     }
     this.speak(
       speech,
@@ -1137,24 +1134,10 @@ export class SpeechExplorer
    * @returns {string[]}       The modified array of words
    */
   protected addComma(words: string[]): string[] {
-    if (words[2]) {
+    if (words[2] && (words[1] || words[0])) {
       words[1] += ',';
     }
     return words;
-  }
-
-  /**
-   * @returns {string}   A string giving the number of links within the
-   *                     currently selected node.
-   */
-  protected linkCount(): string {
-    if (this.anchors.length && !this.isLink()) {
-      const anchors = Array.from(this.current.querySelectorAll('a')).length;
-      if (anchors) {
-        return `, with ${anchors} link${anchors === 1 ? '' : 's'}`;
-      }
-    }
-    return '';
   }
 
   /**
