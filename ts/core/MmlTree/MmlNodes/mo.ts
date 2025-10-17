@@ -463,8 +463,8 @@ export class MmlMo extends AbstractMmlTokenNode {
     for (const name of Object.keys(def[3] || {})) {
       this.attributes.setInherited(name, def[3][name]);
     }
-    this.lspace = ((def[0] || -1) + 1) / 18;
-    this.rspace = ((def[1] || -1) + 1) / 18;
+    this.lspace = def[0] / 18;
+    this.rspace = def[1] / 18;
   }
 
   /**

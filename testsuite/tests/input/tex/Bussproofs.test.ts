@@ -860,13 +860,9 @@ describe('BussproofsRegProofs', () => {
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AxiomC{D}\\AxiomC{A}\\AxiomC{B}\\AxiomC{R}$\\alpha$\\BinaryInfC{$C \\rightarrow D \\rightarrow Q$}\\BinaryInfC{E}\\BinaryInfC{F}\\end{prooftree}" display="block">
          <mrow data-latex-item="{prooftree}" data-latex="\\begin{prooftree}\\AxiomC{D}\\AxiomC{A}\\AxiomC{B}\\AxiomC{R}$\\alpha$\\BinaryInfC{$C \\rightarrow D \\rightarrow Q$}\\BinaryInfC{E}\\BinaryInfC{F}\\end{prooftree}" semantics="bspr_proof:true">
-           <mrow data-mjx-texclass="ORD">
-             <mo>$</mo>
-           </mrow>
+           <mo>$</mo>
            <mi>&#x3B1;</mi>
-           <mrow data-mjx-texclass="ORD">
-             <mo>$</mo>
-           </mrow>
+           <mo>$</mo>
            <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\BinaryInfC{F}" semantics="bspr_inferenceRule:down;bspr_inference:2">
              <mtr>
                <mtd>
