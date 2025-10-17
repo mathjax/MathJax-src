@@ -1077,7 +1077,10 @@ export class SpeechExplorer
     if (describe) {
       let description =
         this.description === this.none ? '' : ', ' + this.description;
-      if (this.document.options.a11y.help && this.document.options.enableExplorerHelp) {
+      if (
+        this.document.options.a11y.help &&
+        this.document.options.enableExplorerHelp
+      ) {
         description += ', press h for help';
       }
       speech += description;
