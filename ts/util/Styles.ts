@@ -365,6 +365,12 @@ export class Styles {
       combine: combineTRBL,
     },
 
+    margin: {
+      children: TRBL,
+      split: splitTRBL,
+      combine: combineTRBL,
+    },
+
     border: {
       children: TRBL,
       split: splitSame,
