@@ -380,9 +380,9 @@ export function ExplorerMathDocumentMixin<
       },
       'mjx-container > mjx-help': {
         display: 'none',
-        position: 'absolute',
-        top: '-.33em',
-        right: '-.5em',
+        position: 'sticky',
+        inset: '-100% 0 100% 0',
+        margin: '-.3em -.5em 0 -.1em',
         width: '.6em',
         height: '.6em',
         cursor: 'pointer',
