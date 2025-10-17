@@ -467,21 +467,28 @@ class SvgHighlighter extends AbstractHighlighter {
    */
   public unhighlightNode(info: Highlight) {
     const node = info.node;
-    const previous = node.previousSibling as HTMLElement;
     if (node.hasAttribute('data-sre-highlighter-bbox')) {
       node.remove();
       return;
     }
-    node.removeAttribute('data-mjx-enclosed');
-    if (previous && previous.hasAttribute('data-sre-highlighter-added')) {
-      info.foreground
-        ? node.setAttribute('fill', info.foreground)
-        : node.removeAttribute('fill');
-      previous.remove();
+    if (node.tagName === 'svg' || node.tagName === 'MJX-CONTAINER') {
+      if (!node.hasAttribute('data-mjx-enclosed')) {
+        node.style.backgroundColor = info.background;
+      }
+      node.removeAttribute('data-mjx-enclosed');
+      node.style.color = info.foreground;
       return;
     }
-    node.style.backgroundColor = info.background;
-    node.style.color = info.foreground;
+    const previous = node.previousSibling as HTMLElement;
+    if (previous?.hasAttribute('data-sre-highlighter-added')) {
+      previous.remove();
+    }
+    node.removeAttribute('data-mjx-enclosed');
+    if (info.foreground) {
+      node.setAttribute('fill', info.foreground);
+    } else {
+      node.removeAttribute('fill');
+    }
   }
 
   /**

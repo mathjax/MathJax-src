@@ -1023,7 +1023,7 @@ export class SpeechExplorer
     this.current = node;
     this.currentMark = -1;
     if (this.current) {
-      const parts = this.getSplitNodes(this.current);
+      const parts = [...this.getSplitNodes(this.current)];
       this.highlighter.encloseNodes(parts, this.node);
       for (const part of parts) {
         if (!part.getAttribute('data-mjx-enclosed')) {
