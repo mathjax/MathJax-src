@@ -122,10 +122,13 @@ export abstract class AbstractRegion<T> implements Region<T> {
    */
   public AddStyles() {
     const id = this.CLASS.sheetId;
-    if (!this.CLASS.style || this.document.adaptor.head().querySelector('#' + id)) {
+    if (
+      !this.CLASS.style ||
+      this.document.adaptor.head().querySelector('#' + id)
+    ) {
       return;
     }
-    const node = this.document.adaptor.node('style', {id});
+    const node = this.document.adaptor.node('style', { id });
     node.innerHTML = this.CLASS.style.cssText;
     this.document.adaptor.head().appendChild(node);
   }
@@ -416,11 +419,16 @@ export class LiveRegion extends StringRegion {
    * @param {Document} document   The document whose CSS styles are to be adjusted
    */
   public static setAlpha(type: string, alpha: number, document: Document) {
-    const style = document.head.querySelector('#' + this.sheetId) as HTMLStyleElement;
+    const style = document.head.querySelector(
+      '#' + this.sheetId
+    ) as HTMLStyleElement;
     if (style) {
       const name = `--mjx-${type}-alpha`;
       (style.sheet.cssRules[0] as any).style.setProperty(name, alpha);
-      (style.sheet.cssRules[1] as any).cssRules[0].style.setProperty(name, alpha ** 0.7071);
+      (style.sheet.cssRules[1] as any).cssRules[0].style.setProperty(
+        name,
+        alpha ** 0.7071
+      );
     }
   }
 }

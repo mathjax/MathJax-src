@@ -432,7 +432,7 @@ export function ExplorerMathDocumentMixin<
           stroke: '#AAAAAA',
           fill: '#404040',
         },
-      }
+      },
     };
 
     /**

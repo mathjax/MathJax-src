@@ -173,7 +173,6 @@ export class DraggableDialog {
    * The default styles for all dialogs
    */
   public static styles: StyleJson = {
-
     //
     // For when dialog element is not available
     //
@@ -447,8 +446,6 @@ export class DraggableDialog {
         'background-color': '#888888 !important',
       },
     },
-
-
   };
 
   protected static helpMessage: string = `

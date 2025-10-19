@@ -621,9 +621,13 @@ export class Menu {
         ),
         this.a11yVar<string>('highlight', (value) => this.setHighlight(value)),
         this.a11yVar<string>('backgroundColor'),
-        this.a11yVar<string>('backgroundOpacity', (value) => this.setAlpha('bg', value)),
+        this.a11yVar<string>('backgroundOpacity', (value) =>
+          this.setAlpha('bg', value)
+        ),
         this.a11yVar<string>('foregroundColor'),
-        this.a11yVar<string>('foregroundOpacity', (value) => this.setAlpha('fg', value)),
+        this.a11yVar<string>('foregroundOpacity', (value) =>
+          this.setAlpha('fg', value)
+        ),
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('viewBraille'),
         this.a11yVar<boolean>('voicing'),
@@ -1335,7 +1339,11 @@ export class Menu {
   protected setAlpha(type: string, value: string) {
     if (MathJax._?.a11y?.explorer) {
       const alpha = parseInt(value) / 100;
-      MathJax._.a11y.explorer.Region.LiveRegion.setAlpha(type, alpha, this.document.document);
+      MathJax._.a11y.explorer.Region.LiveRegion.setAlpha(
+        type,
+        alpha,
+        this.document.document
+      );
     }
   }
 

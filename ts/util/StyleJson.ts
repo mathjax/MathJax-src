@@ -120,9 +120,13 @@ export class StyleJsonSheet {
     const values: string[] = new Array(properties.length);
     let i = 0;
     for (const property of properties) {
-      values[i++] = styles[property] instanceof Object
-        ? '  ' + this.getStyleRules({[property]: styles[property]} as StyleJson).join('\n  ')
-        : '  ' + property + ': ' + styles[property] + ';';
+      values[i++] =
+        styles[property] instanceof Object
+          ? '  ' +
+            this.getStyleRules({
+              [property]: styles[property],
+            } as StyleJson).join('\n  ')
+          : '  ' + property + ': ' + styles[property] + ';';
     }
     return values.join('\n');
   }
