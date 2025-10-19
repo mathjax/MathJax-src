@@ -32,7 +32,7 @@ export type StyleJsonData = {
  * A list of selectors and their data (basically a stylesheet)
  */
 export type StyleJson = {
-  [selector: string]: StyleJsonData;
+  [selector: string]: StyleJsonData | StyleJson;
 };
 
 /******************************************************************************/
@@ -97,32 +97,32 @@ export class StyleJsonSheet {
   }
 
   /**
+   * @param {StyleJson} styles   The style list to convert
    * @returns {string[]}  An array of rule strings for the style list
    */
-  public getStyleRules(): string[] {
-    const selectors = Object.keys(this.styles);
+  public getStyleRules(styles: StyleJson = this.styles): string[] {
+    const selectors = Object.keys(styles);
     const defs: string[] = new Array(selectors.length);
     let i = 0;
     for (const selector of selectors) {
-      defs[i++] =
-        selector +
-        ' {\n' +
-        this.getStyleDefString(this.styles[selector]) +
-        '\n}';
+      const data = styles[selector];
+      defs[i++] = `${selector} {\n${this.getStyleDefString(data)}\n}`;
     }
     return defs;
   }
 
   /**
-   * @param {StyleJsonData} styles  The style data to be stringified
-   * @returns {string}              The CSS string for the given data
+   * @param {StyleJsonData | StyleJson} styles  The style data to be stringified
+   * @returns {string}                           The CSS string for the given data
    */
-  public getStyleDefString(styles: StyleJsonData): string {
+  public getStyleDefString(styles: StyleJsonData | StyleJson): string {
     const properties = Object.keys(styles);
     const values: string[] = new Array(properties.length);
     let i = 0;
     for (const property of properties) {
-      values[i++] = '  ' + property + ': ' + styles[property] + ';';
+      values[i++] = styles[property] instanceof Object
+        ? '  ' + this.getStyleRules({[property]: styles[property]} as StyleJson).join('\n  ')
+        : '  ' + property + ': ' + styles[property] + ';';
     }
     return values.join('\n');
   }

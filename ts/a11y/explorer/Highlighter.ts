@@ -21,25 +21,8 @@
 interface NamedColor {
   color: string;
   alpha?: number;
+  type?: string;
 }
-
-interface ChannelColor {
-  red: number;
-  green: number;
-  blue: number;
-  alpha?: number;
-}
-
-const namedColors: { [key: string]: ChannelColor } = {
-  red: { red: 255, green: 0, blue: 0 },
-  green: { red: 0, green: 255, blue: 0 },
-  blue: { red: 0, green: 0, blue: 255 },
-  yellow: { red: 255, green: 255, blue: 0 },
-  cyan: { red: 0, green: 255, blue: 255 },
-  magenta: { red: 255, green: 0, blue: 255 },
-  white: { red: 255, green: 255, blue: 255 },
-  black: { red: 0, green: 0, blue: 0 },
-};
 
 /**
  * Turns a named color into a channel color.
@@ -49,30 +32,22 @@ const namedColors: { [key: string]: ChannelColor } = {
  * @returns {string} The channel color.
  */
 function getColorString(color: NamedColor, deflt: NamedColor): string {
-  const channel = namedColors[color.color] || namedColors[deflt.color];
-  channel.alpha = color.alpha ?? deflt.alpha;
-  return rgba(channel);
-}
-
-/**
- * RGBa string version of the channel color.
- *
- * @param {ChannelColor} color The channel color.
- * @returns {string} The color in RGBa format.
- */
-function rgba(color: ChannelColor): string {
-  return `rgba(${color.red},${color.green},${color.blue},${color.alpha ?? 1})`;
+  const type = deflt.type;
+  const name = color.color ?? deflt.color;
+  const opacity = color.alpha ?? deflt.alpha;
+  const alpha = opacity === 1 ? 1 : `var(--mjx-${type}-alpha)`;
+  return `rgba(var(--mjx-${type}-${name}), ${alpha})`;
 }
 
 /**
  * The default background color if a none existing color is provided.
  */
-const DEFAULT_BACKGROUND: NamedColor = { color: 'blue', alpha: 1 };
+const DEFAULT_BACKGROUND: NamedColor = { color: 'blue', alpha: 1, type: 'bg' };
 
 /**
  * The default color if a none existing color is provided.
  */
-const DEFAULT_FOREGROUND: NamedColor = { color: 'black', alpha: 1 };
+const DEFAULT_FOREGROUND: NamedColor = { color: 'black', alpha: 1, type: 'fg' };
 
 export interface Highlighter {
   /**

@@ -418,6 +418,21 @@ export function ExplorerMathDocumentMixin<
         display: 'inline-flex',
         'align-items': 'center',
       },
+      '@media (prefers-color-scheme: dark) /* explorer */': {
+        'mjx-help > svg': {
+          stroke: '#E0E0E0',
+        },
+        'mjx-help > svg > circle': {
+          fill: '#404040',
+        },
+        'mjx-help > svg > circle:nth-child(2)': {
+          fill: 'rgba(132, 132, 255, .3)',
+        },
+        'mjx-help:hover > svg > circle:nth-child(2)': {
+          stroke: '#AAAAAA',
+          fill: '#404040',
+        },
+      }
     };
 
     /**

@@ -74,13 +74,6 @@ export abstract class AbstractRegion<T> implements Region<T> {
   protected static className: string;
 
   /**
-   * True if the style has already been added to the document.
-   *
-   * @type {boolean}
-   */
-  protected static styleAdded: boolean = false;
-
-  /**
    * The CSS style that needs to be added for this type of region.
    *
    * @type {StyleJsonSheet}
@@ -118,19 +111,23 @@ export abstract class AbstractRegion<T> implements Region<T> {
   }
 
   /**
+   * @returns {string}   The stylesheet ID
+   */
+  public static get sheetId(): string {
+    return 'MJX-' + this.name + '-styles';
+  }
+
+  /**
    * @override
    */
   public AddStyles() {
-    if (this.CLASS.styleAdded) {
+    const id = this.CLASS.sheetId;
+    if (!this.CLASS.style || this.document.adaptor.head().querySelector('#' + id)) {
       return;
     }
-    // TODO: should that be added to document.documentStyleSheet()?
-    const node = this.document.adaptor.node('style');
+    const node = this.document.adaptor.node('style', {id});
     node.innerHTML = this.CLASS.style.cssText;
-    this.document.adaptor
-      .head(this.document.adaptor.document)
-      .appendChild(node);
-    this.CLASS.styleAdded = true;
+    this.document.adaptor.head().appendChild(node);
   }
 
   /**
@@ -177,7 +174,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
    */
   public Hide() {
     if (!this.div) return;
-    this.div.parentNode.removeChild(this.div);
+    this.div.remove();
     this.div = null;
     this.inner = null;
   }
@@ -335,6 +332,13 @@ export class ToolTip extends StringRegion {
       'border-radius': 'inherit',
       padding: '0 2px',
     },
+    '@media (prefers-color-scheme: dark)': {
+      ['.' + ToolTip.className]: {
+        'background-color': '#222025',
+        'box-shadow': '0px 5px 20px #000',
+        border: '1px solid #7C7C7C',
+      },
+    },
   });
 }
 
@@ -348,6 +352,43 @@ export class LiveRegion extends StringRegion {
    * @override
    */
   protected static style: StyleJsonSheet = new StyleJsonSheet({
+    ':root': {
+      '--mjx-fg-red': '255, 0, 0',
+      '--mjx-fg-green': '0, 255, 0',
+      '--mjx-fg-blue': '0, 0, 255',
+      '--mjx-fg-yellow': '255, 255, 0',
+      '--mjx-fg-cyan': '0, 255, 255',
+      '--mjx-fg-magenta': '255, 0, 255',
+      '--mjx-fg-white': '255, 255, 255',
+      '--mjx-fg-black': '0, 0, 0',
+      '--mjx-bg-red': '255, 0, 0',
+      '--mjx-bg-green': '0, 255, 0',
+      '--mjx-bg-blue': '0, 0, 255',
+      '--mjx-bg-yellow': '255, 255, 0',
+      '--mjx-bg-cyan': '0, 255, 255',
+      '--mjx-bg-magenta': '255, 0, 255',
+      '--mjx-bg-white': '255, 255, 255',
+      '--mjx-bg-black': '0, 0, 0',
+      '--mjx-live-bg-color': 'white',
+      '--mjx-live-shadow-color': '#888',
+      '--mjx-live-border-color': '#CCCCCC',
+      '--mjx-bg-alpha': 0.2,
+      '--mjx-fg-alpha': 1,
+    },
+    '@media (prefers-color-scheme: dark)': {
+      ':root': {
+        '--mjx-bg-blue': '132, 132, 255',
+        '--mjx-bg-white': '0, 0, 0',
+        '--mjx-bg-black': '255, 255, 255',
+        '--mjx-fg-white': '0, 0, 0',
+        '--mjx-fg-black': '255, 255, 255',
+        '--mjx-live-bg-color': '#222025',
+        '--mjx-live-shadow-color': 'black',
+        '--mjx-live-border-color': '#7C7C7C',
+        '--mjx-bg-alpha': 0.3,
+        '--mjx-fg-alpha': 1,
+      },
+    },
     ['.' + LiveRegion.className]: {
       position: 'absolute',
       top: 0,
@@ -360,20 +401,36 @@ export class LiveRegion extends StringRegion {
       left: 0,
       right: 0,
       margin: '0 auto',
-      'background-color': 'white',
-      'box-shadow': '0px 5px 20px #888',
-      border: '2px solid #CCCCCC',
+      'background-color': 'var(--mjx-live-bg-color)',
+      'box-shadow': '0px 5px 20px var(--mjx-live-shadow-color)',
+      border: '2px solid var(--mjx-live-border-color)',
     },
     ['.' + LiveRegion.className + '_Show']: {
       display: 'block',
     },
   });
+
+  /**
+   * @param {string} type         The type of alpha to set (fg or bg)
+   * @param {number} alpha        The alpha value to use for the background
+   * @param {Document} document   The document whose CSS styles are to be adjusted
+   */
+  public static setAlpha(type: string, alpha: number, document: Document) {
+    const style = document.head.querySelector('#' + this.sheetId) as HTMLStyleElement;
+    if (style) {
+      const name = `--mjx-${type}-alpha`;
+      (style.sheet.cssRules[0] as any).style.setProperty(name, alpha);
+      (style.sheet.cssRules[1] as any).cssRules[0].style.setProperty(name, alpha ** 0.7071);
+    }
+  }
 }
 
 /**
  * Region class that enables auto voicing of content via SSML markup.
  */
 export class SpeechRegion extends LiveRegion {
+  protected static style: StyleJsonSheet = null;
+
   /**
    * Flag to activate auto voicing.
    */
@@ -582,6 +639,13 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     },
     ['.' + HoverRegion.className + ' > div']: {
       overflow: 'hidden',
+    },
+    '@media (prefers-color-scheme: dark)': {
+      ['.' + HoverRegion.className]: {
+        'background-color': '#222025',
+        'box-shadow': '0px 5px 20px #000',
+        border: '1px solid #7C7C7C',
+      },
     },
   });
 

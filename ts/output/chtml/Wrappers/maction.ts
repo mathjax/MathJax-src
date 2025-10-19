@@ -188,6 +188,25 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
         'background-color': '#F8F8F8',
         color: 'black',
       },
+      'mjx-maction[data-collapsible][toggle="1"]': {
+        color: '#55F',
+      },
+
+      '@media (prefers-color-scheme: dark) /* chtml maction */': {
+        'mjx-tool > mjx-tip': {
+          border: '1px solid #888',
+          'background-color': '#303030',
+          color: '#E0E0E0',
+          'box-shadow': '2px 2px 5px #000',
+        },
+        'mjx-status': {
+          'background-color': '#303030',
+          color: '#E0E0E0',
+        },
+        'mjx-maction[data-collapsible][toggle="1"]': {
+          color: '#88F',
+        },
+      },
     };
 
     /**

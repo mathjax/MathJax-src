@@ -599,7 +599,7 @@ export class Collapse {
         ),
       },
       [
-        factory.create('mtext', { mathcolor: 'blue', ...variant }, [
+        factory.create('mtext', variant, [
           (factory.create('text') as TextNode).setText(marker),
         ]),
       ]

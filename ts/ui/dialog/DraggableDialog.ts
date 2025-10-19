@@ -173,6 +173,7 @@ export class DraggableDialog {
    * The default styles for all dialogs
    */
   public static styles: StyleJson = {
+
     //
     // For when dialog element is not available
     //
@@ -296,7 +297,7 @@ export class DraggableDialog {
       'line-height': 0,
       padding: '8px 0 6px',
     },
-    '.mjs-dialog-button > mjx-dialog-icon:hover': {
+    '.mjx-dialog-button > mjx-dialog-icon:hover': {
       'background-color': '#CCC !important',
     },
 
@@ -404,6 +405,50 @@ export class DraggableDialog {
       bottom: '-3px',
       cursor: 'nwse-resize',
     },
+
+    '@media (prefers-color-scheme: dark)': {
+      '.mjx-dialog': {
+        'background-color': '#303030',
+        'box-shadow': '0px 10px 20px #000',
+        border: '3px outset #7C7C7C',
+      },
+      'mjx-dialog': {
+        color: '#E0E0E0',
+      },
+      'mjx-dialog > div': {
+        border: '2px inset #7C7C7C',
+        'background-color': '#222025',
+      },
+      'a[href]': {
+        color: '#86A7F5',
+      },
+      'a[href]:visited': {
+        color: '#DD98E2',
+      },
+      'mjx-dialog kbd': {
+        color: '#F8F8F8',
+        'background-color': '#545454',
+        border: 'solid 1.5px #7A7C7E',
+        'border-bottom-color': '#707070',
+        'box-shadow': 'inset -.5px -1px 0 #818589',
+      },
+      '.mjx-dialog-button': {
+        border: '2px solid #686868',
+        color: '#A4A4A4',
+      },
+      '.mjx-dialog-button:hover': {
+        color: '#CBCBCB !important',
+        border: '2px solid #888888 !important',
+      },
+      '.mjx-dialog-button > mjx-dialog-icon': {
+        'background-color': '#646464',
+      },
+      '.mjx-dialog-button > mjx-dialog-icon:hover': {
+        'background-color': '#888888 !important',
+      },
+    },
+
+
   };
 
   protected static helpMessage: string = `
