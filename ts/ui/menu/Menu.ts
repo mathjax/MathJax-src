@@ -334,6 +334,9 @@ export class Menu {
         'mjx-dialog > div': {
           'white-space': 'nowrap',
         },
+        'dialog.mjx-dialog-help > mjx-dialog > div': {
+          'white-space': 'normal',
+        },
         'mjx-v': {
           'font-size': '80%',
         },

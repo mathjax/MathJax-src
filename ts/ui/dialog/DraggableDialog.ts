@@ -231,7 +231,6 @@ export class DraggableDialog {
       all: 'initial',
       cursor: 'inherit',
       width: '100%',
-      height: '100%',
       display: 'flex',
       'flex-direction': 'column',
       'flex-grow': 1,
@@ -274,6 +273,7 @@ export class DraggableDialog {
       position: 'absolute',
       top: '6px',
       height: '17px',
+      width: '17px',
       cursor: 'default',
       display: 'block',
       border: '2px solid #AAA',
@@ -305,7 +305,7 @@ export class DraggableDialog {
     //
     'mjx-dialog-close': {
       right: '6px',
-      'font-size': '24px;',
+      'font-size': '20px;',
     },
 
     //
@@ -313,8 +313,8 @@ export class DraggableDialog {
     //
     'mjx-dialog-help': {
       left: '6px',
-      'font-size': '16px;',
-      width: '17px',
+      'font-size': '14px;',
+      'font-weight': 'bold',
     },
     '.mjx-dialog-help mjx-dialog-help': {
       display: 'none',
