@@ -1526,7 +1526,7 @@ export class SpeechExplorer
 
   /**
    * @param {HTMLElement} node   The node to test for having an href
-   * @returns {boolean}          True if the node has is a link, false otherwise
+   * @returns {boolean}          True if the node has a link, false otherwise
    */
   protected isLink(node: HTMLElement = this.current): boolean {
     return !!node?.getAttribute('data-semantic-attributes')?.includes('href:');
