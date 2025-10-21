@@ -160,6 +160,10 @@ export class CHTML<N, T, D> extends CommonOutputJax<
 
     'mjx-container [inline-breaks]': { display: 'inline' },
 
+    'mjx-container .mjx-selected': {
+      outline: '2px solid black',
+    },
+
     //
     //  These don't have Wrapper subclasses, so add their styles here
     //
