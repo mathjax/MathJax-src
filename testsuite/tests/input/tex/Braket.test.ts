@@ -317,7 +317,7 @@ describe('Braket', () => {
            <mspace width="0.167em"></mspace>
            <mi data-latex="x">x</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-mjx-texclass="BIN" data-braketbar="true">|</mo>
+           <mo data-mjx-texclass="BIN" stretchy="true" data-braketbar="true">|</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
            <mfrac data-latex="\\frac{x}{y}">
              <mi data-latex="x">x</mi>
@@ -359,7 +359,7 @@ describe('Braket', () => {
          <mrow data-latex="\\braket{x|y}">
            <mo data-mjx-texclass="OPEN" stretchy="false">&#x27E8;</mo>
            <mi data-latex="x">x</mi>
-           <mo data-mjx-texclass="ORD" stretchy="false" data-braketbar="true" data-latex="|">|</mo>
+           <mo data-mjx-texclass="ORD" data-braketbar="true" data-latex="|">|</mo>
            <mi data-latex="y">y</mi>
            <mo data-mjx-texclass="CLOSE" stretchy="false">&#x27E9;</mo>
          </mrow>
@@ -379,7 +379,7 @@ describe('Braket', () => {
              <mi data-latex="x">x</mi>
              <mi data-latex="y">y</mi>
            </mfrac>
-           <mo data-mjx-texclass="ORD" stretchy="false" data-braketbar="true" data-latex="|">|</mo>
+           <mo data-mjx-texclass="ORD" data-braketbar="true" data-latex="|">|</mo>
            <mi data-latex="z">z</mi>
            <mo data-mjx-texclass="CLOSE" stretchy="false">&#x27E9;</mo>
          </mrow>
@@ -400,7 +400,7 @@ describe('Braket', () => {
              <mi data-latex="y">y</mi>
            </mfrac>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-mjx-texclass="BIN" data-braketbar="true">|</mo>
+           <mo data-mjx-texclass="BIN" stretchy="true" data-braketbar="true">|</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
            <mi data-latex="z">z</mi>
            <mo data-mjx-texclass="CLOSE">&#x27E9;</mo>
@@ -451,7 +451,7 @@ describe('Braket', () => {
            <mo data-mjx-texclass="BIN" data-braketbar="true">&#x2016;</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-mjx-texclass="BIN" data-braketbar="true">|</mo>
+           <mo data-mjx-texclass="BIN" stretchy="true" data-braketbar="true">|</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
            <mi data-latex="z">z</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
@@ -480,7 +480,7 @@ describe('Braket', () => {
            <mo data-mjx-texclass="BIN" data-braketbar="true">&#x2016;</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-mjx-texclass="BIN" data-braketbar="true">|</mo>
+           <mo data-mjx-texclass="BIN" stretchy="true" data-braketbar="true">|</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
            <mi data-latex="z">z</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
@@ -509,14 +509,14 @@ describe('Braket', () => {
            <mo data-mjx-texclass="BIN" data-braketbar="true">&#x2016;</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-mjx-texclass="BIN" data-braketbar="true">|</mo>
+           <mo data-mjx-texclass="BIN" stretchy="true" data-braketbar="true">|</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
            <mi data-latex="z">z</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
            <mo data-mjx-texclass="BIN" data-braketbar="true">&#x2016;</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-mjx-texclass="BIN" data-braketbar="true">|</mo>
+           <mo data-mjx-texclass="BIN" stretchy="true" data-braketbar="true">|</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
            <mi data-latex="y">y</mi>
            <mo data-mjx-texclass="CLOSE">&#x27E9;</mo>
@@ -542,8 +542,8 @@ describe('Braket', () => {
            <mo data-mjx-texclass="BIN" data-braketbar="true">&#x2016;</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
            <mi data-latex="y">y</mi>
-           <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
-           <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+           <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+           <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
            <mi data-latex="z">z</mi>
            <mspace width="0.167em"></mspace>
            <mo data-mjx-texclass="CLOSE">}</mo>
@@ -568,10 +568,10 @@ describe('Braket', () => {
            <mrow data-mjx-texclass="CLOSE"></mrow>
            <mo data-mjx-texclass="BIN" data-braketbar="true">&#x2016;</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
-           <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+           <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
            <mi data-latex="y">y</mi>
            <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\|">&#x2016;</mo>
-           <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+           <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
            <mi data-latex="z">z</mi>
            <mspace width="0.167em"></mspace>
            <mo data-mjx-texclass="CLOSE">}</mo>
@@ -589,7 +589,7 @@ describe('Braket', () => {
          <mrow data-latex="\\braket {a|b}">
            <mo data-mjx-texclass="OPEN" stretchy="false">&#x27E8;</mo>
            <mi data-latex="a">a</mi>
-           <mo data-mjx-texclass="ORD" stretchy="false" data-braketbar="true" data-latex="|">|</mo>
+           <mo data-mjx-texclass="ORD" data-braketbar="true" data-latex="|">|</mo>
            <mi data-latex="b">b</mi>
            <mo data-mjx-texclass="CLOSE" stretchy="false">&#x27E9;</mo>
          </mrow>
@@ -608,7 +608,7 @@ describe('Braket', () => {
            <mi>a</mi>
            <mo data-mjx-texclass="CLOSE" stretchy="false">&#x27E9;</mo>
          </mrow>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -628,7 +628,7 @@ describe('Braket', () => {
            </mfrac>
            <mo data-mjx-texclass="CLOSE" stretchy="false">&#x27E9;</mo>
          </mrow>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -645,7 +645,7 @@ describe('Braket', () => {
            <mrow data-latex="{}">
              <mo data-mjx-texclass="OPEN" stretchy="false">&#x27E8;</mo>
              <mi data-latex="a">a</mi>
-             <mo data-mjx-texclass="ORD" stretchy="false" data-braketbar="true" data-latex="|">|</mo>
+             <mo data-mjx-texclass="ORD" data-braketbar="true" data-latex="|">|</mo>
              <mi data-latex="b">b</mi>
              <mo data-mjx-texclass="CLOSE" stretchy="false">&#x27E9;</mo>
            </mrow>
@@ -661,6 +661,20 @@ describe('Braket', () => {
   it('Braket-error', () => {
     expectTexError('\\braket')
       .toBe('Missing argument for \\braket');
+  });
+
+  /********************************************************************************/
+
+  it('Braket-braces', () => {
+    expectTexError('\\braket{')
+      .toBe('Missing close brace');
+  });
+
+  /********************************************************************************/
+
+  it('Braket-braces', () => {
+    expectTexError('\\braket}')
+      .toBe('Extra close brace or missing open brace');
   });
 
   /********************************************************************************/

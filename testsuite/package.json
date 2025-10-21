@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@jest/globals": "^29.7.0",
-    "@mathjax/mathjax-bbm-font-extension": "0.4.2-beta.8",
+    "@mathjax/mathjax-bbm-font-extension": "^4.0.0",
     "@types/jest": "^29.5.14",
     "jest": "^29.7.0",
     "ts-jest": "^29.3.4",

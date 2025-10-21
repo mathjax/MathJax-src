@@ -432,6 +432,11 @@ export class SpeechExplorer
   ]);
 
   /**
+   * Semantic id to subtree map.
+   */
+  private subtrees: Map<string, Set<string>> = null;
+
+  /**
    * @override
    */
   public FocusIn(_event: FocusEvent) {
@@ -875,7 +880,7 @@ export class SpeechExplorer
     const parts = [
       [
         this.node.getAttribute('data-semantic-level') ?? 'Level',
-        this.current.getAttribute('aria-level') ?? '0',
+        this.current.getAttribute('data-semantic-level-number') ?? '0',
       ]
         .join(' ')
         .trim(),
@@ -1043,10 +1048,12 @@ export class SpeechExplorer
     //   (i.e., we are focusing out)
     //
     if (this.current) {
-      for (const part of this.getSplitNodes(this.current)) {
+      this.pool.unhighlight();
+      for (const part of Array.from(
+        this.node.querySelectorAll('.mjx-selected')
+      )) {
         part.classList.remove('mjx-selected');
       }
-      this.pool.unhighlight();
       if (this.document.options.a11y.tabSelects === 'last') {
         this.refocus = this.current;
       }
@@ -1063,9 +1070,12 @@ export class SpeechExplorer
     this.current = node;
     this.currentMark = -1;
     if (this.current) {
-      const parts = this.getSplitNodes(this.current);
+      const parts = [...this.getSplitNodes(this.current)];
+      this.highlighter.encloseNodes(parts, this.node);
       for (const part of parts) {
-        part.classList.add('mjx-selected');
+        if (!part.getAttribute('data-mjx-enclosed')) {
+          part.classList.add('mjx-selected');
+        }
       }
       this.pool.highlight(parts);
       this.addSpeech(node, addDescription);
@@ -1075,6 +1085,8 @@ export class SpeechExplorer
     //
     this.node.removeAttribute('aria-busy');
   }
+
+  private cacheParts: Map<string, HTMLElement[]> = new Map();
 
   /**
    * Get all nodes with the same semantic id (multiple nodes if there are line breaks).
@@ -1087,7 +1099,39 @@ export class SpeechExplorer
     if (!id) {
       return [node];
     }
-    return Array.from(this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
+    // Here we need to cache the subtrees.
+    if (this.cacheParts.has(id)) {
+      return this.cacheParts.get(id);
+    }
+    const parts = Array.from(
+      this.node.querySelectorAll(`[data-semantic-id="${id}"]`)
+    ) as HTMLElement[];
+    const subtree = this.subtree(id, parts);
+    this.cacheParts.set(id, [...parts, ...subtree]);
+    return this.cacheParts.get(id);
+  }
+
+  /**
+   * Retrieve the elements in the semantic subtree that are not in the DOM subtree.
+   *
+   * @param {string} id The semantic id of the root node.
+   * @param {HTMLElement[]} nodes The list of nodes corresponding to that id
+   *     (could be multiple for linebroken ones).
+   * @returns {HTMLElement[]} The list of nodes external to the DOM trees rooted
+   *     by any of the input nodes.
+   */
+  private subtree(id: string, nodes: HTMLElement[]): HTMLElement[] {
+    const sub = this.subtrees.get(id);
+    const children: Set<string> = new Set();
+    for (const node of nodes) {
+      (
+        Array.from(node.querySelectorAll(`[data-semantic-id]`)) as HTMLElement[]
+      ).forEach((x) => children.add(this.nodeId(x)));
+    }
+    const rest = setdifference(sub, children);
+    return [...rest]
+      .map((child) => this.getNode(child))
+      .filter((node) => node !== null);
   }
 
   /**
@@ -1647,6 +1691,10 @@ export class SpeechExplorer
    * @override
    */
   public async Start() {
+    if (!this.subtrees) {
+      this.subtrees = new Map();
+      this.getSubtrees();
+    }
     //
     // If we aren't attached or already active, return
     //
@@ -1851,4 +1899,95 @@ export class SpeechExplorer
     }
     return focus.join(' ');
   }
+
+  /**
+   * Populates the subtrees map from the data-semantic-structure attribute.
+   */
+  private getSubtrees() {
+    const node = this.node.querySelector('[data-semantic-structure]');
+    if (!node) return;
+    const sexp = node.getAttribute('data-semantic-structure');
+    const tokens = tokenize(sexp);
+    const tree = parse(tokens);
+    buildMap(tree, this.subtrees);
+  }
+}
+
+/**********************************************************************/
+/*
+ * Some Aux functions for parsing the semantic structure sexpression
+ */
+type SexpTree = string | SexpTree[];
+
+/**
+ * Helper to tokenize input
+ *
+ * @param {string} str The semantic structure.
+ * @returns {string[]} The tokenized list.
+ */
+function tokenize(str: string): string[] {
+  return str.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').trim().split(/\s+/);
+}
+
+/**
+ * Recursive parser to convert tokens into a tree
+ *
+ * @param {string} tokens The tokens from the semantic structure.
+ * @returns {SexpTree} Array list for the semantic structure sexpression.
+ */
+function parse(tokens: string[]): SexpTree {
+  const stack: SexpTree[][] = [[]];
+  for (const token of tokens) {
+    if (token === '(') {
+      const newNode: SexpTree = [];
+      stack[stack.length - 1].push(newNode);
+      stack.push(newNode);
+    } else if (token === ')') {
+      stack.pop();
+    } else {
+      stack[stack.length - 1].push(token);
+    }
+  }
+  return stack[0][0];
+}
+
+/**
+ * Flattens the tree and builds the map.
+ *
+ * @param {SexpTree} tree The sexpression tree.
+ * @param {Map<string, Set<string>>} map The map to populate.
+ */
+function buildMap(tree: SexpTree, map: Map<string, Set<string>>) {
+  if (typeof tree === 'string') {
+    if (!map.has(tree)) map.set(tree, new Set());
+    return new Set();
+  }
+  const [root, ...children] = tree;
+  const rootId = root as string;
+  const descendants: Set<string> = new Set();
+  for (const child of children) {
+    const childRoot = typeof child === 'string' ? child : child[0];
+    const childDescendants = buildMap(child, map);
+    descendants.add(childRoot as string);
+    childDescendants.forEach((d: string) => descendants.add(d));
+  }
+  map.set(rootId, descendants);
+  return descendants;
+}
+
+// Can be replaced with ES2024 implementation of Set.prototyp.difference
+/**
+ * Set difference between two sets A and B: A\B.
+ *
+ * @param {Set<string>} a Initial set.
+ * @param {Set<string>} b Set to remove from A.
+ */
+function setdifference(a: Set<string>, b: Set<string>): Set<string> {
+  if (!a) {
+    return new Set();
+  }
+  if (!b) {
+    return a;
+  }
+  return new Set([...a].filter((x) => !b.has(x)));
 }

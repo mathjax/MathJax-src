@@ -110,13 +110,22 @@ export class CHTML<N, T, D> extends CommonOutputJax<
       'mjx-mtext > mjx-c',
     ].join(', ')]: {
       'clip-path':
-        'padding-box xywh(-1em -2px calc(100% + 2em) calc(100% + 4px))',
+        'padding-box polygon(' +
+        [
+          '-1em -2px',
+          'calc(100% + 1em) -2px',
+          'calc(100% + 1em) calc(100% + 2px)',
+          '-1em calc(100% + 2px)',
+        ].join(', ') +
+        ')',
     },
     'mjx-stretchy-h': {
-      'clip-path': 'padding-box xywh(0 -2px 100% calc(100% + 4px))',
+      'clip-path':
+        'padding-box polygon(0 -2px, 100% -2px, 100% calc(100% + 2px), 0 calc(100% + 2px))',
     },
     'mjx-stretchy-v': {
-      'clip-path': 'padding-box xywh(-2px 0 calc(100% + 4px) 100%)',
+      'clip-path':
+        'padding-box polygon(-2px 0, calc(100% + 2px) 0, calc(100% + 2px) 100%, -2px 100%)',
     },
 
     'mjx-container [space="1"]': { 'margin-left': '.111em' },
@@ -150,6 +159,10 @@ export class CHTML<N, T, D> extends CommonOutputJax<
     'mjx-row > *': { display: 'table-cell' },
 
     'mjx-container [inline-breaks]': { display: 'inline' },
+
+    'mjx-container .mjx-selected': {
+      outline: '2px solid black',
+    },
 
     //
     //  These don't have Wrapper subclasses, so add their styles here

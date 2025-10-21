@@ -161,14 +161,8 @@ const FilterUtil = {
     for (const mo of options.getList('fixStretchy')) {
       if (NodeUtil.getProperty(mo, 'fixStretchy')) {
         const symbol = NodeUtil.getForm(mo);
-        if (symbol && symbol[3] && symbol[3]['stretchy']) {
+        if (symbol?.[3]?.['stretchy']) {
           NodeUtil.setAttribute(mo, 'stretchy', false);
-        }
-        const parent = mo.parent;
-        if (!NodeUtil.getTexClass(mo) && (!symbol || !symbol[2])) {
-          const texAtom = options.nodeFactory.create('node', 'TeXAtom', [mo]);
-          parent.replaceChild(texAtom, mo);
-          texAtom.inheritAttributesFrom(mo);
         }
         NodeUtil.removeProperties(mo, 'fixStretchy');
       }
@@ -187,6 +181,7 @@ const FilterUtil = {
     const node = arg.data.root;
     node.walkTree((mml: MmlNode, _d: any) => {
       const attribs = mml.attributes;
+      if (!attribs) return;
       const keep = new Set(
         ((attribs.get('mjx-keep-attrs') as string) || '').split(/ /)
       );

@@ -279,7 +279,7 @@ describe('Negations', () => {
          <mi data-latex="a">a</mi>
          <mo data-latex="=">&#x2260;</mo>
          <mi data-latex="b">b</mi>
-         <mo data-latex="\\rightarrow">&#x219B;</mo>
+         <mo stretchy="false" data-latex="\\rightarrow">&#x219B;</mo>
          <mi data-latex="c">c</mi>
          <mo data-latex="\\leq">&#x2270;</mo>
          <mi data-latex="d">d</mi>
@@ -1213,7 +1213,7 @@ describe('Fenced', () => {
              <mrow data-mjx-texclass="INNER" data-latex-item="\\left[ \\left\\| A \\right.\\right|" data-latex="\\left[ \\left\\| A \\right.\\right|">
                <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
                <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\| A \\right." data-latex="\\left\\| A \\right.">
-                 <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\|" data-latex="\\left\\|">&#x2016;</mo>
+                 <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\|" data-latex="\\left\\|">&#x2016;</mo>
                  <mi data-latex="A">A</mi>
                  <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
                </mrow>
@@ -1237,7 +1237,7 @@ describe('Fenced', () => {
            <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
            <mi data-latex="a">a</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle|" data-latex="\\middle|">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle|" data-latex="\\middle|">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
            <mi data-latex="b">b</mi>
            <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
@@ -2503,7 +2503,7 @@ describe('MmlToken', () => {
 
   it('Token Invalid Attribute', () => {
     expectTexError('\\mmlToken{mi}[m1=true]{}')
-      .toBe('Invalid MathML attribute: m1=true');
+      .toBe('Invalid MathML attribute: m1');
   });
 
   /********************************************************************************/
@@ -4371,8 +4371,8 @@ describe('Multirel', () => {
       tex2mml('a||b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a||b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4684,9 +4684,7 @@ describe('Other', () => {
     toXmlMatch(
       tex2mml('$'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="$" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="$">$</mo>
-         </mrow>
+         <mo data-latex="$">$</mo>
        </math>`
     );
   });
@@ -4697,9 +4695,7 @@ describe('Other', () => {
     toXmlMatch(
       tex2mml('˦'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="&#x2E6;" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="&#x2E6;">&#x2E6;</mo>
-         </mrow>
+         <mo data-latex="&#x2E6;">&#x2E6;</mo>
        </math>`
     );
   });
@@ -4721,7 +4717,7 @@ describe('Other', () => {
     toXmlMatch(
       tex2mml('⤡'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="&#x2921;" display="block">
-         <mo data-latex="&#x2921;" stretchy="false">&#x2921;</mo>
+         <mo data-latex="&#x2921;">&#x2921;</mo>
        </math>`
     );
   });
@@ -4733,7 +4729,7 @@ describe('Other', () => {
       tex2mml('a⤡b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a&#x2921;b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="&#x2921;" stretchy="false">&#x2921;</mo>
+         <mo data-latex="&#x2921;">&#x2921;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4745,7 +4741,7 @@ describe('Other', () => {
     toXmlMatch(
       tex2mml('⤡b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="&#x2921;b" display="block">
-         <mo data-latex="&#x2921;" stretchy="false">&#x2921;</mo>
+         <mo data-latex="&#x2921;">&#x2921;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4758,7 +4754,7 @@ describe('Other', () => {
       tex2mml('b⤡'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="b&#x2921;" display="block">
          <mi data-latex="b">b</mi>
-         <mo data-latex="&#x2921;" stretchy="false">&#x2921;</mo>
+         <mo data-latex="&#x2921;">&#x2921;</mo>
        </math>`
     );
   });
@@ -4769,7 +4765,7 @@ describe('Other', () => {
     toXmlMatch(
       tex2mml('|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="|" display="block">
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
        </math>`
     );
   });
@@ -4781,7 +4777,7 @@ describe('Other', () => {
       tex2mml('a|b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a|b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4818,9 +4814,7 @@ describe('Other', () => {
       tex2mml('褯¥'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="&#x892F;&#xA5;" display="block">
          <mi mathvariant="normal" data-latex="&#x892F;">&#x892F;</mi>
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="&#xA5;">&#xA5;</mo>
-         </mrow>
+         <mo data-latex="&#xA5;">&#xA5;</mo>
        </math>`
     );
   });
@@ -5200,7 +5194,7 @@ describe('Base Complex', () => {
            <mrow data-mjx-texclass="ORD">
              <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
              <mi data-latex="q">q</mi>
-             <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+             <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
              <mo data-latex="&lt;">&lt;</mo>
              <mn data-latex="1">1</mn>
            </mrow>
@@ -6448,9 +6442,7 @@ describe('Delimiters', () => {
     toXmlMatch(
       tex2mml('/ a \\\\'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="/ a \\\\" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="/">/</mo>
-         </mrow>
+         <mo data-latex="/">/</mo>
          <mi data-latex="a">a</mi>
          <mspace linebreak="newline" data-latex="\\\\"></mspace>
        </math>`
@@ -6542,7 +6534,7 @@ describe('Delimiters', () => {
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\arrowvert a \\right\\Arrowvert" data-latex="\\left\\arrowvert a \\right\\Arrowvert">
            <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left\\arrowvert " data-latex="\\left\\arrowvert ">&#x23D0;</mo>
            <mi data-latex="a">a</mi>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\Arrowvert" data-latex="\\right\\Arrowvert">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\Arrowvert" data-latex="\\right\\Arrowvert">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -6570,7 +6562,7 @@ describe('Delimiters', () => {
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\bracevert a \\right\\Vert" data-latex="\\left\\bracevert a \\right\\Vert">
            <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left\\bracevert " data-latex="\\left\\bracevert ">&#x23AA;</mo>
            <mi data-latex="a">a</mi>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\Vert" data-latex="\\right\\Vert">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\Vert" data-latex="\\right\\Vert">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -6610,9 +6602,7 @@ describe('Delimiters', () => {
     toXmlMatch(
       tex2mml('/ a \\backslash'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="/ a \\backslash" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="/">/</mo>
-         </mrow>
+         <mo data-latex="/">/</mo>
          <mi data-latex="a">a</mi>
          <mi mathvariant="normal" data-latex="\\backslash">\\</mi>
        </math>`
@@ -7938,9 +7928,7 @@ describe('Mathchar0mo', () => {
     toXmlMatch(
       tex2mml('\\surd'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\surd" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo stretchy="false" data-latex="\\surd">&#x221A;</mo>
-         </mrow>
+         <mo stretchy="false" data-latex="\\surd">&#x221A;</mo>
        </math>`
     );
   });
@@ -8776,9 +8764,7 @@ describe('Mathchar0mo', () => {
     toXmlMatch(
       tex2mml('\\perp'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\perp" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="\\perp">&#x27C2;</mo>
-         </mrow>
+         <mo data-latex="\\perp">&#x27C2;</mo>
        </math>`
     );
   });
@@ -8800,7 +8786,7 @@ describe('Mathchar0mo', () => {
     toXmlMatch(
       tex2mml('\\smile'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smile" display="block">
-         <mo data-latex="\\smile">&#x2323;</mo>
+         <mo stretchy="false" data-latex="\\smile">&#x2323;</mo>
        </math>`
     );
   });
@@ -8811,7 +8797,7 @@ describe('Mathchar0mo', () => {
     toXmlMatch(
       tex2mml('\\frown'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\frown" display="block">
-         <mo data-latex="\\frown">&#x2322;</mo>
+         <mo stretchy="false" data-latex="\\frown">&#x2322;</mo>
        </math>`
     );
   });
@@ -9009,7 +8995,7 @@ describe('Mathchar0mo', () => {
     toXmlMatch(
       tex2mml('\\nearrow'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\nearrow" display="block">
-         <mo stretchy="false" data-latex="\\nearrow">&#x2197;</mo>
+         <mo data-latex="\\nearrow">&#x2197;</mo>
        </math>`
     );
   });
@@ -9020,7 +9006,7 @@ describe('Mathchar0mo', () => {
     toXmlMatch(
       tex2mml('\\searrow'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\searrow" display="block">
-         <mo stretchy="false" data-latex="\\searrow">&#x2198;</mo>
+         <mo data-latex="\\searrow">&#x2198;</mo>
        </math>`
     );
   });
@@ -9031,7 +9017,7 @@ describe('Mathchar0mo', () => {
     toXmlMatch(
       tex2mml('\\nwarrow'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\nwarrow" display="block">
-         <mo stretchy="false" data-latex="\\nwarrow">&#x2196;</mo>
+         <mo data-latex="\\nwarrow">&#x2196;</mo>
        </math>`
     );
   });
@@ -9042,7 +9028,7 @@ describe('Mathchar0mo', () => {
     toXmlMatch(
       tex2mml('\\swarrow'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\swarrow" display="block">
-         <mo stretchy="false" data-latex="\\swarrow">&#x2199;</mo>
+         <mo data-latex="\\swarrow">&#x2199;</mo>
        </math>`
     );
   });
@@ -9254,9 +9240,7 @@ describe('Dots', () => {
     toXmlMatch(
       tex2mml('\\vdots'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vdots" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="\\vdots">&#x22EE;</mo>
-         </mrow>
+         <mo data-latex="\\vdots">&#x22EE;</mo>
        </math>`
     );
   });
@@ -10552,7 +10536,7 @@ describe('Big Commands for Delimiters', () => {
       tex2mml('\\big|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\big|" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\big|">
-           <mo minsize="1.2em" maxsize="1.2em">|</mo>
+           <mo minsize="1.2em" maxsize="1.2em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -10565,7 +10549,7 @@ describe('Big Commands for Delimiters', () => {
       tex2mml('\\Big|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Big|" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\Big|">
-           <mo minsize="1.623em" maxsize="1.623em">|</mo>
+           <mo minsize="1.623em" maxsize="1.623em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -10578,7 +10562,7 @@ describe('Big Commands for Delimiters', () => {
       tex2mml('\\bigg|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bigg|" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\bigg|">
-           <mo minsize="2.047em" maxsize="2.047em">|</mo>
+           <mo minsize="2.047em" maxsize="2.047em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -10591,7 +10575,7 @@ describe('Big Commands for Delimiters', () => {
       tex2mml('\\Bigg|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Bigg|" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\Bigg|">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -10604,7 +10588,7 @@ describe('Big Commands for Delimiters', () => {
       tex2mml('\\Biggl|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Biggl|" display="block">
          <mrow data-mjx-texclass="OPEN" data-latex="\\Biggl|">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -10617,7 +10601,7 @@ describe('Big Commands for Delimiters', () => {
       tex2mml('\\Biggr|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Biggr|" display="block">
          <mrow data-mjx-texclass="CLOSE" data-latex="\\Biggr|">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -10630,7 +10614,7 @@ describe('Big Commands for Delimiters', () => {
       tex2mml('\\bigm|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bigm|" display="block">
          <mrow data-mjx-texclass="REL" data-latex="\\bigm|">
-           <mo minsize="1.2em" maxsize="1.2em">|</mo>
+           <mo minsize="1.2em" maxsize="1.2em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -10643,7 +10627,7 @@ describe('Big Commands for Delimiters', () => {
       tex2mml('\\Bigm|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Bigm|" display="block">
          <mrow data-mjx-texclass="REL" data-latex="\\Bigm|">
-           <mo minsize="1.623em" maxsize="1.623em">|</mo>
+           <mo minsize="1.623em" maxsize="1.623em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -10656,7 +10640,7 @@ describe('Big Commands for Delimiters', () => {
       tex2mml('\\biggm|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\biggm|" display="block">
          <mrow data-mjx-texclass="REL" data-latex="\\biggm|">
-           <mo minsize="2.047em" maxsize="2.047em">|</mo>
+           <mo minsize="2.047em" maxsize="2.047em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -10669,7 +10653,7 @@ describe('Big Commands for Delimiters', () => {
       tex2mml('\\Biggm|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Biggm|" display="block">
          <mrow data-mjx-texclass="REL" data-latex="\\Biggm|">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -11170,9 +11154,7 @@ describe('Moving Elements', () => {
            <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\,/}">
              <mpadded width="0">
                <mspace width="0.167em" data-latex="\\,"></mspace>
-               <mrow data-mjx-texclass="ORD">
-                 <mo data-latex="/">/</mo>
-               </mrow>
+               <mo data-latex="/">/</mo>
              </mpadded>
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{=}">
@@ -11197,9 +11179,7 @@ describe('Moving Elements', () => {
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="\\llap{/\\,}">
              <mpadded width="0" lspace="-1width">
-               <mrow data-mjx-texclass="ORD">
-                 <mo data-latex="/">/</mo>
-               </mrow>
+               <mo data-latex="/">/</mo>
                <mspace width="0.167em" data-latex="\\,"></mspace>
              </mpadded>
            </mrow>
@@ -11692,9 +11672,7 @@ describe('Linebreaks', () => {
      toXmlMatch(
        tex2mml('\u2220\\goodbreak )\\goodbreak'),
        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="&#x2220;\\goodbreak )\\goodbreak" display="block">
-          <mrow data-mjx-texclass="ORD">
-            <mo data-latex="&#x2220;">&#x2220;</mo>
-          </mrow>
+          <mo data-latex="&#x2220;">&#x2220;</mo>
           <mo linebreak="goodbreak" data-latex=")" stretchy="false">)</mo>
           <mspace linebreak="goodbreak"></mspace>
         </math>`
@@ -12198,6 +12176,33 @@ describe('Character Class Changes', () => {
 
   /********************************************************************************/
 
+  it('Mathop Apply', () => {
+    toXmlMatch(
+      tex2mml('\\mathop{F} x'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{F} x" display="block">
+         <mrow data-mjx-texclass="OP" data-latex="\\mathop{F}">
+           <mi data-latex="F">F</mi>
+         </mrow>
+         <mo data-mjx-texclass="NONE">&#x2061;</mo>
+         <mi data-latex="x">x</mi>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
+  it('Mathop No Apply', () => {
+    toXmlMatch(
+      tex2mml('\\mathop{} x'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{} x" display="block">
+         <mrow data-mjx-texclass="OP" data-latex="\\mathop{}"></mrow>
+         <mi data-latex="x">x</mi>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
   it('Mathrel', () => {
     toXmlMatch(
       tex2mml('\\mathrel{R}'),
@@ -12320,7 +12325,7 @@ describe('Spacing', () => {
            <mi data-latex="a">a</mi>
            <mspace width="0.278em"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle|" data-latex="\\middle|">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle|" data-latex="\\middle|">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
            <mspace width="0.278em"></mspace>
            <mi data-latex="b">b</mi>
@@ -12343,7 +12348,7 @@ describe('Spacing', () => {
                <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
                <mi data-latex="a">a</mi>
                <mrow data-mjx-texclass="CLOSE"></mrow>
-               <mo data-latex-item="\\middle|" data-latex="\\middle|">|</mo>
+               <mo stretchy="true" data-latex-item="\\middle|" data-latex="\\middle|">|</mo>
                <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
                <mi data-latex="b">b</mi>
                <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
@@ -12482,7 +12487,9 @@ describe('Referencing', () => {
          <mtable displaystyle="true" data-latex="a\\label{A}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -12502,7 +12509,9 @@ describe('Referencing', () => {
          <mtable displaystyle="true" data-latex="a\\label{}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{}">a</mi>
@@ -12522,7 +12531,9 @@ describe('Referencing', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -12530,7 +12541,9 @@ describe('Referencing', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:B">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{B}">c</mi>
@@ -12564,7 +12577,9 @@ describe('Referencing', () => {
          <mtable displaystyle="true" data-latex="a\\label{A}\\ref{A}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -12587,7 +12602,9 @@ describe('Referencing', () => {
          <mtable displaystyle="true" data-latex="a\\label{A}\\ref{B}">
            <mlabeledtr>
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\label{A}">a</mi>
@@ -12610,7 +12627,9 @@ describe('Referencing', () => {
          <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -13910,7 +13929,7 @@ describe('User Defined Macros', () => {
            <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
            <mi data-latex="A">A</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle|" data-latex="\\middle|">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle|" data-latex="\\middle|">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
            <mi data-latex="B">B</mi>
            <mstyle mathcolor="red"></mstyle>
@@ -13931,7 +13950,7 @@ describe('User Defined Macros', () => {
            <mi data-latex="A">A</mi>
            <mstyle mathcolor="red"></mstyle>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo mathcolor="red" data-latex-item="\\middle|" data-latex="\\middle|">|</mo>
+           <mo stretchy="true" mathcolor="red" data-latex-item="\\middle|" data-latex="\\middle|">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
            <mi data-latex="B">B</mi>
            <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
@@ -14121,7 +14140,7 @@ describe('User Defined Environments', () => {
   it('Cases star', () => {
      toXmlMatch(
        tex2mml('\\begin{mmtool} a & test a\\\\ b & test b \\end{mmtool}'),
-       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{mmtool} a &amp; test a\\\\ b &amp; test b \\end{mmtool}\" display=\"block\">
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{mmtool} a &amp; test a\\\\ b &amp; test b \\end{mmtool}" display="block">
           <mrow data-mjx-texclass="INNER" data-latex-item="{mmtool}" data-latex="\\begin{mmtool} a &amp; test a\\\\ b &amp; test b \\end{mmtool}">
             <mo data-mjx-texclass="OPEN">{</mo>
             <mtable rowspacing=".2em" columnspacing="1em" columnalign="left">
@@ -14185,11 +14204,13 @@ describe('Tagged Environments', () => {
   it('EqnTest', () => {
      toXmlMatch(
        tex2mml('\\begin{eqntest} a & b \\end{eqntest}'),
-       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqntest} a &amp; b \\end{eqntest}\" display=\"block\">
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqntest} a &amp; b \\end{eqntest}" display="block">
           <mtable displaystyle="true" columnalign="right left" columnspacing="1em" rowspacing="3pt" data-break-align="bottom top" data-latex-item="{eqntest}" data-latex="\\begin{eqntest} a &amp; b \\end{eqntest}">
             <mlabeledtr>
               <mtd id="mjx-eqn:1">
-                <mtext data-latex="\\text{(1)}">(1)</mtext>
+                <mtext data-latex="\\text{(}">(</mtext>
+                <mtext data-latex="\\text{1}">1</mtext>
+                <mtext data-latex="\\text{)}">)</mtext>
               </mtd>
               <mtd>
                 <mi data-latex="a">a</mi>
@@ -14214,7 +14235,9 @@ describe('Tagged Environments', () => {
           <mtable displaystyle="true" data-latex-item="{equation}" data-latex="\\begin{equation} x \\end{equation}">
             <mlabeledtr>
               <mtd id="mjx-eqn:1">
-                <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
               </mtd>
               <mtd>
                 <mi data-latex="x">x</mi>

@@ -20,7 +20,9 @@ describe('Cases', () => {
          <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{f(x)=} 1 &amp; if $x &gt; 0$ \\\\ 0 &amp; otherwise \\end{numcases}">
            <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mpadded height="0" depth="0" voffset="height">
@@ -37,7 +39,9 @@ describe('Cases', () => {
                        <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
                          <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
                            <mtd>
-                             <mtext data-latex="\\text{(1)}">(1)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{1}">1</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mn data-latex="1">1</mn>
@@ -61,7 +65,9 @@ describe('Cases', () => {
                          </mlabeledtr>
                          <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
                            <mtd>
-                             <mtext data-latex="\\text{(2)}">(2)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{2}">2</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mn data-latex="0">0</mn>
@@ -84,7 +90,9 @@ describe('Cases', () => {
                      <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
                        <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
                          <mtd>
-                           <mtext data-latex="\\text{(1)}">(1)</mtext>
+                           <mtext data-latex="\\text{(}">(</mtext>
+                           <mtext data-latex="\\text{1}">1</mtext>
+                           <mtext data-latex="\\text{)}">)</mtext>
                          </mtd>
                          <mtd>
                            <mn data-latex="1">1</mn>
@@ -133,7 +141,9 @@ describe('Cases', () => {
            </mlabeledtr>
            <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
              <mtd id="mjx-eqn:2">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd></mtd>
              <mtd>
@@ -162,7 +172,9 @@ describe('Cases', () => {
          <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{subnumcases}{f(x)=} 1 &amp; if $x &gt; 0$ \\\\ 0 &amp; otherwise \\end{subnumcases}">
            <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
              <mtd id="mjx-eqn:1a">
-               <mtext data-latex="\\text{(1a)}">(1a)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1a}">1a</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mpadded height="0" depth="0" voffset="height">
@@ -179,7 +191,9 @@ describe('Cases', () => {
                        <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
                          <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
                            <mtd>
-                             <mtext data-latex="\\text{(1a)}">(1a)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{1a}">1a</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mn data-latex="1">1</mn>
@@ -203,7 +217,9 @@ describe('Cases', () => {
                          </mlabeledtr>
                          <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
                            <mtd>
-                             <mtext data-latex="\\text{(1b)}">(1b)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{1b}">1b</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mn data-latex="0">0</mn>
@@ -226,7 +242,9 @@ describe('Cases', () => {
                      <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
                        <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
                          <mtd>
-                           <mtext data-latex="\\text{(1a)}">(1a)</mtext>
+                           <mtext data-latex="\\text{(}">(</mtext>
+                           <mtext data-latex="\\text{1a}">1a</mtext>
+                           <mtext data-latex="\\text{)}">)</mtext>
                          </mtd>
                          <mtd>
                            <mn data-latex="1">1</mn>
@@ -275,7 +293,9 @@ describe('Cases', () => {
            </mlabeledtr>
            <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
              <mtd id="mjx-eqn:1b">
-               <mtext data-latex="\\text{(1b)}">(1b)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1b}">1b</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd></mtd>
              <mtd>
@@ -304,7 +324,9 @@ describe('Cases', () => {
          <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{A=} 1 &amp; if {x\\\\y}\\$ \\end{numcases}">
            <mlabeledtr data-latex-item="{A=}" data-latex="{A=}">
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mpadded height="0" depth="0" voffset="height">
@@ -318,7 +340,9 @@ describe('Cases', () => {
                        <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
                          <mlabeledtr data-latex-item="{A=}" data-latex="{A=}">
                            <mtd>
-                             <mtext data-latex="\\text{(1)}">(1)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{1}">1</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mn data-latex="1">1</mn>
@@ -341,7 +365,9 @@ describe('Cases', () => {
                      <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
                        <mlabeledtr data-latex-item="{A=}" data-latex="{A=}">
                          <mtd>
-                           <mtext data-latex="\\text{(1)}">(1)</mtext>
+                           <mtext data-latex="\\text{(}">(</mtext>
+                           <mtext data-latex="\\text{1}">1</mtext>
+                           <mtext data-latex="\\text{)}">)</mtext>
                          </mtd>
                          <mtd>
                            <mn data-latex="1">1</mn>
@@ -420,7 +446,9 @@ describe('Cases', () => {
          <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{A=} x\\tag{A} &amp; y \\end{numcases}">
            <mlabeledtr data-latex-item="{A=}" data-latex="{A=}">
              <mtd id="mjx-eqn:A">
-               <mtext data-latex="\\text{(A)}">(A)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{A}">A</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mpadded height="0" depth="0" voffset="height">
@@ -434,7 +462,9 @@ describe('Cases', () => {
                        <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
                          <mlabeledtr data-latex-item="{A=}" data-latex="{A=}">
                            <mtd>
-                             <mtext data-latex="\\text{(A)}">(A)</mtext>
+                             <mtext data-latex="\\text{(}">(</mtext>
+                             <mtext data-latex="\\text{A}">A</mtext>
+                             <mtext data-latex="\\text{)}">)</mtext>
                            </mtd>
                            <mtd>
                              <mi data-latex="\\tag{A}">x</mi>
@@ -457,7 +487,9 @@ describe('Cases', () => {
                      <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
                        <mlabeledtr data-latex-item="{A=}" data-latex="{A=}">
                          <mtd>
-                           <mtext data-latex="\\text{(A)}">(A)</mtext>
+                           <mtext data-latex="\\text{(}">(</mtext>
+                           <mtext data-latex="\\text{A}">A</mtext>
+                           <mtext data-latex="\\text{)}">)</mtext>
                          </mtd>
                          <mtd>
                            <mi data-latex="\\tag{A}">x</mi>

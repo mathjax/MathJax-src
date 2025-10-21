@@ -787,6 +787,13 @@ export class FnItem extends BaseItem {
           return [[top, item], true];
         }
       }
+      // @test Mathop Apply, Mathop No Apply
+      if (
+        top.isKind('TeXAtom') &&
+        top.childNodes[0]?.childNodes?.length === 0
+      ) {
+        return [[top, item], true];
+      }
       // @test Named Function, Named Function Arg
       const node = this.create(
         'token',

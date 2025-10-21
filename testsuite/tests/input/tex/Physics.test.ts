@@ -652,14 +652,14 @@ describe('Physics1_3', () => {
       tex2mml('\\absolutevalue\\Bigg{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\absolutevalue\\Bigg{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="OPEN" data-latex="\\Biggl|">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
          <mfrac data-latex="\\frac{a}{b}">
            <mi data-latex="a">a</mi>
            <mi data-latex="b">b</mi>
          </mfrac>
          <mrow data-mjx-texclass="CLOSE" data-latex="\\absolutevalue\\Bigg{\\frac{a}{b}}">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -686,14 +686,14 @@ describe('Physics1_3', () => {
       tex2mml('\\abs\\Bigg{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\abs\\Bigg{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="OPEN" data-latex="\\Biggl|">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
          <mfrac data-latex="\\frac{a}{b}">
            <mi data-latex="a">a</mi>
            <mi data-latex="b">b</mi>
          </mfrac>
          <mrow data-mjx-texclass="CLOSE" data-latex="\\abs\\Bigg{\\frac{a}{b}}">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -722,14 +722,14 @@ describe('Physics1_3', () => {
       tex2mml('\\norm\\Bigg{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\norm\\Bigg{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="OPEN" data-latex="\\Biggl\\|">
-           <mo minsize="2.470em" maxsize="2.470em" symmetric="true">&#x2016;</mo>
+           <mo minsize="2.470em" maxsize="2.470em">&#x2016;</mo>
          </mrow>
          <mfrac data-latex="\\frac{a}{b}">
            <mi data-latex="a">a</mi>
            <mi data-latex="b">b</mi>
          </mfrac>
          <mrow data-mjx-texclass="CLOSE" data-latex="\\norm\\Bigg{\\frac{a}{b}}">
-           <mo minsize="2.470em" maxsize="2.470em" symmetric="true">&#x2016;</mo>
+           <mo minsize="2.470em" maxsize="2.470em">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -758,8 +758,8 @@ describe('Physics1_3', () => {
       tex2mml('\\norm{}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\norm{}" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\|  \\right\\|" data-latex="\\norm{}">
-           <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\|" data-latex="\\left\\|">&#x2016;</mo>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\|" data-latex="\\right\\|">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\|" data-latex="\\left\\|">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\|" data-latex="\\right\\|">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -2400,9 +2400,7 @@ describe('Physics2_4', () => {
       tex2mml('\\gradient '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\gradient " display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\gradient ">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
        </math>`
     );
@@ -2415,9 +2413,7 @@ describe('Physics2_4', () => {
       tex2mml('\\gradient(\\frac{a}{b})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\gradient(\\frac{a}{b})" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex=")">
@@ -2439,9 +2435,7 @@ describe('Physics2_4', () => {
       tex2mml('\\gradient[\\frac{a}{b}]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\gradient[\\frac{a}{b}]" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex="]">
@@ -2463,9 +2457,7 @@ describe('Physics2_4', () => {
       tex2mml('\\gradient{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\gradient{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2483,9 +2475,7 @@ describe('Physics2_4', () => {
       tex2mml('\\grad '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\grad " display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\grad ">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
        </math>`
     );
@@ -2498,9 +2488,7 @@ describe('Physics2_4', () => {
       tex2mml('\\grad(\\frac{a}{b})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\grad(\\frac{a}{b})" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex=")">
@@ -2522,9 +2510,7 @@ describe('Physics2_4', () => {
       tex2mml('\\grad[\\frac{a}{b}]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\grad[\\frac{a}{b}]" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex="]">
@@ -2546,9 +2532,7 @@ describe('Physics2_4', () => {
       tex2mml('\\grad{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\grad{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2590,9 +2574,7 @@ describe('Physics2_5', () => {
       tex2mml('\\divergence{\\frac{a}{b}c}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\divergence{\\frac{a}{b}c}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo mathvariant="bold" data-latex="\\vdot">&#x22C5;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2611,9 +2593,7 @@ describe('Physics2_5', () => {
       tex2mml('\\div{\\frac{a}{b}c}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\div{\\frac{a}{b}c}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo mathvariant="bold" data-latex="\\vdot">&#x22C5;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2632,9 +2612,7 @@ describe('Physics2_5', () => {
       tex2mml('\\div{(\\frac{a}{b}c)}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\div{(\\frac{a}{b}c)}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo mathvariant="bold" data-latex="\\vdot">&#x22C5;</mo>
          <mo data-latex="(" stretchy="false">(</mo>
@@ -2655,9 +2633,7 @@ describe('Physics2_5', () => {
       tex2mml('\\div(\\frac{a}{b}c)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\div(\\frac{a}{b}c)" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo mathvariant="bold" data-latex="\\vdot">&#x22C5;</mo>
          <mrow data-latex=")">
@@ -2712,9 +2688,7 @@ describe('Physics2_6', () => {
       tex2mml('\\curl '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\curl " display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-latex="\\crossproduct">&#xD7;</mo>
        </math>`
@@ -2728,9 +2702,7 @@ describe('Physics2_6', () => {
       tex2mml('\\curl(\\frac{a}{b})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\curl(\\frac{a}{b})" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-latex="\\crossproduct">&#xD7;</mo>
          <mrow data-latex=")">
@@ -2752,9 +2724,7 @@ describe('Physics2_6', () => {
       tex2mml('\\curl[\\frac{a}{b}]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\curl[\\frac{a}{b}]" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-latex="\\crossproduct">&#xD7;</mo>
          <mrow data-latex="]">
@@ -2776,9 +2746,7 @@ describe('Physics2_6', () => {
       tex2mml('\\curl{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\curl{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-latex="\\crossproduct">&#xD7;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -3908,7 +3876,7 @@ describe('Physics3_4', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin|\\frac{x}{y}|" display="block">
          <mi data-latex="\\sin">sin</mi>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mfrac data-latex="\\frac{x}{y}">
            <mi data-latex="x">x</mi>
            <mi data-latex="y">y</mi>
@@ -4368,7 +4336,7 @@ describe('Physics3_5', () => {
            <mi data-mjx-auto-op="false" data-latex="Res">Res</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mfrac data-latex="\\frac{x}{y}">
            <mi data-latex="x">x</mi>
            <mi data-latex="y">y</mi>
@@ -4563,7 +4531,7 @@ describe('Physics3_6', () => {
            <mi data-mjx-variant="-tex-calligraphic" mathvariant="script" data-latex="P">P</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mo data-latex="\\int">&#x222B;</mo>
          <mi data-latex="f">f</mi>
          <mo data-latex="(" stretchy="false">(</mo>
@@ -4777,7 +4745,7 @@ describe('Physics3_7', () => {
            <mi data-mjx-auto-op="false" data-latex="Re">Re</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mfrac data-latex="\\frac{x}{y}">
            <mi data-latex="x">x</mi>
            <mi data-latex="y">y</mi>
@@ -4940,7 +4908,7 @@ describe('Physics3_7', () => {
            <mi data-mjx-auto-op="false" data-latex="Im">Im</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mfrac data-latex="\\frac{x}{y}">
            <mi data-latex="x">x</mi>
            <mi data-latex="y">y</mi>
@@ -7422,7 +7390,7 @@ describe('Physics6_0', () => {
              <mi data-latex="\\phi">&#x3D5;</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\psi}">
              <mi data-latex="\\psi">&#x3C8;</mi>
@@ -7445,7 +7413,7 @@ describe('Physics6_0', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
@@ -7503,7 +7471,7 @@ describe('Physics6_0', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
            <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
@@ -7526,7 +7494,7 @@ describe('Physics6_0', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
@@ -7551,7 +7519,7 @@ describe('Physics6_0', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
@@ -7575,7 +7543,7 @@ describe('Physics6_0', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
@@ -7598,7 +7566,7 @@ describe('Physics6_0', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
            <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
@@ -7619,7 +7587,7 @@ describe('Physics6_0', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
            <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
@@ -7640,7 +7608,7 @@ describe('Physics6_0', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
            <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
@@ -7665,7 +7633,7 @@ describe('Physics6_0', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
            <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
@@ -7816,7 +7784,7 @@ describe('Physics6_1', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
@@ -7842,7 +7810,7 @@ describe('Physics6_1', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
@@ -7866,7 +7834,7 @@ describe('Physics6_1', () => {
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
@@ -7888,7 +7856,7 @@ describe('Physics6_1', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
@@ -7912,7 +7880,7 @@ describe('Physics6_1', () => {
              <mi data-latex="a">a</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{a}">
              <mi data-latex="a">a</mi>
@@ -7933,7 +7901,7 @@ describe('Physics6_1', () => {
          <mrow data-mjx-texclass="ORD" data-latex="{a}">
            <mi data-latex="a">a</mi>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{a}">
            <mi data-latex="a">a</mi>
          </mrow>
@@ -7954,7 +7922,7 @@ describe('Physics6_1', () => {
              <mi data-latex="\\alpha">&#x3B1;</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\alpha}">
              <mi data-latex="\\alpha">&#x3B1;</mi>
@@ -7980,7 +7948,7 @@ describe('Physics6_1', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
@@ -8004,7 +7972,7 @@ describe('Physics6_1', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
@@ -8028,7 +7996,7 @@ describe('Physics6_1', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
@@ -8056,7 +8024,7 @@ describe('Physics6_1', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
@@ -8084,7 +8052,7 @@ describe('Physics6_1', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
            <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
@@ -8106,7 +8074,7 @@ describe('Physics6_1', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
          <mo fence="false" stretchy="false" data-latex="\\braket*{\\frac{a}{b}}{}">&#x27E9;</mo>
        </math>`
@@ -8415,7 +8383,7 @@ describe('Physics6_2', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\ketbra*{\\frac{a}{b}}">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\ketbra*{\\frac{a}{b}}">|</mo>
          <mi data-latex="A">A</mi>
        </math>`
     );
@@ -8732,11 +8700,11 @@ describe('Physics6_3', () => {
              <mi data-latex="B">B</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
            <mfrac data-latex="\\frac{A}{B}">
              <mi data-latex="A">A</mi>
@@ -8763,13 +8731,13 @@ describe('Physics6_3', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
@@ -8868,11 +8836,11 @@ describe('Physics6_3', () => {
              <mi data-latex="B">B</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
            <mfrac data-latex="\\frac{A}{B}">
              <mi data-latex="A">A</mi>
@@ -8899,13 +8867,13 @@ describe('Physics6_3', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
@@ -9002,14 +8970,14 @@ describe('Physics6_3', () => {
              <mi mathvariant="normal" data-latex="\\Phi">&#x3A6;</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
            <mfrac data-latex="\\frac{A}{B}">
              <mi data-latex="A">A</mi>
              <mi data-latex="B">B</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{\\Psi}{\\Phi}}">
            <mfrac data-latex="\\frac{\\Psi}{\\Phi}">
              <mi mathvariant="normal" data-latex="\\Psi">&#x3A8;</mi>
@@ -9036,7 +9004,7 @@ describe('Physics6_3', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
@@ -9045,7 +9013,7 @@ describe('Physics6_3', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{\\Psi}{\\Phi}}">
              <mfrac data-latex="\\frac{\\Psi}{\\Phi}">
@@ -9195,14 +9163,14 @@ describe('Physics6_4', () => {
          <mrow data-mjx-texclass="ORD" data-latex="{n}">
            <mi data-latex="n">n</mi>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{m}">
            <mi data-latex="m">m</mi>
          </mrow>
@@ -9224,14 +9192,14 @@ describe('Physics6_4', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
@@ -9255,7 +9223,7 @@ describe('Physics6_4', () => {
              <mi data-latex="n">n</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
@@ -9264,7 +9232,7 @@ describe('Physics6_4', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{m}">
              <mi data-latex="m">m</mi>
@@ -9290,7 +9258,7 @@ describe('Physics6_4', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
@@ -9299,7 +9267,7 @@ describe('Physics6_4', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
@@ -14217,11 +14185,11 @@ describe('Automatic Bracing Macros Rest', () => {
       tex2mml('\\vqty\\Bigg{a}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vqty\\Bigg{a}" display="block">
          <mrow data-mjx-texclass="OPEN" data-latex="\\Biggl|">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
          <mi data-latex="a">a</mi>
          <mrow data-mjx-texclass="CLOSE" data-latex="\\vqty\\Bigg{a}">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -15385,7 +15353,7 @@ describe('Bra-Ket Macros Rest', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
@@ -15408,7 +15376,7 @@ describe('Bra-Ket Macros Rest', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
@@ -15431,7 +15399,7 @@ describe('Bra-Ket Macros Rest', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
@@ -15457,7 +15425,7 @@ describe('Bra-Ket Macros Rest', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
@@ -15480,7 +15448,7 @@ describe('Bra-Ket Macros Rest', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
@@ -15503,7 +15471,7 @@ describe('Bra-Ket Macros Rest', () => {
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
@@ -16165,9 +16133,7 @@ describe('Options', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vnabla" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
            <mover>
-             <mrow data-mjx-texclass="ORD">
-               <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-             </mrow>
+             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
              <mo stretchy="false">&#x2192;</mo>
            </mover>
          </mrow>

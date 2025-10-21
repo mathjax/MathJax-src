@@ -164,6 +164,8 @@ export const ChtmlMtr = (function <N, T, D>(): ChtmlMtrClass<N, T, D> {
       if (align !== 'baseline') {
         this.adaptor.setAttribute(this.dom[0], 'rowalign', align);
       }
+      const { h, d } = this.getBBox();
+      this.adaptor.setStyle(this.dom[0], 'height', this.em(h + d));
     }
   };
 })<any, any, any>();

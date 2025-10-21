@@ -1563,7 +1563,9 @@ describe('Ams Environments', () => {
            <mlabeledtr data-latex-item="{2}" data-latex="{2}">
              <mtd id="mjx-eqn:1">
                <mpadded width="0" lspace="-1width">
-                 <mtext data-latex="\\text{(1)}">(1)</mtext>
+                 <mtext data-latex="\\text{(}">(</mtext>
+                 <mtext data-latex="\\text{1}">1</mtext>
+                 <mtext data-latex="\\text{)}">)</mtext>
                </mpadded>
              </mtd>
              <mtd></mtd>
@@ -1740,7 +1742,7 @@ describe('Ams Environments', () => {
       tex2mml('\\begin{Vmatrix} a & b \\\\ c & d \\end{Vmatrix}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vmatrix} a &amp; b \\\\ c &amp; d \\end{Vmatrix}" display="block">
          <mrow data-mjx-texclass="INNER" data-latex-item="{Vmatrix}" data-latex="\\begin{Vmatrix} a &amp; b \\\\ c &amp; d \\end{Vmatrix}">
-           <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN">&#x2016;</mo>
            <mtable columnspacing="1em" rowspacing="4pt">
              <mtr>
                <mtd>
@@ -1759,7 +1761,7 @@ describe('Ams Environments', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -1866,7 +1868,9 @@ describe('Ams Tagged Environments', () => {
          <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex-item="{align}" data-latex="\\begin{align} a&amp;=b \\\\ c&amp;=d \\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -1881,7 +1885,9 @@ describe('Ams Tagged Environments', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:2">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="c">c</mi>
@@ -1954,7 +1960,9 @@ describe('Ams Tagged Environments', () => {
            </mtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd columnalign="right">
                <mi data-latex="c">c</mi>
@@ -2063,7 +2071,9 @@ describe('Ams Tagged Environments', () => {
          <mtable displaystyle="true" columnspacing="1em" rowspacing="3pt" data-break-align="middle" data-latex-item="{gather}" data-latex="\\begin{gather} a=b \\\\ c=d \\end{gather}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -2073,7 +2083,9 @@ describe('Ams Tagged Environments', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:2">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="c">c</mi>
@@ -2121,7 +2133,9 @@ describe('Ams Tagged Environments', () => {
          <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex-item="{alignat}" data-latex="\\begin{alignat}{2} a&amp;=b \\\\ c&amp;=d \\end{alignat}">
            <mlabeledtr data-latex-item="{2}" data-latex="{2}">
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -2136,7 +2150,9 @@ describe('Ams Tagged Environments', () => {
            </mlabeledtr>
            <mlabeledtr data-latex-item="{2}" data-latex="{2}">
              <mtd id="mjx-eqn:2">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="c">c</mi>
@@ -2376,7 +2392,9 @@ describe('Ams Tagged Environments', () => {
          <mtable displaystyle="true" data-latex-item="{equation}" data-latex="\\begin{equation} a \\end{equation}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -2407,7 +2425,9 @@ describe('Ams Tagged Environments', () => {
          <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{eqnarray}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -2424,7 +2444,9 @@ describe('Ams Tagged Environments', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:2">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="c">c</mi>
@@ -2493,7 +2515,9 @@ describe('Ams Tagged Environments', () => {
          <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex-item="{align}" data-latex="\\begin{align} a&amp;=b \\\\ &amp;=c \\notag \\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -2531,7 +2555,9 @@ describe('Ams Tagged Environments', () => {
            <mlabeledtr data-latex-item="{1}" data-latex="{1}">
              <mtd id="mjx-eqn:1">
                <mpadded width="0" lspace="-1width">
-                 <mtext data-latex="\\text{(1)}">(1)</mtext>
+                 <mtext data-latex="\\text{(}">(</mtext>
+                 <mtext data-latex="\\text{1}">1</mtext>
+                 <mtext data-latex="\\text{)}">)</mtext>
                </mpadded>
              </mtd>
              <mtd></mtd>
@@ -2583,7 +2609,9 @@ describe('Ams Tagged Environments', () => {
          <mtable width="100%" displaystyle="true" columnalign="right left center right" columnspacing="0em" columnwidth="auto auto fit auto" rowspacing="3pt" data-break-align="bottom top middle bottom" data-width-includes-label="true" data-latex-item="{flalign}" data-latex="\\begin{flalign} a&amp;b &amp; \\end{flalign}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="a">a</mi>
@@ -2692,7 +2720,9 @@ describe('Ams Tagged Environments Left', () => {
            <mlabeledtr data-latex-item="{2}" data-latex="{2}">
              <mtd id="mjx-eqn:1">
                <mpadded width="0">
-                 <mtext data-latex="\\text{(1)}">(1)</mtext>
+                 <mtext data-latex="\\text{(}">(</mtext>
+                 <mtext data-latex="\\text{1}">1</mtext>
+                 <mtext data-latex="\\text{)}">)</mtext>
                </mpadded>
              </mtd>
              <mtd></mtd>
@@ -2725,7 +2755,9 @@ describe('Ams Tagged Environments Left', () => {
          <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" side="left" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline} a\\tag{1} \\end{multline}">
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd columnalign="left">
                <mi data-latex="\\tag{1}">a</mi>
@@ -2752,13 +2784,17 @@ describe('Ams Tagged Environments Left', () => {
          <mtable displaystyle="true" columnspacing="1em" rowspacing="3pt" data-break-align="middle" side="left" data-latex-item="{gather}" data-latex="\\begin{gather}\\begin{align} a &amp;= b \\end{align}\\end{gather}">
            <mlabeledtr>
              <mtd id="mjx-eqn:2">
-               <mtext data-latex="\\text{(2)}">(2)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{2}">2</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" side="left" data-latex-item="{align}" data-latex="{align}">
                  <mlabeledtr>
                    <mtd id="mjx-eqn:1">
-                     <mtext data-latex="\\text{(1)}">(1)</mtext>
+                     <mtext data-latex="\\text{(}">(</mtext>
+                     <mtext data-latex="\\text{1}">1</mtext>
+                     <mtext data-latex="\\text{)}">)</mtext>
                    </mtd>
                    <mtd>
                      <mi data-latex="a">a</mi>
@@ -2950,7 +2986,7 @@ describe('Multirel', () => {
            <mo data-latex="&gt;">&gt;</mo>
          </mrow>
          <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\thickapprox\\thicksim" rspace="0pt">&#x2248;&#x223C;</mo>
-         <mo data-mjx-texclass="REL" data-latex="\\frown\\smile=\\updownarrow" lspace="0pt" stretchy="false">&#x2322;&#x2323;=&#x2195;</mo>
+         <mo data-mjx-texclass="REL" stretchy="false" data-latex="\\frown\\smile=\\updownarrow" lspace="0pt">&#x2322;&#x2323;=&#x2195;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4020,9 +4056,9 @@ describe('Ams symbols', () => {
            <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rvert " data-latex="\\right\\rvert ">|</mo>
          </mrow>
          <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lVert X \\right\\rVert" data-latex="\\left\\lVert X \\right\\rVert">
-           <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\lVert " data-latex="\\left\\lVert ">&#x2016;</mo>
+           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lVert " data-latex="\\left\\lVert ">&#x2016;</mo>
            <mi data-latex="X">X</mi>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\rVert" data-latex="\\right\\rVert">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rVert" data-latex="\\right\\rVert">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -4378,7 +4414,7 @@ describe('Ams symbols', () => {
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Vvdash\\smallsmile\\shortmid\\smallfrown\\shortparallel\\bumpeq\\between\\Bumpeq\\pitchfork\\varpropto\\backepsilon" display="block">
          <mo data-latex="\\Vvdash" rspace="0pt">&#x22AA;</mo>
-         <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\smallsmile\\shortmid\\smallfrown\\shortparallel" lspace="0pt" rspace="0pt">&#x2323;&#x2223;&#x2322;&#x2225;</mo>
+         <mo data-mjx-alternate="1" data-mjx-texclass="REL" stretchy="false" data-latex="\\smallsmile\\shortmid\\smallfrown\\shortparallel" lspace="0pt" rspace="0pt">&#x2323;&#x2223;&#x2322;&#x2225;</mo>
          <mo data-mjx-texclass="REL" data-latex="\\bumpeq\\between\\Bumpeq\\pitchfork" lspace="0pt" rspace="0pt">&#x224F;&#x226C;&#x224E;&#x22D4;</mo>
          <mo data-mjx-alternate="1" data-latex="\\varpropto" lspace="0pt" rspace="0pt">&#x221D;</mo>
          <mo data-latex="\\backepsilon" lspace="0pt">&#x220D;</mo>
@@ -4540,7 +4576,7 @@ describe('Ams symbols', () => {
     toXmlMatch(
       tex2mml('\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow" display="block">
-         <mo data-mjx-texclass="REL" data-latex="\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow">&#x219B;&#x21CD;&#x21CF;&#x21AE;&#x21CE;</mo>
+         <mo data-mjx-texclass="REL" stretchy="false" data-latex="\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow">&#x219B;&#x21CD;&#x21CF;&#x21AE;&#x21CE;</mo>
        </math>`
     );
   });
