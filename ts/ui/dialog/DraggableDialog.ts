@@ -420,7 +420,7 @@ export class DraggableDialog {
     right-hand edge of the dialog, while up and down move the bottom edge
     of the dialog.  Hold the <kbd>Win</kbd> or <kbd>Command</kbd> key and
     press any of the arrow keys to move the dialog box in the given direction.
-    Holding a <kbd>shift</kbd> key as well will make the larger changes
+    Holding a <kbd>shift</kbd> key as well will make larger changes
     in the size or position.</p>
 
     <p>Use <kbd>Tab</kbd> to move among the text and buttons and links
