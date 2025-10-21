@@ -919,7 +919,7 @@ export class DraggableDialog {
   }
 
   /**
-   * Select the contents of the dialog for copying
+   * Select the content of the dialog for copying
    */
   protected selectAll() {
     const selection = document.getSelection();
