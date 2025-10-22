@@ -186,6 +186,17 @@ Set-ExecutionPolicy Unrestricted
 to allow the scripts to run, if you receive errors about not being
 able to run the scripts.
 
+The build process requires MathJax to set up a symbolic link, and in
+Windows, that requires permission, so you may receive an error message
+to that effect.  If so, you may need to run
+
+``` bash
+pnpm link:src
+```
+
+from a shell with administrator privileges.  Once that is done, you
+can run the build process from a non-administrator shell.
+
 
 ## Code Contributions
 
