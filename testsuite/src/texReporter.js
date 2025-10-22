@@ -2,10 +2,8 @@
  *  Custom reporter for tex macro coverage.
  */
 
-import {tmpJsonFile} from './constants.js';
+import { tmpJsonFile, ESC } from './constants.js';
 import * as fs from 'fs';
-
-const ESC = '\u001B';
 
 export default class TexReporter {
 
