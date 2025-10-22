@@ -24,10 +24,9 @@
 import { mathjax } from '../../mathjax.js';
 import { context } from '../context.js';
 
-let root = context.path(new URL(import.meta.url, 'file://').href).replace(
-  /\/util\/asyncLoad\/esm.js$/,
-  '/'
-);
+let root = context
+  .path(new URL(import.meta.url, 'file://').href)
+  .replace(/\/util\/asyncLoad\/esm.js$/, '/');
 
 if (!mathjax.asyncLoad) {
   mathjax.asyncLoad = async (name: string) => {
