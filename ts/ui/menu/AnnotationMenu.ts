@@ -42,7 +42,7 @@ type AnnotationTypes = { [type: string]: string[] };
 /**
  * Returns a method to create the dynamic submenu for showing annotations.
  *
- * @param {SelectableInfo} box The info box in which to post annotation info.
+ * @param {() => void} box The info box in which to post annotation info.
  * @param {AnnotationTypes} types The legitimate annotation types.
  * @param {[string, string][]} cache We cache annotations of a math item, so we
  *    only have to compute them once for the two annotation menus.
@@ -67,7 +67,7 @@ export function showAnnotations(
  * @returns {DynamicSubmenu} Method generating
  *    the copy annotations submenu.
  */
-export function copyAnnotations(cache: [string, string][]) {
+export function copyAnnotations(cache: [string, string][]): DynamicSubmenu {
   return (menu: MJContextMenu, sub: Submenu, callback: SubmenuCallback) => {
     const annotations = cache.slice();
     cache.length = 0;
