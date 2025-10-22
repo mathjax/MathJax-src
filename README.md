@@ -168,7 +168,24 @@ npm run --silent build-all
 ```
 
 in order to compile the JavaScript files from the TypeScript source,
-and build the component files from the JavaScript files.
+and build the component files from the JavaScript files.  Windows
+users will need to use the command
+
+``` bash
+npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
+```
+
+first in order to tell `pnpm` to use the `bash` shell for scripts that
+it runs, as that is required by the build scripts that MathJax defines
+in the `package.json` file.  You may also need to use
+
+``` bash
+Set-ExecutionPolicy Unrestricted
+```
+
+to allow the scripts to run, if you receive errors about not being
+able to run the scripts.
+
 
 ## Code Contributions
 
