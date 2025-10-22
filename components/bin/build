@@ -193,9 +193,9 @@ function processParts(parts) {
 function processLines(file, objects) {
   if (objects.length === 0) return [];
   const base = path.dirname(file).replace(/^\.$/, '');
-  const dir = (PREFIX ? path.join(PREFIX, base) : base);
+  const dir = (PREFIX ? noramlize(path.join(PREFIX, base)) : base);
   const dots = dir.replace(/[^\/]+/g, '..') || '.';
-  const relative = path.join(dots, '..', JS, dir, path.basename(file)).replace(/\.ts$/, '.js');
+  const relative = normalize(path.join(dots, '..', JS, dir, path.basename(file))).replace(/\.ts$/, '.js');
   const name = path.parse(file).name;
   const lines = (target === 'mjs' ? [] : [
     '"use strict";',
@@ -264,7 +264,7 @@ function getExtraDirectories() {
   let prefix = '';
   let indent = INDENT;
   let postfix = '';
-  for (let name of PREFIX.split(/\//)) {
+  for (let name of PREFIX.split('/')) {
     if (name.match(/[^a-zA-Z0-9]/)) {
       name = `"${name}"`;
     }
@@ -293,7 +293,7 @@ function processGlobal() {
   const packages = [];
   PACKAGE = PACKAGE.sort(sortDir);
   while (PACKAGE.length) {
-    const dir = path.dirname(PACKAGE[0]).split(path.sep)[0];
+    const dir = path.dirname(PACKAGE[0]).split('/')[0];
     packages.push(processPackage(lines, indent, dir));
   }
   const name = (ID.match(/[^a-zA-Z0-9_]/) ? `"${ID}"` : ID);
