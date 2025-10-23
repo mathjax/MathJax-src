@@ -1835,8 +1835,9 @@ function parse(tokens: string[]): SexpTree {
  *
  * @param {SexpTree} tree The sexpression tree.
  * @param {Map<string, Set<string>>} map The map to populate.
+ * @returns {Set<string>} The descendant map.
  */
-function buildMap(tree: SexpTree, map: Map<string, Set<string>>) {
+function buildMap(tree: SexpTree, map: Map<string, Set<string>>): Set<string> {
   if (typeof tree === 'string') {
     if (!map.has(tree)) map.set(tree, new Set());
     return new Set();
@@ -1860,6 +1861,7 @@ function buildMap(tree: SexpTree, map: Map<string, Set<string>>) {
  *
  * @param {Set<string>} a Initial set.
  * @param {Set<string>} b Set to remove from A.
+ * @returns {Set<string>} The difference A\B.
  */
 function setdifference(a: Set<string>, b: Set<string>): Set<string> {
   if (!a) {
