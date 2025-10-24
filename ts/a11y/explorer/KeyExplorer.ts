@@ -214,7 +214,9 @@ export class SpeechExplorer
       particular, the Explorer submenu allows you to specify how the
       mathematics should be identified in the page (e.g., by saying "math"
       when the expression is spoken), and whether or not to include a
-      message about the letter "h" bringing up this dialog box.</p>
+      message about the letter "h" bringing up this dialog box.  Turning off
+      speech and Braille will disable the expression explorer, its
+      highlighting, and its help icon.</p>
 
       <p>The contextual menu also provides options for viewing or copying a
       MathML version of the expression or its original source format,
