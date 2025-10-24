@@ -57,7 +57,10 @@ export const MhchemUtils = {
  * @param {string} arrow   The arrow name (without the backslash).
  * @returns {string}       The mhchem arrow name, if there is one.
  */
-export const MhchemReplacements = new Map<string | ((match: string, arrow: string) => string), RegExp>([
+export const MhchemReplacements = new Map<
+  string | ((match: string, arrow: string) => string),
+  RegExp
+>([
   [
     '\\mhchemx$3[$1]{$2}',
     /\\underset{\\lower2mu{(.*?)}}{\\overset{(.*?)}{\\long(.*?)}}/g,
@@ -78,7 +81,9 @@ export const MhchemReplacements = new Map<string | ((match: string, arrow: strin
   [
     (match: string, arrow: string) => {
       const mharrow = `mhchem${arrow}`;
-      return mhchemChars.lookup(mharrow) || mhchemMacros.lookup(mharrow) ? `\\${mharrow}` : match;
+      return mhchemChars.lookup(mharrow) || mhchemMacros.lookup(mharrow)
+        ? `\\${mharrow}`
+        : match;
     },
     /\\(x?(?:long)?(?:left|right|[Ll]eftright|[Rr]ightleft)(?:arrow|harpoons))/g,
   ],
