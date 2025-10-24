@@ -2,12 +2,8 @@ import {combineDefaults, combineWithMathJax} from '#js/components/global.js';
 import {Package} from '#js/components/package.js';
 import {hasWindow} from '#js/util/context.js';
 
-export const FONTPATH = hasWindow
-  ? 'https://cdn.jsdelivr.net/npm/@mathjax/%%FONT%%-font'
-  : '@mathjax/%%FONT%%-font';
-
 export function configFont(font, jax, config, extension = '') {
-  const path = (config.fontPath || (FONTPATH + extension));
+  const path = (config.fontPath || `[fonts]/%%FONT%%-font${extension}`);
   const name = (font.match(/^[a-z]+:/) ? (font.match(/[^/:\\]*$/) || [jax])[0] : font);
   combineDefaults(MathJax.config.loader, 'paths', {
     [name+extension]: (name === font ? path.replace(/%%FONT%%/g, font) : font)
