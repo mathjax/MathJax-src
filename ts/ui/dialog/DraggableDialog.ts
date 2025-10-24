@@ -149,6 +149,8 @@ export class DraggableDialog {
   protected static keyActions: Map<string, keyMapping> = new Map([
     ['Escape', (dialog, event) => dialog.escKey(event)],
     ['a', (dialog, event) => dialog.aKey(event)],
+    ['m', (dialog, event) => dialog.mKey(event)],
+    ['s', (dialog, event) => dialog.sKey(event)],
     ['ArrowRight', (dialog, event) => dialog.arrowKey(event, 'right')],
     ['ArrowLeft', (dialog, event) => dialog.arrowKey(event, 'left')],
     ['ArrowUp', (dialog, event) => dialog.arrowKey(event, 'up')],
@@ -414,20 +416,38 @@ export class DraggableDialog {
     changes the two sides that meet at that corner.  Dragging elsewhere on
     the dialog frame will move the dialog without changing its size.</p>
 
-    <p>For keyboard users, to change the dialog size, hold the
-    <kbd>alt</kbd> or <kbd>option</kbd> key and press any of the arrow
-    keys to enlarge or shrink the dialog box.  Left and right move the
-    right-hand edge of the dialog, while up and down move the bottom edge
-    of the dialog.  Hold the <kbd>Win</kbd> or <kbd>Command</kbd> key and
-    press any of the arrow keys to move the dialog box in the given direction.
-    Holding a <kbd>shift</kbd> key as well will make larger changes
-    in the size or position.</p>
+    <p>For keyboard users, there are two ways to adjust the position
+    and size of the dialog box.  The first is to hold the
+    <kbd>Alt</kbd> or <kbd>Option</kbd> key and press any of the arrow
+    keys to move the dialog box in the given direction.  Hold the
+    <kbd>Win</kbd> or <kbd>Command</kbd> key and press any of the
+    arrow keys to enlarge or shrink the dialog box.  Left and right
+    move the right-hand edge of the dialog, while up and down move the
+    bottom edge of the dialog.
+    </p>
 
-    <p>Use <kbd>Tab</kbd> to move among the text and buttons and links
+    <p>For some users, holding two keys down at once may be difficult,
+    so the second way is to press the <kbd>m</kbd> to start "move"
+    mode, then use the arrow keys to move the dialog box in the given
+    direction.  Press <kbd>m</kbd> again to stop moving the dialog.
+    Similarly, press <kbd>s</kbd> to start and stop "sizing" mode,
+    where the arrows will change the size of the dialog box.</p>
+
+    <p>Holding a <kbd>shift</kbd> key along with the arrow key will
+    make larger changes in the size or position, for either method
+    described above.</p>
+
+    <p>Use <kbd>Tab</kbd> to move among the text, buttons, and links
     within the dialog.  The <kbd>Enter</kbd> or <kbd>Space</kbd> key
     activates the focused item.  The <kbd>Escape</kbd> key closes the
-    dialog, as does clicking outside the dialog box.</p>
+    dialog, as does clicking outside the dialog box, or clicking the
+    "\u00D7" icon in the upper right-hand corner of the dialog.</p>
   `;
+
+  /**
+   * When moving/sizing by keyboard, this gives which is being adjusted.
+   */
+  protected mode: string = '';
 
   /**
    * @param {DialogArgs} args   The data describing the dialog
@@ -621,6 +641,10 @@ export class DraggableDialog {
       this.background.append(this.dialog);
       document.body.append(this.background);
     }
+    context.window.addEventListener(
+      'visibilitychange',
+      this.Visibility.bind(this)
+    );
     //
     // Adjust the min width and height, if the initial dialog is small
     //
@@ -850,6 +874,16 @@ export class DraggableDialog {
   }
 
   /**
+   * Close the dialog if the pages becomes hidden (e.g., moving
+   * foreward or backward in the window's history).
+   */
+  protected Visibility() {
+    if (context.document.hidden) {
+      this.closeDialog();
+    }
+  }
+
+  /**
    * Handle a keydown event
    *
    * @param {KeyboardEvent} event   The key event to handle
@@ -884,6 +918,26 @@ export class DraggableDialog {
   }
 
   /**
+   * Start or stop moving the dialog via arrow keys
+   *
+   * @param {KeyboardEvent} event   The key event to handle
+   */
+  protected mKey(event: KeyboardEvent) {
+    this.mode = this.mode === 'move' ? '' : 'move';
+    this.stop(event);
+  }
+
+  /**
+   * Start or stop sizing the dialog via arrow keys
+   *
+   * @param {KeyboardEvent} event   The key event to handle
+   */
+  protected sKey(event: KeyboardEvent) {
+    this.mode = this.mode === 'size' ? '' : 'size';
+    this.stop(event);
+  }
+
+  /**
    * Handle the arrow keys
    *
    * @param {KeyboardEvent} event   The key event to handle
@@ -893,11 +947,11 @@ export class DraggableDialog {
     if (event.ctrlKey || this.dragging) return;
     this.action = direction;
     this.getWH();
-    if (event.altKey) {
-      this.dragAction(event.shiftKey ? 'bigsize' : 'keysize');
-      this.stop(event);
-    } else if (event.metaKey) {
+    if (event.altKey || this.mode === 'move') {
       this.dragAction(event.shiftKey ? 'bigmove' : 'keymove');
+      this.stop(event);
+    } else if (event.metaKey || this.mode === 'size') {
+      this.dragAction(event.shiftKey ? 'bigsize' : 'keysize');
       this.stop(event);
     }
     this.action = '';
@@ -992,7 +1046,7 @@ export class DraggableDialog {
    *
    * @param {Event} event   The event that caused the closure
    */
-  protected closeDialog(event: Event) {
+  protected closeDialog(event?: Event) {
     if (isDialog) {
       this.dialog.close();
       this.dialog.remove();
@@ -1000,7 +1054,9 @@ export class DraggableDialog {
       this.background.remove();
     }
     this.node?.focus();
-    this.stop(event);
+    if (event) {
+      this.stop(event);
+    }
   }
 
   /**
