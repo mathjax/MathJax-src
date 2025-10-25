@@ -552,8 +552,9 @@ export class MmlMo extends AbstractMmlTokenNode {
       this.getProperty('mathaccent') !== undefined ||
       !parent ||
       !parent.isKind('munderover')
-    )
+    ) {
       return;
+    }
     const [base, under, over] = parent.childNodes;
     if (base.isEmbellished && base.coreMO() === this) return;
     const isUnder = !!(under && under.isEmbellished && under.coreMO() === this);
