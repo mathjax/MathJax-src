@@ -98,7 +98,8 @@ export class StyleJsonSheet {
 
   /**
    * @param {StyleJson} styles   The style list to convert
-   * @returns {string[]}  An array of rule strings for the style list
+   * @param {string} spaces      The spaces to put at the beginning of each line
+   * @returns {string[]}         An array of rule strings for the style list
    */
   public getStyleRules(
     styles: StyleJson = this.styles,
@@ -117,7 +118,8 @@ export class StyleJsonSheet {
 
   /**
    * @param {StyleJsonData | StyleJson} styles  The style data to be stringified
-   * @returns {string}                           The CSS string for the given data
+   * @param {string} spaces                     The spaces to put at the beginning of each line
+   * @returns {string}                          The CSS string for the given data
    */
   public getStyleDefString(
     styles: StyleJsonData | StyleJson,
