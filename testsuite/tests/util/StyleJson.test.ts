@@ -36,4 +36,20 @@ describe('StyleJsonSheet object', () => {
     expect(styles.cssText).toBe('');
   });
 
+  test('Compound style', () => {
+    expect(new StyleJsonSheet({
+      '@media (prefers-color-scheme: dark)': {
+        'mjx-container': {
+          'color': '#E0E0E0',
+        },
+      }
+    }).cssText).toBe([
+      '@media (prefers-color-scheme: dark) {',
+      '  mjx-container {',
+      '    color: #E0E0E0;',
+      '  }',
+      '}'
+    ].join('\n'));
+  });
+
 });

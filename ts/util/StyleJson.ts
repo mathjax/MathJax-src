@@ -100,13 +100,17 @@ export class StyleJsonSheet {
    * @param {StyleJson} styles   The style list to convert
    * @returns {string[]}  An array of rule strings for the style list
    */
-  public getStyleRules(styles: StyleJson = this.styles): string[] {
+  public getStyleRules(
+    styles: StyleJson = this.styles,
+    spaces: string = ''
+  ): string[] {
     const selectors = Object.keys(styles);
     const defs: string[] = new Array(selectors.length);
     let i = 0;
     for (const selector of selectors) {
       const data = styles[selector];
-      defs[i++] = `${selector} {\n${this.getStyleDefString(data)}\n}`;
+      defs[i++] =
+        `${spaces}${selector} {\n${this.getStyleDefString(data, spaces)}\n${spaces}}`;
     }
     return defs;
   }
@@ -115,19 +119,25 @@ export class StyleJsonSheet {
    * @param {StyleJsonData | StyleJson} styles  The style data to be stringified
    * @returns {string}                           The CSS string for the given data
    */
-  public getStyleDefString(styles: StyleJsonData | StyleJson): string {
+  public getStyleDefString(
+    styles: StyleJsonData | StyleJson,
+    spaces: string
+  ): string {
     const properties = Object.keys(styles);
     const values: string[] = new Array(properties.length);
     let i = 0;
     for (const property of properties) {
       values[i++] =
         styles[property] instanceof Object
-          ? '  ' +
-            this.getStyleRules({
-              [property]: styles[property],
-            } as StyleJson).join('\n  ')
-          : '  ' + property + ': ' + styles[property] + ';';
+          ? spaces +
+            this.getStyleRules(
+              {
+                [property]: styles[property],
+              } as StyleJson,
+              spaces + '  '
+            ).join('\n' + spaces)
+          : '  ' + spaces + property + ': ' + styles[property] + ';';
     }
-    return values.join('\n');
+    return values.join('\n' + spaces);
   }
 }
