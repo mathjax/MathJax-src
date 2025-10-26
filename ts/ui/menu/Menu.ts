@@ -714,7 +714,7 @@ export class Menu {
               hidden: !MenuUtil.isMac,
             }),
             this.checkbox('Control', 'Control', 'ctrl', {
-              hiddne: MenuUtil.isMac,
+              hidden: MenuUtil.isMac,
             }),
             this.checkbox('Shift', 'Shift', 'shift'),
           ]),
