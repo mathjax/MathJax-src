@@ -1125,7 +1125,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       attr = attr.substring(match[0].length);
     }
     if (keep.length) {
-      def['mjx-keep-attrs'] = keep.join(' ');
+      node.setProperty('keep-attrs', keep.join(' '));
     }
     const textNode = parser.create('text', replaceUnicode(text));
     node.appendChild(textNode);
