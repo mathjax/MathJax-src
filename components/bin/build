@@ -193,7 +193,7 @@ function processParts(parts) {
 function processLines(file, objects) {
   if (objects.length === 0) return [];
   const base = path.dirname(file).replace(/^\.$/, '');
-  const dir = (PREFIX ? noramlize(path.join(PREFIX, base)) : base);
+  const dir = (PREFIX ? normalize(path.join(PREFIX, base)) : base);
   const dots = dir.replace(/[^\/]+/g, '..') || '.';
   const relative = normalize(path.join(dots, '..', JS, dir, path.basename(file))).replace(/\.ts$/, '.js');
   const name = path.parse(file).name;
