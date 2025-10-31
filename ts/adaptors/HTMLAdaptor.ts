@@ -626,8 +626,22 @@ export class HTMLAdaptor<
     const { path, maps, worker } = options;
     const file = `${path}/${worker}`;
     const content = `
-      self.maps = '${quoted(maps)}';
-      importScripts('${quoted(file)}');
+      (function() {
+        try {
+          self.maps = '${quoted(maps)}';
+          importScripts('${quoted(file)}');
+        } catch (err) {
+          self.addEventListener('message', function(event) {
+            self.postMessage({
+              cmd: 'Finished',
+              data: { result: '', success: true }
+            });
+          });
+          self.postMessage({
+            cmd: 'Ready'
+          });
+        }
+      })();
     `;
     const url = URL.createObjectURL(
       new Blob([content], { type: 'text/javascript' })
