@@ -53,15 +53,15 @@ describe('Braket', () => {
       tex2mml('\\Bra{\\frac{x}{y}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Bra{\\frac{x}{y}}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{\\left\\langle {\\frac{x}{y}} \\right\\vert}">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle {\\frac{x}{y}} \\right\\vert" data-latex="\\left\\langle {\\frac{x}{y}} \\right\\vert">
-             <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle " data-latex="\\left\\langle ">&#x27E8;</mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle {\\frac{x}{y}} \\right\\vert">
+             <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle ">&#x27E8;</mo>
              <mrow data-mjx-texclass="ORD" data-latex="{\\frac{x}{y}}">
                <mfrac data-latex="\\frac{x}{y}">
                  <mi data-latex="x">x</mi>
                  <mi data-latex="y">y</mi>
                </mfrac>
              </mrow>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
            </mrow>
          </mrow>
        </math>`
@@ -112,15 +112,15 @@ describe('Braket', () => {
       tex2mml('\\Ket{\\frac{x}{y}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Ket{\\frac{x}{y}}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{\\left\\vert {\\frac{x}{y}} \\right\\rangle}">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert {\\frac{x}{y}} \\right\\rangle" data-latex="\\left\\vert {\\frac{x}{y}} \\right\\rangle">
-             <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert " data-latex="\\left\\vert ">|</mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert {\\frac{x}{y}} \\right\\rangle">
+             <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert ">|</mo>
              <mrow data-mjx-texclass="ORD" data-latex="{\\frac{x}{y}}">
                <mfrac data-latex="\\frac{x}{y}">
                  <mi data-latex="x">x</mi>
                  <mi data-latex="y">y</mi>
                </mfrac>
              </mrow>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
            </mrow>
          </mrow>
        </math>`
@@ -232,22 +232,22 @@ describe('Braket', () => {
       tex2mml('\\Ketbra{\\frac{x}{y}}{z}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Ketbra{\\frac{x}{y}}{z}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{\\left\\vert {\\frac{x}{y}} \\right\\rangle\\left\\langle {z} \\right\\vert}">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert {\\frac{x}{y}} \\right\\rangle" data-latex="\\left\\vert {\\frac{x}{y}} \\right\\rangle">
-             <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert " data-latex="\\left\\vert ">|</mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert {\\frac{x}{y}} \\right\\rangle">
+             <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert ">|</mo>
              <mrow data-mjx-texclass="ORD" data-latex="{\\frac{x}{y}}">
                <mfrac data-latex="\\frac{x}{y}">
                  <mi data-latex="x">x</mi>
                  <mi data-latex="y">y</mi>
                </mfrac>
              </mrow>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
            </mrow>
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle {z} \\right\\vert" data-latex="\\left\\langle {z} \\right\\vert">
-             <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle " data-latex="\\left\\langle ">&#x27E8;</mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle {z} \\right\\vert">
+             <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle ">&#x27E8;</mo>
              <mrow data-mjx-texclass="ORD" data-latex="{z}">
                <mi data-latex="z">z</mi>
              </mrow>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
            </mrow>
          </mrow>
        </math>`
@@ -339,7 +339,7 @@ describe('Braket', () => {
          <mrow data-mjx-texclass="INNER" data-latex="\\Set{x\\over y}">
            <mo data-mjx-texclass="OPEN">{</mo>
            <mspace width="0.167em"></mspace>
-           <mfrac data-latex-item="\\over">
+           <mfrac>
              <mi data-latex="x">x</mi>
              <mi data-latex="y">y</mi>
            </mfrac>

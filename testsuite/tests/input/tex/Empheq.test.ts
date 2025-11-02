@@ -253,7 +253,7 @@ describe('Empheq', () => {
       tex2mml('\\begin{numcases}{A=\\label{test}} a&=b \\end{numcases}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{numcases}{A=\\label{test}} a&amp;=b \\end{numcases}" display="block">
          <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{A=\\label{test}} a&amp;=b \\end{numcases}">
-           <mlabeledtr data-latex-item="{A=\\label{test}}" data-latex="{A=\\label{test}}">
+           <mlabeledtr data-latex="{A=\\label{test}}">
              <mtd id="mjx-eqn:1">
                <mtext data-latex="\\text{(}">(</mtext>
                <mtext data-latex="\\text{1}">1</mtext>
@@ -269,7 +269,7 @@ describe('Empheq', () => {
                    <mphantom>
                      <mpadded width="0">
                        <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
-                         <mlabeledtr data-latex-item="{A=\\label{test}}" data-latex="{A=\\label{test}}">
+                         <mlabeledtr data-latex="{A=\\label{test}}">
                            <mtd>
                              <mtext data-latex="\\text{(}">(</mtext>
                              <mtext data-latex="\\text{1}">1</mtext>
@@ -294,7 +294,7 @@ describe('Empheq', () => {
                  <mphantom>
                    <mpadded width="0">
                      <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
-                       <mlabeledtr data-latex-item="{A=\\label{test}}" data-latex="{A=\\label{test}}">
+                       <mlabeledtr data-latex="{A=\\label{test}}">
                          <mtd>
                            <mtext data-latex="\\text{(}">(</mtext>
                            <mtext data-latex="\\text{1}">1</mtext>
@@ -499,7 +499,7 @@ describe('Empheq', () => {
       tex2mml('\\begin{empheq}{alignat=2} a & b & c & d \\end{empheq}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{empheq}{alignat=2} a &amp; b &amp; c &amp; d \\end{empheq}" display="block">
          <mtable displaystyle="true" columnalign="right left right left" columnspacing="0em 0em 0em" rowspacing="3pt" data-break-align="bottom top bottom top" data-latex="\\begin{alignat}{2} a &amp; b &amp; c &amp; d \\end{empheq}">
-           <mlabeledtr data-latex-item="{2}" data-latex="{2}">
+           <mlabeledtr data-latex="{2}">
              <mtd id="mjx-eqn:1">
                <mtext data-latex="\\text{(}">(</mtext>
                <mtext data-latex="\\text{1}">1</mtext>

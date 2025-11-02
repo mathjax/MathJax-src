@@ -68,7 +68,7 @@ describe('Tagformat', () => {
     toXmlMatch(
       tex2mml('\\begin{align}x \\label{test}\\tag{x}\\\\ \\ref{test} \\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\ref{test} \\end{align}" display="block">
-         <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\ref{test} \\end{align}">
+         <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\ref{test} \\end{align}">
            <mlabeledtr>
              <mtd id="my-tag:test">
                <mtext data-latex="\\text{[}">[</mtext>
@@ -102,7 +102,7 @@ describe('Tagformat', () => {
     toXmlMatch(
       tex2mml('\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}" display="block">
-         <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}">
+         <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}">
            <mlabeledtr>
              <mtd id="my-tag:test">
                <mtext data-latex="\\text{[}">[</mtext>
@@ -142,7 +142,7 @@ describe('Tagformat', () => {
     toXmlMatch(
       tex2mml('\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}" display="block">
-         <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}">
+         <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:test">
                <mtext data-latex="\\text{(}">(</mtext>

@@ -29,7 +29,7 @@ describe('Units', () => {
       tex2mml('\\units{m^2}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\units{m^2}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{m^2}">
-           <msup data-latex="m^2 ">
+           <msup data-latex="m^2">
              <mi mathvariant="normal" data-latex="m">m</mi>
              <mn data-latex="2">2</mn>
            </msup>
@@ -44,7 +44,7 @@ describe('Units', () => {
     toXmlMatch(
       tex2mml('\\units[2.5]{kg}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\units[2.5]{kg}" display="block">
-         <mn data-latex=".5">2.5</mn>
+         <mn data-latex="2.5">2.5</mn>
          <mspace width="0.167em" data-latex="\\,"></mspace>
          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{kg}">
            <mi data-mjx-auto-op="false" data-latex="kg">kg</mi>
@@ -77,14 +77,14 @@ describe('Units', () => {
     toXmlMatch(
       tex2mml('\\unitfrac[9.8]{m}{s^2}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\unitfrac[9.8]{m}{s^2}" display="block">
-         <mn data-latex=".8">9.8</mn>
+         <mn data-latex="9.8">9.8</mn>
          <mspace width="0.167em" data-latex="\\,"></mspace>
          <mfrac bevelled="true" data-latex="\\nicefrac[\\mathrm]{m}{s^2}">
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{m}">
              <mi mathvariant="normal" data-latex="m">m</mi>
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{s^2}">
-             <msup data-latex="s^2 ">
+             <msup data-latex="s^2">
                <mi mathvariant="normal" data-latex="s">s</mi>
                <mn data-latex="2">2</mn>
              </msup>

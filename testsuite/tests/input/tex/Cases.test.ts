@@ -18,7 +18,7 @@ describe('Cases', () => {
       tex2mml('\\begin{numcases}{f(x)=} 1 & if $x > 0$ \\\\ 0 & otherwise \\end{numcases}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{numcases}{f(x)=} 1 &amp; if $x &gt; 0$ \\\\ 0 &amp; otherwise \\end{numcases}" display="block">
          <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{f(x)=} 1 &amp; if $x &gt; 0$ \\\\ 0 &amp; otherwise \\end{numcases}">
-           <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
+           <mlabeledtr data-latex="{f(x)=}">
              <mtd id="mjx-eqn:1">
                <mtext data-latex="\\text{(}">(</mtext>
                <mtext data-latex="\\text{1}">1</mtext>
@@ -37,7 +37,7 @@ describe('Cases', () => {
                    <mphantom>
                      <mpadded width="0">
                        <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
-                         <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
+                         <mlabeledtr data-latex="{f(x)=}">
                            <mtd>
                              <mtext data-latex="\\text{(}">(</mtext>
                              <mtext data-latex="\\text{1}">1</mtext>
@@ -63,7 +63,7 @@ describe('Cases', () => {
                              <mstyle indentshift="2em"></mstyle>
                            </mtd>
                          </mlabeledtr>
-                         <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
+                         <mlabeledtr data-latex="{f(x)=}">
                            <mtd>
                              <mtext data-latex="\\text{(}">(</mtext>
                              <mtext data-latex="\\text{2}">2</mtext>
@@ -88,7 +88,7 @@ describe('Cases', () => {
                  <mphantom>
                    <mpadded width="0">
                      <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
-                       <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
+                       <mlabeledtr data-latex="{f(x)=}">
                          <mtd>
                            <mtext data-latex="\\text{(}">(</mtext>
                            <mtext data-latex="\\text{1}">1</mtext>
@@ -139,7 +139,7 @@ describe('Cases', () => {
                <mstyle indentshift="2em"></mstyle>
              </mtd>
            </mlabeledtr>
-           <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
+           <mlabeledtr data-latex="{f(x)=}">
              <mtd id="mjx-eqn:2">
                <mtext data-latex="\\text{(}">(</mtext>
                <mtext data-latex="\\text{2}">2</mtext>
@@ -170,7 +170,7 @@ describe('Cases', () => {
       tex2mml('\\begin{subnumcases}{f(x)=} 1 & if $x > 0$ \\\\ 0 & otherwise \\end{subnumcases}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{subnumcases}{f(x)=} 1 &amp; if $x &gt; 0$ \\\\ 0 &amp; otherwise \\end{subnumcases}" display="block">
          <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{subnumcases}{f(x)=} 1 &amp; if $x &gt; 0$ \\\\ 0 &amp; otherwise \\end{subnumcases}">
-           <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
+           <mlabeledtr data-latex="{f(x)=}">
              <mtd id="mjx-eqn:1a">
                <mtext data-latex="\\text{(}">(</mtext>
                <mtext data-latex="\\text{1a}">1a</mtext>
@@ -189,7 +189,7 @@ describe('Cases', () => {
                    <mphantom>
                      <mpadded width="0">
                        <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
-                         <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
+                         <mlabeledtr data-latex="{f(x)=}">
                            <mtd>
                              <mtext data-latex="\\text{(}">(</mtext>
                              <mtext data-latex="\\text{1a}">1a</mtext>
@@ -215,7 +215,7 @@ describe('Cases', () => {
                              <mstyle indentshift="2em"></mstyle>
                            </mtd>
                          </mlabeledtr>
-                         <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
+                         <mlabeledtr data-latex="{f(x)=}">
                            <mtd>
                              <mtext data-latex="\\text{(}">(</mtext>
                              <mtext data-latex="\\text{1b}">1b</mtext>
@@ -240,7 +240,7 @@ describe('Cases', () => {
                  <mphantom>
                    <mpadded width="0">
                      <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
-                       <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
+                       <mlabeledtr data-latex="{f(x)=}">
                          <mtd>
                            <mtext data-latex="\\text{(}">(</mtext>
                            <mtext data-latex="\\text{1a}">1a</mtext>
@@ -291,7 +291,7 @@ describe('Cases', () => {
                <mstyle indentshift="2em"></mstyle>
              </mtd>
            </mlabeledtr>
-           <mlabeledtr data-latex-item="{f(x)=}" data-latex="{f(x)=}">
+           <mlabeledtr data-latex="{f(x)=}">
              <mtd id="mjx-eqn:1b">
                <mtext data-latex="\\text{(}">(</mtext>
                <mtext data-latex="\\text{1b}">1b</mtext>
@@ -322,7 +322,7 @@ describe('Cases', () => {
       tex2mml('\\begin{numcases}{A=} 1 & if {x\\\\y}\\$ \\end{numcases}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{numcases}{A=} 1 &amp; if {x\\\\y}\\$ \\end{numcases}" display="block">
          <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{A=} 1 &amp; if {x\\\\y}\\$ \\end{numcases}">
-           <mlabeledtr data-latex-item="{A=}" data-latex="{A=}">
+           <mlabeledtr data-latex="{A=}">
              <mtd id="mjx-eqn:1">
                <mtext data-latex="\\text{(}">(</mtext>
                <mtext data-latex="\\text{1}">1</mtext>
@@ -338,7 +338,7 @@ describe('Cases', () => {
                    <mphantom>
                      <mpadded width="0">
                        <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
-                         <mlabeledtr data-latex-item="{A=}" data-latex="{A=}">
+                         <mlabeledtr data-latex="{A=}">
                            <mtd>
                              <mtext data-latex="\\text{(}">(</mtext>
                              <mtext data-latex="\\text{1}">1</mtext>
@@ -363,7 +363,7 @@ describe('Cases', () => {
                  <mphantom>
                    <mpadded width="0">
                      <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
-                       <mlabeledtr data-latex-item="{A=}" data-latex="{A=}">
+                       <mlabeledtr data-latex="{A=}">
                          <mtd>
                            <mtext data-latex="\\text{(}">(</mtext>
                            <mtext data-latex="\\text{1}">1</mtext>
@@ -423,8 +423,8 @@ describe('Cases', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{cc} x & y \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} x &amp; y \\end{array}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\begin{array}{cc} x &amp; y \\end{array}">
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} x &amp; y \\end{array}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="x">x</mi>
              </mtd>
@@ -444,7 +444,7 @@ describe('Cases', () => {
       tex2mml('\\begin{numcases}{A=} x\\tag{A} & y \\end{numcases}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{numcases}{A=} x\\tag{A} &amp; y \\end{numcases}" display="block">
          <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{A=} x\\tag{A} &amp; y \\end{numcases}">
-           <mlabeledtr data-latex-item="{A=}" data-latex="{A=}">
+           <mlabeledtr data-latex="{A=}">
              <mtd id="mjx-eqn:A">
                <mtext data-latex="\\text{(}">(</mtext>
                <mtext data-latex="\\text{A}">A</mtext>
@@ -460,7 +460,7 @@ describe('Cases', () => {
                    <mphantom>
                      <mpadded width="0">
                        <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
-                         <mlabeledtr data-latex-item="{A=}" data-latex="{A=}">
+                         <mlabeledtr data-latex="{A=}">
                            <mtd>
                              <mtext data-latex="\\text{(}">(</mtext>
                              <mtext data-latex="\\text{A}">A</mtext>
@@ -485,7 +485,7 @@ describe('Cases', () => {
                  <mphantom>
                    <mpadded width="0">
                      <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
-                       <mlabeledtr data-latex-item="{A=}" data-latex="{A=}">
+                       <mlabeledtr data-latex="{A=}">
                          <mtd>
                            <mtext data-latex="\\text{(}">(</mtext>
                            <mtext data-latex="\\text{A}">A</mtext>

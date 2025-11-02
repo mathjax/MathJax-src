@@ -19,8 +19,8 @@ describe('Colortbl', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{cc} a & \\cellcolor{red} b \\\\ \\cellcolor{yellow} c & d \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; \\cellcolor{red} b \\\\ \\cellcolor{yellow} c &amp; d \\end{array}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\begin{array}{cc} a &amp; \\cellcolor{red} b \\\\ \\cellcolor{yellow} c &amp; d \\end{array}">
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; \\cellcolor{red} b \\\\ \\cellcolor{yellow} c &amp; d \\end{array}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -28,7 +28,7 @@ describe('Colortbl', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+           <mtr data-latex="{cc}">
              <mtd mathbackground="yellow">
                <mi data-latex="c">c</mi>
              </mtd>
@@ -47,8 +47,8 @@ describe('Colortbl', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{cc} a & b \\cellcolor{red} \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; b \\cellcolor{red} \\end{array}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\begin{array}{cc} a &amp; b \\cellcolor{red} \\end{array}">
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; b \\cellcolor{red} \\end{array}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -67,8 +67,8 @@ describe('Colortbl', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{cc} a & b \\\\ \\rowcolor{yellow} c & d \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; b \\\\ \\rowcolor{yellow} c &amp; d \\end{array}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\begin{array}{cc} a &amp; b \\\\ \\rowcolor{yellow} c &amp; d \\end{array}">
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; b \\\\ \\rowcolor{yellow} c &amp; d \\end{array}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -76,7 +76,7 @@ describe('Colortbl', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+           <mtr data-latex="{cc}">
              <mtd mathbackground="yellow">
                <mi data-latex="c">c</mi>
              </mtd>
@@ -102,8 +102,8 @@ describe('Colortbl', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{cc} a & \\columncolor{yellow} b \\\\ c & d \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; \\columncolor{yellow} b \\\\ c &amp; d \\end{array}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\begin{array}{cc} a &amp; \\columncolor{yellow} b \\\\ c &amp; d \\end{array}">
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; \\columncolor{yellow} b \\\\ c &amp; d \\end{array}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -111,7 +111,7 @@ describe('Colortbl', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="c">c</mi>
              </mtd>
@@ -137,8 +137,8 @@ describe('Colortbl', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{c>{\\columncolor{yellow}}c} a & b \\\\ c & d \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c&gt;{\\columncolor{yellow}}c} a &amp; b \\\\ c &amp; d \\end{array}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\columncolor{yellow}d\\end{array}">
-           <mtr data-latex-item="{c&gt;{\\columncolor{yellow}}c}" data-latex="{c&gt;{\\columncolor{yellow}}c}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\columncolor{yellow}d\\end{array}">
+           <mtr data-latex="{c&gt;{\\columncolor{yellow}}c}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -146,7 +146,7 @@ describe('Colortbl', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{c&gt;{\\columncolor{yellow}}c}" data-latex="{c&gt;{\\columncolor{yellow}}c}">
+           <mtr data-latex="{c&gt;{\\columncolor{yellow}}c}">
              <mtd>
                <mi data-latex="c">c</mi>
              </mtd>
@@ -165,8 +165,8 @@ describe('Colortbl', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{c>{\\cellcolor{yellow}}c} a & b \\\\ c & d \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c&gt;{\\cellcolor{yellow}}c} a &amp; b \\\\ c &amp; d \\end{array}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\cellcolor{yellow}d\\end{array}">
-           <mtr data-latex-item="{c&gt;{\\cellcolor{yellow}}c}" data-latex="{c&gt;{\\cellcolor{yellow}}c}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\cellcolor{yellow}d\\end{array}">
+           <mtr data-latex="{c&gt;{\\cellcolor{yellow}}c}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -174,7 +174,7 @@ describe('Colortbl', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{c&gt;{\\cellcolor{yellow}}c}" data-latex="{c&gt;{\\cellcolor{yellow}}c}">
+           <mtr data-latex="{c&gt;{\\cellcolor{yellow}}c}">
              <mtd>
                <mi data-latex="c">c</mi>
              </mtd>
@@ -193,8 +193,8 @@ describe('Colortbl', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{cc} a & b \\\\ \\rowcolor{red} c & \\cellcolor{yellow} d \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; b \\\\ \\rowcolor{red} c &amp; \\cellcolor{yellow} d \\end{array}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\begin{array}{cc} a &amp; b \\\\ \\rowcolor{red} c &amp; \\cellcolor{yellow} d \\end{array}">
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; b \\\\ \\rowcolor{red} c &amp; \\cellcolor{yellow} d \\end{array}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -202,7 +202,7 @@ describe('Colortbl', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+           <mtr data-latex="{cc}">
              <mtd mathbackground="red">
                <mi data-latex="c">c</mi>
              </mtd>
@@ -221,8 +221,8 @@ describe('Colortbl', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{cc} a & \\columncolor{red} b \\\\ c & \\cellcolor{yellow} d \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ c &amp; \\cellcolor{yellow} d \\end{array}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ c &amp; \\cellcolor{yellow} d \\end{array}">
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ c &amp; \\cellcolor{yellow} d \\end{array}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -230,7 +230,7 @@ describe('Colortbl', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="c">c</mi>
              </mtd>
@@ -249,8 +249,8 @@ describe('Colortbl', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{cc} a & \\columncolor{red} b \\\\ \\rowcolor{yellow} c & d \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ \\rowcolor{yellow} c &amp; d \\end{array}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ \\rowcolor{yellow} c &amp; d \\end{array}">
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ \\rowcolor{yellow} c &amp; d \\end{array}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -258,7 +258,7 @@ describe('Colortbl', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+           <mtr data-latex="{cc}">
              <mtd mathbackground="yellow">
                <mi data-latex="c">c</mi>
              </mtd>
@@ -277,8 +277,8 @@ describe('Colortbl', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{cc} a & \\columncolor{red} b \\\\ \\rowcolor{yellow} c & \\cellcolor{green} d \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ \\rowcolor{yellow} c &amp; \\cellcolor{green} d \\end{array}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ \\rowcolor{yellow} c &amp; \\cellcolor{green} d \\end{array}">
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ \\rowcolor{yellow} c &amp; \\cellcolor{green} d \\end{array}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -286,7 +286,7 @@ describe('Colortbl', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+           <mtr data-latex="{cc}">
              <mtd mathbackground="yellow">
                <mi data-latex="c">c</mi>
              </mtd>
@@ -305,8 +305,8 @@ describe('Colortbl', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{cc} a & \\columncolor{red}[ignore][ignore] b \\\\ c & d \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red}[ignore][ignore] b \\\\ c &amp; d \\end{array}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red}[ignore][ignore] b \\\\ c &amp; d \\end{array}">
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red}[ignore][ignore] b \\\\ c &amp; d \\end{array}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -314,7 +314,7 @@ describe('Colortbl', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{cc}" data-latex="{cc}">
+           <mtr data-latex="{cc}">
              <mtd>
                <mi data-latex="c">c</mi>
              </mtd>
@@ -347,9 +347,9 @@ describe('Colortbl', () => {
     toXmlMatch(
       tex2mml('\\begin{array}{|c|} \\cellcolor{red} a \\end{array}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{|c|} \\cellcolor{red} a \\end{array}" display="block">
-         <menclose notation="left right" data-padding="0" data-latex-item="{array}" data-latex="\\begin{array}{|c|} \\cellcolor{red} a \\end{array}">
+         <menclose notation="left right" data-padding="0" data-latex="\\begin{array}{|c|} \\cellcolor{red} a \\end{array}">
            <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em">
-             <mtr data-latex-item="{|c|}" data-latex="{|c|}">
+             <mtr data-latex="{|c|}">
                <mtd mathbackground="red">
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -369,7 +369,7 @@ describe('Colortbl', () => {
          <mrow data-mjx-texclass="INNER" data-latex="\\pmatrix{ \\cellcolor{red} a }">
            <mo data-mjx-texclass="OPEN">(</mo>
            <mtable rowspacing="4pt" columnspacing="1em" data-frame-styles="" framespacing=".2em .125em">
-             <mtr data-latex-item="{" data-latex="{">
+             <mtr data-latex="{">
                <mtd mathbackground="red">
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -388,7 +388,7 @@ describe('Colortbl', () => {
       tex2mml('\\matrix{ \\cellcolor[rgb]{1,0,0} a }'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrix{ \\cellcolor[rgb]{1,0,0} a }" display="block">
          <mtable rowspacing="4pt" columnspacing="1em" data-frame-styles="" framespacing=".2em .125em" data-latex="\\matrix{ \\cellcolor[rgb]{1,0,0} a }">
-           <mtr data-latex-item="{" data-latex="{">
+           <mtr data-latex="{">
              <mtd mathbackground="#ff0000">
                <mi data-latex="a">a</mi>
              </mtd>
@@ -416,7 +416,7 @@ describe('Colortbl', () => {
       tex2mml('\\matrix{ \\cellcolor[rgb]{1,0,0} a }'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrix{ \\cellcolor[rgb]{1,0,0} a }" display="block">
          <mtable rowspacing="4pt" columnspacing="1em" data-frame-styles="" data-latex="\\matrix{ \\cellcolor[rgb]{1,0,0} a }">
-           <mtr data-latex-item="{" data-latex="{">
+           <mtr data-latex="{">
              <mtd mathbackground="#ff0000">
                <mi data-latex="a">a</mi>
              </mtd>
