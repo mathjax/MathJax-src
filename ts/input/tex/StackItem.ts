@@ -359,7 +359,7 @@ export interface StackItem extends NodeStack {
    * @param {MmlNode} node The current node.
    * @param {string=} prefix A prefix for the LaTeX command.
    */
-  addLatexItem(node: MmlNode, prefix?: string): void
+  addLatexItem(node: MmlNode, prefix?: string): void;
 }
 
 export interface StackItemClass extends FactoryNodeClass<StackItem> {
