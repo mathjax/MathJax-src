@@ -1461,6 +1461,7 @@ export class SpeechExplorer
         if (
           child !== this.speech &&
           child !== this.img &&
+          child.tagName &&
           child.tagName.toLowerCase() !== 'rect'
         ) {
           const { left, right, top, bottom } = child.getBoundingClientRect();
