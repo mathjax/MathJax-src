@@ -199,7 +199,6 @@ export class HTMLAdaptor<
   extends AbstractDOMAdaptor<N, T, D>
   implements MinHTMLAdaptor<N, T, D>
 {
-
   /**
    * The font size to use when it can't be measured (e.g., the element
    * isn't in the DOM).
@@ -597,7 +596,7 @@ export class HTMLAdaptor<
     const style = this.window.getComputedStyle(node);
     return parseFloat(
       style.fontSize ||
-      String((this.constructor as typeof HTMLAdaptor).DEFAULT_FONT_SIZE)
+        String((this.constructor as typeof HTMLAdaptor).DEFAULT_FONT_SIZE)
     );
   }
 
