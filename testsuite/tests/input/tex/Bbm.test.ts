@@ -1,5 +1,5 @@
-import { afterAll, beforeEach, describe, test } from '@jest/globals';
-import { getTokens, toXmlMatch, setupTex, tex2mml } from '#helpers';
+import { afterAll, beforeEach, describe, test, expect } from '@jest/globals';
+import { getTokens, toXmlMatch, setupTex, setupComponents, tex2mml } from '#helpers';
 import '#js/input/tex/bbm/BbmConfiguration';
 
 /**********************************************************************************/
@@ -148,6 +148,20 @@ describe('Bbm', () => {
 
   /********************************************************************************/
 
+});
+
+/**********************************************************************************/
+/**********************************************************************************/
+
+declare const MathJax: any;
+
+setupComponents({loader: {load: ['input/tex-base', 'output/chtml']}});
+
+describe('Bbm', () => {
+
+  test('bbm with no output', async() => {
+    await expect(MathJax.loader.load('[tex]/bbm').then(() => true)).resolves.toBe(true);
+  });
 });
 
 /**********************************************************************************/
