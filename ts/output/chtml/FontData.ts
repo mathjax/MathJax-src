@@ -636,7 +636,7 @@ export class ChtmlFontData extends FontData<
     if (options.oc) {
       styles[selector + '[noic]'] = { 'padding-right': this.em(data[2]) };
     }
-    this.checkCombiningChar(options, styles[selector]);
+    this.checkCombiningChar(options, styles[selector] as StyleJsonData);
   }
 
   /**
@@ -656,6 +656,10 @@ export class ChtmlFontData extends FontData<
       pad.pop();
     }
     css.padding = pad.join(' ');
+    if (css.width === '0' && options.dx) {
+      css.width = this.em(2 * options.dx);
+      css['margin-left'] = '-' + css.width;
+    }
   }
 
   /***********************************************************************/
