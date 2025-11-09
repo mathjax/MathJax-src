@@ -179,13 +179,11 @@ const FilterUtil = {
    */
   cleanAttributes(arg: { data: ParseOptions }) {
     const node = arg.data.root;
-    node.walkTree((mml: MmlNode, _d: any) => {
-      const attribs = mml.attributes;
-      if (!attribs) return;
+    node.walkTree((mml: MmlNode) => {
       const keep = new Set(
-        ((attribs.get('mjx-keep-attrs') as string) || '').split(/ /)
+        ((mml.getProperty('keep-attrs') as string) || '').split(/ /)
       );
-      attribs.unset('mjx-keep-attrs');
+      const attribs = mml.attributes;
       for (const key of attribs.getExplicitNames()) {
         if (
           !keep.has(key) &&
@@ -194,7 +192,7 @@ const FilterUtil = {
           attribs.unset(key);
         }
       }
-    }, {});
+    });
   },
 
   /**
