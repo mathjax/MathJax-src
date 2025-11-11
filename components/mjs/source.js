@@ -15,7 +15,9 @@
  *  limitations under the License.
  */
 
-import {src} from '#source/source.cjs';
+import {dirname} from '#source/source.cjs';
+import {context} from '#js/util/context.js';
+const src = context.path(dirname);
 
 export const source = {
   'core': `${src}/core/core.js`,

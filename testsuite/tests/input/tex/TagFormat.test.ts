@@ -172,6 +172,88 @@ describe('Tagformat', () => {
 
   /********************************************************************************/
 
+  test('Array tag', () => {
+    setupTex(['base', 'ams', 'tagformat'], {
+      tagformat: {
+        tag: (tag: string) => ['|', tag, '|'],
+      },
+      tags: 'ams'
+    });
+    toXmlMatch(
+      tex2mml('x \\tag{1}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x \\tag{1}" display="block">
+         <mtable displaystyle="true" data-latex="x \\tag{1}">
+           <mlabeledtr>
+             <mtd id="mjx-eqn:1">
+               <mtext data-latex="\\text{|}">|</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{|}">|</mtext>
+             </mtd>
+             <mtd>
+               <mi data-latex="\\tag{1}">x</mi>
+             </mtd>
+           </mlabeledtr>
+         </mtable>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
+  test('Array tag with empty entry', () => {
+    setupTex(['base', 'ams', 'tagformat'], {
+      tagformat: {
+        tag: (tag: string) => ['', tag, '.'],
+      },
+      tags: 'ams'
+    });
+    toXmlMatch(
+      tex2mml('x \\tag{1}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x \\tag{1}" display="block">
+         <mtable displaystyle="true" data-latex="x \\tag{1}">
+           <mlabeledtr>
+             <mtd id="mjx-eqn:1">
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{.}">.</mtext>
+             </mtd>
+             <mtd>
+               <mi data-latex="\\tag{1}">x</mi>
+             </mtd>
+           </mlabeledtr>
+         </mtable>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
+  test('Array tag with null entry', () => {
+    setupTex(['base', 'ams', 'tagformat'], {
+      tagformat: {
+        tag: (tag: string) => [ , tag, '.'],
+      },
+      tags: 'ams'
+    });
+    toXmlMatch(
+      tex2mml('x \\tag{1}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x \\tag{1}" display="block">
+         <mtable displaystyle="true" data-latex="x \\tag{1}">
+           <mlabeledtr>
+             <mtd id="mjx-eqn:1">
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{.}">.</mtext>
+             </mtd>
+             <mtd>
+               <mi data-latex="\\tag{1}">x</mi>
+             </mtd>
+           </mlabeledtr>
+         </mtable>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
 });
 
 /**********************************************************************************/

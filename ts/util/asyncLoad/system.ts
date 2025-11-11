@@ -22,11 +22,12 @@
  */
 
 import { mathjax } from '../../mathjax.js';
+import { context } from '../context.js';
 
 declare const System: { import: (name: string, url?: string) => any };
 declare const __dirname: string;
 
-let root = 'file://' + __dirname.replace(/\/[^/]*\/[^/]*$/, '/');
+let root = 'file://' + context.path(__dirname).replace(/\/[^/]*\/[^/]*$/, '/');
 
 if (!mathjax.asyncLoad && typeof System !== 'undefined' && System.import) {
   mathjax.asyncLoad = (name: string) => {
@@ -41,7 +42,7 @@ if (!mathjax.asyncLoad && typeof System !== 'undefined' && System.import) {
  * @param {string} url   the base URL to use for loading relative paths
  */
 export function setBaseURL(url: string) {
-  root = new URL(url, 'file://').href;
+  root = new URL(context.path(url), 'file://').href;
   if (!root.match(/\/$/)) {
     root += '/';
   }

@@ -125,6 +125,13 @@ function fileRegExp(name) {
 }
 
 /**
+ * Options for the execSync() function
+ */
+const execOptions = process.platform === 'win32'
+      ? { shell: `${process.env.ProgramFiles}\\Git\\bin\\bash.exe` }
+      : {};
+
+/**
  * Get the current working directory
  */
 const root = process.cwd();
@@ -196,7 +203,7 @@ function processSubdirs(dir, action, config) {
  * Run a command on a given directory
  */
 function run(cmd, dir) {
-  return execSync(cmd + ` '${path.relative('.', dir).replace(/'/g, '\\\'')}'`);
+  return execSync(cmd + ` '${path.relative('.', dir).replace(/'/g, '\\\'')}'`, execOptions);
 }
 
 /**

@@ -1,1 +1,1 @@
-export declare const src: string;
+export declare const dirname: string;

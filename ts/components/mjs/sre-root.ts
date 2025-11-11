@@ -21,12 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import { context } from '../../util/context.js';
+
 /**
  * @returns {string}   The MathJax mjs SRE root directory
  */
 export function sreRoot(): string {
-  return new URL(import.meta.url).pathname.replace(
-    /components\/[cm]js\/sre-root.js$/,
-    'a11y/sre'
-  );
+  return context
+    .path(new URL(import.meta.url).pathname)
+    .replace(/components\/[cm]js\/sre-root.js$/, 'a11y/sre');
 }

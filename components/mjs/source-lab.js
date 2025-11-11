@@ -15,4 +15,4 @@
  *  limitations under the License.
  */
 
-export const src = String(new URL('.', import.meta.url)).replace(/\/$/, '');
+export const dirname = String(new URL('.', import.meta.url)).replace(/\/$/, '');

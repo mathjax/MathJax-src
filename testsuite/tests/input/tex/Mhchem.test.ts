@@ -5588,7 +5588,7 @@ describe('Mhchem-Ams', () => {
 
   /********************************************************************************/
 
-  it('Mhchem leftrightarrrow', () => {
+  it('Mhchem leftrightarrow', () => {
     toXmlMatch(
       tex2mml('\\ce{A\\leftrightarrow B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A\\leftrightarrow B}" display="block">
@@ -5597,6 +5597,25 @@ describe('Mhchem-Ams', () => {
              <mi mathvariant="normal" data-latex="A">A</mi>
            </mrow>
            <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemleftrightarrow">&#xE42E;</mo>
+           <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+             <mi mathvariant="normal" data-latex="B">B</mi>
+           </mrow>
+         </mrow>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
+  it('Mhchem rightleftharpoons', () => {
+    toXmlMatch(
+      tex2mml('\\ce{A\\rightleftharpoons B}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A\\rightleftharpoons B}" display="block">
+         <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A}\\rightleftharpoons \\mathrm{B}}">
+           <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+             <mi mathvariant="normal" data-latex="A">A</mi>
+           </mrow>
+           <mo data-mjx-alternate="1" stretchy="false" data-latex="\\rightleftharpoons">&#x21CC;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
              <mi mathvariant="normal" data-latex="B">B</mi>
            </mrow>
