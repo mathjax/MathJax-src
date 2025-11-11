@@ -25,7 +25,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const {spawn, execSync} = require('child_process');
+const {spawn} = require('child_process');
 
 /**
  * The module type to use ('cjs' or 'mjs')
@@ -64,14 +64,7 @@ const rootRE = fileRegExp(path.dirname(jsPath));
 const nodeRE = /^.*\/node_modules/;
 const fontRE = new RegExp('^.*\\/(mathjax-[^\/-]*)(?:-font)?\/(build|[cm]js)');
 
-/**
- * Find the directory where npx runs (so we know where "npx webpack" will run)
- * (We use npx rather than pnpm here as it seems that pnpm doesn't
- * find the executable from a node_modules directory higher than the
- * first package.json, and extensions and fonts can have their own
- * package.json.)
- */
-const packDir = String(execSync('npx node -e "console.log(process.cwd())"'));
+const packDir = process.cwd();
 
 /**
  * @param {string} dir   The directory to pack
@@ -80,11 +73,20 @@ const packDir = String(execSync('npx node -e "console.log(process.cwd())"'));
 async function readJSON(dir) {
   return new Promise((ok, fail) => {
     const buffer = [];
-    const child = spawn('npx', [
-      'webpack', '--env', `dir=${path.relative(packDir, path.resolve(dir))}`,
-      '--env', `bundle=${bundle}`, '--json',
-      '-c', path.relative(packDir, path.join(compPath, 'webpack.config.' + target))
-    ]);
+    const child = spawn(
+      'npx',
+      [
+        'webpack',
+        '--env', `dir=${path.relative(packDir, path.resolve(dir))}`,
+        '--env', `bundle=${bundle}`,
+        '--json',
+        '-c', path.relative(packDir, path.join(compPath, 'webpack.config.' + target))
+      ],
+      {
+        cwd: packDir,
+        shell: true,
+      }
+    );
     child.stdout.on('data', (data) => buffer.push(String(data)));
     child.stderr.on('data', (data) => console.error(String(data)));
     child.on('close', (code) => {

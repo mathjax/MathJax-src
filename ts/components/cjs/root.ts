@@ -25,10 +25,13 @@
  * The location of this file
  */
 declare const __dirname: string;
+declare const require: (file: string) => any;
 
 /**
  * @return {string}   The MathJax component root directory
  */
 export function mjxRoot(): string {
-  return __dirname.replace(/[cm]js\/components\/[cm]js$/, 'bundle');
+  return require('../../util/context.js')
+    .context.path(__dirname)
+    .replace(/[cm]js\/components\/[cm]js$/, 'bundle');
 }

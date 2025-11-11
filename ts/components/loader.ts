@@ -120,7 +120,7 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
    */
   normalize: (data) => {
     const name = data.name;
-    if (!name.match(/^(?:[a-z]+:\/)?\/|[a-z]:\\|\[/i)) {
+    if (!name.match(/^(?:[a-z]+:\/)?\/|[a-z]:[/\\]|\[/i)) {
       data.name = '[mathjax]/' + name.replace(/^\.\//, '');
     }
     return true;

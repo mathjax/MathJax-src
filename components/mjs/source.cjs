@@ -15,4 +15,4 @@
  *  limitations under the License.
  */
 
-module.exports.src = __dirname;
+module.exports.dirname = __dirname;
