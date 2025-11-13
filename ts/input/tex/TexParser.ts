@@ -623,6 +623,12 @@ export default class TexParser {
     return node;
   }
 
+  /**
+   * Trim spaces from the ends of a TeX string, leave a space when the last item is "\ "
+   *
+   * @param {string} tex   The TeX string to trim
+   * @returns {string}     The trimmed string
+   */
   protected trimTex(tex: string): string {
     return tex.trim() + (tex.match(/(?:^|[^\\])(?:\\\\)*\\\s+$/) ? ' ' : '');
   }
