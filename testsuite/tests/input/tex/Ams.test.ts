@@ -441,16 +441,19 @@ describe('Ams', () => {
     toXmlMatch(
       tex2mml('\\xleftarrow{abcd}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xleftarrow{abcd}" display="block">
-         <mover data-latex="\\xleftarrow{abcd}">
-           <mo data-mjx-texclass="REL">&#x2190;</mo>
-           <mpadded width="+0.833em" lspace="0.556em" voffset="-.2em" height="-.2em">
-             <mi data-latex="a">a</mi>
-             <mi data-latex="b">b</mi>
-             <mi data-latex="c">c</mi>
-             <mi data-latex="d">d</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xleftarrow{abcd}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x2190;</mo>
+             <mpadded width="+0.833em" lspace="0.556em" voffset="-.2em" height="-.2em">
+               <mi data-latex="a">a</mi>
+               <mi data-latex="b">b</mi>
+               <mi data-latex="c">c</mi>
+               <mi data-latex="d">d</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -461,22 +464,25 @@ describe('Ams', () => {
     toXmlMatch(
       tex2mml('\\xleftarrow[xyz]{abcd}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xleftarrow[xyz]{abcd}" display="block">
-         <munderover data-latex="\\xleftarrow[xyz]{abcd}">
-           <mo data-mjx-texclass="REL">&#x2190;</mo>
-           <mpadded width="+0.833em" lspace="0.556em" voffset=".15em" depth="-.15em">
-             <mi data-latex="x">x</mi>
-             <mi data-latex="y">y</mi>
-             <mi data-latex="z">z</mi>
-             <mspace height=".75em"></mspace>
-           </mpadded>
-           <mpadded width="+0.833em" lspace="0.556em" voffset="-.2em" height="-.2em">
-             <mi data-latex="a">a</mi>
-             <mi data-latex="b">b</mi>
-             <mi data-latex="c">c</mi>
-             <mi data-latex="d">d</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </munderover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xleftarrow[xyz]{abcd}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <munderover>
+             <mo data-mjx-texclass="ORD">&#x2190;</mo>
+             <mpadded width="+0.833em" lspace="0.556em" voffset=".15em" depth="-.15em">
+               <mi data-latex="x">x</mi>
+               <mi data-latex="y">y</mi>
+               <mi data-latex="z">z</mi>
+               <mspace height=".75em"></mspace>
+             </mpadded>
+             <mpadded width="+0.833em" lspace="0.556em" voffset="-.2em" height="-.2em">
+               <mi data-latex="a">a</mi>
+               <mi data-latex="b">b</mi>
+               <mi data-latex="c">c</mi>
+               <mi data-latex="d">d</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </munderover>
+         </mrow>
        </math>`
     );
   });
@@ -488,16 +494,19 @@ describe('Ams', () => {
       tex2mml('A\\xleftarrow{abcd}B'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\xleftarrow{abcd}B" display="block">
          <mi data-latex="A">A</mi>
-         <mover data-latex="\\xleftarrow{abcd}">
-           <mo data-mjx-texclass="REL">&#x2190;</mo>
-           <mpadded width="+0.833em" lspace="0.556em" voffset="-.2em" height="-.2em">
-             <mi data-latex="a">a</mi>
-             <mi data-latex="b">b</mi>
-             <mi data-latex="c">c</mi>
-             <mi data-latex="d">d</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xleftarrow{abcd}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x2190;</mo>
+             <mpadded width="+0.833em" lspace="0.556em" voffset="-.2em" height="-.2em">
+               <mi data-latex="a">a</mi>
+               <mi data-latex="b">b</mi>
+               <mi data-latex="c">c</mi>
+               <mi data-latex="d">d</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
          <mi data-latex="B">B</mi>
        </math>`
     );
@@ -509,16 +518,19 @@ describe('Ams', () => {
     toXmlMatch(
       tex2mml('\\xrightarrow{abcd}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xrightarrow{abcd}" display="block">
-         <mover data-latex="\\xrightarrow{abcd}">
-           <mo data-mjx-texclass="REL">&#x2192;</mo>
-           <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-             <mi data-latex="a">a</mi>
-             <mi data-latex="b">b</mi>
-             <mi data-latex="c">c</mi>
-             <mi data-latex="d">d</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xrightarrow{abcd}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x2192;</mo>
+             <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
+               <mi data-latex="a">a</mi>
+               <mi data-latex="b">b</mi>
+               <mi data-latex="c">c</mi>
+               <mi data-latex="d">d</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -529,22 +541,25 @@ describe('Ams', () => {
     toXmlMatch(
       tex2mml('\\xrightarrow[xyz]{abcd}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xrightarrow[xyz]{abcd}" display="block">
-         <munderover data-latex="\\xrightarrow[xyz]{abcd}">
-           <mo data-mjx-texclass="REL">&#x2192;</mo>
-           <mpadded width="+0.833em" lspace="0.278em" voffset=".15em" depth="-.15em">
-             <mi data-latex="x">x</mi>
-             <mi data-latex="y">y</mi>
-             <mi data-latex="z">z</mi>
-             <mspace height=".75em"></mspace>
-           </mpadded>
-           <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-             <mi data-latex="a">a</mi>
-             <mi data-latex="b">b</mi>
-             <mi data-latex="c">c</mi>
-             <mi data-latex="d">d</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </munderover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xrightarrow[xyz]{abcd}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <munderover>
+             <mo data-mjx-texclass="ORD">&#x2192;</mo>
+             <mpadded width="+0.833em" lspace="0.278em" voffset=".15em" depth="-.15em">
+               <mi data-latex="x">x</mi>
+               <mi data-latex="y">y</mi>
+               <mi data-latex="z">z</mi>
+               <mspace height=".75em"></mspace>
+             </mpadded>
+             <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
+               <mi data-latex="a">a</mi>
+               <mi data-latex="b">b</mi>
+               <mi data-latex="c">c</mi>
+               <mi data-latex="d">d</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </munderover>
+         </mrow>
        </math>`
     );
   });
@@ -556,16 +571,19 @@ describe('Ams', () => {
       tex2mml('A\\xrightarrow{abcd}B'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\xrightarrow{abcd}B" display="block">
          <mi data-latex="A">A</mi>
-         <mover data-latex="\\xrightarrow{abcd}">
-           <mo data-mjx-texclass="REL">&#x2192;</mo>
-           <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-             <mi data-latex="a">a</mi>
-             <mi data-latex="b">b</mi>
-             <mi data-latex="c">c</mi>
-             <mi data-latex="d">d</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xrightarrow{abcd}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x2192;</mo>
+             <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
+               <mi data-latex="a">a</mi>
+               <mi data-latex="b">b</mi>
+               <mi data-latex="c">c</mi>
+               <mi data-latex="d">d</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
          <mi data-latex="B">B</mi>
        </math>`
     );
