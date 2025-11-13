@@ -80,12 +80,12 @@ const ParseMethods = {
   digit(parser: TexParser, _c: string): ParseResult {
     const pattern = parser.configuration.options['numberPattern'];
     const n = parser.string.slice(parser.i - 1).match(pattern);
-    // @test Integer Font
-    const def = ParseUtil.getFontDef(parser);
     if (!n) {
       // @test Decimal Point, Decimal Point European
       return false;
     }
+    // @test Integer Font
+    const def = ParseUtil.getFontDef(parser);
     // @test Integer, Number, Decimal (European)
     const mml = parser.create('token', 'mn', def, n[0].replace(/[{}]/g, ''));
     parser.i += n[0].length - 1;

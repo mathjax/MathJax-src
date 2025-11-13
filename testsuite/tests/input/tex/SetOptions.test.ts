@@ -77,7 +77,7 @@ describe('Setoptions', () => {
     toXmlMatch(
       tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
-         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="50%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
+         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="50%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
            <mtr>
              <mtd columnalign="left">
                <mi data-latex="a">a</mi>
@@ -161,7 +161,7 @@ describe('Setoptions options', () => {
     toXmlMatch(
       tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
-         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="50%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
+         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="50%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
            <mtr>
              <mtd columnalign="left">
                <mi data-latex="a">a</mi>
@@ -207,7 +207,7 @@ describe('Setoptions options', () => {
     toXmlMatch(
       tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
-         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="50%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
+         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="50%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
            <mtr>
              <mtd columnalign="left">
                <mi data-latex="a">a</mi>
@@ -231,7 +231,7 @@ describe('Setoptions options', () => {
     toXmlMatch(
       tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
-         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
+         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
            <mtr>
              <mtd columnalign="left">
                <mi data-latex="a">a</mi>
@@ -253,7 +253,7 @@ describe('Setoptions options', () => {
     toXmlMatch(
       tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
-         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
+         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
            <mtr>
              <mtd columnalign="left">
                <mi data-latex="a">a</mi>
@@ -275,7 +275,7 @@ describe('Setoptions options', () => {
     toXmlMatch(
       tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
-         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="25%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
+         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="25%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
            <mtr>
              <mtd columnalign="left">
                <mi data-latex="a">a</mi>

@@ -25,7 +25,7 @@ describe('Texhtml', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x + &lt;tex-html&gt;&lt;b&gt;bold&lt;/b&gt;&lt;/tex-html&gt; + y" display="block">
          <mi data-latex="x">x</mi>
          <mo data-latex="+">+</mo>
-         <mtext data-latex="tex-html&gt;&lt;b&gt;bold&lt;/b&gt;&lt;/tex-html&gt;"><b>bold</b></mtext>
+         <mtext data-latex="&lt;tex-html&gt;&lt;b&gt;bold&lt;/b&gt;&lt;/tex-html&gt;"><b>bold</b></mtext>
          <mo data-latex="+">+</mo>
          <mi data-latex="y">y</mi>
        </math>`
@@ -40,9 +40,9 @@ describe('Texhtml', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x + &lt;tex-html&gt;&lt;b&gt;bold&lt;/b&gt;&lt;/tex-html&gt; + &lt;tex-html&gt;&lt;i&gt;italic&lt;/i&gt;&lt;/tex-html&gt;y" display="block">
          <mi data-latex="x">x</mi>
          <mo data-latex="+">+</mo>
-         <mtext data-latex="tex-html&gt;&lt;b&gt;bold&lt;/b&gt;&lt;/tex-html&gt;"><b>bold</b></mtext>
+         <mtext data-latex="&lt;tex-html&gt;&lt;b&gt;bold&lt;/b&gt;&lt;/tex-html&gt;"><b>bold</b></mtext>
          <mo data-latex="+">+</mo>
-         <mtext data-latex="tex-html&gt;&lt;i&gt;italic&lt;/i&gt;&lt;/tex-html&gt;"><i>italic</i></mtext>
+         <mtext data-latex="&lt;tex-html&gt;&lt;i&gt;italic&lt;/i&gt;&lt;/tex-html&gt;"><i>italic</i></mtext>
          <mi data-latex="y">y</mi>
        </math>`
     );
@@ -56,7 +56,7 @@ describe('Texhtml', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x + &lt;tex-html n=&quot;2&quot;&gt;&lt;b&gt;bold&lt;/b&gt; and &lt;tex-html&gt;html&lt;/tex-html&gt;&lt;!2&gt;&lt;/tex-html&gt; + y" display="block">
          <mi data-latex="x">x</mi>
          <mo data-latex="+">+</mo>
-         <mtext data-latex="tex-html n=&quot;2&quot;&gt;&lt;b&gt;bold&lt;/b&gt; and &lt;tex-html&gt;html&lt;/tex-html&gt;&lt;!2&gt;&lt;/tex-html&gt;"><div><b>bold</b> and <tex-html>html</tex-html></div></mtext>
+         <mtext data-latex="&lt;tex-html n=&quot;2&quot;&gt;&lt;b&gt;bold&lt;/b&gt; and &lt;tex-html&gt;html&lt;/tex-html&gt;&lt;!2&gt;&lt;/tex-html&gt;"><div><b>bold</b> and <tex-html>html</tex-html></div></mtext>
          <mo data-latex="+">+</mo>
          <mi data-latex="y">y</mi>
        </math>`
@@ -70,7 +70,7 @@ describe('Texhtml', () => {
       render2mml('x + <tex-html></tex-html> + y'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x + &lt;tex-html&gt;&lt;/tex-html&gt; + y" display="block">
          <mi data-latex="x">x</mi>
-         <mo data-latex="tex-html&gt;&lt;/tex-html&gt;">+</mo>
+         <mo data-latex="&lt;tex-html&gt;&lt;/tex-html&gt;">+</mo>
          <mo data-latex="+">+</mo>
          <mi data-latex="y">y</mi>
        </math>`

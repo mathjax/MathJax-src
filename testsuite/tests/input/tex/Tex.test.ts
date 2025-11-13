@@ -504,7 +504,7 @@ describe('TexParser', () => {
     toXmlMatch(
       tex2mml('\\let\\vert=x \\begin{vmatrix} a \\end{vmatrix}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\vert=x \\begin{vmatrix} a \\end{vmatrix}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" data-latex-item="{vmatrix}" data-latex="\\let\\vert=x \\begin{vmatrix} a \\end{vmatrix}">
+         <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\let\\vert=x \\begin{vmatrix} a \\end{vmatrix}">
            <mtr>
              <mtd>
                <mi data-latex="a">a</mi>

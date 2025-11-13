@@ -24,6 +24,7 @@
 import { TEXCLASS, MMLNODE, MmlNode } from '../../core/MmlTree/MmlNode.js';
 import NodeUtil from './NodeUtil.js';
 import ParseOptions from './ParseOptions.js';
+import { TexConstant } from './TexConstants.js';
 import { MmlMo } from '../../core/MmlTree/MmlNodes/mo.js';
 import { Attributes } from '../../core/MmlTree/Attributes.js';
 
@@ -184,6 +185,7 @@ const FilterUtil = {
         ((mml.getProperty('keep-attrs') as string) || '').split(/ /)
       );
       const attribs = mml.attributes;
+      attribs.unset(TexConstant.Attr.LATEXITEM);
       for (const key of attribs.getExplicitNames()) {
         if (
           !keep.has(key) &&

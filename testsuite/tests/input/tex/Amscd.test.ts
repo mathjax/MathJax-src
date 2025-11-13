@@ -15,7 +15,7 @@ describe('AmsCD', () => {
     toXmlMatch(
       tex2mml('\\begin{CD}A @>a>> B\\\\@VVbV @VVcV\\\\C @>d>> D\\end{CD}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="A">A</mi>
@@ -101,7 +101,7 @@ describe('AmsCD', () => {
     toXmlMatch(
       tex2mml('\\begin{CD}A @<<< B @>>> C\\\\@. @| @AAA\\\\@. D @= E\\end{CD}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&lt;&lt;&lt; B @&gt;&gt;&gt; C\\\\@. @| @AAA\\\\@. D @= E\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD}A @&lt;&lt;&lt; B @&gt;&gt;&gt; C\\\\@. @| @AAA\\\\@. D @= E\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&lt;&lt;&lt; B @&gt;&gt;&gt; C\\\\@. @| @AAA\\\\@. D @= E\\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="A">A</mi>
@@ -168,7 +168,7 @@ describe('AmsCD', () => {
     toXmlMatch(
       tex2mml('\\begin{CD}A @>a>b> B\\\\@VlVrV @AlArA\\\\C @<a<b< D\\end{CD}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&gt;a&gt;b&gt; B\\\\@VlVrV @AlArA\\\\C @&lt;a&lt;b&lt; D\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD}A @&gt;a&gt;b&gt; B\\\\@VlVrV @AlArA\\\\C @&lt;a&lt;b&lt; D\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&gt;a&gt;b&gt; B\\\\@VlVrV @AlArA\\\\C @&lt;a&lt;b&lt; D\\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="A">A</mi>
@@ -288,7 +288,7 @@ describe('AmsCD', () => {
         '\\begin{CD}A @>>> B@>\\text{very long label}>>C\\\\@VVV @VVV @VVV\\\\D @>>> E@>>> F\\end{CD}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&gt;&gt;&gt; B@&gt;\\text{very long label}&gt;&gt;C\\\\@VVV @VVV @VVV\\\\D @&gt;&gt;&gt; E@&gt;&gt;&gt; F\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD}A @&gt;&gt;&gt; B@&gt;\\text{very long label}&gt;&gt;C\\\\@VVV @VVV @VVV\\\\D @&gt;&gt;&gt; E@&gt;&gt;&gt; F\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&gt;&gt;&gt; B@&gt;\\text{very long label}&gt;&gt;C\\\\@VVV @VVV @VVV\\\\D @&gt;&gt;&gt; E@&gt;&gt;&gt; F\\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="A">A</mi>
@@ -372,7 +372,7 @@ describe('AmsCD', () => {
         '\\begin{CD}A @>>> B @>{\\text{very long label}}>> C \\\\@VVV @VVV @VVV \\\\D @>>> E @>{\\phantom{\\text{very long label}}}>> F\\end{CD}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&gt;&gt;&gt; B @&gt;{\\text{very long label}}&gt;&gt; C \\\\@VVV @VVV @VVV \\\\D @&gt;&gt;&gt; E @&gt;{\\phantom{\\text{very long label}}}&gt;&gt; F\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD}A @&gt;&gt;&gt; B @&gt;{\\text{very long label}}&gt;&gt; C \\\\@VVV @VVV @VVV \\\\D @&gt;&gt;&gt; E @&gt;{\\phantom{\\text{very long label}}}&gt;&gt; F\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&gt;&gt;&gt; B @&gt;{\\text{very long label}}&gt;&gt; C \\\\@VVV @VVV @VVV \\\\D @&gt;&gt;&gt; E @&gt;{\\phantom{\\text{very long label}}}&gt;&gt; F\\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="A">A</mi>
@@ -464,7 +464,7 @@ describe('AmsCD', () => {
         '\\begin{CD}A @>>> B @>{\\text{very long label}}>> C \\\\@VVV @VVV @VVV \\\\D @>>> E @>{\\rlap{\\scriptstyle{\\ \\ \\ \\text{shorter}}}\\phantom{\\text{very long label}}}>> F\\end{CD}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&gt;&gt;&gt; B @&gt;{\\text{very long label}}&gt;&gt; C \\\\@VVV @VVV @VVV \\\\D @&gt;&gt;&gt; E @&gt;{\\rlap{\\scriptstyle{\\ \\ \\ \\text{shorter}}}\\phantom{\\text{very long label}}}&gt;&gt; F\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD}A @&gt;&gt;&gt; B @&gt;{\\text{very long label}}&gt;&gt; C \\\\@VVV @VVV @VVV \\\\D @&gt;&gt;&gt; E @&gt;{\\rlap{\\scriptstyle{\\ \\ \\ \\text{shorter}}}\\phantom{\\text{very long label}}}&gt;&gt; F\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&gt;&gt;&gt; B @&gt;{\\text{very long label}}&gt;&gt; C \\\\@VVV @VVV @VVV \\\\D @&gt;&gt;&gt; E @&gt;{\\rlap{\\scriptstyle{\\ \\ \\ \\text{shorter}}}\\phantom{\\text{very long label}}}&gt;&gt; F\\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="A">A</mi>
@@ -533,9 +533,9 @@ describe('AmsCD', () => {
                      <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\scriptstyle{\\ \\ \\ \\text{shorter}}}">
                        <mpadded width="0">
                          <mrow data-mjx-texclass="ORD" data-latex="\\scriptstyle{\\ \\ \\ \\text{shorter}}">
-                           <mtext>&#xA0;</mtext>
-                           <mtext>&#xA0;</mtext>
-                           <mtext>&#xA0;</mtext>
+                           <mtext data-latex="\\ ">&#xA0;</mtext>
+                           <mtext data-latex="\\ ">&#xA0;</mtext>
+                           <mtext data-latex="\\ ">&#xA0;</mtext>
                            <mtext data-latex="\\text{shorter}">shorter</mtext>
                          </mrow>
                        </mpadded>
@@ -566,7 +566,7 @@ describe('AmsCD', () => {
         '\\minCDarrowwidth{5cm}\\begin{CD}A @>a>> B\\\\@VVbV @VVcV\\\\C @>d>> D\\end{CD}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\minCDarrowwidth{5cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\minCDarrowwidth{5cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\minCDarrowwidth{5cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="A">A</mi>
@@ -654,7 +654,7 @@ describe('AmsCD', () => {
         '\\minCDarrowheight{4cm}\\begin{CD}A @>a>> B\\\\@VVbV @VVcV\\\\C @>d>> D\\end{CD}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\minCDarrowheight{4cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\minCDarrowheight{4cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\minCDarrowheight{4cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="A">A</mi>
@@ -742,7 +742,7 @@ describe('AmsCD', () => {
         '\\minCDarrowheight{4cm}\\minCDarrowwidth{5cm}\\begin{CD}A @>a>> B\\\\@VVbV @VVcV\\\\C @>d>> D\\end{CD}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\minCDarrowheight{4cm}\\minCDarrowwidth{5cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\minCDarrowheight{4cm}\\minCDarrowwidth{5cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\minCDarrowheight{4cm}\\minCDarrowwidth{5cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="A">A</mi>
@@ -828,7 +828,7 @@ describe('AmsCD', () => {
     toXmlMatch(
       tex2mml('\\begin{CD}A @ > x > > B \\end{CD}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @ &gt; x &gt; &gt; B \\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD}A @ &gt; x &gt; &gt; B \\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @ &gt; x &gt; &gt; B \\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="A">A</mi>
@@ -857,7 +857,7 @@ describe('AmsCD', () => {
     toXmlMatch(
       tex2mml('\\begin{CD}A @Ra>> BaD\\end{CD}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @Ra&gt;&gt; BaD\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD}A @Ra&gt;&gt; BaD\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @Ra&gt;&gt; BaD\\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="A">A</mi>
@@ -881,12 +881,12 @@ describe('AmsCD', () => {
     toXmlMatch(
       tex2mml(`\\begin{CD}A' @>>> B\\end{CD}`),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A' @&gt;&gt;&gt; B\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD}A' @&gt;&gt;&gt; B\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A' @&gt;&gt;&gt; B\\end{CD}">
            <mtr>
              <mtd>
                <msup>
                  <mi data-latex="A">A</mi>
-                 <mo data-mjx-alternate="1">&#x2032;</mo>
+                 <mo data-mjx-alternate="1" data-latex="'">&#x2032;</mo>
                </msup>
                <mpadded height="8.5pt" depth="2pt"></mpadded>
              </mtd>
@@ -924,7 +924,7 @@ describe('AmsCD Options', () => {
     toXmlMatch(
       tex2mml('\\begin{CD}A @>a>> B\\\\@VVbV @VVcV\\\\C @>d>> D\\end{CD}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="A">A</mi>

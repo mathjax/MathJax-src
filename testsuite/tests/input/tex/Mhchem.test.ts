@@ -104,8 +104,8 @@ describe('Mhchem0', () => {
          </mrow>
          <mo data-latex="]" stretchy="false">]</mo>
          <mo data-latex="=">=</mo>
-         <mrow data-mjx-texclass="ORD" data-latex="{5.3~\\mathchoice{\\textstyle\\frac{\\mathrm{J}}{\\mathrm{mol}\\mkern3mu \\mathrm{K}}}{\\frac{\\mathrm{J}}{\\mathrm{mol}\\mkern3mu \\mathrm{K}}}{\\frac{\\mathrm{J}}{\\mathrm{mol}\\mkern3mu \\mathrm{K}}}{\\frac{\\mathrm{J}}{\\mathrm{mol}\\mkern3mu \\mathrm{K}}}}">
-           <mn data-latex="5.3">75.3</mn>
+         <mrow data-mjx-texclass="ORD" data-latex="{75.3~\\mathchoice{\\textstyle\\frac{\\mathrm{J}}{\\mathrm{mol}\\mkern3mu \\mathrm{K}}}{\\frac{\\mathrm{J}}{\\mathrm{mol}\\mkern3mu \\mathrm{K}}}{\\frac{\\mathrm{J}}{\\mathrm{mol}\\mkern3mu \\mathrm{K}}}{\\frac{\\mathrm{J}}{\\mathrm{mol}\\mkern3mu \\mathrm{K}}}}">
+           <mn data-latex="75.3">75.3</mn>
            <mtext data-latex="~">&#xA0;</mtext>
            <mstyle displaystyle="false" data-latex="\\textstyle\\frac{\\mathrm{J}}{\\mathrm{mol}\\mkern3mu \\mathrm{K}}">
              <mfrac data-latex="\\frac{\\mathrm{J}}{\\mathrm{mol}\\mkern3mu \\mathrm{K}}">
@@ -354,7 +354,7 @@ describe('Mhchem0', () => {
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Y}">
              <mi mathvariant="normal" data-latex="Y">Y</mi>
            </mrow>
-           <msup data-latex="{\\vphantom{A}}^{9+}">
+           <msup data-latex="{\\vphantom{A}}^{99+}">
              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
                  <mpadded width="0">
@@ -364,8 +364,8 @@ describe('Mhchem0', () => {
                  </mpadded>
                </mrow>
              </mrow>
-             <mrow data-mjx-texclass="ORD" data-latex="{9+}">
-               <mn data-latex="9">99</mn>
+             <mrow data-mjx-texclass="ORD" data-latex="{99+}">
+               <mn data-latex="99">99</mn>
                <mo data-latex="+">+</mo>
              </mrow>
            </msup>
@@ -393,7 +393,7 @@ describe('Mhchem1', () => {
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Y}">
              <mi mathvariant="normal" data-latex="Y">Y</mi>
            </mrow>
-           <msup data-latex="{\\vphantom{A}}^{9+}">
+           <msup data-latex="{\\vphantom{A}}^{99+}">
              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
                  <mpadded width="0">
@@ -403,8 +403,8 @@ describe('Mhchem1', () => {
                  </mpadded>
                </mrow>
              </mrow>
-             <mrow data-mjx-texclass="ORD" data-latex="{9+}">
-               <mn data-latex="9">99</mn>
+             <mrow data-mjx-texclass="ORD" data-latex="{99+}">
+               <mn data-latex="99">99</mn>
                <mo data-latex="+">+</mo>
              </mrow>
            </msup>
@@ -496,7 +496,7 @@ describe('Mhchem1', () => {
       tex2mml('\\ce{0.5 H2O}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{0.5 H2O}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{0.5\\,\\mathrm{H}{\\vphantom{A}}_{\\smash[t]{2}}\\mathrm{O}}">
-           <mn data-latex=".5">0.5</mn>
+           <mn data-latex="0.5">0.5</mn>
            <mspace width="0.167em" data-latex="\\,"></mspace>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{H}">
              <mi mathvariant="normal" data-latex="H">H</mi>
@@ -1620,8 +1620,8 @@ describe('Mhchem3', () => {
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
            <mn data-latex="2">2</mn>
            <mspace width="0.167em" data-latex="\\,"></mspace>
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left(  \\mathrm{O}{\\vphantom{A}}_{\\smash[t]{2}} {}+{} \\mathchoice{\\textstyle\\frac{79}{21}}{\\frac{79}{21}}{\\frac{79}{21}}{\\frac{79}{21}}\\,\\mathrm{N}{\\vphantom{A}}_{\\smash[t]{2}} \\right)" data-latex="\\left(  \\mathrm{O}{\\vphantom{A}}_{\\smash[t]{2}} {}+{} \\mathchoice{\\textstyle\\frac{79}{21}}{\\frac{79}{21}}{\\frac{79}{21}}{\\frac{79}{21}}\\,\\mathrm{N}{\\vphantom{A}}_{\\smash[t]{2}} \\right)">
-             <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left(  \\mathrm{O}{\\vphantom{A}}_{\\smash[t]{2}} {}+{} \\mathchoice{\\textstyle\\frac{79}{21}}{\\frac{79}{21}}{\\frac{79}{21}}{\\frac{79}{21}}\\,\\mathrm{N}{\\vphantom{A}}_{\\smash[t]{2}} \\right)">
+             <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
              <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{O}">
                <mi mathvariant="normal" data-latex="O">O</mi>
              </mrow>
@@ -1674,7 +1674,7 @@ describe('Mhchem3', () => {
                  </mrow>
                </mrow>
              </msub>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
            </mrow>
          </mrow>
        </math>`
@@ -1887,7 +1887,7 @@ describe('Mhchem4', () => {
              <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{x }}">
                <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{x }">
                  <mpadded height="0">
-                   <mi data-latex="x ">x</mi>
+                   <mi data-latex="x">x</mi>
                  </mpadded>
                </mrow>
              </mrow>
@@ -2068,7 +2068,7 @@ describe('Mhchem4', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{\\beta +}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{\\beta }{\\vphantom{A}}^{+}}">
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{\\beta }">
-             <mi data-latex="\\beta ">&#x3B2;</mi>
+             <mi data-latex="\\beta">&#x3B2;</mi>
            </mrow>
            <msup data-latex="{\\vphantom{A}}^{+}">
              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
@@ -2202,7 +2202,7 @@ describe('Mhchem4', () => {
              <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{e }}">
                <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{e }">
                  <mpadded height="0">
-                   <mi data-latex="e ">e</mi>
+                   <mi data-latex="e">e</mi>
                  </mpadded>
                </mrow>
              </mrow>
@@ -2263,7 +2263,7 @@ describe('Mhchem4', () => {
              <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{\\frac{6}{2} }}">
                <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{\\frac{6}{2} }">
                  <mpadded height="0">
-                   <mfrac data-latex="\\frac{6}{2} ">
+                   <mfrac data-latex="\\frac{6}{2}">
                      <mn data-latex="6">6</mn>
                      <mn data-latex="2">2</mn>
                    </mfrac>
@@ -2308,7 +2308,7 @@ describe('Mhchem5', () => {
              <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{i }}">
                <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{i }">
                  <mpadded height="0">
-                   <mi data-latex="i ">i</mi>
+                   <mi data-latex="i">i</mi>
                  </mpadded>
                </mrow>
              </mrow>
@@ -2355,7 +2355,7 @@ describe('Mhchem5', () => {
              <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{i }}">
                <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{i }">
                  <mpadded height="0">
-                   <mi data-latex="i ">i</mi>
+                   <mi data-latex="i">i</mi>
                  </mpadded>
                </mrow>
              </mrow>
@@ -2474,7 +2474,7 @@ describe('Mhchem5', () => {
            <mo data-latex="(" stretchy="false">(</mo>
            <mi data-latex="h">h</mi>
            <mi data-latex="P">P</mi>
-           <mn data-latex="2">12</mn>
+           <mn data-latex="12">12</mn>
            <mo data-latex=")" stretchy="false">)</mo>
          </mrow>
        </math>`
@@ -3016,7 +3016,7 @@ describe('Mhchem6', () => {
              <mo data-latex="\\cdot">&#x22C5;</mo>
            </mrow>
            <mspace width="0.167em" data-latex="\\,"></mspace>
-           <mn data-latex="2">12</mn>
+           <mn data-latex="12">12</mn>
            <mspace width="0.167em" data-latex="\\,"></mspace>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{H}">
              <mi mathvariant="normal" data-latex="H">H</mi>
@@ -3103,7 +3103,7 @@ describe('Mhchem6', () => {
              <mo data-latex="\\cdot">&#x22C5;</mo>
            </mrow>
            <mspace width="0.167em" data-latex="\\,"></mspace>
-           <mn data-latex="2">12</mn>
+           <mn data-latex="12">12</mn>
            <mspace width="0.167em" data-latex="\\,"></mspace>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{H}">
              <mi mathvariant="normal" data-latex="H">H</mi>
@@ -3190,7 +3190,7 @@ describe('Mhchem6', () => {
              <mo data-latex="\\cdot">&#x22C5;</mo>
            </mrow>
            <mspace width="0.167em" data-latex="\\,"></mspace>
-           <mn data-latex="2">12</mn>
+           <mn data-latex="12">12</mn>
            <mspace width="0.167em" data-latex="\\,"></mspace>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{H}">
              <mi mathvariant="normal" data-latex="H">H</mi>
@@ -3568,7 +3568,7 @@ describe('Mhchem7', () => {
                      <mo data-latex=",">,</mo>
                    </mrow>
                    <mspace width="0.056em" linebreak="nobreak" data-latex="\\mkern1mu"></mspace>
-                   <mn data-latex=".8">0.8</mn>
+                   <mn data-latex="0.8">0.8</mn>
                  </mpadded>
                </mrow>
              </mrow>
@@ -3594,7 +3594,7 @@ describe('Mhchem7', () => {
                      <mo data-latex=",">,</mo>
                    </mrow>
                    <mspace width="0.056em" linebreak="nobreak" data-latex="\\mkern1mu"></mspace>
-                   <mn data-latex=".2">0.2</mn>
+                   <mn data-latex="0.2">0.2</mn>
                  </mpadded>
                </mrow>
              </mrow>
@@ -4432,7 +4432,7 @@ describe('Mhchem9', () => {
       tex2mml('\\pu{123 kJ}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pu{123 kJ}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{123~\\mathrm{kJ}}">
-           <mn data-latex="23">123</mn>
+           <mn data-latex="123">123</mn>
            <mtext data-latex="~">&#xA0;</mtext>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{kJ}">
              <mi data-mjx-auto-op="false" data-latex="kJ">kJ</mi>
@@ -4449,11 +4449,11 @@ describe('Mhchem9', () => {
       tex2mml('\\pu{123 mm2}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pu{123 mm2}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{123~\\mathrm{mm^{2}}}">
-           <mn data-latex="23">123</mn>
+           <mn data-latex="123">123</mn>
            <mtext data-latex="~">&#xA0;</mtext>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{mm^{2}}">
              <msup data-latex="mm^{2}">
-               <mi data-mjx-auto-op="false" data-latex="m">mm</mi>
+               <mi data-mjx-auto-op="false" data-latex="mm">mm</mi>
                <mrow data-mjx-texclass="ORD" data-latex="{2}">
                  <mn data-latex="2">2</mn>
                </mrow>
@@ -4471,7 +4471,7 @@ describe('Mhchem9', () => {
       tex2mml('\\pu{123 J s}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pu{123 J s}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{123~\\mathrm{J}\\mkern3mu \\mathrm{s}}">
-           <mn data-latex="23">123</mn>
+           <mn data-latex="123">123</mn>
            <mtext data-latex="~">&#xA0;</mtext>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{J}">
              <mi mathvariant="normal" data-latex="J">J</mi>
@@ -4492,7 +4492,7 @@ describe('Mhchem9', () => {
       tex2mml('\\pu{123 J*s}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pu{123 J*s}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{123~\\mathrm{J}\\mkern1mu{\\cdot}\\mkern1mu \\mathrm{s}}">
-           <mn data-latex="23">123</mn>
+           <mn data-latex="123">123</mn>
            <mtext data-latex="~">&#xA0;</mtext>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{J}">
              <mi mathvariant="normal" data-latex="J">J</mi>
@@ -4517,7 +4517,7 @@ describe('Mhchem9', () => {
       tex2mml('\\pu{123 kJ/mol}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pu{123 kJ/mol}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{123~\\mathrm{kJ}/\\mathrm{mol}}">
-           <mn data-latex="23">123</mn>
+           <mn data-latex="123">123</mn>
            <mtext data-latex="~">&#xA0;</mtext>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{kJ}">
              <mi data-mjx-auto-op="false" data-latex="kJ">kJ</mi>
@@ -4538,7 +4538,7 @@ describe('Mhchem9', () => {
       tex2mml('\\pu{123 kJ//mol}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pu{123 kJ//mol}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{123~\\mathchoice{\\textstyle\\frac{\\mathrm{kJ}}{\\mathrm{mol}}}{\\frac{\\mathrm{kJ}}{\\mathrm{mol}}}{\\frac{\\mathrm{kJ}}{\\mathrm{mol}}}{\\frac{\\mathrm{kJ}}{\\mathrm{mol}}}}">
-           <mn data-latex="23">123</mn>
+           <mn data-latex="123">123</mn>
            <mtext data-latex="~">&#xA0;</mtext>
            <mstyle displaystyle="false" data-latex="\\textstyle\\frac{\\mathrm{kJ}}{\\mathrm{mol}}">
              <mfrac data-latex="\\frac{\\mathrm{kJ}}{\\mathrm{mol}}">
@@ -4562,7 +4562,7 @@ describe('Mhchem9', () => {
       tex2mml('\\pu{123 kJ mol-1}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pu{123 kJ mol-1}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{123~\\mathrm{kJ}\\mkern3mu \\mathrm{mol^{-1}}}">
-           <mn data-latex="23">123</mn>
+           <mn data-latex="123">123</mn>
            <mtext data-latex="~">&#xA0;</mtext>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{kJ}">
              <mi data-mjx-auto-op="false" data-latex="kJ">kJ</mi>
@@ -4570,7 +4570,7 @@ describe('Mhchem9', () => {
            <mspace width="0.167em" linebreak="nobreak" data-latex="\\mkern3mu"></mspace>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{mol^{-1}}">
              <msup data-latex="mol^{-1}">
-               <mi data-mjx-auto-op="false" data-latex="ol">mol</mi>
+               <mi data-mjx-auto-op="false" data-latex="mol">mol</mi>
                <mrow data-mjx-texclass="ORD" data-latex="{-1}">
                  <mo data-latex="-">&#x2212;</mo>
                  <mn data-latex="1">1</mn>
@@ -4589,7 +4589,7 @@ describe('Mhchem9', () => {
       tex2mml('\\pu{123 kJ*mol-1}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pu{123 kJ*mol-1}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{123~\\mathrm{kJ}\\mkern1mu{\\cdot}\\mkern1mu \\mathrm{mol^{-1}}}">
-           <mn data-latex="23">123</mn>
+           <mn data-latex="123">123</mn>
            <mtext data-latex="~">&#xA0;</mtext>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{kJ}">
              <mi data-mjx-auto-op="false" data-latex="kJ">kJ</mi>
@@ -4601,7 +4601,7 @@ describe('Mhchem9', () => {
            <mspace width="0.056em" linebreak="nobreak" data-latex="\\mkern1mu"></mspace>
            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{mol^{-1}}">
              <msup data-latex="mol^{-1}">
-               <mi data-mjx-auto-op="false" data-latex="ol">mol</mi>
+               <mi data-mjx-auto-op="false" data-latex="mol">mol</mi>
                <mrow data-mjx-texclass="ORD" data-latex="{-1}">
                  <mo data-latex="-">&#x2212;</mo>
                  <mn data-latex="1">1</mn>
@@ -4620,10 +4620,10 @@ describe('Mhchem9', () => {
       tex2mml('\\pu{1.2e3 kJ}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pu{1.2e3 kJ}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{1.2\\cdot 10^{3}~\\mathrm{kJ}}">
-           <mn data-latex=".2">1.2</mn>
+           <mn data-latex="1.2">1.2</mn>
            <mo data-latex="\\cdot">&#x22C5;</mo>
-           <msup data-latex="0^{3}">
-             <mn data-latex="0">10</mn>
+           <msup data-latex="10^{3}">
+             <mn data-latex="10">10</mn>
              <mrow data-mjx-texclass="ORD" data-latex="{3}">
                <mn data-latex="3">3</mn>
              </mrow>
@@ -4650,8 +4650,8 @@ describe('Mhchem9', () => {
            </mrow>
            <mn data-latex="2">2</mn>
            <mo data-latex="\\cdot">&#x22C5;</mo>
-           <msup data-latex="0^{3}">
-             <mn data-latex="0">10</mn>
+           <msup data-latex="10^{3}">
+             <mn data-latex="10">10</mn>
              <mrow data-mjx-texclass="ORD" data-latex="{3}">
                <mn data-latex="3">3</mn>
              </mrow>
@@ -4672,10 +4672,10 @@ describe('Mhchem9', () => {
       tex2mml('\\pu{1.2E3 kJ}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pu{1.2E3 kJ}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{1.2\\times 10^{3}~\\mathrm{kJ}}">
-           <mn data-latex=".2">1.2</mn>
+           <mn data-latex="1.2">1.2</mn>
            <mo data-latex="\\times">&#xD7;</mo>
-           <msup data-latex="0^{3}">
-             <mn data-latex="0">10</mn>
+           <msup data-latex="10^{3}">
+             <mn data-latex="10">10</mn>
              <mrow data-mjx-texclass="ORD" data-latex="{3}">
                <mn data-latex="3">3</mn>
              </mrow>
@@ -4702,8 +4702,8 @@ describe('Mhchem9', () => {
            </mrow>
            <mn data-latex="2">2</mn>
            <mo data-latex="\\times">&#xD7;</mo>
-           <msup data-latex="0^{3}">
-             <mn data-latex="0">10</mn>
+           <msup data-latex="10^{3}">
+             <mn data-latex="10">10</mn>
              <mrow data-mjx-texclass="ORD" data-latex="{3}">
                <mn data-latex="3">3</mn>
              </mrow>
@@ -5018,7 +5018,7 @@ describe('Mhchem-Ams', () => {
                    <mspace height=".75em"></mspace>
                  </mpadded>
                  <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
-                   <mi data-latex="x ">x</mi>
+                   <mi data-latex="x">x</mi>
                    <mspace depth=".2em"></mspace>
                  </mpadded>
                </munderover>
@@ -5141,7 +5141,7 @@ describe('Mhchem-Ams', () => {
              <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{x }}">
                <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{x }">
                  <mpadded height="0">
-                   <mi data-latex="x ">x</mi>
+                   <mi data-latex="x">x</mi>
                  </mpadded>
                </mrow>
              </mrow>

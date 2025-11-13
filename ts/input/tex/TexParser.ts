@@ -99,7 +99,6 @@ export default class TexParser {
     this.stack = new Stack(this.itemFactory, ENV, inner ? isInner : true);
     this.Parse();
     this.Push(this.itemFactory.create('stop'));
-    this.updateResult(this.string, this.i);
     this.stack.env = ENV;
   }
 
@@ -149,9 +148,17 @@ export default class TexParser {
    */
   public parse(kind: HandlerType, input: ParseInput): ParseResult {
     const i = this.saveI;
-    this.saveI = this.i;
+    //
+    // Back up one to pick up the parsed character (this.i is past it at this point).
+    //
+    this.saveI = this.i - (kind === 'character' && input[1] !== '&' ? 1 : 0);
     const result = this.configuration.handlers.get(kind).parse(input);
-    this.updateResult(input[1], i);
+    //
+    // The macro gets processed by the \\ character later
+    //
+    if (kind !== 'macro') {
+      this.updateResult(input[1], i);
+    }
     this.saveI = i;
     return result;
   }
@@ -246,7 +253,10 @@ export default class TexParser {
     }
     const node = this.stack.Top().First;
     this.configuration.popParser();
-    node.attributes.set(TexConstant.Attr.LATEX, this.string);
+    const latex = this.trimTex(this.string);
+    if (latex) {
+      node.attributes.set(TexConstant.Attr.LATEX, latex);
+    }
     return node;
   }
 
@@ -614,6 +624,16 @@ export default class TexParser {
   }
 
   /**
+   * Trim spaces from the ends of a TeX string, leave a space when the last item is "\ "
+   *
+   * @param {string} tex   The TeX string to trim
+   * @returns {string}     The trimmed string
+   */
+  protected trimTex(tex: string): string {
+    return tex.trim() + (tex.match(/(?:^|[^\\])(?:\\\\)*\\\s+$/) ? ' ' : '');
+  }
+
+  /**
    * Finalizes the LaTeX for the topmost Mml element on the stack after parsing
    * has been completed.
    *
@@ -626,68 +646,99 @@ export default class TexParser {
     if (!node) {
       return;
     }
-    // TODO: This can probably be removed once processed. But needs more
-    // testing.
+    const LATEX = TexConstant.Attr.LATEX;
+    //
+    // Check if there is a latex-item and process it if there isn't already latex attached.
+    //
+    const latex = node.attributes.get(LATEX);
     const existing = node.attributes.get(TexConstant.Attr.LATEXITEM);
     if (existing !== undefined) {
-      node.attributes.set(TexConstant.Attr.LATEX, existing);
+      if (!latex) {
+        if (input === '}' || existing === '}') {
+          this.composeBraces(node);
+        } else {
+          node.attributes.set(LATEX, existing);
+        }
+      }
       return;
     }
+    //
+    // Get the current latex sub-string and check that it isn't already the saved latex
+    // and that the input and string are not both backslashes (the start of a macro).
+    //
     old = old < this.saveI ? this.saveI : old;
-    let str = old !== this.i ? this.string.slice(old, this.i) : input;
-    str = str.trim();
-    if (!str) {
+    const str = this.trimTex(
+      old !== this.i ? this.string.slice(old, this.i) : input
+    );
+    if (!str || str === latex || (input === '\\' && str === '\\')) {
       return;
     }
-    if (input === '\\') {
-      str = '\\' + str;
-    }
-    // These are the cases to handle sub and superscripts.
-    if (
-      node.attributes.get(TexConstant.Attr.LATEX) === '^' &&
-      str !== '^' &&
-      str !== '\\^'
-    ) {
-      if (node.childNodes[2]) {
-        if (str === '}') {
-          this.composeBraces(node.childNodes[2]);
-        } else {
-          node.childNodes[2].attributes.set(TexConstant.Attr.LATEX, str);
-        }
+    if (str === '_' || str === '^') {
+      //
+      // If the input is _ or ^, mark that we are doing a sub-sup.
+      //
+      node.setProperty('sub-sup', str);
+    } else {
+      //
+      // Otherwise, if we are doing a sub-sup, do the proper one.
+      //
+      switch (node.getProperty('sub-sup')) {
+        case '^':
+          //
+          // If we have a superscript, process the superscript latex.
+          //
+          if (node.childNodes[2]) {
+            if (str === '}') {
+              this.composeBraces(node.childNodes[2]);
+            } else if (!node.childNodes[2].attributes.hasExplicit(LATEX)) {
+              node.childNodes[2].attributes.set(LATEX, str);
+            }
+          }
+          //
+          // Make the latex for the superscript (possibly with subscript).
+          //
+          if (node.childNodes[1]) {
+            const sub = node.childNodes[1].attributes.get(LATEX);
+            this.composeLatex(node, `_${sub}^`, 0, 2);
+          } else {
+            this.composeLatex(node, '^', 0, 2);
+          }
+          return;
+
+        case '_':
+          //
+          // If we have a subscript, process the subscript latex.
+          //
+          if (node.childNodes[1]) {
+            if (str === '}') {
+              this.composeBraces(node.childNodes[1]);
+            } else if (!node.childNodes[1].attributes.hasExplicit(LATEX)) {
+              node.childNodes[1].attributes.set(LATEX, str);
+            }
+          }
+          //
+          // Update the latex for the subscript (possibly with superscript).
+          //
+          if (node.childNodes[2]) {
+            const sup = node.childNodes[2].attributes.get(LATEX);
+            this.composeLatex(node, `^${sup}_`, 0, 1);
+          } else {
+            this.composeLatex(node, '_', 0, 1);
+          }
+          return;
       }
-      if (node.childNodes[1]) {
-        const sub = node.childNodes[1].attributes.get(TexConstant.Attr.LATEX);
-        this.composeLatex(node, `_${sub}^`, 0, 2);
-      } else {
-        this.composeLatex(node, '^', 0, 2);
+      //
+      // If this is a close brace, get the braced contents.
+      //
+      if (str === '}') {
+        this.composeBraces(node);
+        return;
       }
-      return;
     }
-    if (
-      node.attributes.get(TexConstant.Attr.LATEX) === '_' &&
-      str !== '_' &&
-      str !== '\\_'
-    ) {
-      if (node.childNodes[1]) {
-        if (str === '}') {
-          this.composeBraces(node.childNodes[1]);
-        } else {
-          node.childNodes[1].attributes.set(TexConstant.Attr.LATEX, str);
-        }
-      }
-      if (node.childNodes[2]) {
-        const sub = node.childNodes[2].attributes.get(TexConstant.Attr.LATEX);
-        this.composeLatex(node, `^${sub}_`, 0, 1);
-      } else {
-        this.composeLatex(node, '_', 0, 1);
-      }
-      return;
-    }
-    if (str === '}') {
-      this.composeBraces(node);
-      return;
-    }
-    node.attributes.set(TexConstant.Attr.LATEX, str);
+    //
+    // Otherwise, set the node's latex.
+    //
+    node.attributes.set(LATEX, str);
   }
 
   /**
@@ -705,11 +756,12 @@ export default class TexParser {
     pos2: number
   ) {
     if (!node.childNodes[pos1] || !node.childNodes[pos2]) return;
+    const LATEX = TexConstant.Attr.LATEX;
     const expr =
-      (node.childNodes[pos1].attributes.get(TexConstant.Attr.LATEX) || '') +
+      (node.childNodes[pos1].attributes.get(LATEX) || '') +
       comp +
-      node.childNodes[pos2].attributes.get(TexConstant.Attr.LATEX);
-    node.attributes.set(TexConstant.Attr.LATEX, expr);
+      node.childNodes[pos2].attributes.get(LATEX);
+    node.attributes.set(LATEX, expr);
   }
 
   /**
