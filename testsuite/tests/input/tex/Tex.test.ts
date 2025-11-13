@@ -436,21 +436,24 @@ describe('TexParser', () => {
     toXmlMatch(
       tex2mml('\\xrightarrow[{[x]}]{a}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xrightarrow[{[x]}]{a}" display="block">
-         <munderover data-latex="\\xrightarrow[{[x]}]{a}">
-           <mo data-mjx-texclass="REL">&#x2192;</mo>
-           <mpadded width="+0.833em" lspace="0.278em" voffset=".15em" depth="-.15em">
-             <mrow data-mjx-texclass="ORD" data-latex="{[x]}">
-               <mo data-latex="[" stretchy="false">[</mo>
-               <mi data-latex="x">x</mi>
-               <mo data-latex="]" stretchy="false">]</mo>
-             </mrow>
-             <mspace height=".75em"></mspace>
-           </mpadded>
-           <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-             <mi data-latex="a">a</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </munderover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xrightarrow[{[x]}]{a}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <munderover>
+             <mo data-mjx-texclass="ORD">&#x2192;</mo>
+             <mpadded width="+0.833em" lspace="0.278em" voffset=".15em" depth="-.15em">
+               <mrow data-mjx-texclass="ORD" data-latex="{[x]}">
+                 <mo data-latex="[" stretchy="false">[</mo>
+                 <mi data-latex="x">x</mi>
+                 <mo data-latex="]" stretchy="false">]</mo>
+               </mrow>
+               <mspace height=".75em"></mspace>
+             </mpadded>
+             <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
+               <mi data-latex="a">a</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </munderover>
+         </mrow>
        </math>`
     );
   });

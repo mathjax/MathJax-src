@@ -743,15 +743,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xleftrightarrow{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xleftrightarrow{x+y}" display="block">
-         <mover data-latex="\\xleftrightarrow{x+y}">
-           <mo data-mjx-texclass="REL">&#x2194;</mo>
-           <mpadded width="+1.111em" lspace="0.556em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xleftrightarrow{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x2194;</mo>
+             <mpadded width="+1.111em" lspace="0.556em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -762,15 +765,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xLeftarrow{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xLeftarrow{x+y}" display="block">
-         <mover data-latex="\\xLeftarrow{x+y}">
-           <mo data-mjx-texclass="REL">&#x21D0;</mo>
-           <mpadded width="+1.056em" lspace="0.667em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xLeftarrow{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x21D0;</mo>
+             <mpadded width="+1.056em" lspace="0.667em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -781,15 +787,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xRightarrow{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xRightarrow{x+y}" display="block">
-         <mover data-latex="\\xRightarrow{x+y}">
-           <mo data-mjx-texclass="REL">&#x21D2;</mo>
-           <mpadded width="+1.056em" lspace="0.389em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xRightarrow{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x21D2;</mo>
+             <mpadded width="+1.056em" lspace="0.389em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -800,15 +809,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xLeftrightarrow{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xLeftrightarrow{x+y}" display="block">
-         <mover data-latex="\\xLeftrightarrow{x+y}">
-           <mo data-mjx-texclass="REL">&#x21D4;</mo>
-           <mpadded width="+1.333em" lspace="0.667em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xLeftrightarrow{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x21D4;</mo>
+             <mpadded width="+1.333em" lspace="0.667em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -819,15 +831,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xhookleftarrow{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xhookleftarrow{x+y}" display="block">
-         <mover data-latex="\\xhookleftarrow{x+y}">
-           <mo data-mjx-texclass="REL">&#x21A9;</mo>
-           <mpadded width="+0.833em" lspace="0.556em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xhookleftarrow{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x21A9;</mo>
+             <mpadded width="+0.833em" lspace="0.556em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -838,15 +853,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xhookrightarrow{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xhookrightarrow{x+y}" display="block">
-         <mover data-latex="\\xhookrightarrow{x+y}">
-           <mo data-mjx-texclass="REL">&#x21AA;</mo>
-           <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xhookrightarrow{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x21AA;</mo>
+             <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -857,15 +875,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xmapsto{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xmapsto{x+y}" display="block">
-         <mover data-latex="\\xmapsto{x+y}">
-           <mo data-mjx-texclass="REL">&#x21A6;</mo>
-           <mpadded width="+1.111em" lspace="0.556em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xmapsto{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x21A6;</mo>
+             <mpadded width="+1.111em" lspace="0.556em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -876,15 +897,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xrightharpoondown{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xrightharpoondown{x+y}" display="block">
-         <mover data-latex="\\xrightharpoondown{x+y}">
-           <mo data-mjx-texclass="REL">&#x21C1;</mo>
-           <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xrightharpoondown{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x21C1;</mo>
+             <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -895,15 +919,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xleftharpoondown{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xleftharpoondown{x+y}" display="block">
-         <mover data-latex="\\xleftharpoondown{x+y}">
-           <mo data-mjx-texclass="REL">&#x21BD;</mo>
-           <mpadded width="+0.833em" lspace="0.556em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xleftharpoondown{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x21BD;</mo>
+             <mpadded width="+0.833em" lspace="0.556em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -914,15 +941,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xrightleftharpoons{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xrightleftharpoons{x+y}" display="block">
-         <mover data-latex="\\xrightleftharpoons{x+y}">
-           <mo data-mjx-texclass="REL">&#x21CC;</mo>
-           <mpadded width="+1.111em" lspace="0.556em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xrightleftharpoons{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x21CC;</mo>
+             <mpadded width="+1.111em" lspace="0.556em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -933,15 +963,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xleftrightharpoons{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xleftrightharpoons{x+y}" display="block">
-         <mover data-latex="\\xleftrightharpoons{x+y}">
-           <mo data-mjx-texclass="REL">&#x21CB;</mo>
-           <mpadded width="+1.111em" lspace="0.556em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xleftrightharpoons{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x21CB;</mo>
+             <mpadded width="+1.111em" lspace="0.556em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -952,15 +985,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xrightharpoonup{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xrightharpoonup{x+y}" display="block">
-         <mover data-latex="\\xrightharpoonup{x+y}">
-           <mo data-mjx-texclass="REL">&#x21C0;</mo>
-           <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xrightharpoonup{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x21C0;</mo>
+             <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -971,15 +1007,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xleftharpoonup{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xleftharpoonup{x+y}" display="block">
-         <mover data-latex="\\xleftharpoonup{x+y}">
-           <mo data-mjx-texclass="REL">&#x21BC;</mo>
-           <mpadded width="+0.833em" lspace="0.556em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xleftharpoonup{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD">&#x21BC;</mo>
+             <mpadded width="+0.833em" lspace="0.556em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -990,15 +1029,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xlongleftarrow{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xlongleftarrow{x+y}" display="block">
-         <mover data-latex="\\xlongleftarrow{x+y}">
-           <mo data-mjx-texclass="REL" minsize="1.45em">&#x27F5;</mo>
-           <mpadded width="+1.056em" lspace="0.667em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xlongleftarrow{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD" minsize="1.45em">&#x27F5;</mo>
+             <mpadded width="+1.056em" lspace="0.667em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -1009,15 +1051,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xLongleftarrow{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xLongleftarrow{x+y}" display="block">
-         <mover data-latex="\\xLongleftarrow{x+y}">
-           <mo data-mjx-texclass="REL" minsize="1.45em">&#x27F8;</mo>
-           <mpadded width="+1.056em" lspace="0.667em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xLongleftarrow{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD" minsize="1.45em">&#x27F8;</mo>
+             <mpadded width="+1.056em" lspace="0.667em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -1028,15 +1073,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xlongrightarrow{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xlongrightarrow{x+y}" display="block">
-         <mover data-latex="\\xlongrightarrow{x+y}">
-           <mo data-mjx-texclass="REL" minsize="1.45em">&#x27F6;</mo>
-           <mpadded width="+1.056em" lspace="0.389em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xlongrightarrow{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD" minsize="1.45em">&#x27F6;</mo>
+             <mpadded width="+1.056em" lspace="0.389em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });
@@ -1047,15 +1095,18 @@ describe('Mathtools stretchy', () => {
     toXmlMatch(
       tex2mml('\\xLongrightarrow{x+y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xLongrightarrow{x+y}" display="block">
-         <mover data-latex="\\xLongrightarrow{x+y}">
-           <mo data-mjx-texclass="REL" minsize="1.45em">&#x27F9;</mo>
-           <mpadded width="+1.056em" lspace="0.389em" voffset="-.2em" height="-.2em">
-             <mi data-latex="x">x</mi>
-             <mo data-latex="+">+</mo>
-             <mi data-latex="y">y</mi>
-             <mspace depth=".2em"></mspace>
-           </mpadded>
-         </mover>
+         <mrow data-mjx-texclass="REL" data-latex="\\xLongrightarrow{x+y}">
+           <mrow data-mjx-texclass="NONE"></mrow>
+           <mover>
+             <mo data-mjx-texclass="ORD" minsize="1.45em">&#x27F9;</mo>
+             <mpadded width="+1.056em" lspace="0.389em" voffset="-.2em" height="-.2em">
+               <mi data-latex="x">x</mi>
+               <mo data-latex="+">+</mo>
+               <mi data-latex="y">y</mi>
+               <mspace depth=".2em"></mspace>
+             </mpadded>
+           </mover>
+         </mrow>
        </math>`
     );
   });

@@ -560,7 +560,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     let arrow = parser.create(
       'token',
       'mo',
-      { stretchy: true, texClass: TEXCLASS.REL },
+      { stretchy: true, texClass: TEXCLASS.ORD }, // REL is applied in a TeXAtom below
       String.fromCodePoint(chr)
     );
     if (m) {
@@ -588,7 +588,23 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     // @test Above Left Arrow, Above Right Arrow, Above Left Arrow in Context,
     //       Above Right Arrow in Context
     NodeUtil.setProperty(mml, 'subsupOK', true);
-    parser.Push(mml);
+    //
+    // Use an empty item to prevent the xarrow from further stretching (see #3457)
+    // and enclose both in a TeXAtom to make the combination a REL.
+    //
+    parser.Push(
+      parser.create(
+        'node',
+        'TeXAtom',
+        [
+          parser.create('node', 'TeXAtom', [], {
+            texClass: TEXCLASS.NONE,
+          }),
+          mml,
+        ],
+        { texClass: TEXCLASS.REL }
+      )
+    );
   },
 
   /**
