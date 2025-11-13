@@ -187,6 +187,24 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
         'background-color': '#F8F8F8',
         color: 'black',
       },
+      'g[data-mml-node="maction"][data-collapsible][data-toggle="1"]': {
+        fill: '#55F',
+      },
+
+      '@media (prefers-color-scheme: dark) /* svg maction */': {
+        'mjx-tool > mjx-tip': {
+          'background-color': '#303030',
+          color: '#E0E0E0',
+          'box-shadow': '2px 2px 5px #000',
+        },
+        'mjx-status': {
+          'background-color': '#303030',
+          color: '#E0E0E0',
+        },
+        'g[data-mml-node="maction"][data-collapsible][data-toggle="1"]': {
+          fill: '#88F',
+        },
+      },
     };
 
     /**

@@ -621,9 +621,13 @@ export class Menu {
         ),
         this.a11yVar<string>('highlight', (value) => this.setHighlight(value)),
         this.a11yVar<string>('backgroundColor'),
-        this.a11yVar<string>('backgroundOpacity'),
+        this.a11yVar<string>('backgroundOpacity', (value) =>
+          this.setAlpha('bg', value)
+        ),
         this.a11yVar<string>('foregroundColor'),
-        this.a11yVar<string>('foregroundOpacity'),
+        this.a11yVar<string>('foregroundOpacity', (value) =>
+          this.setAlpha('fg', value)
+        ),
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('viewBraille'),
         this.a11yVar<boolean>('voicing'),
@@ -922,8 +926,7 @@ export class Menu {
       AnnotationMenu.copyAnnotations(cache),
       '',
     ]);
-    CssStyles.addInfoStyles(this.document.document as any);
-    CssStyles.addMenuStyles(this.document.document as any);
+    CssStyles.addMenuStyles(this.document.document as Document);
   }
 
   /**
@@ -1075,6 +1078,8 @@ export class Menu {
       if (renderer !== this.defaultSettings.renderer) {
         this.document.whenReady(() => this.setRenderer(renderer, false));
       }
+      this.setAlpha('fg', this.settings.foregroundOpacity ?? '100');
+      this.setAlpha('bg', this.settings.backgroundOpacity ?? '20');
     });
   }
 
@@ -1324,6 +1329,21 @@ export class Menu {
     }
     if (!Menu.loadingPromises.has('a11y/complexity')) {
       this.rerender(STATE.COMPILED);
+    }
+  }
+
+  /**
+   * @param {string} type   The type of alpha to set (fg or bg)
+   * @param {string} value  The value to set it to
+   */
+  protected setAlpha(type: string, value: string) {
+    if (MathJax._?.a11y?.explorer) {
+      const alpha = parseInt(value) / 100;
+      MathJax._.a11y.explorer.Region.LiveRegion.setAlpha(
+        type,
+        alpha,
+        this.document.document
+      );
     }
   }
 
