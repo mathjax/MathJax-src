@@ -415,7 +415,7 @@ export class LiveRegion extends StringRegion {
 
   /**
    * @param {string} type         The type of alpha to set (fg or bg)
-   * @param {number} alpha        The alpha value to use for the background
+   * @param {number} alpha        The alpha value to use
    * @param {Document} document   The document whose CSS styles are to be adjusted
    */
   public static setAlpha(type: string, alpha: number, document: Document) {
