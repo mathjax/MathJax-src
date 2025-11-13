@@ -255,9 +255,7 @@ describe('Unicode others', () => {
     toXmlMatch(
       tex2mml('\\char"A5'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\char&quot;A5" display="block">
-         <mrow data-mjx-texclass="ORD">
-           <mo data-latex="\\char&quot;A5">&#xA5;</mo>
-         </mrow>
+         <mo data-latex="\\char&quot;A5">&#xA5;</mo>
        </math>`
     );
   });

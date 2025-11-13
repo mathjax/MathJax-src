@@ -250,8 +250,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
         );
         adaptor.setAttribute(parents[i], 'align', align);
         if (shift) {
-          adaptor.setStyle(parents[i], 'position', 'relative');
-          adaptor.setStyle(parents[i], 'left', this.em(shift));
+          adaptor.setStyle(parents[i], 'margin-left', this.em(shift));
         }
         if (i < n && this.jax.math.display) {
           adaptor.setStyle(

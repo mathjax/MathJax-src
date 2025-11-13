@@ -1,7 +1,6 @@
 import { describe, test, expect } from '@jest/globals';
 
-const window = {document: {}, navigator: {appVersion: 'Linux'}};
-(global as any).window = window;
+global.process = {...process, platform: 'test'} as any;
 
 describe('context object', () => {
 
@@ -9,8 +8,8 @@ describe('context object', () => {
     let {context, hasWindow} = await import("#js/util/context.js");
     expect(context.path('C:\\test.js')).toBe('C:\\test.js');
     delete context.path;
-    expect(context).toEqual({window: window, document: window.document, os: 'Unix'});
-    expect(hasWindow).toBe(true);
+    expect(context).toEqual({window: null, document: null, os: 'test'});
+    expect(hasWindow).toBe(false);
   });
 
 });

@@ -359,13 +359,18 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
         font: TexConstant.Variant.NORMAL,
         multiLetterIdentifiers: parser.options.ams.operatornamePattern,
         operatorLetters: true,
+        noAutoOP: true,
       },
       parser.configuration
     ).mml();
     //
-    //  If we get something other than a single mi, wrap in a TeXAtom.
+    //  If we get a single mi, remove the autoOp property
+    //  (it will get that automatically if more than one letter),
+    //  otherwise wrap the results in a TeXAtom.
     //
-    if (!mml.isKind('mi')) {
+    if (mml.isKind('mi')) {
+      mml.removeProperty('autoOP');
+    } else {
       mml = parser.create('node', 'TeXAtom', [mml]);
     }
     //
@@ -555,7 +560,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     let arrow = parser.create(
       'token',
       'mo',
-      { stretchy: true, texClass: TEXCLASS.REL },
+      { stretchy: true, texClass: TEXCLASS.ORD }, // REL is applied in a TeXAtom below
       String.fromCodePoint(chr)
     );
     if (m) {
@@ -583,7 +588,23 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     // @test Above Left Arrow, Above Right Arrow, Above Left Arrow in Context,
     //       Above Right Arrow in Context
     NodeUtil.setProperty(mml, 'subsupOK', true);
-    parser.Push(mml);
+    //
+    // Use an empty item to prevent the xarrow from further stretching (see #3457)
+    // and enclose both in a TeXAtom to make the combination a REL.
+    //
+    parser.Push(
+      parser.create(
+        'node',
+        'TeXAtom',
+        [
+          parser.create('node', 'TeXAtom', [], {
+            texClass: TEXCLASS.NONE,
+          }),
+          mml,
+        ],
+        { texClass: TEXCLASS.REL }
+      )
+    );
   },
 
   /**

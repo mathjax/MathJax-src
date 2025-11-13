@@ -136,7 +136,7 @@ export class OpenItem extends BaseItem {
       // @test PrimeSup
       const mml = this.toMml();
       const node = this.create('node', 'TeXAtom', [mml]);
-      addLatexItem(node, item);
+      item.addLatexItem(node);
       return [[this.factory.create('mml', node)], true];
     }
     return super.checkItem(item);
@@ -418,8 +418,8 @@ export class LeftItem extends BaseItem {
       const left = fenced.childNodes[0];
       const right = fenced.childNodes[fenced.childNodes.length - 1];
       const mrow = this.factory.create('mml', fenced);
-      addLatexItem(left, this, '\\left');
-      addLatexItem(right, item, '\\right');
+      this.addLatexItem(left, '\\left');
+      item.addLatexItem(right, '\\right');
       mrow
         .Peek()[0]
         .attributes.set(
@@ -437,7 +437,7 @@ export class LeftItem extends BaseItem {
         def.mathcolor = item.getProperty('color');
       }
       const middle = this.create('token', 'mo', def, item.getProperty('delim'));
-      addLatexItem(middle, item, '\\middle');
+      item.addLatexItem(middle, '\\middle');
       this.Push(
         this.create('node', 'TeXAtom', [], { texClass: TEXCLASS.CLOSE }),
         middle,
@@ -595,7 +595,7 @@ export class BeginItem extends BaseItem {
       }
       // @test Hfill
       const node = this.toMml();
-      addLatexItem(node, item);
+      item.addLatexItem(node);
       return [[this.factory.create('mml', node)], true];
     }
     if (item.isKind('stop')) {
@@ -786,6 +786,10 @@ export class FnItem extends BaseItem {
           // @test Fn Operator
           return [[top, item], true];
         }
+      }
+      // @test Mathop Apply, Mathop No Apply
+      if (top.isKind('TeXAtom') && top.childNodes[0].childNodes.length === 0) {
+        return [[top, item], true];
       }
       // @test Named Function, Named Function Arg
       const node = this.create(
@@ -1366,7 +1370,7 @@ export class ArrayItem extends BaseItem {
       NodeUtil.setAttribute(node, 'data-break-align', this.breakAlign.row);
       this.breakAlign.row = '';
     }
-    addLatexItem(node, this);
+    this.addLatexItem(node);
     this.table.push(node);
     this.row = [];
     this.atEnd = false;
@@ -1647,23 +1651,5 @@ export class EquationItem extends BaseItem {
       throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());
     }
     return super.checkItem(item);
-  }
-}
-
-/**
- * Adds auxiliary attributes for LaTeX output to node.
- *
- * @param {MmlNode} node The current node.
- * @param {StackItem} item The stack item.
- * @param {string=} prefix A prefix for the LaTeX command.
- */
-function addLatexItem(node: MmlNode, item: StackItem, prefix: string = '') {
-  const str = item.startStr.slice(item.startI, item.stopI);
-  if (str) {
-    node.attributes.set(
-      TexConstant.Attr.LATEXITEM,
-      prefix ? prefix + str : str
-    );
-    node.attributes.set(TexConstant.Attr.LATEX, prefix ? prefix + str : str);
   }
 }

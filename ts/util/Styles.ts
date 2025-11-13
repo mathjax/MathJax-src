@@ -56,7 +56,7 @@ export const WSC = ['width', 'style', 'color'];
  * @returns {string[]}    Array of parts of the style (separated by spaces)
  */
 function splitSpaces(text: string): string[] {
-  const parts = text.split(/((?:'[^']*'|"[^"]*"|,[\s\n]|[^\s\n])*)/g);
+  const parts = text.split(/((?:'[^'\n]*'|"[^"\n]*"|,[\s\n]|[^\s\n])*)/g);
   const split = [] as string[];
   while (parts.length > 1) {
     parts.shift();
@@ -360,6 +360,12 @@ export class Styles {
    */
   public static connect: connections = {
     padding: {
+      children: TRBL,
+      split: splitTRBL,
+      combine: combineTRBL,
+    },
+
+    margin: {
       children: TRBL,
       split: splitTRBL,
       combine: combineTRBL,

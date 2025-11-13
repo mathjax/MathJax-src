@@ -75,6 +75,15 @@ export interface Highlighter {
   unhighlightAll(): void;
 
   /**
+   * Encloses multiple nodes if they in the same line
+   *
+   * @param {HTMLElement[]} parts   The elements to be selected
+   * @param {HTMLElement} node      The root node of the expression
+   * @returns {HTMLElement[]}       The elements that shoudl be highlighted
+   */
+  encloseNodes(parts: HTMLElement[], node: HTMLElement): HTMLElement[];
+
+  /**
    * Predicate to check if a node is an maction node.
    *
    * @param {Element} node A DOM node.
@@ -123,7 +132,7 @@ abstract class AbstractHighlighter implements Highlighter {
   /**
    * The Attribute for marking highlighted nodes.
    */
-  protected ATTR = 'sre-highlight-' + this.counter.toString();
+  protected ATTR = 'data-sre-highlight-' + this.counter.toString();
 
   /**
    * The foreground color.
@@ -139,6 +148,16 @@ abstract class AbstractHighlighter implements Highlighter {
    * The maction name/class for a highlighter.
    */
   protected mactionName = '';
+
+  /**
+   * The CSS selector to use to find the line-box container.
+   */
+  protected static lineSelector = '';
+
+  /**
+   * The attribute name for the line number.
+   */
+  protected static lineAttr = '';
 
   /**
    * List of currently highlighted nodes and their original background color.
@@ -206,6 +225,71 @@ abstract class AbstractHighlighter implements Highlighter {
     while (this.currentHighlights.length > 0) {
       this.unhighlight();
     }
+  }
+
+  /**
+   * Create a container of a given size and position.
+   *
+   * @param {number} x           The x-coordinate for the container
+   * @param {number} y           The y-coordinate for the container
+   * @param {number} w           The width for the container
+   * @param {number} h           The height for the container
+   * @param {HTMLElement} node   The mjx-container element
+   * @param {HTMLElement} part   The first node in the line to be enclosed
+   * @returns {HTMLElement}      The element of the given size
+   */
+  protected abstract createEnclosure(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    node: HTMLElement,
+    part: HTMLElement
+  ): HTMLElement;
+
+  /**
+   * @override
+   */
+  public encloseNodes(parts: HTMLElement[], node: HTMLElement): HTMLElement[] {
+    if (parts.length === 1) {
+      return parts;
+    }
+    const CLASS = this.constructor as typeof AbstractHighlighter;
+    const selector = CLASS.lineSelector;
+    const lineno = CLASS.lineAttr;
+    const lines: Map<string, HTMLElement[]> = new Map();
+    for (const part of parts) {
+      const line = part.closest(selector);
+      const n = line ? line.getAttribute(lineno) : '';
+      if (!lines.has(n)) {
+        lines.set(n, []);
+      }
+      lines.get(n).push(part);
+    }
+    for (const list of lines.values()) {
+      if (list.length > 1) {
+        let [L, T, R, B] = [Infinity, Infinity, -Infinity, -Infinity];
+        for (const part of list) {
+          part.setAttribute('data-mjx-enclosed', 'true');
+          const { left, top, right, bottom } = part.getBoundingClientRect();
+          if (top === bottom && left === right) continue;
+          if (left < L) L = left;
+          if (top < T) T = top;
+          if (bottom > B) B = bottom;
+          if (right > R) R = right;
+        }
+        const enclosure = this.createEnclosure(
+          L,
+          B,
+          R - L,
+          B - T,
+          node,
+          list[0]
+        );
+        parts.push(enclosure);
+      }
+    }
+    return parts;
   }
 
   /**
@@ -280,6 +364,9 @@ abstract class AbstractHighlighter implements Highlighter {
 }
 
 class SvgHighlighter extends AbstractHighlighter {
+  protected static lineSelector = '[data-mjx-linebox]';
+  protected static lineAttr = 'data-mjx-lineno';
+
   /**
    * @override
    */
@@ -307,31 +394,32 @@ class SvgHighlighter extends AbstractHighlighter {
         background: node.style.backgroundColor,
         foreground: node.style.color,
       };
-      node.style.backgroundColor = this.background;
+      if (!node.hasAttribute('data-mjx-enclosed')) {
+        node.style.backgroundColor = this.background;
+      }
       node.style.color = this.foreground;
       return info;
     }
-    // This is a hack for v4.
-    // TODO: v4 Change
-    // const rect = (document ?? DomUtil).createElementNS(
-    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    rect.setAttribute(
-      'sre-highlighter-added', // Mark highlighting rect.
-      'true'
-    );
-    const padding = 40;
-    const bbox: SVGRect = (node as any as SVGGraphicsElement).getBBox();
-    rect.setAttribute('x', (bbox.x - padding).toString());
-    rect.setAttribute('y', (bbox.y - padding).toString());
-    rect.setAttribute('width', (bbox.width + 2 * padding).toString());
-    rect.setAttribute('height', (bbox.height + 2 * padding).toString());
-    const transform = node.getAttribute('transform');
-    if (transform) {
-      rect.setAttribute('transform', transform);
+    if (node.hasAttribute('data-sre-highlighter-bbox')) {
+      node.setAttribute(this.ATTR, 'true');
+      node.setAttribute('fill', this.background);
+      return { node: node, foreground: 'none' };
     }
-    rect.setAttribute('fill', this.background);
+    if (!node.hasAttribute('data-mjx-enclosed')) {
+      const { x, y, width, height } = (
+        node as any as SVGGraphicsElement
+      ).getBBox();
+      const rect = this.createRect(
+        x,
+        y,
+        width,
+        height,
+        node.getAttribute('transform')
+      );
+      rect.setAttribute('fill', this.background);
+      node.parentNode.insertBefore(rect, node);
+    }
     node.setAttribute(this.ATTR, 'true');
-    node.parentNode.insertBefore(rect, node);
     info = { node: node, foreground: node.getAttribute('fill') };
     if (node.nodeName !== 'rect') {
       // We currently do not change foreground of collapsed nodes.
@@ -353,16 +441,103 @@ class SvgHighlighter extends AbstractHighlighter {
    * @override
    */
   public unhighlightNode(info: Highlight) {
-    const previous = info.node.previousSibling as HTMLElement;
-    if (previous && previous.hasAttribute('sre-highlighter-added')) {
-      info.foreground
-        ? info.node.setAttribute('fill', info.foreground)
-        : info.node.removeAttribute('fill');
-      info.node.parentNode.removeChild(previous);
+    const node = info.node;
+    if (node.hasAttribute('data-sre-highlighter-bbox')) {
+      node.remove();
       return;
     }
-    info.node.style.backgroundColor = info.background;
-    info.node.style.color = info.foreground;
+    if (node.tagName === 'svg' || node.tagName === 'MJX-CONTAINER') {
+      if (!node.hasAttribute('data-mjx-enclosed')) {
+        node.style.backgroundColor = info.background;
+      }
+      node.removeAttribute('data-mjx-enclosed');
+      node.style.color = info.foreground;
+      return;
+    }
+    const previous = node.previousSibling as HTMLElement;
+    if (previous?.hasAttribute('data-sre-highlighter-added')) {
+      previous.remove();
+    }
+    node.removeAttribute('data-mjx-enclosed');
+    if (info.foreground) {
+      node.setAttribute('fill', info.foreground);
+    } else {
+      node.removeAttribute('fill');
+    }
+  }
+
+  /**
+   * @override
+   */
+  protected createEnclosure(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    _node: HTMLElement,
+    part: HTMLElement
+  ): HTMLElement {
+    const [x1, y1] = this.screen2svg(x, y, part);
+    const [x2, y2] = this.screen2svg(x + w, y - h, part);
+    const rect = this.createRect(
+      x1,
+      y1,
+      x2 - x1,
+      y2 - y1,
+      part.getAttribute('transform')
+    );
+    rect.setAttribute('data-sre-highlighter-bbox', 'true');
+    part.parentNode.insertBefore(rect, part);
+    return rect;
+  }
+
+  /**
+   * Convert screen coordinates in px to local SVG coordinates.
+   *
+   * @param {number} x           The screen x coordinate
+   * @param {number} y           The screen y coordinate
+   * @param {HTMLElement} part   The element whose coordinate system is to be used
+   * @returns {number[]}         The x,y coordinates in the coordinates of part
+   */
+  protected screen2svg(x: number, y: number, part: HTMLElement): number[] {
+    const node = part as any as SVGGraphicsElement;
+    const P = DOMPoint.fromPoint({ x, y }).matrixTransform(
+      node.getScreenCTM().inverse()
+    );
+    return [P.x, P.y];
+  }
+
+  /**
+   * Create a rectangle of the given size and position.
+   *
+   * @param {number} x           The x position of the rectangle
+   * @param {number} y           The y position of the rectangle
+   * @param {number} w           The width of the rectangle
+   * @param {number} h           The height of the rectangle
+   * @param {string} transform   The transform to apply, if any
+   * @returns {HTMLElement}      The generated rectangle element
+   */
+  protected createRect(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    transform: string
+  ): HTMLElement {
+    const padding = 40;
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute(
+      'data-sre-highlighter-added', // Mark highlighting rect.
+      'true'
+    );
+    rect.setAttribute('x', String(x - padding));
+    rect.setAttribute('y', String(y - padding));
+    rect.setAttribute('width', String(w + 2 * padding));
+    rect.setAttribute('height', String(h + 2 * padding));
+    if (transform) {
+      rect.setAttribute('transform', transform);
+    }
+    return rect as any as HTMLElement;
   }
 
   /**
@@ -383,6 +558,9 @@ class SvgHighlighter extends AbstractHighlighter {
 }
 
 class ChtmlHighlighter extends AbstractHighlighter {
+  protected static lineSelector = 'mjx-linebox';
+  protected static lineAttr = 'lineno';
+
   /**
    * @override
    */
@@ -401,7 +579,9 @@ class ChtmlHighlighter extends AbstractHighlighter {
       foreground: node.style.color,
     };
     if (!this.isHighlighted(node)) {
-      node.style.backgroundColor = this.background;
+      if (!node.hasAttribute('data-mjx-enclosed')) {
+        node.style.backgroundColor = this.background;
+      }
       node.style.color = this.foreground;
     }
     return info;
@@ -411,8 +591,34 @@ class ChtmlHighlighter extends AbstractHighlighter {
    * @override
    */
   public unhighlightNode(info: Highlight) {
-    info.node.style.backgroundColor = info.background;
-    info.node.style.color = info.foreground;
+    const node = info.node;
+    node.style.backgroundColor = info.background;
+    node.style.color = info.foreground;
+    node.removeAttribute('data-mjx-enclosed');
+    if (node.tagName.toLowerCase() === 'mjx-bbox') {
+      node.remove();
+    }
+  }
+
+  /**
+   * @override
+   */
+  protected createEnclosure(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    node: HTMLElement
+  ): HTMLElement {
+    const base = node.getBoundingClientRect();
+    const enclosure = document.createElement('mjx-bbox');
+    enclosure.style.width = w + 'px';
+    enclosure.style.height = h + 'px';
+    enclosure.style.left = x - base.left + 'px';
+    enclosure.style.top = y - h - base.top + 'px';
+    enclosure.style.position = 'absolute';
+    node.prepend(enclosure);
+    return enclosure;
   }
 
   /**

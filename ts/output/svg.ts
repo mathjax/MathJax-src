@@ -110,7 +110,10 @@ export class SVG<N, T, D> extends CommonOutputJax<
       fill: 'blue',
       stroke: 'blue',
     },
-    'rect[sre-highlighter-added]:has(+ .mjx-selected)': {
+    [[
+      'rect[data-sre-highlighter-added]:has(+ .mjx-selected)',
+      'rect[data-sre-highlighter-bbox].mjx-selected',
+    ].join(', ')]: {
       stroke: 'black',
       'stroke-width': '80px',
     },

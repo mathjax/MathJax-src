@@ -269,7 +269,7 @@ export class SpeechExplorer
    * The explorer key mapping
    */
   protected static keyMap: Map<string, [keyMapping, boolean?]> = new Map([
-    ['Tab', [() => true]],
+    ['Tab', [(explorer, event) => explorer.tabKey(event)]],
     ['Escape', [(explorer) => explorer.escapeKey()]],
     ['Enter', [(explorer, event) => explorer.enterKey(event)]],
     ['Home', [(explorer) => explorer.homeKey()]],
@@ -420,6 +420,16 @@ export class SpeechExplorer
    */
   protected cellTypes: string[] = ['cell', 'line'];
 
+  /**
+   * The anchors in this expression
+   */
+  protected anchors: HTMLElement[];
+
+  /**
+   * Whether the expression was focused by a back tab
+   */
+  protected backTab: boolean = false;
+
   /********************************************************************/
   /*
    * The event handlers
@@ -438,6 +448,11 @@ export class SpeechExplorer
   ]);
 
   /**
+   * Semantic id to subtree map.
+   */
+  private subtrees: Map<string, Set<string>> = null;
+
+  /**
    * @override
    */
   public FocusIn(_event: FocusEvent) {
@@ -450,6 +465,7 @@ export class SpeechExplorer
     }
     if (!this.clicked) {
       this.Start();
+      this.backTab = _event.target === this.img;
     }
     this.clicked = null;
   }
@@ -640,6 +656,41 @@ export class SpeechExplorer
   protected escapeKey(): boolean {
     this.Stop();
     this.focusTop();
+    return true;
+  }
+
+  /**
+   * Tab to the next internal link, if any, and stop the event from
+   * propagating, or if no more links, let it propagate so that the
+   * browser moves to the next focusable item.
+   *
+   * @param {KeyboardEvent} event  The event for the enter key
+   * @returns {void | boolean}     False means play the honk sound
+   */
+  protected tabKey(event: KeyboardEvent): void | boolean {
+    if (this.anchors.length === 0 || !this.current) return true;
+    if (this.backTab) {
+      if (!event.shiftKey) return true;
+      const link = this.linkFor(this.anchors[this.anchors.length - 1]);
+      if (this.anchors.length === 1 && link === this.current) {
+        return true;
+      }
+      this.setCurrent(link);
+      return;
+    }
+    const [anchors, position, current] = event.shiftKey
+      ? [
+          this.anchors.slice(0).reverse(),
+          Node.DOCUMENT_POSITION_PRECEDING,
+          this.isLink() ? this.getAnchor() : this.current,
+        ]
+      : [this.anchors, Node.DOCUMENT_POSITION_FOLLOWING, this.current];
+    for (const anchor of anchors) {
+      if (current.compareDocumentPosition(anchor) & position) {
+        this.setCurrent(this.linkFor(anchor));
+        return;
+      }
+    }
     return true;
   }
 
@@ -850,7 +901,7 @@ export class SpeechExplorer
     const parts = [
       [
         this.node.getAttribute('data-semantic-level') ?? 'Level',
-        this.current.getAttribute('aria-level') ?? '0',
+        this.current.getAttribute('data-semantic-level-number') ?? '0',
       ]
         .join(' ')
         .trim(),
@@ -998,6 +1049,7 @@ export class SpeechExplorer
    * @param {boolean} addDescription   True if the speech node should get a description
    */
   protected setCurrent(node: HTMLElement, addDescription: boolean = false) {
+    this.backTab = false;
     this.speechType = '';
     if (!document.hasFocus()) {
       this.refocus = this.current;
@@ -1013,10 +1065,12 @@ export class SpeechExplorer
     //   (i.e., we are focusing out)
     //
     if (this.current) {
-      for (const part of this.getSplitNodes(this.current)) {
+      this.pool.unhighlight();
+      for (const part of Array.from(
+        this.node.querySelectorAll('.mjx-selected')
+      )) {
         part.classList.remove('mjx-selected');
       }
-      this.pool.unhighlight();
       if (this.document.options.a11y.tabSelects === 'last') {
         this.refocus = this.current;
       }
@@ -1033,9 +1087,12 @@ export class SpeechExplorer
     this.current = node;
     this.currentMark = -1;
     if (this.current) {
-      const parts = this.getSplitNodes(this.current);
+      const parts = [...this.getSplitNodes(this.current)];
+      this.highlighter.encloseNodes(parts, this.node);
       for (const part of parts) {
-        part.classList.add('mjx-selected');
+        if (!part.getAttribute('data-mjx-enclosed')) {
+          part.classList.add('mjx-selected');
+        }
       }
       this.pool.highlight(parts);
       this.addSpeech(node, addDescription);
@@ -1045,6 +1102,8 @@ export class SpeechExplorer
     //
     this.node.removeAttribute('aria-busy');
   }
+
+  private cacheParts: Map<string, HTMLElement[]> = new Map();
 
   /**
    * Get all nodes with the same semantic id (multiple nodes if there are line breaks).
@@ -1057,7 +1116,39 @@ export class SpeechExplorer
     if (!id) {
       return [node];
     }
-    return Array.from(this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
+    // Here we need to cache the subtrees.
+    if (this.cacheParts.has(id)) {
+      return this.cacheParts.get(id);
+    }
+    const parts = Array.from(
+      this.node.querySelectorAll(`[data-semantic-id="${id}"]`)
+    ) as HTMLElement[];
+    const subtree = this.subtree(id, parts);
+    this.cacheParts.set(id, [...parts, ...subtree]);
+    return this.cacheParts.get(id);
+  }
+
+  /**
+   * Retrieve the elements in the semantic subtree that are not in the DOM subtree.
+   *
+   * @param {string} id The semantic id of the root node.
+   * @param {HTMLElement[]} nodes The list of nodes corresponding to that id
+   *     (could be multiple for linebroken ones).
+   * @returns {HTMLElement[]} The list of nodes external to the DOM trees rooted
+   *     by any of the input nodes.
+   */
+  private subtree(id: string, nodes: HTMLElement[]): HTMLElement[] {
+    const sub = this.subtrees.get(id);
+    const children: Set<string> = new Set();
+    for (const node of nodes) {
+      (
+        Array.from(node.querySelectorAll(`[data-semantic-id]`)) as HTMLElement[]
+      ).forEach((x) => children.add(this.nodeId(x)));
+    }
+    const rest = setdifference(sub, children);
+    return [...rest]
+      .map((child) => this.getNode(child))
+      .filter((node) => node !== null);
   }
 
   /**
@@ -1068,12 +1159,16 @@ export class SpeechExplorer
    * @param {boolean} describe   True if the description should be added
    */
   protected addSpeech(node: HTMLElement, describe: boolean) {
-    this.img?.remove();
-    let speech = [
+    if (this.anchors.length) {
+      setTimeout(() => this.img?.remove(), 10);
+    } else {
+      this.img?.remove();
+    }
+    let speech = this.addComma([
       node.getAttribute(SemAttr.PREFIX),
       node.getAttribute(SemAttr.SPEECH),
       node.getAttribute(SemAttr.POSTFIX),
-    ]
+    ])
       .join(' ')
       .trim();
     if (describe) {
@@ -1093,6 +1188,20 @@ export class SpeechExplorer
       this.SsmlAttributes(node, SemAttr.SPEECH_SSML)
     );
     this.node.setAttribute('tabindex', '-1');
+  }
+
+  /**
+   * In an array [prefix, center, postfix], the center gets a comma if
+   * there is a postfix.
+   *
+   * @param {string[]} words   The words to check
+   * @returns {string[]}       The modified array of words
+   */
+  protected addComma(words: string[]): string[] {
+    if (words[2] && (words[1] || words[0])) {
+      words[1] += ',';
+    }
+    return words;
   }
 
   /**
@@ -1175,6 +1284,7 @@ export class SpeechExplorer
       'aria-roledescription': item.none,
     });
     container.appendChild(this.img);
+    this.adjustAnchors();
   }
 
   /**
@@ -1187,6 +1297,34 @@ export class SpeechExplorer
     for (const child of Array.from(container.childNodes) as HTMLElement[]) {
       child.removeAttribute('aria-hidden');
     }
+    this.restoreAnchors();
+  }
+
+  /**
+   * Move all the href attributes to data-mjx-href attributes
+   * (so they won't be focusable links, as they are aria-hidden).
+   */
+  protected adjustAnchors() {
+    this.anchors = Array.from(this.node.querySelectorAll('a[href]'));
+    for (const anchor of this.anchors) {
+      const href = anchor.getAttribute('href');
+      anchor.setAttribute('data-mjx-href', href);
+      anchor.removeAttribute('href');
+    }
+    if (this.anchors.length) {
+      this.img.setAttribute('tabindex', '0');
+    }
+  }
+
+  /**
+   * Move the links back to their href attributes.
+   */
+  protected restoreAnchors() {
+    for (const anchor of this.anchors) {
+      anchor.setAttribute('href', anchor.getAttribute('data-mjx-href'));
+      anchor.removeAttribute('data-mjx-href');
+    }
+    this.anchors = [];
   }
 
   /**
@@ -1437,6 +1575,7 @@ export class SpeechExplorer
         if (
           child !== this.speech &&
           child !== this.img &&
+          child.tagName &&
           child.tagName.toLowerCase() !== 'rect'
         ) {
           const { left, right, top, bottom } = child.getBoundingClientRect();
@@ -1448,6 +1587,42 @@ export class SpeechExplorer
       }
     }
     return found;
+  }
+
+  /**
+   * @param {HTMLElement} node   The node to test for having an href
+   * @returns {boolean}          True if the node has a link, false otherwise
+   */
+  protected isLink(node: HTMLElement = this.current): boolean {
+    return !!node?.getAttribute('data-semantic-attributes')?.includes('href:');
+  }
+
+  /**
+   * @param {HTMLElement} node   The link node whose <a> node is desired
+   * @returns {HTMLElement}      The <a> node for the given link node
+   */
+  protected getAnchor(node: HTMLElement = this.current): HTMLElement {
+    const anchor = node.closest('a');
+    return anchor && this.node.contains(anchor) ? anchor : null;
+  }
+
+  /**
+   * @param {HTMLElement} anchor   The <a> node whose speech node is desired
+   * @returns {HTMLElement}        The node for which the <a> is handling the href
+   */
+  protected linkFor(anchor: HTMLElement): HTMLElement {
+    return anchor?.querySelector('[data-semantic-attributes*="href:"]');
+  }
+
+  /**
+   * @param {HTMLElement} node   A node inside a link whose top-level link node is required
+   * @returns {HTMLElement}      The parent node with an href that contains the given node
+   */
+  protected parentLink(node: HTMLElement): HTMLElement {
+    const link = node?.closest(
+      '[data-semantic-attributes*="href:"]'
+    ) as HTMLElement;
+    return link && this.node.contains(link) ? link : null;
   }
 
   /**
@@ -1537,6 +1712,10 @@ export class SpeechExplorer
    * @override
    */
   public async Start() {
+    if (!this.subtrees) {
+      this.subtrees = new Map();
+      this.getSubtrees();
+    }
     //
     // If we aren't attached or already active, return
     //
@@ -1703,18 +1882,12 @@ export class SpeechExplorer
    * @returns {boolean} True if link was successfully triggered.
    */
   protected triggerLink(node: HTMLElement): boolean {
-    const focus = node
-      ?.getAttribute('data-semantic-postfix')
-      ?.match(/(^| )link($| )/);
-    if (focus) {
-      while (node && node !== this.node) {
-        if (node instanceof HTMLAnchorElement) {
-          node.dispatchEvent(new MouseEvent('click'));
-          setTimeout(() => this.FocusOut(null), 50);
-          return true;
-        }
-        node = node.parentNode as HTMLElement;
-      }
+    if (this.isLink(node)) {
+      const anchor = this.getAnchor(node);
+      anchor.classList.add('mjx-visited');
+      setTimeout(() => this.FocusOut(null), 50);
+      window.location.href = anchor.getAttribute('data-mjx-href');
+      return true;
     }
     return false;
   }
@@ -1725,12 +1898,9 @@ export class SpeechExplorer
    * @returns {boolean} True if link was successfully triggered.
    */
   protected triggerLinkMouse(): boolean {
-    let node = this.refocus;
-    while (node && node !== this.node) {
-      if (this.triggerLink(node)) {
-        return true;
-      }
-      node = node.parentNode as HTMLElement;
+    const link = this.parentLink(this.refocus);
+    if (this.triggerLink(link)) {
+      return true;
     }
     return false;
   }
@@ -1754,4 +1924,97 @@ export class SpeechExplorer
     }
     return focus.join(' ');
   }
+
+  /**
+   * Populates the subtrees map from the data-semantic-structure attribute.
+   */
+  private getSubtrees() {
+    const node = this.node.querySelector('[data-semantic-structure]');
+    if (!node) return;
+    const sexp = node.getAttribute('data-semantic-structure');
+    const tokens = tokenize(sexp);
+    const tree = parse(tokens);
+    buildMap(tree, this.subtrees);
+  }
+}
+
+/**********************************************************************/
+/*
+ * Some Aux functions for parsing the semantic structure sexpression
+ */
+type SexpTree = string | SexpTree[];
+
+/**
+ * Helper to tokenize input
+ *
+ * @param {string} str The semantic structure.
+ * @returns {string[]} The tokenized list.
+ */
+function tokenize(str: string): string[] {
+  return str.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').trim().split(/\s+/);
+}
+
+/**
+ * Recursive parser to convert tokens into a tree
+ *
+ * @param {string} tokens The tokens from the semantic structure.
+ * @returns {SexpTree} Array list for the semantic structure sexpression.
+ */
+function parse(tokens: string[]): SexpTree {
+  const stack: SexpTree[][] = [[]];
+  for (const token of tokens) {
+    if (token === '(') {
+      const newNode: SexpTree = [];
+      stack[stack.length - 1].push(newNode);
+      stack.push(newNode);
+    } else if (token === ')') {
+      stack.pop();
+    } else {
+      stack[stack.length - 1].push(token);
+    }
+  }
+  return stack[0][0];
+}
+
+/**
+ * Flattens the tree and builds the map.
+ *
+ * @param {SexpTree} tree The sexpression tree.
+ * @param {Map<string, Set<string>>} map The map to populate.
+ * @returns {Set<string>} The descendant map.
+ */
+function buildMap(tree: SexpTree, map: Map<string, Set<string>>): Set<string> {
+  if (typeof tree === 'string') {
+    if (!map.has(tree)) map.set(tree, new Set());
+    return new Set();
+  }
+  const [root, ...children] = tree;
+  const rootId = root as string;
+  const descendants: Set<string> = new Set();
+  for (const child of children) {
+    const childRoot = typeof child === 'string' ? child : child[0];
+    const childDescendants = buildMap(child, map);
+    descendants.add(childRoot as string);
+    childDescendants.forEach((d: string) => descendants.add(d));
+  }
+  map.set(rootId, descendants);
+  return descendants;
+}
+
+// Can be replaced with ES2024 implementation of Set.prototyp.difference
+/**
+ * Set difference between two sets A and B: A\B.
+ *
+ * @param {Set<string>} a Initial set.
+ * @param {Set<string>} b Set to remove from A.
+ * @returns {Set<string>} The difference A\B.
+ */
+function setdifference(a: Set<string>, b: Set<string>): Set<string> {
+  if (!a) {
+    return new Set();
+  }
+  if (!b) {
+    return a;
+  }
+  return new Set([...a].filter((x) => !b.has(x)));
 }

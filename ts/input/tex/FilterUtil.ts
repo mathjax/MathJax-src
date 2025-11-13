@@ -24,6 +24,7 @@
 import { TEXCLASS, MMLNODE, MmlNode } from '../../core/MmlTree/MmlNode.js';
 import NodeUtil from './NodeUtil.js';
 import ParseOptions from './ParseOptions.js';
+import { TexConstant } from './TexConstants.js';
 import { MmlMo } from '../../core/MmlTree/MmlNodes/mo.js';
 import { Attributes } from '../../core/MmlTree/Attributes.js';
 
@@ -161,14 +162,8 @@ const FilterUtil = {
     for (const mo of options.getList('fixStretchy')) {
       if (NodeUtil.getProperty(mo, 'fixStretchy')) {
         const symbol = NodeUtil.getForm(mo);
-        if (symbol && symbol[3] && symbol[3]['stretchy']) {
+        if (symbol?.[3]?.['stretchy']) {
           NodeUtil.setAttribute(mo, 'stretchy', false);
-        }
-        const parent = mo.parent;
-        if (!NodeUtil.getTexClass(mo) && (!symbol || !symbol[2])) {
-          const texAtom = options.nodeFactory.create('node', 'TeXAtom', [mo]);
-          parent.replaceChild(texAtom, mo);
-          texAtom.inheritAttributesFrom(mo);
         }
         NodeUtil.removeProperties(mo, 'fixStretchy');
       }
@@ -185,12 +180,12 @@ const FilterUtil = {
    */
   cleanAttributes(arg: { data: ParseOptions }) {
     const node = arg.data.root;
-    node.walkTree((mml: MmlNode, _d: any) => {
-      const attribs = mml.attributes;
+    node.walkTree((mml: MmlNode) => {
       const keep = new Set(
-        ((attribs.get('mjx-keep-attrs') as string) || '').split(/ /)
+        ((mml.getProperty('keep-attrs') as string) || '').split(/ /)
       );
-      attribs.unset('mjx-keep-attrs');
+      const attribs = mml.attributes;
+      attribs.unset(TexConstant.Attr.LATEXITEM);
       for (const key of attribs.getExplicitNames()) {
         if (
           !keep.has(key) &&
@@ -199,7 +194,7 @@ const FilterUtil = {
           attribs.unset(key);
         }
       }
-    }, {});
+    });
   },
 
   /**

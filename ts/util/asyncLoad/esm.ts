@@ -22,15 +22,15 @@
  */
 
 import { mathjax } from '../../mathjax.js';
+import { context } from '../context.js';
 
-let root = new URL(import.meta.url).href.replace(
-  /\/util\/asyncLoad\/esm.js$/,
-  '/'
-);
+let root = context
+  .path(new URL(import.meta.url, 'file://').href)
+  .replace(/\/util\/asyncLoad\/esm.js$/, '/');
 
 if (!mathjax.asyncLoad) {
   mathjax.asyncLoad = async (name: string) => {
-    const file = name.charAt(0) === '.' ? new URL(name, root).pathname : name;
+    const file = name.charAt(0) === '.' ? new URL(name, root).href : name;
     return import(file).then((result) => result.default ?? result);
   };
 }
@@ -39,7 +39,7 @@ if (!mathjax.asyncLoad) {
  * @param {string} url   the base URL to use for loading relative paths
  */
 export function setBaseURL(url: string) {
-  root = new URL(url, 'file://').href;
+  root = new URL(context.path(url), 'file://').href;
   if (!root.match(/\/$/)) {
     root += '/';
   }

@@ -690,23 +690,17 @@ new sm.CommandMap('macros', {
   //  TeX substitution macros
   bmod: [
     BaseMethods.Macro,
-    '\\mmlToken{mo}[lspace="' +
-      THICKMATHSPACE +
-      '"' +
-      ' rspace="' +
-      THICKMATHSPACE +
-      '"]{mod}',
+    `\\mmlToken{mo}[lspace="${THICKMATHSPACE}" rspace="${THICKMATHSPACE}"]{mod}`,
   ],
   pmod: [BaseMethods.Macro, '\\pod{\\mmlToken{mi}{mod}\\kern 6mu #1}', 1],
   mod: [
     BaseMethods.Macro,
-    '\\mathchoice{\\kern18mu}{\\kern12mu}' +
-      '{\\kern12mu}{\\kern12mu}\\mmlToken{mi}{mod}\\,\\,#1',
+    '\\mathchoice{\\kern18mu}{\\kern12mu}{\\kern12mu}{\\kern12mu}\\mmlToken{mi}{mod}\\,\\,#1',
     1,
   ],
   pod: [
     BaseMethods.Macro,
-    '\\mathchoice{\\kern18mu}{\\kern8mu}' + '{\\kern8mu}{\\kern8mu}(#1)',
+    '\\mathchoice{\\kern18mu}{\\kern8mu}{\\kern8mu}{\\kern8mu}(#1)',
     1,
   ],
   iff: [BaseMethods.Macro, '\\;\\Longleftrightarrow\\;'],
@@ -716,7 +710,7 @@ new sm.CommandMap('macros', {
   TeX: [BaseMethods.Macro, 'T\\kern-.14em\\lower.5ex{E}\\kern-.115em X'],
   LaTeX: [
     BaseMethods.Macro,
-    'L\\kern-.325em\\raise.21em' + '{\\scriptstyle{A}}\\kern-.17em\\TeX',
+    'L\\kern-.325em\\raise.21em{\\scriptstyle{A}}\\kern-.17em\\TeX',
   ],
 
   //  Specially handled
