@@ -154,7 +154,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
         display: 'inline-table',
         width: '100%'
       },
-      'mjx-dtable > *': {
+      'mjx-dtable > mjx-line, mjx-dtable > mjx-row': {
         'font-size': '2000%'
       },
       'mjx-dbox': {

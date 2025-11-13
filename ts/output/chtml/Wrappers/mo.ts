@@ -141,7 +141,9 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       'mjx-stretchy-h': {
         display: 'inline-block',
       },
-      'mjx-stretchy-h > *': {
+      [['beg', 'ext', 'end', 'mid']
+        .map((node) => `mjx-stretchy-h > mjx-${node}`)
+        .join(', ')]: {
         display: 'inline-block',
         width: 0,
         'text-align': 'right',
@@ -158,7 +160,9 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         display: 'inline-block',
         'text-align': 'center',
       },
-      'mjx-stretchy-v > *': {
+      [['beg', 'ext', 'end', 'mid']
+        .map((node) => `mjx-stretchy-v > mjx-${node}`)
+        .join(', ')]: {
         display: 'block',
         height: 0,
         margin: '0 auto',

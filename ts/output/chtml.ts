@@ -156,7 +156,9 @@ export class CHTML<N, T, D> extends CommonOutputJax<
     'mjx-block': { display: 'block' },
     'mjx-itable': { display: 'inline-table' },
     'mjx-row': { display: 'table-row' },
-    'mjx-row > *': { display: 'table-cell' },
+    [['cell', 'base', 'under', 'over', 'den']
+      .map((node) => `mjx-row > mjx-${node}`)
+      .join(', ')]: { display: 'table-cell' },
 
     'mjx-container [inline-breaks]': { display: 'inline' },
 

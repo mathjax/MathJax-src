@@ -542,7 +542,7 @@ export function CommonMoMixin<
      */
     public setBreakStyle(linebreak: string = '') {
       this.breakStyle =
-        this.node.parent.isEmbellished && !linebreak
+        this.node.parent?.isEmbellished && !linebreak
           ? ''
           : this.getBreakStyle(linebreak);
       if (!this.breakCount) return;
