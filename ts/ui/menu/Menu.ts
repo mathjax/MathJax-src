@@ -1180,6 +1180,16 @@ export class Menu {
    */
   protected setAssistiveMml(mml: boolean) {
     this.document.options.enableAssistiveMml = mml;
+    if (mml) {
+      Menu.loading++; // pretend we're loading, to suppress rerendering for each variable change
+      if (this.settings.speech) {
+        this.menu.pool.lookup('speech').setValue(false);
+      }
+      if (this.settings.braille) {
+        this.menu.pool.lookup('braille').setValue(false);
+      }
+      Menu.loading--;
+    }
     if (!mml || MathJax._?.a11y?.['assistive-mml']) {
       this.rerender();
     } else {
@@ -1213,6 +1223,11 @@ export class Menu {
   protected setSpeech(speech: boolean) {
     this.enableAccessibilityItems('Speech', speech);
     this.document.options.enableSpeech = speech;
+    if (speech && this.settings.assistiveMml) {
+      Menu.loading++; // pretend we're loading, to suppress rerendering for each variable change
+      this.menu.pool.lookup('assistiveMml').setValue(false);
+      Menu.loading--;
+    }
     if (!speech || MathJax._?.a11y?.explorer) {
       this.rerender(STATE.COMPILED);
     } else {
@@ -1226,6 +1241,11 @@ export class Menu {
   protected setBraille(braille: boolean) {
     this.enableAccessibilityItems('Braille', braille);
     this.document.options.enableBraille = braille;
+    if (braille && this.settings.assistiveMml) {
+      Menu.loading++; // pretend we're loading, to suppress rerendering for each variable change
+      this.menu.pool.lookup('assistiveMml').setValue(false);
+      Menu.loading--;
+    }
     if (!braille || MathJax._?.a11y?.explorer) {
       this.rerender(STATE.COMPILED);
     } else {
