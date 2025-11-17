@@ -1292,6 +1292,10 @@ export class SpeechExplorer
       role: 'img',
       'aria-roledescription': item.none,
     });
+    const braille = container.getAttribute(SemAttr.BRAILLE);
+    if (braille) {
+      this.img.setAttribute('aria-braillelabel', braille);
+    }
     container.appendChild(this.img);
     this.adjustAnchors();
   }
