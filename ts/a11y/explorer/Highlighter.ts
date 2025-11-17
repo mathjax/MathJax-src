@@ -18,36 +18,31 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-interface NamedColor {
+import { LiveRegion } from './Region.js';
+
+export interface NamedColor {
   color: string;
   alpha?: number;
-  type?: string;
-}
-
-/**
- * Turns a named color into a channel color.
- *
- * @param {NamedColor} color The definition.
- * @param {NamedColor} deflt The default color name if the named color does not exist.
- * @returns {string} The channel color.
- */
-function getColorString(color: NamedColor, deflt: NamedColor): string {
-  const type = deflt.type;
-  const name = color.color ?? deflt.color;
-  const opacity = color.alpha ?? deflt.alpha;
-  const alpha = opacity === 1 ? 1 : `var(--mjx-${type}-alpha)`;
-  return `rgba(var(--mjx-${type}-${name}), ${alpha})`;
 }
 
 /**
  * The default background color if a none existing color is provided.
  */
-const DEFAULT_BACKGROUND: NamedColor = { color: 'blue', alpha: 1, type: 'bg' };
+const DEFAULT_BACKGROUND: NamedColor = { color: 'blue', alpha: 0.2 };
 
 /**
  * The default color if a none existing color is provided.
  */
-const DEFAULT_FOREGROUND: NamedColor = { color: 'black', alpha: 1, type: 'fg' };
+const DEFAULT_FOREGROUND: NamedColor = { color: 'black', alpha: 1 };
+
+/**
+ * The attributes for various markers
+ */
+export const ATTR = {
+  ENCLOSED: 'data-sre-enclosed',
+  BBOX: 'data-sre-highlighter-bbox',
+  ADDED: 'data-sre-highlighter-added',
+};
 
 export interface Highlighter {
   /**
@@ -92,14 +87,12 @@ export interface Highlighter {
   isMactionNode(node: Element): boolean;
 
   /**
-   * @returns {string} The foreground color as rgba string.
+   * Returns the maction sub nodes of a given node.
+   *
+   * @param {HTMLElement} node The root node.
+   * @returns {HTMLElement[]} The list of maction sub nodes.
    */
-  get foreground(): string;
-
-  /**
-   * @returns {string} The background color as rgba string.
-   */
-  get background(): string;
+  getMactionNodes(node: HTMLElement): HTMLElement[];
 
   /**
    * Sets of the color the highlighter is using.
@@ -110,86 +103,63 @@ export interface Highlighter {
   setColor(background: NamedColor, foreground: NamedColor): void;
 }
 
-/**
- * Highlight information consisting of node, fore and background color.
- */
-interface Highlight {
-  node: HTMLElement;
-  background?: string;
-  foreground?: string;
-}
-
-let counter = 0;
-
 abstract class AbstractHighlighter implements Highlighter {
-  /**
-   * This counter creates a unique highlighter name. This is important in case
-   * we have more than a single highlighter on a node, e.g., during auto voicing
-   * with synchronised highlighting.
-   */
-  public counter = counter++;
-
   /**
    * The Attribute for marking highlighted nodes.
    */
-  protected ATTR = 'data-sre-highlight-' + this.counter.toString();
-
-  /**
-   * The foreground color.
-   */
-  private _foreground: string;
-
-  /**
-   * The background color.
-   */
-  private _background: string;
-
-  /**
-   * The maction name/class for a highlighter.
-   */
-  protected mactionName = '';
+  protected ATTR: string;
 
   /**
    * The CSS selector to use to find the line-box container.
    */
-  protected static lineSelector = '';
+  protected static lineSelector: string;
 
   /**
    * The attribute name for the line number.
    */
-  protected static lineAttr = '';
+  protected static lineAttr: string;
+
+  /**
+   * Primary highlighter = 1, secondary highlighter = 2
+   */
+  protected priority: number;
 
   /**
    * List of currently highlighted nodes and their original background color.
    */
-  private currentHighlights: Highlight[][] = [];
+  private currentHighlights: HTMLElement[][] = [];
+
+  /**
+   * @param {number} priority   1 = primary, 2 = secondary
+   */
+  constructor(priority: number) {
+    this.priority = priority;
+    this.ATTR = 'data-sre-highlight-' + priority;
+  }
 
   /**
    * Highlights a single node.
    *
-   * @param node The node to be highlighted.
-   * @returns The old node information.
+   * @param {HTMLElement} node The node to be highlighted.
    */
-  protected abstract highlightNode(node: HTMLElement): Highlight;
+  protected abstract highlightNode(node: HTMLElement): void;
 
   /**
    * Unhighlights a single node.
    *
-   * @param highlight The highlight info for the node to be unhighlighted.
+   * @param {HTMLElement} node  The highlight info for the node to be unhighlighted.
    */
-  protected abstract unhighlightNode(highlight: Highlight): void;
+  protected abstract unhighlightNode(node: HTMLElement): void;
 
   /**
    * @override
    */
   public highlight(nodes: HTMLElement[]) {
-    this.currentHighlights.push(
-      nodes.map((node) => {
-        const info = this.highlightNode(node);
-        this.setHighlighted(node);
-        return info;
-      })
-    );
+    this.currentHighlights.push(nodes);
+    for (const node of nodes) {
+      this.highlightNode(node);
+      this.setHighlighted(node);
+    }
   }
 
   /**
@@ -197,7 +167,7 @@ abstract class AbstractHighlighter implements Highlighter {
    */
   public highlightAll(node: HTMLElement) {
     const mactions = this.getMactionNodes(node);
-    for (let i = 0, maction; (maction = mactions[i]); i++) {
+    for (const maction of mactions) {
       this.highlight([maction]);
     }
   }
@@ -210,10 +180,10 @@ abstract class AbstractHighlighter implements Highlighter {
     if (!nodes) {
       return;
     }
-    nodes.forEach((highlight: Highlight) => {
-      if (this.isHighlighted(highlight.node)) {
-        this.unhighlightNode(highlight);
-        this.unsetHighlighted(highlight.node);
+    nodes.forEach((node: HTMLElement) => {
+      if (this.isHighlighted(node)) {
+        this.unhighlightNode(node);
+        this.unsetHighlighted(node);
       }
     });
   }
@@ -270,7 +240,7 @@ abstract class AbstractHighlighter implements Highlighter {
       if (list.length > 1) {
         let [L, T, R, B] = [Infinity, Infinity, -Infinity, -Infinity];
         for (const part of list) {
-          part.setAttribute('data-mjx-enclosed', 'true');
+          part.setAttribute(ATTR.ENCLOSED, 'true');
           const { left, top, right, bottom } = part.getBoundingClientRect();
           if (top === bottom && left === right) continue;
           if (left < L) L = left;
@@ -293,25 +263,22 @@ abstract class AbstractHighlighter implements Highlighter {
   }
 
   /**
+   * @param {string} type        fg or bg
+   * @param {NamedColor} color   The color to set
+   * @param {NamedColor} def     The defaults to use for missing parts of the color
+   */
+  protected setColorCSS(type: string, color: NamedColor, def: NamedColor) {
+    const name = color.color ?? def.color;
+    const alpha = color.alpha ?? def.alpha;
+    LiveRegion.setColor(type, this.priority, name, alpha);
+  }
+
+  /**
    * @override
    */
   public setColor(background: NamedColor, foreground: NamedColor) {
-    this._foreground = getColorString(foreground, DEFAULT_FOREGROUND);
-    this._background = getColorString(background, DEFAULT_BACKGROUND);
-  }
-
-  /**
-   * @override
-   */
-  public get foreground(): string {
-    return this._foreground;
-  }
-
-  /**
-   * @override
-   */
-  public get background(): string {
-    return this._background;
+    this.setColorCSS('fg', foreground, DEFAULT_FOREGROUND);
+    this.setColorCSS('bg', background, DEFAULT_BACKGROUND);
   }
 
   /**
@@ -320,19 +287,12 @@ abstract class AbstractHighlighter implements Highlighter {
    * @param {HTMLElement} node The root node.
    * @returns {HTMLElement[]} The list of maction sub nodes.
    */
-  public getMactionNodes(node: HTMLElement): HTMLElement[] {
-    return Array.from(
-      node.getElementsByClassName(this.mactionName)
-    ) as HTMLElement[];
-  }
+  public abstract getMactionNodes(node: HTMLElement): HTMLElement[];
 
   /**
    * @override
    */
-  public isMactionNode(node: Element): boolean {
-    const className = node.className || node.getAttribute('class');
-    return className ? !!className.match(new RegExp(this.mactionName)) : false;
-  }
+  public abstract isMactionNode(node: Element): boolean;
 
   /**
    * Check if a node is already highlighted.
@@ -360,6 +320,7 @@ abstract class AbstractHighlighter implements Highlighter {
    */
   public unsetHighlighted(node: HTMLElement) {
     node.removeAttribute(this.ATTR);
+    node.removeAttribute(ATTR.ENCLOSED);
   }
 }
 
@@ -370,99 +331,41 @@ class SvgHighlighter extends AbstractHighlighter {
   /**
    * @override
    */
-  constructor() {
-    super();
-    this.mactionName = 'maction';
-  }
-
-  /**
-   * @override
-   */
   public highlightNode(node: HTMLElement) {
-    let info: Highlight;
-    if (this.isHighlighted(node)) {
-      info = {
-        node: node,
-        background: this.background,
-        foreground: this.foreground,
-      };
-      return info;
+    if (
+      this.isHighlighted(node) ||
+      node.tagName === 'svg' ||
+      node.tagName === 'MJX-CONTAINER' ||
+      node.hasAttribute(ATTR.BBOX) ||
+      node.hasAttribute(ATTR.ENCLOSED)
+    ) {
+      return;
     }
-    if (node.tagName === 'svg' || node.tagName === 'MJX-CONTAINER') {
-      info = {
-        node: node,
-        background: node.style.backgroundColor,
-        foreground: node.style.color,
-      };
-      if (!node.hasAttribute('data-mjx-enclosed')) {
-        node.style.backgroundColor = this.background;
-      }
-      node.style.color = this.foreground;
-      return info;
-    }
-    if (node.hasAttribute('data-sre-highlighter-bbox')) {
-      node.setAttribute(this.ATTR, 'true');
-      node.setAttribute('fill', this.background);
-      return { node: node, foreground: 'none' };
-    }
-    if (!node.hasAttribute('data-mjx-enclosed')) {
-      const { x, y, width, height } = (
-        node as any as SVGGraphicsElement
-      ).getBBox();
-      const rect = this.createRect(
-        x,
-        y,
-        width,
-        height,
-        node.getAttribute('transform')
-      );
-      rect.setAttribute('fill', this.background);
-      node.parentNode.insertBefore(rect, node);
-    }
-    node.setAttribute(this.ATTR, 'true');
-    info = { node: node, foreground: node.getAttribute('fill') };
-    if (node.nodeName !== 'rect') {
-      // We currently do not change foreground of collapsed nodes.
-      node.setAttribute('fill', this.foreground);
-    }
-    return info;
+    const { x, y, width, height } = (
+      node as any as SVGGraphicsElement
+    ).getBBox();
+    const rect = this.createRect(
+      x,
+      y,
+      width,
+      height,
+      node.getAttribute('transform')
+    );
+    this.setHighlighted(rect);
+    node.parentNode.insertBefore(rect, node);
   }
 
   /**
    * @override
    */
-  public setHighlighted(node: HTMLElement) {
-    if (node.tagName === 'svg') {
-      super.setHighlighted(node);
-    }
-  }
-
-  /**
-   * @override
-   */
-  public unhighlightNode(info: Highlight) {
-    const node = info.node;
-    if (node.hasAttribute('data-sre-highlighter-bbox')) {
+  public unhighlightNode(node: HTMLElement) {
+    if (node.hasAttribute(ATTR.BBOX)) {
       node.remove();
       return;
     }
-    if (node.tagName === 'svg' || node.tagName === 'MJX-CONTAINER') {
-      if (!node.hasAttribute('data-mjx-enclosed')) {
-        node.style.backgroundColor = info.background;
-      }
-      node.removeAttribute('data-mjx-enclosed');
-      node.style.color = info.foreground;
-      return;
-    }
     const previous = node.previousSibling as HTMLElement;
-    if (previous?.hasAttribute('data-sre-highlighter-added')) {
+    if (previous?.hasAttribute(ATTR.ADDED)) {
       previous.remove();
-    }
-    node.removeAttribute('data-mjx-enclosed');
-    if (info.foreground) {
-      node.setAttribute('fill', info.foreground);
-    } else {
-      node.removeAttribute('fill');
     }
   }
 
@@ -486,7 +389,7 @@ class SvgHighlighter extends AbstractHighlighter {
       y2 - y1,
       part.getAttribute('transform')
     );
-    rect.setAttribute('data-sre-highlighter-bbox', 'true');
+    rect.setAttribute(ATTR.BBOX, 'true');
     part.parentNode.insertBefore(rect, part);
     return rect;
   }
@@ -526,10 +429,7 @@ class SvgHighlighter extends AbstractHighlighter {
   ): HTMLElement {
     const padding = 40;
     const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    rect.setAttribute(
-      'data-sre-highlighter-added', // Mark highlighting rect.
-      'true'
-    );
+    rect.setAttribute(ATTR.ADDED, 'true'); // Mark highlighting rect.
     rect.setAttribute('x', String(x - padding));
     rect.setAttribute('y', String(y - padding));
     rect.setAttribute('width', String(w + 2 * padding));
@@ -544,16 +444,14 @@ class SvgHighlighter extends AbstractHighlighter {
    * @override
    */
   public isMactionNode(node: HTMLElement) {
-    return node.getAttribute('data-mml-node') === this.mactionName;
+    return node.getAttribute('data-mml-node') === 'maction';
   }
 
   /**
    * @override
    */
-  public getMactionNodes(node: HTMLElement) {
-    return Array.from(
-      node.querySelectorAll(`[data-mml-node="${this.mactionName}"]`)
-    ) as HTMLElement[];
+  public getMactionNodes(node: HTMLElement): HTMLElement[] {
+    return Array.from(node.querySelectorAll('[data-mml-node="maction"]'));
   }
 }
 
@@ -564,37 +462,12 @@ class ChtmlHighlighter extends AbstractHighlighter {
   /**
    * @override
    */
-  constructor() {
-    super();
-    this.mactionName = 'mjx-maction';
-  }
+  public highlightNode(_node: HTMLElement) {}
 
   /**
    * @override
    */
-  public highlightNode(node: HTMLElement) {
-    const info = {
-      node: node,
-      background: node.style.backgroundColor,
-      foreground: node.style.color,
-    };
-    if (!this.isHighlighted(node)) {
-      if (!node.hasAttribute('data-mjx-enclosed')) {
-        node.style.backgroundColor = this.background;
-      }
-      node.style.color = this.foreground;
-    }
-    return info;
-  }
-
-  /**
-   * @override
-   */
-  public unhighlightNode(info: Highlight) {
-    const node = info.node;
-    node.style.backgroundColor = info.background;
-    node.style.color = info.foreground;
-    node.removeAttribute('data-mjx-enclosed');
+  public unhighlightNode(node: HTMLElement) {
     if (node.tagName.toLowerCase() === 'mjx-bbox') {
       node.remove();
     }
@@ -625,16 +498,14 @@ class ChtmlHighlighter extends AbstractHighlighter {
    * @override
    */
   public isMactionNode(node: HTMLElement) {
-    return node.tagName?.toUpperCase() === this.mactionName.toUpperCase();
+    return node.tagName?.toLowerCase() === 'mjx-maction';
   }
 
   /**
    * @override
    */
-  public getMactionNodes(node: HTMLElement) {
-    return Array.from(
-      node.getElementsByTagName(this.mactionName)
-    ) as HTMLElement[];
+  public getMactionNodes(node: HTMLElement): HTMLElement[] {
+    return Array.from(node.querySelectorAll('mjx-maction'));
   }
 }
 
@@ -642,17 +513,19 @@ class ChtmlHighlighter extends AbstractHighlighter {
  * Highlighter factory that returns the highlighter that goes with the current
  * Mathjax renderer.
  *
+ * @param {number} priority 1 = primary, 2 = secondary highlighter.
  * @param {NamedColor} back A background color specification.
  * @param {NamedColor} fore A foreground color specification.
  * @param {string} renderer The renderer name.
  * @returns {Highlighter} A new highlighter.
  */
 export function getHighlighter(
+  priority: number,
   back: NamedColor,
   fore: NamedColor,
   renderer: string
 ): Highlighter {
-  const highlighter = new highlighterMapping[renderer]();
+  const highlighter = new highlighterMapping[renderer](priority);
   highlighter.setColor(back, fore);
   return highlighter;
 }
@@ -660,7 +533,9 @@ export function getHighlighter(
 /**
  * Mapping renderer names to highlighter constructor.
  */
-const highlighterMapping: { [key: string]: new () => Highlighter } = {
+const highlighterMapping: {
+  [key: string]: new (priority: number) => Highlighter;
+} = {
   SVG: SvgHighlighter,
   CHTML: ChtmlHighlighter,
   generic: ChtmlHighlighter,

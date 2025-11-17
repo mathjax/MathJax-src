@@ -620,13 +620,17 @@ export class Menu {
           this.setBrailleCode(code)
         ),
         this.a11yVar<string>('highlight', (value) => this.setHighlight(value)),
-        this.a11yVar<string>('backgroundColor'),
-        this.a11yVar<string>('backgroundOpacity', (value) =>
-          this.setAlpha('bg', value)
+        this.a11yVar<string>('backgroundColor', (color) =>
+          this.setColor('bg', color)
         ),
-        this.a11yVar<string>('foregroundColor'),
-        this.a11yVar<string>('foregroundOpacity', (value) =>
-          this.setAlpha('fg', value)
+        this.a11yVar<string>('backgroundOpacity', (opacity) =>
+          this.setColor('bg', null, opacity)
+        ),
+        this.a11yVar<string>('foregroundColor', (color) =>
+          this.setColor('fg', color)
+        ),
+        this.a11yVar<string>('foregroundOpacity', (opacity) =>
+          this.setColor('fg', null, opacity)
         ),
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('viewBraille'),
@@ -1078,8 +1082,6 @@ export class Menu {
       if (renderer !== this.defaultSettings.renderer) {
         this.document.whenReady(() => this.setRenderer(renderer, false));
       }
-      this.setAlpha('fg', this.settings.foregroundOpacity ?? '100');
-      this.setAlpha('bg', this.settings.backgroundOpacity ?? '20');
     });
   }
 
@@ -1308,9 +1310,6 @@ export class Menu {
       this.rerender(STATE.COMPILED);
     } else {
       this.loadA11y('complexity');
-      if (!MathJax._?.a11y?.explorer) {
-        this.loadA11y('explorer');
-      }
     }
   }
 
@@ -1333,18 +1332,24 @@ export class Menu {
   }
 
   /**
-   * @param {string} type   The type of alpha to set (fg or bg)
-   * @param {string} value  The value to set it to
+   * @param {string} type      'fg' or 'bg'
+   * @param {string} name      The color name
+   * @param {string} opacity   The color's opacity percentage
    */
-  protected setAlpha(type: string, value: string) {
-    if (MathJax._?.a11y?.explorer) {
-      const alpha = parseInt(value) / 100;
-      MathJax._.a11y.explorer.Region.LiveRegion.setAlpha(
-        type,
-        alpha,
-        this.document.document
-      );
+  protected setColor(type: string, name: string, opacity?: string) {
+    const a11y = this.document.options.a11y;
+    if (!name) {
+      name = a11y[type === 'fg' ? 'foregroundColor' : 'backgroundColor'];
     }
+    if (!opacity) {
+      opacity = a11y[type === 'fg' ? 'foregroundOpacity' : 'backgroundOpacity'];
+    }
+    MathJax._.a11y.explorer.Region.LiveRegion.setColor(
+      type,
+      1,
+      name.toLowerCase(),
+      parseInt(opacity) / 100
+    );
   }
 
   /**
@@ -1682,9 +1687,8 @@ export class Menu {
    */
   protected rerender(start: number = STATE.TYPESET) {
     this.rerenderStart = Math.min(start, this.rerenderStart);
-    const startup = MathJax.startup;
-    if (!Menu.loading && startup.hasTypeset) {
-      startup.document.whenReady(async () => {
+    if (!Menu.loading && MathJax.startup.hasTypeset) {
+      this.document.whenReady(async () => {
         if (this.rerenderStart <= STATE.COMPILED) {
           this.document.reset({ inputJax: [] });
         }

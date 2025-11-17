@@ -26,6 +26,7 @@ import {
   AbstractMmlTokenNode,
   TextNode,
 } from '../../core/MmlTree/MmlNode.js';
+import { PropertyList } from '../../core/Tree/Node.js';
 import { ComplexityVisitor } from './visitor.js';
 
 /*==========================================================================*/
@@ -584,9 +585,10 @@ export class Collapse {
     const factory = this.complexity.factory;
     const marker = node.getProperty('collapse-marker') as string;
     const parent = node.parent;
-    const variant = node.getProperty('collapse-variant')
-      ? { mathvariant: '-tex-variant' }
-      : {};
+    const variant = { 'data-mjx-collapsed': true } as PropertyList;
+    if (node.getProperty('collapse-variant')) {
+      variant.mathvariant = '-tex-variant';
+    }
     const maction = factory.create(
       'maction',
       {

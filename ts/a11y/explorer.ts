@@ -413,7 +413,7 @@ export function ExplorerMathDocumentMixin<
         fill: 'white',
       },
       'mjx-help > svg > circle:nth-child(2)': {
-        fill: 'rgba(0, 0, 255, 0.2)',
+        fill: 'var(--mjx-bg1-color)',
         r: '7px',
       },
       'mjx-help > svg > line': {
