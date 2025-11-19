@@ -34,6 +34,10 @@ import { InfoDialog } from '../../ui/dialog/InfoDialog.js';
 
 /**********************************************************************/
 
+const isWindows = context.os === 'Windows';
+
+const BRAILLE_PADDING = Array(40).fill('\u2800').join('');
+
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
  *
@@ -348,7 +352,18 @@ export class SpeechExplorer
    * @returns {string}  The string to use for no description
    */
   protected get none(): string {
-    return this.item.none;
+    return this.document.options.a11y.brailleSpeech
+      ? this.item.brailleNone
+      : this.item.none;
+  }
+
+  /**
+   * Shorthand for the item's "brailleNone" indicator
+   *
+   * @returns {string}  The string to use for no description
+   */
+  protected get brailleNone(): string {
+    return this.item.brailleNone;
   }
 
   /**
@@ -665,6 +680,7 @@ export class SpeechExplorer
   protected escapeKey(): boolean {
     this.Stop();
     this.focusTop();
+    this.setCurrent(null);
     return true;
   }
 
@@ -1219,7 +1235,7 @@ export class SpeechExplorer
    */
   protected removeSpeech() {
     if (this.speech) {
-      this.speech.remove();
+      this.unspeak(this.speech);
       this.speech = null;
       if (this.img) {
         this.node.append(this.img);
@@ -1246,28 +1262,56 @@ export class SpeechExplorer
     description: string = this.none
   ) {
     const oldspeech = this.speech;
-    this.speech = document.createElement('mjx-speech');
-    this.speech.setAttribute('role', this.role);
-    this.speech.setAttribute('aria-label', speech);
-    this.speech.setAttribute(SemAttr.SPEECH, speech);
+    const speechNode = (this.speech = document.createElement('mjx-speech'));
+    speechNode.setAttribute('role', this.role);
+    speechNode.setAttribute('aria-label', speech || this.none);
+    speechNode.setAttribute('aria-roledescription', description || this.none);
+    speechNode.setAttribute(SemAttr.SPEECH, speech);
     if (ssml) {
-      this.speech.setAttribute(SemAttr.PREFIX_SSML, ssml[0] || '');
-      this.speech.setAttribute(SemAttr.SPEECH_SSML, ssml[1] || '');
-      this.speech.setAttribute(SemAttr.POSTFIX_SSML, ssml[2] || '');
+      speechNode.setAttribute(SemAttr.PREFIX_SSML, ssml[0] || '');
+      speechNode.setAttribute(SemAttr.SPEECH_SSML, ssml[1] || '');
+      speechNode.setAttribute(SemAttr.POSTFIX_SSML, ssml[2] || '');
     }
     if (braille) {
-      this.speech.setAttribute('aria-braillelabel', braille);
+      if (this.document.options.a11y.brailleSpeech) {
+        speechNode.setAttribute('aria-label', braille);
+        speechNode.setAttribute('aria-roledescription', this.brailleNone);
+      }
+      speechNode.setAttribute('aria-braillelabel', braille);
+      speechNode.setAttribute('aria-brailleroledescription', this.brailleNone);
+      if (this.document.options.a11y.brailleCombine) {
+        speechNode.setAttribute(
+          'aria-label',
+          braille + BRAILLE_PADDING + speech
+        );
+      }
     }
-    this.speech.setAttribute('aria-roledescription', description);
-    this.speech.setAttribute('tabindex', '0');
-    this.node.append(this.speech);
+    speechNode.setAttribute('tabindex', '0');
+    if (isWindows) {
+      const container = document.createElement('mjx-speech-container');
+      container.setAttribute('role', 'application');
+      container.setAttribute('aria-roledescription', this.none);
+      container.setAttribute('aria-brailleroledescription', this.brailleNone);
+      container.append(speechNode);
+      this.node.append(container);
+      speechNode.setAttribute('role', 'img');
+    } else {
+      this.node.append(speechNode);
+    }
     this.focusSpeech = true;
-    this.speech.focus();
+    speechNode.focus();
     this.focusSpeech = false;
     this.Update();
     if (oldspeech) {
-      setTimeout(() => oldspeech.remove(), 100);
+      setTimeout(() => this.unspeak(oldspeech), 100);
     }
+  }
+
+  public unspeak(node: HTMLElement) {
+    if (isWindows) {
+      node = node.parentElement;
+    }
+    node.remove();
   }
 
   /**
@@ -1294,9 +1338,18 @@ export class SpeechExplorer
     });
     const braille = container.getAttribute(SemAttr.BRAILLE);
     if (braille) {
+      if (this.document.options.a11y.brailleSpeech) {
+        this.img.setAttribute('aria-label', braille);
+        this.img.setAttribute('aria-roledescription', this.brailleNone);
+      }
       this.img.setAttribute('aria-braillelabel', braille);
+      this.img.setAttribute('aria-brailleroledescription', this.brailleNone);
+      if (this.document.options.a11y.brailleCombine) {
+        this.img.setAttribute('aria-label', braille + BRAILLE_PADDING + speech);
+      }
     }
     container.appendChild(this.img);
+    //    this.node.setAttribute('aria-roledescription', this.description);
     this.adjustAnchors();
   }
 
@@ -1783,10 +1836,10 @@ export class SpeechExplorer
    */
   public Stop() {
     if (this.active) {
-      const description = this.description;
-      if (this.node.getAttribute('aria-roledescription') !== description) {
-        this.node.setAttribute('aria-roledescription', description);
-      }
+      //      const description = this.description;
+      //      if (this.node.getAttribute('aria-roledescription') !== description) {
+      //        this.node.setAttribute('aria-roledescription', description);
+      //      }
       this.node.classList.remove('mjx-explorer-active');
       if (this.document.options.enableExplorerHelp) {
         this.document.infoIcon.remove();

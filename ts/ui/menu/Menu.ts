@@ -91,6 +91,8 @@ export interface MenuSettings {
   backgroundOpacity: string;
   braille: boolean;
   brailleCode: string;
+  brailleSpeech: boolean;
+  brailleCombine: boolean;
   foregroundColor: string;
   foregroundOpacity: string;
   highlight: string;
@@ -156,6 +158,8 @@ export class Menu {
       speech: true,
       braille: true,
       brailleCode: 'nemeth',
+      brailleSpeech: false,
+      brailleCombine: false,
       speechRules: 'clearspeak-default',
       roleDescription: 'math',
       tabSelects: 'all',
@@ -619,6 +623,12 @@ export class Menu {
         this.variable<string>('brailleCode', (code) =>
           this.setBrailleCode(code)
         ),
+        this.a11yVar<boolean>('brailleSpeech', (speech) =>
+          this.setBrailleSpeech(speech)
+        ),
+        this.a11yVar<boolean>('brailleCombine', (speech) =>
+          this.setBrailleCombine(speech)
+        ),
         this.a11yVar<string>('highlight', (value) => this.setHighlight(value)),
         this.a11yVar<string>('backgroundColor'),
         this.a11yVar<string>('backgroundOpacity', (value) =>
@@ -804,6 +814,12 @@ export class Menu {
         this.submenu('Braille', '\xA0 \xA0 Braille', [
           this.checkbox('Generate', 'Generate', 'braille'),
           this.checkbox('Subtitles', 'Show Subtitles', 'viewBraille'),
+          this.checkbox('BrailleSpeech', 'Replace Speech', 'brailleSpeech'),
+          this.checkbox(
+            'BrailleCombine',
+            'Combine with Speech',
+            'brailleCombine'
+          ),
           this.rule(),
           this.label('Code', 'Code Format:'),
           this.radioGroup('brailleCode', [
@@ -1246,10 +1262,17 @@ export class Menu {
   protected setSpeech(speech: boolean) {
     this.enableAccessibilityItems('Speech', speech);
     this.document.options.enableSpeech = speech;
-    if (speech && this.settings.assistiveMml) {
-      this.noRerender(() =>
-        this.menu.pool.lookup('assistiveMml').setValue(false)
-      );
+    if (speech) {
+      if (this.settings.assistiveMml) {
+        this.noRerender(() =>
+          this.menu.pool.lookup('assistiveMml').setValue(false)
+        );
+      }
+      if (this.settings.brailleSpeech) {
+        this.noRerender(() =>
+          this.menu.pool.lookup('brailleSpeech').setValue(false)
+        );
+      }
     }
     if (!speech || MathJax._?.a11y?.explorer) {
       this.rerender(STATE.COMPILED);
@@ -1281,6 +1304,34 @@ export class Menu {
    */
   protected setBrailleCode(code: string) {
     this.document.options.sre.braille = code;
+    this.rerender(STATE.COMPILED);
+  }
+
+  /**
+   * @param {boolean} speech   Whether to use aria-label for Braille
+   */
+  protected setBrailleSpeech(speech: boolean) {
+    if (speech && this.settings.speech) {
+      Menu.loading++; // pretend we're loading, to suppress rerendering for each variable change
+      this.menu.pool.lookup('speech').setValue(false);
+      Menu.loading--;
+    } else {
+      this.enableAccessibilityItems('Speech', true);
+    }
+    this.settings.brailleCombine = this.document.options.a11y.brailleCombine =
+      false;
+    this.rerender(STATE.COMPILED);
+  }
+
+  /**
+   * @param {boolean} _speech   Whether to combine Braille into aria-label
+   */
+  protected setBrailleCombine(_speech: boolean) {
+    if (this.settings.brailleSpeech) {
+      this.menu.pool.lookup('brailleSpeech').setValue(false);
+    }
+    this.settings.brailleSpeech = this.document.options.a11y.brailleSpeech =
+      false;
     this.rerender(STATE.COMPILED);
   }
 
