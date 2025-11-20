@@ -117,6 +117,14 @@ export class SVG<N, T, D> extends CommonOutputJax<
       stroke: 'black',
       'stroke-width': '80px',
     },
+    '@media (prefers-color-scheme: dark)': {
+      [[
+        'rect[data-sre-highlighter-added]:has(+ .mjx-selected)',
+        'rect[data-sre-highlighter-bbox].mjx-selected',
+      ].join(', ')]: {
+        stroke: '#C8C8C8',
+      },
+    },
   };
 
   /**

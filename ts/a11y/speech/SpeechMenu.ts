@@ -22,7 +22,12 @@
  */
 
 import { ExplorerMathItem } from '../explorer.js';
-import { MJContextMenu } from '../../ui/menu/MJContextMenu.js';
+import { MJContextMenu, SubmenuCallback } from '../../ui/menu/MJContextMenu.js';
+import {
+  SelectionDialog,
+  SelectionOrder,
+  SelectionGrid,
+} from '../../ui/dialog/SelectionDialog.js';
 import { SubMenu, Submenu } from '../../ui/menu/mj-context-menu.js';
 import * as Sre from '../sre.js';
 
@@ -113,7 +118,7 @@ let counter = 0;
 function csSelectionBox(menu: MJContextMenu, locale: string): object {
   const props = localePreferences.get(locale);
   csPrefsVariables(menu, Object.keys(props));
-  const items = [];
+  const items: any[] = [];
   for (const prop of Object.getOwnPropertyNames(props)) {
     items.push({
       title: prop,
@@ -121,22 +126,19 @@ function csSelectionBox(menu: MJContextMenu, locale: string): object {
       variable: 'csprf_' + prop,
     });
   }
-  const sb = menu.factory.get('selectionBox')(
-    menu.factory,
-    {
-      title: 'Clearspeak Preferences',
-      signature: '',
-      order: 'alphabetic',
-      grid: 'square',
-      selections: items,
-    },
+  const sb = new SelectionDialog(
+    'Clearspeak Preferences',
+    '',
+    items,
+    SelectionOrder.ALPHABETICAL,
+    SelectionGrid.SQUARE,
     menu
   );
   return {
     type: 'command',
     id: 'ClearspeakPreferences',
     content: 'Select Preferences',
-    action: () => sb.post(0, 0),
+    action: () => sb.post(),
   };
 }
 
@@ -223,13 +225,13 @@ function smartPreferences(
  *
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach elements to.
- * @param {(sub: SubMenu) => void} callback Callback to apply on the constructed
+ * @param {SubmenuCallback} callback Callback to apply on the constructed
  *   submenu.
  */
 export async function clearspeakMenu(
   menu: MJContextMenu,
   sub: Submenu,
-  callback: (sub: SubMenu) => void
+  callback: SubmenuCallback
 ) {
   const exit = (items: object[]) => {
     callback(
@@ -288,13 +290,13 @@ let LOCALE_MENU: SubMenu = null;
  *
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach elements to.
- * @param {(sub: SubMenu) => void} callback Callback to apply on the constructed
+ * @param {SubmenuCallback} callback Callback to apply on the constructed
  *   submenu.
  */
 export function localeMenu(
   menu: MJContextMenu,
   sub: Submenu,
-  callback: (sub: SubMenu) => void
+  callback: SubmenuCallback
 ) {
   if (LOCALE_MENU) {
     callback(LOCALE_MENU);

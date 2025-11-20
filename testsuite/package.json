@@ -4,7 +4,7 @@
   "description": "MathJax jest tests for v4",
   "type": "module",
   "scripts": {
-    "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' pnpm jest"
+    "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --localstorage-file ./lib/localstorage' pnpm jest"
   },
   "imports": {
     "#js/*": "../mjs/*",
