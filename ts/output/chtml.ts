@@ -165,6 +165,11 @@ export class CHTML<N, T, D> extends CommonOutputJax<
     'mjx-container .mjx-selected': {
       outline: '2px solid black',
     },
+    '@media (prefers-color-scheme: dark)': {
+      'mjx-container .mjx-selected': {
+        outline: '2px solid #C8C8C8',
+      },
+    },
 
     //
     //  These don't have Wrapper subclasses, so add their styles here

@@ -30,6 +30,9 @@ import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, SemAttr } from '../speech/SpeechUtil.js';
 import { GeneratorPool } from '../speech/GeneratorPool.js';
 import { context } from '../../util/context.js';
+import { InfoDialog } from '../../ui/dialog/InfoDialog.js';
+
+/**********************************************************************/
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
@@ -70,7 +73,7 @@ export interface KeyExplorer extends Explorer {
 /**
  * Type of function that implements a key press action
  */
-type keyMapping = (
+export type keyMapping = (
   explorer: SpeechExplorer,
   event: KeyboardEvent
 ) => boolean | void;
@@ -107,136 +110,6 @@ export function hasModifiers(
 }
 
 /**********************************************************************/
-
-/**
- * Creates a customized help dialog
- *
- * @param {string} title   The title to use for the message
- * @param {string} select  Additional ways to select the typeset math
- * @returns {string}       The customized message
- */
-function helpMessage(title: string, select: string): string {
-  return `
-<H2>Exploring expressions ${title}</h2>
-
-<p>The mathematics on this page is being rendered by <a
-href="https://www.mathjax.org/" target="_blank">MathJax</a>, which
-generates both the text spoken by screen readers, as well as the
-visual layout for sighted users.</p>
-
-<p>Expressions typeset by MathJax can be explored interactively, and
-are focusable.  You can use the <kbd>Tab</kbd> key to move to a typeset
-expression${select}.  Initially, the expression will be read in full,
-but you can use the following keys to explore the expression
-further:<p>
-
-<ul>
-
-<li><kbd>Down Arrow</kbd> moves one level deeper into the expression to
-allow you to explore the current subexpression term by term.</li>
-
-<li><kbd>Up Arrow</kbd> moves back up a level within the expression.</li>
-
-<li><kbd>Right Arrow</kbd> moves to the next term in the current
-subexpression.</li>
-
-<li><kbd>Left Arrow</kbd> moves to the next term in the current
-subexpression.</li>
-
-<li><kbd>Shift</kbd>+<kbd>Arrow</kbd> moves to a neighboring cell within a table.
-
-<li><kbd>0-9</kbd>+<kbd>0-9</kbd> jumps to a cell by its index in the table, where 0 = 10.
-
-<li><kbd>Home</kbd> takes you to the top of the expression.</li>
-
-<li><kbd>Enter</kbd> or <kbd>Return</kbd> clicks a link or activates an active
-subexpression.</li>
-
-<li><kbd>Space</kbd> opens the MathJax contextual menu where you can view
-or copy the source format of the expression, or modify MathJax's
-settings.</li>
-
-<li><kbd>Escape</kbd> exits the expression explorer.</li>
-
-<li><kbd>x</kbd> gives a summary of the current subexpression.</li>
-
-<li><kbd>z</kbd> gives the full text of a collapsed expression.</li>
-
-<li><kbd>d</kbd> gives the current depth within the expression.</li>
-
-<li><kbd>s</kbd> starts or stops auto-voicing with synchronized highlighting.</li>
-
-<li><kbd>v</kbd> marks the current position in the expression.</li>
-
-<li><kbd>p</kbd> cycles through the marked positions in the expression.</li>
-
-<li><kbd>u</kbd> clears all marked positions and returns to the starting position.</li>
-
-<li><kbd>&gt;</kbd> cycles through the available speech rule sets
-(MathSpeak, ClearSpeak).</li>
-
-<li><kbd>&lt;</kbd> cycles through the verbosity levels for the current
-rule set.</li>
-
-<li><kbd>h</kbd> produces this help listing.</li>
-</ul>
-
-<p>The MathJax contextual menu allows you to enable or disable speech
-or Braille generation for mathematical expressions, the language to
-use for the spoken mathematics, and other features of MathJax.  In
-particular, the Explorer submenu allows you to specify how the
-mathematics should be identified in the page (e.g., by saying "math"
-when the expression is spoken), and whether or not to include a
-message about the letter "h" bringing up this dialog box.</p>
-
-<p>The contextual menu also provides options for viewing or copying a
-MathML version of the expression or its original source format,
-creating an SVG version of the expression, and viewing various other
-information.</p>
-
-<p>For more help, see the <a
-href="https://docs.mathjax.org/en/latest/basic/accessibility.html"
-targe="_blank">MathJax accessibility documentation.</a></p>
-`;
-}
-
-/**
- * Help for the different OS versions
- */
-const helpData: Map<string, [string, string]> = new Map([
-  [
-    'MacOS',
-    [
-      'on MacOS and iOS using VoiceOver',
-      ', or the VoiceOver arrow keys to select an expression',
-    ],
-  ],
-  [
-    'Windows',
-    [
-      'in Windows using NVDA or JAWS',
-      `. The screen reader should enter focus or forms mode automatically
-when the expression gets the browser focus, but if not, you can toggle
-focus mode using NVDA+space in NVDA; for JAWS, Enter should start
-forms mode while Numpad Plus leaves it.  Also note that you can use
-the NVDA or JAWS key plus the arrow keys to explore the expression
-even in browse mode, and you can use NVDA+shift+arrow keys to
-navigate out of an expression that has the focus in NVDA`,
-    ],
-  ],
-  [
-    'Unix',
-    [
-      'in Unix using Orca',
-      `, and Orca should enter focus mode automatically.  If not, use the
-Orca+a key to toggle focus mode on or off.  Also note that you can use
-Orca+arrow keys to explore expressions even in browse mode`,
-    ],
-  ],
-  ['unknown', ['with a Screen Reader.', '']],
-]);
-
-/**********************************************************************/
 /**********************************************************************/
 
 /**
@@ -249,6 +122,149 @@ export class SpeechExplorer
   extends AbstractExplorer<string>
   implements KeyExplorer
 {
+  /**
+   * Creates a customized help dialog
+   *
+   * @param {string} title   The title to use for the message
+   * @param {string} select  Additional ways to select the typeset math
+   * @returns {string}       The customized message
+   */
+  protected static helpMessage(title: string, select: string): string {
+    return `
+      <h2 role="heading" aria-level="2">Exploring expressions ${title}</h2>
+
+      <p>The mathematics on this page is being rendered by <a
+      href="https://www.mathjax.org/" target="_blank">MathJax</a>, which
+      generates both the text spoken by screen readers, as well as the
+      visual layout for sighted users.</p>
+
+      <p>Expressions typeset by MathJax can be explored interactively, and
+      are focusable.  You can use the <kbd>Tab</kbd> key to move to a typeset
+      expression${select}.  Initially, the expression will be read in full,
+      but you can use the following keys to explore the expression
+      further:</p>
+
+      <ul>
+
+      <li><kbd>Down Arrow</kbd> moves one level deeper into the
+      expression to allow you to explore the current subexpression term by
+      term.</li>
+
+      <li><kbd>Up Arrow</kbd> moves back up a level within the
+      expression.</li>
+
+      <li><kbd>Right Arrow</kbd> moves to the next term in the
+      current subexpression.</li>
+
+      <li><kbd>Left Arrow</kbd> moves to the next term in the
+      current subexpression.</li>
+
+      <li><kbd>Shift</kbd>+<kbd>Arrow</kbd> moves to a
+      neighboring cell within a table.</li>
+
+      <li><kbd>0-9</kbd>+<kbd>0-9</kbd> jumps to a cell
+      by its index in the table, where 0 = 10.</li>
+
+      <li><kbd>Home</kbd> takes you to the top of the
+      expression.</li>
+
+      <li><kbd>Enter</kbd> or <kbd>Return</kbd> clicks a
+      link or activates an active subexpression.</li>
+
+      <li><kbd>Space</kbd> opens the MathJax contextual menu
+      where you can view or copy the source format of the expression, or
+      modify MathJax's settings.</li>
+
+      <li><kbd>Escape</kbd> exits the expression
+      explorer.</li>
+
+      <li><kbd>x</kbd> gives a summary of the current
+      subexpression.</li>
+
+      <li><kbd>z</kbd> gives the full text of a collapsed
+      expression.</li>
+
+      <li><kbd>d</kbd> gives the current depth within the
+      expression.</li>
+
+      <li><kbd>s</kbd> starts or stops auto-voicing with
+      synchronized highlighting.</li>
+
+      <li><kbd>v</kbd> marks the current position in the
+      expression.</li>
+
+      <li><kbd>p</kbd> cycles through the marked positions in
+      the expression.</li>
+
+      <li><kbd>u</kbd> clears all marked positions and returns
+      to the starting position.</li>
+
+      <li><kbd>&gt;</kbd> cycles through the available speech
+      rule sets (MathSpeak, ClearSpeak).</li>
+
+      <li><kbd>&lt;</kbd> cycles through the verbosity levels
+      for the current rule set.</li>
+
+      <li><kbd>h</kbd> produces this help listing.</li>
+      </ul>
+
+      <p>The MathJax contextual menu allows you to enable or disable speech
+      or Braille generation for mathematical expressions, the language to
+      use for the spoken mathematics, and other features of MathJax.  In
+      particular, the Explorer submenu allows you to specify how the
+      mathematics should be identified in the page (e.g., by saying "math"
+      when the expression is spoken), and whether or not to include a
+      message about the letter "h" bringing up this dialog box.  Turning off
+      speech and Braille will disable the expression explorer, its
+      highlighting, and its help icon.</p>
+
+      <p>The contextual menu also provides options for viewing or copying a
+      MathML version of the expression or its original source format,
+      creating an SVG version of the expression, and viewing various other
+      information.</p>
+
+      <p>For more help, see the <a
+      href="https://docs.mathjax.org/en/latest/basic/accessibility.html"
+      target="_blank">MathJax accessibility documentation.</a></p>
+    `;
+  }
+
+  /**
+   * Help for the different OS versions
+   */
+  protected static helpData: Map<string, [string, string]> = new Map([
+    [
+      'MacOS',
+      [
+        'on MacOS and iOS using VoiceOver',
+        ', or the VoiceOver arrow keys to select an expression',
+      ],
+    ],
+    [
+      'Windows',
+      [
+        'in Windows using NVDA or JAWS',
+        `. The screen reader should enter focus or forms mode automatically
+        when the expression gets the browser focus, but if not, you can toggle
+        focus mode using NVDA+space in NVDA; for JAWS, Enter should start
+        forms mode while Numpad Plus leaves it.  Also note that you can use
+        the NVDA or JAWS key plus the arrow keys to explore the expression
+        even in browse mode, and you can use NVDA+shift+arrow keys to
+        navigate out of an expression that has the focus in NVDA`,
+      ],
+    ],
+    [
+      'Unix',
+      [
+        'in Unix using Orca',
+        `, and Orca should enter focus mode automatically.  If not, use the
+        Orca+a key to toggle focus mode on or off.  Also note that you can use
+        Orca+arrow keys to explore expressions even in browse mode`,
+      ],
+    ],
+    ['unknown', ['with a Screen Reader.', '']],
+  ]);
+
   /*
    * The explorer key mapping
    */
@@ -623,8 +639,13 @@ export class SpeechExplorer
 
   /**
    * Open the help dialog, and refocus when it closes.
+   *
+   * @returns {boolean | void}  True cancels the event
    */
-  protected hKey() {
+  protected hKey(): boolean | void {
+    if (!this.document.options.enableExplorerHelp) {
+      return true;
+    }
     this.refocus = this.current;
     this.help();
   }
@@ -986,40 +1007,36 @@ export class SpeechExplorer
    * Displays the help dialog.
    */
   protected help() {
-    const adaptor = this.document.adaptor;
-    const helpBackground = adaptor.node('mjx-help-background');
-    const close = (event: Event) => {
-      helpBackground.remove();
-      this.node.focus();
-      this.stopEvent(event);
-    };
-    helpBackground.addEventListener('click', close);
-    const helpSizer = adaptor.node('mjx-help-sizer', {}, [
-      adaptor.node(
-        'mjx-help-dialog',
-        { tabindex: 0, role: 'dialog', 'aria-labeledby': 'mjx-help-label' },
-        [
-          adaptor.node('h1', { id: 'mjx-help-label' }, [
-            adaptor.text('MathJax Expression Explorer Help'),
-          ]),
-          adaptor.node('div'),
-          adaptor.node('input', { type: 'button', value: 'Close' }),
-        ]
-      ),
-    ]);
-    helpBackground.append(helpSizer);
-    const help = helpSizer.firstChild as HTMLElement;
-    help.addEventListener('click', (event) => this.stopEvent(event));
-    help.lastChild.addEventListener('click', close);
-    help.addEventListener('keydown', (event: KeyboardEvent) => {
-      if (event.code === 'Escape') {
-        close(event);
-      }
+    if (!this.document.options.enableExplorerHelp) {
+      return;
+    }
+    const CLASS = this.constructor as typeof SpeechExplorer;
+    const [title, select] = CLASS.helpData.get(context.os);
+    InfoDialog.post({
+      title: 'MathJax Expression Explorer Help',
+      message: CLASS.helpMessage(title, select),
+      node: this.node,
+      adaptor: this.document.adaptor,
+      styles: {
+        '.mjx-dialog': {
+          'max-height': 'calc(min(35em, 90%))',
+        },
+        'mjx-dialog mjx-title': {
+          'font-size': '133%',
+          margin: '.5em 1.75em',
+        },
+        'mjx-dialog h2': {
+          'font-size': '20px',
+          margin: '.5em 0',
+        },
+        'mjx-dialog ul': {
+          'list-style-type': 'none',
+        },
+        'mjx-dialog li': {
+          'margin-bottom': '.5em',
+        },
+      },
     });
-    const [title, select] = helpData.get(context.os);
-    (help.childNodes[1] as HTMLElement).innerHTML = helpMessage(title, select);
-    document.body.append(helpBackground);
-    help.focus();
   }
 
   /********************************************************************/
@@ -1159,7 +1176,10 @@ export class SpeechExplorer
     if (describe) {
       let description =
         this.description === this.none ? '' : ', ' + this.description;
-      if (this.document.options.a11y.help) {
+      if (
+        this.document.options.a11y.help &&
+        this.document.options.enableExplorerHelp
+      ) {
         description += ', press h for help';
       }
       speech += description;
@@ -1719,7 +1739,9 @@ export class SpeechExplorer
     // and add the info icon.
     //
     this.node.classList.add('mjx-explorer-active');
-    this.node.append(this.document.infoIcon);
+    if (this.document.options.enableExplorerHelp) {
+      this.node.append(this.document.infoIcon);
+    }
     //
     // Get the node to make current, and determine if we need to add a
     // speech node (or just use the top-level node), then set the
@@ -1755,7 +1777,9 @@ export class SpeechExplorer
         this.node.setAttribute('aria-roledescription', description);
       }
       this.node.classList.remove('mjx-explorer-active');
-      this.document.infoIcon.remove();
+      if (this.document.options.enableExplorerHelp) {
+        this.document.infoIcon.remove();
+      }
       this.pool.unhighlight();
       this.magnifyRegion.Hide();
       this.region.Hide();

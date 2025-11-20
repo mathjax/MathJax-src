@@ -35,6 +35,8 @@ import {
   expandable,
 } from '../../util/Options.js';
 import { ExplorerMathItem } from '../../a11y/explorer.js';
+import { InfoDialog } from '../dialog/InfoDialog.js';
+import { CopyDialog } from '../dialog/CopyDialog.js';
 
 import { SVG } from '../../output/svg.js';
 
@@ -42,11 +44,10 @@ import * as AnnotationMenu from './AnnotationMenu.js';
 import { MJContextMenu } from './MJContextMenu.js';
 import { RadioCompare } from './RadioCompare.js';
 import { MmlVisitor } from './MmlVisitor.js';
-import { SelectableInfo } from './SelectableInfo.js';
 import { MenuMathDocument } from './MenuHandler.js';
 import * as MenuUtil from './MenuUtil.js';
 
-import { Info, Parser, Rule, CssStyles, Submenu } from './mj-context-menu.js';
+import { Parser, Rule, CssStyles, Submenu } from './mj-context-menu.js';
 
 /*==========================================================================*/
 
@@ -140,7 +141,7 @@ export class Menu {
       zoom: 'NoZoom',
       zscale: '200%',
       renderer: 'CHTML',
-      alt: false,
+      alt: true,
       cmd: false,
       ctrl: false,
       shift: false,
@@ -184,7 +185,7 @@ export class Menu {
     '.mjx-dashed{stroke-dasharray:140}',
     '.mjx-dotted{stroke-linecap:round;stroke-dasharray:0,140}',
     'use[data-c]{stroke-width:3px}',
-  ].join('');
+  ].join('\n');
 
   /**
    * The number of startup modules that are currently being loaded
@@ -291,27 +292,99 @@ export class Menu {
   /**
    * The "About MathJax" info box
    */
-  protected about = new Info(
-    '<b style="font-size:120%;">MathJax</b> v' + mathjax.version,
-    () => {
-      const lines = [] as string[];
-      lines.push(
-        'Input Jax: ' + this.document.inputJax.map((jax) => jax.name).join(', ')
-      );
-      lines.push('Output Jax: ' + this.document.outputJax.name);
-      lines.push('Document Type: ' + this.document.kind);
-      return lines.join('<br/>');
-    },
-    '<a href="https://www.mathjax.org">www.mathjax.org</a>'
-  );
+  protected about() {
+    const lines = [] as string[];
+    //
+    // Add the input and output jax and the document type
+    //
+    lines.push(
+      'Input Jax: ' + this.document.inputJax.map((jax) => jax.name).join(', ')
+    );
+    lines.push('Output Jax: ' + this.document.outputJax.name);
+    lines.push('Document Type: ' + this.document.kind);
+    //
+    // Add the loaded packages and their versions
+    //
+    if (MathJax && MathJax.loader) {
+      lines.push('<hr/>Modules Loaded:');
+      const Package = MathJax._.components.package.Package;
+      const versions = (MathJax as any).loader.versions;
+      for (const name of Array.from(Package.packages.keys()).sort(
+        this.sortPackages
+      )) {
+        const version = versions.get(Package.resolvePath(name));
+        if (version) {
+          lines.push(
+            `&#xA0;&#xA0;&#xA0;&#xA0;${name} <mjx-v>(${version})</mjx-v>`
+          );
+        }
+      }
+    }
+    //
+    // Post the dialog
+    //
+    InfoDialog.post({
+      title: 'MathJax <mjx-v>v' + mathjax.version + '</mjx-v>',
+      message: lines.join('<br/>'),
+      adaptor: this.document.adaptor,
+      styles: {
+        '.mjx-dialog': {
+          'max-height': 'calc(min(20em, 85%))',
+        },
+        'mjx-dialog > div': {
+          'white-space': 'nowrap',
+        },
+        'dialog.mjx-dialog-help > mjx-dialog > div': {
+          'white-space': 'normal',
+        },
+        'mjx-v': {
+          'font-size': '80%',
+        },
+      },
+      extraNodes: [
+        this.document.adaptor.node(
+          'a',
+          { href: 'https://www.mathjax.org', 'data-drag': 'false' },
+          [this.document.adaptor.text('https://www.mathjax.org')]
+        ),
+      ],
+    });
+  }
+
+  /**
+   * Function to sort the package names
+   *
+   * @param {string} a   The first module name
+   * @param {string} b   The second module name
+   * @returns {number}   -1 of a < b, 1 if a > b
+   */
+  protected sortPackages(a: string, b: string): number {
+    const [prefixA, rootA] = a.includes('/') ? a.split(/\//) : ['', a];
+    const [prefixB, rootB] = b.includes('/') ? b.split(/\//) : ['', b];
+    return prefixA === prefixB
+      ? rootA < rootB
+        ? -1
+        : 1
+      : prefixA.charAt(0) === '['
+        ? prefixB.charAt(0) === '['
+          ? prefixA < prefixB
+            ? -1
+            : 1
+          : 1
+        : prefixB.charAt(0) === '['
+          ? -1
+          : prefixA < prefixB
+            ? -1
+            : 1;
+  }
 
   /**
    * The "MathJax Help" info box
    */
-  protected help = new Info(
-    '<b>MathJax Help</b>',
-    () => {
-      return [
+  protected help() {
+    InfoDialog.post({
+      title: 'MathJax Help',
+      message: [
         '<p><b>MathJax</b> is a JavaScript library that allows page',
         ' authors to include mathematics within their web pages.',
         " As a reader, you don't need to do anything to make that happen.</p>",
@@ -344,146 +417,125 @@ export class Menu {
         ' to save the preferences set via this menu locally in your browser.  These',
         ' are not used to track you, and are not transferred or used remotely by',
         ' MathJax in any way.</p>',
-      ].join('\n');
-    },
-    '<a href="https://www.mathjax.org">www.mathjax.org</a>'
-  );
+      ].join('\n'),
+      adaptor: this.document.adaptor,
+      extraNodes: [
+        this.document.adaptor.node(
+          'a',
+          { href: 'https://www.mathjax.org', 'data-drag': 'none' },
+          [this.document.adaptor.text('https://www.mathjax.org')]
+        ),
+      ],
+    });
+  }
 
   /**
    * The "Show As MathML" info box
    */
-  protected mathmlCode = new SelectableInfo(
-    'MathJax MathML Expression',
-    () => {
-      if (!this.menu.mathItem) return '';
-      const text = this.toMML(this.menu.mathItem);
-      return '<pre>' + this.formatSource(text) + '</pre>';
-    },
-    ''
-  );
+  protected mathMLCode() {
+    CopyDialog.post({
+      title: 'MathJax MathML Expression',
+      message: this.menu.mathItem ? this.toMML(this.menu.mathItem) : '',
+      adaptor: this.document.adaptor,
+      code: true,
+    });
+  }
 
   /**
    * The "Show As (original form)" info box
    */
-  protected originalText = new SelectableInfo(
-    'MathJax Original Source',
-    () => {
-      if (!this.menu.mathItem) return '';
-      const text = this.menu.mathItem.math;
-      return (
-        '<pre style="font-size:125%; margin:0">' +
-        this.formatSource(text) +
-        '</pre>'
-      );
-    },
-    ''
-  );
+  protected originalText() {
+    CopyDialog.post({
+      title: 'MathJax Original Source',
+      message: this.menu.mathItem?.math ?? '',
+      adaptor: this.document.adaptor,
+      code: true,
+    });
+  }
 
   /**
    * The "Show As Annotation" info box
    */
-  protected annotationBox = new SelectableInfo(
-    'MathJax Annotation Text',
-    () => {
-      const text = AnnotationMenu.annotation;
-      return (
-        '<pre style="font-size:125%; margin:0">' +
-        this.formatSource(text) +
-        '</pre>'
-      );
-    },
-    ''
-  );
+  protected annotationBox() {
+    CopyDialog.post({
+      title: 'MathJax Annotation Text',
+      message: AnnotationMenu.annotation,
+      adaptor: this.document.adaptor,
+      code: true,
+    });
+  }
 
   /**
    * The "Show As SVG Image" info box
    */
-  protected svgImage = new SelectableInfo(
-    'MathJax SVG Image',
-    () => {
-      //
-      // SVG image inserted after it is created
-      //
-      return (
-        '<div id="svg-image" style="font-family: monospace; font-size:125%; margin:0">' +
-        'Generative SVG Image...</div>'
-      );
-    },
-    ''
-  );
+  public async svgImage() {
+    CopyDialog.post({
+      title: 'MathJax SVG Image',
+      message: await this.toSVG(this.menu.mathItem),
+      adaptor: this.document.adaptor,
+      code: true,
+    });
+  }
 
   /**
    * The "Show As Speech Text" info box
    */
-  protected speechText = new SelectableInfo(
-    'MathJax Speech Text',
-    () => {
-      if (!this.menu.mathItem) return '';
-      return (
-        '<div style="font-size:125%; margin:0">' +
-        this.formatSource(this.menu.mathItem.outputData.speech) +
-        '</div>'
-      );
-    },
-    ''
-  );
+  protected speechText() {
+    CopyDialog.post({
+      title: 'MathJax Speech Text',
+      message: this.menu.mathItem?.outputData?.speech ?? '',
+      adaptor: this.document.adaptor,
+      code: true,
+    });
+  }
 
   /**
    * The "Show As Speech Text" info box
    */
-  protected brailleText = new SelectableInfo(
-    'MathJax Braille Code',
-    () => {
-      if (!this.menu.mathItem) return '';
-      return (
-        '<div style="font-size:125%; margin:0">' +
-        this.formatSource(this.menu.mathItem.outputData.braille) +
-        '</div>'
-      );
-    },
-    ''
-  );
+  protected brailleText() {
+    CopyDialog.post({
+      title: 'MathJax Braille Text',
+      message: this.menu.mathItem?.outputData?.braille ?? '',
+      adaptor: this.document.adaptor,
+      code: true,
+    });
+  }
 
   /**
    * The "Show As Error Message" info box
    */
-  protected errorMessage = new SelectableInfo(
-    'MathJax Error Message',
-    () => {
-      if (!this.menu.mathItem) return '';
-      return (
-        '<pre style="font-size:125%; margin:0">' +
-        this.formatSource(this.menu.errorMsg) +
-        '</pre>'
-      );
-    },
-    ''
-  );
+  protected errorMessage() {
+    CopyDialog.post({
+      title: 'MathJax Error Message',
+      message: this.menu.mathItem ? this.menu.errorMsg : '',
+      adaptor: this.document.adaptor,
+      code: true,
+    });
+  }
 
   /**
    * The info box for zoomed expressions
    */
-  protected zoomBox = new Info(
-    'MathJax Zoomed Expression',
-    () => {
-      if (!this.menu.mathItem) return '';
-      const element = (this.menu.mathItem.typesetRoot as any).cloneNode(
-        true
-      ) as HTMLElement;
-      element.style.margin = '0';
-      const scale = 1.25 * parseFloat(this.settings.zscale); // 1.25 is to reverse the default 80% font-size
-      return (
-        '<div style="font-size: ' + scale + '%">' + element.outerHTML + '</div>'
-      );
-    },
-    ''
-  );
-
-  protected postInfo(dialog: Info) {
+  protected zoomBox() {
+    let text = '';
     if (this.menu.mathItem) {
-      this.menu.nofocus = !!this.menu.mathItem.outputData.nofocus;
+      const node = this.menu.mathItem.typesetRoot as HTMLElement;
+      const size = this.document.adaptor.fontSize(node);
+      const zoom = node.cloneNode(true) as HTMLElement;
+      zoom.style.margin = '0';
+      const scale = (size * parseFloat(this.settings.zscale)) / 100;
+      text = `<div style="font-size: ${scale}px">${zoom.outerHTML}</div>`;
     }
-    dialog.post();
+    InfoDialog.post({
+      title: 'MathJax Zoomed Expression',
+      message: text,
+      adaptor: this.document.adaptor,
+      styles: {
+        'mjx-dialog > div': {
+          padding: '1.8em',
+        },
+      },
+    });
   }
 
   /*======================================================================*/
@@ -569,9 +621,13 @@ export class Menu {
         ),
         this.a11yVar<string>('highlight', (value) => this.setHighlight(value)),
         this.a11yVar<string>('backgroundColor'),
-        this.a11yVar<string>('backgroundOpacity'),
+        this.a11yVar<string>('backgroundOpacity', (value) =>
+          this.setAlpha('bg', value)
+        ),
         this.a11yVar<string>('foregroundColor'),
-        this.a11yVar<string>('foregroundOpacity'),
+        this.a11yVar<string>('foregroundOpacity', (value) =>
+          this.setAlpha('fg', value)
+        ),
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('viewBraille'),
         this.a11yVar<boolean>('voicing'),
@@ -607,38 +663,23 @@ export class Menu {
       ],
       items: [
         this.submenu('Show', 'Show Math As', [
-          this.command('MathMLcode', 'MathML Code', () =>
-            this.postInfo(this.mathmlCode)
-          ),
-          this.command('Original', 'Original Form', () =>
-            this.postInfo(this.originalText)
-          ),
+          this.command('MathMLcode', 'MathML Code', () => this.mathMLCode()),
+          this.command('Original', 'Original Form', () => this.originalText()),
           this.rule(),
-          this.command(
-            'Speech',
-            'Speech Text',
-            () => this.postInfo(this.speechText),
-            {
-              disabled: true,
-            }
-          ),
-          this.command(
-            'Braille',
-            'Braille Code',
-            () => this.postInfo(this.brailleText),
-            { disabled: true }
-          ),
-          this.command('SVG', 'SVG Image', () => this.postSvgImage(), {
+          this.command('Speech', 'Speech Text', () => this.speechText(), {
+            disabled: true,
+          }),
+          this.command('Braille', 'Braille Code', () => this.brailleText(), {
+            disabled: true,
+          }),
+          this.command('SVG', 'SVG Image', () => this.svgImage(), {
             disabled: true,
           }),
           this.submenu('ShowAnnotation', 'Annotation'),
           this.rule(),
-          this.command(
-            'Error',
-            'Error Message',
-            () => this.postInfo(this.errorMessage),
-            { disabled: true }
-          ),
+          this.command('Error', 'Error Message', () => this.errorMessage(), {
+            disabled: true,
+          }),
         ]),
         this.submenu('Copy', 'Copy to Clipboard', [
           this.command('MathMLcode', 'MathML Code', () => this.copyMathML()),
@@ -694,9 +735,7 @@ export class Menu {
           this.submenu('Language', 'Language'),
           this.rule(),
           this.submenu('ZoomTrigger', 'Zoom Trigger', [
-            this.command('ZoomNow', 'Zoom Once Now', () =>
-              this.zoom(null, '', this.menu.mathItem)
-            ),
+            this.command('ZoomNow', 'Zoom Once Now', () => this.zoom(null, '')),
             this.rule(),
             this.radioGroup('zoom', [
               ['Click'],
@@ -864,8 +903,8 @@ export class Menu {
           ),
         ]),
         this.rule(),
-        this.command('About', 'About MathJax', () => this.postInfo(this.about)),
-        this.command('Help', 'MathJax Help', () => this.postInfo(this.help)),
+        this.command('About', 'About MathJax', () => this.about()),
+        this.command('Help', 'MathJax Help', () => this.help()),
       ],
     }) as MJContextMenu;
     const menu = this.menu;
@@ -873,12 +912,11 @@ export class Menu {
     menu.findID('Settings', 'Overflow', 'Elide').disable();
     menu.findID('Braille', 'ueb').hide();
     menu.setJax(this.jax);
-    this.attachDialogMenus(menu);
     this.checkLoadableItems();
     const cache: [string, string][] = [];
     MJContextMenu.DynamicSubmenus.set('ShowAnnotation', [
       AnnotationMenu.showAnnotations(
-        this.annotationBox,
+        () => this.annotationBox(),
         this.options.annotationTypes,
         cache
       ),
@@ -888,24 +926,7 @@ export class Menu {
       AnnotationMenu.copyAnnotations(cache),
       '',
     ]);
-    CssStyles.addInfoStyles(this.document.document as any);
-    CssStyles.addMenuStyles(this.document.document as any);
-  }
-
-  /**
-   * @param {MJContextMenu} menu   The menu to attach
-   */
-  protected attachDialogMenus(menu: MJContextMenu) {
-    this.about.attachMenu(menu);
-    this.help.attachMenu(menu);
-    this.originalText.attachMenu(menu);
-    this.mathmlCode.attachMenu(menu);
-    this.originalText.attachMenu(menu);
-    this.svgImage.attachMenu(menu);
-    this.speechText.attachMenu(menu);
-    this.brailleText.attachMenu(menu);
-    this.errorMessage.attachMenu(menu);
-    this.zoomBox.attachMenu(menu);
+    CssStyles.addMenuStyles(this.document.document as Document);
   }
 
   /**
@@ -1057,6 +1078,8 @@ export class Menu {
       if (renderer !== this.defaultSettings.renderer) {
         this.document.whenReady(() => this.setRenderer(renderer, false));
       }
+      this.setAlpha('fg', this.settings.foregroundOpacity ?? '100');
+      this.setAlpha('bg', this.settings.backgroundOpacity ?? '20');
     });
   }
 
@@ -1310,6 +1333,21 @@ export class Menu {
   }
 
   /**
+   * @param {string} type   The type of alpha to set (fg or bg)
+   * @param {string} value  The value to set it to
+   */
+  protected setAlpha(type: string, value: string) {
+    if (MathJax._?.a11y?.explorer) {
+      const alpha = parseInt(value) / 100;
+      MathJax._.a11y.explorer.Region.LiveRegion.setAlpha(
+        type,
+        alpha,
+        this.document.document
+      );
+    }
+  }
+
+  /**
    * Request the scaling value from the user and save it in the settings
    */
   protected scaleAllMath() {
@@ -1476,18 +1514,6 @@ export class Menu {
   }
 
   /**
-   * @param {string} text   The text to be displayed in an Info box
-   * @returns {string}      The text with HTML specials being escaped
-   */
-  protected formatSource(text: string): string {
-    return text
-      .trim()
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-  }
-
-  /**
    * @param {HTMLMATHITEM} math   The MathItem to serialize as MathML
    * @returns {string}            The serialized version of the internal MathML
    */
@@ -1504,12 +1530,11 @@ export class Menu {
    * @param {HTMLMATHITEM} math   The MathItem to serialize as SVG
    * @returns {Promise<string>}   A promise returning the serialized SVG
    */
-  protected toSVG(math: HTMLMATHITEM): Promise<string> {
+  protected async toSVG(math: HTMLMATHITEM): Promise<string> {
     const jax = this.jax.SVG;
-    if (!jax)
-      return Promise.resolve(
-        "SVG can't be produced.<br>Try switching to SVG output first."
-      );
+    if (!jax) {
+      return "SVG can't be produced.<br>Try switching to SVG output first.";
+    }
     const adaptor = jax.adaptor;
     const cache = jax.options.fontCache;
     const breaks = !!math.root.getProperty('process-breaks');
@@ -1520,9 +1545,7 @@ export class Menu {
     ) {
       for (const child of adaptor.childNodes(math.typesetRoot)) {
         if (adaptor.kind(child) === 'svg') {
-          return Promise.resolve(
-            this.formatSvg(adaptor.serializeXML(child as HTMLElement))
-          );
+          return this.formatSvg(adaptor.serializeXML(child as HTMLElement));
         }
       }
     }
@@ -1552,14 +1575,12 @@ export class Menu {
       jax.unmarkInlineBreaks(math.root);
       math.root.setProperty('inlineMarked', false);
     }
-    const promise = mathjax.handleRetriesFor(() => {
+    await mathjax.handleRetriesFor(() => {
       jax.toDOM(math, div, jax.document);
     });
-    return promise.then(() => {
-      math.root = root;
-      jax.options.fontCache = cache;
-      return this.formatSvg(jax.adaptor.innerHTML(div));
-    });
+    math.root = root;
+    jax.options.fontCache = cache;
+    return this.formatSvg(jax.adaptor.serializeXML(div));
   }
 
   /**
@@ -1567,18 +1588,47 @@ export class Menu {
    * @returns {string} The adjusted SVG string
    */
   protected formatSvg(svg: string): string {
+    //
+    // Insert the minimal CSS styles
+    //
     const css = (this.constructor as typeof Menu).SvgCss;
     svg = svg.match(/^<svg.*?><defs>/)
       ? svg.replace(/<defs>/, `<defs><style>${css}</style>`)
       : svg.replace(/^(<svg.*?>)/, `$1<defs><style>${css}</style></defs>`);
+    //
+    // Use black as default color
+    //
     svg = svg
       .replace(/ (?:role|focusable)=".*?"/g, '')
       .replace(/"currentColor"/g, '"black"');
+    //
+    // Add newlines and indentation
+    //
+    const SVG = svg.split(/(<\/?[a-zA-Z].*?>)/);
+    for (let i = 2, spaces = ''; i < SVG.length; i += 2) {
+      const prev = SVG[i - 1];
+      const next = SVG[i + 1];
+      if (prev.charAt(1) !== '/' && prev.charAt(prev.length - 2) !== '/') {
+        spaces += '  ';
+      }
+      if (next) {
+        if (next.charAt(1) === '/') spaces = spaces.slice(2);
+        SVG[i + 1] = next.replace(
+          ' xmlns:xlink="http://www.w3.org/1999/xlink"',
+          ''
+        );
+      }
+      if (SVG[i]) {
+        SVG[i] = '\n  ' + spaces + SVG[i].replace(/\n/g, '\n  ' + spaces);
+      }
+      SVG[i] += '\n' + spaces;
+    }
+    svg = SVG.join('');
+    //
+    // Remove unwanted attributes
+    //
     if (!this.settings.showSRE) {
-      svg = svg.replace(
-        / (?:data-semantic-.*?|data-speech-node|role|aria-(?:level|posinset|setsize|owns))=".*?"/g,
-        ''
-      );
+      svg = svg.replace(/ (?:data-semantic-.*?|data-speech-node)=".*?"/g, '');
     }
     if (!this.settings.showTex) {
       svg = svg.replace(/ data-latex(?:-item)?=".*?"/g, '');
@@ -1591,18 +1641,10 @@ export class Menu {
         )
         .replace(/ data-mml-node="TeXAtom"/g, '');
     }
+    //
+    // Return the result
+    //
     return `${XMLDECLARATION}\n${svg}`;
-  }
-
-  /**
-   * Get the SVG image and post it
-   */
-  public postSvgImage() {
-    this.postInfo(this.svgImage);
-    this.toSVG(this.menu.mathItem).then((svg) => {
-      const html = this.svgImage.html.querySelector('#svg-image');
-      html.innerHTML = this.formatSource(svg).replace(/\n/g, '<br>');
-    });
   }
 
   /*======================================================================*/
@@ -1610,20 +1652,10 @@ export class Menu {
   /**
    * @param {MouseEvent|null} event   The event triggering the zoom (or null for from a menu pick)
    * @param {string} type             The type of event occurring (click, dblclick)
-   * @param {HTMLMATHITEM} math       The MathItem triggering the event
    */
-  protected zoom(event: MouseEvent, type: string, math: HTMLMATHITEM) {
+  protected zoom(event: MouseEvent, type: string) {
     if (!event || this.isZoomEvent(event, type)) {
-      this.menu.mathItem = math;
-      if (event) {
-        //
-        // The zoomBox.post() below assumes the menu is open,
-        //   so if this zoom() call is from an event (not the menu),
-        //   make sure the menu is open before posting the zoom box
-        //
-        this.menu.post(event);
-      }
-      this.postInfo(this.zoomBox);
+      this.zoomBox();
     }
   }
 
@@ -1717,6 +1749,9 @@ export class Menu {
     math.typesetRoot.tabIndex = this.settings.inTabOrder ? 0 : -1;
   }
 
+  /**
+   * @param {HTMLMATHITEM} math   The math item to which listeners are to be attached
+   */
   public addEvents(math: HTMLMATHITEM) {
     const node = math.typesetRoot;
     node.addEventListener(
@@ -1740,14 +1775,10 @@ export class Menu {
       true
     );
     node.addEventListener('keydown', () => (this.menu.mathItem = math), true);
-    node.addEventListener(
-      'click',
-      (event) => this.zoom(event, 'Click', math),
-      true
-    );
+    node.addEventListener('click', (event) => this.zoom(event, 'Click'), true);
     node.addEventListener(
       'dblclick',
-      (event) => this.zoom(event, 'DoubleClick', math),
+      (event) => this.zoom(event, 'DoubleClick'),
       true
     );
   }

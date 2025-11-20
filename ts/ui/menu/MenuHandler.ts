@@ -201,6 +201,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       enableSpeech: true,
       enableBraille: true,
       enableExplorer: true,
+      enableExplorerHelp: true,
       enrichSpeech: 'none',
       enrichError: (_doc: MenuMathDocument, _math: MenuMathItem, err: Error) =>
         console.warn('Enrichment Error:', err),
