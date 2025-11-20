@@ -234,7 +234,7 @@ export class SpeechExplorer
       href="https://docs.mathjax.org/en/latest/basic/accessibility.html"
       target="_blank">MathJax accessibility documentation.</a></p>
       `;
-      }
+  }
 
   /**
    * Help for the different OS versions

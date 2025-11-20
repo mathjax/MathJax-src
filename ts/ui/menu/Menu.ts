@@ -1247,7 +1247,9 @@ export class Menu {
     this.enableAccessibilityItems('Speech', speech);
     this.document.options.enableSpeech = speech;
     if (speech && this.settings.assistiveMml) {
-      this.noRerender(() => this.menu.pool.lookup('assistiveMml').setValue(false));
+      this.noRerender(() =>
+        this.menu.pool.lookup('assistiveMml').setValue(false)
+      );
     }
     if (!speech || MathJax._?.a11y?.explorer) {
       this.rerender(STATE.COMPILED);
@@ -1263,7 +1265,9 @@ export class Menu {
     this.enableAccessibilityItems('Braille', braille);
     this.document.options.enableBraille = braille;
     if (braille && this.settings.assistiveMml) {
-      this.noRerender(() => this.menu.pool.lookup('assistiveMml').setValue(false));
+      this.noRerender(() =>
+        this.menu.pool.lookup('assistiveMml').setValue(false)
+      );
     }
     if (!braille || MathJax._?.a11y?.explorer) {
       this.rerender(STATE.COMPILED);
@@ -1715,7 +1719,7 @@ export class Menu {
     try {
       exec();
       Menu.loading--;
-    } catch(err) {
+    } catch (err) {
       Menu.loading--; // make sure this resets if there is an error
       throw err;
     }
