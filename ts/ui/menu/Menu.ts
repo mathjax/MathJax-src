@@ -1181,14 +1181,14 @@ export class Menu {
   protected setAssistiveMml(mml: boolean) {
     this.document.options.enableAssistiveMml = mml;
     if (mml) {
-      Menu.loading++; // pretend we're loading, to suppress rerendering for each variable change
-      if (this.settings.speech) {
-        this.menu.pool.lookup('speech').setValue(false);
-      }
-      if (this.settings.braille) {
-        this.menu.pool.lookup('braille').setValue(false);
-      }
-      Menu.loading--;
+      this.noRerender(() => {
+        if (this.settings.speech) {
+          this.menu.pool.lookup('speech').setValue(false);
+        }
+        if (this.settings.braille) {
+          this.menu.pool.lookup('braille').setValue(false);
+        }
+      });
     }
     if (!mml || MathJax._?.a11y?.['assistive-mml']) {
       this.rerender();
@@ -1224,9 +1224,7 @@ export class Menu {
     this.enableAccessibilityItems('Speech', speech);
     this.document.options.enableSpeech = speech;
     if (speech && this.settings.assistiveMml) {
-      Menu.loading++; // pretend we're loading, to suppress rerendering for each variable change
-      this.menu.pool.lookup('assistiveMml').setValue(false);
-      Menu.loading--;
+      this.noRerender(() => this.menu.pool.lookup('assistiveMml').setValue(false));
     }
     if (!speech || MathJax._?.a11y?.explorer) {
       this.rerender(STATE.COMPILED);
@@ -1242,9 +1240,7 @@ export class Menu {
     this.enableAccessibilityItems('Braille', braille);
     this.document.options.enableBraille = braille;
     if (braille && this.settings.assistiveMml) {
-      Menu.loading++; // pretend we're loading, to suppress rerendering for each variable change
-      this.menu.pool.lookup('assistiveMml').setValue(false);
-      Menu.loading--;
+      this.noRerender(() => this.menu.pool.lookup('assistiveMml').setValue(false));
     }
     if (!braille || MathJax._?.a11y?.explorer) {
       this.rerender(STATE.COMPILED);
@@ -1363,24 +1359,24 @@ export class Menu {
    * Reset all menu settings to the (page) defaults
    */
   protected resetDefaults() {
-    Menu.loading++; // pretend we're loading, to suppress rerendering for each variable change
-    const pool = this.menu.pool;
-    const settings = this.defaultSettings;
-    for (const name of Object.keys(settings) as (keyof MenuSettings)[]) {
-      const variable = pool.lookup(name);
-      if (variable) {
-        if (variable.getValue() !== settings[name]) {
-          variable.setValue(settings[name] as string | boolean);
-          const item = (variable as any).items[0];
-          if (item) {
-            item.executeCallbacks_();
+    this.noRerender(() => {
+      const pool = this.menu.pool;
+      const settings = this.defaultSettings;
+      for (const name of Object.keys(settings) as (keyof MenuSettings)[]) {
+        const variable = pool.lookup(name);
+        if (variable) {
+          if (variable.getValue() !== settings[name]) {
+            variable.setValue(settings[name] as string | boolean);
+            const item = (variable as any).items[0];
+            if (item) {
+              item.executeCallbacks_();
+            }
           }
+        } else if (Object.hasOwn(this.settings, name)) {
+          (this.settings as any)[name] = settings[name];
         }
-      } else if (Object.hasOwn(this.settings, name)) {
-        (this.settings as any)[name] = settings[name];
       }
-    }
-    Menu.loading--;
+    });
     this.rerender(STATE.COMPILED);
   }
 
@@ -1679,6 +1675,17 @@ export class Menu {
         await this.document.rerenderPromise(this.rerenderStart);
         this.rerenderStart = STATE.LAST;
       });
+    }
+  }
+
+  protected noRerender(exec: () => void) {
+    Menu.loading++; // pretend we're loading, to suppress rerendering durring exec() call
+    try {
+      exec();
+      Menu.loading--;
+    } catch(err) {
+      Menu.loading--; // make sure this resets if there is an error
+      throw err;
     }
   }
 
