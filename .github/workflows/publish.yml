@@ -5,7 +5,7 @@ on:
     types: [published]
 
 jobs:
-  setup:
+  publish:
     runs-on: ubuntu-latest
     name: Build and publish MathJax
     permissions:
