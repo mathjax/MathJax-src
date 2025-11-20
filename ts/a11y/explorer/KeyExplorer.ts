@@ -459,8 +459,10 @@ export class SpeechExplorer
    */
   public FocusOut(_event: FocusEvent) {
     if (this.current && !this.focusSpeech) {
-      this.setCurrent(null);
-      this.Stop();
+      if (!this.document.options.keepRegions) {
+        this.setCurrent(null);
+        this.Stop();
+      }
       if (!document.hasFocus()) {
         this.focusTop();
       }
