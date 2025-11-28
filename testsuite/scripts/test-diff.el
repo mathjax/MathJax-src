@@ -2,7 +2,7 @@
 ;;; Tools for working with Jest tests in Emacs.
 ;;;
 ;;;
-;;; Copyright (c) 2024 The MathJax Consortium
+;;; Copyright (c) 2024-5 The MathJax Consortium
 
 (require 'ediff)
 (require 'cl-lib)
