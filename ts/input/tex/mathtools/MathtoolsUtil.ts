@@ -1,5 +1,5 @@
 /*************************************************************
- *  Copyright (c) 2021-2024 MathJax Consortium
+ *  Copyright (c) 2021-2025 MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,14 +24,12 @@ import { EqnArrayItem } from '../base/BaseItems.js';
 import { UnitUtil } from '../UnitUtil.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import { CommandMap } from '../TokenMap.js';
-import { Macro } from '../Token.js';
-import ParseOptions from '../ParseOptions.js';
 import { lookup } from '../../../util/Options.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { HandlerType } from '../HandlerTypes.js';
+import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 
 import { MathtoolsMethods } from './MathtoolsMethods.js';
-import { PAIREDDELIMS } from './MathtoolsConfiguration.js';
 
 /**
  * Utility functions for the Mathtools package.
@@ -66,7 +64,7 @@ export const MathtoolsUtil = {
    *
    * @param {TexParser} parser   The current TeX parser.
    * @param {string} name        The name of the macro doing the checking.
-   * @returns {EqnArrayItem}      The top item (an EqnArrayItem).
+   * @returns {EqnArrayItem}     The top item (an EqnArrayItem).
    */
   checkAlignment(parser: TexParser, name: string): EqnArrayItem {
     const top = parser.stack.Top() as EqnArrayItem;
@@ -83,16 +81,27 @@ export const MathtoolsUtil = {
   /**
    * Add a paired delimiter to the list of them.
    *
-   * @param {ParseOptions} config   The parse options to modify.
-   * @param {string} cs             The control sequence for the paired delimiters.
-   * @param {string[]} args         The definition for the paired delimiters.  One of:
-   *                                   [left, right]
-   *                                   [left, right, body, argcount]
-   *                                   [left, right, body, argcount, pre, post]
+   * @param {TexParser} parser   The current TeX parser
+   * @param {string} cs          The control sequence for the paired delimiters.
+   * @param {string[]} args      The definition for the paired delimiters.  One of:
+   *                                [left, right]
+   *                                [left, right, body, argcount]
+   *                                [left, right, body, argcount, pre, post]
    */
-  addPairedDelims(config: ParseOptions, cs: string, args: string[]) {
-    const delims = config.handlers.retrieve(PAIREDDELIMS) as CommandMap;
-    delims.add(cs, new Macro(cs, MathtoolsMethods.PairedDelimiters, args));
+  addPairedDelims(parser: TexParser, cs: string, args: string[]) {
+    if (parser.configuration.handlers.get(HandlerType.MACRO).contains(cs)) {
+      throw new TexError(
+        'CommadExists',
+        'Command %1 already defined',
+        `\\${cs}`
+      );
+    }
+    NewcommandUtil.addMacro(
+      parser,
+      cs,
+      MathtoolsMethods.PairedDelimiters,
+      args
+    );
   },
 
   /**
@@ -104,15 +113,11 @@ export const MathtoolsUtil = {
   spreadLines(mtable: MmlNode, spread: string) {
     if (!mtable.isKind('mtable')) return;
     let rowspacing = mtable.attributes.get('rowspacing') as string;
-    if (rowspacing) {
-      const add = UnitUtil.dimen2em(spread);
-      rowspacing = rowspacing
-        .split(/ /)
-        .map((s) => UnitUtil.em(Math.max(0, UnitUtil.dimen2em(s) + add)))
-        .join(' ');
-    } else {
-      rowspacing = spread;
-    }
+    const add = UnitUtil.dimen2em(spread);
+    rowspacing = rowspacing
+      .split(/ /)
+      .map((s) => UnitUtil.em(Math.max(0, UnitUtil.dimen2em(s) + add)))
+      .join(' ');
     mtable.attributes.set('rowspacing', rowspacing);
   },
 
@@ -137,7 +142,7 @@ export const MathtoolsUtil = {
    * @param {TexParser} parser   The active tex parser.
    * @param {string} name        The name of the calling macro (\prescript).
    * @param {string} pos         The position for the argument (sub, sup, arg).
-   * @returns {MmlNode}           The parsed MML version of the argument.
+   * @returns {MmlNode}          The parsed MML version of the argument.
    */
   getScript(parser: TexParser, name: string, pos: string): MmlNode {
     let arg = UnitUtil.trimSpaces(parser.GetArgument(name));
@@ -148,6 +153,13 @@ export const MathtoolsUtil = {
     if (format) {
       arg = `${format}{${arg}}`;
     }
-    return new TexParser(arg, parser.stack.env, parser.configuration).mml();
+    const mml = new TexParser(
+      arg,
+      parser.stack.env,
+      parser.configuration
+    ).mml();
+    return mml.isKind('TeXAtom') && mml.childNodes[0].childNodes.length === 0
+      ? parser.create('node', 'none')
+      : mml;
   },
 };

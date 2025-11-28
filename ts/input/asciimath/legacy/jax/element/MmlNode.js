@@ -24,6 +24,7 @@
     toMmlNode: function (factory) {
       var kind = this.type;
       if (kind === 'texatom') kind = 'TeXAtom';
+      if (kind === 'text') kind = '#text';
       var node = this.nodeMake(factory, kind);
       if ("texClass" in this) node.texClass = this.texClass;
       return node;

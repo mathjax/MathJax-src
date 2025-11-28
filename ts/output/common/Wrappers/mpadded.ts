@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -171,6 +171,18 @@ export function CommonMpaddedMixin<
     extends Base
     implements CommonMpadded<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
   {
+    get containerWidth(): number {
+      const attributes = this.node.attributes;
+      const w = attributes.get('width') as string;
+      if (
+        !w.match(/^[-+]|%$/) &&
+        attributes.get('data-overflow') === 'linebreak'
+      ) {
+        return this.length2em(w);
+      }
+      return this.parent.containerWidth;
+    }
+
     /**
      * @override
      */

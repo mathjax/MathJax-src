@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2023-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,18 @@
  */
 
 /**
- * @file  Base imports of sre locales.
+ * @file  ES6 shim for getting the MathJax root directory
  *
  * @author dpvc@mathjax.org (Davide Cervone)
- * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-export const MathMaps: Map<string, { [path: string]: any }> = new Map();
+import { context } from '../../util/context.js';
 
-export default MathMaps;
+/**
+ * @returns {string}   The MathJax mjs SRE root directory
+ */
+export function sreRoot(): string {
+  return context
+    .path(new URL(import.meta.url).pathname)
+    .replace(/components\/[cm]js\/sre-root.js$/, 'a11y/sre');
+}

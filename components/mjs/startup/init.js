@@ -1,3 +1,4 @@
+import './hasown.js'; // Can be removed with ES2024 implementation of Object.hasown
 import './lib/startup.js';
 
 import {combineDefaults} from '#js/components/global.js';
@@ -17,4 +18,3 @@ export function startup(ready) {
                .then(() => CONFIG.ready())
                .catch(error => CONFIG.failed(error));
 }
-

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2024 The MathJax Consortium
+ *  Copyright (c) 2024-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+declare const process: { platform: string };
+
 /**
  * True if there is a window object
  */
@@ -32,4 +34,47 @@ export const hasWindow = typeof window !== 'undefined';
 export const context = {
   window: hasWindow ? window : null,
   document: hasWindow ? window.document : null,
+  os: (() => {
+    if (hasWindow && window.navigator) {
+      const app = window.navigator.appVersion;
+      const osNames = [
+        ['Win', 'Windows'],
+        ['Mac', 'MacOS'],
+        ['X11', 'Unix'],
+        ['Linux', 'Unix'],
+      ];
+      for (const [key, os] of osNames) {
+        if (app.includes(key)) {
+          return os;
+        }
+      }
+      if (window.navigator.userAgent.includes('Android')) {
+        return 'Unix';
+      }
+    } else if (typeof process !== 'undefined') {
+      return (
+        {
+          linux: 'Unix',
+          android: 'Unix',
+          aix: 'Unix',
+          freebsd: 'Unix',
+          netbsd: 'Unix',
+          openbsd: 'Unix',
+          sunos: 'Unix',
+          darwin: 'MacOS',
+          win32: 'Windows',
+          cygwin: 'Windows',
+        }[process.platform] || process.platform
+      );
+    }
+    return 'unknown';
+  })(),
+  path: (file: string) => file,
 };
+
+if (context.os === 'Windows') {
+  context.path = (file: string) =>
+    file.match(/^[/\\]?[a-zA-Z]:[/\\]/)
+      ? file.replace(/\\/g, '/').replace(/^\//, '')
+      : file;
+}

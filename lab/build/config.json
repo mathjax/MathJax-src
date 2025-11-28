@@ -1,0 +1,6 @@
+{
+  "webpack": {
+    "name": "sre",
+    "dist": ".."
+  }
+}

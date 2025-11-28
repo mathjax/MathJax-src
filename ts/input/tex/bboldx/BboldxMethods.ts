@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -132,9 +132,6 @@ function getBbxFont(
   light: string,
   bfbb: string
 ): string {
-  if (!parser.options?.bboldx) {
-    return normal;
-  }
-  const options = parser.options?.bboldx;
+  const options = parser.options.bboldx;
   return options.bfbb ? bfbb : options.light ? light : normal;
 }

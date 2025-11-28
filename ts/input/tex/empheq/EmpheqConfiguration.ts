@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2021-2024 The MathJax Consortium
+ *  Copyright (c) 2021-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -58,13 +58,18 @@ export const EmpheqMethods = {
     } else {
       ParseUtil.checkEqnEnv(parser);
       const opts = parser.GetBrackets('\\begin{' + begin.getName() + '}') || '';
-      const [env, n] = (
-        parser.GetArgument('\\begin{' + begin.getName() + '}') || ''
-      ).split(/=/);
+      const [env, n] = parser
+        .GetArgument('\\begin{' + begin.getName() + '}')
+        .split(/=/);
       if (!EmpheqUtil.checkEnv(env)) {
-        throw new TexError('UnknownEnv', 'Unknown environment "%1"', env);
+        throw new TexError(
+          'EmpheqInvalidEnv',
+          'Invalid environment "%1" for %2',
+          env,
+          begin.getName()
+        );
       }
-      begin.setProperty('nestable', true);
+      begin.setProperty('nestStart', true);
       if (opts) {
         begin.setProperties(
           EmpheqUtil.splitOptions(opts, { left: 1, right: 1 })

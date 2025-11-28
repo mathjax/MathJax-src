@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -180,14 +180,14 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
       //  Create the SVG structure for the root
       //
       const SVG = this.standardSvgNodes(parents);
+      surd.toSVG(SVG);
+      const dx = this.addRoot(SVG, root, sbox, H);
       const BASE = this.adaptor.append(SVG[0], this.svg('g')) as N;
+      base.toSVG([BASE]);
       //
       //  Place the children
       //
-      const dx = this.addRoot(SVG, root, sbox, H);
-      surd.toSVG(SVG);
       surd.place(dx, H - sbox.h);
-      base.toSVG([BASE]);
       base.place(dx + sbox.w, 0);
       this.adaptor.append(
         SVG[SVG.length - 1],

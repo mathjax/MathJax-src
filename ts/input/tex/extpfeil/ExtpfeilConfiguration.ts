@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@
  */
 
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
-import { Configuration, ParserConfiguration } from '../Configuration.js';
+import { Configuration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
 import { AmsMethods } from '../ams/AmsMethods.js';
 import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
-import { NewcommandConfiguration } from '../newcommand/NewcommandConfiguration.js';
+import { NewcommandConfig } from '../newcommand/NewcommandConfiguration.js';
 import TexError from '../TexError.js';
 
 // Namespace
@@ -87,11 +87,7 @@ new CommandMap('extpfeil', {
   Newextarrow: ExtpfeilMethods.NewExtArrow,
 });
 
-const init = function (config: ParserConfiguration) {
-  NewcommandConfiguration.init(config);
-};
-
 export const ExtpfeilConfiguration = Configuration.create('extpfeil', {
   [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['extpfeil'] },
-  [ConfigurationType.INIT]: init,
+  [ConfigurationType.CONFIG]: NewcommandConfig,
 });

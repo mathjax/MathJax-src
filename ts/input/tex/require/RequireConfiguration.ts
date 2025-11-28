@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2024 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -174,13 +174,18 @@ export function RequireLoad(parser: TexParser, name: string) {
       extension
     );
   }
-  if (!Package.packages.has(extension)) {
-    mathjax.retryAfter(Loader.load(extension));
+  const data = Package.packages.get(extension);
+  if (!data) {
+    mathjax.retryAfter(Loader.load(extension).catch((_) => {}));
+  }
+  if (data.hasFailed) {
+    throw new TexError('RequireFail', 'Extension "%1" failed to load', name);
   }
   const require = LOADERCONFIG[extension]?.rendererExtensions;
-  (MathJax.startup.document as MenuMathDocument)?.menu?.addRequiredExtensions?.(
-    require
-  );
+  const menu = (MathJax.startup.document as MenuMathDocument)?.menu;
+  if (require && menu) {
+    menu.addRequiredExtensions(require);
+  }
   RegisterExtension(
     parser.configuration.packageData.get('require').jax,
     extension
@@ -247,7 +252,6 @@ export const options = {
     //
     allow: expandable({
       base: false,
-      'all-packages': false,
       autoload: false,
       configmacros: false,
       tagformat: false,
@@ -275,7 +279,9 @@ new CommandMap('require', { require: RequireMethods.Require });
  * The configuration for the \require macro
  */
 export const RequireConfiguration = Configuration.create('require', {
-  [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['require'] },
-  config,
-  options,
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.MACRO]: ['require'],
+  },
+  [ConfigurationType.CONFIG]: config,
+  [ConfigurationType.OPTIONS]: options,
 });

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,12 +22,17 @@
  */
 
 import { LiteElement } from './Element.js';
+import { LiteWindow } from './Window.js';
 
 /************************************************************/
 /**
  * Implements a lightweight Document replacement
  */
 export class LiteDocument {
+  /**
+   * The document's parent window
+   */
+  public defaultView: LiteWindow = null;
   /**
    * The document's <html> element
    */
@@ -42,7 +47,7 @@ export class LiteDocument {
   public body: LiteElement;
 
   /**
-   * the DOCTYPE comment
+   * The DOCTYPE comment
    */
   public type: string;
 
@@ -57,12 +62,14 @@ export class LiteDocument {
 
   /**
    * @class
+   * @param {LiteWindow} window   The window for the document (if given)
    */
-  constructor() {
+  constructor(window: LiteWindow = null) {
     this.root = new LiteElement('html', {}, [
       (this.head = new LiteElement('head')),
       (this.body = new LiteElement('body')),
     ]);
     this.type = '';
+    this.defaultView = window;
   }
 }

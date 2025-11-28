@@ -2,7 +2,7 @@
 
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -125,10 +125,16 @@ function fileRegExp(name) {
 }
 
 /**
- * Get and change the current working directory
+ * Options for the execSync() function
+ */
+const execOptions = process.platform === 'win32'
+      ? { shell: `${process.env.ProgramFiles}\\Git\\bin\\bash.exe` }
+      : {};
+
+/**
+ * Get the current working directory
  */
 const root = process.cwd();
-process.chdir(path.dirname(path.dirname(__dirname)));
 
 /**
  * Regular expression for the components directory
@@ -197,7 +203,7 @@ function processSubdirs(dir, action, config) {
  * Run a command on a given directory
  */
 function run(cmd, dir) {
-  return execSync(cmd + ` '${path.relative('.', dir).replace(/'/g, '\\\'')}'`);
+  return execSync(cmd + ` '${path.relative('.', dir).replace(/'/g, '\\\'')}'`, execOptions);
 }
 
 /**

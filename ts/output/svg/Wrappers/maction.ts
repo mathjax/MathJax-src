@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -186,6 +186,24 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
         'font-size': '90%',
         'background-color': '#F8F8F8',
         color: 'black',
+      },
+      'g[data-mml-node="maction"][data-collapsible][data-toggle="1"]': {
+        fill: '#55F',
+      },
+
+      '@media (prefers-color-scheme: dark) /* svg maction */': {
+        'mjx-tool > mjx-tip': {
+          'background-color': '#303030',
+          color: '#E0E0E0',
+          'box-shadow': '2px 2px 5px #000',
+        },
+        'mjx-status': {
+          'background-color': '#303030',
+          color: '#E0E0E0',
+        },
+        'g[data-mml-node="maction"][data-collapsible][data-toggle="1"]': {
+          fill: '#88F',
+        },
       },
     };
 

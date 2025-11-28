@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -107,11 +107,12 @@ export class ComplexityVisitor extends MmlVisitor {
   /**
    * @override
    */
-  public visitTree(node: MmlNode) {
+  public visitTree(node: MmlNode, id: number) {
     super.visitTree(node, true);
     if (this.options.makeCollapsible) {
-      this.collapse.makeCollapse(node);
+      id = this.collapse.makeCollapse(node, id);
     }
+    return id;
   }
 
   /**

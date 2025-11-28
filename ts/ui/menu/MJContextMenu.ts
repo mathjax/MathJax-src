@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2024 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
 import { MathItem } from '../../core/MathItem.js';
 import { OptionList } from '../../util/Options.js';
 import { JaxList } from './Menu.js';
+import { ExplorerMathItem } from '../../a11y/explorer.js';
 
 import {
   ContextMenu,
@@ -32,6 +33,14 @@ import {
   Menu,
   Item,
 } from './mj-context-menu.js';
+
+export type SubmenuCallback = (sub: SubMenu) => void;
+
+export type DynamicSubmenu = (
+  menu: MJContextMenu,
+  sub: Submenu,
+  callback: SubmenuCallback
+) => void;
 
 /*==========================================================================*/
 
@@ -43,17 +52,20 @@ export class MJContextMenu extends ContextMenu {
   /**
    * Static map to hold methods for re-computing dynamic submenus.
    *
-   * @type {Map<string, (menu: MJContextMenu, sub: Submenu) => Submenu>}
+   * @type {Map<string, [DynamicSubmenu, string]>}
    */
-  public static DynamicSubmenus: Map<
-    string,
-    [(menu: MJContextMenu, sub: Submenu) => SubMenu, string]
-  > = new Map();
+  public static DynamicSubmenus: Map<string, [DynamicSubmenu, string]> =
+    new Map();
 
   /**
    * The MathItem that has posted the menu
    */
   public mathItem: MathItem<HTMLElement, Text, Document> = null;
+
+  /**
+   * Records the mathItem's nofocus value when a SelectInfo dialog is opened
+   */
+  public nofocus: boolean = false;
 
   /**
    * The document options
@@ -80,6 +92,10 @@ export class MJContextMenu extends ContextMenu {
    */
   public post(x?: any, y?: number) {
     if (this.mathItem) {
+      const speech = (this.mathItem as ExplorerMathItem)?.explorers?.speech;
+      if (speech?.active) {
+        speech.restarted = speech.semanticFocus();
+      }
       if (y !== undefined) {
         this.getOriginalMenu();
         this.getSemanticsMenu();
@@ -99,9 +115,14 @@ export class MJContextMenu extends ContextMenu {
    * @override
    */
   public unpost() {
-    super.unpost();
-    this.mathItem?.typesetRoot?.blur();
+    if ((this as any).posted) {
+      super.unpost();
+    }
+    if (this.mathItem) {
+      this.mathItem.outputData.nofocus = this.nofocus;
+    }
     this.mathItem = null;
+    this.nofocus = false;
   }
 
   /*======================================================================*/
@@ -215,13 +236,14 @@ export class MJContextMenu extends ContextMenu {
     for (const [id, [method, option]] of MJContextMenu.DynamicSubmenus) {
       const menu = this.find(id) as Submenu;
       if (!menu) continue;
-      const sub = method(this, menu);
-      menu.submenu = sub;
-      if (sub.items.length && (!option || this.settings[option])) {
-        menu.enable();
-      } else {
-        menu.disable();
-      }
+      method(this, menu, (sub: SubMenu) => {
+        menu.submenu = sub;
+        if (sub?.items?.length && (!option || this.settings[option])) {
+          menu.enable();
+        } else {
+          menu.disable();
+        }
+      });
     }
   }
 }

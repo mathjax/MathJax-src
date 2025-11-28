@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -250,8 +250,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
         );
         adaptor.setAttribute(parents[i], 'align', align);
         if (shift) {
-          adaptor.setStyle(parents[i], 'position', 'relative');
-          adaptor.setStyle(parents[i], 'left', this.em(shift));
+          adaptor.setStyle(parents[i], 'margin-left', this.em(shift));
         }
         if (i < n && this.jax.math.display) {
           adaptor.setStyle(

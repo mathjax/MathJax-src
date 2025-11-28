@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -64,6 +64,6 @@ export class LiteWindow {
    * Create the LiteWindow and its LiteDocument
    */
   constructor() {
-    this.document = new LiteDocument();
+    this.document = new LiteDocument(this);
   }
 }

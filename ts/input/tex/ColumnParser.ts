@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2022-2024 The MathJax Consortium
+ *  Copyright (c) 2022-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -139,8 +139,7 @@ export class ColumnParser {
         );
       }
       const code = state.template.codePointAt(state.i);
-      const c = (state.c =
-        code === undefined ? '' : String.fromCodePoint(code));
+      const c = (state.c = String.fromCodePoint(code));
       state.i += c.length;
       if (!Object.hasOwn(this.columnHandler, c)) {
         throw new TexError('BadPreamToken', 'Illegal pream-token (%1)', c);
@@ -263,7 +262,7 @@ export class ColumnParser {
    * @returns {string} The dimension string
    */
   public getDimen(state: ColumnState): string {
-    const dim = this.getBraces(state) || '';
+    const dim = this.getBraces(state);
     if (!UnitUtil.matchDimen(dim)[0]) {
       throw new TexError(
         'MissingColumnDimOrUnits',
@@ -299,7 +298,7 @@ export class ColumnParser {
    */
   public getBraces(state: ColumnState): string {
     while (state.template[state.i] === ' ') state.i++;
-    if (state.i > state.template.length) {
+    if (state.i >= state.template.length) {
       throw new TexError(
         'MissingArgForColumn',
         'Missing argument for %1 column declaration',

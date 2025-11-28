@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ const DIRNAME = __dirname;
  * @return {string}        The string with regex special characters escaped
  */
 function quoteRE(string) {
-  return string.replace(/([\\.{}[\]()?*^$])/g, '\\$1');
+  return string.replace(/([\\.{}[\]()?*+^$])/g, '\\$1');
 }
 
 /****************************************************************/
@@ -55,6 +55,7 @@ const PLUGINS = function (js, dir, target, font, jax, name) {
   //
   // Replace components/mjs/root with the webpack version
   //   and map mathjax-full/js to mathjax-full/${target}
+  //   similarly for @mathjax/src/js.
   //
   const plugins = [
     new webpack.NormalModuleReplacementPlugin(
@@ -62,9 +63,19 @@ const PLUGINS = function (js, dir, target, font, jax, name) {
       '../../../components/root-pack.js'
     ),
     new webpack.NormalModuleReplacementPlugin(
+      /mjs\/components\/mjs\/sre-root\.js/,
+      '../../../components/sre-pack.js'
+    ),
+    new webpack.NormalModuleReplacementPlugin(
       /mathjax-full\/js\//,
       function (resource) {
         resource.request = resource.request.replace(/mathjax-full\/js\//, `mathjax-full/${target}/`);
+      }
+    ),
+    new webpack.NormalModuleReplacementPlugin(
+      /@mathjax\/src\/js\//,
+      function (resource) {
+        resource.request = resource.request.replace(/@mathjax\/src\/js\//, `@mathjax/src/${target}/`);
       }
     )
   ];
@@ -73,13 +84,11 @@ const PLUGINS = function (js, dir, target, font, jax, name) {
   // Replace default font with the no-font file
   //
   if (!font) {
-    const jax = (name.match(/chtml|svg/) || ['chtml'])[0];
-    const nofont = path.resolve(DIRNAME, target, 'output', jax, 'nofont.js');
     plugins.push(
       new webpack.NormalModuleReplacementPlugin(
-        /DefaultFont.js/,
+        /-font\/.*?\/default\.js/,
         function (resource) {
-          resource.request = path.relative(resource.context, nofont).replace(/^([^.])/, './$1');
+          resource.request = resource.request.replace(/\/.*?\/default\.js/, '/nofont.js');
         }
       )
     );
@@ -128,7 +137,7 @@ const RESOLVE = function (js, dir, target, libs) {
   //  Add directory names to libraries
   //
   const libREs = libs
-        .map(lib => lib.replace(/components\/src\//, 'components/' + target + '/'))
+        .map(lib => lib.replace(/components\/(?:src|js)\//, 'components/' + target + '/'))
         .map(lib => (lib.charAt(0) === '.' ?
                      [jsRE, path.join(dir, lib) + path.sep] :
                      [mjRE, path.join(root, lib) + path.sep]));

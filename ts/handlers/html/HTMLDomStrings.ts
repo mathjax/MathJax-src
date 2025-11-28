@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -55,8 +55,7 @@ export class HTMLDomStrings<N, T, D> {
   /* prettier-ignore */
   public static OPTIONS: OptionList = {
     skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code',
-                   'annotation', 'annotation-xml', 'select', 'option',
-                   'mjx-container'],
+                   'math', 'select', 'option', 'mjx-container'],
                                         // The names of the tags whose contents will not be
                                         // scanned for math delimiters
 

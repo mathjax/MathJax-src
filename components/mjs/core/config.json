@@ -4,6 +4,8 @@
     "targets": [
       "mathjax.ts",
       "core", "util", "handlers",
+      "ui/dialog/DraggableDialog.ts",
+      "ui/dialog/InfoDialog.ts",
       "adaptors/HTMLAdaptor.ts",
       "adaptors/browserAdaptor.ts",
       "components/global.ts"

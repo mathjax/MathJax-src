@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2024 The MathJax Consortium
+ *  Copyright (c) 2009-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 
 import { MathDocument } from '../../core/MathDocument.js';
 import { StyleJsonSheet } from '../../util/StyleJson.js';
-import * as Sre from '../sre.js';
+import { Highlighter, getHighlighter } from './Highlighter.js';
 import { SsmlElement, buildSpeech } from '../speech/SpeechUtil.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
@@ -43,9 +43,9 @@ export interface Region<T> {
    * Shows the live region in the document.
    *
    * @param {HTMLElement} node
-   * @param {Sre.highlighter} highlighter
+   * @param {Highlighter} highlighter
    */
-  Show(node: HTMLElement, highlighter: Sre.highlighter): void;
+  Show(node: HTMLElement, highlighter: Highlighter): void;
 
   /**
    * Takes the element out of the document flow.
@@ -72,13 +72,6 @@ export abstract class AbstractRegion<T> implements Region<T> {
    * @type {string}
    */
   protected static className: string;
-
-  /**
-   * True if the style has already been added to the document.
-   *
-   * @type {boolean}
-   */
-  protected static styleAdded: boolean = false;
 
   /**
    * The CSS style that needs to be added for this type of region.
@@ -118,19 +111,26 @@ export abstract class AbstractRegion<T> implements Region<T> {
   }
 
   /**
+   * @returns {string}   The stylesheet ID
+   */
+  public static get sheetId(): string {
+    return 'MJX-' + this.name + '-styles';
+  }
+
+  /**
    * @override
    */
   public AddStyles() {
-    if (this.CLASS.styleAdded) {
+    const id = this.CLASS.sheetId;
+    if (
+      !this.CLASS.style ||
+      this.document.adaptor.head().querySelector('#' + id)
+    ) {
       return;
     }
-    // TODO: should that be added to document.documentStyleSheet()?
-    const node = this.document.adaptor.node('style');
+    const node = this.document.adaptor.node('style', { id });
     node.innerHTML = this.CLASS.style.cssText;
-    this.document.adaptor
-      .head(this.document.adaptor.document)
-      .appendChild(node);
-    this.CLASS.styleAdded = true;
+    this.document.adaptor.head().appendChild(node);
   }
 
   /**
@@ -151,7 +151,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
   /**
    * @override
    */
-  public Show(node: HTMLElement, highlighter: Sre.highlighter) {
+  public Show(node: HTMLElement, highlighter: Highlighter) {
     this.AddElement();
     this.position(node);
     this.highlight(highlighter);
@@ -168,16 +168,16 @@ export abstract class AbstractRegion<T> implements Region<T> {
   /**
    * Highlights the region.
    *
-   * @param {Sre.highlighter} highlighter The Sre highlighter.
+   * @param {Highlighter} highlighter The Sre highlighter.
    */
-  protected abstract highlight(highlighter: Sre.highlighter): void;
+  protected abstract highlight(highlighter: Highlighter): void;
 
   /**
    * @override
    */
   public Hide() {
     if (!this.div) return;
-    this.div.parentNode.removeChild(this.div);
+    this.div.remove();
     this.div = null;
     this.inner = null;
   }
@@ -198,7 +198,6 @@ export abstract class AbstractRegion<T> implements Region<T> {
    * @param {HTMLElement} node The reference node.
    */
   protected stackRegions(node: HTMLElement) {
-    this.AddElement();
     // TODO: This could be made more efficient by caching regions of a class.
     const rect = node.getBoundingClientRect();
     let baseBottom = 0;
@@ -265,7 +264,7 @@ export class DummyRegion extends AbstractRegion<void> {
   /**
    * @override
    */
-  public highlight(_highlighter: Sre.highlighter) {}
+  public highlight(_highlighter: Highlighter) {}
 }
 
 export class StringRegion extends AbstractRegion<string> {
@@ -288,7 +287,7 @@ export class StringRegion extends AbstractRegion<string> {
     }
     if (this.inner) {
       this.inner.textContent = '';
-      this.inner.textContent = speech;
+      this.inner.textContent = speech || '\u00a0';
     }
   }
 
@@ -302,11 +301,10 @@ export class StringRegion extends AbstractRegion<string> {
   /**
    * @override
    */
-  protected highlight(highlighter: Sre.highlighter) {
+  protected highlight(highlighter: Highlighter) {
     if (!this.div) return;
-    const color = highlighter.colorString();
-    this.inner.style.backgroundColor = color.background;
-    this.inner.style.color = color.foreground;
+    this.inner.style.backgroundColor = highlighter.background;
+    this.inner.style.color = highlighter.foreground;
   }
 }
 
@@ -325,13 +323,24 @@ export class ToolTip extends StringRegion {
       height: 'auto',
       opacity: 1,
       'text-align': 'center',
-      'border-radius': '6px',
+      'border-radius': '4px',
       padding: 0,
       'border-bottom': '1px dotted black',
       position: 'absolute',
       display: 'inline-block',
       'background-color': 'white',
       'z-index': 202,
+    },
+    ['.' + ToolTip.className + ' > div']: {
+      'border-radius': 'inherit',
+      padding: '0 2px',
+    },
+    '@media (prefers-color-scheme: dark)': {
+      ['.' + ToolTip.className]: {
+        'background-color': '#222025',
+        'box-shadow': '0px 5px 20px #000',
+        border: '1px solid #7C7C7C',
+      },
     },
   });
 }
@@ -346,6 +355,43 @@ export class LiveRegion extends StringRegion {
    * @override
    */
   protected static style: StyleJsonSheet = new StyleJsonSheet({
+    ':root': {
+      '--mjx-fg-red': '255, 0, 0',
+      '--mjx-fg-green': '0, 255, 0',
+      '--mjx-fg-blue': '0, 0, 255',
+      '--mjx-fg-yellow': '255, 255, 0',
+      '--mjx-fg-cyan': '0, 255, 255',
+      '--mjx-fg-magenta': '255, 0, 255',
+      '--mjx-fg-white': '255, 255, 255',
+      '--mjx-fg-black': '0, 0, 0',
+      '--mjx-bg-red': '255, 0, 0',
+      '--mjx-bg-green': '0, 255, 0',
+      '--mjx-bg-blue': '0, 0, 255',
+      '--mjx-bg-yellow': '255, 255, 0',
+      '--mjx-bg-cyan': '0, 255, 255',
+      '--mjx-bg-magenta': '255, 0, 255',
+      '--mjx-bg-white': '255, 255, 255',
+      '--mjx-bg-black': '0, 0, 0',
+      '--mjx-live-bg-color': 'white',
+      '--mjx-live-shadow-color': '#888',
+      '--mjx-live-border-color': '#CCCCCC',
+      '--mjx-bg-alpha': 0.2,
+      '--mjx-fg-alpha': 1,
+    },
+    '@media (prefers-color-scheme: dark)': {
+      ':root': {
+        '--mjx-bg-blue': '132, 132, 255',
+        '--mjx-bg-white': '0, 0, 0',
+        '--mjx-bg-black': '255, 255, 255',
+        '--mjx-fg-white': '0, 0, 0',
+        '--mjx-fg-black': '255, 255, 255',
+        '--mjx-live-bg-color': '#222025',
+        '--mjx-live-shadow-color': 'black',
+        '--mjx-live-border-color': '#7C7C7C',
+        '--mjx-bg-alpha': 0.3,
+        '--mjx-fg-alpha': 1,
+      },
+    },
     ['.' + LiveRegion.className]: {
       position: 'absolute',
       top: 0,
@@ -358,20 +404,41 @@ export class LiveRegion extends StringRegion {
       left: 0,
       right: 0,
       margin: '0 auto',
-      'background-color': 'white',
-      'box-shadow': '0px 5px 20px #888',
-      border: '2px solid #CCCCCC',
+      'background-color': 'var(--mjx-live-bg-color)',
+      'box-shadow': '0px 5px 20px var(--mjx-live-shadow-color)',
+      border: '2px solid var(--mjx-live-border-color)',
     },
     ['.' + LiveRegion.className + '_Show']: {
       display: 'block',
     },
   });
+
+  /**
+   * @param {string} type         The type of alpha to set (fg or bg)
+   * @param {number} alpha        The alpha value to use
+   * @param {Document} document   The document whose CSS styles are to be adjusted
+   */
+  public static setAlpha(type: string, alpha: number, document: Document) {
+    const style = document.head.querySelector(
+      '#' + this.sheetId
+    ) as HTMLStyleElement;
+    if (style) {
+      const name = `--mjx-${type}-alpha`;
+      (style.sheet.cssRules[0] as any).style.setProperty(name, alpha);
+      (style.sheet.cssRules[1] as any).cssRules[0].style.setProperty(
+        name,
+        alpha ** 0.7071
+      );
+    }
+  }
 }
 
 /**
  * Region class that enables auto voicing of content via SSML markup.
  */
 export class SpeechRegion extends LiveRegion {
+  protected static style: StyleJsonSheet = null;
+
   /**
    * Flag to activate auto voicing.
    */
@@ -393,16 +460,17 @@ export class SpeechRegion extends LiveRegion {
   /**
    * The highlighter to use.
    */
-  public highlighter: Sre.highlighter = Sre.getHighlighter(
+  public highlighter: Highlighter = getHighlighter(
     { color: 'red' },
     { color: 'black' },
-    { renderer: this.document.outputJax.name, browser: 'v3' }
+    this.document.outputJax.name
   );
 
   /**
    * @override
    */
-  public Show(node: HTMLElement, highlighter: Sre.highlighter) {
+  public Show(node: HTMLElement, highlighter: Highlighter) {
+    super.Update('\u00a0'); // Ensures region shown and cannot be overwritten.
     this.node = node;
     super.Show(node, highlighter);
   }
@@ -410,12 +478,18 @@ export class SpeechRegion extends LiveRegion {
   /**
    * Have we already requested voices from the browser?
    */
-  private voiceRequest = false;
+  private voiceRequest: boolean = false;
+
+  /**
+   * Has the auto voicing been cancelled?
+   */
+  private voiceCancelled: boolean = false;
 
   /**
    * @override
    */
   public Update(speech: string) {
+    // TODO (Volker): Make sure we use speech and ssml!
     if (this.voiceRequest) {
       this.makeVoice(speech);
       return;
@@ -423,7 +497,6 @@ export class SpeechRegion extends LiveRegion {
     speechSynthesis.onvoiceschanged = (() => (this.voiceRequest = true)).bind(
       this
     );
-    super.Update('\u00a0'); // Ensures region shown and cannot be overwritten.
     const promise = new Promise((resolve) => {
       setTimeout(() => {
         if (this.voiceRequest) {
@@ -464,6 +537,7 @@ export class SpeechRegion extends LiveRegion {
    * @param {string} locale The locale to use.
    */
   protected makeUtterances(ssml: SsmlElement[], locale: string) {
+    this.voiceCancelled = false;
     let utterance = null;
     for (const utter of ssml) {
       if (utter.mark) {
@@ -473,7 +547,9 @@ export class SpeechRegion extends LiveRegion {
           continue;
         }
         utterance.addEventListener('end', (_event: Event) => {
-          this.highlightNode(utter.mark);
+          if (!this.voiceCancelled) {
+            this.highlightNode(utter.mark);
+          }
         });
         continue;
       }
@@ -506,6 +582,23 @@ export class SpeechRegion extends LiveRegion {
         this.highlighter.unhighlight();
       });
     }
+  }
+
+  /**
+   * @override
+   */
+  public Hide() {
+    this.cancelVoice();
+    super.Hide();
+  }
+
+  /**
+   * Cancel the auto-voicing
+   */
+  public cancelVoice() {
+    this.voiceCancelled = true;
+    speechSynthesis.cancel();
+    this.highlighter.unhighlight();
   }
 
   /**
@@ -555,6 +648,13 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     ['.' + HoverRegion.className + ' > div']: {
       overflow: 'hidden',
     },
+    '@media (prefers-color-scheme: dark)': {
+      ['.' + HoverRegion.className]: {
+        'background-color': '#222025',
+        'box-shadow': '0px 5px 20px #000',
+        border: '1px solid #7C7C7C',
+      },
+    },
   });
 
   /**
@@ -593,7 +693,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   /**
    * @override
    */
-  protected highlight(highlighter: Sre.highlighter) {
+  protected highlight(highlighter: Highlighter) {
     if (!this.div) return;
     // TODO Do this with styles to avoid the interaction of SVG/CHTML.
     if (
@@ -602,15 +702,14 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     ) {
       return;
     }
-    const color = highlighter.colorString();
-    this.inner.style.backgroundColor = color.background;
-    this.inner.style.color = color.foreground;
+    this.inner.style.backgroundColor = highlighter.background;
+    this.inner.style.color = highlighter.foreground;
   }
 
   /**
    * @override
    */
-  public Show(node: HTMLElement, highlighter: Sre.highlighter) {
+  public Show(node: HTMLElement, highlighter: Highlighter) {
     this.AddElement();
     this.div.style.fontSize = this.document.options.a11y.magnify;
     this.Update(node);
@@ -634,6 +733,10 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     if (!this.div) return;
     this.Clear();
     const mjx = this.cloneNode(node);
+    const selected = mjx.querySelector('[data-mjx-clone]') as HTMLElement;
+    this.inner.style.backgroundColor = node.style.backgroundColor;
+    selected.style.backgroundColor = '';
+    selected.classList.remove('mjx-selected');
     this.inner.appendChild(mjx);
     this.position(node);
   }
@@ -646,6 +749,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    */
   private cloneNode(node: HTMLElement): HTMLElement {
     let mjx = node.cloneNode(true) as HTMLElement;
+    mjx.setAttribute('data-mjx-clone', 'true');
     if (mjx.nodeName !== 'MJX-CONTAINER') {
       // remove element spacing (could be done in CSS)
       if (mjx.nodeName !== 'g') {

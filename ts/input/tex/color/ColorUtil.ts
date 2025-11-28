@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 Omar Al-Ithawi and The MathJax Consortium
+ *  Copyright (c) 2018-2025 Omar Al-Ithawi and The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,15 +48,16 @@ export class ColorModel {
    */
   private normalizeColor(model: string, def: string): string {
     if (!model || model === 'named') {
+      if (def.match(/;/)) {
+        throw new TexError('BadColorValue', 'Invalid color value');
+      }
       // Allow to define colors directly by using the CSS format e.g. `#888`
       return def;
     }
-
     if (ColorModelProcessors.has(model)) {
       const modelProcessor = ColorModelProcessors.get(model);
       return modelProcessor(def);
     }
-
     throw new TexError(
       'UndefinedColorModel',
       "Color model '%1' not defined",
@@ -75,7 +76,6 @@ export class ColorModel {
     if (!model || model === 'named') {
       return this.getColorByName(def);
     }
-
     return this.normalizeColor(model, def);
   }
 
@@ -96,11 +96,12 @@ export class ColorModel {
     if (this.userColors.has(name)) {
       return this.userColors.get(name);
     }
-
     if (COLORS.has(name)) {
       return COLORS.get(name);
     }
-
+    if (name.match(/;/)) {
+      throw new TexError('BadColorValue', 'Invalid color value');
+    }
     // Pass the color name as-is to CSS
     return name;
   }

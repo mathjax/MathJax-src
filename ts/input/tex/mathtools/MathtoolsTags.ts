@@ -1,5 +1,5 @@
 /*************************************************************
- *  Copyright (c) 2021-2024 MathJax Consortium
+ *  Copyright (c) 2021-2025 MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -90,11 +90,11 @@ export function MathtoolsTagFormat(
         if (!Array.isArray(forms[form]) || forms[form].length !== 3) {
           throw new TexError(
             'InvalidTagFormDef',
-            'The tag form definition for "%1" should be an array fo three strings',
+            'The tag form definition for "%1" should be an array of three strings',
             form
           );
         }
-        this.mtFormats.set(form, forms[form]);
+        this.mtFormats.set(form, forms[form] as [string, string, string]);
       }
     }
 
@@ -104,9 +104,7 @@ export function MathtoolsTagFormat(
     public formatTag(tag: string) {
       if (this.mtCurrent) {
         const [left, right, format] = this.mtCurrent;
-        return format
-          ? `${left}${format}{${tag}}${right}`
-          : `${left}${tag}${right}`;
+        return [left, format ? `${format}{${tag}}` : tag, right];
       }
       return super.formatTag(tag);
     }

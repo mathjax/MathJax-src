@@ -2,7 +2,7 @@
 
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-
 const fs = require('fs');
 const path = require('path');
 const {spawn} = require('child_process');
@@ -40,11 +39,10 @@ const bundle = (process.argv[3] || 'bundle');
 
 /**
  * @param {string} name    The file name to turn into a Regular expression
- * @param {string} tail    Additional regexp to include after the file path
  * @return {RegExp}        The regular expression for the name,
  */
-function fileRegExp(name, tail = '') {
-  return new RegExp(name.replace(/([\\.{}[\]()?*^$])/g, '\\$1') + tail, 'g');
+function fileRegExp(name) {
+  return new RegExp(name.replace(/([\\.{}[\]()?*+^$])/g, '\\$1'), 'g');
 }
 
 /**
@@ -59,13 +57,14 @@ function fileSize(file) {
  * Regular expressions for the components directory and the MathJax .js location
  */
 const compPath = path.dirname(__dirname);
-const nodePath = path.join(__dirname, '..', '..', 'node_modules');
 const mjPath = path.dirname(compPath);
 const jsPath = path.join(__dirname, '..', '..', target);
 const compRE = fileRegExp(compPath);
 const rootRE = fileRegExp(path.dirname(jsPath));
-const nodeRE = fileRegExp(nodePath, '(?:/\\.pnpm/.*?/node_modules)?');
+const nodeRE = /^.*\/node_modules/;
 const fontRE = new RegExp('^.*\\/(mathjax-[^\/-]*)(?:-font)?\/(build|[cm]js)');
+
+const packDir = process.cwd();
 
 /**
  * @param {string} dir   The directory to pack
@@ -74,12 +73,27 @@ const fontRE = new RegExp('^.*\\/(mathjax-[^\/-]*)(?:-font)?\/(build|[cm]js)');
 async function readJSON(dir) {
   return new Promise((ok, fail) => {
     const buffer = [];
-    const child = spawn('pnpm', [
-      'webpack', '--env', `dir=${dir}`, '--env', `bundle=${bundle}`, '--json',
-      '-c', path.relative('.', path.join(compPath, 'webpack.config.' + target))
-    ]);
+    const child = spawn(
+      'npx',
+      [
+        'webpack',
+        '--env', `dir=${path.relative(packDir, path.resolve(dir))}`,
+        '--env', `bundle=${bundle}`,
+        '--json',
+        '-c', path.relative(packDir, path.join(compPath, 'webpack.config.' + target))
+      ],
+      {
+        cwd: packDir,
+        shell: true,
+      }
+    );
     child.stdout.on('data', (data) => buffer.push(String(data)));
-    child.stdout.on('close', (code) => {
+    child.stderr.on('data', (data) => console.error(String(data)));
+    child.on('close', (code) => {
+      if (code !== 0) {
+        fail('Webpack failed with code ' + code);
+        return;
+      }
       const json = JSON.parse(buffer.join(''));
       if (json.errors && json.errors.length) {
         fail(json.errors[0].message);

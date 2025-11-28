@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -66,16 +66,25 @@ export type StringMap = { [key: string]: string };
 /**
  * MathML spacing rules
  */
-/* prettier-ignore */
-const SMALLSIZE = 2/18;
+const SMALLSIZE = 2 / 18;
+const MOSPACE = 5 / 18;
 
 /**
  * @param {boolean} script   The scriptlevel
+ * @param {boolean} nodict   True if the mo text is not in the operator dictionary
  * @param {number} size      The space size
- * @returns {number}          The size clamped to SMALLSIZE when scriptlevel > 0
+ * @returns {number}         The size clamped to SMALLSIZE when scriptlevel > 0
  */
-function MathMLSpace(script: boolean, size: number): number {
-  return script ? (size < SMALLSIZE ? 0 : SMALLSIZE) : size;
+function MathMLSpace(script: boolean, nodict: boolean, size: number): number {
+  return nodict
+    ? script
+      ? SMALLSIZE
+      : MOSPACE
+    : script
+      ? size < SMALLSIZE
+        ? 0
+        : SMALLSIZE
+      : size;
 }
 
 /**
@@ -448,7 +457,7 @@ export class CommonWrapper<
    * @returns {number} The container width
    */
   get containerWidth(): number {
-    return this.jax.containerWidth;
+    return this.parent ? this.parent.containerWidth : this.jax.containerWidth;
   }
 
   /**
@@ -700,9 +709,10 @@ export class CommonWrapper<
     if (this.node.isEmbellished) {
       return [this, this.coreMO()] as any as [WW, WW];
     }
-    const childNodes = this.childNodes[0]?.node?.isInferred
-      ? this.childNodes[0].childNodes
-      : this.childNodes;
+    const childNodes =
+      this.childNodes[0]?.node?.isInferred || this.node.isKind('semantics')
+        ? this.childNodes[0].childNodes
+        : this.childNodes;
     if (this.node.isToken || !childNodes[i]) {
       return [this, null] as any as [WW, WW];
     }
@@ -1050,23 +1060,25 @@ export class CommonWrapper<
     if (!parent || !parent.isKind('mrow') || parent.childNodes.length === 1) {
       return;
     }
+    const n = parent.childIndex(child);
+    if (n === null) return;
     //
     // Get the lspace and rspace
     //
+    const noDictDef = node.getProperty('noDictDef');
     const attributes = node.attributes;
     const isScript = (attributes.get('scriptlevel') as number) > 0;
     this.bbox.L = attributes.isSet('lspace')
       ? Math.max(0, this.length2em(attributes.get('lspace')))
-      : MathMLSpace(isScript, node.lspace);
+      : MathMLSpace(isScript, noDictDef as boolean, node.lspace);
     this.bbox.R = attributes.isSet('rspace')
       ? Math.max(0, this.length2em(attributes.get('rspace')))
-      : MathMLSpace(isScript, node.rspace);
+      : MathMLSpace(isScript, noDictDef as boolean, node.rspace);
     //
     // If there are two adjacent <mo>, use enough left space to make it
     //   the maximum of the rspace of the first and lspace of the second
     //
-    const n = parent.childIndex(child);
-    if (n === 0) return;
+    if (!n) return;
     const prev = parent.childNodes[n - 1] as AbstractMmlNode;
     if (!prev.isEmbellished) return;
     const bbox = this.jax.nodeMap.get(prev).getBBox();
@@ -1221,12 +1233,12 @@ export class CommonWrapper<
       return ['left', 0];
     }
     if (!align || align === 'auto') {
-      align = this.jax.math.outputData.inlineMarked
+      align = this.jax.math.root.getProperty('inlineMarked')
         ? 'left'
         : this.jax.options.displayAlign;
     }
     if (!shift || shift === 'auto') {
-      shift = this.jax.math.outputData.inlineMarked
+      shift = this.jax.math.root.getProperty('inlineMarked')
         ? '0'
         : this.jax.options.displayIndent;
     }

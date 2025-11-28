@@ -3,13 +3,16 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./js",
+    "module": "nodenext",
     "moduleResolution": "nodenext",
     "paths": {
       "#js/*": ["../mjs/*"],
       "#source/*": ["../components/mjs/*"],
-      "#helpers": ["./src/index.js"]
+      "#src/*": ["./src/*"],
+      "#helpers": ["./js/src/index.js"]
     },
-    "lib": ["es2017"]
+    "isolatedModules": true,
+    "lib": ["DOM", "es2022"]
   },
   "include": ["./tests/**/*.ts", "./src/*.ts"]
 }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,9 @@
 
 import { PrioritizedList, PrioritizedListItem } from './PrioritizedList.js';
 
-type AnyFunction = (...args: unknown[]) => unknown;
+export type AnyFunction = (...args: unknown[]) => unknown;
+export type AnyFunctionDef = AnyFunction | [AnyFunction, number];
+export type AnyFunctionList = AnyFunctionDef[];
 
 /*****************************************************************/
 /**
@@ -38,6 +40,32 @@ export interface FunctionListItem extends PrioritizedListItem<AnyFunction> {}
  */
 
 export class FunctionList extends PrioritizedList<AnyFunction> {
+  /**
+   * @override
+   * @param {AnyFunctionList} list   The initial list of functions to add
+   */
+  constructor(list: AnyFunctionList = null) {
+    super();
+    if (list) {
+      this.addList(list);
+    }
+  }
+
+  /**
+   * Add a list of filter functions, possibly with priorities.
+   *
+   * @param {AnyFunctionList} list   The list of functions to add
+   */
+  public addList(list: AnyFunctionList) {
+    for (const item of list) {
+      if (Array.isArray(item)) {
+        this.add(item[0], item[1]);
+      } else {
+        this.add(item);
+      }
+    }
+  }
+
   /**
    * Executes the functions in the list (in prioritized order),
    *   passing the given data to the functions.  If any return

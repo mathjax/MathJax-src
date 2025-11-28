@@ -1,5 +1,5 @@
 /*************************************************************
- *  Copyright (c) 2020-2024 MathJax Consortium
+ *  Copyright (c) 2020-2025 MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ export class MultlinedItem extends MultlineItem {
     }
     if (this.table.length > 1) {
       const options = this.factory.configuration.options.mathtools;
-      const gap = options.multlinegap;
+      const gap = options['multlined-gap'];
       const firstskip = options['firstline-afterskip'] || gap;
       const lastskip = options['lastline-preskip'] || gap;
       const first = NodeUtil.getChildren(this.table[0])[0];

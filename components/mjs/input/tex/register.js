@@ -12,6 +12,9 @@ export function registerTeX(packageList = [], tex = true) {
     let packages = MathJax.config.tex.packages;
     MathJax.config.tex.packages = packageList;
     if (packages) {
+      if (Array.isArray(packages)) {
+        packages = {'[+]': packages.filter((name) => !packageList.includes(name))};
+      }
       insert(MathJax.config.tex, {packages});
     }
   }

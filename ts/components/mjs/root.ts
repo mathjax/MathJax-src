@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2023-2024 The MathJax Consortium
+ *  Copyright (c) 2023-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,12 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import { context } from '../../util/context.js';
+
 /**
  * @returns {string}   The MathJax component root directory
  */
 export function mjxRoot(): string {
-  return new URL(import.meta.url).pathname.replace(
-    /[cm]js\/components\/[cm]js\/root.js$/,
-    (_) => 'bundle'
-  );
+  return context
+    .path(new URL(import.meta.url).pathname)
+    .replace(/[cm]js\/components\/[cm]js\/root.js$/, 'bundle');
 }

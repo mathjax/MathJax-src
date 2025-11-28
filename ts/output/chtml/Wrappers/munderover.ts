@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -298,7 +298,9 @@ export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
       'mjx-mover:not([limits="false"])': {
         'padding-top': '.1em', // big_op_spacing5
       },
-      'mjx-mover:not([limits="false"]) > *': {
+      [['base', 'over']
+        .map((node) => `mjx-mover:not([limits="false"]) > mjx-${node}`)
+        .join(', ')]: {
         display: 'block',
         'text-align': 'left',
       },
@@ -436,7 +438,9 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<
       'mjx-munderover:not([limits="false"])': {
         'padding-top': '.1em', // big_op_spacing5
       },
-      'mjx-munderover:not([limits="false"]) > *': {
+      [['over', 'box']
+        .map((node) => `mjx-munderover:not([limits="false"]) > mjx-${node}`)
+        .join(', ')]: {
         display: 'block',
       },
     };

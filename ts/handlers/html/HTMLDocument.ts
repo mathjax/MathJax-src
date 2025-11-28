@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import { HTMLMathList } from './HTMLMathList.js';
 import { HTMLDomStrings } from './HTMLDomStrings.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { InputJax } from '../../core/InputJax.js';
-import { STATE, ProtoItem, Location } from '../../core/MathItem.js';
+import { STATE, newState, ProtoItem, Location } from '../../core/MathItem.js';
 import { StyleJson } from '../../util/StyleJson.js';
 
 /*****************************************************************/
@@ -48,6 +48,11 @@ import { StyleJson } from '../../util/StyleJson.js';
  * @template T  The Text node class
  */
 export type HTMLNodeArray<N, T> = [N | T, number][][];
+
+/**
+ * Add STATE value for adding the stylesheets (after INSERTED)
+ */
+newState('STYLES', STATE.INSERTED + 1);
 
 /*****************************************************************/
 /**
@@ -71,7 +76,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     ...AbstractMathDocument.OPTIONS,
     renderActions: expandable({
       ...AbstractMathDocument.OPTIONS.renderActions,
-      styles: [STATE.INSERTED + 1, '', 'updateStyleSheet', false]  // update styles on a rerender() call
+      styles: [STATE.STYLES, '', 'updateStyleSheet', false]  // update styles on a rerender() call
     }),
     MathList: HTMLMathList,           // Use the HTMLMathList for MathLists
     MathItem: HTMLMathItem,           // Use the HTMLMathItem for MathItem
@@ -273,10 +278,16 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    *  Add any elements needed for the document
    */
   protected addPageElements() {
-    const body = this.adaptor.body(this.document);
+    const adaptor = this.adaptor;
+    const body = adaptor.body(this.document);
     const node = this.documentPageElements();
     if (node) {
-      this.adaptor.append(body, node);
+      const child = adaptor.firstChild(body);
+      if (child) {
+        adaptor.insert(node, child);
+      } else {
+        adaptor.append(body, node);
+      }
     }
   }
 
@@ -349,6 +360,9 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    */
   public addStyles(styles: StyleJson) {
     this.styles.push(styles);
+    if ('insertStyles' in this.outputJax) {
+      (this.outputJax as any).insertStyles(styles);
+    }
   }
 
   /**

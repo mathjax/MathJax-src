@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -200,6 +200,11 @@ export interface MathItem<N, T, D> {
    *                           to the document when rolling back a typeset version
    */
   reset(restore?: boolean): void;
+
+  /**
+   * Clear any data (the MathItem's container is being removed)
+   */
+  clear(): void;
 }
 
 /*****************************************************************/
@@ -247,7 +252,7 @@ export function protoItem<N, T>(
   start: number,
   end: number,
   display: boolean = null
-) {
+): ProtoItem<N, T> {
   const item: ProtoItem<N, T> = {
     open: open,
     math: math,
@@ -414,7 +419,9 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   /**
    * @override
    */
-  public removeFromDocument(_restore: boolean = false) {}
+  public removeFromDocument(_restore: boolean = false) {
+    this.clear();
+  }
 
   /**
    * @override
@@ -453,6 +460,11 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   public reset(restore: boolean = false) {
     this.state(STATE.UNPROCESSED, restore);
   }
+
+  /**
+   * @override
+   */
+  clear() {}
 }
 
 /*****************************************************************/

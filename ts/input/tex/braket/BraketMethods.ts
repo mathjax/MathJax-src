@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import { ParseMethod, ParseResult } from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
 import { TEXCLASS } from '../../../core/MmlTree/MmlNode.js';
-import TexError from '../TexError.js';
 import { BraketItem } from './BraketItems.js';
 
 const BraketMethods: { [key: string]: ParseMethod } = {
@@ -33,7 +32,7 @@ const BraketMethods: { [key: string]: ParseMethod } = {
    * Generate a bra-ket expression.
    *
    * @param {TexParser} parser The current TeX parser.
-   * @param {string} _name Name of the current control sequence.
+   * @param {string} name Name of the current control sequence.
    * @param {string} open Opening delimiter.
    * @param {string} close Closing delimiter.
    * @param {boolean} stretchy Is it stretchy.
@@ -42,21 +41,17 @@ const BraketMethods: { [key: string]: ParseMethod } = {
    */
   Braket(
     parser: TexParser,
-    _name: string,
+    name: string,
     open: string,
     close: string,
     stretchy: boolean,
     barmax: number,
     space: boolean = false
   ) {
+    const i = parser.i;
+    parser.GetArgument(name); // Error if there isn't a proper argument
+    parser.i = i;
     const next = parser.GetNext();
-    if (next === '') {
-      throw new TexError(
-        'MissingArgFor',
-        'Missing argument for %1',
-        parser.currentCS
-      );
-    }
     let single = true;
     if (next === '{') {
       parser.i++;

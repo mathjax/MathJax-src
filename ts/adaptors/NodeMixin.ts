@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2022-2024 The MathJax Consortium
+ *  Copyright (c) 2022-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,8 +23,18 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { DOMAdaptor } from '../core/DOMAdaptor.js';
+import { DOMAdaptor, minWorker } from '../core/DOMAdaptor.js';
 import { userOptions, defaultOptions, OptionList } from '../util/Options.js';
+import { asyncLoad } from '../util/AsyncLoad.js';
+
+/**
+ * A minimal worker thread interface
+ */
+export interface WebWorker {
+  on(kind: string, listener: (event: Event) => void): void;
+  postMessage(msg: any): void;
+  terminate(): void;
+}
 
 /**
  * A constructor for a given class
@@ -168,6 +178,39 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
       return options.badSizes
         ? { left: 0, right: 0, top: 0, bottom: 0 }
         : super.nodeBBox(node);
+    }
+
+    /**
+     * @override
+     */
+    public async createWorker(
+      listener: (event: any) => void,
+      options: OptionList
+    ): Promise<minWorker> {
+      const { Worker } = await asyncLoad('node:worker_threads');
+      class LiteWorker {
+        protected worker: WebWorker;
+        constructor(url: string, options: OptionList = {}) {
+          this.worker = new Worker(url, options);
+        }
+        addEventListener(kind: string, listener: (event: any) => void) {
+          this.worker.on(kind, listener);
+        }
+        postMessage(msg: any) {
+          this.worker.postMessage({ data: msg });
+        }
+        terminate() {
+          this.worker.terminate();
+        }
+      }
+      const { path, maps } = options;
+      const url = `${path}/${options.worker}`;
+      const worker = new LiteWorker(url, {
+        type: 'module',
+        workerData: { maps },
+      });
+      worker.addEventListener('message', listener);
+      return worker;
     }
   };
 }

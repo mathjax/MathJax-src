@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2024 The MathJax Consortium
+ *  Copyright (c) 2009-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  */
 
 import { A11yDocument, Region } from './Region.js';
-import * as Sre from '../sre.js';
+import { Highlighter } from './Highlighter.js';
 
 import type { ExplorerPool } from './ExplorerPool.js';
 
@@ -118,11 +118,9 @@ export class AbstractExplorer<T> implements Explorer {
   protected events: [string, (x: Event) => void][] = [];
 
   /**
-   * The Sre highlighter associated with the walker.
-   *
-   * @type {Sre.highlighter}
+   * @returns {Highlighter} The Sre highlighter associated with the walker.
    */
-  protected get highlighter(): Sre.highlighter {
+  protected get highlighter(): Highlighter {
     return this.pool.highlighter;
   }
 

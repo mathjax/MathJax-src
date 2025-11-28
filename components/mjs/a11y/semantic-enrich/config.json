@@ -2,9 +2,7 @@
   "build": {
     "component": "a11y/semantic-enrich",
     "targets": [
-      "a11y/semantic-enrich.ts",
-      "a11y/speech/SpeechUtil.ts",
-      "a11y/speech/GeneratorPool.ts"
+      "a11y/semantic-enrich.ts"
     ]
   },
   "webpack": {
@@ -12,7 +10,8 @@
     "libs": [
       "components/src/input/mml/lib",
       "components/src/core/lib",
-      "components/src/a11y/sre/lib"
+      "components/src/a11y/sre/lib",
+      "components/src/loader/lib"
     ]
   }
 }

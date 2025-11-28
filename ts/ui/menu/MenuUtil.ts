@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2024 The MathJax Consortium
+ *  Copyright (c) 2024-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,8 +26,7 @@ import { context } from '../../util/context.js';
 /**
  * True when platform is a Mac (so we can enable CMD menu item for zoom trigger)
  */
-export const isMac =
-  context.window?.navigator?.platform?.substring(0, 3) === 'Mac';
+export const isMac = context.os === 'MacOS';
 
 /**
  * @param {string} text   The text to be copied to the clipboard

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -64,9 +64,11 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
    * @returns {void} No value.
    */
   arrow(parser: TexParser, name: string): void {
-    const c = parser.string.charAt(parser.i);
+    const i = parser.i;
+    const c = parser.GetNext();
     if (!c.match(/[><VA.|=]/)) {
       // TODO: This return is suspicious.
+      parser.i = i;
       return Other(parser, name);
     } else {
       parser.i++;
@@ -124,37 +126,33 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
         if (!a) {
           a = '\\kern ' + top.getProperty('minw');
         } // minsize needs work
-        if (a || b) {
-          const pad: EnvList = { width: '+.67em', lspace: '.33em' };
-          mml = parser.create('node', 'munderover', [mml]) as MmlMunderover;
-          if (a) {
-            const nodeA = new TexParser(
-              a,
-              parser.stack.env,
-              parser.configuration
-            ).mml();
-            const mpadded = parser.create('node', 'mpadded', [nodeA], pad);
-            NodeUtil.setAttribute(mpadded, 'voffset', '.1em');
-            NodeUtil.setChild(mml, mml.over, mpadded);
-          }
-          if (b) {
-            const nodeB = new TexParser(
-              b,
-              parser.stack.env,
-              parser.configuration
-            ).mml();
-            NodeUtil.setChild(
-              mml,
-              mml.under,
-              parser.create('node', 'mpadded', [nodeB], pad)
-            );
-          }
-          if (parser.configuration.options.amscd.hideHorizontalLabels) {
-            mml = parser.create('node', 'mpadded', mml, {
-              depth: 0,
-              height: '.67em',
-            });
-          }
+        const pad: EnvList = { width: '+.67em', lspace: '.33em' };
+        mml = parser.create('node', 'munderover', [mml]) as MmlMunderover;
+        const nodeA = new TexParser(
+          a,
+          parser.stack.env,
+          parser.configuration
+        ).mml();
+        const mpadded = parser.create('node', 'mpadded', [nodeA], pad);
+        NodeUtil.setAttribute(mpadded, 'voffset', '.1em');
+        NodeUtil.setChild(mml, mml.over, mpadded);
+        if (b) {
+          const nodeB = new TexParser(
+            b,
+            parser.stack.env,
+            parser.configuration
+          ).mml();
+          NodeUtil.setChild(
+            mml,
+            mml.under,
+            parser.create('node', 'mpadded', [nodeB], pad)
+          );
+        }
+        if (parser.configuration.options.amscd.hideHorizontalLabels) {
+          mml = parser.create('node', 'mpadded', [mml], {
+            depth: 0,
+            height: '.67em',
+          });
         }
       } else {
         //
@@ -167,7 +165,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
           if (a) {
             NodeUtil.appendChildren(mml, [
               new TexParser(
-                '\\scriptstyle\\llap{' + a + '}',
+                '\\scriptstyle\\raise.125em{\\vcenter{\\llap{' + a + '}}}',
                 parser.stack.env,
                 parser.configuration
               ).mml(),
@@ -178,7 +176,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
           if (b) {
             NodeUtil.appendChildren(mml, [
               new TexParser(
-                '\\scriptstyle\\rlap{' + b + '}',
+                '\\scriptstyle\\raise.125em{\\vcenter{\\rlap{' + b + '}}}',
                 parser.stack.env,
                 parser.configuration
               ).mml(),

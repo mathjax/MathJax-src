@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -89,6 +89,11 @@ export class Package {
   public promise: Promise<string>;
 
   /**
+   * The result of loading a module via the custom loader
+   */
+  public result: any = {};
+
+  /**
    * True when the package is being loaded but hasn't yet finished loading
    */
   protected isLoading: boolean = false;
@@ -96,7 +101,7 @@ export class Package {
   /**
    * True if the package has failed to load
    */
-  protected hasFailed: boolean = false;
+  public hasFailed: boolean = false;
 
   /**
    * True if this package should be loaded automatically (e.g., it was created in reference
@@ -154,9 +159,9 @@ export class Package {
    */
   public static loadPromise(name: string): Promise<void> {
     const config = (CONFIG[name] || {}) as PackageConfig;
-    const promise = Promise.all(
-      (config.extraLoads || []).map((name) => Loader.load(name))
-    );
+    const promise = config.extraLoads
+      ? Loader.load(...config.extraLoads)
+      : Promise.resolve();
     const checkReady = config.checkReady || (() => Promise.resolve());
     return promise.then(() => checkReady()) as Promise<void>;
   }
@@ -315,11 +320,13 @@ export class Package {
       const result = CONFIG.require(url);
       if (result instanceof Promise) {
         result
+          .then((result) => (this.result = result))
           .then(() => this.checkLoad())
           .catch((err) =>
             this.failed('Can\'t load "' + url + '"\n' + err.message.trim())
           );
       } else {
+        this.result = result;
         this.checkLoad();
       }
     } catch (err) {

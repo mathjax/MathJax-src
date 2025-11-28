@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ export const WSC = ['width', 'style', 'color'];
  * @returns {string[]}    Array of parts of the style (separated by spaces)
  */
 function splitSpaces(text: string): string[] {
-  const parts = text.split(/((?:'[^']*'|"[^"]*"|,[\s\n]|[^\s\n])*)/g);
+  const parts = text.split(/((?:'[^'\n]*'|"[^"\n]*"|,[\s\n]|[^\s\n])*)/g);
   const split = [] as string[];
   while (parts.length > 1) {
     parts.shift();
@@ -349,9 +349,9 @@ export class Styles {
   public static pattern: { [name: string]: RegExp } = {
     sanitize: /['";]/,
     value:
-      /^((:?'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^'";])*?)(?:;|$).*/,
+      /^((:?'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^'";])*?)[\s\n]*(?:;|$).*/,
     style:
-      /([-a-z]+)[\s\n]*:[\s\n]*((?:'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^';])*?)[\s\n]*(?:;|$)/g,
+      /([-a-z]+)[\s\n]*:[\s\n]*((?:'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^'";])*?)[\s\n]*(?:;|$)/g,
     comment: /\/\*[^]*?\*\//g,
   };
 
@@ -360,6 +360,12 @@ export class Styles {
    */
   public static connect: connections = {
     padding: {
+      children: TRBL,
+      split: splitTRBL,
+      combine: combineTRBL,
+    },
+
+    margin: {
       children: TRBL,
       split: splitTRBL,
       combine: combineTRBL,
@@ -436,7 +442,8 @@ export class Styles {
 
   /**
    * @param {string} text  The value to be sanitized
-   * @returns {string}      The sanitized value (removes ; and anything past that, and balances quotation marks)
+   * @returns {string}     The sanitized value
+   *                         (removes ; and anything past that, and balances quotation marks)
    */
   protected sanitizeValue(text: string): string {
     const PATTERN = (this.constructor as typeof Styles).pattern;
@@ -461,8 +468,12 @@ export class Styles {
     const styles = [] as string[];
     for (const name of Object.keys(this.styles)) {
       const parent = this.parentName(name);
-      if (!this.styles[parent]) {
-        styles.push(name + ': ' + this.sanitizeValue(this.styles[name]) + ';');
+      const cname = name.replace(/.*-/, '');
+      if (
+        !this.styles[parent] ||
+        !Styles.connect[parent]?.children?.includes(cname)
+      ) {
+        styles.push(`${name}: ${this.styles[name]};`);
       }
     }
     return styles.join(' ');
@@ -481,7 +492,7 @@ export class Styles {
    */
   public set(name: string, value: string | number | boolean) {
     name = this.normalizeName(name);
-    this.setStyle(name, value.toString());
+    this.setStyle(name, String(value));
     //
     // If there is no combine function, the children combine to
     // a separate parent (e.g., border-width sets border-top-width, etc.
@@ -496,8 +507,16 @@ export class Styles {
     // it with its parent's other children
     //
     while (name.match(/-/)) {
+      const cname = name;
       name = this.parentName(name);
-      if (!Styles.connect[name]) break;
+      if (
+        !Styles.connect[cname] &&
+        !Styles.connect[name]?.children?.includes(
+          cname.substring(name.length + 1)
+        )
+      ) {
+        break;
+      }
       Styles.connect[name].combine.call(this, name);
     }
   }
@@ -516,7 +535,7 @@ export class Styles {
    * @param {string} value  The value to set it to
    */
   protected setStyle(name: string, value: string) {
-    this.styles[name] = value;
+    this.styles[name] = this.sanitizeValue(value);
     if (Styles.connect[name] && Styles.connect[name].children) {
       Styles.connect[name].split.call(this, name);
     }
@@ -538,7 +557,7 @@ export class Styles {
 
   /**
    * @param {string} name   The name of the style whose parent style is to be found
-   * @returns {string}       The name of the parent, or '' if none
+   * @returns {string}      The name of the parent, or '' if none
    */
   protected parentName(name: string): string {
     const parent = name.replace(/-[^-]*$/, '');
@@ -550,9 +569,9 @@ export class Styles {
    * @param {string} child  The suffix to be added to the parent
    * @returns {string}      The combined name
    */
-  protected childName(name: string, child: string) {
+  protected childName(name: string, child: string): string {
     //
-    // If the child contains a dash, it is already the fill name
+    // If the child contains a dash, it is already the full name
     //
     if (child.match(/-/)) {
       return child;

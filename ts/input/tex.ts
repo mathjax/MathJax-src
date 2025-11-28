@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -68,8 +68,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     ...AbstractInputJax.OPTIONS,
     FindTeX: null,
     packages: ['base'],
-    // Digit pattern to match numbers.
-    digits: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
     // Maximum size of TeX string to process.
     maxBuffer: 5 * 1024,
     // Maximum number of array template substitutions (avoids infinite loop from @{\\} for example)
@@ -159,13 +157,15 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     userOptions(parseOptions.options, rest);
     configuration.config(this);
     TeX.tags(parseOptions, configuration);
-    this.postFilters.add(FilterUtil.cleanSubSup, -7);
-    this.postFilters.add(FilterUtil.setInherited, -6);
-    this.postFilters.add(FilterUtil.checkScriptlevel, -5);
-    this.postFilters.add(FilterUtil.moveLimits, -4);
-    this.postFilters.add(FilterUtil.cleanStretchy, -3);
-    this.postFilters.add(FilterUtil.cleanAttributes, -2);
-    this.postFilters.add(FilterUtil.combineRelations, -1);
+    this.postFilters.addList([
+      [FilterUtil.cleanSubSup, -7],
+      [FilterUtil.setInherited, -6],
+      [FilterUtil.checkScriptlevel, -5],
+      [FilterUtil.moveLimits, -4],
+      [FilterUtil.cleanStretchy, -3],
+      [FilterUtil.cleanAttributes, -2],
+      [FilterUtil.combineRelations, -1],
+    ]);
   }
 
   /**
@@ -203,7 +203,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     this.latex = math.math;
     let node: MmlNode;
     this.parseOptions.tags.startEquation(math);
-    let globalEnv;
     let parser;
     try {
       parser = new TexParser(
@@ -212,7 +211,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         this.parseOptions
       );
       node = parser.mml();
-      globalEnv = parser.stack.global;
     } catch (err) {
       if (!(err instanceof TexError)) {
         throw err;
@@ -222,9 +220,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     }
     node = this.parseOptions.nodeFactory.create('node', 'math', [node]);
     node.attributes.set(TexConstant.Attr.LATEX, this.latex);
-    if (globalEnv?.indentalign) {
-      NodeUtil.setAttribute(node, 'indentalign', globalEnv.indentalign);
-    }
     if (math.display) {
       NodeUtil.setAttribute(node, 'display', 'block');
     }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2024 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
 
 import { mathjax } from '../../mathjax.js';
 import * as path from 'path';
-import { src } from '#source/source.cjs';
+import { dirname } from '#source/source.cjs';
 
 declare const require: (name: string) => any;
 
-let root = path.resolve(src, '..', '..', 'cjs');
+let root = path.resolve(dirname, '..', '..', 'cjs');
 
 if (!mathjax.asyncLoad && typeof require !== 'undefined') {
   mathjax.asyncLoad = (name: string) => {

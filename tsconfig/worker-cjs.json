@@ -1,0 +1,15 @@
+{
+  "extends": "./mjs.json",
+  "compilerOptions": {
+    "removeComments": false,
+    "outDir": "../cjs/a11y/sre",
+    "module": "preserve",
+    "moduleResolution": "node"
+  },
+  "files": [
+    "../ts/a11y/sre/speech-worker.ts",
+    "../ts/a11y/sre/worker_threads.d.ts"
+  ],
+  "include": [],
+  "exclude": []
+}

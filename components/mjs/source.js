@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2024 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,10 +15,14 @@
  *  limitations under the License.
  */
 
-import {src} from '#source/source.cjs';
+import {dirname} from '#source/source.cjs';
+import {context} from '#js/util/context.js';
+const src = context.path(dirname);
 
 export const source = {
   'core': `${src}/core/core.js`,
+  'adaptors/jsdom': `${src}/adaptors/jsdom/jsdom.js`,
+  'adaptors/linkedom': `${src}/adaptors/linkedom/linkedom.js`,
   'adaptors/liteDOM': `${src}/adaptors/liteDOM/liteDOM.js`,
   'input/tex': `${src}/input/tex/tex.js`,
   'input/tex-base': `${src}/input/tex-base/tex-base.js`,
@@ -30,6 +34,7 @@ export const source = {
   '[tex]/bbm': `${src}/input/tex/extensions/bbm/bbm.js`,
   '[tex]/bboldx': `${src}/input/tex/extensions/bboldx/bboldx.js`,
   '[tex]/bbox': `${src}/input/tex/extensions/bbox/bbox.js`,
+  '[tex]/begingroup': `${src}/input/tex/extensions/begingroup/begingroup.js`,
   '[tex]/boldsymbol': `${src}/input/tex/extensions/boldsymbol/boldsymbol.js`,
   '[tex]/braket': `${src}/input/tex/extensions/braket/braket.js`,
   '[tex]/bussproofs': `${src}/input/tex/extensions/bussproofs/bussproofs.js`,
@@ -70,9 +75,11 @@ export const source = {
   'output/svg': `${src}/output/svg/svg.js`,
   'a11y/assistive-mml': `${src}/a11y/assistive-mml/assistive-mml.js`,
   'a11y/semantic-enrich': `${src}/a11y/semantic-enrich/semantic-enrich.js`,
+  'a11y/speech': `${src}/a11y/speech/speech.js`,
   'a11y/complexity': `${src}/a11y/complexity/complexity.js`,
   'a11y/explorer': `${src}/a11y/explorer/explorer.js`,
   'a11y/sre': `${src}/a11y/sre/sre.js`,
+  '[mathmaps]': `${src}/../../bundle/sre/mathmaps`,
   'ui/lazy': `${src}/ui/lazy/lazy.js`,
   'ui/menu': `${src}/ui/menu/menu.js`,
   'ui/safe': `${src}/ui/safe/safe.js`,

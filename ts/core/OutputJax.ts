@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -47,7 +47,12 @@ export interface OutputJax<N, T, D> {
   options: OptionList;
 
   /**
-   * Lists of post-filters to call after typesetting the math
+   * List of pre-filters to call after typesetting the math
+   */
+  preFilters: FunctionList;
+
+  /**
+   * List of post-filters to call before typesetting the math
    */
   postFilters: FunctionList;
 
@@ -130,12 +135,20 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
   /**
    * The default options for the output jax
    */
-  public static OPTIONS: OptionList = {};
+  public static OPTIONS: OptionList = {
+    preFilters: [],
+    postFilters: [],
+  };
 
   /**
    * The actual options supplied to the output jax
    */
   public options: OptionList;
+
+  /**
+   * Filters to run before the output is processed
+   */
+  public preFilters: FunctionList;
 
   /**
    * Filters to run after the output is processed
@@ -153,7 +166,8 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
   constructor(options: OptionList = {}) {
     const CLASS = this.constructor as typeof AbstractOutputJax;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
-    this.postFilters = new FunctionList();
+    this.preFilters = new FunctionList(this.options.preFilters);
+    this.postFilters = new FunctionList(this.options.postFilters);
   }
 
   /**

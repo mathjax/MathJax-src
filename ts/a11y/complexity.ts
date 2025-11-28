@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import { Handler } from '../core/Handler.js';
 import { MathDocumentConstructor } from '../core/MathDocument.js';
 import { STATE, newState } from '../core/MathItem.js';
 import { MathML } from '../input/mathml.js';
-import { MmlNode } from '../core/MmlTree/MmlNode.js';
 import {
   EnrichHandler,
   EnrichedMathItem,
@@ -70,6 +69,11 @@ newState('COMPLEXITY', 40);
  */
 export interface ComplexityMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
   /**
+   * The starting collapse ID for this expression
+   */
+  initialID: number;
+
+  /**
    * @param {ComplexityMathDocument} document   The MathDocument for the MathItem
    * @param {boolean} force                     True to force the computation even if enableComplexity is false
    */
@@ -80,7 +84,7 @@ export interface ComplexityMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
  * The mixin for adding complexity to MathItems
  *
  * @param {B} BaseMathItem       The MathItem class to be extended
- * @param {function(MmlNode): void} computeComplexity Method of complexity computation.
+ * @param {(math: ComplexityMathItem<N,T,D>) => void} computeComplexity Method of complexity computation.
  * @returns {ComplexityMathItem}  The complexity MathItem class
  *
  * @template N  The HTMLElement node class
@@ -90,9 +94,14 @@ export interface ComplexityMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
  */
 export function ComplexityMathItemMixin<N, T, D, B extends EMItemC<N, T, D>>(
   BaseMathItem: B,
-  computeComplexity: (node: MmlNode) => void
+  computeComplexity: (math: ComplexityMathItem<N, T, D>) => void
 ): CMItemC<N, T, D> & B {
   return class extends BaseMathItem {
+    /**
+     * The starting collapse ID for this expression
+     */
+    public initialID: number = null;
+
     /**
      * @param {ComplexityMathDocument} document   The MathDocument for the MathItem
      * @param {boolean} force                     True to force the computation even if enableComplexity is false
@@ -104,7 +113,7 @@ export function ComplexityMathItemMixin<N, T, D, B extends EMItemC<N, T, D>>(
       if (this.state() >= STATE.COMPLEXITY) return;
       if (!this.isEscaped && (document.options.enableComplexity || force)) {
         this.enrich(document, true);
-        computeComplexity(this.root);
+        computeComplexity(this);
       }
       this.state(STATE.COMPLEXITY);
     }
@@ -184,8 +193,12 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
         this.mmlFactory,
         visitorOptions
       );
-      const computeComplexity = (node: MmlNode) =>
-        this.complexityVisitor.visitTree(node);
+      const computeComplexity = (math: ComplexityMathItem<N, T, D>) => {
+        math.initialID = this.complexityVisitor.visitTree(
+          math.root,
+          math.initialID
+        );
+      };
       this.options.MathItem = ComplexityMathItemMixin<
         N,
         T,

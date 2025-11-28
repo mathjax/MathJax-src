@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -141,13 +141,16 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       'mjx-stretchy-h': {
         display: 'inline-block',
       },
-      'mjx-stretchy-h > *': {
+      [['beg', 'ext', 'end', 'mid']
+        .map((node) => `mjx-stretchy-h > mjx-${node}`)
+        .join(', ')]: {
         display: 'inline-block',
         width: 0,
         'text-align': 'right',
       },
       'mjx-stretchy-h > mjx-ext': {
-        'clip-path': 'padding-box xywh(0 -1em 100% calc(100% + 2em))',
+        'clip-path':
+          'padding-box polygon(0 -1em, 100% -1em, 100% calc(100% + 1em), 0 calc(100% + 1em))',
         width: '100%',
         border: '0px solid transparent',
         'box-sizing': 'border-box',
@@ -157,7 +160,9 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         display: 'inline-block',
         'text-align': 'center',
       },
-      'mjx-stretchy-v > *': {
+      [['beg', 'ext', 'end', 'mid']
+        .map((node) => `mjx-stretchy-v > mjx-${node}`)
+        .join(', ')]: {
         display: 'block',
         height: 0,
         margin: '0 auto',
@@ -166,11 +171,12 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         display: 'block',
       },
       'mjx-stretchy-v > mjx-ext': {
-        'clip-path': 'padding-box xywh(-1em 0 calc(100% + 2em) 100%)',
+        'clip-path':
+          'padding-box polygon(-1em 0, calc(100% + 1em) 0, calc(100% + 1em) 100%, -1em 100%)',
         height: '100%',
         border: '0.1px solid transparent',
         'box-sizing': 'border-box',
-        'white-space': 'wrap',
+        'white-space': 'pre',
       },
       'mjx-mark': {
         display: 'inline-block',

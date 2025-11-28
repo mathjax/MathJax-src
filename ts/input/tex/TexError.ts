@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2024 The MathJax Consortium
+ *  Copyright (c) 2009-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -74,9 +74,6 @@ export default class TexError {
             parts[i] = '%' + parts[i];
           }
         }
-      }
-      if (parts[i] == null) {
-        parts[i] = '???';
       }
     }
     return parts.join('');

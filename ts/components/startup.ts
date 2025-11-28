@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -71,7 +71,9 @@ export interface MathJaxConfig extends MJConfig {
 /**
  * Generic types for the standard MathJax objects
  */
-export type MATHDOCUMENT = MathDocument<any, any, any>;
+export type MATHDOCUMENT = MathDocument<any, any, any> & {
+  menu?: { loadingPromise: Promise<void> };
+};
 export type HANDLER = Handler<any, any, any>;
 export type DOMADAPTOR = DOMAdaptor<any, any, any>;
 export type INPUTJAX = InputJax<any, any, any>;
@@ -104,8 +106,7 @@ export interface MathJaxObject extends MJObject {
     adaptor: DOMADAPTOR;
     elements: any[];
     document: MATHDOCUMENT;
-    promise: Promise<void>;
-    rerenderPromise: Promise<void>;
+    promise: Promise<any>;
     registerConstructor(name: string, constructor: any): void;
     useHandler(name: string, force?: boolean): void;
     useAdaptor(name: string, force?: boolean): void;
@@ -115,6 +116,7 @@ export interface MathJaxObject extends MJObject {
     toMML(node: MmlNode): string;
     defaultReady(): void;
     defaultPageReady(): Promise<void>;
+    defaultOptionError(message: string, key: string): void;
     getComponents(): void;
     makeMethods(): void;
     makeTypesetMethods(): void;
@@ -181,7 +183,7 @@ export abstract class Startup {
    *   (called in the defaultReady() function when MathJax is finished with
    *    its initial typesetting)
    */
-  public static promiseResolve: () => void;
+  public static promiseResolve: (value?: any) => any;
   /**
    * The function that rejects the first promise defined below
    *   (called in the defaultReady() function when MathJax's initial
@@ -193,7 +195,7 @@ export abstract class Startup {
    * The promise for the startup process (the initial typesetting).
    * It is resolved or rejected in the ready() function.
    */
-  public static promise = new Promise<void>((resolve, reject) => {
+  public static promise = new Promise<any>((resolve, reject) => {
     Startup.promiseResolve = resolve;
     Startup.promiseReject = reject;
   });
@@ -219,18 +221,18 @@ export abstract class Startup {
   });
 
   /**
-   * Non-null when MathJax.typeset() or MathJax.typesetPromise() have been performed
-   * (so the menu code can tell whether a rerender is needed when components are loaded)
-   * and then is equal to a promise after which rerendering can occur.
+   * This is true when MathJax.typeset() or MathJax.typesetPromise() have been called
+   * (used by the menu code to tell if a rerender action is needed when a component is
+   * loaded dynamically).
    */
-  public static rerenderPromise: Promise<void> = null;
+  public static hasTypeset: boolean = false;
 
   /**
    * @param {MmlNode} node   The root of the tree to convert to serialized MathML
    * @returns {string}        The serialized MathML from the tree
    */
   public static toMML(node: MmlNode): string {
-    return Startup.visitor.visitTree(node, document);
+    return Startup.visitor.visitTree(node, this.document);
   }
 
   /**
@@ -325,6 +327,7 @@ export abstract class Startup {
         ? (Startup.output as COMMONJAX).font.loadDynamicFiles()
         : Promise.resolve()
     )
+      .then(() => Startup.document.menu?.loadingPromise)
       .then(
         CONFIG.typeset && MathJax.typesetPromise
           ? () => Startup.typesetPromise(CONFIG.elements)
@@ -334,19 +337,22 @@ export abstract class Startup {
   }
 
   /**
+   * The default OptionError function
+   */
+  public static defaultOptionError = OPTIONS.optionError;
+
+  /**
    * Perform the typesetting with handling of retries
    *
    * @param {any[]} elements The list of elements to typeset
-   * @returns {Promise<void>} The promise that resolves when elements are typeset
+   * @returns {Promise<any>} The promise that resolves when elements are typeset
    */
-  public static typesetPromise(elements: any[]): Promise<void> {
-    Startup.document.options.elements = elements;
-    Startup.document.reset();
-    return Startup.mathjax.handleRetriesFor(() => {
-      Startup.document.render();
-      const promise = Promise.all(Startup.document.renderPromises);
-      Startup.document.renderPromises = [];
-      return promise;
+  public static typesetPromise(elements: any[]): Promise<any> {
+    this.hasTypeset = true;
+    return Startup.document.whenReady(async () => {
+      Startup.document.options.elements = elements;
+      Startup.document.reset();
+      await Startup.document.renderPromise();
     });
   }
 
@@ -380,6 +386,8 @@ export abstract class Startup {
    *   Make input2mml() and input2mmlPromise() conversion methods and inputReset() method
    *   If there is a registered output jax
    *     Make input2output() and input2outputPromise conversion methods and outputStylesheet() method
+   * Create the MathJax.done() method.
+   * Create the MathJax.whenReady() method.
    */
   public static makeMethods() {
     if (Startup.input && Startup.output) {
@@ -394,6 +402,9 @@ export abstract class Startup {
         Startup.makeOutputMethods(iname, oname, jax);
       }
     }
+    MathJax.done = () => Startup.document.done();
+    MathJax.whenReady = (action: () => any) =>
+      Startup.document.whenReady(action);
   }
 
   /**
@@ -406,18 +417,13 @@ export abstract class Startup {
    */
   public static makeTypesetMethods() {
     MathJax.typeset = (elements: any[] = null) => {
+      this.hasTypeset = true;
       Startup.document.options.elements = elements;
       Startup.document.reset();
       Startup.document.render();
-      if (!Startup.rerenderPromise) {
-        Startup.rerenderPromise = Startup.promise;
-      }
     };
     MathJax.typesetPromise = (elements: any[] = null) => {
-      Startup.rerenderPromise = Startup.promise = Startup.promise.then(() =>
-        Startup.typesetPromise(elements)
-      );
-      return Startup.promise;
+      return Startup.typesetPromise(elements);
     };
     MathJax.typesetClear = (elements: any[] = null) => {
       if (elements) {
@@ -454,17 +460,12 @@ export abstract class Startup {
   ) {
     const name = iname + '2' + oname;
     MathJax[name] = (math: string, options: OptionList = {}) => {
-      options.format = input.name;
+      options = { ...options, format: input.name };
       return Startup.document.convert(math, options);
     };
     MathJax[name + 'Promise'] = (math: string, options: OptionList = {}) => {
-      Startup.promise = Startup.promise.then(() => {
-        options.format = input.name;
-        return Startup.mathjax.handleRetriesFor(() =>
-          Startup.document.convert(math, options)
-        );
-      });
-      return Startup.promise;
+      options = { ...options, format: input.name };
+      return Startup.document.convertPromise(math, options);
     };
     MathJax[oname + 'Stylesheet'] = () =>
       Startup.output.styleSheet(Startup.document);
@@ -489,22 +490,16 @@ export abstract class Startup {
   public static makeMmlMethods(name: string, input: INPUTJAX) {
     const STATE = MathJax._.core.MathItem.STATE;
     MathJax[name + '2mml'] = (math: string, options: OptionList = {}) => {
-      options.end = STATE.CONVERT;
-      options.format = input.name;
+      options = { ...options, end: STATE.CONVERT, format: input.name };
       return Startup.toMML(Startup.document.convert(math, options));
     };
-    MathJax[name + '2mmlPromise'] = (
+    MathJax[name + '2mmlPromise'] = async (
       math: string,
       options: OptionList = {}
     ) => {
-      Startup.promise = Startup.promise.then(() => {
-        options.end = STATE.CONVERT;
-        options.format = input.name;
-        return Startup.mathjax.handleRetriesFor(() =>
-          Startup.toMML(Startup.document.convert(math, options))
-        );
-      });
-      return Startup.promise;
+      options = { ...options, end: STATE.CONVERT, format: input.name };
+      const node = await Startup.document.convertPromise(math, options);
+      return Startup.toMML(node);
     };
   }
 
@@ -625,6 +620,7 @@ if (typeof MathJax._.startup === 'undefined') {
     typeset: true,
     ready: Startup.defaultReady.bind(Startup),
     pageReady: Startup.defaultPageReady.bind(Startup),
+    polyfillHasOwn: true, // Can be removed with ES2024 implementation of Object.hasown
   });
   combineWithMathJax({
     startup: Startup,

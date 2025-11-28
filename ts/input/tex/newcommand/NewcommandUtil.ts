@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2024 The MathJax Consortium
+ *  Copyright (c) 2009-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import { Macro, Token } from '../Token.js';
 import { Args, Attributes, ParseMethod } from '../Types.js';
-import * as sm from '../TokenMap.js';
+import * as tm from '../TokenMap.js';
 
 /**
  * Naming constants for the extension mappings.
@@ -38,6 +38,11 @@ export enum NewcommandTables {
   NEW_COMMAND = 'new-Command',
   NEW_ENVIRONMENT = 'new-Environment',
 }
+
+/**
+ * The priority for the maps where definitions are stored.
+ */
+export const NewcommandPriority = -100;
 
 export const NewcommandUtil = {
   /**
@@ -58,8 +63,9 @@ export const NewcommandUtil = {
         cmd
       );
     }
-    const cs = UnitUtil.trimSpaces(parser.GetArgument(cmd));
-    return cs.substring(1);
+    const cs = UnitUtil.trimSpaces(parser.GetArgument(cmd)).substring(1);
+    this.checkProtectedMacros(parser, cs);
+    return cs;
   },
 
   /**
@@ -83,6 +89,7 @@ export const NewcommandUtil = {
         name
       );
     }
+    this.checkProtectedMacros(parser, cs);
     return cs;
   },
 
@@ -193,16 +200,13 @@ export const NewcommandUtil = {
     }
     let i = parser.i;
     let j = 0;
-    let hasBraces = 0;
+    let hasBraces = false;
     while (parser.i < parser.string.length) {
       const c = parser.string.charAt(parser.i);
       // @test Def Let, Def Optional Brace, Def Options CS
       if (c === '{') {
         // @test Def Optional Brace, Def Options CS
-        if (parser.i === i) {
-          // @test Def Optional Brace
-          hasBraces = 1;
-        }
+        hasBraces = parser.i === i;
         parser.GetArgument(name);
         j = parser.i - i;
       } else if (this.MatchParam(parser, param)) {
@@ -212,12 +216,12 @@ export const NewcommandUtil = {
           i++;
           j -= 2;
         }
-        return j < 0 ? '' : parser.string.substring(i, i + j);
+        return parser.string.substring(i, i + j);
       } else if (c === '\\') {
         // @test Def Options CS
         parser.i++;
         j++;
-        hasBraces = 0;
+        hasBraces = false;
         const match = parser.string.substring(parser.i).match(/[a-z]+|./i);
         if (match) {
           // @test Def Options CS
@@ -228,7 +232,7 @@ export const NewcommandUtil = {
         // @test Def Let
         parser.i++;
         j++;
-        hasBraces = 0;
+        hasBraces = false;
       }
     }
     // @test Runaway Argument
@@ -263,6 +267,48 @@ export const NewcommandUtil = {
   },
 
   /**
+   * Gets the proper maps depending on whether \global is in effect.
+   * If it is, begingroup is called to clear any definitions and return the global maps
+   * Otherwise, the named maps are retrieved.
+   *
+   * @param {TexParser} parser  The current parser.
+   * @param {string[]} tokens   The tokens to delete from each begingroup map if global
+   * @param {string[]} maps     The map names to return
+   * @returns {tm.AbstractParseMap}   The array of requested maps
+   *
+   * @template T  the type of AbstractParseMap to get (Token or Macro)
+   */
+  checkGlobal<T>(
+    parser: TexParser,
+    tokens: string[],
+    maps: string[]
+  ): tm.AbstractParseMap<T>[] {
+    return (
+      parser.stack.env.isGlobal
+        ? parser.configuration.packageData
+            .get('begingroup')
+            .stack.checkGlobal(tokens, maps)
+        : maps.map((name) => parser.configuration.handlers.retrieve(name))
+    ) as tm.AbstractParseMap<T>[];
+  },
+
+  /**
+   * Checks if a control sequence is protected from being redefined.
+   *
+   * @param {TexParser} parser  The current parser.
+   * @param {string} cs         The control sequence name to check
+   */
+  checkProtectedMacros(parser: TexParser, cs: string) {
+    if (parser.options.protectedMacros?.includes(cs)) {
+      throw new TexError(
+        'ProtectedMacro',
+        "The control sequence %1 can't be redefined",
+        `\\${cs}`
+      );
+    }
+  },
+
+  /**
    * Adds a new delimiter as extension to the parser.
    *
    * @param {TexParser} parser The current parser.
@@ -271,13 +317,18 @@ export const NewcommandUtil = {
    * @param {Attributes} attr The attributes needed for parsing.
    */
   addDelimiter(parser: TexParser, cs: string, char: string, attr: Attributes) {
-    const handlers = parser.configuration.handlers;
-    if (char !== null && cs.charAt(0) === '\\') {
-      const macros = handlers.retrieve(NewcommandTables.NEW_COMMAND);
-      (macros as sm.CommandMap).remove(cs.slice(1));
+    const name = cs.substring(1);
+    this.checkProtectedMacros(parser, name);
+    const [macros, delims] = NewcommandUtil.checkGlobal<Token>(
+      parser,
+      [name, cs],
+      [NewcommandTables.NEW_COMMAND, NewcommandTables.NEW_DELIMITER]
+    );
+    if (name !== cs) {
+      macros.remove(name);
     }
-    const handler = handlers.retrieve(NewcommandTables.NEW_DELIMITER);
-    (handler as sm.DelimiterMap).add(cs, new Token(cs, char, attr));
+    delims.add(cs, new Token(cs, char, attr));
+    delete parser.stack.env.isGlobal;
   },
 
   /**
@@ -297,12 +348,15 @@ export const NewcommandUtil = {
     attr: Args[],
     token: string = ''
   ) {
+    this.checkProtectedMacros(parser, cs);
+    const macros = NewcommandUtil.checkGlobal<Macro>(
+      parser,
+      [cs],
+      [NewcommandTables.NEW_COMMAND]
+    )[0];
     this.undefineDelimiter(parser, '\\' + cs);
-    const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(
-      NewcommandTables.NEW_COMMAND
-    ) as sm.CommandMap;
-    handler.add(cs, new Macro(token ? token : cs, func, attr));
+    macros.add(cs, new Macro(token ? token : cs, func, attr));
+    delete parser.stack.env.isGlobal;
   },
 
   /**
@@ -319,11 +373,13 @@ export const NewcommandUtil = {
     func: ParseMethod,
     attr: Args[]
   ) {
-    const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(
-      NewcommandTables.NEW_ENVIRONMENT
-    ) as sm.EnvironmentMap;
-    handler.add(env, new Macro(env, func, attr));
+    const envs = NewcommandUtil.checkGlobal<Macro>(
+      parser,
+      [env],
+      [NewcommandTables.NEW_ENVIRONMENT]
+    )[0];
+    envs.add(env, new Macro(env, func, attr));
+    delete parser.stack.env.isGlobal;
   },
 
   /**
@@ -335,17 +391,22 @@ export const NewcommandUtil = {
    * @param {string} cs The control sequence to undefine.
    */
   undefineMacro(parser: TexParser, cs: string) {
-    const handlers = parser.configuration.handlers;
-    const macros = handlers.retrieve(NewcommandTables.NEW_COMMAND);
-    (macros as sm.CommandMap).remove(cs);
-    if (handlers.get(HandlerType.MACRO).applicable(cs)) {
+    const macros = NewcommandUtil.checkGlobal<Macro>(
+      parser,
+      [cs],
+      [NewcommandTables.NEW_COMMAND]
+    )[0];
+    macros.remove(cs);
+    if (parser.configuration.handlers.get(HandlerType.MACRO).applicable(cs)) {
       //
       // This will hide the macro that is in a later mapping
       // by forcing the parser to jump directly to the fallback
       // handler.
       //
-      this.addMacro(parser, cs, () => SubHandler.FALLBACK, []);
+      macros.add(cs, new Macro(cs, () => SubHandler.FALLBACK, []));
+      this.undefineDelimiter(parser, '\\' + cs);
     }
+    delete parser.stack.env.isGlobal;
   },
 
   /**
@@ -357,15 +418,21 @@ export const NewcommandUtil = {
    * @param {string} cs The control sequence to undefine.
    */
   undefineDelimiter(parser: TexParser, cs: string) {
-    const handlers = parser.configuration.handlers;
-    const delims = handlers.retrieve(NewcommandTables.NEW_DELIMITER);
-    (delims as sm.DelimiterMap).remove(cs);
-    if (handlers.get(HandlerType.DELIMITER).applicable(cs)) {
+    const delims = NewcommandUtil.checkGlobal<Token>(
+      parser,
+      [cs],
+      [NewcommandTables.NEW_DELIMITER]
+    )[0];
+    delims.remove(cs);
+    if (
+      parser.configuration.handlers.get(HandlerType.DELIMITER).applicable(cs)
+    ) {
       //
       // This will hide the delimiter that is in a later mapping
       // by forcing the parser to skip any additional maps.
       //
-      this.addDelimiter(parser, cs, null);
+      delims.add(cs, new Token(cs, null, {}));
     }
+    delete parser.stack.env.isGlobal;
   },
 };

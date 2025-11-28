@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2022-2024 The MathJax Consortium
+ *  Copyright (c) 2022-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
     //
     //  Get the serialized HTML that <tex-html> contains
     //  (If there are nested <tex-html>, they are marked using an n="x" attribute and
-    //   and associated comment <!x> that marks which </tex-html> goes with it.)
+    //   an associated comment <!x> that marks which </tex-html> goes with it.)
     //
     parser.i += match[0].length;
     const end = (match[1] ? `<!${match[1]}>` : '') + '</tex-html>';

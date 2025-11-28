@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,10 +42,13 @@ export interface MinDocument<N, T> {
   body: N;
   title: string;
   doctype: { name: string };
+  defaultView: MinWindow<N, MinDocument<N, T>>;
+  location: { protocol: string; host: string };
   createElement(kind: string): N;
   createElementNS(ns: string, kind: string): N;
   createTextNode(text: string): T;
   querySelectorAll(selector: string): ArrayLike<N>;
+  querySelector(selector: string): N | null;
 }
 
 /*****************************************************************/
@@ -97,6 +100,8 @@ export interface MinHTMLElement<N, T> {
   hasAttribute(name: string): boolean;
   getBoundingClientRect(): object;
   getBBox?(): { x: number; y: number; width: number; height: number };
+  querySelector(selector: string): N | null;
+  src?: string;
 }
 
 /*****************************************************************/
@@ -157,6 +162,8 @@ export interface MinWindow<N, D> {
   DocumentFragment: any;
   Document: any;
   getComputedStyle(node: N): any;
+  addEventListener(kind: string, listener: (event: any) => void): void;
+  postMessage(msg: any, domain: string): void;
 }
 
 /*****************************************************************/
@@ -192,6 +199,12 @@ export class HTMLAdaptor<
   extends AbstractDOMAdaptor<N, T, D>
   implements MinHTMLAdaptor<N, T, D>
 {
+  /**
+   * The font size to use when it can't be measured (e.g., the element
+   * isn't in the DOM).
+   */
+  public static DEFAULT_FONT_SIZE = 16;
+
   /**
    * The HTML adaptor can measure DOM node sizes
    */
@@ -243,28 +256,28 @@ export class HTMLAdaptor<
   /**
    * @override
    */
-  public head(doc: D) {
+  public head(doc: D = this.document) {
     return doc.head || (doc as any as N);
   }
 
   /**
    * @override
    */
-  public body(doc: D) {
+  public body(doc: D = this.document) {
     return doc.body || (doc as any as N);
   }
 
   /**
    * @override
    */
-  public root(doc: D) {
+  public root(doc: D = this.document) {
     return doc.documentElement || (doc as any as N);
   }
 
   /**
    * @override
    */
-  public doctype(doc: D) {
+  public doctype(doc: D = this.document) {
     return doc.doctype ? `<!DOCTYPE ${doc.doctype.name}>` : '';
   }
 
@@ -300,6 +313,13 @@ export class HTMLAdaptor<
       }
     }
     return containers;
+  }
+
+  /**
+   * @override
+   */
+  public getElement(selector: string, node: D | N = this.document): N {
+    return node.querySelector(selector);
   }
 
   /**
@@ -436,6 +456,9 @@ export class HTMLAdaptor<
     return node.outerHTML;
   }
 
+  /**
+   * @override
+   */
   public serializeXML(node: N) {
     const serializer = new this.window.XMLSerializer();
     return serializer.serializeToString(node) as string;
@@ -446,6 +469,9 @@ export class HTMLAdaptor<
    */
   public setAttribute(node: N, name: string, value: string, ns: string = null) {
     if (!ns) {
+      if (name === 'style') {
+        value = value.replace(/\n/g, ' ');
+      }
       return node.setAttribute(name, value);
     }
     name = ns.replace(/.*\//, '') + ':' + name.replace(/^.*:/, '');
@@ -521,14 +547,14 @@ export class HTMLAdaptor<
    * @override
    */
   public setStyle(node: N, name: string, value: string) {
-    (node.style as OptionList)[name] = value;
+    node.style[name] = String(value).replace(/\n/g, ' ');
   }
 
   /**
    * @override
    */
   public getStyle(node: N, name: string) {
-    return (node.style as OptionList)[name];
+    return node.style[name];
   }
 
   /**
@@ -568,7 +594,10 @@ export class HTMLAdaptor<
    */
   public fontSize(node: N) {
     const style = this.window.getComputedStyle(node);
-    return parseFloat(style.fontSize);
+    return parseFloat(
+      style.fontSize ||
+        String((this.constructor as typeof HTMLAdaptor).DEFAULT_FONT_SIZE)
+    );
   }
 
   /**
@@ -598,4 +627,47 @@ export class HTMLAdaptor<
       node.getBoundingClientRect() as PageBBox;
     return { left, right, top, bottom };
   }
+
+  /**
+   * @override
+   */
+  public async createWorker(
+    listener: (event: any) => void,
+    options: OptionList
+  ) {
+    const { path, maps, worker } = options;
+    const file = `${path}/${worker}`;
+    const content = `
+      self.maps = '${quoted(maps)}';
+      importScripts('${quoted(file)}');
+    `;
+    const url = URL.createObjectURL(
+      new Blob([content], { type: 'text/javascript' })
+    );
+    const webworker = new Worker(url);
+    webworker.onmessage = listener;
+    URL.revokeObjectURL(url);
+    return webworker;
+  }
+}
+
+/**
+ * Quote any backslashes or single quotes, and turn non-ASCII
+ * characters into \u{...}  so that the result can be inserted into
+ * single quotes and return the original string when evaluated.
+ *
+ * @param {string} text   The text to be quoted
+ * @returns {string}      The quoted text
+ */
+function quoted(text: string): string {
+  return [...text]
+    .map((c) => {
+      if (c === '\\' || c === "'") {
+        c = '\\' + c;
+      } else if (c < ' ' || c > '\u007e') {
+        c = `\\u{${c.codePointAt(0).toString(16)}}`;
+      }
+      return c;
+    })
+    .join('');
 }

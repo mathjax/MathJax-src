@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2024 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -125,7 +125,7 @@ export const TagFormatConfiguration = Configuration.create('tagformat', {
   [ConfigurationType.OPTIONS]: {
     tagformat: {
       number: (n: number) => n.toString(),
-      tag: (tag: string) => '(' + tag + ')',
+      tag: (tag: string) => ['(', tag, ')'],
       ref: '', // means use the tag function
       id: (id: string) => 'mjx-eqn:' + id.replace(/\s/g, '_'),
       url: (id: string, base: string) => base + '#' + encodeURIComponent(id),

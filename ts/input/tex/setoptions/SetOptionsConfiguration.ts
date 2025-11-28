@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2021-2024 The MathJax Consortium
+ *  Copyright (c) 2021-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import { ParseUtil } from '../ParseUtil.js';
 import { Macro } from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
 import { expandable, isObject } from '../../../util/Options.js';
+import { PrioritizedList } from '../../../util/PrioritizedList.js';
 
 export const SetOptionsUtil = {
   /**
@@ -42,7 +43,7 @@ export const SetOptionsUtil = {
    *
    * @param {TexParser} parser   The active tex parser.
    * @param {string} extension   The name of the package whose option is being set.
-   * @returns {boolean}           True when options can be set for this package.
+   * @returns {boolean}          True when options can be set for this package.
    */
   filterPackage(parser: TexParser, extension: string): boolean {
     if (extension !== 'tex' && !ConfigurationHandler.get(extension)) {
@@ -69,23 +70,32 @@ export const SetOptionsUtil = {
    * @param {TexParser} parser   The active tex parser.
    * @param {string} extension   The name of the package whose option is being set.
    * @param {string} option      The name of the option being set.
-   * @returns {boolean}           True when the option can be set.
+   * @returns {boolean}          True when the option can be set.
    */
   filterOption(parser: TexParser, extension: string, option: string): boolean {
     const config = parser.options.setoptions;
     const options = config.allowOptions[extension] || {};
+    const isTex = extension === 'tex';
     const allow =
       Object.hasOwn(options, option) && !isObject(options[option])
         ? options[option]
         : null;
     if (allow === false || (allow === null && !config.allowOptionsDefault)) {
-      throw new TexError(
-        'OptionNotSettable',
-        'Option "%1" is not allowed to be set',
-        option
-      );
+      if (isTex) {
+        throw new TexError(
+          'TeXOptionNotSettable',
+          'Option "%1" is not allowed to be set',
+          option
+        );
+      } else {
+        throw new TexError(
+          'OptionNotSettable',
+          'Option "%1" is not allowed to be set for package %2',
+          option,
+          extension
+        );
+      }
     }
-    const isTex = extension === 'tex';
     const extOptions = isTex ? parser.options : parser.options[extension];
     if (!extOptions || !Object.hasOwn(extOptions, option)) {
       if (isTex) {
@@ -109,19 +119,23 @@ export const SetOptionsUtil = {
   /**
    * Verify an option's value before setting it.
    *
-   * @param {TexParser} _parser   The active tex parser.
-   * @param {string} _extension   The name of the package whose option this is.
-   * @param {string} _option      The name of the option being set.
-   * @param {string} value       The value to give to the option.
-   * @returns {string}            The (possibly modified) value for the option
+   * @param {TexParser} _parser            The active tex parser.
+   * @param {string} _extension            The name of the package whose option this is.
+   * @param {string} _option               The name of the option being set.
+   * @param {string} value                 The value to give to the option.
+   * @returns {string | boolean | RegExp}  The (possibly modified) value for the option
    */
   filterValue(
     _parser: TexParser,
     _extension: string,
     _option: string,
     value: string
-  ): string {
-    return value;
+  ): string | boolean | RegExp {
+    if (typeof value !== 'string') {
+      return value;
+    }
+    const match = value.match(/^\/(.*)\/([dgimsuvy]*)$/);
+    return match ? new RegExp(match[1], match[2]) : value;
   },
 };
 
@@ -145,10 +159,6 @@ function SetOptions(parser: TexParser, name: string) {
   parser.Push(parser.itemFactory.create('null'));
 }
 
-const setOptionsMap = new CommandMap('setoptions', {
-  setOptions: SetOptions,
-});
-
 /**
  * If the require package is available, save the original require,
  *   and define a macro that loads the extension and sets
@@ -161,9 +171,12 @@ function setoptionsConfig(
   _config: ParserConfiguration,
   jax: TeX<any, any, any>
 ) {
-  const require = jax.parseOptions.handlers
-    .get(HandlerType.MACRO)
-    .lookup('require') as any;
+  const setOptionsMap = new CommandMap('setoptions', {
+    setOptions: SetOptions,
+  });
+  const macros = jax.parseOptions.handlers.get(HandlerType.MACRO);
+  macros.add(['setoptions'], null, PrioritizedList.DEFAULTPRIORITY - 1); // put it in front of the standard maps
+  const require = macros.lookup('require') as any;
   if (require) {
     setOptionsMap.add('Require', new Macro('Require', require._func));
     setOptionsMap.add(
@@ -178,7 +191,6 @@ function setoptionsConfig(
 }
 
 export const SetOptionsConfiguration = Configuration.create('setoptions', {
-  [ConfigurationType.HANDLER]: { macro: ['setoptions'] },
   [ConfigurationType.CONFIG]: setoptionsConfig,
   [ConfigurationType.PRIORITY]: 3, // must be less than the priority of the require package (which is 5).
   /* prettier-ignore */

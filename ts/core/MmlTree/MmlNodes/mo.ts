@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -142,7 +142,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    */
   /* prettier-ignore */
   /* eslint-disable no-misleading-character-class */
-  protected static mathaccents = new RegExp([
+  public static mathaccents = new RegExp([
     '^[',
     '\u00B4\u0301\u02CA',  // acute
     '\u0060\u0300\u02CB',  // grave
@@ -439,6 +439,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     if (def) {
       return def;
     }
+    this.setProperty('noDictDef', true);
     const limits = this.attributes.get('movablelimits');
     const isOP = !!mo.match(CLASS.opPattern);
     if ((isOP || limits) && this.getProperty('texClass') === undefined) {
@@ -462,8 +463,8 @@ export class MmlMo extends AbstractMmlTokenNode {
     for (const name of Object.keys(def[3] || {})) {
       this.attributes.setInherited(name, def[3][name]);
     }
-    this.lspace = (def[0] + 1) / 18;
-    this.rspace = (def[1] + 1) / 18;
+    this.lspace = def[0] / 18;
+    this.rspace = def[1] / 18;
   }
 
   /**
@@ -551,8 +552,9 @@ export class MmlMo extends AbstractMmlTokenNode {
       this.getProperty('mathaccent') !== undefined ||
       !parent ||
       !parent.isKind('munderover')
-    )
+    ) {
       return;
+    }
     const [base, under, over] = parent.childNodes;
     if (base.isEmbellished && base.coreMO() === this) return;
     const isUnder = !!(under && under.isEmbellished && under.coreMO() === this);

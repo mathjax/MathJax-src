@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2021-2024 The MathJax Consortium
+ *  Copyright (c) 2021-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -95,6 +95,9 @@ export class ColorArrayItem extends ArrayItem {
     //
     const mml = super.createMml();
     let table = mml.isKind('mrow') ? mml.childNodes[1] : mml;
+    if (table.isKind('mstyle')) {
+      table = table.childNodes[0].childNodes[0];
+    }
     if (table.isKind('menclose')) {
       table = table.childNodes[0].childNodes[0];
     }
@@ -180,7 +183,7 @@ new CommandMap('colortbl', {
  */
 const config = function (config: ParserConfiguration, jax: TeX<any, any, any>) {
   //
-  //  Make sure color is configured.  (It doesn't have to be included in tex.packages.)
+  //  Make sure color is configured.  (It doesn't have to be included in tex.packages)
   //
   if (!jax.parseOptions.packageData.has('color')) {
     ConfigurationHandler.get('color').config(config, jax);
@@ -190,10 +193,12 @@ const config = function (config: ParserConfiguration, jax: TeX<any, any, any>) {
 //
 //  Create the color-table configuration.
 //
-/* prettier-ignore */
+// Use priority 10 to make sure we are processed after the base package
+// (to override its array and config)
+//
 export const ColortblConfiguration = Configuration.create('colortbl', {
-  [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['colortbl']},
-  [ConfigurationType.ITEMS]: {'array': ColorArrayItem},  // overrides original array class
-  [ConfigurationType.PRIORITY]: 10,                      // make sure we are processed after the base package (to override its array)
-  [ConfigurationType.CONFIG]: [config, 10]               // make sure we configure after the color package, if it is used.
+  [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['colortbl'] },
+  [ConfigurationType.ITEMS]: { array: ColorArrayItem }, // overrides original array class
+  [ConfigurationType.PRIORITY]: 10,
+  [ConfigurationType.CONFIG]: [config, 10],
 });

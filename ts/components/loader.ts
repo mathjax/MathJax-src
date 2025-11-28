@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -120,7 +120,7 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
    */
   normalize: (data) => {
     const name = data.name;
-    if (!name.match(/^(?:[a-z]+:\/)?\/|[a-z]:\\|\[/i)) {
+    if (!name.match(/^(?:[a-z]+:\/)?\/|[a-z]:[/\\]|\[/i)) {
       data.name = '[mathjax]/' + name.replace(/^\.\//, '');
     }
     return true;
@@ -170,6 +170,13 @@ export const Loader = {
   versions: new Map<string, string>(),
 
   /**
+   * Array of nested load promises so if component performs additional
+   * loads (like an output jax with an alternate font), then the
+   * outer load promises won't resolve until the inner ones are complete.
+   */
+  nestedLoads: [] as Promise<any[]>[],
+
+  /**
    * Get a promise that is resolved when all the named packages have been loaded.
    *
    * @param {string[]} names  The packages to wait for
@@ -191,36 +198,83 @@ export const Loader = {
    * Load the named packages and return a promise that is resolved when they are all loaded
    *
    * @param {string[]} names  The packages to load
-   * @returns {Promise}       A promise that resolves when all the named packages are ready
+   * @returns {Promise<any[]>}  A promise that resolves when all the named packages are ready
    */
-  load(...names: string[]): Promise<void | string[]> {
+  load(...names: string[]): Promise<any[]> {
     if (names.length === 0) {
-      return Promise.resolve();
+      return Promise.resolve([]);
     }
-    const promises = [];
-    for (const name of names) {
-      let extension = Package.packages.get(name);
-      if (!extension) {
-        extension = new Package(name);
-        extension.provides(CONFIG.provides[name]);
+    //
+    // Add a new array to store promises for this load() call
+    //
+    let nested = [] as Promise<any>[];
+    this.nestedLoads.unshift(nested);
+    //
+    // Create a promise for this load() call
+    //
+    const promise = Promise.resolve().then(async () => {
+      //
+      // Collect the promises for all the named packages,
+      // creating the package if needed, and add checks
+      // for the version numbers used in the components.
+      //
+      const promises = [];
+      for (const name of names) {
+        let extension = Package.packages.get(name);
+        if (!extension) {
+          extension = new Package(name);
+          extension.provides(CONFIG.provides[name]);
+        }
+        extension.checkNoLoad();
+        promises.push(
+          extension.promise.then(() => {
+            if (
+              CONFIG.versionWarnings &&
+              extension.isLoaded &&
+              !Loader.versions.has(Package.resolvePath(name))
+            ) {
+              console.warn(
+                `No version information available for component ${name}`
+              );
+            }
+            return extension.result;
+          }) as Promise<any>
+        );
       }
-      extension.checkNoLoad();
-      promises.push(
-        extension.promise.then(() => {
-          if (!CONFIG.versionWarnings) return;
-          if (
-            extension.isLoaded &&
-            !Loader.versions.has(Package.resolvePath(name))
-          ) {
-            console.warn(
-              `No version information available for component ${name}`
-            );
-          }
-        }) as Promise<null>
-      );
-    }
-    Package.loadAll();
-    return Promise.all(promises);
+      //
+      // Load everything that was requested and wait for
+      // them to be loaded.
+      //
+      Package.loadAll();
+      const result = await Promise.all(promises);
+      //
+      // If any other loads occurred while we were waiting,
+      // Wait for those promises, and clear the list so that
+      // if even MORE loads occur while waiting for those,
+      // we can wait for them, too.  Keep doing that until
+      // no additional loads occurred, in which case we are
+      // now done.
+      //
+      while (nested.length) {
+        const promise = Promise.all(nested);
+        nested = this.nestedLoads[this.nestedLoads.indexOf(nested)] = [];
+        await promise;
+      }
+      //
+      // Remove the (empty) list from the nested list,
+      // and return the result.
+      //
+      this.nestedLoads.splice(this.nestedLoads.indexOf(nested), 1);
+      return result;
+    });
+    //
+    // Add this load promise to the lists for any parent load() call that are
+    // pending when this load() was performed, then return the load promise.
+    //
+    this.nestedLoads
+      .slice(1)
+      .forEach((list: Promise<any>[]) => list.push(promise));
+    return promise;
   },
 
   /**
@@ -345,6 +399,9 @@ if (typeof MathJax.loader === 'undefined') {
   combineDefaults(MathJax.config, 'loader', {
     paths: {
       mathjax: Loader.getRoot(),
+      fonts: context.window
+        ? 'https://cdn.jsdelivr.net/npm/@mathjax'
+        : '@mathjax',
     },
     source: {},
     dependencies: {},

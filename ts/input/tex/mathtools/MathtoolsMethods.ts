@@ -1,5 +1,5 @@
 /*************************************************************
- *  Copyright (c) 2020-2024 MathJax Consortium
+ *  Copyright (c) 2020-2025 MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,11 +34,23 @@ import NodeUtil from '../NodeUtil.js';
 import { TEXCLASS } from '../../../core/MmlTree/MmlNode.js';
 import { length2em, em } from '../../../util/lengths.js';
 import { lookup } from '../../../util/Options.js';
-import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
+import { HandlerType } from '../HandlerTypes.js';
+import { Macro } from '../Token.js';
+import { CommandMap } from '../TokenMap.js';
+import {
+  NewcommandUtil,
+  NewcommandTables,
+} from '../newcommand/NewcommandUtil.js';
 import NewcommandMethods from '../newcommand/NewcommandMethods.js';
+import { PrioritizedList } from '../../../util/PrioritizedList.js';
 
 import { MathtoolsTags } from './MathtoolsTags.js';
 import { MathtoolsUtil } from './MathtoolsUtil.js';
+
+export const LEGACYCONFIG = {
+  [HandlerType.MACRO]: ['mathtools-legacycolonsymbols'],
+};
+export const LEGACYPRIORITY = PrioritizedList.DEFAULTPRIORITY - 1;
 
 /**
  * The implementations for the macros and environments for the mathtools package.
@@ -71,7 +83,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    * @param {string} open        The open delimiter for the matrix.
    * @param {string} close       The close delimiter for the matrix.
    * @param {string} align       The (optional) alignment.  If not given, use a bracket argument for it.
-   * @returns {ParseResult}       The ArrayItem for the matrix.
+   * @returns {ParseResult}      The ArrayItem for the matrix.
    */
   MtSmallMatrix(
     parser: TexParser,
@@ -104,21 +116,18 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser   The active tex parser.
    * @param {StackItem} begin    The BeginItem for the environment.
-   * @returns {ParseResult}       The MultlinedItem.
+   * @returns {ParseResult}      The MultlinedItem.
    */
   MtMultlined(parser: TexParser, begin: StackItem): ParseResult {
     const name = `\\begin{${begin.getName()}}`;
-    let pos = 'c';
-    let width = '';
+    let pos = parser.options.mathtools['multlined-pos'] || 'c';
+    let width = parser.options.mathtools['multlined-width'] || '';
     //
     //  Only process bracket arguments if they follow immediately with no space.
     //  Note that if [pos] is missing, [width] can still be provided.
     //
     if (!parser.nextIsSpace()) {
-      const arg = parser.GetBrackets(
-        name,
-        parser.options.mathtools['multlined-pos'] || 'c'
-      );
+      const arg = parser.GetBrackets(name, pos);
       if (arg.match(/^[ctb]$/)) {
         pos = arg;
         width = !parser.nextIsSpace() ? parser.GetBrackets(name, '') : '';
@@ -145,7 +154,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
       width: width || 'auto',
       columnwidth: '100%',
     };
-    return ParseUtil.setArrayAlign(item as ArrayItem, pos || 'c');
+    return ParseUtil.setArrayAlign(item as ArrayItem, pos);
   },
 
   /**
@@ -219,7 +228,8 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
       //
       const spread = parser.GetDimen(`\\begin{${begin.getName()}}`);
       begin.setProperty('spread', spread);
-      begin.setProperty('nestable', true);
+      begin.setProperty('nestStart', true);
+      ParseUtil.checkEqnEnv(parser);
       parser.Push(begin);
     }
   },
@@ -232,7 +242,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    * @param {string} open        The open delimiter for the matrix.
    * @param {string} close       The close delimiter for the matrix.
    * @param {string} style       The style (D, T, S, SS) for the contents of the array
-   * @returns {ArrayItem}         The ArrayItem for the environment
+   * @returns {ArrayItem}        The ArrayItem for the environment
    */
   Cases(
     parser: TexParser,
@@ -399,8 +409,15 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
+   * @param {string} box         The box command to use
+   * @param {boolean} math       True when the box command uses math mode
    */
-  Aboxed(parser: TexParser, name: string) {
+  Aboxed(
+    parser: TexParser,
+    name: string,
+    box: string = 'boxed',
+    math: boolean = true
+  ) {
     //
     //  Check that the top item is an alignment, and that we are on an even number of cells
     //  (othewise add one to make it even).
@@ -428,13 +445,36 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     //
     //  Insert the TeX needed for the boxed content
     //
+    const [bmath, emath] = math ? ['', ''] : ['$\\displaystyle{', '}$'];
     const tex = ParseUtil.substituteArgs(
       parser,
       [left, right],
-      '\\rlap{\\boxed{#1{}#2}}\\kern.267em\\phantom{#1}&\\phantom{{}#2}\\kern.267em'
+      `\\rlap{\\${box}{${bmath}#1{}#2${emath}}}` +
+        '\\kern.267em\\phantom{#1}&\\phantom{{}#2}\\kern.267em'
     );
     parser.string = tex + rest;
     parser.i = 0;
+  },
+
+  /**
+   * Implements \MakeAboxedCommand.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
+  MakeAboxedCommand(parser: TexParser, name: string) {
+    const star = parser.GetStar();
+    const cs = NewcommandUtil.GetCSname(parser, name);
+    const box = NewcommandUtil.GetCSname(parser, name + '\\' + cs);
+    const handlers = parser.configuration.handlers;
+    if (handlers.get(HandlerType.MACRO).lookup(cs)) {
+      throw new TexError('AlreadyDefined', '%1 is already defined', '\\' + cs);
+    }
+    const handler = handlers.retrieve(
+      NewcommandTables.NEW_COMMAND
+    ) as CommandMap;
+    handler.add(cs, new Macro(cs, MathtoolsMethods.Aboxed, [box, star]));
+    parser.Push(parser.itemFactory.create('null'));
   },
 
   /**
@@ -472,9 +512,6 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    * @param {string} name        The macro name.
    */
   VDotsWithin(parser: TexParser, name: string) {
-    const top = parser.stack.Top() as EqnArrayItem;
-    const isFlush =
-      top.table && top.getProperty('flushspaceabove') === top.table.length;
     const arg =
       '\\mmlToken{mi}{}' + parser.GetArgument(name) + '\\mmlToken{mi}{}';
     const base = new TexParser(
@@ -490,11 +527,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
           'node',
           'mpadded',
           [parser.create('node', 'mo', [parser.create('text', '\u22EE')])],
-          {
-            width: 0,
-            lspace: '-.5width',
-            ...(isFlush ? { height: '-.6em', voffset: '-.18em' } : {}),
-          }
+          { width: 0, lspace: '-.5width' }
         ),
         parser.create('node', 'mphantom', [base]),
       ],
@@ -629,7 +662,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const open = parser.GetArgument(name);
     const close = parser.GetArgument(name);
-    MathtoolsUtil.addPairedDelims(parser.configuration, cs, [open, close]);
+    MathtoolsUtil.addPairedDelims(parser, cs, [open, close]);
     parser.Push(parser.itemFactory.create('null'));
   },
 
@@ -645,12 +678,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const open = parser.GetArgument(name);
     const close = parser.GetArgument(name);
     const body = parser.GetArgument(name);
-    MathtoolsUtil.addPairedDelims(parser.configuration, cs, [
-      open,
-      close,
-      body,
-      n,
-    ]);
+    MathtoolsUtil.addPairedDelims(parser, cs, [open, close, body, n]);
     parser.Push(parser.itemFactory.create('null'));
   },
 
@@ -668,7 +696,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const close = parser.GetArgument(name);
     const post = parser.GetArgument(name);
     const body = parser.GetArgument(name);
-    MathtoolsUtil.addPairedDelims(parser.configuration, cs, [
+    MathtoolsUtil.addPairedDelims(parser, cs, [
       open,
       close,
       body,
@@ -680,10 +708,10 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
   },
 
   /**
-   * Implements \centeredcolon, \ordinarycolon, \MTThinColon.
+   * Implements \centercolon, \ordinarycolon, \MTThinColon.
    *
    * @param {TexParser} parser   The calling parser.
-   * @param {string} _name        The macro name.
+   * @param {string} _name       The macro name.
    * @param {boolean} center     True if colon should be centered
    * @param {boolean} force      True menas always center (don't use centercolon option).
    * @param {boolean} thin       True if this is a thin color (for \coloneqq, etc).
@@ -980,6 +1008,13 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const args = parser.GetArgument(name);
     const keys = ParseUtil.keyvalOptions(args, allowed, true);
     for (const id of Object.keys(keys)) {
+      if (id === 'legacycolonsymbols' && options[id] !== keys[id]) {
+        if (options[id]) {
+          parser.configuration.handlers.remove(LEGACYCONFIG, {});
+        } else {
+          parser.configuration.handlers.add(LEGACYCONFIG, {}, LEGACYPRIORITY);
+        }
+      }
       options[id] = keys[id];
     }
     parser.Push(parser.itemFactory.create('null'));

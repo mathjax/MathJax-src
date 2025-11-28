@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2024 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -223,6 +223,7 @@ export function AssistiveMmlMathDocumentMixin<
         display: 'block !important',
         width: 'auto !important',
         overflow: 'hidden !important',
+        'text-indent': '0px ! important',
         /*
          *  Don't allow the assistive MathML to become part of the selection
          */

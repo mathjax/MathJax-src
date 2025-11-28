@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ export const UnitsMethods: { [key: string]: ParseMethod } = {
    * @param {string} name The name of the calling macro.
    */
   UnitFrac(parser: TexParser, name: string) {
-    const val = parser.GetBrackets(name) || '';
+    const val = parser.GetBrackets(name);
     const num = parser.GetArgument(name);
     const den = parser.GetArgument(name);
     let macro = `\\nicefrac[\\mathrm]{${num}}{${den}}`;
@@ -71,7 +71,7 @@ export const UnitsMethods: { [key: string]: ParseMethod } = {
    * @param {string} name The name of the calling macro.
    */
   NiceFrac(parser: TexParser, name: string) {
-    const font = parser.GetBrackets(name) || '\\mathrm';
+    const font = parser.GetBrackets(name, '\\mathrm');
     const num = parser.GetArgument(name);
     const den = parser.GetArgument(name);
     const numMml = new TexParser(

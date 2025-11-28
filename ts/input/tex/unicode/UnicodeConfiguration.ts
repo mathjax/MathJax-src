@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
         HD.replace(/ /g, '').match(/^(\d+(\.\d*)?|\.\d+),(\d+(\.\d*)?|\.\d+)$/)
       ) {
         HDsplit = HD.replace(/ /g, '').split(/,/);
-        font = parser.GetBrackets(name);
+        font = parser.GetBrackets(name) || '';
       } else {
         font = HD;
       }
@@ -134,12 +134,24 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
     let c = '';
     const text = parser.string.substring(parser.i);
     if (next === "'") {
-      match = text.match(/^'(?:([0-7]{1,7}) ?|(\\\S)|(.))/u);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      match = text.match(/^'([0-7]{1,7}) ?/u);
       if (match) {
-        if (match[1]) {
-          c = String.fromCodePoint(parseInt(match[1], 8));
-        } else if (match[3]) {
-          c = match[3];
+        c = String.fromCodePoint(parseInt(match[1], 8));
+      }
+    } else if (next === '"') {
+      match = text.match(/^"([0-9A-F]{1,6}) ?/);
+      if (match) {
+        c = String.fromCodePoint(parseInt(match[1], 16));
+      }
+    } else if (next === '`') {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      match = text.match(/^`(?:(\\\S)|(.))/u);
+      if (match) {
+        if (match[2]) {
+          c = match[2];
         } else {
           parser.i += 2;
           const cs = [...parser.GetCS()];
@@ -153,11 +165,6 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
           c = cs[0];
           match = [''];
         }
-      }
-    } else if (next === '"') {
-      match = text.match(/^"([0-9A-F]{1,6}) ?/);
-      if (match) {
-        c = String.fromCodePoint(parseInt(match[1], 16));
       }
     } else {
       match = text.match(/^([0-9]{1,7}) ?/);

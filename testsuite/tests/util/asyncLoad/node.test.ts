@@ -25,7 +25,7 @@ describe('asyncLoad() for node', () => {
 
     await expect(asyncLoad('#js/../cjs/components/version.js')                  // load using package exports
                  .then((result: any) => result.VERSION)).resolves.toBe(mathjax.version);
-    await expect(asyncLoad('mathjax-full/js/components/version.js')             // load from module
+    await expect(asyncLoad('@mathjax/src/js/components/version.js')             // load from module
                  .then((result: any) => result.VERSION)).resolves.toBe(mathjax.version);
 
     await expect(asyncLoad(mjsFile).catch(() => true)).resolves.toBe(true);     // mjs file fails

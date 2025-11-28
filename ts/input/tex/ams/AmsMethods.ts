@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,8 +30,6 @@ import NodeUtil from '../NodeUtil.js';
 import { TexConstant } from '../TexConstants.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import { Macro } from '../Token.js';
-import { CommandMap } from '../TokenMap.js';
 import { ArrayItem } from '../base/BaseItems.js';
 import { FlalignItem } from './AmsItems.js';
 import BaseMethods from '../base/BaseMethods.js';
@@ -42,8 +40,7 @@ import {
   MmlNode,
   AbstractMmlTokenNode,
 } from '../../../core/MmlTree/MmlNode.js';
-
-export const NEW_OPS = 'ams-declare-ops';
+import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 
 /**
  * Utility for breaking the \sideset scripts from any other material.
@@ -186,11 +183,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       balign,
       spaceStr
     );
-    return ParseUtil.setArrayAlign(
-      array as ArrayItem,
-      valign,
-      !taggable ? parser : null
-    );
+    return ParseUtil.setArrayAlign(array as ArrayItem, valign, parser);
   },
 
   /**
@@ -338,15 +331,11 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    */
   HandleDeclareOp(parser: TexParser, name: string) {
     const star = parser.GetStar() ? '*' : '';
-    let cs = UnitUtil.trimSpaces(parser.GetArgument(name));
-    if (cs.charAt(0) === '\\') {
-      cs = cs.substring(1);
-    }
+    const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const op = parser.GetArgument(name);
-    (parser.configuration.handlers.retrieve(NEW_OPS) as CommandMap).add(
-      cs,
-      new Macro(cs, AmsMethods.Macro, [`\\operatorname${star}{${op}}`])
-    );
+    NewcommandUtil.addMacro(parser, cs, AmsMethods.Macro, [
+      `\\operatorname${star}{${op}}`,
+    ]);
     parser.Push(parser.itemFactory.create('null'));
   },
 
@@ -370,13 +359,18 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
         font: TexConstant.Variant.NORMAL,
         multiLetterIdentifiers: parser.options.ams.operatornamePattern,
         operatorLetters: true,
+        noAutoOP: true,
       },
       parser.configuration
     ).mml();
     //
-    //  If we get something other than a single mi, wrap in a TeXAtom.
+    //  If we get a single mi, remove the autoOp property
+    //  (it will get that automatically if more than one letter),
+    //  otherwise wrap the results in a TeXAtom.
     //
-    if (!mml.isKind('mi')) {
+    if (mml.isKind('mi')) {
+      mml.removeProperty('autoOP');
+    } else {
       mml = parser.create('node', 'TeXAtom', [mml]);
     }
     //
@@ -391,8 +385,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     //  Skip a following \limits macro if not a starred operator
     //
     if (!star) {
-      const c = parser.GetNext(),
-        i = parser.i;
+      const c = parser.GetNext();
+      const i = parser.i;
       if (c === '\\' && ++parser.i && parser.GetCS() !== 'limits') {
         parser.i = i;
       }
@@ -529,13 +523,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       next = parser.GetArgument(name);
       parser.i = i;
       if (next === '\\limits') {
-        if (name === '\\idotsint') {
-          // @test MultiInt with Limits
-          integral = '\\!\\!\\mathop{\\,\\,' + integral + '}';
-        } else {
-          // Question: This is not used anymore?
-          integral = '\\!\\!\\!\\mathop{\\,\\,\\,' + integral + '}';
-        }
+        // @test MultiInt with Limits
+        integral = '\\!\\!\\mathop{\\,\\,' + integral + '}';
       }
     }
     // @test MultiInt, MultiInt in Context
@@ -551,8 +540,16 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * @param {number} chr The arrow character in hex code.
    * @param {number} l Left width.
    * @param {number} r Right width.
+   * @param {number} m Min width
    */
-  xArrow(parser: TexParser, name: string, chr: number, l: number, r: number) {
+  xArrow(
+    parser: TexParser,
+    name: string,
+    chr: number,
+    l: number,
+    r: number,
+    m: number = 0
+  ) {
     const def = {
       width: '+' + UnitUtil.em((l + r) / 18),
       lspace: UnitUtil.em(l / 18),
@@ -563,9 +560,12 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     let arrow = parser.create(
       'token',
       'mo',
-      { stretchy: true, texClass: TEXCLASS.REL },
+      { stretchy: true, texClass: TEXCLASS.ORD }, // REL is applied in a TeXAtom below
       String.fromCodePoint(chr)
     );
+    if (m) {
+      arrow.attributes.set('minsize', UnitUtil.em(m));
+    }
     arrow = parser.create('node', 'mstyle', [arrow], { scriptlevel: 0 });
     const mml = parser.create('node', 'munderover', [arrow]) as MmlMunderover;
     let mpadded = parser.create('node', 'mpadded', [first, dstrut], def);
@@ -588,7 +588,23 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     // @test Above Left Arrow, Above Right Arrow, Above Left Arrow in Context,
     //       Above Right Arrow in Context
     NodeUtil.setProperty(mml, 'subsupOK', true);
-    parser.Push(mml);
+    //
+    // Use an empty item to prevent the xarrow from further stretching (see #3457)
+    // and enclose both in a TeXAtom to make the combination a REL.
+    //
+    parser.Push(
+      parser.create(
+        'node',
+        'TeXAtom',
+        [
+          parser.create('node', 'TeXAtom', [], {
+            texClass: TEXCLASS.NONE,
+          }),
+          mml,
+        ],
+        { texClass: TEXCLASS.REL }
+      )
+    );
   },
 
   /**

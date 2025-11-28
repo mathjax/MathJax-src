@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2023-2024 The MathJax Consortium
+ *  Copyright (c) 2023-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,10 +25,13 @@
  * The location of this file
  */
 declare const __dirname: string;
+declare const require: (file: string) => any;
 
 /**
  * @return {string}   The MathJax component root directory
  */
 export function mjxRoot(): string {
-  return __dirname.replace(/[cm]js\/components\/[cm]js$/, (_) => 'bundle');
+  return require('../../util/context.js')
+    .context.path(__dirname)
+    .replace(/[cm]js\/components\/[cm]js$/, 'bundle');
 }

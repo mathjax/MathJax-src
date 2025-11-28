@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -195,6 +195,7 @@ export class Collapse {
       (node, complexity) => {
         complexity = this.uncollapseChild(complexity, node, 0);
         if (complexity > (this.cutoff.sqrt as number)) {
+          node.setProperty('collapse-variant', true);
           complexity = this.recordCollapse(
             node,
             complexity,
@@ -209,6 +210,7 @@ export class Collapse {
       (node, complexity) => {
         complexity = this.uncollapseChild(complexity, node, 0, 2);
         if (complexity > (this.cutoff.sqrt as number)) {
+          node.setProperty('collapse-variant', true);
           complexity = this.recordCollapse(
             node,
             complexity,
@@ -531,9 +533,18 @@ export class Collapse {
   /**
    * Add maction nodes to the nodes in the tree that can collapse
    *
-   * @param {MmlNode} node   The root of the tree to check
+   * @param {MmlNode} node     The root of the tree to check
+   * @param {number|null} id   The initial id to use
+   * @returns {number}         The initial id used
    */
-  public makeCollapse(node: MmlNode) {
+  public makeCollapse(node: MmlNode, id: number | null): number {
+    let oldCount = null;
+    if (id === null) {
+      id = this.idCount;
+    } else {
+      oldCount = this.idCount;
+      this.idCount = id;
+    }
     const nodes: MmlNode[] = [];
     node.walkTree((child: MmlNode) => {
       if (child.getProperty('collapse-marker')) {
@@ -541,6 +552,10 @@ export class Collapse {
       }
     });
     this.makeActions(nodes);
+    if (oldCount !== null) {
+      this.idCount = oldCount;
+    }
+    return id;
   }
 
   /**
@@ -569,6 +584,9 @@ export class Collapse {
     const factory = this.complexity.factory;
     const marker = node.getProperty('collapse-marker') as string;
     const parent = node.parent;
+    const variant = node.getProperty('collapse-variant')
+      ? { mathvariant: '-tex-variant' }
+      : {};
     const maction = factory.create(
       'maction',
       {
@@ -581,7 +599,7 @@ export class Collapse {
         ),
       },
       [
-        factory.create('mtext', { mathcolor: 'blue' }, [
+        factory.create('mtext', variant, [
           (factory.create('text') as TextNode).setText(marker),
         ]),
       ]
@@ -616,6 +634,7 @@ export class Collapse {
     for (const name of Object.keys(attributes)) {
       if (
         name.substring(0, 14) === 'data-semantic-' ||
+        name.substring(0, 12) === 'data-speech-' ||
         name.substring(0, 5) === 'aria-' ||
         name === 'role'
       ) {

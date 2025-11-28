@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -137,9 +137,12 @@ export function combineWithMathJax(config: any): MathJaxObject {
 }
 
 /**
- * Create the MathJax global, if it doesn't exist
+ * Create the MathJax global, if it doesn't exist or is not an object literal
  */
-if (typeof GLOBAL.MathJax === 'undefined') {
+if (
+  typeof GLOBAL.MathJax === 'undefined' ||
+  GLOBAL.MathJax.constructor !== {}.constructor
+) {
   GLOBAL.MathJax = {} as MathJaxConfig;
 }
 

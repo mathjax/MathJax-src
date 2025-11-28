@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2024 The MathJax Consortium
+ *  Copyright (c) 2009-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -94,9 +94,7 @@ function muReplace([value, unit, length]: [string, string, number]): [
   if (unit !== 'mu') {
     return [value, unit, length];
   }
-  const em = UnitUtil.em(
-    UnitUtil.UNIT_CASES.get(unit) * parseFloat(value || '1')
-  );
+  const em = UnitUtil.em(UnitUtil.UNIT_CASES.get(unit) * parseFloat(value));
   return [em.slice(0, -2), 'em', length];
 }
 
@@ -143,7 +141,7 @@ export const UnitUtil = {
     const [value, unit] = UnitUtil.matchDimen(dim);
     const m = parseFloat(value || '1');
     const factor = UnitUtil.UNIT_CASES.get(unit);
-    return factor ? factor * m : 0;
+    return factor * m;
   },
 
   /**

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -124,6 +124,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
    * @override
    */
   public removeFromDocument(restore: boolean = false) {
+    super.removeFromDocument(restore);
     if (this.state() >= STATE.TYPESET) {
       const adaptor = this.adaptor;
       const node = this.start.node;

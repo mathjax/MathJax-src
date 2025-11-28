@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -283,10 +283,6 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       );
       return;
     }
-    if (arg) {
-      next = open;
-      right = close;
-    }
     parser.i++;
     parser.Push(
       parser.itemFactory
@@ -304,19 +300,6 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
   Eval(parser: TexParser, name: string) {
     const star = parser.GetStar();
     const next = parser.GetNext();
-    if (next === '{') {
-      const arg = parser.GetArgument(name);
-      const replace =
-        '\\left. ' +
-        (star ? '\\smash{' + arg + '}' : arg) +
-        ' ' +
-        '\\vphantom{\\int}\\right|';
-      parser.string =
-        parser.string.slice(0, parser.i) +
-        replace +
-        parser.string.slice(parser.i);
-      return;
-    }
     if (next === '(' || next === '[') {
       parser.i++;
       parser.Push(
@@ -329,11 +312,15 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       );
       return;
     }
-    throw new TexError(
-      'MissingArgFor',
-      'Missing argument for %1',
-      parser.currentCS
-    );
+    let replace = '\\left.\\vphantom{\\int}\\right|';
+    if (next === '{') {
+      const arg = parser.GetArgument(name);
+      replace = `\\left.${star ? `\\smash{${arg}}` : arg}\\vphantom{\\int}\\right|`;
+    }
+    parser.string =
+      parser.string.substring(0, parser.i) +
+      replace +
+      parser.string.slice(parser.i);
   },
 
   /**
@@ -710,10 +697,9 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
           ? `\\langle{${bra}}\\vert{${ket}}\\rangle`
           : `\\left\\langle{${bra}}\\middle\\vert{${ket}}\\right\\rangle`;
     } else {
-      macro =
-        starBra || starKet
-          ? `\\langle{${bra}}\\vert`
-          : `\\left\\langle{${bra}}\\right\\vert{${ket}}`;
+      macro = starBra
+        ? `\\langle{${bra}}\\vert`
+        : `\\left\\langle{${bra}}\\right\\vert{${ket}}`;
     }
     parser.Push(
       new TexParser(macro, parser.stack.env, parser.configuration).mml()
@@ -1041,10 +1027,6 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       } catch (_e) {
         parser.i = endI;
         elements.push(parser.string.slice(currentI, endI - 1));
-        break;
-      }
-      if (parser.i >= endI) {
-        elements.push(parser.string.slice(currentI, endI));
         break;
       }
       currentI = parser.i;

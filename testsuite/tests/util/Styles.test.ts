@@ -23,6 +23,27 @@ describe('CssStyles object', () => {
     cssTest('  a  : \n  0  ;   b\n :   1px \n ', {a: '0', b: '1px'}, 'a: 0; b: 1px;'); // extra spaces
     cssTest('abc: ; xyz: 0', {xyz: '0'}, 'xyz: 0;'); // missing value
     cssTest('abc xyz: 1px', {}, ''); // malformed CSS string
+
+    cssTest(`abc: xy 'pqr`, {abc: `xy 'pqr'`}, `abc: xy 'pqr';`);            // append missing '
+    cssTest(`abc: xy "pqr`, {abc: `xy "pqr"`}, `abc: xy "pqr";`);            // append missing "
+    cssTest(`abc: xy '\\'pqr`, {abc: `xy '\\'pqr'`}, `abc: xy '\\'pqr';`);   // handle quoted '
+    cssTest(`abc: xy "\\"pqr`, {abc: `xy "\\"pqr"`}, `abc: xy "\\"pqr";`);   // handle quoted "
+    cssTest(`abc: ';'`, {abc: `';'`});               // handle quoted ;
+    cssTest(`abc: ';`, {abc: `';'`}, `abc: ';';`);   // and missing '
+
+    cssTest('\nabc\n:\n xyz \n; \n def \n : \n pqr\n ; \n ', {
+      abc: 'xyz',
+      def: 'pqr'
+    }, 'abc: xyz; def: pqr;');
+    cssTest(`abc: \n xy \n 'pqr\n`, {abc: `xy   'pqr '`}, `abc: xy   'pqr ';`);
+
+    //
+    // Remove unquoted ; and beyond
+    //
+    const styles = new Styles();
+    styles.set('abc', 'xy ; z');
+    expect(styles.styleList).toEqual({abc: 'xy'});
+    expect(styles.cssText).toBe('abc: xy;');
   });
 
   test('padding', () => {
@@ -61,8 +82,68 @@ describe('CssStyles object', () => {
       'padding-right': '0',
       'padding-top': '0'
     }, 'padding: 0;');
+    cssTest('padding-left: 2px; padding: 0', {
+      'padding': '0',
+      'padding-bottom': '0',
+      'padding-left': '0',
+      'padding-right': '0',
+      'padding-top': '0'
+    }, 'padding: 0;');
     cssTest('padding:', {}, '');
   });
+
+  test('margin', () => {
+    cssTest('margin-left: 2px; margin: 0', {
+      'margin': '0',
+      'margin-bottom': '0',
+      'margin-left': '0',
+      'margin-right': '0',
+      'margin-top': '0'
+    }, 'margin: 0;');
+    cssTest('margin: 3px', {
+      'margin': '3px',
+      'margin-bottom': '3px',
+      'margin-left': '3px',
+      'margin-right': '3px',
+      'margin-top': '3px'
+    });
+    cssTest('margin: 3px; margin-right: 1px', {
+      'margin': '3px 1px 3px 3px',
+      'margin-bottom': '3px',
+      'margin-left': '3px',
+      'margin-right': '1px',
+      'margin-top': '3px'
+    }, 'margin: 3px 1px 3px 3px;');
+    cssTest('margin-top: 0; margin-right: 1px; margin-bottom: 0; margin-left: 1px', {
+      'margin': '0 1px',
+      'margin-bottom': '0',
+      'margin-left': '1px',
+      'margin-right': '1px',
+      'margin-top': '0'
+    }, 'margin: 0 1px;');
+    cssTest('margin-top: 0; margin-right: 1px; margin-bottom: 2px; margin-left: 1px', {
+      'margin': '0 1px 2px',
+      'margin-bottom': '2px',
+      'margin-left': '1px',
+      'margin-right': '1px',
+      'margin-top': '0'
+    }, 'margin: 0 1px 2px;');
+    cssTest('margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0', {
+      'margin': '0',
+      'margin-bottom': '0',
+      'margin-left': '0',
+      'margin-right': '0',
+      'margin-top': '0'
+    }, 'margin: 0;');
+    cssTest('margin-left: 2px; margin: 0', {
+      'margin': '0',
+      'margin-bottom': '0',
+      'margin-left': '0',
+      'margin-right': '0',
+      'margin-top': '0'
+    }, 'margin: 0;');
+    cssTest('margin:', {}, '');
+  }),
 
   test('border', () => {
     cssTest('border: 3px solid red', {
@@ -227,6 +308,38 @@ describe('CssStyles object', () => {
       'border-top': 'red',
       'border-top-color': 'red',
     }, 'border-top: red; border-right: red; border-bottom: red;');
+    cssTest('border-radius: 3px', {
+      'border-radius': '3px',
+    });
+    cssTest('background: red; background-clip: none', {
+      'background': 'red',
+      'background-clip': 'none',
+    });
+    cssTest(' border-top: inset blue 2px; border: 3px solid red', {
+      'border': '3px solid red',
+      'border-top': '3px solid red',
+      'border-top-color': 'red',
+      'border-top-style': 'solid',
+      'border-top-width': '3px',
+      'border-right': '3px solid red',
+      'border-right-color': 'red',
+      'border-right-style': 'solid',
+      'border-right-width': '3px',
+      'border-bottom': '3px solid red',
+      'border-bottom-color': 'red',
+      'border-bottom-style': 'solid',
+      'border-bottom-width': '3px',
+      'border-left': '3px solid red',
+      'border-left-color': 'red',
+      'border-left-style': 'solid',
+      'border-left-width': '3px',
+    }, 'border: 3px solid red;');
+    cssTest('border-top-color: blue; border-top: 3px solid red', {
+      'border-top': '3px solid red',
+      'border-top-color': 'red',
+      'border-top-style': 'solid',
+      'border-top-width': '3px',
+    }, 'border-top: 3px solid red;');
   });
 
   test('font', () => {
@@ -326,6 +439,18 @@ describe('CssStyles object', () => {
     expect(styles.get('padding-bottom')).toBe('0');
     expect(styles.get('padding-left')).toBe('1px');
     expect(styles.get('border')).toBe('');
+  });
+
+  test('set()', () => {
+    const styles = new Styles('padding-left: 2px');
+    styles.set('padding-left', '3px');
+    expect(styles.get('padding-left')).toBe('3px');
+    expect(styles.get('padding')).toBe('');
+    expect(styles.cssText).toBe('padding-left: 3px;');
+    styles.set('padding', '');
+    expect(styles.get('padding-left')).toBe('');
+    expect(styles.get('padding')).toBe('');
+    expect(styles.cssText).toBe('');
   });
 
 });

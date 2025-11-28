@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -153,7 +153,6 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       },
       'mjx-math[breakable]': {
         display: 'inline',
-        'font-family': 'inherit',
       },
       //
       //  For inline breakpoints, use a space that is 1em width, make it breakable,

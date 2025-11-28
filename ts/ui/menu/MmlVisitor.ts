@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2024 The MathJax Consortium
+ *  Copyright (c) 2019-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -119,7 +119,7 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
     if (this.options.filterSRE) {
       const keys = Object.keys(list).filter((id) =>
         id.match(
-          /^(?:data-semantic-.*?|role|aria-(?:level|posinset|setsize|owns))$/
+          /^(?:data-semantic-.*?|data-speech-node|role|aria-(?:level|posinset|setsize|owns))$/
         )
       );
       for (const key of keys) {

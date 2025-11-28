@@ -23,7 +23,7 @@ describe('asyncLoad() for esm', () => {
 
     await expect(asyncLoad('#js/components/version.js')                         // load using package exports
                  .then((result: any) => result.VERSION)).resolves.toBe(mathjax.version);
-    await expect(asyncLoad('mathjax-full/js/components/version.js')             // load from module
+    await expect(asyncLoad('@mathjax/src/js/components/version.js')             // load from module
                  .then((result: any) => result.VERSION)).resolves.toBe(mathjax.version);
 
     await expect(asyncLoad(mjsFile).then((result: any) => result.loaded)).resolves.toBe(true);  // mjs file loads

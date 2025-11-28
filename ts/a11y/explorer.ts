@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,19 +25,19 @@ import { Handler } from '../core/Handler.js';
 import { MmlNode } from '../core/MmlTree/MmlNode.js';
 import { MathML } from '../input/mathml.js';
 import { STATE, newState } from '../core/MathItem.js';
-import {
-  EnrichedMathItem,
-  EnrichedMathDocument,
-  EnrichHandler,
-} from './semantic-enrich.js';
+import { SpeechMathItem, SpeechMathDocument, SpeechHandler } from './speech.js';
 import { MathDocumentConstructor } from '../core/MathDocument.js';
 import { OptionList, expandable } from '../util/Options.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { hasWindow } from '../util/context.js';
+import { StyleJson } from '../util/StyleJson.js';
+import { context } from '../util/context.js';
 
 import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
 
 import * as Sre from './sre.js';
+
+const isUnix = context.os === 'Unix';
 
 /**
  * Generic constructor for Mixins
@@ -48,31 +48,64 @@ export type Constructor<T> = new (...args: any[]) => T;
  * Shorthands for types with HTMLElement, Text, and Document instead of generics
  */
 export type HANDLER = Handler<HTMLElement, Text, Document>;
-export type HTMLDOCUMENT = EnrichedMathDocument<HTMLElement, Text, Document>;
-export type HTMLMATHITEM = EnrichedMathItem<HTMLElement, Text, Document>;
+export type HTMLDOCUMENT = SpeechMathDocument<HTMLElement, Text, Document> & {
+  menu?: any;
+};
+export type HTMLMATHITEM = SpeechMathItem<HTMLElement, Text, Document>;
 export type MATHML = MathML<HTMLElement, Text, Document>;
 
 /*==========================================================================*/
 
 /**
- * Add STATE value for having the Explorer added (after TYPESET and before INSERTED or CONTEXT_MENU)
+ * Add STATE value for having the Explorer added (after INSERTED and before CONTEXT_MENU)
  */
-newState('EXPLORER', 160);
+newState('EXPLORER', STATE.INSERTED + 30);
 
 /**
  * The properties added to MathItem for the Explorer
  */
 export interface ExplorerMathItem extends HTMLMATHITEM {
   /**
+   * The value to use for the aria role for mjx-speech elements
+   */
+  ariaRole: string;
+
+  /**
+   * The aria-roleDescription to use for the math
+   */
+  roleDescription: string;
+
+  /**
+   * The string to use for when there is no description;
+   */
+  none: string;
+
+  /**
    * The Explorer objects for this math item
    */
   explorers: ExplorerPool;
+
+  /**
+   * Semantic id of the rerendered element that should regain the focus.
+   */
+  refocus: string;
 
   /**
    * @param {HTMLDocument} document  The document where the Explorer is being added
    * @param {boolean} force          True to force the explorer even if enableExplorer is false
    */
   explorable(document: HTMLDOCUMENT, force?: boolean): void;
+
+  /**
+   * @param {ExplorerMathDocument} document  The explorer document being used
+   * @returns {HTMLElement}                  The temporary focus element, if any
+   */
+  setTemporaryFocus(document: ExplorerMathDocument): HTMLElement;
+
+  /**
+   * @param {HTMLElement} focus  The temporary focus element, if any
+   */
+  clearTemporaryFocus(focus: HTMLElement): void;
 }
 
 /**
@@ -88,16 +121,73 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
   BaseMathItem: B,
   toMathML: (node: MmlNode) => string
 ): Constructor<ExplorerMathItem> & B {
-  return class extends BaseMathItem {
+  return class BaseClass extends BaseMathItem {
+    /**
+     * The value to use for the aria role for mjx-speech elements
+     */
+    protected static ariaRole: string = isUnix ? 'tree' : 'application';
+
+    /**
+     * The aria-roleDescription to use for the math
+     */
+    protected static roleDescription: string = 'math';
+
+    /**
+     * Decription to use when set to none
+     *  (private-use-1 is not spoken by any screen reader tested)
+     */
+    protected static none: string = '\u0091';
+
+    public get ariaRole() {
+      return (this.constructor as typeof BaseClass).ariaRole;
+    }
+
+    public get roleDescription() {
+      const CLASS = this.constructor as typeof BaseClass;
+      return CLASS.roleDescription === 'none'
+        ? CLASS.none
+        : CLASS.roleDescription;
+    }
+
+    public get none() {
+      return (this.constructor as typeof BaseClass).none;
+    }
+
     /**
      * @override
      */
     public explorers: ExplorerPool;
 
     /**
-     * Semantic id of the rerendered element that should regain the focus.
+     * @override
      */
-    protected refocus: number = null;
+    public refocus: string = null;
+
+    /**
+     * @override
+     */
+    public attachSpeech(document: ExplorerMathDocument) {
+      super.attachSpeech(document);
+      this.outputData.speechPromise
+        ?.then(() => this.explorers.speech.attachSpeech())
+        ?.then(() => {
+          if (this.explorers?.speech) {
+            this.explorers.speech.restarted = this.refocus;
+          }
+          this.refocus = null;
+          if (this.explorers) {
+            this.explorers.restart();
+          }
+        });
+    }
+
+    /**
+     * @override
+     */
+    public detachSpeech(document: ExplorerMathDocument) {
+      super.detachSpeech(document);
+      this.explorers.speech.detachSpeech();
+    }
 
     /**
      * Add the explorer to the output for this math item
@@ -121,32 +211,60 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     /**
      * @override
      */
-    public rerender(
-      document: ExplorerMathDocument,
-      start: number = STATE.RERENDER
-    ) {
-      if (this.explorers) {
-        const speech = this.explorers.speech;
-        if (speech && speech.attached && speech.active) {
-          const focus = speech.semanticFocus();
-          this.refocus = focus ? focus.id : null;
+    public state(state: number = null, restore: boolean = false) {
+      if (state < STATE.EXPLORER && this.explorers) {
+        for (const explorer of Object.values(this.explorers.explorers)) {
+          if (explorer.active) {
+            explorer.Stop();
+          }
         }
-        this.explorers.reattach();
       }
-      super.rerender(document, start);
+      return super.state(state, restore);
     }
 
     /**
      * @override
      */
-    public updateDocument(document: ExplorerMathDocument) {
-      super.updateDocument(document);
-      if (this.explorers?.speech) {
-        this.explorers.speech.restarted = this.refocus;
-      }
-      this.refocus = null;
+    public rerender(
+      document: ExplorerMathDocument,
+      start: number = STATE.RERENDER
+    ) {
+      const focus = this.setTemporaryFocus(document);
+      super.rerender(document, start);
+      this.clearTemporaryFocus(focus);
+    }
+
+    /**
+     * Focuses a temporary element during rerendering
+     *
+     * @param {ExplorerMathDocument} document   The explorer document to use
+     * @returns {HTMLElement}                   The temporary focus element, if any
+     */
+    public setTemporaryFocus(document: ExplorerMathDocument): HTMLElement {
+      let focus = null;
       if (this.explorers) {
-        this.explorers.restart();
+        const speech = this.explorers.speech;
+        focus = speech?.attached ? document.tmpFocus : null;
+        if (focus) {
+          this.refocus = speech.semanticFocus() ?? null;
+          const adaptor = document.adaptor;
+          adaptor.append(adaptor.body(), focus);
+        }
+        this.explorers.reattach();
+        focus?.focus();
+      }
+      return focus;
+    }
+
+    /**
+     * Removes the temporary element after rerendering
+     *
+     * @param {HTMLElement} focus  The temporary focus element, if any
+     */
+    public clearTemporaryFocus(focus: HTMLElement) {
+      if (focus) {
+        const promise = this.outputData.speechPromise ?? Promise.resolve();
+        promise.then(() => setTimeout(() => focus.remove(), 100));
       }
     }
   };
@@ -157,9 +275,24 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
  */
 export interface ExplorerMathDocument extends HTMLDOCUMENT {
   /**
+   * The info icon for the selected expression
+   */
+  infoIcon: HTMLElement;
+
+  /**
+   * An element ot use for temporary focus during rerendering
+   */
+  tmpFocus: HTMLElement;
+
+  /**
    * The objects needed for the explorer
    */
   explorerRegions: RegionPool;
+
+  /**
+   * The MathItem with the active KeyExplorer, if any
+   */
+  activeItem: ExplorerMathItem;
 
   /**
    * Add the Explorer to the MathItems in the MathDocument
@@ -180,7 +313,7 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
 export function ExplorerMathDocumentMixin<
   B extends MathDocumentConstructor<HTMLDOCUMENT>,
 >(BaseDocument: B): MathDocumentConstructor<ExplorerMathDocument> & B {
-  return class extends BaseDocument {
+  return class BaseClass extends BaseDocument {
     /**
      * @override
      */
@@ -188,6 +321,7 @@ export function ExplorerMathDocumentMixin<
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
       enableExplorer: hasWindow,           // only activate in interactive contexts
+      enableExplorerHelp: true,            // help dialog is enabled
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         explorable: [STATE.EXPLORER]
@@ -195,8 +329,6 @@ export function ExplorerMathDocumentMixin<
       sre: expandable({
         ...BaseDocument.OPTIONS.sre,
         speech: 'none',                    // None as speech is explicitly computed
-        structure: true,                   // Generates full aria structure
-        aria: true,
       }),
       a11y: {
         ...BaseDocument.OPTIONS.a11y,
@@ -219,13 +351,118 @@ export function ExplorerMathDocumentMixin<
         treeColoring: false,               // tree color expression
         viewBraille: false,                // display Braille output as subtitles
         voicing: false,                    // switch on speech output
+        help: true,                        // include "press h for help" messages on focus
+        roleDescription: 'math',           // the role description to use for math expressions
+        tabSelects: 'all',                 // 'all' for whole expression, 'last' for last explored node
       }
     };
+
+    /**
+     * Styles to add for speech
+     */
+    public static speechStyles: StyleJson = {
+      'mjx-container[has-speech="true"]': {
+        position: 'relative',
+        cursor: 'default',
+      },
+      'mjx-speech': {
+        position: 'absolute',
+        'z-index': -1,
+        left: 0,
+        top: 0,
+        bottom: 0,
+        right: 0,
+      },
+      'mjx-speech:focus': {
+        outline: 'none',
+      },
+      'mjx-container .mjx-selected': {
+        outline: '2px solid black',
+      },
+
+      'mjx-container a[data-mjx-href]': {
+        color: 'LinkText',
+        cursor: 'pointer',
+      },
+      'mjx-container a[data-mjx-href].mjx-visited': {
+        color: 'VisitedText',
+      },
+
+      'mjx-container > mjx-help': {
+        display: 'none',
+        position: 'sticky',
+        inset: '-100% 0 100% 0',
+        margin: '-.3em -.5em 0 -.1em',
+        width: '.6em',
+        height: '.6em',
+        cursor: 'pointer',
+      },
+      'mjx-container[display="true"] > mjx-help': {
+        right: 0,
+      },
+      'mjx-help > svg': {
+        stroke: 'black',
+        width: '100%',
+        height: '100%',
+      },
+      'mjx-help > svg > circle': {
+        'stroke-width': '1.5px',
+        cx: '9px',
+        cy: '9px',
+        r: '9px',
+        fill: 'white',
+      },
+      'mjx-help > svg > circle:nth-child(2)': {
+        fill: 'rgba(0, 0, 255, 0.2)',
+        r: '7px',
+      },
+      'mjx-help > svg > line': {
+        'stroke-width': '2.5px',
+        'stroke-linecap': 'round',
+      },
+      'mjx-help:hover > svg > circle:nth-child(2)': {
+        fill: 'white',
+      },
+      'mjx-container.mjx-explorer-active > mjx-help': {
+        display: 'inline-flex',
+        'align-items': 'center',
+      },
+      '@media (prefers-color-scheme: dark) /* explorer */': {
+        'mjx-help > svg': {
+          stroke: '#E0E0E0',
+        },
+        'mjx-help > svg > circle': {
+          fill: '#404040',
+        },
+        'mjx-help > svg > circle:nth-child(2)': {
+          fill: 'rgba(132, 132, 255, .3)',
+        },
+        'mjx-help:hover > svg > circle:nth-child(2)': {
+          stroke: '#AAAAAA',
+          fill: '#404040',
+        },
+      },
+    };
+
+    /**
+     * The info icon for the selected expression
+     */
+    public infoIcon: HTMLElement;
+
+    /**
+     * An element ot use for temporary focus during rerendering
+     */
+    public tmpFocus: HTMLElement;
 
     /**
      * The objects needed for the explorer
      */
     public explorerRegions: RegionPool = null;
+
+    /**
+     * The MathItem with the active KeyExplorer, if any
+     */
+    public activeItem: ExplorerMathItem = null;
 
     /**
      * Extend the MathItem class used for this MathDocument
@@ -246,8 +483,48 @@ export function ExplorerMathDocumentMixin<
       if (!options.a11y.speechRules) {
         options.a11y.speechRules = `${options.sre.domain}-${options.sre.style}`;
       }
-      options.MathItem = ExplorerMathItemMixin(options.MathItem, toMathML);
+      const mathItem = (options.MathItem = ExplorerMathItemMixin(
+        options.MathItem,
+        toMathML
+      ));
+      mathItem.roleDescription = options.roleDescription;
       this.explorerRegions = new RegionPool(this);
+      if ('addStyles' in this) {
+        (this as any).addStyles(
+          (this.constructor as typeof BaseClass).speechStyles
+        );
+      }
+      const adaptor = this.adaptor;
+      const SVGNS = 'http://www.w3.org/2000/svg';
+      this.infoIcon = adaptor.node('mjx-help', {}, [
+        adaptor.node(
+          'svg',
+          { viewBox: '0 0 18 18', xmlns: SVGNS, 'aria-hidden': 'true' },
+          [
+            adaptor.node('circle', { stroke: 'none' }, [], SVGNS),
+            adaptor.node('circle', {}, [], SVGNS),
+            adaptor.node('line', { x1: 9, y1: 9, x2: 9, y2: 13 }, [], SVGNS),
+            adaptor.node('line', { x1: 9, y1: 5.5, x2: 9, y2: 5.5 }, [], SVGNS),
+          ],
+          SVGNS
+        ),
+      ]);
+      this.tmpFocus = adaptor.node('mjx-focus', {
+        tabIndex: 0,
+        style: {
+          outline: 'none',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: '-10px',
+          width: '1px',
+          height: '1px',
+          overflow: 'hidden',
+        },
+        role: mathItem.ariaRole,
+        'aria-label': mathItem.none,
+        'aria-roledescription': mathItem.none,
+      });
     }
 
     /**
@@ -264,6 +541,17 @@ export function ExplorerMathDocumentMixin<
         }
         this.processed.set('explorer');
       }
+      return this;
+    }
+
+    /**
+     * @override
+     */
+    public rerender(start?: number) {
+      const active = this.activeItem;
+      const focus = active?.setTemporaryFocus(this);
+      super.rerender(start);
+      active?.clearTemporaryFocus(focus);
       return this;
     }
 
@@ -293,8 +581,8 @@ export function ExplorerHandler(
   handler: HANDLER,
   MmlJax: MATHML = null
 ): HANDLER {
-  if (!handler.documentClass.prototype.enrich && MmlJax) {
-    handler = EnrichHandler(handler, MmlJax);
+  if (!handler.documentClass.prototype.attachSpeech) {
+    handler = SpeechHandler(handler, MmlJax);
   }
   handler.documentClass = ExplorerMathDocumentMixin(
     handler.documentClass as any
@@ -316,6 +604,8 @@ export function setA11yOptions(
   document: HTMLDOCUMENT,
   options: { [key: string]: any }
 ) {
+  // TODO (volker): This needs to be replace by the engine feature vector.
+  // Minus rule sets etc. Breaking change in SRE.
   const sreOptions = Sre.engineSetup() as { [name: string]: string };
   for (const key in options) {
     if (document.options.a11y[key] !== undefined) {
@@ -323,6 +613,9 @@ export function setA11yOptions(
     } else if (sreOptions[key] !== undefined) {
       document.options.sre[key] = options[key];
     }
+  }
+  if (options.roleDescription) {
+    document.options.MathItem.roleDescription = options.roleDescription;
   }
   // Reinit explorers
   for (const item of document.math) {

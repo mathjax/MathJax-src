@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,9 +25,7 @@
 import { MmlVisitor } from './MmlVisitor.js';
 import { MmlNode, TextNode, XMLNode } from './MmlNode.js';
 import { HtmlNode } from './MmlNodes/HtmlNode.js';
-
-export const toEntity = (c: string) =>
-  '&#x' + c.codePointAt(0).toString(16).toUpperCase() + ';';
+import { toEntity } from '../../util/string.js';
 
 /*****************************************************************/
 /**
@@ -161,7 +159,17 @@ export class SerializedMmlVisitor extends MmlVisitor {
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
-      .replace(/[\uD800-\uDBFF]./g, toEntity)
-      .replace(/[\u0080-\uD7FF\uE000-\uFFFF]/g, toEntity);
+      .replace(/[\uD800-\uDBFF]./g, this.toEntity)
+      .replace(/[\u0080-\uD7FF\uE000-\uFFFF]/g, this.toEntity);
+  }
+
+  /**
+   * Access to the toEntity() function that can be overridden in subclasses.
+   *
+   * @param {string} c   The character to encode.
+   * @returns {string}   The numeric entity for the character.
+   */
+  protected toEntity(c: string): string {
+    return toEntity(c);
   }
 }

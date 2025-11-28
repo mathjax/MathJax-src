@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -97,15 +97,11 @@ export function rewriteBoldTokens(arg: { data: ParseOptions }) {
   for (const node of arg.data.getList('fixBold')) {
     if (NodeUtil.getProperty(node, 'fixBold')) {
       const variant = NodeUtil.getAttribute(node, 'mathvariant') as string;
-      if (variant == null) {
-        NodeUtil.setAttribute(node, 'mathvariant', TexConstant.Variant.BOLD);
-      } else {
-        NodeUtil.setAttribute(
-          node,
-          'mathvariant',
-          BOLDVARIANT[variant] || variant
-        );
-      }
+      NodeUtil.setAttribute(
+        node,
+        'mathvariant',
+        BOLDVARIANT[variant] || variant
+      );
       NodeUtil.removeProperties(node, 'fixBold');
     }
   }

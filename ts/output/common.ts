@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import { AbstractOutputJax } from '../core/OutputJax.js';
 import { MathDocument } from '../core/MathDocument.js';
 import { MathItem, Metrics, STATE } from '../core/MathItem.js';
 import { MmlNode, TEXCLASS } from '../core/MmlTree/MmlNode.js';
+import { MmlMspace } from '../core/MmlTree/MmlNodes/mspace.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
 import {
   FontData,
@@ -91,19 +92,19 @@ export abstract class CommonOutputJax<
   D,
   /* prettier-ignore */
   WW extends CommonWrapper<
-    N, T, D, 
+    N, T, D,
     CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
     WW, WF, WC, CC, VV, DD, FD, FC
   >,
   /* prettier-ignore */
   WF extends CommonWrapperFactory<
-    N, T, D, 
+    N, T, D,
     CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
     WW, WF, WC, CC, VV, DD, FD, FC
   >,
   /* prettier-ignore */
   WC extends CommonWrapperClass<
-    N, T, D, 
+    N, T, D,
     CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
     WW, WF, WC, CC, VV, DD, FD, FC
   >,
@@ -143,6 +144,7 @@ export abstract class CommonOutputJax<
       LinebreakVisitor: null,      // The LinebreakVisitor to use
     },
     font: '',                      // the font component to load
+    fontExtensions: [],            // the font extensions to load
     htmlHDW: 'auto',               // 'use', 'force', or 'ignore' data-mjx-hdw attributes
     wrapperFactory: null,          // The wrapper factory to use
     fontData: null,                // The FontData object to use
@@ -166,8 +168,8 @@ export abstract class CommonOutputJax<
       display: 'block',
       'text-align': 'center',
       'justify-content': 'center',
-      margin: 'calc(1em - 2px) 0',
-      padding: '2px 0',
+      margin: '.7em 0',
+      padding: '.3em 2px',
     },
     'mjx-container[display][width="full"]': {
       display: 'flex',
@@ -181,6 +183,15 @@ export abstract class CommonOutputJax<
       'justify-content': 'right',
     },
   };
+
+  /**
+   * The font to use for generic extensions
+   */
+  public static genericFont: FontDataClass<
+    CharOptions,
+    VariantData<CharOptions>,
+    DelimiterData
+  >;
 
   /**
    * Used for collecting styles needed for the output jax
@@ -304,6 +315,8 @@ export abstract class CommonOutputJax<
     this.styleJson = this.options.styleJson || new StyleJsonSheet();
     this.font = font || new fontClass(fontOptions);
     this.font.setOptions({ mathmlSpacing: this.options.mathmlSpacing });
+    /* prettier-ignore */
+    (this.constructor as typeof CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>).genericFont = fontClass;
     this.unknownCache = new Map();
     const linebreaks = (this.options.linebreaks.LinebreakVisitor ||
       LinebreakVisitor) as typeof Linebreaks;
@@ -348,9 +361,17 @@ export abstract class CommonOutputJax<
    * @override
    */
   public typeset(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
+    /* prettier-ignore */
+    const CLASS = (this.constructor as typeof CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>);
+    const generic = CLASS.genericFont;
+    CLASS.genericFont = this.font.constructor as FontDataClass<CC, VV, DD>;
     this.setDocument(html);
     const node = this.createNode();
-    this.toDOM(math, node, html);
+    try {
+      this.toDOM(math, node, html);
+    } finally {
+      CLASS.genericFont = generic;
+    }
     return node;
   }
 
@@ -373,7 +394,8 @@ export abstract class CommonOutputJax<
       this.math.display
     ) {
       const w = wrapper.getOuterBBox().w;
-      const W = this.math.metrics.containerWidth / this.pxPerEm;
+      const W =
+        Math.max(0, this.math.metrics.containerWidth - 4) / this.pxPerEm;
       if (w > W && w) {
         scale *= W / w;
       }
@@ -413,6 +435,7 @@ export abstract class CommonOutputJax<
     this.math = math;
     this.container = node;
     this.pxPerEm = math.metrics.ex / this.font.params.x_height;
+    this.executeFilters(this.preFilters, math, html, node);
     this.nodeMap = new Map<MmlNode, WW>();
     math.root.attributes.getAllInherited().overflow =
       this.options.displayOverflow;
@@ -422,13 +445,22 @@ export abstract class CommonOutputJax<
     if (linebreak) {
       this.getLinebreakWidth();
     }
+    const makeBreaks = this.options.linebreaks.inline && !math.display;
+    let inlineMarked = !!math.root.getProperty('inlineMarked');
     if (
-      this.options.linebreaks.inline &&
-      !math.display &&
-      !math.outputData.inlineMarked
+      inlineMarked &&
+      (!makeBreaks ||
+        this.forceInlineBreaks !== math.root.getProperty('inlineForced'))
     ) {
+      this.unmarkInlineBreaks(math.root);
+      math.root.removeProperty('inlineMarked');
+      math.root.removeProperty('inlineForced');
+      inlineMarked = false;
+    }
+    if (makeBreaks && !inlineMarked) {
       this.markInlineBreaks(math.root.childNodes?.[0]);
-      math.outputData.inlineMarked = true;
+      math.root.setProperty('inlineMarked', true);
+      math.root.setProperty('inlineForced', this.forceInlineBreaks);
     }
     math.root.setTeXclass(null);
     const wrapper = this.factory.wrap(math.root);
@@ -529,7 +561,7 @@ export abstract class CommonOutputJax<
         postbreak = linebreak === 'newline' && linebreakstyle === 'after';
       } else if (child.isKind('mspace')) {
         const linebreak = child.attributes.get('linebreak') as string;
-        if (linebreak !== 'nobreak') {
+        if (linebreak !== 'nobreak' && (child as MmlMspace).canBreak) {
           marked = this.markInlineBreak(
             marked,
             forcebreak,
@@ -607,6 +639,21 @@ export abstract class CommonOutputJax<
   }
 
   /**
+   * @param {MmlNode} node   The node where inline breaks are to be removed
+   */
+  public unmarkInlineBreaks(node: MmlNode) {
+    if (!node) return;
+    node.removeProperty('forcebreak');
+    node.removeProperty('breakable');
+    if (node.getProperty('process-breaks')) {
+      node.removeProperty('process-breaks');
+      for (const child of node.childNodes) {
+        this.unmarkInlineBreaks(child);
+      }
+    }
+  }
+
+  /**
    * @override
    */
   public getMetrics(html: MathDocument<N, T, D>) {
@@ -639,7 +686,7 @@ export abstract class CommonOutputJax<
     const getFamily =
       this.options.mtextInheritFont || this.options.merrorInheritFont;
     const test = this.getTestElement(node, display);
-    const metrics = this.measureMetrics(test, getFamily);
+    const metrics = { ...this.measureMetrics(test, getFamily), display };
     this.adaptor.remove(test);
     return metrics;
   }
@@ -855,6 +902,13 @@ export abstract class CommonOutputJax<
       this
     );
   }
+
+  /**
+   * Insert styles into an existing stylesheet
+   *
+   * @param {StyleJson} _styles  The styles to insert
+   */
+  public insertStyles(_styles: StyleJson) {}
 
   /*****************************************************************/
 

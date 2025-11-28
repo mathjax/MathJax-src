@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2018-2025 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -163,6 +163,13 @@ export const ChtmlMmultiscripts = (function <
       },
       '[script-align="right"] > mjx-row > mjx-cell': {
         'text-align': 'right',
+      },
+      //
+      // This declaration avoids a Safari positioning bug:
+      //
+      'mjx-none': {
+        display: 'inline-block',
+        height: '1px',
       },
     };
 
