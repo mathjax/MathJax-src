@@ -5,6 +5,7 @@
 ;;; Copyright (c) 2024 The MathJax Consortium
 
 (require 'ediff)
+(require 'cl-lib)
 
 ;;; Jest Tests
 ;;; ==========
