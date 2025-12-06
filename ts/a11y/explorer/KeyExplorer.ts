@@ -223,6 +223,13 @@ export class SpeechExplorer
       creating an SVG version of the expression, and viewing various other
       information.</p>
 
+      <p>Finally, selecting the "Insert Hidden MathML" item from the options
+      submenu will turn of MathJax's speech and Braille generation and
+      instead use visually hidden MathML that some screen readers can voice,
+      though support for this is not universal across all screen readers and
+      operating systems.  Selecting speech or Braille generation in their
+      submenus will remove the hidden MathML again.</p>
+
       <p>For more help, see the <a
       href="https://docs.mathjax.org/en/latest/basic/accessibility.html"
       target="_blank">MathJax accessibility documentation.</a></p>
