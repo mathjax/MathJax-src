@@ -465,7 +465,7 @@ export class LiveRegion extends StringRegion {
         css.setProperty(name, value);
       }
       const oname = `--mjx-${type}${priority}-alpha`;
-      if (css.getPropertyValue(name) !== String(opacity)) {
+      if (css.getPropertyValue(oname) !== String(opacity)) {
         css.setProperty(oname, opacity);
         (style.sheet.cssRules[1] as any).cssRules[0].style.setProperty(
           oname,
