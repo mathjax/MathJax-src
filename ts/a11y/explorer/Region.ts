@@ -702,6 +702,13 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     'mjx-container[data-mjx-clone-container]': {
       padding: '2px ! important',
     },
+    'mjx-math > mjx-mlabeledtr': {
+      display: 'inline-block',
+      'margin-right': '.5em ! important',
+    },
+    'mjx-math > mjx-mtd': {
+      float: 'right',
+    }
   });
 
   /**
@@ -801,6 +808,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
       }
       mjx = container.cloneNode(false).appendChild(mjx).parentElement;
       mjx.style.margin = '0';
+      mjx.style.minWidth = '';
     }
     mjx.setAttribute('data-mjx-clone-container', 'true');
     return mjx;
@@ -818,7 +826,10 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   ) {
     for (const child of enclosed) {
       if (child !== node) {
-        mjx.appendChild(child.cloneNode(true));
+        const id = child.getAttribute('data-semantic-id');
+        if (!id || !mjx.querySelector(`[data-semantic-id="${id}"]`)) {
+          mjx.appendChild(child.cloneNode(true));
+        }
       }
     }
   }
@@ -856,9 +867,23 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
       x = X;
       y = Y + bbox.y;
     }
+    //
+    // Handle top-level expression with a tag
+    //
+    const g = container.querySelector('g');
+    if (container.getAttribute('width') === 'full' && g.firstChild.lastChild === node) {
+      mjx.innerHTML = '';
+      mjx.appendChild(container.cloneNode(true).firstChild);
+      mjx.querySelector('.mjx-selected').setAttribute('data-mjx-clone', 'true');
+      mjx.querySelector('[data-sre-highlighter-added]')?.remove();
+      return;
+    }
+    //
+    // All other expressions
+    //
     (mjx.firstChild as HTMLElement).setAttribute('transform', 'scale(1, -1)');
-    const W = parseFloat(mjx.getAttribute('viewBox').split(/ /)[2]);
-    const w = parseFloat(mjx.getAttribute('width'));
+    const W = parseFloat((mjx.getAttribute('viewBox') || mjx.getAttribute('data-mjx-viewBox')).split(/ /)[2]);
+    const w = parseFloat(mjx.style.minWidth || mjx.getAttribute('width'));
     mjx.setAttribute('viewBox', [x, -(y + height), width, height].join(' '));
     mjx.removeAttribute('style');
     mjx.setAttribute('width', (w / W) * width + 'ex');

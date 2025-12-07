@@ -310,6 +310,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
       const adaptor = this.adaptor;
       adaptor.setStyle(svg, 'min-width', adaptor.getStyle(svg, 'width'));
       adaptor.setAttribute(svg, 'width', pwidth);
+      adaptor.setAttribute(svg, 'data-mjx-viewBox', adaptor.getAttribute(svg, 'viewBox'));
       adaptor.removeAttribute(svg, 'viewBox');
       const scale = this.fixed(
         wrapper.metrics.ex / (this.font.params.x_height * 1000),
