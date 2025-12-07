@@ -708,7 +708,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     },
     'mjx-math > mjx-mtd': {
       float: 'right',
-    }
+    },
   });
 
   /**
@@ -871,7 +871,10 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     // Handle top-level expression with a tag
     //
     const g = container.querySelector('g');
-    if (container.getAttribute('width') === 'full' && g.firstChild.lastChild === node) {
+    if (
+      container.getAttribute('width') === 'full' &&
+      g.firstChild.lastChild === node
+    ) {
       mjx.innerHTML = '';
       mjx.appendChild(container.cloneNode(true).firstChild);
       mjx.querySelector('.mjx-selected').setAttribute('data-mjx-clone', 'true');
@@ -882,7 +885,11 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     // All other expressions
     //
     (mjx.firstChild as HTMLElement).setAttribute('transform', 'scale(1, -1)');
-    const W = parseFloat((mjx.getAttribute('viewBox') || mjx.getAttribute('data-mjx-viewBox')).split(/ /)[2]);
+    const W = parseFloat(
+      (
+        mjx.getAttribute('viewBox') || mjx.getAttribute('data-mjx-viewBox')
+      ).split(/ /)[2]
+    );
     const w = parseFloat(mjx.style.minWidth || mjx.getAttribute('width'));
     mjx.setAttribute('viewBox', [x, -(y + height), width, height].join(' '));
     mjx.removeAttribute('style');
