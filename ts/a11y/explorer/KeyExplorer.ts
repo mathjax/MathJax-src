@@ -1349,7 +1349,6 @@ export class SpeechExplorer
       }
     }
     container.appendChild(this.img);
-    //    this.node.setAttribute('aria-roledescription', this.description);
     this.adjustAnchors();
   }
 
@@ -1836,10 +1835,6 @@ export class SpeechExplorer
    */
   public Stop() {
     if (this.active) {
-      //      const description = this.description;
-      //      if (this.node.getAttribute('aria-roledescription') !== description) {
-      //        this.node.setAttribute('aria-roledescription', description);
-      //      }
       this.node.classList.remove('mjx-explorer-active');
       if (this.document.options.enableExplorerHelp) {
         this.document.infoIcon.remove();
