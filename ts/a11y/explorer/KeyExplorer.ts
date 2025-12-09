@@ -1099,12 +1099,14 @@ export class SpeechExplorer
       const parts = [...this.getSplitNodes(this.current)];
       this.highlighter.encloseNodes(parts, this.node);
       for (const part of parts) {
-        if (!part.getAttribute('data-mjx-enclosed')) {
+        if (!part.getAttribute('data-sre-enclosed')) {
           part.classList.add('mjx-selected');
         }
       }
       this.pool.highlight(parts);
       this.addSpeech(node, addDescription);
+      this.node.setAttribute('tabindex', '-1');
+      this.Update();
     }
     //
     // Done making changes
@@ -1168,6 +1170,12 @@ export class SpeechExplorer
    * @param {boolean} describe   True if the description should be added
    */
   protected addSpeech(node: HTMLElement, describe: boolean) {
+    if (
+      !this.document.options.enableSpeech &&
+      !this.document.options.enableBraille
+    ) {
+      return;
+    }
     if (this.anchors.length) {
       setTimeout(() => this.img?.remove(), 10);
     } else {
@@ -1196,7 +1204,6 @@ export class SpeechExplorer
       node.getAttribute(SemAttr.BRAILLE),
       this.SsmlAttributes(node, SemAttr.SPEECH_SSML)
     );
-    this.node.setAttribute('tabindex', '-1');
   }
 
   /**
@@ -1763,13 +1770,13 @@ export class SpeechExplorer
     const options = this.document.options;
     const a11y = options.a11y;
     if (a11y.subtitles && a11y.speech && options.enableSpeech) {
-      this.region.Show(this.node, this.highlighter);
+      this.region.Show(this.node);
     }
     if (a11y.viewBraille && a11y.braille && options.enableBraille) {
-      this.brailleRegion.Show(this.node, this.highlighter);
+      this.brailleRegion.Show(this.node);
     }
     if (a11y.keyMagnifier) {
-      this.magnifyRegion.Show(this.current, this.highlighter);
+      this.magnifyRegion.Show(this.current);
     }
     this.Update();
   }
@@ -1801,11 +1808,16 @@ export class SpeechExplorer
   public Update() {
     if (!this.active) return;
     this.region.node = this.node;
-    this.generators.updateRegions(
-      this.speech || this.node,
-      this.region,
-      this.brailleRegion
-    );
+    if (
+      this.document.options.enableSpeech ||
+      this.document.options.enableBraille
+    ) {
+      this.generators.updateRegions(
+        this.speech || this.node,
+        this.region,
+        this.brailleRegion
+      );
+    }
     this.magnifyRegion.Update(this.current);
   }
 

@@ -30,7 +30,6 @@ import * as me from './MouseExplorer.js';
 import { TreeColorer, FlameColorer } from './TreeExplorer.js';
 
 import { Highlighter, getHighlighter } from './Highlighter.js';
-// import * as Sre from '../sre.js';
 
 /**
  * The regions objects needed for the explorers.
@@ -360,6 +359,7 @@ export class ExplorerPool {
   protected setPrimaryHighlighter() {
     const [foreground, background] = this.colorOptions();
     this._highlighter = getHighlighter(
+      LiveRegion.priority.primary,
       background,
       foreground,
       this.document.outputJax.name
@@ -371,6 +371,7 @@ export class ExplorerPool {
    */
   protected setSecondaryHighlighter() {
     this.secondaryHighlighter = getHighlighter(
+      LiveRegion.priority.secondary,
       { color: 'red' },
       { color: 'black' },
       this.document.outputJax.name

@@ -188,7 +188,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
         'background-color': '#F8F8F8',
         color: 'black',
       },
-      'mjx-maction[data-collapsible][toggle="1"]': {
+      'mjx-container [data-mjx-collapsed]': {
         color: '#55F',
       },
 
@@ -203,7 +203,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
           'background-color': '#303030',
           color: '#E0E0E0',
         },
-        'mjx-maction[data-collapsible][toggle="1"]': {
+        'mjx-container [data-mjx-collapsed]': {
           color: '#88F',
         },
       },
