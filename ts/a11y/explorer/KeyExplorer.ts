@@ -214,6 +214,10 @@ export class SpeechExplorer
       <li><kbd>&lt;</kbd> cycles through the verbosity levels
       for the current rule set.</li>
 
+      <li><kbd>b</kbd> toggles whether Braille notation is combined
+      with speech text for tactile Braille devices, as discussed
+      below.
+
       <li><kbd>h</kbd> produces this help listing.</li>
       </ul>
 
@@ -324,6 +328,7 @@ export class SpeechExplorer
     ['p', [(explorer) => explorer.prevMark(), false]],
     ['u', [(explorer) => explorer.clearMarks(), false]],
     ['s', [(explorer) => explorer.autoVoice(), false]],
+    ['b', [(explorer) => explorer.toggleBraille(), false]],
     ...[...'0123456789'].map((n) => [
       n,
       [(explorer: SpeechExplorer) => explorer.numberKey(parseInt(n)), false],
@@ -903,6 +908,15 @@ export class SpeechExplorer
       this.document.options.a11y.voicing = value;
     }
     this.Update();
+  }
+
+  protected toggleBraille() {
+    const value = !this.document.options.a11y.brailleCombine;
+    if (this.document.menu) {
+      this.document.menu.menu.pool.lookup('brailleCombine').setValue(value);
+    } else {
+      this.document.options.a11y.brailleCombine = value;
+    }
   }
 
   /**
