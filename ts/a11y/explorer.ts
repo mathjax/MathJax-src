@@ -81,6 +81,11 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
   none: string;
 
   /**
+   * The string to use for when there is no Braille description;
+   */
+  brailleNone: string;
+
+  /**
    * The Explorer objects for this math item
    */
   explorers: ExplorerPool;
@@ -138,6 +143,11 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      */
     protected static none: string = '\u0091';
 
+    /**
+     * Braille decription to use when set to none
+     */
+    protected static brailleNone: string = '\u2800';
+
     public get ariaRole() {
       return (this.constructor as typeof BaseClass).ariaRole;
     }
@@ -151,6 +161,10 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
 
     public get none() {
       return (this.constructor as typeof BaseClass).none;
+    }
+
+    public get brailleNone() {
+      return (this.constructor as typeof BaseClass).brailleNone;
     }
 
     /**
@@ -351,6 +365,8 @@ export function ExplorerMathDocumentMixin<
         treeColoring: false,               // tree color expression
         viewBraille: false,                // display Braille output as subtitles
         voicing: false,                    // switch on speech output
+        brailleSpeech: false,              // use aria-label for Braille
+        brailleCombine: false,             // combine Braille with speech output
         help: true,                        // include "press h for help" messages on focus
         roleDescription: 'math',           // the role description to use for math expressions
         tabSelects: 'all',                 // 'all' for whole expression, 'last' for last explored node

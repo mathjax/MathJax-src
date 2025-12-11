@@ -34,6 +34,10 @@ import { InfoDialog } from '../../ui/dialog/InfoDialog.js';
 
 /**********************************************************************/
 
+const isWindows = context.os === 'Windows';
+
+const BRAILLE_PADDING = Array(40).fill('\u2800').join('');
+
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
  *
@@ -125,11 +129,16 @@ export class SpeechExplorer
   /**
    * Creates a customized help dialog
    *
-   * @param {string} title   The title to use for the message
-   * @param {string} select  Additional ways to select the typeset math
-   * @returns {string}       The customized message
+   * @param {string} title    The title to use for the message
+   * @param {string} select   Additional ways to select the typeset math
+   * @param {string} braille  Additional Braille information
+   * @returns {string}        The customized message
    */
-  protected static helpMessage(title: string, select: string): string {
+  protected static helpMessage(
+    title: string,
+    select: string,
+    braille: string
+  ): string {
     return `
       <h2 role="heading" aria-level="2">Exploring expressions ${title}</h2>
 
@@ -205,6 +214,10 @@ export class SpeechExplorer
       <li><kbd>&lt;</kbd> cycles through the verbosity levels
       for the current rule set.</li>
 
+      <li><kbd>b</kbd> toggles whether Braille notation is combined
+      with speech text for tactile Braille devices, as discussed
+      below.
+
       <li><kbd>h</kbd> produces this help listing.</li>
       </ul>
 
@@ -217,6 +230,13 @@ export class SpeechExplorer
       message about the letter "h" bringing up this dialog box.  Turning off
       speech and Braille will disable the expression explorer, its
       highlighting, and its help icon.</p>
+
+      <p>Support for tactile Braille devices varies across screen readers,
+      browsers, and operative systems.  If you are using a Braille output
+      device, you may need to select the "Combine with Speech" option in the
+      contextual menu's Braille submenu in order to obtain Nemeth or Euro
+      Braille output rather than the speech text on your Braille
+      device. ${braille}</p>
 
       <p>The contextual menu also provides options for viewing or copying a
       MathML version of the expression or its original source format,
@@ -239,12 +259,13 @@ export class SpeechExplorer
   /**
    * Help for the different OS versions
    */
-  protected static helpData: Map<string, [string, string]> = new Map([
+  protected static helpData: Map<string, [string, string, string]> = new Map([
     [
       'MacOS',
       [
         'on MacOS and iOS using VoiceOver',
         ', or the VoiceOver arrow keys to select an expression',
+        '',
       ],
     ],
     [
@@ -258,6 +279,8 @@ export class SpeechExplorer
         the NVDA or JAWS key plus the arrow keys to explore the expression
         even in browse mode, and you can use NVDA+shift+arrow keys to
         navigate out of an expression that has the focus in NVDA`,
+        `NVDA users need to select this option, while JAWS users should be able
+        to get Braille output without changing this setting.`,
       ],
     ],
     [
@@ -267,9 +290,10 @@ export class SpeechExplorer
         `, and Orca should enter focus mode automatically.  If not, use the
         Orca+a key to toggle focus mode on or off.  Also note that you can use
         Orca+arrow keys to explore expressions even in browse mode`,
+        '',
       ],
     ],
-    ['unknown', ['with a Screen Reader.', '']],
+    ['unknown', ['with a Screen Reader.', '', '']],
   ]);
 
   /*
@@ -304,6 +328,7 @@ export class SpeechExplorer
     ['p', [(explorer) => explorer.prevMark(), false]],
     ['u', [(explorer) => explorer.clearMarks(), false]],
     ['s', [(explorer) => explorer.autoVoice(), false]],
+    ['b', [(explorer) => explorer.toggleBraille(), false]],
     ...[...'0123456789'].map((n) => [
       n,
       [(explorer: SpeechExplorer) => explorer.numberKey(parseInt(n)), false],
@@ -348,7 +373,18 @@ export class SpeechExplorer
    * @returns {string}  The string to use for no description
    */
   protected get none(): string {
-    return this.item.none;
+    return this.document.options.a11y.brailleSpeech
+      ? this.item.brailleNone
+      : this.item.none;
+  }
+
+  /**
+   * Shorthand for the item's "brailleNone" indicator
+   *
+   * @returns {string}  The string to use for no description
+   */
+  protected get brailleNone(): string {
+    return this.item.brailleNone;
   }
 
   /**
@@ -665,6 +701,7 @@ export class SpeechExplorer
   protected escapeKey(): boolean {
     this.Stop();
     this.focusTop();
+    this.setCurrent(null);
     return true;
   }
 
@@ -873,6 +910,15 @@ export class SpeechExplorer
     this.Update();
   }
 
+  protected toggleBraille() {
+    const value = !this.document.options.a11y.brailleCombine;
+    if (this.document.menu) {
+      this.document.menu.menu.pool.lookup('brailleCombine').setValue(value);
+    } else {
+      this.document.options.a11y.brailleCombine = value;
+    }
+  }
+
   /**
    * Get index for cell to jump to.
    *
@@ -1018,10 +1064,10 @@ export class SpeechExplorer
       return;
     }
     const CLASS = this.constructor as typeof SpeechExplorer;
-    const [title, select] = CLASS.helpData.get(context.os);
+    const [title, select, braille] = CLASS.helpData.get(context.os);
     InfoDialog.post({
       title: 'MathJax Expression Explorer Help',
-      message: CLASS.helpMessage(title, select),
+      message: CLASS.helpMessage(title, select, braille),
       node: this.node,
       adaptor: this.document.adaptor,
       styles: {
@@ -1226,7 +1272,7 @@ export class SpeechExplorer
    */
   protected removeSpeech() {
     if (this.speech) {
-      this.speech.remove();
+      this.unspeak(this.speech);
       this.speech = null;
       if (this.img) {
         this.node.append(this.img);
@@ -1253,28 +1299,56 @@ export class SpeechExplorer
     description: string = this.none
   ) {
     const oldspeech = this.speech;
-    this.speech = document.createElement('mjx-speech');
-    this.speech.setAttribute('role', this.role);
-    this.speech.setAttribute('aria-label', speech);
-    this.speech.setAttribute(SemAttr.SPEECH, speech);
+    const speechNode = (this.speech = document.createElement('mjx-speech'));
+    speechNode.setAttribute('role', this.role);
+    speechNode.setAttribute('aria-label', speech || this.none);
+    speechNode.setAttribute('aria-roledescription', description || this.none);
+    speechNode.setAttribute(SemAttr.SPEECH, speech);
     if (ssml) {
-      this.speech.setAttribute(SemAttr.PREFIX_SSML, ssml[0] || '');
-      this.speech.setAttribute(SemAttr.SPEECH_SSML, ssml[1] || '');
-      this.speech.setAttribute(SemAttr.POSTFIX_SSML, ssml[2] || '');
+      speechNode.setAttribute(SemAttr.PREFIX_SSML, ssml[0] || '');
+      speechNode.setAttribute(SemAttr.SPEECH_SSML, ssml[1] || '');
+      speechNode.setAttribute(SemAttr.POSTFIX_SSML, ssml[2] || '');
     }
     if (braille) {
-      this.speech.setAttribute('aria-braillelabel', braille);
+      if (this.document.options.a11y.brailleSpeech) {
+        speechNode.setAttribute('aria-label', braille);
+        speechNode.setAttribute('aria-roledescription', this.brailleNone);
+      }
+      speechNode.setAttribute('aria-braillelabel', braille);
+      speechNode.setAttribute('aria-brailleroledescription', this.brailleNone);
+      if (this.document.options.a11y.brailleCombine) {
+        speechNode.setAttribute(
+          'aria-label',
+          braille + BRAILLE_PADDING + speech
+        );
+      }
     }
-    this.speech.setAttribute('aria-roledescription', description);
-    this.speech.setAttribute('tabindex', '0');
-    this.node.append(this.speech);
+    speechNode.setAttribute('tabindex', '0');
+    if (isWindows) {
+      const container = document.createElement('mjx-speech-container');
+      container.setAttribute('role', 'application');
+      container.setAttribute('aria-roledescription', this.none);
+      container.setAttribute('aria-brailleroledescription', this.brailleNone);
+      container.append(speechNode);
+      this.node.append(container);
+      speechNode.setAttribute('role', 'img');
+    } else {
+      this.node.append(speechNode);
+    }
     this.focusSpeech = true;
-    this.speech.focus();
+    speechNode.focus();
     this.focusSpeech = false;
     this.Update();
     if (oldspeech) {
-      setTimeout(() => oldspeech.remove(), 100);
+      setTimeout(() => this.unspeak(oldspeech), 100);
     }
+  }
+
+  public unspeak(node: HTMLElement) {
+    if (isWindows) {
+      node = node.parentElement;
+    }
+    node.remove();
   }
 
   /**
@@ -1299,6 +1373,18 @@ export class SpeechExplorer
       role: 'img',
       'aria-roledescription': item.none,
     });
+    const braille = container.getAttribute(SemAttr.BRAILLE);
+    if (braille) {
+      if (this.document.options.a11y.brailleSpeech) {
+        this.img.setAttribute('aria-label', braille);
+        this.img.setAttribute('aria-roledescription', this.brailleNone);
+      }
+      this.img.setAttribute('aria-braillelabel', braille);
+      this.img.setAttribute('aria-brailleroledescription', this.brailleNone);
+      if (this.document.options.a11y.brailleCombine) {
+        this.img.setAttribute('aria-label', braille + BRAILLE_PADDING + speech);
+      }
+    }
     container.appendChild(this.img);
     this.adjustAnchors();
   }
@@ -1786,10 +1872,6 @@ export class SpeechExplorer
    */
   public Stop() {
     if (this.active) {
-      const description = this.description;
-      if (this.node.getAttribute('aria-roledescription') !== description) {
-        this.node.setAttribute('aria-roledescription', description);
-      }
       this.node.classList.remove('mjx-explorer-active');
       if (this.document.options.enableExplorerHelp) {
         this.document.infoIcon.remove();
