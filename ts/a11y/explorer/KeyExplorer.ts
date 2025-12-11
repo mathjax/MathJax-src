@@ -129,11 +129,16 @@ export class SpeechExplorer
   /**
    * Creates a customized help dialog
    *
-   * @param {string} title   The title to use for the message
-   * @param {string} select  Additional ways to select the typeset math
-   * @returns {string}       The customized message
+   * @param {string} title    The title to use for the message
+   * @param {string} select   Additional ways to select the typeset math
+   * @param {string} braille  Additional Braille information
+   * @returns {string}        The customized message
    */
-  protected static helpMessage(title: string, select: string): string {
+  protected static helpMessage(
+    title: string,
+    select: string,
+    braille: string
+  ): string {
     return `
       <h2 role="heading" aria-level="2">Exploring expressions ${title}</h2>
 
@@ -222,6 +227,13 @@ export class SpeechExplorer
       speech and Braille will disable the expression explorer, its
       highlighting, and its help icon.</p>
 
+      <p>Support for tactile Braille devices varies across screen readers,
+      browsers, and operative systems.  If you are using a Braille output
+      device, you may need to select the "Combine with Speech" option in the
+      contextual menu's Braille submenu in order to obtain Nemeth or Euro
+      Braille output rather than the speech text on your Braille
+      device. ${braille}</p>
+
       <p>The contextual menu also provides options for viewing or copying a
       MathML version of the expression or its original source format,
       creating an SVG version of the expression, and viewing various other
@@ -243,12 +255,13 @@ export class SpeechExplorer
   /**
    * Help for the different OS versions
    */
-  protected static helpData: Map<string, [string, string]> = new Map([
+  protected static helpData: Map<string, [string, string, string]> = new Map([
     [
       'MacOS',
       [
         'on MacOS and iOS using VoiceOver',
         ', or the VoiceOver arrow keys to select an expression',
+        '',
       ],
     ],
     [
@@ -262,6 +275,8 @@ export class SpeechExplorer
         the NVDA or JAWS key plus the arrow keys to explore the expression
         even in browse mode, and you can use NVDA+shift+arrow keys to
         navigate out of an expression that has the focus in NVDA`,
+        `NVDA users need to select this option, while JAWS users should be able
+        to get Braille output without changing this setting.`,
       ],
     ],
     [
@@ -271,9 +286,10 @@ export class SpeechExplorer
         `, and Orca should enter focus mode automatically.  If not, use the
         Orca+a key to toggle focus mode on or off.  Also note that you can use
         Orca+arrow keys to explore expressions even in browse mode`,
+        '',
       ],
     ],
-    ['unknown', ['with a Screen Reader.', '']],
+    ['unknown', ['with a Screen Reader.', '', '']],
   ]);
 
   /*
@@ -1034,10 +1050,10 @@ export class SpeechExplorer
       return;
     }
     const CLASS = this.constructor as typeof SpeechExplorer;
-    const [title, select] = CLASS.helpData.get(context.os);
+    const [title, select, braille] = CLASS.helpData.get(context.os);
     InfoDialog.post({
       title: 'MathJax Expression Explorer Help',
-      message: CLASS.helpMessage(title, select),
+      message: CLASS.helpMessage(title, select, braille),
       node: this.node,
       adaptor: this.document.adaptor,
       styles: {

@@ -814,7 +814,9 @@ export class Menu {
         this.submenu('Braille', '\xA0 \xA0 Braille', [
           this.checkbox('Generate', 'Generate', 'braille'),
           this.checkbox('Subtitles', 'Show Subtitles', 'viewBraille'),
-          this.checkbox('BrailleSpeech', 'Replace Speech', 'brailleSpeech'),
+          this.checkbox('BrailleSpeech', 'Replace Speech', 'brailleSpeech', {
+            hidden: true,
+          }),
           this.checkbox(
             'BrailleCombine',
             'Combine with Speech',
@@ -1312,9 +1314,7 @@ export class Menu {
    */
   protected setBrailleSpeech(speech: boolean) {
     if (speech && this.settings.speech) {
-      Menu.loading++; // pretend we're loading, to suppress rerendering for each variable change
-      this.menu.pool.lookup('speech').setValue(false);
-      Menu.loading--;
+      this.noRerender(() => this.menu.pool.lookup('speech').setValue(false));
     } else {
       this.enableAccessibilityItems('Speech', true);
     }
