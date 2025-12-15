@@ -192,10 +192,10 @@ export interface MinHTMLAdaptor<N, T, D> extends DOMAdaptor<N, T, D> {
  * @template D  The Document class
  */
 export class HTMLAdaptor<
-    N extends MinHTMLElement<N, T>,
-    T extends MinText<N, T>,
-    D extends MinDocument<N, T>,
-  >
+  N extends MinHTMLElement<N, T>,
+  T extends MinText<N, T>,
+  D extends MinDocument<N, T>,
+>
   extends AbstractDOMAdaptor<N, T, D>
   implements MinHTMLAdaptor<N, T, D>
 {

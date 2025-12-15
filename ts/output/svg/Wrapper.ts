@@ -74,21 +74,20 @@ export type SvgConstructor<N, T, D> = CommonWrapperConstructor<
 /**
  *  The type of the SvgWrapper class (used when creating the wrapper factory for this class)
  */
-export interface SvgWrapperClass<N, T, D>
-  extends CommonWrapperClass<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass
-  > {}
+export interface SvgWrapperClass<N, T, D> extends CommonWrapperClass<
+  N,
+  T,
+  D,
+  SVG<N, T, D>,
+  SvgWrapper<N, T, D>,
+  SvgWrapperFactory<N, T, D>,
+  SvgWrapperClass<N, T, D>,
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData,
+  SvgFontData,
+  SvgFontDataClass
+> {}
 
 /*****************************************************************/
 /**

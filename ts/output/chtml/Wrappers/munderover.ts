@@ -71,7 +71,8 @@ import { StyleJson } from '../../../util/StyleJson.js';
  * @template D  The Document class
  */
 export interface ChtmlMunderNTD<N, T, D>
-  extends ChtmlMsubNTD<N, T, D>,
+  extends
+    ChtmlMsubNTD<N, T, D>,
     CommonMunder<
       N,
       T,
@@ -95,7 +96,8 @@ export interface ChtmlMunderNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMunderClass<N, T, D>
-  extends ChtmlMsubClass<N, T, D>,
+  extends
+    ChtmlMsubClass<N, T, D>,
     CommonMunderClass<
       N,
       T,
@@ -214,7 +216,8 @@ export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
  * @template D  The Document class
  */
 export interface ChtmlMoverNTD<N, T, D>
-  extends ChtmlMsupNTD<N, T, D>,
+  extends
+    ChtmlMsupNTD<N, T, D>,
     CommonMover<
       N,
       T,
@@ -238,7 +241,8 @@ export interface ChtmlMoverNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMoverClass<N, T, D>
-  extends ChtmlMsupClass<N, T, D>,
+  extends
+    ChtmlMsupClass<N, T, D>,
     CommonMoverClass<
       N,
       T,
@@ -347,7 +351,8 @@ export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
  * @template D  The Document class
  */
 export interface ChtmlMunderoverNTD<N, T, D>
-  extends ChtmlMsubsupNTD<N, T, D>,
+  extends
+    ChtmlMsubsupNTD<N, T, D>,
     CommonMunderover<
       N,
       T,
@@ -371,7 +376,8 @@ export interface ChtmlMunderoverNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMunderoverClass<N, T, D>
-  extends ChtmlMsubsupClass<N, T, D>,
+  extends
+    ChtmlMsubsupClass<N, T, D>,
     CommonMunderoverClass<
       N,
       T,

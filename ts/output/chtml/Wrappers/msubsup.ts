@@ -65,7 +65,8 @@ import { StyleJson } from '../../../util/StyleJson.js';
  * @template D  The Document class
  */
 export interface ChtmlMsubNTD<N, T, D>
-  extends ChtmlScriptbaseNTD<N, T, D>,
+  extends
+    ChtmlScriptbaseNTD<N, T, D>,
     CommonMsub<
       N,
       T,
@@ -89,7 +90,8 @@ export interface ChtmlMsubNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMsubClass<N, T, D>
-  extends ChtmlScriptbaseClass<N, T, D>,
+  extends
+    ChtmlScriptbaseClass<N, T, D>,
     CommonMsubClass<
       N,
       T,
@@ -155,7 +157,8 @@ export const ChtmlMsub = (function <N, T, D>(): ChtmlMsubClass<N, T, D> {
  * @template D  The Document class
  */
 export interface ChtmlMsupNTD<N, T, D>
-  extends ChtmlScriptbaseNTD<N, T, D>,
+  extends
+    ChtmlScriptbaseNTD<N, T, D>,
     CommonMsup<
       N,
       T,
@@ -179,7 +182,8 @@ export interface ChtmlMsupNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMsupClass<N, T, D>
-  extends ChtmlScriptbaseClass<N, T, D>,
+  extends
+    ChtmlScriptbaseClass<N, T, D>,
     CommonMsupClass<
       N,
       T,
@@ -245,7 +249,8 @@ export const ChtmlMsup = (function <N, T, D>(): ChtmlMsupClass<N, T, D> {
  * @template D  The Document class
  */
 export interface ChtmlMsubsupNTD<N, T, D>
-  extends ChtmlScriptbaseNTD<N, T, D>,
+  extends
+    ChtmlScriptbaseNTD<N, T, D>,
     CommonMsubsup<
       N,
       T,
@@ -269,7 +274,8 @@ export interface ChtmlMsubsupNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMsubsupClass<N, T, D>
-  extends ChtmlScriptbaseClass<N, T, D>,
+  extends
+    ChtmlScriptbaseClass<N, T, D>,
     CommonMsubsupClass<
       N,
       T,

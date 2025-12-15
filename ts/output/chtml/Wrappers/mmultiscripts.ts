@@ -52,7 +52,8 @@ import { split } from '../../../util/string.js';
  * @template D  The Document class
  */
 export interface ChtmlMmultiscriptsNTD<N, T, D>
-  extends ChtmlMsubsupNTD<N, T, D>,
+  extends
+    ChtmlMsubsupNTD<N, T, D>,
     CommonMmultiscripts<
       N,
       T,
@@ -76,7 +77,8 @@ export interface ChtmlMmultiscriptsNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMmultiscriptsClass<N, T, D>
-  extends ChtmlMsubsupClass<N, T, D>,
+  extends
+    ChtmlMsubsupClass<N, T, D>,
     CommonMmultiscriptsClass<
       N,
       T,

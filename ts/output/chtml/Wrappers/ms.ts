@@ -48,7 +48,8 @@ import { MmlMs } from '../../../core/MmlTree/MmlNodes/ms.js';
  * @template D  The Document class
  */
 export interface ChtmlMsNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMs<
       N,
       T,
@@ -72,7 +73,8 @@ export interface ChtmlMsNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMsClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMsClass<
       N,
       T,

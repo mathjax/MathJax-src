@@ -51,7 +51,8 @@ import { ZeroFontDataUrl } from './zero.js';
  * @template D  The Document class
  */
 export interface SvgMathNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMath<
       N,
       T,
@@ -75,7 +76,8 @@ export interface SvgMathNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMathClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMathClass<
       N,
       T,

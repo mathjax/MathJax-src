@@ -50,7 +50,8 @@ import { MmlMroot } from '../../../core/MmlTree/MmlNodes/mroot.js';
  * @template D  The Document class
  */
 export interface ChtmlMrootNTD<N, T, D>
-  extends ChtmlMsqrtNTD<N, T, D>,
+  extends
+    ChtmlMsqrtNTD<N, T, D>,
     CommonMroot<
       N,
       T,
@@ -74,7 +75,8 @@ export interface ChtmlMrootNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMrootClass<N, T, D>
-  extends ChtmlMsqrtClass<N, T, D>,
+  extends
+    ChtmlMsqrtClass<N, T, D>,
     CommonMrootClass<
       N,
       T,

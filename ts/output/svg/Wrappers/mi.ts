@@ -48,7 +48,8 @@ import { MmlMi } from '../../../core/MmlTree/MmlNodes/mi.js';
  * @template D  The Document class
  */
 export interface SvgMiNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMi<
       N,
       T,
@@ -72,7 +73,8 @@ export interface SvgMiNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMiClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMiClass<
       N,
       T,

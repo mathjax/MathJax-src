@@ -1320,8 +1320,8 @@ export class Menu {
     } else {
       this.enableAccessibilityItems('Speech', true);
     }
-    this.settings.brailleCombine = this.document.options.a11y.brailleCombine =
-      false;
+    this.settings.brailleCombine =
+      this.document.options.a11y.brailleCombine = false;
     this.rerender(STATE.COMPILED);
   }
 
@@ -1332,8 +1332,8 @@ export class Menu {
     if (this.settings.brailleSpeech) {
       this.menu.pool.lookup('brailleSpeech').setValue(false);
     }
-    this.settings.brailleSpeech = this.document.options.a11y.brailleSpeech =
-      false;
+    this.settings.brailleSpeech =
+      this.document.options.a11y.brailleSpeech = false;
     this.rerender(STATE.COMPILED);
   }
 

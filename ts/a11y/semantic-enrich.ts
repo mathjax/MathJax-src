@@ -274,8 +274,11 @@ export function EnrichedMathItemMixin<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface EnrichedMathDocument<N, T, D>
-  extends AbstractMathDocument<N, T, D> {
+export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<
+  N,
+  T,
+  D
+> {
   /**
    * Perform enrichment on the MathItems in the MathDocument
    *

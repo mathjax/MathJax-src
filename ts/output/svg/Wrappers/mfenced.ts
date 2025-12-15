@@ -49,7 +49,8 @@ import { SvgInferredMrowNTD } from './mrow.js';
  * @template D  The Document class
  */
 export interface SvgMfencedNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMfenced<
       N,
       T,
@@ -73,7 +74,8 @@ export interface SvgMfencedNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMfencedClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMfencedClass<
       N,
       T,

@@ -67,7 +67,8 @@ export type SizeData = {
  * @template D  The Document class
  */
 export interface SvgMtrNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMtr<
       N,
       T,
@@ -123,7 +124,8 @@ export interface SvgMtrNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMtrClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMtrClass<
       N,
       T,
@@ -302,7 +304,8 @@ export const SvgMtr = (function <N, T, D>(): SvgMtrClass<N, T, D> {
  * @template D  The Document class
  */
 export interface SvgMlabeledtrNTD<N, T, D>
-  extends SvgMtrNTD<N, T, D>,
+  extends
+    SvgMtrNTD<N, T, D>,
     CommonMlabeledtr<
       N,
       T,
@@ -326,7 +329,8 @@ export interface SvgMlabeledtrNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMlabeledtrClass<N, T, D>
-  extends SvgMtrClass<N, T, D>,
+  extends
+    SvgMtrClass<N, T, D>,
     CommonMlabeledtrClass<
       N,
       T,

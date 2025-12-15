@@ -56,7 +56,8 @@ import { STATE } from '../../../core/MathItem.js';
  * @template D  The Document class
  */
 export interface SvgMactionNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMaction<
       N,
       T,
@@ -91,7 +92,8 @@ export interface SvgMactionNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMactionClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMactionClass<
       N,
       T,

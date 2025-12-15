@@ -51,7 +51,8 @@ import { DIRECTION } from '../FontData.js';
  * @template D  The Document class
  */
 export interface ChtmlMoNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMo<
       N,
       T,
@@ -75,7 +76,8 @@ export interface ChtmlMoNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMoClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMoClass<
       N,
       T,

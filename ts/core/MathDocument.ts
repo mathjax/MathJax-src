@@ -655,9 +655,11 @@ class DefaultMathItem<N, T, D> extends AbstractMathItem<N, T, D> {}
  * @template T  The Text node class
  * @template D  The Document class
  */
-export abstract class AbstractMathDocument<N, T, D>
-  implements MathDocument<N, T, D>
-{
+export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
+  N,
+  T,
+  D
+> {
   /**
    * The type of MathDocument
    */

@@ -53,7 +53,8 @@ import { STATE } from '../../../core/MathItem.js';
  * @template D  The Document class
  */
 export interface ChtmlMactionNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMaction<
       N,
       T,
@@ -95,7 +96,8 @@ export interface ChtmlMactionNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMactionClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMactionClass<
       N,
       T,

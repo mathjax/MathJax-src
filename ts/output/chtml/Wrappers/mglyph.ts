@@ -50,7 +50,8 @@ import { StyleJson, StyleJsonData } from '../../../util/StyleJson.js';
  * @template D  The Document class
  */
 export interface ChtmlMglyphNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMglyph<
       N,
       T,
@@ -74,7 +75,8 @@ export interface ChtmlMglyphNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMglyphClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMglyphClass<
       N,
       T,

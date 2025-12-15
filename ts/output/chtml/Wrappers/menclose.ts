@@ -70,7 +70,8 @@ const ANGLE = Angle(Notation.ARROWDX, Notation.ARROWY);
  * @template D  The Document class
  */
 export interface ChtmlMencloseNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMenclose<
       N,
       T,
@@ -124,7 +125,8 @@ export interface ChtmlMencloseNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMencloseClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMencloseClass<
       N,
       T,

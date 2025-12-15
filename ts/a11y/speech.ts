@@ -169,8 +169,11 @@ export function SpeechMathItemMixin<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SpeechMathDocument<N, T, D>
-  extends EnrichedMathDocument<N, T, D> {
+export interface SpeechMathDocument<N, T, D> extends EnrichedMathDocument<
+  N,
+  T,
+  D
+> {
   /**
    * The webworker handler for the document
    */

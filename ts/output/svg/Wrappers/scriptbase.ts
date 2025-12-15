@@ -50,7 +50,8 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
  * @template D  The Document class
  */
 export interface SvgScriptbaseNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonScriptbase<
       N,
       T,
@@ -74,7 +75,8 @@ export interface SvgScriptbaseNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgScriptbaseClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonScriptbaseClass<
       N,
       T,

@@ -48,7 +48,8 @@ import { MmlMspace } from '../../../core/MmlTree/MmlNodes/mspace.js';
  * @template D  The Document class
  */
 export interface ChtmlMspaceNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMspace<
       N,
       T,
@@ -72,7 +73,8 @@ export interface ChtmlMspaceNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMspaceClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMspaceClass<
       N,
       T,

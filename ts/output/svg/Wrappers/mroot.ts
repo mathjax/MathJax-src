@@ -50,7 +50,8 @@ import { BBox } from '../../../util/BBox.js';
  * @template D  The Document class
  */
 export interface SvgMrootNTD<N, T, D>
-  extends SvgMsqrtNTD<N, T, D>,
+  extends
+    SvgMsqrtNTD<N, T, D>,
     CommonMroot<
       N,
       T,
@@ -74,7 +75,8 @@ export interface SvgMrootNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMrootClass<N, T, D>
-  extends SvgMsqrtClass<N, T, D>,
+  extends
+    SvgMsqrtClass<N, T, D>,
     CommonMrootClass<
       N,
       T,

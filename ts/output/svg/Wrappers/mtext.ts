@@ -48,7 +48,8 @@ import { MmlMtext } from '../../../core/MmlTree/MmlNodes/mtext.js';
  * @template D  The Document class
  */
 export interface SvgMtextNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMtext<
       N,
       T,
@@ -72,7 +73,8 @@ export interface SvgMtextNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMtextClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMtextClass<
       N,
       T,

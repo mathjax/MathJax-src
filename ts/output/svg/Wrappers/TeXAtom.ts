@@ -48,7 +48,8 @@ import { MmlNode, TEXCLASSNAMES } from '../../../core/MmlTree/MmlNode.js';
  * @template D  The Document class
  */
 export interface SvgTeXAtomNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonTeXAtom<
       N,
       T,
@@ -72,7 +73,8 @@ export interface SvgTeXAtomNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgTeXAtomClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonTeXAtomClass<
       N,
       T,

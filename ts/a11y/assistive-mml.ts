@@ -158,8 +158,11 @@ export function AssistiveMmlMathItemMixin<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface AssistiveMmlMathDocument<N, T, D>
-  extends AbstractMathDocument<N, T, D> {
+export interface AssistiveMmlMathDocument<N, T, D> extends AbstractMathDocument<
+  N,
+  T,
+  D
+> {
   /**
    * @param {MmlNode} node   The node to be serializes
    * @returns {string}        The serialization of the node

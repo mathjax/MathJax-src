@@ -50,7 +50,8 @@ import { OptionList } from '../../../util/Options.js';
  * @template D  The Document class
  */
 export interface SvgMglyphNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMglyph<
       N,
       T,
@@ -74,7 +75,8 @@ export interface SvgMglyphNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMglyphClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMglyphClass<
       N,
       T,

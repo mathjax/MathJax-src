@@ -119,7 +119,7 @@ export class ChtmlFontData extends FontData<
   protected static defaultStyles = {};
 
   /**
-   * The default @font-face declarations with %%URL%% where the font path should go
+   * The default `@font-face` declarations with `%%URL%%` where the font path should go
    */
   protected static defaultFonts = {};
 
@@ -149,7 +149,7 @@ export class ChtmlFontData extends FontData<
   public fontUsage: StyleJson = {};
 
   /**
-   * Number of new @font-face entries that have been processed
+   * Number of new `@font-face` entries that have been processed
    */
   protected newFonts: number = 0;
 
