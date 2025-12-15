@@ -406,15 +406,19 @@ export function ExplorerMathDocumentMixin<
 
       'mjx-container > mjx-help': {
         display: 'none',
-        position: 'sticky',
-        inset: '-100% 0 100% 0',
-        margin: '-.3em -.5em 0 -.1em',
+        position: 'absolute',
+        top: '-.3em',
+        right: '-.5em',
         width: '.6em',
         height: '.6em',
         cursor: 'pointer',
       },
       'mjx-container[display="true"] > mjx-help': {
+        position: 'sticky',
+        inset: '-100% 0 100% 0',
+        margin: '-.3em -.5em 0 -.1em',
         right: 0,
+        top: 'initial',
       },
       'mjx-help > svg': {
         stroke: 'black',
