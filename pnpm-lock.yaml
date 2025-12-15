@@ -18,8 +18,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       speech-rule-engine:
-        specifier: 5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: 5.0.0-beta.3
+        version: 5.0.0-beta.3
     devDependencies:
       '@eslint/js':
         specifier: ^9.28.0
@@ -530,8 +530,8 @@ packages:
     resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
     engines: {node: '>=18'}
 
-  commander@14.0.0:
-    resolution: {integrity: sha512-2uM9rYjPvyq39NwLRqaiLtWHyDC1FvryJDa2ATTVims5YAS4PupsEQsDvP14FqhFr0P49CYDugi59xaxJlTXRA==}
+  commander@14.0.2:
+    resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
     engines: {node: '>=20'}
 
   commander@2.20.3:
@@ -1354,8 +1354,8 @@ packages:
   spdx-license-ids@3.0.21:
     resolution: {integrity: sha512-Bvg/8F5XephndSK3JffaRqdT+gyhfqIPwDHpX80tJrF8QQRYMo8sNMeaZ2Dp5+jhwKnUmIOyFFQfHRkjJm5nXg==}
 
-  speech-rule-engine@5.0.0-beta.1:
-    resolution: {integrity: sha512-arqcJpXEYRG9mQMxRCNd2xFERGvIvwvuhcnoXDw/SyeYNyJ5I9SUU5ft+BPw0M1rPpwl3Q+6ZeeYAcwGXTa6oQ==}
+  speech-rule-engine@5.0.0-beta.3:
+    resolution: {integrity: sha512-wSrjCo8h4SJmGtjicD0OrTuCNH/wEaMsV+ktA1D9C2IPnensiP4pfPv+DnEZDMbauC5SCSE1prP5KA0z/W8bLg==}
     hasBin: true
 
   string-argv@0.3.2:
@@ -2102,7 +2102,7 @@ snapshots:
 
   commander@13.1.0: {}
 
-  commander@14.0.0: {}
+  commander@14.0.2: {}
 
   commander@2.20.3: {}
 
@@ -2883,10 +2883,10 @@ snapshots:
 
   spdx-license-ids@3.0.21: {}
 
-  speech-rule-engine@5.0.0-beta.1:
+  speech-rule-engine@5.0.0-beta.3:
     dependencies:
       '@xmldom/xmldom': 0.9.8
-      commander: 14.0.0
+      commander: 14.0.2
       wicked-good-xpath: 1.3.0
 
   string-argv@0.3.2: {}
