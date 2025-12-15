@@ -17,7 +17,7 @@ describe('Bboldx', () => {
       tex2mml('\\mathbb{Aa\u{393}\u{3B3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbb{Aa&#x393;&#x3B3;}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\mathbb{Aa&#x393;&#x3B3;}">
-           <mi data-mjx-variant="-bboldx" data-latex="a">Aa</mi>
+           <mi data-mjx-variant="-bboldx" data-latex="Aa">Aa</mi>
            <mi data-mjx-variant="-bboldx" data-latex="&#x393;">&#x393;</mi>
            <mi data-mjx-variant="-bboldx" data-latex="&#x3B3;">&#x3B3;</mi>
          </mrow>
@@ -32,7 +32,7 @@ describe('Bboldx', () => {
       tex2mml('\\mathbfbb{Aa\u{393}\u{3B3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbfbb{Aa&#x393;&#x3B3;}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\mathbfbb{Aa&#x393;&#x3B3;}">
-           <mi data-mjx-variant="-bboldx-bold" data-latex="a">Aa</mi>
+           <mi data-mjx-variant="-bboldx-bold" data-latex="Aa">Aa</mi>
            <mi data-mjx-variant="-bboldx-bold" data-latex="&#x393;">&#x393;</mi>
            <mi data-mjx-variant="-bboldx-bold" data-latex="&#x3B3;">&#x3B3;</mi>
          </mrow>
@@ -479,7 +479,7 @@ describe('Bboldx light', () => {
       tex2mml('\\mathbb{Aa\u{393}\u{3B3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbb{Aa&#x393;&#x3B3;}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\mathbb{Aa&#x393;&#x3B3;}">
-           <mi data-mjx-variant="-bboldx-light" data-latex="a">Aa</mi>
+           <mi data-mjx-variant="-bboldx-light" data-latex="Aa">Aa</mi>
            <mi data-mjx-variant="-bboldx-light" data-latex="&#x393;">&#x393;</mi>
            <mi data-mjx-variant="-bboldx-light" data-latex="&#x3B3;">&#x3B3;</mi>
          </mrow>
@@ -494,7 +494,7 @@ describe('Bboldx light', () => {
       tex2mml('\\mathbfbb{Aa\u{393}\u{3B3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbfbb{Aa&#x393;&#x3B3;}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\mathbfbb{Aa&#x393;&#x3B3;}">
-           <mi data-mjx-variant="-bboldx" data-latex="a">Aa</mi>
+           <mi data-mjx-variant="-bboldx" data-latex="Aa">Aa</mi>
            <mi data-mjx-variant="-bboldx" data-latex="&#x393;">&#x393;</mi>
            <mi data-mjx-variant="-bboldx" data-latex="&#x3B3;">&#x3B3;</mi>
          </mrow>
@@ -534,7 +534,7 @@ describe('Bboldx bfbb', () => {
       tex2mml('\\mathbb{Aa\u{393}\u{3B3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbb{Aa&#x393;&#x3B3;}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\mathbb{Aa&#x393;&#x3B3;}">
-           <mi data-mjx-variant="-bboldx-bold" data-latex="a">Aa</mi>
+           <mi data-mjx-variant="-bboldx-bold" data-latex="Aa">Aa</mi>
            <mi data-mjx-variant="-bboldx-bold" data-latex="&#x393;">&#x393;</mi>
            <mi data-mjx-variant="-bboldx-bold" data-latex="&#x3B3;">&#x3B3;</mi>
          </mrow>
@@ -549,7 +549,7 @@ describe('Bboldx bfbb', () => {
       tex2mml('\\mathbfbb{Aa\u{393}\u{3B3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbfbb{Aa&#x393;&#x3B3;}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\mathbfbb{Aa&#x393;&#x3B3;}">
-           <mi data-mjx-variant="-bboldx-bold" data-latex="a">Aa</mi>
+           <mi data-mjx-variant="-bboldx-bold" data-latex="Aa">Aa</mi>
            <mi data-mjx-variant="-bboldx-bold" data-latex="&#x393;">&#x393;</mi>
            <mi data-mjx-variant="-bboldx-bold" data-latex="&#x3B3;">&#x3B3;</mi>
          </mrow>

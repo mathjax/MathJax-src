@@ -129,8 +129,11 @@ export function ComplexityMathItemMixin<N, T, D, B extends EMItemC<N, T, D>>(
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ComplexityMathDocument<N, T, D>
-  extends EnrichedMathDocument<N, T, D> {
+export interface ComplexityMathDocument<N, T, D> extends EnrichedMathDocument<
+  N,
+  T,
+  D
+> {
   /**
    * Perform complexity computations on the MathItems in the MathDocument
    *

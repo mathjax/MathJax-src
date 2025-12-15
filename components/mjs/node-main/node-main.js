@@ -23,6 +23,7 @@ import '../startup/init.js';
 import {Loader, CONFIG} from '#js/components/loader.js';
 import {Package} from '#js/components/package.js';
 import {combineDefaults, combineConfig} from '#js/components/global.js';
+import {context} from '#js/util/context.js';
 import '../core/core.js';
 import '../adaptors/liteDOM/liteDOM.js';
 import {source} from '../source.js';
@@ -30,7 +31,7 @@ import {source} from '../source.js';
 const MathJax = global.MathJax;
 
 const path = eval('require("path")');   // get path from node, not webpack
-const dir = MathJax.config.__dirname;   // set up by node-main.mjs or node-main.cjs
+const dir = context.path(MathJax.config.__dirname);   // set up by node-main.mjs or node-main.cjs
 
 /*
  * Set up the initial configuration

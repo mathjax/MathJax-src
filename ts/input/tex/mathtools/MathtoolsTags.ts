@@ -104,9 +104,7 @@ export function MathtoolsTagFormat(
     public formatTag(tag: string) {
       if (this.mtCurrent) {
         const [left, right, format] = this.mtCurrent;
-        return format
-          ? `${left}${format}{${tag}}${right}`
-          : `${left}${tag}${right}`;
+        return [left, format ? `${format}{${tag}}` : tag, right];
       }
       return super.formatTag(tag);
     }

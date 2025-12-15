@@ -8,4 +8,5 @@ coverage
 /bundle
 /bundle-cjs
 /testsuite/js
+/testsuite/lib/localstorage
 /lab/sre.js

@@ -144,6 +144,7 @@ export abstract class CommonOutputJax<
       LinebreakVisitor: null,      // The LinebreakVisitor to use
     },
     font: '',                      // the font component to load
+    fontExtensions: [],            // the font extensions to load
     htmlHDW: 'auto',               // 'use', 'force', or 'ignore' data-mjx-hdw attributes
     wrapperFactory: null,          // The wrapper factory to use
     fontData: null,                // The FontData object to use
@@ -167,8 +168,8 @@ export abstract class CommonOutputJax<
       display: 'block',
       'text-align': 'center',
       'justify-content': 'center',
-      margin: 'calc(1em - 2px) 0',
-      padding: '2px 0',
+      margin: '.7em 0',
+      padding: '.3em 2px',
     },
     'mjx-container[display][width="full"]': {
       display: 'flex',
@@ -182,6 +183,15 @@ export abstract class CommonOutputJax<
       'justify-content': 'right',
     },
   };
+
+  /**
+   * The font to use for generic extensions
+   */
+  public static genericFont: FontDataClass<
+    CharOptions,
+    VariantData<CharOptions>,
+    DelimiterData
+  >;
 
   /**
    * Used for collecting styles needed for the output jax
@@ -305,6 +315,8 @@ export abstract class CommonOutputJax<
     this.styleJson = this.options.styleJson || new StyleJsonSheet();
     this.font = font || new fontClass(fontOptions);
     this.font.setOptions({ mathmlSpacing: this.options.mathmlSpacing });
+    /* prettier-ignore */
+    (this.constructor as typeof CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>).genericFont = fontClass;
     this.unknownCache = new Map();
     const linebreaks = (this.options.linebreaks.LinebreakVisitor ||
       LinebreakVisitor) as typeof Linebreaks;
@@ -349,9 +361,17 @@ export abstract class CommonOutputJax<
    * @override
    */
   public typeset(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
+    /* prettier-ignore */
+    const CLASS = (this.constructor as typeof CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>);
+    const generic = CLASS.genericFont;
+    CLASS.genericFont = this.font.constructor as FontDataClass<CC, VV, DD>;
     this.setDocument(html);
     const node = this.createNode();
-    this.toDOM(math, node, html);
+    try {
+      this.toDOM(math, node, html);
+    } finally {
+      CLASS.genericFont = generic;
+    }
     return node;
   }
 
@@ -374,7 +394,8 @@ export abstract class CommonOutputJax<
       this.math.display
     ) {
       const w = wrapper.getOuterBBox().w;
-      const W = this.math.metrics.containerWidth / this.pxPerEm;
+      const W =
+        Math.max(0, this.math.metrics.containerWidth - 4) / this.pxPerEm;
       if (w > W && w) {
         scale *= W / w;
       }

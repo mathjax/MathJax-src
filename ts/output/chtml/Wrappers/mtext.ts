@@ -48,7 +48,8 @@ import { MmlMtext } from '../../../core/MmlTree/MmlNodes/mtext.js';
  * @template D  The Document class
  */
 export interface ChtmlMtextNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMtext<
       N,
       T,
@@ -72,7 +73,8 @@ export interface ChtmlMtextNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMtextClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMtextClass<
       N,
       T,

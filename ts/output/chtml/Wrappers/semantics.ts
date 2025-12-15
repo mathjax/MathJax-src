@@ -61,7 +61,8 @@ import { StyleList } from '../../../util/Styles.js';
  * @template D  The Document class
  */
 export interface ChtmlSemanticsNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonSemantics<
       N,
       T,
@@ -85,7 +86,8 @@ export interface ChtmlSemanticsNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlSemanticsClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonSemanticsClass<
       N,
       T,
@@ -226,7 +228,8 @@ export const ChtmlAnnotationXML = (function <N, T, D>(): ChtmlWrapperClass<
  * @template D  The Document class
  */
 export interface ChtmlXmlNodeNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonXmlNode<
       N,
       T,
@@ -250,7 +253,8 @@ export interface ChtmlXmlNodeNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlXmlNodeClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonXmlNodeClass<
       N,
       T,

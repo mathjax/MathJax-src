@@ -50,7 +50,8 @@ import { BBox } from '../../../util/BBox.js';
  * @template D  The Document class
  */
 export interface ChtmlMathNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMath<
       N,
       T,
@@ -74,7 +75,8 @@ export interface ChtmlMathNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMathClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMathClass<
       N,
       T,

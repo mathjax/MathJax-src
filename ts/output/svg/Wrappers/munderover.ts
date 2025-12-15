@@ -70,7 +70,8 @@ import {
  * @template D  The Document class
  */
 export interface SvgMunderNTD<N, T, D>
-  extends SvgMsubNTD<N, T, D>,
+  extends
+    SvgMsubNTD<N, T, D>,
     CommonMunder<
       N,
       T,
@@ -94,7 +95,8 @@ export interface SvgMunderNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMunderClass<N, T, D>
-  extends SvgMsubClass<N, T, D>,
+  extends
+    SvgMsubClass<N, T, D>,
     CommonMunderClass<
       N,
       T,
@@ -187,7 +189,8 @@ export const SvgMunder = (function <N, T, D>(): SvgMunderClass<N, T, D> {
  * @template D  The Document class
  */
 export interface SvgMoverNTD<N, T, D>
-  extends SvgMsupNTD<N, T, D>,
+  extends
+    SvgMsupNTD<N, T, D>,
     CommonMover<
       N,
       T,
@@ -211,7 +214,8 @@ export interface SvgMoverNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMoverClass<N, T, D>
-  extends SvgMsupClass<N, T, D>,
+  extends
+    SvgMsupClass<N, T, D>,
     CommonMoverClass<
       N,
       T,
@@ -301,7 +305,8 @@ export const SvgMover = (function <N, T, D>(): SvgMoverClass<N, T, D> {
  * @template D  The Document class
  */
 export interface SvgMunderoverNTD<N, T, D>
-  extends SvgMsubsupNTD<N, T, D>,
+  extends
+    SvgMsubsupNTD<N, T, D>,
     CommonMunderover<
       N,
       T,
@@ -325,7 +330,8 @@ export interface SvgMunderoverNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMunderoverClass<N, T, D>
-  extends SvgMsubsupClass<N, T, D>,
+  extends
+    SvgMsubsupClass<N, T, D>,
     CommonMunderoverClass<
       N,
       T,

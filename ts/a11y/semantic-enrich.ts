@@ -209,6 +209,7 @@ export function EnrichedMathItemMixin<
           //
           math.math = math.math
             .replace(/ role="treeitem"/g, ' data-speech-node="true"')
+            .replace(/ aria-level/g, ' data-semantic-level-number')
             .replace(/ aria-(?:posinset|owns|setsize)=".*?"/g, '');
           math.display = this.display;
           math.compile(document);
@@ -273,8 +274,11 @@ export function EnrichedMathItemMixin<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface EnrichedMathDocument<N, T, D>
-  extends AbstractMathDocument<N, T, D> {
+export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<
+  N,
+  T,
+  D
+> {
   /**
    * Perform enrichment on the MathItems in the MathDocument
    *

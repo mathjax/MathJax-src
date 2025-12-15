@@ -315,13 +315,13 @@ describe('Newcommand', () => {
     toXmlMatch(
       tex2mml('\\let\\lb=\\{\\left\\lb \\frac{1}{2} \\right\\}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\lb=\\{\\left\\lb \\frac{1}{2} \\right\\}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lb \\frac{1}{2} \\right\\}" data-latex="\\let\\lb=\\{\\left\\lb \\frac{1}{2} \\right\\}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lb " data-latex="\\left\\lb ">{</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\let\\lb=\\{\\left\\lb \\frac{1}{2} \\right\\}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lb ">{</mo>
            <mfrac data-latex="\\frac{1}{2}">
              <mn data-latex="1">1</mn>
              <mn data-latex="2">2</mn>
            </mfrac>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\}" data-latex="\\right\\}">}</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\}">}</mo>
          </mrow>
        </math>`
     );
@@ -333,13 +333,13 @@ describe('Newcommand', () => {
     toXmlMatch(
       tex2mml('\\let\\lb( \\left\\lb \\frac{1}{2} \\right)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\lb( \\left\\lb \\frac{1}{2} \\right)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lb \\frac{1}{2} \\right)" data-latex="\\let\\lb( \\left\\lb \\frac{1}{2} \\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lb " data-latex="\\left\\lb ">(</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\let\\lb( \\left\\lb \\frac{1}{2} \\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lb ">(</mo>
            <mfrac data-latex="\\frac{1}{2}">
              <mn data-latex="1">1</mn>
              <mn data-latex="2">2</mn>
            </mfrac>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -420,17 +420,17 @@ describe('Newcommand', () => {
         '\\let\\lp(\\let\\rp)\\let\\mp\\rp\\left\\lp \\frac{a}{b}\\middle\\mp c \\right\\rp'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\lp(\\let\\rp)\\let\\mp\\rp\\left\\lp \\frac{a}{b}\\middle\\mp c \\right\\rp" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lp \\frac{a}{b}\\middle\\mp c \\right\\rp" data-latex="\\let\\lp(\\let\\rp)\\let\\mp\\rp\\left\\lp \\frac{a}{b}\\middle\\mp c \\right\\rp">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lp " data-latex="\\left\\lp ">(</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\let\\lp(\\let\\rp)\\let\\mp\\rp\\left\\lp \\frac{a}{b}\\middle\\mp c \\right\\rp">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lp ">(</mo>
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
              <mi data-latex="b">b</mi>
            </mfrac>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\mp " data-latex="\\middle\\mp ">)</mo>
+           <mo data-latex="\\middle\\mp ">)</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\mp"></mrow>
            <mi data-latex="c">c</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rp" data-latex="\\right\\rp">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rp">)</mo>
          </mrow>
        </math>`
     );
@@ -444,17 +444,17 @@ describe('Newcommand', () => {
         '\\let\\lp\\langle\\let\\rp\\rangle\\let\\mp\\rp\\left\\lp \\frac{a}{b}\\middle\\mp c \\right\\rp'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\lp\\langle\\let\\rp\\rangle\\let\\mp\\rp\\left\\lp \\frac{a}{b}\\middle\\mp c \\right\\rp" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lp \\frac{a}{b}\\middle\\mp c \\right\\rp" data-latex="\\let\\lp\\langle\\let\\rp\\rangle\\let\\mp\\rp\\left\\lp \\frac{a}{b}\\middle\\mp c \\right\\rp">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lp " data-latex="\\left\\lp ">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\let\\lp\\langle\\let\\rp\\rangle\\let\\mp\\rp\\left\\lp \\frac{a}{b}\\middle\\mp c \\right\\rp">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lp ">&#x27E8;</mo>
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
              <mi data-latex="b">b</mi>
            </mfrac>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\mp " data-latex="\\middle\\mp ">&#x27E9;</mo>
+           <mo data-latex="\\middle\\mp ">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\mp"></mrow>
            <mi data-latex="c">c</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rp" data-latex="\\right\\rp">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rp">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -491,7 +491,7 @@ describe('Newcommand', () => {
     toXmlMatch(
       tex2mml('\\let\\sqrt\\choose a\\sqrt b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\sqrt\\choose a\\sqrt b" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex-item="\\sqrt" data-latex="\\let\\sqrt\\choose a\\sqrt b">
+         <mrow data-mjx-texclass="ORD" data-latex="\\let\\sqrt\\choose a\\sqrt b">
            <mrow data-mjx-texclass="OPEN" data-latex="\\biggl (">
              <mo minsize="2.047em" maxsize="2.047em">(</mo>
            </mrow>
@@ -835,7 +835,7 @@ describe('Newcommand Ams', () => {
       tex2mml('\\let\\b\\lvert\\let\\lvert\\langle\\vert\\b\\lvert'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\b\\lvert\\let\\lvert\\langle\\vert\\b\\lvert" display="block">
          <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
-         <mo data-mjx-texclass="OPEN" fence="false" stretchy="false" data-latex="\\b">|</mo>
+         <mo data-mjx-texclass="OPEN" data-latex="\\b">|</mo>
          <mo fence="false" stretchy="false" data-latex="\\lvert">&#x27E8;</mo>
        </math>`
     );
@@ -847,10 +847,10 @@ describe('Newcommand Ams', () => {
     toXmlMatch(
       tex2mml('\\let\\b\\lvert\\let\\lvert\\langle\\left\\b q \\right\\lvert'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\b\\lvert\\let\\lvert\\langle\\left\\b q \\right\\lvert" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\b q \\right\\lvert" data-latex="\\let\\b\\lvert\\let\\lvert\\langle\\left\\b q \\right\\lvert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\b " data-latex="\\left\\b ">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\let\\b\\lvert\\let\\lvert\\langle\\left\\b q \\right\\lvert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\b ">|</mo>
            <mi data-latex="q">q</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\lvert" data-latex="\\right\\lvert">&#x27E8;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\lvert">&#x27E8;</mo>
          </mrow>
        </math>`
     );
@@ -1085,10 +1085,10 @@ describe('Newcommand Overrides', () => {
     toXmlMatch(
       tex2mml('\\def\\test{x} \\let\\test=\\| \\left\\test X \\right\\test'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\test{x} \\let\\test=\\| \\left\\test X \\right\\test" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\test X \\right\\test" data-latex="\\def\\test{x} \\let\\test=\\| \\left\\test X \\right\\test">
-           <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\test " data-latex="\\left\\test ">&#x2016;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\def\\test{x} \\let\\test=\\| \\left\\test X \\right\\test">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\test ">&#x2016;</mo>
            <mi data-latex="X">X</mi>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\test" data-latex="\\right\\test">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\test">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -1112,10 +1112,10 @@ describe('Newcommand Overrides', () => {
     toXmlMatch(
       tex2mml('\\let\\sqrt=\\| \\left\\sqrt X \\right\\sqrt'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\sqrt=\\| \\left\\sqrt X \\right\\sqrt" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\sqrt X \\right\\sqrt" data-latex="\\let\\sqrt=\\| \\left\\sqrt X \\right\\sqrt">
-           <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\sqrt " data-latex="\\left\\sqrt ">&#x2016;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\let\\sqrt=\\| \\left\\sqrt X \\right\\sqrt">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\sqrt ">&#x2016;</mo>
            <mi data-latex="X">X</mi>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\sqrt" data-latex="\\right\\sqrt">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\sqrt">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -1154,10 +1154,10 @@ describe('Newcommand Overrides', () => {
     toXmlMatch(
       tex2mml('\\let\\test=< \\left\\test X \\right\\test'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\test=&lt; \\left\\test X \\right\\test" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\test X \\right\\test" data-latex="\\let\\test=&lt; \\left\\test X \\right\\test">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\test " data-latex="\\left\\test ">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\let\\test=&lt; \\left\\test X \\right\\test">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\test ">&#x27E8;</mo>
            <mi data-latex="X">X</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\test" data-latex="\\right\\test">&#x27E8;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\test">&#x27E8;</mo>
          </mrow>
        </math>`
     );
@@ -1195,8 +1195,8 @@ describe('Nested Environments', () => {
         ].join('')
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newenvironment{boxed}{\\begin{array}{|c|c|}\\hline}{\\\\\\hline\\end{array}}\\begin{boxed}a&amp;b\\\\c&amp;d\\end{boxed}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex-item="{array}" data-latex="">
-           <mtr data-latex-item="{|c|c|}" data-latex="{|c|c|}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex="{array}">
+           <mtr data-latex="{|c|c|}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -1204,7 +1204,7 @@ describe('Nested Environments', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{|c|c|}" data-latex="{|c|c|}">
+           <mtr data-latex="{|c|c|}">
              <mtd>
                <mi data-latex="c">c</mi>
              </mtd>
@@ -1228,11 +1228,11 @@ describe('Nested Environments', () => {
         ].join('')
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newenvironment{boxed}{\\begin{array}{|c|c|}\\hline}{\\\\\\hline\\end{array}}\\begin{boxed}\\begin{boxed}a&amp;b\\\\c&amp;d\\end{boxed} &amp; X \\end{boxed}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex-item="{array}" data-latex="">
-           <mtr data-latex-item="{|c|c|}" data-latex="{|c|c|}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex="{array}">
+           <mtr data-latex="{|c|c|}">
              <mtd>
-               <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex-item="{array}" data-latex="{array}">
-                 <mtr data-latex-item="{|c|c|}" data-latex="{|c|c|}">
+               <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex="{array}">
+                 <mtr data-latex="{|c|c|}">
                    <mtd>
                      <mi data-latex="a">a</mi>
                    </mtd>
@@ -1240,7 +1240,7 @@ describe('Nested Environments', () => {
                      <mi data-latex="b">b</mi>
                    </mtd>
                  </mtr>
-                 <mtr data-latex-item="{|c|c|}" data-latex="{|c|c|}">
+                 <mtr data-latex="{|c|c|}">
                    <mtd>
                      <mi data-latex="c">c</mi>
                    </mtd>

@@ -55,7 +55,7 @@ export class TagInfo {
    *     is, but align* is not).
    * @param {string} tag The tag name (e.g., 1).
    * @param {string} tagId The unique id for that tag (e.g., mjx-eqn:1).
-   * @param {string} tagFormat The formatted tag (e.g., "(1)").
+   * @param {string|string[]} tagFormat The formatted tag (e.g., "$\bullet$" or ['(','1',')']).
    * @param {boolean} noTag A no tagging command has been set (e.g., \notag,
    *     \nonumber).
    * @param {string} labelId The label referring to the tag.
@@ -66,7 +66,7 @@ export class TagInfo {
     readonly defaultTags: boolean = false,
     public tag: string = null,
     public tagId: string = '',
-    public tagFormat: string = '',
+    public tagFormat: string | string[] = '',
     public noTag: boolean = false,
     public labelId: string = ''
   ) {}
@@ -149,7 +149,7 @@ export interface Tags {
    * @param {string} tag The tag string.
    * @returns {string} The formatted numbered tag.
    */
-  formatTag(tag: string): string;
+  formatTag(tag: string): string | string[];
 
   /**
    * How to format references to tags.
@@ -157,7 +157,7 @@ export interface Tags {
    * @param {string} tag The tag string.
    * @returns {string} The formatted numbered tag.
    */
-  formatRef(tag: string): string;
+  formatRef(tag: string): string | string[];
 
   /**
    * How to format URLs for references.
@@ -390,7 +390,7 @@ export class AbstractTags implements Tags {
    * @override
    */
   public formatTag(tag: string) {
-    return '(' + tag + ')';
+    return ['(', tag, ')'];
   }
 
   /**
@@ -566,8 +566,12 @@ export class AbstractTags implements Tags {
       );
       this.label = '';
     }
+    const format = this.currentTag.tagFormat;
+    const tag = Array.isArray(format)
+      ? format
+      : format.match(/^(\(|\[|\{)(.*)(\}|\]|\))$/)?.slice(1) || [format];
     const mml = new TexParser(
-      '\\text{' + this.currentTag.tagFormat + '}',
+      tag.map((part) => (part ? `\\text{${part}}` : '')).join(''),
       {},
       this.configuration
     ).mml();

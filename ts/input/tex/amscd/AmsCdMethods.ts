@@ -64,9 +64,11 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
    * @returns {void} No value.
    */
   arrow(parser: TexParser, name: string): void {
-    const c = parser.string.charAt(parser.i);
+    const i = parser.i;
+    const c = parser.GetNext();
     if (!c.match(/[><VA.|=]/)) {
       // TODO: This return is suspicious.
+      parser.i = i;
       return Other(parser, name);
     } else {
       parser.i++;
@@ -163,7 +165,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
           if (a) {
             NodeUtil.appendChildren(mml, [
               new TexParser(
-                '\\scriptstyle\\llap{' + a + '}',
+                '\\scriptstyle\\raise.125em{\\vcenter{\\llap{' + a + '}}}',
                 parser.stack.env,
                 parser.configuration
               ).mml(),
@@ -174,7 +176,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
           if (b) {
             NodeUtil.appendChildren(mml, [
               new TexParser(
-                '\\scriptstyle\\rlap{' + b + '}',
+                '\\scriptstyle\\raise.125em{\\vcenter{\\rlap{' + b + '}}}',
                 parser.stack.env,
                 parser.configuration
               ).mml(),

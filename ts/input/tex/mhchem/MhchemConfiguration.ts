@@ -52,8 +52,15 @@ export const MhchemUtils = {
 /**
  * Replace these constructs in mhchem output now that we have stretchy versions
  * of the needed arrows
+ *
+ * @param {string} match   The matching macro name
+ * @param {string} arrow   The arrow name (without the backslash).
+ * @returns {string}       The mhchem arrow name, if there is one.
  */
-export const MhchemReplacements = new Map<string, RegExp>([
+export const MhchemReplacements = new Map<
+  string | ((match: string, arrow: string) => string),
+  RegExp
+>([
   [
     '\\mhchemx$3[$1]{$2}',
     /\\underset{\\lower2mu{(.*?)}}{\\overset{(.*?)}{\\long(.*?)}}/g,
@@ -72,7 +79,12 @@ export const MhchemReplacements = new Map<string, RegExp>([
     /\\rlap\{\\lower\.2em\{-\}\}\\rlap\{\\raise.2em\{-\}\}\\tripledash/g,
   ],
   [
-    '\\mhchem$1',
+    (match: string, arrow: string) => {
+      const mharrow = `mhchem${arrow}`;
+      return mhchemChars.lookup(mharrow) || mhchemMacros.lookup(mharrow)
+        ? `\\${mharrow}`
+        : match;
+    },
     /\\(x?(?:long)?(?:left|right|[Ll]eftright|[Rr]ightleft)(?:arrow|harpoons))/g,
   ],
 ]);
@@ -90,7 +102,7 @@ export const MhchemMethods: { [key: string]: ParseMethod } = {
     try {
       tex = mhchemParser.toTex(arg, machine);
       for (const [name, pattern] of MhchemReplacements.entries()) {
-        tex = tex.replace(pattern, name);
+        tex = tex.replace(pattern, name as string);
       }
     } catch (err) {
       throw new TexError(err[0], err[1]);
@@ -106,7 +118,7 @@ export const MhchemMethods: { [key: string]: ParseMethod } = {
 /**
  * The command macros
  */
-new CommandMap('mhchem', {
+const mhchemMacros = new CommandMap('mhchem', {
   ce: [MhchemMethods.Machine, 'ce'],
   pu: [MhchemMethods.Machine, 'pu'],
   mhchemxrightarrow: [MhchemMethods.xArrow, 0xe429, 5, 9],
@@ -121,7 +133,7 @@ new CommandMap('mhchem', {
 /**
  * The character macros
  */
-new CharacterMap('mhchem-chars', MhchemUtils.relmo, {
+const mhchemChars = new CharacterMap('mhchem-chars', MhchemUtils.relmo, {
   tripledash: ['\uE410', { stretchy: false }],
   mhchemBondTD: ['\uE411', { stretchy: false }],
   mhchemBondTDD: ['\uE412', { stretchy: false }],
@@ -133,8 +145,8 @@ new CharacterMap('mhchem-chars', MhchemUtils.relmo, {
   mhchemlongRightleftharpoons: '\uE409',
   mhchemlongLeftrightharpoons: '\uE40A',
   mhchemlongleftrightarrows: '\uE42B',
-  mhchemrightarrow: '\uE42C',
-  mhchemleftarrow: '\uE42D',
+  mhchemrightarrow: '\uE42D',
+  mhchemleftarrow: '\uE42C',
   mhchemleftrightarrow: '\uE42E',
 });
 

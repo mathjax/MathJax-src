@@ -49,7 +49,8 @@ import { ChtmlInferredMrowNTD } from './mrow.js';
  * @template D  The Document class
  */
 export interface ChtmlMfencedNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMfenced<
       N,
       T,
@@ -73,7 +74,8 @@ export interface ChtmlMfencedNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMfencedClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMfencedClass<
       N,
       T,

@@ -64,7 +64,8 @@ import {
  * @template D  The Document class
  */
 export interface SvgMsubNTD<N, T, D>
-  extends SvgScriptbaseNTD<N, T, D>,
+  extends
+    SvgScriptbaseNTD<N, T, D>,
     CommonMsub<
       N,
       T,
@@ -88,7 +89,8 @@ export interface SvgMsubNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMsubClass<N, T, D>
-  extends SvgScriptbaseClass<N, T, D>,
+  extends
+    SvgScriptbaseClass<N, T, D>,
     CommonMsubClass<
       N,
       T,
@@ -152,7 +154,8 @@ export const SvgMsub = (function <N, T, D>(): SvgMsubClass<N, T, D> {
  * @template D  The Document class
  */
 export interface SvgMsupNTD<N, T, D>
-  extends SvgScriptbaseNTD<N, T, D>,
+  extends
+    SvgScriptbaseNTD<N, T, D>,
     CommonMsup<
       N,
       T,
@@ -176,7 +179,8 @@ export interface SvgMsupNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMsupClass<N, T, D>
-  extends SvgScriptbaseClass<N, T, D>,
+  extends
+    SvgScriptbaseClass<N, T, D>,
     CommonMsupClass<
       N,
       T,
@@ -240,7 +244,8 @@ export const SvgMsup = (function <N, T, D>(): SvgMsupClass<N, T, D> {
  * @template D  The Document class
  */
 export interface SvgMsubsupNTD<N, T, D>
-  extends SvgScriptbaseNTD<N, T, D>,
+  extends
+    SvgScriptbaseNTD<N, T, D>,
     CommonMsubsup<
       N,
       T,
@@ -264,7 +269,8 @@ export interface SvgMsubsupNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMsubsupClass<N, T, D>
-  extends SvgScriptbaseClass<N, T, D>,
+  extends
+    SvgScriptbaseClass<N, T, D>,
     CommonMsubsupClass<
       N,
       T,

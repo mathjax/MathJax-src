@@ -192,13 +192,19 @@ export interface MinHTMLAdaptor<N, T, D> extends DOMAdaptor<N, T, D> {
  * @template D  The Document class
  */
 export class HTMLAdaptor<
-    N extends MinHTMLElement<N, T>,
-    T extends MinText<N, T>,
-    D extends MinDocument<N, T>,
-  >
+  N extends MinHTMLElement<N, T>,
+  T extends MinText<N, T>,
+  D extends MinDocument<N, T>,
+>
   extends AbstractDOMAdaptor<N, T, D>
   implements MinHTMLAdaptor<N, T, D>
 {
+  /**
+   * The font size to use when it can't be measured (e.g., the element
+   * isn't in the DOM).
+   */
+  public static DEFAULT_FONT_SIZE = 16;
+
   /**
    * The HTML adaptor can measure DOM node sizes
    */
@@ -463,6 +469,9 @@ export class HTMLAdaptor<
    */
   public setAttribute(node: N, name: string, value: string, ns: string = null) {
     if (!ns) {
+      if (name === 'style') {
+        value = value.replace(/\n/g, ' ');
+      }
       return node.setAttribute(name, value);
     }
     name = ns.replace(/.*\//, '') + ':' + name.replace(/^.*:/, '');
@@ -538,14 +547,14 @@ export class HTMLAdaptor<
    * @override
    */
   public setStyle(node: N, name: string, value: string) {
-    (node.style as OptionList)[name] = value;
+    node.style[name] = String(value).replace(/\n/g, ' ');
   }
 
   /**
    * @override
    */
   public getStyle(node: N, name: string) {
-    return (node.style as OptionList)[name];
+    return node.style[name];
   }
 
   /**
@@ -585,7 +594,10 @@ export class HTMLAdaptor<
    */
   public fontSize(node: N) {
     const style = this.window.getComputedStyle(node);
-    return parseFloat(style.fontSize);
+    return parseFloat(
+      style.fontSize ||
+        String((this.constructor as typeof HTMLAdaptor).DEFAULT_FONT_SIZE)
+    );
   }
 
   /**

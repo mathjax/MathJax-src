@@ -54,7 +54,8 @@ const CLASSPREFIX = 'mjx-';
  * @template D  The Document class
  */
 export interface SvgMtableNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMtable<
       N,
       T,
@@ -84,7 +85,8 @@ export interface SvgMtableNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMtableClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMtableClass<
       N,
       T,

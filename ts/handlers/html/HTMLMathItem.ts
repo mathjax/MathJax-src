@@ -83,7 +83,9 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
           if (this.start.n) {
             node = this.adaptor.split(this.start.node as T, this.start.n);
           }
-          this.adaptor.replace(this.typesetRoot, node);
+          if (this.adaptor.parent(node)) {
+            this.adaptor.replace(this.typesetRoot, node);
+          }
         } else {
           if (this.start.n) {
             node = this.adaptor.split(node, this.start.n);

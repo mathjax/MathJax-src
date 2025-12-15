@@ -61,7 +61,8 @@ import { StyleList } from '../../../util/Styles.js';
  * @template D  The Document class
  */
 export interface SvgSemanticsNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonSemantics<
       N,
       T,
@@ -85,7 +86,8 @@ export interface SvgSemanticsNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgSemanticsClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonSemanticsClass<
       N,
       T,
@@ -216,7 +218,8 @@ export const SvgAnnotationXML = (function <N, T, D>(): SvgWrapperClass<
  * @template D  The Document class
  */
 export interface SvgXmlNodeNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonXmlNode<
       N,
       T,
@@ -240,7 +243,8 @@ export interface SvgXmlNodeNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgXmlNodeClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonXmlNodeClass<
       N,
       T,

@@ -57,7 +57,8 @@ import { StyleJson } from '../../../util/StyleJson.js';
  * @template D  The Document class
  */
 export interface ChtmlMrowNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMrow<
       N,
       T,
@@ -81,7 +82,8 @@ export interface ChtmlMrowNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMrowClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMrowClass<
       N,
       T,
@@ -250,8 +252,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
         );
         adaptor.setAttribute(parents[i], 'align', align);
         if (shift) {
-          adaptor.setStyle(parents[i], 'position', 'relative');
-          adaptor.setStyle(parents[i], 'left', this.em(shift));
+          adaptor.setStyle(parents[i], 'margin-left', this.em(shift));
         }
         if (i < n && this.jax.math.display) {
           adaptor.setStyle(
@@ -362,7 +363,8 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
  * @template D  The Document class
  */
 export interface ChtmlInferredMrowNTD<N, T, D>
-  extends ChtmlMrowNTD<N, T, D>,
+  extends
+    ChtmlMrowNTD<N, T, D>,
     CommonInferredMrow<
       N,
       T,
@@ -386,7 +388,8 @@ export interface ChtmlInferredMrowNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlInferredMrowClass<N, T, D>
-  extends ChtmlMrowClass<N, T, D>,
+  extends
+    ChtmlMrowClass<N, T, D>,
     CommonInferredMrowClass<
       N,
       T,

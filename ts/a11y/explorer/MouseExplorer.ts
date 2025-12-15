@@ -136,7 +136,7 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     this.highlighter.unhighlight();
     this.highlighter.highlight([node]);
     this.region.Update(kind);
-    this.region.Show(node, this.highlighter);
+    this.region.Show(node);
   }
 
   /**

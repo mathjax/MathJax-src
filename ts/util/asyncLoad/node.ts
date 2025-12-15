@@ -23,11 +23,11 @@
 
 import { mathjax } from '../../mathjax.js';
 import * as path from 'path';
-import { src } from '#source/source.cjs';
+import { dirname } from '#source/source.cjs';
 
 declare const require: (name: string) => any;
 
-let root = path.resolve(src, '..', '..', 'cjs');
+let root = path.resolve(dirname, '..', '..', 'cjs');
 
 if (!mathjax.asyncLoad && typeof require !== 'undefined') {
   mathjax.asyncLoad = (name: string) => {

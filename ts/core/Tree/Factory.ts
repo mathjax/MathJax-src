@@ -121,8 +121,7 @@ interface AbstractFactoryClass<
 export abstract class AbstractFactory<
   N extends FactoryNode,
   C extends FactoryNodeClass<N>,
-> implements Factory<N, C>
-{
+> implements Factory<N, C> {
   /**
    * The default collection of objects to use for the node map
    */

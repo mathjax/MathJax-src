@@ -125,7 +125,7 @@ export const TagFormatConfiguration = Configuration.create('tagformat', {
   [ConfigurationType.OPTIONS]: {
     tagformat: {
       number: (n: number) => n.toString(),
-      tag: (tag: string) => '(' + tag + ')',
+      tag: (tag: string) => ['(', tag, ')'],
       ref: '', // means use the tag function
       id: (id: string) => 'mjx-eqn:' + id.replace(/\s/g, '_'),
       url: (id: string, base: string) => base + '#' + encodeURIComponent(id),

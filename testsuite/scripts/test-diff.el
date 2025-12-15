@@ -2,9 +2,10 @@
 ;;; Tools for working with Jest tests in Emacs.
 ;;;
 ;;;
-;;; Copyright (c) 2024 The MathJax Consortium
+;;; Copyright (c) 2024-5 The MathJax Consortium
 
 (require 'ediff)
+(require 'cl-lib)
 
 ;;; Jest Tests
 ;;; ==========
@@ -17,7 +18,7 @@
 ;;;
 
 (defun jest-find-expected ()
-  (block find-fail-block
+  (cl-block find-fail-block
     (let ((expected (condition-case nil
                         (search-forward "Expected value")
                       (error nil))))
@@ -31,19 +32,19 @@
 (defun jest-find-fail ()
   ;; Returns start end for actual and expected and position of fail o/w nil.
   (interactive)
-  (block find-fail-block
+  (cl-block find-fail-block
     (let ((pos (condition-case nil
                    (search-forward "●" nil t)
                  (error nil))))
       (when (null pos)
-        (return-from find-fail-block  nil))
+        (cl-return-from find-fail-block  nil))
       (let ((expected (jest-find-expected))
             (actual (condition-case nil
                         (search-forward "Received:")
                       (error nil)))
             )
         (when (or (null actual) (null expected))
-          (return-from find-fail-block  nil))
+          (cl-return-from find-fail-block  nil))
         (let* ((beg1 (progn
                        (goto-char actual)
                        (search-forward "\"")
@@ -88,7 +89,7 @@
   (condition-case nil
       (search-forward "Summary of all failing tests")
     (error (beginning-of-buffer)))
-  (do ((fail (jest-find-fail) (jest-find-fail)))
+  (cl-do ((fail (jest-find-fail) (jest-find-fail)))
       ((null fail) nil)
     (print fail)
     (append-to-buffer bufferA (caadr fail) (cdadr fail))
@@ -102,7 +103,7 @@
 ;;; Go to position where you want the next test inserted.
 (defun jest-replace-expected-for-actual ()
   (interactive)
-  (block expected-block
+  (cl-block expected-block
     (other-window 1)
     (let* ((fail (jest-find-fail))
            (actual (car (fourth fail)))

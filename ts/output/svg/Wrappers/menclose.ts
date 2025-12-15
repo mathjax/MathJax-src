@@ -51,7 +51,8 @@ import { OptionList } from '../../../util/Options.js';
  * @template D  The Document class
  */
 export interface SvgMencloseNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMenclose<
       N,
       T,
@@ -123,7 +124,8 @@ export interface SvgMencloseNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMencloseClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMencloseClass<
       N,
       T,

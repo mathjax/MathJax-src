@@ -109,9 +109,9 @@ export interface Visitor<N extends VisitorNode<N>> {
  * @template N   The node type being traversed
  * @template C   The node class for N (the constructor rather than instance of the class)
  */
-export abstract class AbstractVisitor<N extends VisitorNode<N>>
-  implements Visitor<N>
-{
+export abstract class AbstractVisitor<
+  N extends VisitorNode<N>,
+> implements Visitor<N> {
   /**
    * Holds the mapping from node kinds to visitor funcitons
    */

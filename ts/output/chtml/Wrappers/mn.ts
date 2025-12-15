@@ -48,7 +48,8 @@ import { MmlMn } from '../../../core/MmlTree/MmlNodes/mn.js';
  * @template D  The Document class
  */
 export interface ChtmlMnNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMn<
       N,
       T,
@@ -72,7 +73,8 @@ export interface ChtmlMnNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMnClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMnClass<
       N,
       T,

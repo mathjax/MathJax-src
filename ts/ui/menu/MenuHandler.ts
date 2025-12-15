@@ -86,8 +86,11 @@ newState('CONTEXT_MENU', 170);
 /**
  * The new function for MathItem that adds the context menu
  */
-export interface MenuMathItem
-  extends ComplexityMathItem<HTMLElement, Text, Document> {
+export interface MenuMathItem extends ComplexityMathItem<
+  HTMLElement,
+  Text,
+  Document
+> {
   /**
    * @param {MenuMathDocument} document   The document where the menu is being added
    * @param {boolean} force               True if menu should be added even if enableMenu is false
@@ -151,7 +154,8 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
  * The properties needed in the MathDocument for context menus
  */
 export interface MenuMathDocument
-  extends ComplexityMathDocument<HTMLElement, Text, Document>,
+  extends
+    ComplexityMathDocument<HTMLElement, Text, Document>,
     SpeechMathDocument<HTMLElement, Text, Document> {
   /**
    * The menu associated with this document
@@ -201,6 +205,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       enableSpeech: true,
       enableBraille: true,
       enableExplorer: true,
+      enableExplorerHelp: true,
       enrichSpeech: 'none',
       enrichError: (_doc: MenuMathDocument, _math: MenuMathItem, err: Error) =>
         console.warn('Enrichment Error:', err),

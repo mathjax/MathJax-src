@@ -54,7 +54,8 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
  * @template D  The Document class
  */
 export interface SvgMrowNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMrow<
       N,
       T,
@@ -78,7 +79,8 @@ export interface SvgMrowNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMrowClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMrowClass<
       N,
       T,
@@ -270,7 +272,8 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
  * @template D  The Document class
  */
 export interface SvgInferredMrowNTD<N, T, D>
-  extends SvgMrowNTD<N, T, D>,
+  extends
+    SvgMrowNTD<N, T, D>,
     CommonInferredMrow<
       N,
       T,
@@ -294,7 +297,8 @@ export interface SvgInferredMrowNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgInferredMrowClass<N, T, D>
-  extends SvgMrowClass<N, T, D>,
+  extends
+    SvgMrowClass<N, T, D>,
     CommonInferredMrowClass<
       N,
       T,

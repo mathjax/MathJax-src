@@ -243,7 +243,6 @@ export interface CommonMtable<
    * @param {number[]} D     The maximum depth for each of the rows
    * @param {number[]} W     The maximum width for each column
    * @param {number} M       The current height for items aligned top and bottom
-   * @returns {number}        The updated value for M
    */
   updateHDW(
     cell: WW,
@@ -254,17 +253,7 @@ export interface CommonMtable<
     D: number[],
     W: number[],
     M: number
-  ): number;
-
-  /**
-   * Extend the H and D of a row to cover the maximum height needed by top/bottom aligned items
-   *
-   * @param {number} i     The row whose hight and depth should be adjusted
-   * @param {number[]} H   The row heights
-   * @param {number[]} D   The row depths
-   * @param {number} M     The maximum height of top/bottom aligned items
-   */
-  extendHD(i: number, H: number[], D: number[], M: number): void;
+  ): void;
 
   /**
    * @param {WW} cell    The cell to check for percentage widths
@@ -701,14 +690,13 @@ export function CommonMtableMixin<
         }
       }
       const count = stretchy.length;
-      const nodeCount = this.childNodes.length;
-      if (count && nodeCount > 1 && W === null) {
+      if (count && W === null) {
         W = 0;
         //
         //  If all the children are stretchy, find the largest one,
         //  otherwise, find the width of the non-stretchy children.
         //
-        const all = count > 1 && count === nodeCount;
+        const all = count === this.childNodes.length;
         for (const row of this.tableRows) {
           const cell = row.getChild(i);
           if (cell) {
@@ -727,12 +715,15 @@ export function CommonMtableMixin<
         //
         //  Stretch the stretchable children
         //
+        const TW = this.getTableData().W;
         for (const child of stretchy) {
+          const w = child.getBBox().w;
           child
             .coreMO()
-            .getStretchedVariant([
-              Math.max(W, child.getBBox().w) / child.coreRScale(),
-            ]);
+            .getStretchedVariant([Math.max(W, w) / child.coreRScale()]);
+          if (w > TW[i]) {
+            TW[i] = w;
+          }
         }
       }
     }
@@ -744,21 +735,29 @@ export function CommonMtableMixin<
       if (
         this.jax.math.root.attributes.get('overflow') !== 'linebreak' ||
         !this.jax.math.display
-      )
+      ) {
         return;
-      const { D } = this.getTableData();
+      }
+      const { H, D } = this.getTableData();
       let j = 0;
       let w = 0;
       for (const row of this.tableRows) {
         const cell = row.getChild(i);
-        if (cell && cell.getBBox().w > W) {
-          cell.childNodes[0].breakToWidth(W);
+        if (cell) {
+          const r = row.getBBox().rscale;
           const bbox = cell.getBBox();
-          D[j] = Math.max(D[j], bbox.d);
-          if (bbox.w > w) {
-            w = bbox.w;
+          if (cell && bbox.w * r > W) {
+            cell.childNodes[0].breakToWidth(W);
+            const align = row.node.attributes.get('rowalign') as string;
+            this.updateHDW(cell, i, j, align, H, D);
+          }
+          if (bbox.w * r > w) {
+            w = bbox.w * r;
           }
         }
+        const bbox = row.getBBox();
+        bbox.h = H[j];
+        bbox.d = D[j];
         j++;
       }
       //
@@ -791,26 +790,71 @@ export function CommonMtableMixin<
       const LW = [0];
       const rows = this.tableRows;
       for (let j = 0; j < rows.length; j++) {
-        let M = 0;
         const row = rows[j];
         const align = row.node.attributes.get('rowalign') as string;
         for (let i = 0; i < row.numCells; i++) {
           const cell = row.getChild(i);
-          M = this.updateHDW(cell, i, j, align, H, D, W, M);
+          this.updateHDW(cell, i, j, align, H, D, W);
           this.recordPWidthCell(cell, i);
         }
         NH[j] = H[j];
         ND[j] = D[j];
         if (row.labeled) {
-          M = this.updateHDW(row.childNodes[0], 0, j, align, H, D, LW, M);
+          this.updateHDW(row.childNodes[0], 0, j, align, H, D, LW);
         }
-        this.extendHD(j, H, D, M);
-        this.extendHD(j, NH, ND, M);
+        row.bbox.h = H[j];
+        row.bbox.d = D[j];
       }
       const L = LW[0];
       this.data = { H, D, W, NH, ND, L };
       return this.data;
     }
+
+    /**
+     * Functions for adjusting the H and D values for cells
+     * that are aligned by top, bottom, center, axis, and baseline.
+     */
+    protected adjustHD: {
+      [name: string]: (
+        h: number,
+        d: number,
+        H: number[],
+        D: number[],
+        j: number
+      ) => void;
+    } = {
+      top: (h, d, H, D, j) => {
+        if (h > H[j]) {
+          D[j] -= h - H[j];
+          H[j] = h;
+        }
+        if (h + d > H[j] + D[j]) {
+          D[j] = h + d - H[j];
+        }
+      },
+      bottom: (h, d, H, D, j) => {
+        if (d > D[j]) {
+          H[j] -= d - D[j];
+          D[j] = d;
+        }
+        if (h + d > H[j] + D[j]) {
+          H[j] = h + d - D[j];
+        }
+      },
+      center: (h, d, H, D, j) => {
+        if (h + d > H[j] + D[j]) {
+          H[j] = D[j] = (h + d) / 2;
+        }
+      },
+      other: (h, d, H, D, j) => {
+        if (h > H[j]) {
+          H[j] = h;
+        }
+        if (d > D[j]) {
+          D[j] = d;
+        }
+      },
+    };
 
     /**
      * @override
@@ -822,9 +866,8 @@ export function CommonMtableMixin<
       align: string,
       H: number[],
       D: number[],
-      W: number[],
-      M: number
-    ): number {
+      W: number[] = null
+    ) {
       let { h, d, w } = cell.getBBox();
       const scale = cell.parent.bbox.rscale;
       if (cell.parent.bbox.rscale !== 1) {
@@ -836,27 +879,12 @@ export function CommonMtableMixin<
         if (h < 0.75) h = 0.75;
         if (d < 0.25) d = 0.25;
       }
-      let m = 0;
       align = (cell.node.attributes.get('rowalign') as string) || align;
-      if (align !== 'baseline' && align !== 'axis') {
-        m = h + d;
-        h = d = 0;
+      if (!Object.hasOwn(this.adjustHD, align)) {
+        align = 'other';
       }
-      if (h > H[j]) H[j] = h;
-      if (d > D[j]) D[j] = d;
-      if (m > M) M = m;
+      this.adjustHD[align](h, d, H, D, j);
       if (W && w > W[i]) W[i] = w;
-      return M;
-    }
-
-    /**
-     * @override
-     */
-    public extendHD(i: number, H: number[], D: number[], M: number) {
-      const d = (M - (H[i] + D[i])) / 2;
-      if (d < 0.00001) return;
-      H[i] += d;
-      D[i] += d;
     }
 
     /**

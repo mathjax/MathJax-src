@@ -328,6 +328,9 @@ export class WorkerHandler<N, T, D> {
         continue;
       }
       node = adaptor.childNodes(node)[0] as N;
+      if (adaptor.kind(node) === 'rect') {
+        node = adaptor.next(node) as N;
+      }
       adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
       this.setSpecialAttributes(node, sid, '');
     }

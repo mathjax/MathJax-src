@@ -49,7 +49,8 @@ import { SvgMoNTD } from './mo.js';
  * @template D  The Document class
  */
 export interface SvgMfracNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMfrac<
       N,
       T,
@@ -73,7 +74,8 @@ export interface SvgMfracNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMfracClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMfracClass<
       N,
       T,

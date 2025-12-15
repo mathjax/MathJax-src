@@ -48,7 +48,8 @@ import { MmlMi } from '../../../core/MmlTree/MmlNodes/mi.js';
  * @template D  The Document class
  */
 export interface ChtmlMiNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMi<
       N,
       T,
@@ -72,7 +73,8 @@ export interface ChtmlMiNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMiClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMiClass<
       N,
       T,

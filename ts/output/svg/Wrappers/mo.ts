@@ -55,7 +55,8 @@ const HFUZZ = 0.1; // overlap for horizontal stretchy glyphs
  * @template D  The Document class
  */
 export interface SvgMoNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMo<
       N,
       T,
@@ -79,7 +80,8 @@ export interface SvgMoNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMoClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMoClass<
       N,
       T,

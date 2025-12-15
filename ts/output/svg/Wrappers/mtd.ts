@@ -48,7 +48,8 @@ import { MmlMtd } from '../../../core/MmlTree/MmlNodes/mtd.js';
  * @template D  The Document class
  */
 export interface SvgMtdNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMtd<
       N,
       T,
@@ -96,7 +97,8 @@ export interface SvgMtdNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMtdClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMtdClass<
       N,
       T,

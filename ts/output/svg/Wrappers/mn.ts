@@ -48,7 +48,8 @@ import { MmlMn } from '../../../core/MmlTree/MmlNodes/mn.js';
  * @template D  The Document class
  */
 export interface SvgMnNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMn<
       N,
       T,
@@ -72,7 +73,8 @@ export interface SvgMnNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMnClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMnClass<
       N,
       T,

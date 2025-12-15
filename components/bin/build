@@ -61,6 +61,9 @@ process.chdir(path.dirname(json));
 const mjPath = path.relative(process.cwd(), path.resolve(__dirname, '..', '..', target));
 const mjGlobal = path.join('..', mjPath, 'components', 'global.js');
 
+/**
+ * Determine the module type
+ */
 function getType() {
   const component = config.component || 'part';
   if (component.match(/\/(svg|chtml|common)\/fonts\//)) return RegExp.$1 + '-font';
@@ -68,6 +71,13 @@ function getType() {
   if (component.match(/^(.+)\//)) return RegExp.$1;
   return component;
 }
+
+/**
+ * Convert Windows paths to unix paths
+ */
+const normalize = process.platform === 'win32'
+      ? (file) => file.replace(/\\/g, '/')
+      : (file) => file;
 
 /**
  * Extract the configuration values
@@ -100,7 +110,7 @@ let PACKAGE = [];
  */
 function processList(base, dir, list, top = true) {
   for (const item of list) {
-    const file = path.join(dir, item);
+    const file = normalize(path.join(dir, item));
     if (!EXCLUDE.has(file)) {
       const stat = fs.statSync(path.resolve(base, file));
       if (stat.isDirectory()) {
@@ -183,9 +193,9 @@ function processParts(parts) {
 function processLines(file, objects) {
   if (objects.length === 0) return [];
   const base = path.dirname(file).replace(/^\.$/, '');
-  const dir = (PREFIX ? path.join(PREFIX, base) : base);
+  const dir = (PREFIX ? normalize(path.join(PREFIX, base)) : base);
   const dots = dir.replace(/[^\/]+/g, '..') || '.';
-  const relative = path.join(dots, '..', JS, dir, path.basename(file)).replace(/\.ts$/, '.js');
+  const relative = normalize(path.join(dots, '..', JS, dir, path.basename(file))).replace(/\.ts$/, '.js');
   const name = path.parse(file).name;
   const lines = (target === 'mjs' ? [] : [
     '"use strict";',
@@ -254,7 +264,7 @@ function getExtraDirectories() {
   let prefix = '';
   let indent = INDENT;
   let postfix = '';
-  for (let name of PREFIX.split(/\//)) {
+  for (let name of PREFIX.split('/')) {
     if (name.match(/[^a-zA-Z0-9]/)) {
       name = `"${name}"`;
     }
@@ -271,19 +281,19 @@ function getExtraDirectories() {
 function processGlobal() {
   console.info('  ' + COMPONENT + '.ts');
   const lines = (target === 'cjs' ? [
-    `const {combineWithMathJax} = require('${GLOBAL}')`,
-    `const {VERSION} = require('${VERSION}');`,
+    `const {combineWithMathJax} = require('${normalize(GLOBAL)}')`,
+    `const {VERSION} = require('${normalize(VERSION)}');`,
     '',
   ] : [
-    `import {combineWithMathJax} from '${GLOBAL}';`,
-    `import {VERSION} from '${VERSION}';`,
+    `import {combineWithMathJax} from '${normalize(GLOBAL)}';`,
+    `import {VERSION} from '${normalize(VERSION)}';`,
     '',
   ]);
   const [prefix, indent, postfix] = getExtraDirectories();
   const packages = [];
   PACKAGE = PACKAGE.sort(sortDir);
   while (PACKAGE.length) {
-    const dir = path.dirname(PACKAGE[0]).split(path.sep)[0];
+    const dir = path.dirname(PACKAGE[0]).split('/')[0];
     packages.push(processPackage(lines, indent, dir));
   }
   const name = (ID.match(/[^a-zA-Z0-9_]/) ? `"${ID}"` : ID);
@@ -337,7 +347,7 @@ function processPackage(lines, space, dir) {
     if (path.dirname(PACKAGE[0]) === dir) {
       const file = PACKAGE.shift();
       const name = path.basename(file);
-      let relativefile = path.join('..', JS, dir, name).replace(/\.ts$/, '.js')
+      const relativefile = normalize(path.join('..', JS, dir, name).replace(/\.ts$/, '.js'));
       const component = 'module' + (++importCount);
       lines.push(
         target === 'cjs' ?

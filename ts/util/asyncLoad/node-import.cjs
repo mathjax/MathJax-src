@@ -23,9 +23,9 @@
 
 const { mathjax } = require('../../mathjax.js');
 const path = require('path');
-const { src } = require('#source/source.cjs');
+const { dirname } = require('#source/source.cjs');
 
-let root = path.resolve(src, '..', '..', 'cjs');
+let root = path.resolve(dirname, '..', '..', 'cjs');
 
 if (!mathjax.asyncLoad) {
   mathjax.asyncLoad = async (name) => {
