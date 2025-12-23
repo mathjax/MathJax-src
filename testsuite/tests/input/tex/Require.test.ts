@@ -18,7 +18,7 @@ setupComponents({
   loader: {
     load: ['input/tex-base', '[tex]/require'],
     source: {
-      '[tex]/error': '../../testsuite/lib/error.js'
+      '[tex]/error': '../testsuite/lib/error.js'
     },
     dependencies: {
       '[tex]/upgreek': ['input/tex-base', '[tex]/error']
