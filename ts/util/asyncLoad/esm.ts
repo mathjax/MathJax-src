@@ -23,15 +23,28 @@
 
 import { mathjax } from '../../mathjax.js';
 import { context } from '../context.js';
+import { resolvePath } from '../AsyncLoad.js';
+
+import { readFileSync } from 'node:fs';
+const { resolve } = import.meta as any as { resolve: (file: string) => string };
+const RESOLVE = resolve || ((file: string) => file);
 
 let root = context
   .path(new URL(import.meta.url, 'file://').href)
   .replace(/\/util\/asyncLoad\/esm.js$/, '/');
 
+mathjax.json = async (name: string) => {
+  return JSON.parse(
+    String(readFileSync(new URL(RESOLVE(name), 'file://').pathname))
+  );
+};
+
 if (!mathjax.asyncLoad) {
   mathjax.asyncLoad = async (name: string) => {
-    const file = name.charAt(0) === '.' ? new URL(name, root).href : name;
-    return import(file).then((result) => result.default ?? result);
+    const file = resolvePath(name, (name) => new URL(name, root).pathname);
+    return (file.match(/\.json$/) ? mathjax.json(file) : import(file)).then(
+      (result) => result.default ?? result
+    );
   };
 }
 

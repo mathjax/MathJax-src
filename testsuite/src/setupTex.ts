@@ -24,6 +24,7 @@ import { expect } from '@jest/globals';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { source } from '#source/source.js';
+import {Locale} from '#js/util/Locale.js';
 
 declare const MathJax: any;
 type MATHITEM = MathItem<any, any, any>;
@@ -196,6 +197,7 @@ export function setupTex(
   const html = new HTMLDocument('', adaptor, { InputJax: tex });
   convert = (expr: string, display: boolean) =>
     toMathML(html.convert(expr, { display: display, end: STATE.CONVERT }));
+  return Locale.setLocale();
 }
 
 /**
@@ -223,6 +225,7 @@ export function setupTexRender(
     html.findMath().compile();
     return toMathML((Array.from(html.math)[0] as MATHITEM).root);
   };
+  return Locale.setLocale();
 }
 
 /**
@@ -307,6 +310,7 @@ export function setupTexWithOutput(
   const toMathML = (node: MmlNode) => visitor.visitTree(node);
   convert = (expr: string, display: boolean) =>
     toMathML(html.convert(expr, { display: display, end: STATE.CONVERT }));
+  return Locale.setLocale();
 }
 
 /*********************************************************************/

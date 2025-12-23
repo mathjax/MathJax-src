@@ -4,6 +4,11 @@
     "component": "input/tex/extensions/bbox",
     "targets": ["input/tex/bbox"]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/bbox",
+    "from": "[ts]/input/tex/bbox",
+    "copy": ["locales"]
+  },
   "webpack": {
     "name": "input/tex/extensions/bbox",
     "libs": [

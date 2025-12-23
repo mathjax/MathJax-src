@@ -2,7 +2,7 @@ import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
 import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
 import '#js/input/tex/bbox/BboxConfiguration';
 
-beforeEach(() => setupTex(['base', 'bbox']));
+beforeEach(async () => setupTex(['base', 'bbox']));
 
 /**********************************************************************************/
 
@@ -52,9 +52,8 @@ describe('Bbox', () => {
   });
 
   it('Bbox-General-Error', () => {
-    expectTexError('\\bbox[22-11=color]{a}').toBe(
-      `"22-11=color" doesn't look like a color, a padding dimension, or a style`
-    );
+    expectTexError('\\bbox[22-11=color]{a}')
+      .toBe(`'22-11=color' doesn't look like a color, a padding dimension, or a style`);
   });
 });
 
