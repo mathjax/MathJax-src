@@ -77,4 +77,12 @@ export const mathjax = {
    * When asyncLoad uses require(), it actually operates synchronously and this is true
    */
   asyncIsSynchronous: false,
+
+  /**
+   * function to use for loading json files in components
+   *
+   * @param {string} file      The name of the JSON file to load
+   * @returns {Promise<any>}   A promise resolving to the JSON data
+   */
+  json: (file: string) => fetch(file).then((data) => data.json()),
 };

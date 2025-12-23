@@ -1,5 +1,5 @@
 import { describe, test, expect } from '@jest/globals';
-import { asyncLoad } from '#js/util/AsyncLoad.js';
+import { asyncLoad, resolvePath } from '#js/util/AsyncLoad.js';
 import { mathjax } from '#js/mathjax.js';
 
 describe('asyncLoad()', () => {
@@ -42,5 +42,30 @@ describe('asyncLoad()', () => {
         throw 'fail';
       });
     await expect(asyncLoad('x.js')).rejects.toBe('fail');
+  });
+
+  test('resolvePath', () => {
+    //
+    // Test resolvePath woth Pacakge path resolution
+    //
+    (global as any).MathJax = {
+      _: {
+        components: {
+          package: {
+            Package: {
+              resolvePath: (file: string) => 'test:' + file,
+            }
+          }
+        }
+      }
+    };
+    expect(resolvePath('[x]/y.js', (file) => file)).toBe('test:[x]/y.js');
+
+    //
+    // Remove MathJax._ and test relative and absolute paths
+    //
+    (global as any).MathJax = {}
+    expect(resolvePath('./x.js', (file) => `rel:${file.substring(2)}`, (file) => `abs:${file}`)).toBe('rel:x.js');
+    expect(resolvePath('x.js', (file) => `rel:${file.substring(2)}`, (file) => `abs:${file}`)).toBe('abs:x.js');
   });
 });
