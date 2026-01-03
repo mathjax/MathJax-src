@@ -1941,7 +1941,23 @@ export class SpeechExplorer
   public AddEvents() {
     if (!this.eventsAttached) {
       super.AddEvents();
+      this.addHtmlEvents();
       this.eventsAttached = true;
+    }
+  }
+
+  /**
+   * Prevent clicks in mjx-html nodes from propagating (so clicks in
+   * HTML input elements or other selectable nodes will not cause
+   * the explorer from processing the click.
+   */
+  protected addHtmlEvents() {
+    for (const html of Array.from(this.node.querySelectorAll('mjx-html'))) {
+      html.addEventListener('click', (event) => {
+        if (html.contains(document.activeElement)) {
+          event.stopPropagation();
+        }
+      });
     }
   }
 
