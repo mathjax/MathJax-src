@@ -1277,7 +1277,7 @@ export class SpeechExplorer
       if (this.img) {
         this.node.append(this.img);
       }
-      this.node.setAttribute('tabindex', '0');
+      this.node.setAttribute('tabindex', this.tabIndex);
     }
   }
 
@@ -1904,12 +1904,19 @@ export class SpeechExplorer
   }
 
   /**
+   * @returns {string}   The tabIndex to use when not exploring
+   */
+  protected get tabIndex(): string {
+    return this.document.options.a11y.inTabOrder ? '0' : '-1';
+  }
+
+  /**
    * @override
    */
   public Attach() {
     if (this.attached) return;
     super.Attach();
-    this.node.setAttribute('tabindex', '0');
+    this.node.setAttribute('tabindex', this.tabIndex);
     this.attached = true;
   }
 
@@ -1923,7 +1930,7 @@ export class SpeechExplorer
     this.node.removeAttribute('aria-label');
     this.img?.remove();
     if (this.active) {
-      this.node.setAttribute('tabindex', '0');
+      this.node.setAttribute('tabindex', this.tabIndex);
     }
     this.attached = false;
   }

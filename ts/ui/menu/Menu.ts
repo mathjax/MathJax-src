@@ -84,7 +84,6 @@ export interface MenuSettings {
   autocollapse: boolean;
   collapsible: boolean;
   enrich: boolean;
-  inTabOrder: boolean;
   assistiveMml: boolean;
   // A11y settings
   backgroundColor: string;
@@ -99,6 +98,7 @@ export interface MenuSettings {
   infoPrefix: boolean;
   infoRole: boolean;
   infoType: boolean;
+  inTabOrder: boolean;
   locale: string;
   magnification: string;
   magnify: string;
@@ -153,7 +153,6 @@ export class Menu {
       autocollapse: false,
       collapsible: false,
       enrich: true,
-      inTabOrder: true,
       assistiveMml: false,
       speech: true,
       braille: true,
@@ -162,6 +161,7 @@ export class Menu {
       brailleCombine: false,
       speechRules: 'clearspeak-default',
       roleDescription: 'math',
+      inTabOrder: true,
       tabSelects: 'all',
       help: true,
     },
@@ -669,7 +669,7 @@ export class Menu {
         this.variable<boolean>('enrich', (enrich) =>
           this.setEnrichment(enrich)
         ),
-        this.variable<boolean>('inTabOrder', (tab) => this.setTabOrder(tab)),
+        this.a11yVar<boolean>('inTabOrder', (tab) => this.setTabOrder(tab)),
         this.a11yVar<string>('tabSelects'),
         this.variable<boolean>('assistiveMml', (mml) =>
           this.setAssistiveMml(mml)
