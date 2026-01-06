@@ -178,7 +178,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         height: '100%',
         border: '0.1px solid transparent',
         'box-sizing': 'border-box',
-        'white-space': 'pre',
+        'white-space': 'normal',
       },
       'mjx-mark': {
         display: 'inline-block',
