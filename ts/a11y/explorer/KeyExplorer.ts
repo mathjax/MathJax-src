@@ -1953,11 +1953,14 @@ export class SpeechExplorer
    */
   protected addHtmlEvents() {
     for (const html of Array.from(this.node.querySelectorAll('mjx-html'))) {
-      html.addEventListener('click', (event) => {
+      const stop = (event: Event) => {
         if (html.contains(document.activeElement)) {
           event.stopPropagation();
         }
-      });
+      };
+      html.addEventListener('click', stop);
+      html.addEventListener('keydown', stop);
+      html.addEventListener('dblclick', stop);
     }
   }
 
