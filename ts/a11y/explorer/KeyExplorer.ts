@@ -1947,7 +1947,7 @@ export class SpeechExplorer
   }
 
   /**
-   * Prevent clicks in mjx-html nodes from propagating (so clicks in
+   * Prevent clicks in mjx-html nodes from propagating, so clicks in
    * HTML input elements or other selectable nodes will not cause
    * the explorer from processing the click.
    */
