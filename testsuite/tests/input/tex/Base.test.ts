@@ -7928,7 +7928,7 @@ describe('Mathchar0mo', () => {
     toXmlMatch(
       tex2mml('\\surd'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\surd" display="block">
-         <mo stretchy="false" data-latex="\\surd">&#x221A;</mo>
+         <mo symmetric="true" stretchy="false" data-latex="\\surd">&#x221A;</mo>
        </math>`
     );
   });
