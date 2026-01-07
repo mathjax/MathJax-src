@@ -207,7 +207,7 @@ export class DraggableDialog {
       display: 'flex',
       'flex-direction': 'column',
       'align-items': 'center',
-      position: 'relative',
+      position: 'fixed',
       top: '-4%',
     },
     '.mjx-dialog.mjx-moving': {
