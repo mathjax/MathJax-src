@@ -36,7 +36,7 @@ export type connection = {
   parts?: string[],                 // suffix names for sub-parts
   split: (name: string) => void,    // function to split the value for the children
   combine: (name: string) => void   // function to combine the child values when one changes
-  subPart?: boolean         // children combine to a different parent
+  subPart?: boolean                 // true means children combine to a different parent
 };
 
 /**
@@ -503,7 +503,7 @@ export class Styles {
   }
 
   /**
-   * @returns {StyleList}  The object to map style names to the values
+   * @returns {StyleList} The object to map style names to the values
    */
   public get styleList(): StyleList {
     return { ...this.styles };
