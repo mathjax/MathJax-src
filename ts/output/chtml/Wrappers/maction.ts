@@ -53,7 +53,8 @@ import { STATE } from '../../../core/MathItem.js';
  * @template D  The Document class
  */
 export interface ChtmlMactionNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMaction<
       N,
       T,
@@ -95,7 +96,8 @@ export interface ChtmlMactionNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMactionClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMactionClass<
       N,
       T,
@@ -187,6 +189,25 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
         'font-size': '90%',
         'background-color': '#F8F8F8',
         color: 'black',
+      },
+      'mjx-container [data-mjx-collapsed]': {
+        color: '#55F',
+      },
+
+      '@media (prefers-color-scheme: dark) /* chtml maction */': {
+        'mjx-tool > mjx-tip': {
+          border: '1px solid #888',
+          'background-color': '#303030',
+          color: '#E0E0E0',
+          'box-shadow': '2px 2px 5px #000',
+        },
+        'mjx-status': {
+          'background-color': '#303030',
+          color: '#E0E0E0',
+        },
+        'mjx-container [data-mjx-collapsed]': {
+          color: '#88F',
+        },
       },
     };
 

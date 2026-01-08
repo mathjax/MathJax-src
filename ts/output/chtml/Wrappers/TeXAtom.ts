@@ -48,7 +48,8 @@ import { MmlNode, TEXCLASSNAMES } from '../../../core/MmlTree/MmlNode.js';
  * @template D  The Document class
  */
 export interface ChtmlTeXAtomNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonTeXAtom<
       N,
       T,
@@ -72,7 +73,8 @@ export interface ChtmlTeXAtomNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlTeXAtomClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonTeXAtomClass<
       N,
       T,

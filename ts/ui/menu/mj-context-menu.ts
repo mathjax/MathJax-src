@@ -25,7 +25,6 @@
 export { ContextMenu } from '#menu/context_menu.js';
 export { SubMenu } from '#menu/sub_menu.js';
 export { Submenu } from '#menu/item_submenu.js';
-export { Info } from '#menu/info.js';
 export { Radio } from '#menu/item_radio.js';
 export { Rule } from '#menu/item_rule.js';
 export { ParserFactory } from '#menu/parser_factory.js';

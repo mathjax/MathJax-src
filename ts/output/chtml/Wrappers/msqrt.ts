@@ -51,7 +51,8 @@ import { StyleJson } from '../../../util/StyleJson.js';
  * @template D  The Document class
  */
 export interface ChtmlMsqrtNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMsqrt<
       N,
       T,
@@ -75,7 +76,8 @@ export interface ChtmlMsqrtNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMsqrtClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMsqrtClass<
       N,
       T,

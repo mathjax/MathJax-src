@@ -119,7 +119,7 @@ export class ChtmlFontData extends FontData<
   protected static defaultStyles = {};
 
   /**
-   * The default @font-face declarations with %%URL%% where the font path should go
+   * The default `@font-face` declarations with `%%URL%%` where the font path should go
    */
   protected static defaultFonts = {};
 
@@ -149,7 +149,7 @@ export class ChtmlFontData extends FontData<
   public fontUsage: StyleJson = {};
 
   /**
-   * Number of new @font-face entries that have been processed
+   * Number of new `@font-face` entries that have been processed
    */
   protected newFonts: number = 0;
 
@@ -583,6 +583,9 @@ export class ChtmlFontData extends FontData<
       padding: this.padding(HDW as ChtmlCharData, w - HDW[2]),
     };
     if (part === 'ext') {
+      const padding = (css.padding as string).split(/ /);
+      padding[1] = padding[3] = '0';
+      css.padding = padding.join(' ');
       if (!w && options.dx) {
         w = 2 * options.dx - 0.06;
       }
@@ -633,7 +636,7 @@ export class ChtmlFontData extends FontData<
     if (options.oc) {
       styles[selector + '[noic]'] = { 'padding-right': this.em(data[2]) };
     }
-    this.checkCombiningChar(options, styles[selector]);
+    this.checkCombiningChar(options, styles[selector] as StyleJsonData);
   }
 
   /**
@@ -653,6 +656,10 @@ export class ChtmlFontData extends FontData<
       pad.pop();
     }
     css.padding = pad.join(' ');
+    if (css.width === '0' && options.dx) {
+      css.width = this.em(2 * options.dx);
+      css['margin-left'] = '-' + css.width;
+    }
   }
 
   /***********************************************************************/

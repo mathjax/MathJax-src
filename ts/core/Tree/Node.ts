@@ -159,8 +159,7 @@ export interface NodeClass<N extends Node<N, C>, C extends NodeClass<N, C>> {
 export abstract class AbstractNode<
   N extends Node<N, C>,
   C extends NodeClass<N, C>,
-> implements Node<N, C>
-{
+> implements Node<N, C> {
   /**
    * The parent node for this one
    */

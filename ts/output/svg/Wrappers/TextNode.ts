@@ -48,7 +48,8 @@ import { StyleJsonSheet } from '../../../util/StyleJson.js';
  * @template D  The Document class
  */
 export interface SvgTextNodeNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonTextNode<
       N,
       T,
@@ -72,7 +73,8 @@ export interface SvgTextNodeNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgTextNodeClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonTextNodeClass<
       N,
       T,

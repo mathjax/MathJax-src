@@ -48,7 +48,8 @@ import { MmlMspace } from '../../../core/MmlTree/MmlNodes/mspace.js';
  * @template D  The Document class
  */
 export interface SvgMspaceNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMspace<
       N,
       T,
@@ -72,7 +73,8 @@ export interface SvgMspaceNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMspaceClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMspaceClass<
       N,
       T,

@@ -30,6 +30,13 @@ import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, SemAttr } from '../speech/SpeechUtil.js';
 import { GeneratorPool } from '../speech/GeneratorPool.js';
 import { context } from '../../util/context.js';
+import { InfoDialog } from '../../ui/dialog/InfoDialog.js';
+
+/**********************************************************************/
+
+const isWindows = context.os === 'Windows';
+
+const BRAILLE_PADDING = Array(40).fill('\u2800').join('');
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
@@ -70,7 +77,7 @@ export interface KeyExplorer extends Explorer {
 /**
  * Type of function that implements a key press action
  */
-type keyMapping = (
+export type keyMapping = (
   explorer: SpeechExplorer,
   event: KeyboardEvent
 ) => boolean | void;
@@ -107,136 +114,6 @@ export function hasModifiers(
 }
 
 /**********************************************************************/
-
-/**
- * Creates a customized help dialog
- *
- * @param {string} title   The title to use for the message
- * @param {string} select  Additional ways to select the typeset math
- * @returns {string}       The customized message
- */
-function helpMessage(title: string, select: string): string {
-  return `
-<H2>Exploring expressions ${title}</h2>
-
-<p>The mathematics on this page is being rendered by <a
-href="https://www.mathjax.org/" target="_blank">MathJax</a>, which
-generates both the text spoken by screen readers, as well as the
-visual layout for sighted users.</p>
-
-<p>Expressions typeset by MathJax can be explored interactively, and
-are focusable.  You can use the <kbd>Tab</kbd> key to move to a typeset
-expression${select}.  Initially, the expression will be read in full,
-but you can use the following keys to explore the expression
-further:<p>
-
-<ul>
-
-<li><kbd>Down Arrow</kbd> moves one level deeper into the expression to
-allow you to explore the current subexpression term by term.</li>
-
-<li><kbd>Up Arrow</kbd> moves back up a level within the expression.</li>
-
-<li><kbd>Right Arrow</kbd> moves to the next term in the current
-subexpression.</li>
-
-<li><kbd>Left Arrow</kbd> moves to the next term in the current
-subexpression.</li>
-
-<li><kbd>Shift</kbd>+<kbd>Arrow</kbd> moves to a neighboring cell within a table.
-
-<li><kbd>0-9</kbd>+<kbd>0-9</kbd> jumps to a cell by its index in the table, where 0 = 10.
-
-<li><kbd>Home</kbd> takes you to the top of the expression.</li>
-
-<li><kbd>Enter</kbd> or <kbd>Return</kbd> clicks a link or activates an active
-subexpression.</li>
-
-<li><kbd>Space</kbd> opens the MathJax contextual menu where you can view
-or copy the source format of the expression, or modify MathJax's
-settings.</li>
-
-<li><kbd>Escape</kbd> exits the expression explorer.</li>
-
-<li><kbd>x</kbd> gives a summary of the current subexpression.</li>
-
-<li><kbd>z</kbd> gives the full text of a collapsed expression.</li>
-
-<li><kbd>d</kbd> gives the current depth within the expression.</li>
-
-<li><kbd>s</kbd> starts or stops auto-voicing with synchronized highlighting.</li>
-
-<li><kbd>v</kbd> marks the current position in the expression.</li>
-
-<li><kbd>p</kbd> cycles through the marked positions in the expression.</li>
-
-<li><kbd>u</kbd> clears all marked positions and returns to the starting position.</li>
-
-<li><kbd>&gt;</kbd> cycles through the available speech rule sets
-(MathSpeak, ClearSpeak).</li>
-
-<li><kbd>&lt;</kbd> cycles through the verbosity levels for the current
-rule set.</li>
-
-<li><kbd>h</kbd> produces this help listing.</li>
-</ul>
-
-<p>The MathJax contextual menu allows you to enable or disable speech
-or Braille generation for mathematical expressions, the language to
-use for the spoken mathematics, and other features of MathJax.  In
-particular, the Explorer submenu allows you to specify how the
-mathematics should be identified in the page (e.g., by saying "math"
-when the expression is spoken), and whether or not to include a
-message about the letter "h" bringing up this dialog box.</p>
-
-<p>The contextual menu also provides options for viewing or copying a
-MathML version of the expression or its original source format,
-creating an SVG version of the expression, and viewing various other
-information.</p>
-
-<p>For more help, see the <a
-href="https://docs.mathjax.org/en/latest/basic/accessibility.html"
-targe="_blank">MathJax accessibility documentation.</a></p>
-`;
-}
-
-/**
- * Help for the different OS versions
- */
-const helpData: Map<string, [string, string]> = new Map([
-  [
-    'MacOS',
-    [
-      'on MacOS and iOS using VoiceOver',
-      ', or the VoiceOver arrow keys to select an expression',
-    ],
-  ],
-  [
-    'Windows',
-    [
-      'in Windows using NVDA or JAWS',
-      `. The screen reader should enter focus or forms mode automatically
-when the expression gets the browser focus, but if not, you can toggle
-focus mode using NVDA+space in NVDA; for JAWS, Enter should start
-forms mode while Numpad Plus leaves it.  Also note that you can use
-the NVDA or JAWS key plus the arrow keys to explore the expression
-even in browse mode, and you can use NVDA+shift+arrow keys to
-navigate out of an expression that has the focus in NVDA`,
-    ],
-  ],
-  [
-    'Unix',
-    [
-      'in Unix using Orca',
-      `, and Orca should enter focus mode automatically.  If not, use the
-Orca+a key to toggle focus mode on or off.  Also note that you can use
-Orca+arrow keys to explore expressions even in browse mode`,
-    ],
-  ],
-  ['unknown', ['with a Screen Reader.', '']],
-]);
-
-/**********************************************************************/
 /**********************************************************************/
 
 /**
@@ -249,11 +126,181 @@ export class SpeechExplorer
   extends AbstractExplorer<string>
   implements KeyExplorer
 {
+  /**
+   * Creates a customized help dialog
+   *
+   * @param {string} title    The title to use for the message
+   * @param {string} select   Additional ways to select the typeset math
+   * @param {string} braille  Additional Braille information
+   * @returns {string}        The customized message
+   */
+  protected static helpMessage(
+    title: string,
+    select: string,
+    braille: string
+  ): string {
+    return `
+      <h2 role="heading" aria-level="2">Exploring expressions ${title}</h2>
+
+      <p>The mathematics on this page is being rendered by <a
+      href="https://www.mathjax.org/" target="_blank">MathJax</a>, which
+      generates both the text spoken by screen readers, as well as the
+      visual layout for sighted users.</p>
+
+      <p>Expressions typeset by MathJax can be explored interactively, and
+      are focusable.  You can use the <kbd>Tab</kbd> key to move to a typeset
+      expression${select}.  Initially, the expression will be read in full,
+      but you can use the following keys to explore the expression
+      further:</p>
+
+      <ul>
+
+      <li><kbd>Down Arrow</kbd> moves one level deeper into the
+      expression to allow you to explore the current subexpression term by
+      term.</li>
+
+      <li><kbd>Up Arrow</kbd> moves back up a level within the
+      expression.</li>
+
+      <li><kbd>Right Arrow</kbd> moves to the next term in the
+      current subexpression.</li>
+
+      <li><kbd>Left Arrow</kbd> moves to the next term in the
+      current subexpression.</li>
+
+      <li><kbd>Shift</kbd>+<kbd>Arrow</kbd> moves to a
+      neighboring cell within a table.</li>
+
+      <li><kbd>0-9</kbd>+<kbd>0-9</kbd> jumps to a cell
+      by its index in the table, where 0 = 10.</li>
+
+      <li><kbd>Home</kbd> takes you to the top of the
+      expression.</li>
+
+      <li><kbd>Enter</kbd> or <kbd>Return</kbd> clicks a
+      link or activates an active subexpression.</li>
+
+      <li><kbd>Space</kbd> opens the MathJax contextual menu
+      where you can view or copy the source format of the expression, or
+      modify MathJax's settings.</li>
+
+      <li><kbd>Escape</kbd> exits the expression
+      explorer.</li>
+
+      <li><kbd>x</kbd> gives a summary of the current
+      subexpression.</li>
+
+      <li><kbd>z</kbd> gives the full text of a collapsed
+      expression.</li>
+
+      <li><kbd>d</kbd> gives the current depth within the
+      expression.</li>
+
+      <li><kbd>s</kbd> starts or stops auto-voicing with
+      synchronized highlighting.</li>
+
+      <li><kbd>v</kbd> marks the current position in the
+      expression.</li>
+
+      <li><kbd>p</kbd> cycles through the marked positions in
+      the expression.</li>
+
+      <li><kbd>u</kbd> clears all marked positions and returns
+      to the starting position.</li>
+
+      <li><kbd>&gt;</kbd> cycles through the available speech
+      rule sets (MathSpeak, ClearSpeak).</li>
+
+      <li><kbd>&lt;</kbd> cycles through the verbosity levels
+      for the current rule set.</li>
+
+      <li><kbd>b</kbd> toggles whether Braille notation is combined
+      with speech text for tactile Braille devices, as discussed
+      below.
+
+      <li><kbd>h</kbd> produces this help listing.</li>
+      </ul>
+
+      <p>The MathJax contextual menu allows you to enable or disable speech
+      or Braille generation for mathematical expressions, the language to
+      use for the spoken mathematics, and other features of MathJax.  In
+      particular, the Explorer submenu allows you to specify how the
+      mathematics should be identified in the page (e.g., by saying "math"
+      when the expression is spoken), and whether or not to include a
+      message about the letter "h" bringing up this dialog box.  Turning off
+      speech and Braille will disable the expression explorer, its
+      highlighting, and its help icon.</p>
+
+      <p>Support for tactile Braille devices varies across screen readers,
+      browsers, and operative systems.  If you are using a Braille output
+      device, you may need to select the "Combine with Speech" option in the
+      contextual menu's Braille submenu in order to obtain Nemeth or Euro
+      Braille output rather than the speech text on your Braille
+      device. ${braille}</p>
+
+      <p>The contextual menu also provides options for viewing or copying a
+      MathML version of the expression or its original source format,
+      creating an SVG version of the expression, and viewing various other
+      information.</p>
+
+      <p>Finally, selecting the "Insert Hidden MathML" item from the options
+      submenu will turn of MathJax's speech and Braille generation and
+      instead use visually hidden MathML that some screen readers can voice,
+      though support for this is not universal across all screen readers and
+      operating systems.  Selecting speech or Braille generation in their
+      submenus will remove the hidden MathML again.</p>
+
+      <p>For more help, see the <a
+      href="https://docs.mathjax.org/en/latest/basic/accessibility.html"
+      target="_blank">MathJax accessibility documentation.</a></p>
+    `;
+  }
+
+  /**
+   * Help for the different OS versions
+   */
+  protected static helpData: Map<string, [string, string, string]> = new Map([
+    [
+      'MacOS',
+      [
+        'on MacOS and iOS using VoiceOver',
+        ', or the VoiceOver arrow keys to select an expression',
+        '',
+      ],
+    ],
+    [
+      'Windows',
+      [
+        'in Windows using NVDA or JAWS',
+        `. The screen reader should enter focus or forms mode automatically
+        when the expression gets the browser focus, but if not, you can toggle
+        focus mode using NVDA+space in NVDA; for JAWS, Enter should start
+        forms mode while Numpad Plus leaves it.  Also note that you can use
+        the NVDA or JAWS key plus the arrow keys to explore the expression
+        even in browse mode, and you can use NVDA+shift+arrow keys to
+        navigate out of an expression that has the focus in NVDA`,
+        `NVDA users need to select this option, while JAWS users should be able
+        to get Braille output without changing this setting.`,
+      ],
+    ],
+    [
+      'Unix',
+      [
+        'in Unix using Orca',
+        `, and Orca should enter focus mode automatically.  If not, use the
+        Orca+a key to toggle focus mode on or off.  Also note that you can use
+        Orca+arrow keys to explore expressions even in browse mode`,
+        '',
+      ],
+    ],
+    ['unknown', ['with a Screen Reader.', '', '']],
+  ]);
+
   /*
    * The explorer key mapping
    */
   protected static keyMap: Map<string, [keyMapping, boolean?]> = new Map([
-    ['Tab', [() => true]],
+    ['Tab', [(explorer, event) => explorer.tabKey(event)]],
     ['Escape', [(explorer) => explorer.escapeKey()]],
     ['Enter', [(explorer, event) => explorer.enterKey(event)]],
     ['Home', [(explorer) => explorer.homeKey()]],
@@ -281,6 +328,7 @@ export class SpeechExplorer
     ['p', [(explorer) => explorer.prevMark(), false]],
     ['u', [(explorer) => explorer.clearMarks(), false]],
     ['s', [(explorer) => explorer.autoVoice(), false]],
+    ['b', [(explorer) => explorer.toggleBraille(), false]],
     ...[...'0123456789'].map((n) => [
       n,
       [(explorer: SpeechExplorer) => explorer.numberKey(parseInt(n)), false],
@@ -325,7 +373,18 @@ export class SpeechExplorer
    * @returns {string}  The string to use for no description
    */
   protected get none(): string {
-    return this.item.none;
+    return this.document.options.a11y.brailleSpeech
+      ? this.item.brailleNone
+      : this.item.none;
+  }
+
+  /**
+   * Shorthand for the item's "brailleNone" indicator
+   *
+   * @returns {string}  The string to use for no description
+   */
+  protected get brailleNone(): string {
+    return this.item.brailleNone;
   }
 
   /**
@@ -404,6 +463,16 @@ export class SpeechExplorer
    */
   protected cellTypes: string[] = ['cell', 'line'];
 
+  /**
+   * The anchors in this expression
+   */
+  protected anchors: HTMLElement[];
+
+  /**
+   * Whether the expression was focused by a back tab
+   */
+  protected backTab: boolean = false;
+
   /********************************************************************/
   /*
    * The event handlers
@@ -422,6 +491,11 @@ export class SpeechExplorer
   ]);
 
   /**
+   * Semantic id to subtree map.
+   */
+  private subtrees: Map<string, Set<string>> = null;
+
+  /**
    * @override
    */
   public FocusIn(_event: FocusEvent) {
@@ -434,6 +508,7 @@ export class SpeechExplorer
     }
     if (!this.clicked) {
       this.Start();
+      this.backTab = _event.target === this.img;
     }
     this.clicked = null;
   }
@@ -443,8 +518,10 @@ export class SpeechExplorer
    */
   public FocusOut(_event: FocusEvent) {
     if (this.current && !this.focusSpeech) {
-      this.setCurrent(null);
-      this.Stop();
+      if (!this.document.options.keepRegions) {
+        this.setCurrent(null);
+        this.Stop();
+      }
       if (!document.hasFocus()) {
         this.focusTop();
       }
@@ -605,8 +682,13 @@ export class SpeechExplorer
 
   /**
    * Open the help dialog, and refocus when it closes.
+   *
+   * @returns {boolean | void}  True cancels the event
    */
-  protected hKey() {
+  protected hKey(): boolean | void {
+    if (!this.document.options.enableExplorerHelp) {
+      return true;
+    }
     this.refocus = this.current;
     this.help();
   }
@@ -619,6 +701,42 @@ export class SpeechExplorer
   protected escapeKey(): boolean {
     this.Stop();
     this.focusTop();
+    this.setCurrent(null);
+    return true;
+  }
+
+  /**
+   * Tab to the next internal link, if any, and stop the event from
+   * propagating, or if no more links, let it propagate so that the
+   * browser moves to the next focusable item.
+   *
+   * @param {KeyboardEvent} event  The event for the enter key
+   * @returns {void | boolean}     False means play the honk sound
+   */
+  protected tabKey(event: KeyboardEvent): void | boolean {
+    if (this.anchors.length === 0 || !this.current) return true;
+    if (this.backTab) {
+      if (!event.shiftKey) return true;
+      const link = this.linkFor(this.anchors[this.anchors.length - 1]);
+      if (this.anchors.length === 1 && link === this.current) {
+        return true;
+      }
+      this.setCurrent(link);
+      return;
+    }
+    const [anchors, position, current] = event.shiftKey
+      ? [
+          this.anchors.slice(0).reverse(),
+          Node.DOCUMENT_POSITION_PRECEDING,
+          this.isLink() ? this.getAnchor() : this.current,
+        ]
+      : [this.anchors, Node.DOCUMENT_POSITION_FOLLOWING, this.current];
+    for (const anchor of anchors) {
+      if (current.compareDocumentPosition(anchor) & position) {
+        this.setCurrent(this.linkFor(anchor));
+        return;
+      }
+    }
     return true;
   }
 
@@ -792,6 +910,15 @@ export class SpeechExplorer
     this.Update();
   }
 
+  protected toggleBraille() {
+    const value = !this.document.options.a11y.brailleCombine;
+    if (this.document.menu) {
+      this.document.menu.menu.pool.lookup('brailleCombine').setValue(value);
+    } else {
+      this.document.options.a11y.brailleCombine = value;
+    }
+  }
+
   /**
    * Get index for cell to jump to.
    *
@@ -829,7 +956,7 @@ export class SpeechExplorer
     const parts = [
       [
         this.node.getAttribute('data-semantic-level') ?? 'Level',
-        this.current.getAttribute('aria-level') ?? '0',
+        this.current.getAttribute('data-semantic-level-number') ?? '0',
       ]
         .join(' ')
         .trim(),
@@ -933,40 +1060,36 @@ export class SpeechExplorer
    * Displays the help dialog.
    */
   protected help() {
-    const adaptor = this.document.adaptor;
-    const helpBackground = adaptor.node('mjx-help-background');
-    const close = (event: Event) => {
-      helpBackground.remove();
-      this.node.focus();
-      this.stopEvent(event);
-    };
-    helpBackground.addEventListener('click', close);
-    const helpSizer = adaptor.node('mjx-help-sizer', {}, [
-      adaptor.node(
-        'mjx-help-dialog',
-        { tabindex: 0, role: 'dialog', 'aria-labeledby': 'mjx-help-label' },
-        [
-          adaptor.node('h1', { id: 'mjx-help-label' }, [
-            adaptor.text('MathJax Expression Explorer Help'),
-          ]),
-          adaptor.node('div'),
-          adaptor.node('input', { type: 'button', value: 'Close' }),
-        ]
-      ),
-    ]);
-    helpBackground.append(helpSizer);
-    const help = helpSizer.firstChild as HTMLElement;
-    help.addEventListener('click', (event) => this.stopEvent(event));
-    help.lastChild.addEventListener('click', close);
-    help.addEventListener('keydown', (event: KeyboardEvent) => {
-      if (event.code === 'Escape') {
-        close(event);
-      }
+    if (!this.document.options.enableExplorerHelp) {
+      return;
+    }
+    const CLASS = this.constructor as typeof SpeechExplorer;
+    const [title, select, braille] = CLASS.helpData.get(context.os);
+    InfoDialog.post({
+      title: 'MathJax Expression Explorer Help',
+      message: CLASS.helpMessage(title, select, braille),
+      node: this.node,
+      adaptor: this.document.adaptor,
+      styles: {
+        '.mjx-dialog': {
+          'max-height': 'calc(min(35em, 90%))',
+        },
+        'mjx-dialog mjx-title': {
+          'font-size': '133%',
+          margin: '.5em 1.75em',
+        },
+        'mjx-dialog h2': {
+          'font-size': '20px',
+          margin: '.5em 0',
+        },
+        'mjx-dialog ul': {
+          'list-style-type': 'none',
+        },
+        'mjx-dialog li': {
+          'margin-bottom': '.5em',
+        },
+      },
     });
-    const [title, select] = helpData.get(context.os);
-    (help.childNodes[1] as HTMLElement).innerHTML = helpMessage(title, select);
-    document.body.append(helpBackground);
-    help.focus();
   }
 
   /********************************************************************/
@@ -981,6 +1104,7 @@ export class SpeechExplorer
    * @param {boolean} addDescription   True if the speech node should get a description
    */
   protected setCurrent(node: HTMLElement, addDescription: boolean = false) {
+    this.backTab = false;
     this.speechType = '';
     if (!document.hasFocus()) {
       this.refocus = this.current;
@@ -996,10 +1120,12 @@ export class SpeechExplorer
     //   (i.e., we are focusing out)
     //
     if (this.current) {
-      for (const part of this.getSplitNodes(this.current)) {
+      this.pool.unhighlight();
+      for (const part of Array.from(
+        this.node.querySelectorAll('.mjx-selected')
+      )) {
         part.classList.remove('mjx-selected');
       }
-      this.pool.unhighlight();
       if (this.document.options.a11y.tabSelects === 'last') {
         this.refocus = this.current;
       }
@@ -1016,18 +1142,25 @@ export class SpeechExplorer
     this.current = node;
     this.currentMark = -1;
     if (this.current) {
-      const parts = this.getSplitNodes(this.current);
+      const parts = [...this.getSplitNodes(this.current)];
+      this.highlighter.encloseNodes(parts, this.node);
       for (const part of parts) {
-        part.classList.add('mjx-selected');
+        if (!part.getAttribute('data-sre-enclosed')) {
+          part.classList.add('mjx-selected');
+        }
       }
       this.pool.highlight(parts);
       this.addSpeech(node, addDescription);
+      this.node.setAttribute('tabindex', '-1');
+      this.Update();
     }
     //
     // Done making changes
     //
     this.node.removeAttribute('aria-busy');
   }
+
+  private cacheParts: Map<string, HTMLElement[]> = new Map();
 
   /**
    * Get all nodes with the same semantic id (multiple nodes if there are line breaks).
@@ -1040,7 +1173,39 @@ export class SpeechExplorer
     if (!id) {
       return [node];
     }
-    return Array.from(this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
+    // Here we need to cache the subtrees.
+    if (this.cacheParts.has(id)) {
+      return this.cacheParts.get(id);
+    }
+    const parts = Array.from(
+      this.node.querySelectorAll(`[data-semantic-id="${id}"]`)
+    ) as HTMLElement[];
+    const subtree = this.subtree(id, parts);
+    this.cacheParts.set(id, [...parts, ...subtree]);
+    return this.cacheParts.get(id);
+  }
+
+  /**
+   * Retrieve the elements in the semantic subtree that are not in the DOM subtree.
+   *
+   * @param {string} id The semantic id of the root node.
+   * @param {HTMLElement[]} nodes The list of nodes corresponding to that id
+   *     (could be multiple for linebroken ones).
+   * @returns {HTMLElement[]} The list of nodes external to the DOM trees rooted
+   *     by any of the input nodes.
+   */
+  private subtree(id: string, nodes: HTMLElement[]): HTMLElement[] {
+    const sub = this.subtrees.get(id);
+    const children: Set<string> = new Set();
+    for (const node of nodes) {
+      (
+        Array.from(node.querySelectorAll(`[data-semantic-id]`)) as HTMLElement[]
+      ).forEach((x) => children.add(this.nodeId(x)));
+    }
+    const rest = setdifference(sub, children);
+    return [...rest]
+      .map((child) => this.getNode(child))
+      .filter((node) => node !== null);
   }
 
   /**
@@ -1051,18 +1216,31 @@ export class SpeechExplorer
    * @param {boolean} describe   True if the description should be added
    */
   protected addSpeech(node: HTMLElement, describe: boolean) {
-    this.img?.remove();
-    let speech = [
+    if (
+      !this.document.options.enableSpeech &&
+      !this.document.options.enableBraille
+    ) {
+      return;
+    }
+    if (this.anchors.length) {
+      setTimeout(() => this.img?.remove(), 10);
+    } else {
+      this.img?.remove();
+    }
+    let speech = this.addComma([
       node.getAttribute(SemAttr.PREFIX),
       node.getAttribute(SemAttr.SPEECH),
       node.getAttribute(SemAttr.POSTFIX),
-    ]
+    ])
       .join(' ')
       .trim();
     if (describe) {
       let description =
         this.description === this.none ? '' : ', ' + this.description;
-      if (this.document.options.a11y.help) {
+      if (
+        this.document.options.a11y.help &&
+        this.document.options.enableExplorerHelp
+      ) {
         description += ', press h for help';
       }
       speech += description;
@@ -1072,7 +1250,20 @@ export class SpeechExplorer
       node.getAttribute(SemAttr.BRAILLE),
       this.SsmlAttributes(node, SemAttr.SPEECH_SSML)
     );
-    this.node.setAttribute('tabindex', '-1');
+  }
+
+  /**
+   * In an array [prefix, center, postfix], the center gets a comma if
+   * there is a postfix.
+   *
+   * @param {string[]} words   The words to check
+   * @returns {string[]}       The modified array of words
+   */
+  protected addComma(words: string[]): string[] {
+    if (words[2] && (words[1] || words[0])) {
+      words[1] += ',';
+    }
+    return words;
   }
 
   /**
@@ -1081,7 +1272,7 @@ export class SpeechExplorer
    */
   protected removeSpeech() {
     if (this.speech) {
-      this.speech.remove();
+      this.unspeak(this.speech);
       this.speech = null;
       if (this.img) {
         this.node.append(this.img);
@@ -1108,28 +1299,56 @@ export class SpeechExplorer
     description: string = this.none
   ) {
     const oldspeech = this.speech;
-    this.speech = document.createElement('mjx-speech');
-    this.speech.setAttribute('role', this.role);
-    this.speech.setAttribute('aria-label', speech);
-    this.speech.setAttribute(SemAttr.SPEECH, speech);
+    const speechNode = (this.speech = document.createElement('mjx-speech'));
+    speechNode.setAttribute('role', this.role);
+    speechNode.setAttribute('aria-label', speech || this.none);
+    speechNode.setAttribute('aria-roledescription', description || this.none);
+    speechNode.setAttribute(SemAttr.SPEECH, speech);
     if (ssml) {
-      this.speech.setAttribute(SemAttr.PREFIX_SSML, ssml[0] || '');
-      this.speech.setAttribute(SemAttr.SPEECH_SSML, ssml[1] || '');
-      this.speech.setAttribute(SemAttr.POSTFIX_SSML, ssml[2] || '');
+      speechNode.setAttribute(SemAttr.PREFIX_SSML, ssml[0] || '');
+      speechNode.setAttribute(SemAttr.SPEECH_SSML, ssml[1] || '');
+      speechNode.setAttribute(SemAttr.POSTFIX_SSML, ssml[2] || '');
     }
     if (braille) {
-      this.speech.setAttribute('aria-braillelabel', braille);
+      if (this.document.options.a11y.brailleSpeech) {
+        speechNode.setAttribute('aria-label', braille);
+        speechNode.setAttribute('aria-roledescription', this.brailleNone);
+      }
+      speechNode.setAttribute('aria-braillelabel', braille);
+      speechNode.setAttribute('aria-brailleroledescription', this.brailleNone);
+      if (this.document.options.a11y.brailleCombine) {
+        speechNode.setAttribute(
+          'aria-label',
+          braille + BRAILLE_PADDING + speech
+        );
+      }
     }
-    this.speech.setAttribute('aria-roledescription', description);
-    this.speech.setAttribute('tabindex', '0');
-    this.node.append(this.speech);
+    speechNode.setAttribute('tabindex', '0');
+    if (isWindows) {
+      const container = document.createElement('mjx-speech-container');
+      container.setAttribute('role', 'application');
+      container.setAttribute('aria-roledescription', this.none);
+      container.setAttribute('aria-brailleroledescription', this.brailleNone);
+      container.append(speechNode);
+      this.node.append(container);
+      speechNode.setAttribute('role', 'img');
+    } else {
+      this.node.append(speechNode);
+    }
     this.focusSpeech = true;
-    this.speech.focus();
+    speechNode.focus();
     this.focusSpeech = false;
     this.Update();
     if (oldspeech) {
-      setTimeout(() => oldspeech.remove(), 100);
+      setTimeout(() => this.unspeak(oldspeech), 100);
     }
+  }
+
+  public unspeak(node: HTMLElement) {
+    if (isWindows) {
+      node = node.parentElement;
+    }
+    node.remove();
   }
 
   /**
@@ -1154,7 +1373,20 @@ export class SpeechExplorer
       role: 'img',
       'aria-roledescription': item.none,
     });
+    const braille = container.getAttribute(SemAttr.BRAILLE);
+    if (braille) {
+      if (this.document.options.a11y.brailleSpeech) {
+        this.img.setAttribute('aria-label', braille);
+        this.img.setAttribute('aria-roledescription', this.brailleNone);
+      }
+      this.img.setAttribute('aria-braillelabel', braille);
+      this.img.setAttribute('aria-brailleroledescription', this.brailleNone);
+      if (this.document.options.a11y.brailleCombine) {
+        this.img.setAttribute('aria-label', braille + BRAILLE_PADDING + speech);
+      }
+    }
     container.appendChild(this.img);
+    this.adjustAnchors();
   }
 
   /**
@@ -1167,6 +1399,34 @@ export class SpeechExplorer
     for (const child of Array.from(container.childNodes) as HTMLElement[]) {
       child.removeAttribute('aria-hidden');
     }
+    this.restoreAnchors();
+  }
+
+  /**
+   * Move all the href attributes to data-mjx-href attributes
+   * (so they won't be focusable links, as they are aria-hidden).
+   */
+  protected adjustAnchors() {
+    this.anchors = Array.from(this.node.querySelectorAll('a[href]'));
+    for (const anchor of this.anchors) {
+      const href = anchor.getAttribute('href');
+      anchor.setAttribute('data-mjx-href', href);
+      anchor.removeAttribute('href');
+    }
+    if (this.anchors.length) {
+      this.img.setAttribute('tabindex', '0');
+    }
+  }
+
+  /**
+   * Move the links back to their href attributes.
+   */
+  protected restoreAnchors() {
+    for (const anchor of this.anchors) {
+      anchor.setAttribute('href', anchor.getAttribute('data-mjx-href'));
+      anchor.removeAttribute('data-mjx-href');
+    }
+    this.anchors = [];
   }
 
   /**
@@ -1417,6 +1677,7 @@ export class SpeechExplorer
         if (
           child !== this.speech &&
           child !== this.img &&
+          child.tagName &&
           child.tagName.toLowerCase() !== 'rect'
         ) {
           const { left, right, top, bottom } = child.getBoundingClientRect();
@@ -1428,6 +1689,42 @@ export class SpeechExplorer
       }
     }
     return found;
+  }
+
+  /**
+   * @param {HTMLElement} node   The node to test for having an href
+   * @returns {boolean}          True if the node has a link, false otherwise
+   */
+  protected isLink(node: HTMLElement = this.current): boolean {
+    return !!node?.getAttribute('data-semantic-attributes')?.includes('href:');
+  }
+
+  /**
+   * @param {HTMLElement} node   The link node whose <a> node is desired
+   * @returns {HTMLElement}      The <a> node for the given link node
+   */
+  protected getAnchor(node: HTMLElement = this.current): HTMLElement {
+    const anchor = node.closest('a');
+    return anchor && this.node.contains(anchor) ? anchor : null;
+  }
+
+  /**
+   * @param {HTMLElement} anchor   The <a> node whose speech node is desired
+   * @returns {HTMLElement}        The node for which the <a> is handling the href
+   */
+  protected linkFor(anchor: HTMLElement): HTMLElement {
+    return anchor?.querySelector('[data-semantic-attributes*="href:"]');
+  }
+
+  /**
+   * @param {HTMLElement} node   A node inside a link whose top-level link node is required
+   * @returns {HTMLElement}      The parent node with an href that contains the given node
+   */
+  protected parentLink(node: HTMLElement): HTMLElement {
+    const link = node?.closest(
+      '[data-semantic-attributes*="href:"]'
+    ) as HTMLElement;
+    return link && this.node.contains(link) ? link : null;
   }
 
   /**
@@ -1517,6 +1814,10 @@ export class SpeechExplorer
    * @override
    */
   public async Start() {
+    if (!this.subtrees) {
+      this.subtrees = new Map();
+      this.getSubtrees();
+    }
     //
     // If we aren't attached or already active, return
     //
@@ -1538,7 +1839,9 @@ export class SpeechExplorer
     // and add the info icon.
     //
     this.node.classList.add('mjx-explorer-active');
-    this.node.append(this.document.infoIcon);
+    if (this.document.options.enableExplorerHelp) {
+      this.node.append(this.document.infoIcon);
+    }
     //
     // Get the node to make current, and determine if we need to add a
     // speech node (or just use the top-level node), then set the
@@ -1553,13 +1856,13 @@ export class SpeechExplorer
     const options = this.document.options;
     const a11y = options.a11y;
     if (a11y.subtitles && a11y.speech && options.enableSpeech) {
-      this.region.Show(this.node, this.highlighter);
+      this.region.Show(this.node);
     }
     if (a11y.viewBraille && a11y.braille && options.enableBraille) {
-      this.brailleRegion.Show(this.node, this.highlighter);
+      this.brailleRegion.Show(this.node);
     }
     if (a11y.keyMagnifier) {
-      this.magnifyRegion.Show(this.current, this.highlighter);
+      this.magnifyRegion.Show(this.current);
     }
     this.Update();
   }
@@ -1569,12 +1872,10 @@ export class SpeechExplorer
    */
   public Stop() {
     if (this.active) {
-      const description = this.description;
-      if (this.node.getAttribute('aria-roledescription') !== description) {
-        this.node.setAttribute('aria-roledescription', description);
-      }
       this.node.classList.remove('mjx-explorer-active');
-      this.document.infoIcon.remove();
+      if (this.document.options.enableExplorerHelp) {
+        this.document.infoIcon.remove();
+      }
       this.pool.unhighlight();
       this.magnifyRegion.Hide();
       this.region.Hide();
@@ -1589,11 +1890,16 @@ export class SpeechExplorer
   public Update() {
     if (!this.active) return;
     this.region.node = this.node;
-    this.generators.updateRegions(
-      this.speech || this.node,
-      this.region,
-      this.brailleRegion
-    );
+    if (
+      this.document.options.enableSpeech ||
+      this.document.options.enableBraille
+    ) {
+      this.generators.updateRegions(
+        this.speech || this.node,
+        this.region,
+        this.brailleRegion
+      );
+    }
     this.magnifyRegion.Update(this.current);
   }
 
@@ -1679,18 +1985,12 @@ export class SpeechExplorer
    * @returns {boolean} True if link was successfully triggered.
    */
   protected triggerLink(node: HTMLElement): boolean {
-    const focus = node
-      ?.getAttribute('data-semantic-postfix')
-      ?.match(/(^| )link($| )/);
-    if (focus) {
-      while (node && node !== this.node) {
-        if (node instanceof HTMLAnchorElement) {
-          node.dispatchEvent(new MouseEvent('click'));
-          setTimeout(() => this.FocusOut(null), 50);
-          return true;
-        }
-        node = node.parentNode as HTMLElement;
-      }
+    if (this.isLink(node)) {
+      const anchor = this.getAnchor(node);
+      anchor.classList.add('mjx-visited');
+      setTimeout(() => this.FocusOut(null), 50);
+      window.location.href = anchor.getAttribute('data-mjx-href');
+      return true;
     }
     return false;
   }
@@ -1701,12 +2001,9 @@ export class SpeechExplorer
    * @returns {boolean} True if link was successfully triggered.
    */
   protected triggerLinkMouse(): boolean {
-    let node = this.refocus;
-    while (node && node !== this.node) {
-      if (this.triggerLink(node)) {
-        return true;
-      }
-      node = node.parentNode as HTMLElement;
+    const link = this.parentLink(this.refocus);
+    if (this.triggerLink(link)) {
+      return true;
     }
     return false;
   }
@@ -1730,4 +2027,97 @@ export class SpeechExplorer
     }
     return focus.join(' ');
   }
+
+  /**
+   * Populates the subtrees map from the data-semantic-structure attribute.
+   */
+  private getSubtrees() {
+    const node = this.node.querySelector('[data-semantic-structure]');
+    if (!node) return;
+    const sexp = node.getAttribute('data-semantic-structure');
+    const tokens = tokenize(sexp);
+    const tree = parse(tokens);
+    buildMap(tree, this.subtrees);
+  }
+}
+
+/**********************************************************************/
+/*
+ * Some Aux functions for parsing the semantic structure sexpression
+ */
+type SexpTree = string | SexpTree[];
+
+/**
+ * Helper to tokenize input
+ *
+ * @param {string} str The semantic structure.
+ * @returns {string[]} The tokenized list.
+ */
+function tokenize(str: string): string[] {
+  return str.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').trim().split(/\s+/);
+}
+
+/**
+ * Recursive parser to convert tokens into a tree
+ *
+ * @param {string} tokens The tokens from the semantic structure.
+ * @returns {SexpTree} Array list for the semantic structure sexpression.
+ */
+function parse(tokens: string[]): SexpTree {
+  const stack: SexpTree[][] = [[]];
+  for (const token of tokens) {
+    if (token === '(') {
+      const newNode: SexpTree = [];
+      stack[stack.length - 1].push(newNode);
+      stack.push(newNode);
+    } else if (token === ')') {
+      stack.pop();
+    } else {
+      stack[stack.length - 1].push(token);
+    }
+  }
+  return stack[0][0];
+}
+
+/**
+ * Flattens the tree and builds the map.
+ *
+ * @param {SexpTree} tree The sexpression tree.
+ * @param {Map<string, Set<string>>} map The map to populate.
+ * @returns {Set<string>} The descendant map.
+ */
+function buildMap(tree: SexpTree, map: Map<string, Set<string>>): Set<string> {
+  if (typeof tree === 'string') {
+    if (!map.has(tree)) map.set(tree, new Set());
+    return new Set();
+  }
+  const [root, ...children] = tree;
+  const rootId = root as string;
+  const descendants: Set<string> = new Set();
+  for (const child of children) {
+    const childRoot = typeof child === 'string' ? child : child[0];
+    const childDescendants = buildMap(child, map);
+    descendants.add(childRoot as string);
+    childDescendants.forEach((d: string) => descendants.add(d));
+  }
+  map.set(rootId, descendants);
+  return descendants;
+}
+
+// Can be replaced with ES2024 implementation of Set.prototyp.difference
+/**
+ * Set difference between two sets A and B: A\B.
+ *
+ * @param {Set<string>} a Initial set.
+ * @param {Set<string>} b Set to remove from A.
+ * @returns {Set<string>} The difference A\B.
+ */
+function setdifference(a: Set<string>, b: Set<string>): Set<string> {
+  if (!a) {
+    return new Set();
+  }
+  if (!b) {
+    return a;
+  }
+  return new Set([...a].filter((x) => !b.has(x)));
 }

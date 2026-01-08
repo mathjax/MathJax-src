@@ -50,7 +50,8 @@ import { StyleJson } from '../../../util/StyleJson.js';
  * @template D  The Document class
  */
 export interface ChtmlTextNodeNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonTextNode<
       N,
       T,
@@ -74,7 +75,8 @@ export interface ChtmlTextNodeNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlTextNodeClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonTextNodeClass<
       N,
       T,

@@ -75,7 +75,8 @@ export function AlignX(align: string): AlignFunction {
  * @template D  The Document class
  */
 export interface SvgMmultiscriptsNTD<N, T, D>
-  extends SvgMsubsupNTD<N, T, D>,
+  extends
+    SvgMsubsupNTD<N, T, D>,
     CommonMmultiscripts<
       N,
       T,
@@ -99,7 +100,8 @@ export interface SvgMmultiscriptsNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMmultiscriptsClass<N, T, D>
-  extends SvgMsubsupClass<N, T, D>,
+  extends
+    SvgMsubsupClass<N, T, D>,
     CommonMmultiscriptsClass<
       N,
       T,

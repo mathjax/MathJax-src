@@ -399,6 +399,9 @@ if (typeof MathJax.loader === 'undefined') {
   combineDefaults(MathJax.config, 'loader', {
     paths: {
       mathjax: Loader.getRoot(),
+      fonts: context.window
+        ? 'https://cdn.jsdelivr.net/npm/@mathjax'
+        : '@mathjax',
     },
     source: {},
     dependencies: {},

@@ -81,6 +81,11 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
   none: string;
 
   /**
+   * The string to use for when there is no Braille description;
+   */
+  brailleNone: string;
+
+  /**
    * The Explorer objects for this math item
    */
   explorers: ExplorerPool;
@@ -138,6 +143,11 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      */
     protected static none: string = '\u0091';
 
+    /**
+     * Braille decription to use when set to none
+     */
+    protected static brailleNone: string = '\u2800';
+
     public get ariaRole() {
       return (this.constructor as typeof BaseClass).ariaRole;
     }
@@ -151,6 +161,10 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
 
     public get none() {
       return (this.constructor as typeof BaseClass).none;
+    }
+
+    public get brailleNone() {
+      return (this.constructor as typeof BaseClass).brailleNone;
     }
 
     /**
@@ -321,6 +335,7 @@ export function ExplorerMathDocumentMixin<
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
       enableExplorer: hasWindow,           // only activate in interactive contexts
+      enableExplorerHelp: true,            // help dialog is enabled
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         explorable: [STATE.EXPLORER]
@@ -350,6 +365,8 @@ export function ExplorerMathDocumentMixin<
         treeColoring: false,               // tree color expression
         viewBraille: false,                // display Braille output as subtitles
         voicing: false,                    // switch on speech output
+        brailleSpeech: false,              // use aria-label for Braille
+        brailleCombine: false,             // combine Braille with speech output
         help: true,                        // include "press h for help" messages on focus
         roleDescription: 'math',           // the role description to use for math expressions
         tabSelects: 'all',                 // 'all' for whole expression, 'last' for last explored node
@@ -378,17 +395,30 @@ export function ExplorerMathDocumentMixin<
       'mjx-container .mjx-selected': {
         outline: '2px solid black',
       },
+
+      'mjx-container a[data-mjx-href]': {
+        color: 'LinkText',
+        cursor: 'pointer',
+      },
+      'mjx-container a[data-mjx-href].mjx-visited': {
+        color: 'VisitedText',
+      },
+
       'mjx-container > mjx-help': {
         display: 'none',
         position: 'absolute',
-        top: '-.33em',
+        top: '-.3em',
         right: '-.5em',
         width: '.6em',
         height: '.6em',
         cursor: 'pointer',
       },
       'mjx-container[display="true"] > mjx-help': {
+        position: 'sticky',
+        inset: '-100% 0 100% 0',
+        margin: '-.3em -.5em 0 -.1em',
         right: 0,
+        top: 'initial',
       },
       'mjx-help > svg': {
         stroke: 'black',
@@ -403,7 +433,7 @@ export function ExplorerMathDocumentMixin<
         fill: 'white',
       },
       'mjx-help > svg > circle:nth-child(2)': {
-        fill: 'rgba(0, 0, 255, 0.2)',
+        fill: 'var(--mjx-bg1-color)',
         r: '7px',
       },
       'mjx-help > svg > line': {
@@ -417,77 +447,20 @@ export function ExplorerMathDocumentMixin<
         display: 'inline-flex',
         'align-items': 'center',
       },
-
-      'mjx-help-sizer': {
-        position: 'fixed',
-        width: '40%',
-        'max-width': '30em',
-        top: '3em',
-        left: '50%',
-      },
-      'mjx-help-dialog': {
-        position: 'absolute',
-        width: '200%',
-        left: '-100%',
-        border: '3px outset',
-        'border-radius': '15px',
-        color: 'black',
-        'background-color': '#DDDDDD',
-        'z-index': '301',
-        'text-align': 'right',
-        'font-style': 'normal',
-        'text-indent': 0,
-        'text-transform': 'none',
-        'line-height': 'normal',
-        'letter-spacing': 'normal',
-        'word-spacing': 'normal',
-        'word-wrap': 'normal',
-        float: 'none',
-        'box-shadow': '0px 10px 20px #808080',
-        outline: 'none',
-      },
-      'mjx-help-dialog > h1': {
-        'font-size': '24px',
-        'text-align': 'center',
-        margin: '.5em 0',
-      },
-      'mjx-help-dialog > div': {
-        margin: '0 1em',
-        padding: '3px',
-        overflow: 'auto',
-        height: '20em',
-        border: '2px inset black',
-        'background-color': 'white',
-        'text-align': 'left',
-      },
-      'mjx-help-dialog > input': {
-        margin: '.5em 2em',
-      },
-      'mjx-help-dialog kbd': {
-        display: 'inline-block',
-        padding: '3px 5px',
-        'font-size': '11px',
-        'line-height': '10px',
-        color: '#444d56',
-        'vertical-align': 'middle',
-        'background-color': '#fafbfc',
-        border: 'solid 1.5px #c6cbd1',
-        'border-bottom-color': '#959da5',
-        'border-radius': '3px',
-        'box-shadow': 'inset -.5px -1px 0 #959da5',
-      },
-      'mjx-help-dialog ul': {
-        'list-style-type': 'none',
-      },
-      'mjx-help-dialog li': {
-        'margin-bottom': '.5em',
-      },
-      'mjx-help-background': {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+      '@media (prefers-color-scheme: dark) /* explorer */': {
+        'mjx-help > svg': {
+          stroke: '#E0E0E0',
+        },
+        'mjx-help > svg > circle': {
+          fill: '#404040',
+        },
+        'mjx-help > svg > circle:nth-child(2)': {
+          fill: 'rgba(132, 132, 255, .3)',
+        },
+        'mjx-help:hover > svg > circle:nth-child(2)': {
+          stroke: '#AAAAAA',
+          fill: '#404040',
+        },
       },
     };
 
@@ -556,7 +529,7 @@ export function ExplorerMathDocumentMixin<
           SVGNS
         ),
       ]);
-      this.tmpFocus = this.adaptor.node('mjx-focus', {
+      this.tmpFocus = adaptor.node('mjx-focus', {
         tabIndex: 0,
         style: {
           outline: 'none',

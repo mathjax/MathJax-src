@@ -48,8 +48,11 @@ export interface ChtmlHtmlNodeNTD<N, T, D> extends ChtmlXmlNodeNTD<N, T, D> {}
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlHtmlNodeClass<N, T, D>
-  extends ChtmlXmlNodeClass<N, T, D> {
+export interface ChtmlHtmlNodeClass<N, T, D> extends ChtmlXmlNodeClass<
+  N,
+  T,
+  D
+> {
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,

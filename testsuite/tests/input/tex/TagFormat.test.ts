@@ -27,7 +27,9 @@ describe('Tagformat', () => {
          <mtable displaystyle="true" data-latex="x \\tag{1}">
            <mlabeledtr>
              <mtd id="my-tag:1">
-               <mtext data-latex="\\text{[1]}">[1]</mtext>
+               <mtext data-latex="\\text{[}">[</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{]}">]</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{1}">x</mi>
@@ -47,7 +49,9 @@ describe('Tagformat', () => {
          <mtable displaystyle="true" data-latex="x \\tag{x}">
            <mlabeledtr>
              <mtd id="my-tag:x">
-               <mtext data-latex="\\text{[x]}">[x]</mtext>
+               <mtext data-latex="\\text{[}">[</mtext>
+               <mtext data-latex="\\text{x}">x</mtext>
+               <mtext data-latex="\\text{]}">]</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{x}">x</mi>
@@ -64,10 +68,12 @@ describe('Tagformat', () => {
     toXmlMatch(
       tex2mml('\\begin{align}x \\label{test}\\tag{x}\\\\ \\ref{test} \\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\ref{test} \\end{align}" display="block">
-         <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\ref{test} \\end{align}">
+         <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\ref{test} \\end{align}">
            <mlabeledtr>
              <mtd id="my-tag:test">
-               <mtext data-latex="\\text{[x]}">[x]</mtext>
+               <mtext data-latex="\\text{[}">[</mtext>
+               <mtext data-latex="\\text{x}">x</mtext>
+               <mtext data-latex="\\text{]}">]</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{x}">x</mi>
@@ -75,7 +81,9 @@ describe('Tagformat', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="my-tag:A1">
-               <mtext data-latex="\\text{[A1]}">[A1]</mtext>
+               <mtext data-latex="\\text{[}">[</mtext>
+               <mtext data-latex="\\text{A1}">A1</mtext>
+               <mtext data-latex="\\text{]}">]</mtext>
              </mtd>
              <mtd>
                <mrow href="[[#my-tag%3Atest]]" class="MathJax_ref" data-latex="\\ref{test}">
@@ -94,10 +102,12 @@ describe('Tagformat', () => {
     toXmlMatch(
       tex2mml('\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}" display="block">
-         <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}">
+         <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}">
            <mlabeledtr>
              <mtd id="my-tag:test">
-               <mtext data-latex="\\text{[x]}">[x]</mtext>
+               <mtext data-latex="\\text{[}">[</mtext>
+               <mtext data-latex="\\text{x}">x</mtext>
+               <mtext data-latex="\\text{]}">]</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{x}">x</mi>
@@ -105,7 +115,9 @@ describe('Tagformat', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="my-tag:A1">
-               <mtext data-latex="\\text{[A1]}">[A1]</mtext>
+               <mtext data-latex="\\text{[}">[</mtext>
+               <mtext data-latex="\\text{A1}">A1</mtext>
+               <mtext data-latex="\\text{]}">]</mtext>
              </mtd>
              <mtd>
                <mrow href="[[#my-tag%3Atest]]" class="MathJax_ref" data-latex="\\eqref{test}">
@@ -130,10 +142,12 @@ describe('Tagformat', () => {
     toXmlMatch(
       tex2mml('\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}" display="block">
-         <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}">
+         <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}">
            <mlabeledtr>
              <mtd id="mjx-eqn:test">
-               <mtext data-latex="\\text{(x)}">(x)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{x}">x</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mi data-latex="\\tag{x}">x</mi>
@@ -141,12 +155,96 @@ describe('Tagformat', () => {
            </mlabeledtr>
            <mlabeledtr>
              <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(1)}">(1)</mtext>
+               <mtext data-latex="\\text{(}">(</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{)}">)</mtext>
              </mtd>
              <mtd>
                <mrow href="#mjx-eqn%3Atest" class="MathJax_ref" data-latex="\\eqref{test}">
                  <mtext>**x**</mtext>
                </mrow>
+             </mtd>
+           </mlabeledtr>
+         </mtable>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
+  test('Array tag', () => {
+    setupTex(['base', 'ams', 'tagformat'], {
+      tagformat: {
+        tag: (tag: string) => ['|', tag, '|'],
+      },
+      tags: 'ams'
+    });
+    toXmlMatch(
+      tex2mml('x \\tag{1}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x \\tag{1}" display="block">
+         <mtable displaystyle="true" data-latex="x \\tag{1}">
+           <mlabeledtr>
+             <mtd id="mjx-eqn:1">
+               <mtext data-latex="\\text{|}">|</mtext>
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{|}">|</mtext>
+             </mtd>
+             <mtd>
+               <mi data-latex="\\tag{1}">x</mi>
+             </mtd>
+           </mlabeledtr>
+         </mtable>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
+  test('Array tag with empty entry', () => {
+    setupTex(['base', 'ams', 'tagformat'], {
+      tagformat: {
+        tag: (tag: string) => ['', tag, '.'],
+      },
+      tags: 'ams'
+    });
+    toXmlMatch(
+      tex2mml('x \\tag{1}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x \\tag{1}" display="block">
+         <mtable displaystyle="true" data-latex="x \\tag{1}">
+           <mlabeledtr>
+             <mtd id="mjx-eqn:1">
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{.}">.</mtext>
+             </mtd>
+             <mtd>
+               <mi data-latex="\\tag{1}">x</mi>
+             </mtd>
+           </mlabeledtr>
+         </mtable>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
+  test('Array tag with null entry', () => {
+    setupTex(['base', 'ams', 'tagformat'], {
+      tagformat: {
+        tag: (tag: string) => [ , tag, '.'],
+      },
+      tags: 'ams'
+    });
+    toXmlMatch(
+      tex2mml('x \\tag{1}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x \\tag{1}" display="block">
+         <mtable displaystyle="true" data-latex="x \\tag{1}">
+           <mlabeledtr>
+             <mtd id="mjx-eqn:1">
+               <mtext data-latex="\\text{1}">1</mtext>
+               <mtext data-latex="\\text{.}">.</mtext>
+             </mtd>
+             <mtd>
+               <mi data-latex="\\tag{1}">x</mi>
              </mtd>
            </mlabeledtr>
          </mtable>

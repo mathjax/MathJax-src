@@ -288,7 +288,7 @@ describe('NoError', () => {
     toXmlMatch(
       tex2mml('\\mmlToken{mi}[m1=true]{}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mmlToken{mi}[m1=true]{}" display="block">
-         <merror data-mjx-error="Invalid MathML attribute: m1=true" title="Invalid MathML attribute: m1=true">
+         <merror data-mjx-error="Invalid MathML attribute: m1" title="Invalid MathML attribute: m1">
            <mtext>\\mmlToken{mi}[m1=true]{}</mtext>
          </merror>
        </math>`

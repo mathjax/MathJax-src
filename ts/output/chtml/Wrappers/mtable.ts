@@ -52,7 +52,8 @@ import { OptionList } from '../../../util/Options.js';
  * @template D  The Document class
  */
 export interface ChtmlMtableNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMtable<
       N,
       T,
@@ -87,7 +88,8 @@ export interface ChtmlMtableNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMtableClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMtableClass<
       N,
       T,

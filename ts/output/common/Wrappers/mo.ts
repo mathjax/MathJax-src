@@ -359,53 +359,64 @@ export function CommonMoMixin<
      * @override
      */
     public getStretchedVariant(WH: number[], exact: boolean = false) {
-      if (this.stretch.dir !== DIRECTION.None) {
-        let D = this.getWH(WH);
-        const min = this.getSize('minsize', 0);
-        const max = this.getSize('maxsize', Infinity);
-        const mathaccent = this.node.getProperty('mathaccent');
-        //
-        //  Clamp the dimension to the max and min
-        //  then get the target size via TeX rules
-        //
-        D = Math.max(min, Math.min(max, D));
-        const df = this.font.params.delimiterfactor / 1000;
-        const ds = this.font.params.delimitershortfall;
-        const m =
-          min || exact
-            ? D
-            : mathaccent
-              ? Math.min(D / df, D + ds)
-              : Math.max(D * df, D - ds);
-        //
-        //  Look through the delimiter sizes for one that matches
-        //
-        const delim = this.stretch;
-        const c = delim.c || this.getText().codePointAt(0);
-        let i = 0;
-        if (delim.sizes) {
-          for (const d of delim.sizes) {
-            if (d >= m) {
-              if (mathaccent && i) {
-                i--;
-              }
-              this.setDelimSize(c, i);
-              return;
+      if (this.stretch.dir === DIRECTION.None) {
+        return;
+      }
+      let D = this.getWH(WH);
+      const min = this.getSize('minsize', 0);
+      const max = this.getSize('maxsize', Infinity);
+      const mathaccent = this.node.getProperty('mathaccent');
+      //
+      //  Clamp the dimension to the max and min
+      //  then get the target size via TeX rules
+      //
+      D = Math.max(min, Math.min(max, D));
+      const df = this.font.params.delimiterfactor / 1000;
+      const ds = this.font.params.delimitershortfall;
+      const m =
+        min || exact
+          ? D
+          : mathaccent
+            ? Math.min(D / df, D + ds)
+            : Math.max(D * df, D - ds);
+      //
+      //  Get the delimiter character, and look up the
+      //  delimiter data again if we have already stretched it
+      //  (in case a fixed size set the delim.c).  See #3457.
+      //
+      const C = this.getText().codePointAt(0);
+      let delim = this.stretch;
+      if (this.size) {
+        this.stretch = delim = this.font.getDelimiter(C) as DD;
+        this.size = null;
+      }
+      const c = delim.c || C;
+      //
+      //  Look through the delimiter sizes for one that matches
+      //
+      let i = 0;
+      if (delim.sizes) {
+        for (const d of delim.sizes) {
+          if (d >= m) {
+            if (mathaccent && i) {
+              i--;
             }
-            i++;
+            this.setDelimSize(c, i);
+            return;
           }
+          i++;
         }
-        //
-        //  No size matches, so if we can make multi-character delimiters,
-        //  record the data for that, otherwise, use the largest fixed size.
-        //
-        if (delim.stretch) {
-          this.size = -1;
-          this.invalidateBBox();
-          this.getStretchBBox(WH, this.checkExtendedHeight(D, delim), delim);
-        } else {
-          this.setDelimSize(c, i - 1);
-        }
+      }
+      //
+      //  No size matches, so if we can make multi-character delimiters,
+      //  record the data for that, otherwise, use the largest fixed size.
+      //
+      if (delim.stretch) {
+        this.size = -1;
+        this.invalidateBBox();
+        this.getStretchBBox(WH, this.checkExtendedHeight(D, delim), delim);
+      } else {
+        this.setDelimSize(c, i - 1);
       }
     }
 
@@ -531,7 +542,7 @@ export function CommonMoMixin<
      */
     public setBreakStyle(linebreak: string = '') {
       this.breakStyle =
-        this.node.parent.isEmbellished && !linebreak
+        this.node.parent?.isEmbellished && !linebreak
           ? ''
           : this.getBreakStyle(linebreak);
       if (!this.breakCount) return;

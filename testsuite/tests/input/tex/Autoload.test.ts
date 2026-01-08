@@ -27,7 +27,7 @@ describe('Autoload', () => {
     toXmlMatch(
       await typeset2mml('\\begin{CD} a @>>> b\\end{CD}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD} a @&gt;&gt;&gt; b\\end{CD}" display="block">
-         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD} a @&gt;&gt;&gt; b\\end{CD}">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD} a @&gt;&gt;&gt; b\\end{CD}">
            <mtr>
              <mtd>
                <mi data-latex="a">a</mi>

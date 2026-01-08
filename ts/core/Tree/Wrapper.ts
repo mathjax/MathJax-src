@@ -108,8 +108,7 @@ export class AbstractWrapper<
   N extends Node<N, C>,
   C extends NodeClass<N, C>,
   W extends Wrapper<N, C, W>,
-> implements Wrapper<N, C, W>
-{
+> implements Wrapper<N, C, W> {
   /**
    * @override
    */

@@ -23,7 +23,7 @@
 
 import { MathDocument } from '../../core/MathDocument.js';
 import { StyleJsonSheet } from '../../util/StyleJson.js';
-import { Highlighter, getHighlighter } from './Highlighter.js';
+import { Highlighter } from './Highlighter.js';
 import { SsmlElement, buildSpeech } from '../speech/SpeechUtil.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
@@ -43,9 +43,8 @@ export interface Region<T> {
    * Shows the live region in the document.
    *
    * @param {HTMLElement} node
-   * @param {Highlighter} highlighter
    */
-  Show(node: HTMLElement, highlighter: Highlighter): void;
+  Show(node: HTMLElement): void;
 
   /**
    * Takes the element out of the document flow.
@@ -72,13 +71,6 @@ export abstract class AbstractRegion<T> implements Region<T> {
    * @type {string}
    */
   protected static className: string;
-
-  /**
-   * True if the style has already been added to the document.
-   *
-   * @type {boolean}
-   */
-  protected static styleAdded: boolean = false;
 
   /**
    * The CSS style that needs to be added for this type of region.
@@ -118,19 +110,33 @@ export abstract class AbstractRegion<T> implements Region<T> {
   }
 
   /**
+   * @returns {string}   The stylesheet ID
+   */
+  public static get sheetId(): string {
+    return 'MJX-' + this.name + '-styles';
+  }
+
+  /**
+   * @returns {HTMLStyleElement}   The stylesheet for this region
+   */
+  public static get styleSheet(): HTMLStyleElement {
+    return document.head.querySelector('#' + this.sheetId) as HTMLStyleElement;
+  }
+
+  /**
    * @override
    */
   public AddStyles() {
-    if (this.CLASS.styleAdded) {
+    const id = this.CLASS.sheetId;
+    if (
+      !this.CLASS.style ||
+      this.document.adaptor.head().querySelector('#' + id)
+    ) {
       return;
     }
-    // TODO: should that be added to document.documentStyleSheet()?
-    const node = this.document.adaptor.node('style');
+    const node = this.document.adaptor.node('style', { id });
     node.innerHTML = this.CLASS.style.cssText;
-    this.document.adaptor
-      .head(this.document.adaptor.document)
-      .appendChild(node);
-    this.CLASS.styleAdded = true;
+    this.document.adaptor.head().appendChild(node);
   }
 
   /**
@@ -151,10 +157,9 @@ export abstract class AbstractRegion<T> implements Region<T> {
   /**
    * @override
    */
-  public Show(node: HTMLElement, highlighter: Highlighter) {
+  public Show(node: HTMLElement) {
     this.AddElement();
     this.position(node);
-    this.highlight(highlighter);
     this.div.classList.add(this.CLASS.className + '_Show');
   }
 
@@ -166,18 +171,11 @@ export abstract class AbstractRegion<T> implements Region<T> {
   protected abstract position(node: HTMLElement): void;
 
   /**
-   * Highlights the region.
-   *
-   * @param {Highlighter} highlighter The Sre highlighter.
-   */
-  protected abstract highlight(highlighter: Highlighter): void;
-
-  /**
    * @override
    */
   public Hide() {
     if (!this.div) return;
-    this.div.parentNode.removeChild(this.div);
+    this.div.remove();
     this.div = null;
     this.inner = null;
   }
@@ -260,11 +258,6 @@ export class DummyRegion extends AbstractRegion<void> {
    * @override
    */
   public position() {}
-
-  /**
-   * @override
-   */
-  public highlight(_highlighter: Highlighter) {}
 }
 
 export class StringRegion extends AbstractRegion<string> {
@@ -297,15 +290,6 @@ export class StringRegion extends AbstractRegion<string> {
   protected position(node: HTMLElement) {
     this.stackRegions(node);
   }
-
-  /**
-   * @override
-   */
-  protected highlight(highlighter: Highlighter) {
-    if (!this.div) return;
-    this.inner.style.backgroundColor = highlighter.background;
-    this.inner.style.color = highlighter.foreground;
-  }
 }
 
 export class ToolTip extends StringRegion {
@@ -318,7 +302,7 @@ export class ToolTip extends StringRegion {
    * @override
    */
   protected static style: StyleJsonSheet = new StyleJsonSheet({
-    ['.' + ToolTip.className]: {
+    [`.${ToolTip.className}`]: {
       width: 'auto',
       height: 'auto',
       opacity: 1,
@@ -331,9 +315,16 @@ export class ToolTip extends StringRegion {
       'background-color': 'white',
       'z-index': 202,
     },
-    ['.' + ToolTip.className + ' > div']: {
+    [`.${ToolTip.className} > div`]: {
       'border-radius': 'inherit',
       padding: '0 2px',
+    },
+    '@media (prefers-color-scheme: dark)': {
+      ['.' + ToolTip.className]: {
+        'background-color': '#222025',
+        'box-shadow': '0px 5px 20px #000',
+        border: '1px solid #7C7C7C',
+      },
     },
   });
 }
@@ -344,11 +335,61 @@ export class LiveRegion extends StringRegion {
    */
   protected static className = 'MJX_LiveRegion';
 
+  public static priority = {
+    primary: 1,
+    secondary: 2,
+  };
+
   /**
    * @override
    */
   protected static style: StyleJsonSheet = new StyleJsonSheet({
-    ['.' + LiveRegion.className]: {
+    ':root': {
+      '--mjx-fg-red': '255, 0, 0',
+      '--mjx-fg-green': '0, 255, 0',
+      '--mjx-fg-blue': '0, 0, 255',
+      '--mjx-fg-yellow': '255, 255, 0',
+      '--mjx-fg-cyan': '0, 255, 255',
+      '--mjx-fg-magenta': '255, 0, 255',
+      '--mjx-fg-white': '255, 255, 255',
+      '--mjx-fg-black': '0, 0, 0',
+      '--mjx-bg-red': '255, 0, 0',
+      '--mjx-bg-green': '0, 255, 0',
+      '--mjx-bg-blue': '0, 0, 255',
+      '--mjx-bg-yellow': '255, 255, 0',
+      '--mjx-bg-cyan': '0, 255, 255',
+      '--mjx-bg-magenta': '255, 0, 255',
+      '--mjx-bg-white': '255, 255, 255',
+      '--mjx-bg-black': '0, 0, 0',
+      '--mjx-live-bg-color': 'white',
+      '--mjx-live-shadow-color': '#888',
+      '--mjx-live-border-color': '#CCCCCC',
+      '--mjx-bg1-color': 'rgba(var(--mjx-bg-blue), var(--mjx-bg-alpha))',
+      '--mjx-fg1-color': 'rgba(var(--mjx-fg-black), 1)',
+      '--mjx-bg2-color': 'rgba(var(--mjx-bg-red), 1)',
+      '--mjx-fg2-color': 'rgba(var(--mjx-fg-black), 1)',
+      '--mjx-bg1-alpha': 0.2,
+      '--mjx-fg1-alpha': 1,
+      '--mjx-bg2-alpha': 1,
+      '--mjx-fg2-alpha': 1,
+    },
+    '@media (prefers-color-scheme: dark)': {
+      ':root': {
+        '--mjx-bg-blue': '132, 132, 255',
+        '--mjx-bg-white': '0, 0, 0',
+        '--mjx-bg-black': '255, 255, 255',
+        '--mjx-fg-white': '0, 0, 0',
+        '--mjx-fg-black': '255, 255, 255',
+        '--mjx-live-bg-color': '#222025',
+        '--mjx-live-shadow-color': 'black',
+        '--mjx-live-border-color': '#7C7C7C',
+        '--mjx-bg1-alpha': 0.3,
+        '--mjx-fg1-alpha': 1,
+        '--mjx-bg2-alpha': 1,
+        '--mjx-fg2-alpha': 1,
+      },
+    },
+    [`.${LiveRegion.className}`]: {
       position: 'absolute',
       top: 0,
       display: 'none',
@@ -360,20 +401,87 @@ export class LiveRegion extends StringRegion {
       left: 0,
       right: 0,
       margin: '0 auto',
-      'background-color': 'white',
-      'box-shadow': '0px 5px 20px #888',
-      border: '2px solid #CCCCCC',
+      'background-color': 'var(--mjx-live-bg-color)',
+      'box-shadow': '0px 5px 20px var(--mjx-live-shadow-color)',
+      border: '2px solid var(--mjx-live-border-color)',
     },
-    ['.' + LiveRegion.className + '_Show']: {
+    [`.${LiveRegion.className}_Show`]: {
       display: 'block',
     },
+    [`.${LiveRegion.className} > div`]: {
+      color: 'var(--mjx-fg1-color)',
+      'background-color': 'var(--mjx-bg1-color)',
+    },
+    //
+    // Primary highlighting colors
+    //
+    'mjx-container [data-sre-highlight-1]:not([data-mjx-collapsed], rect)': {
+      color: 'var(--mjx-fg1-color) ! important', //                   // CHTML
+      fill: 'var(--mjx-fg1-color) ! important', //                    // SVG
+    },
+    [[
+      'mjx-container:not([data-mjx-clone-container])',
+      '[data-sre-highlight-1]:not([data-sre-enclosed], rect)',
+    ].join(' ')]: {
+      'background-color': 'var(--mjx-bg1-color) ! important', //      // CHTML
+    },
+    'mjx-container rect[data-sre-highlight-1]:not([data-sre-enclosed])': {
+      fill: 'var(--mjx-bg1-color) ! important', //                    // SVG
+    },
+    //
+    // Secondary highlighting colors
+    //
+    'mjx-container [data-sre-highlight-2]': {
+      color: 'var(--mjx-fg2-color) ! important', //                   // CHTML
+      'background-color': 'var(--mjx-bg2-color) ! important', //      // CHTML
+      fill: 'var(--mjx-fg2-color) ! important', //                    // SVG
+    },
+    'mjx-container rect[data-sre-highlight-2]': {
+      fill: 'var(--mjx-bg2-color) ! important', //                    // SVG
+    },
   });
+
+  /**
+   * Set the CSS styles for a given color type and priority
+   *
+   * @param {string} type      The color type (fg or bg)
+   * @param {number} priority  1 = primary, 2 = secondary
+   * @param {string} color     The color name (blue, red, black, etc.)
+   * @param {number} opacity   The alpha channel for the color
+   */
+  public static setColor(
+    type: string,
+    priority: number,
+    color: string,
+    opacity: number
+  ) {
+    const style = this.styleSheet;
+    if (style) {
+      const css = (style.sheet.cssRules[0] as any).style;
+      const alpha = opacity === 1 ? 1 : `var(--mjx-${type}${priority}-alpha)`;
+      const name = `--mjx-${type}${priority}-color`;
+      const value = `rgba(var(--mjx-${type}-${color}), ${alpha})`;
+      if (css.getPropertyValue(name) !== value) {
+        css.setProperty(name, value);
+      }
+      const oname = `--mjx-${type}${priority}-alpha`;
+      if (css.getPropertyValue(oname) !== String(opacity)) {
+        css.setProperty(oname, opacity);
+        (style.sheet.cssRules[1] as any).cssRules[0].style.setProperty(
+          oname,
+          opacity ** 0.7071
+        );
+      }
+    }
+  }
 }
 
 /**
  * Region class that enables auto voicing of content via SSML markup.
  */
 export class SpeechRegion extends LiveRegion {
+  protected static style: StyleJsonSheet = null;
+
   /**
    * Flag to activate auto voicing.
    */
@@ -393,21 +501,17 @@ export class SpeechRegion extends LiveRegion {
   private clear: boolean = false;
 
   /**
-   * The highlighter to use.
+   * The highlighter to use. (Set by ExplorerPool)
    */
-  public highlighter: Highlighter = getHighlighter(
-    { color: 'red' },
-    { color: 'black' },
-    this.document.outputJax.name
-  );
+  public highlighter: Highlighter;
 
   /**
    * @override
    */
-  public Show(node: HTMLElement, highlighter: Highlighter) {
+  public Show(node: HTMLElement) {
     super.Update('\u00a0'); // Ensures region shown and cannot be overwritten.
     this.node = node;
-    super.Show(node, highlighter);
+    super.Show(node);
   }
 
   /**
@@ -448,6 +552,9 @@ export class SpeechRegion extends LiveRegion {
     promise.then(() => this.makeVoice(speech));
   }
 
+  /**
+   * @param {string} speech  The speech string to voice
+   */
   private makeVoice(speech: string) {
     this.active =
       this.document.options.a11y.voicing &&
@@ -566,7 +673,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    * @override
    */
   protected static style: StyleJsonSheet = new StyleJsonSheet({
-    ['.' + HoverRegion.className]: {
+    [`.${HoverRegion.className}`]: {
       display: 'block',
       position: 'absolute',
       width: 'max-content',
@@ -580,8 +687,27 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
       'box-shadow': '0px 10px 20px #888',
       border: '2px solid #CCCCCC',
     },
-    ['.' + HoverRegion.className + ' > div']: {
+    [`.${HoverRegion.className} > div`]: {
       overflow: 'hidden',
+      color: 'var(--mjx-fg1-color)',
+      'background-color': 'var(--mjx-bg1-color)',
+    },
+    '@media (prefers-color-scheme: dark)': {
+      ['.' + HoverRegion.className]: {
+        'background-color': '#222025',
+        'box-shadow': '0px 5px 20px #000',
+        border: '1px solid #7C7C7C',
+      },
+    },
+    'mjx-container[data-mjx-clone-container]': {
+      padding: '2px ! important',
+    },
+    'mjx-math > mjx-mlabeledtr': {
+      display: 'inline-block',
+      'margin-right': '.5em ! important',
+    },
+    'mjx-math > mjx-mtd': {
+      float: 'right',
     },
   });
 
@@ -621,27 +747,11 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   /**
    * @override
    */
-  protected highlight(highlighter: Highlighter) {
-    if (!this.div) return;
-    // TODO Do this with styles to avoid the interaction of SVG/CHTML.
-    if (
-      this.inner.firstChild &&
-      !(this.inner.firstChild as HTMLElement).hasAttribute('sre-highlight')
-    ) {
-      return;
-    }
-    this.inner.style.backgroundColor = highlighter.background;
-    this.inner.style.color = highlighter.foreground;
-  }
-
-  /**
-   * @override
-   */
-  public Show(node: HTMLElement, highlighter: Highlighter) {
+  public Show(node: HTMLElement) {
     this.AddElement();
     this.div.style.fontSize = this.document.options.a11y.magnify;
     this.Update(node);
-    super.Show(node, highlighter);
+    super.Show(node);
   }
 
   /**
@@ -675,47 +785,126 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    * @param {HTMLElement} node The original node.
    * @returns {HTMLElement} The cloned node.
    */
-  private cloneNode(node: HTMLElement): HTMLElement {
+  protected cloneNode(node: HTMLElement): HTMLElement {
     let mjx = node.cloneNode(true) as HTMLElement;
     mjx.setAttribute('data-mjx-clone', 'true');
     if (mjx.nodeName !== 'MJX-CONTAINER') {
-      // remove element spacing (could be done in CSS)
       if (mjx.nodeName !== 'g') {
         mjx.style.marginLeft = mjx.style.marginRight = '0';
       }
-      let container = node;
-      while (container && container.nodeName !== 'MJX-CONTAINER') {
-        container = container.parentNode as HTMLElement;
-      }
+      const container = node.closest('mjx-container');
       if (mjx.nodeName !== 'MJX-MATH' && mjx.nodeName !== 'svg') {
-        const child = container.firstChild;
-        mjx = child.cloneNode(false).appendChild(mjx).parentNode as HTMLElement;
-        //
-        // SVG specific
-        //
-        if (mjx.nodeName === 'svg') {
-          (mjx.firstChild as HTMLElement).setAttribute(
-            'transform',
-            'matrix(1 0 0 -1 0 0)'
-          );
-          const W = parseFloat(mjx.getAttribute('viewBox').split(/ /)[2]);
-          const w = parseFloat(mjx.getAttribute('width'));
-          const { x, y, width, height } = (node as any).getBBox();
-          mjx.setAttribute(
-            'viewBox',
-            [x, -(y + height), width, height].join(' ')
-          );
-          mjx.removeAttribute('style');
-          mjx.setAttribute('width', (w / W) * width + 'ex');
-          mjx.setAttribute('height', (w / W) * height + 'ex');
-          container.setAttribute('sre-highlight', 'false');
+        let math = container.firstChild;
+        if (math.nodeName === 'MJX-BBOX') {
+          math = math.nextSibling;
+        }
+        mjx = math.cloneNode(false).appendChild(mjx).parentElement;
+        const enclosed = Array.from(
+          container.querySelectorAll('[data-sre-enclosed]')
+        );
+        math.nodeName === 'svg'
+          ? this.svgClone(node, enclosed, mjx, container)
+          : this.chtmlClone(node, enclosed, mjx);
+      }
+      mjx = container.cloneNode(false).appendChild(mjx).parentElement;
+      mjx.style.margin = '0';
+      mjx.style.minWidth = '';
+    }
+    mjx.setAttribute('data-mjx-clone-container', 'true');
+    return mjx;
+  }
+
+  /**
+   * @param {HTMLElement} node     The main node being shown
+   * @param {Element[]} enclosed   The elements to be cloned
+   * @param {HTMLElement} mjx      The container for the clones
+   */
+  protected chtmlClone(
+    node: HTMLElement,
+    enclosed: Element[],
+    mjx: HTMLElement
+  ) {
+    for (const child of enclosed) {
+      if (child !== node) {
+        const id = child.getAttribute('data-semantic-id');
+        if (!id || !mjx.querySelector(`[data-semantic-id="${id}"]`)) {
+          mjx.appendChild(child.cloneNode(true));
         }
       }
-      mjx = container.cloneNode(false).appendChild(mjx)
-        .parentNode as HTMLElement;
-      //  remove displayed math margins (could be done in CSS)
-      mjx.style.margin = '0';
     }
-    return mjx;
+  }
+
+  /**
+   * @param {HTMLElement} node     The main node being shown
+   * @param {Element[]} enclosed   The elements to be cloned
+   * @param {HTMLElement} mjx      The container for the clones
+   * @param {Element} container    The container for node
+   */
+  protected svgClone(
+    node: Element,
+    enclosed: Element[],
+    mjx: HTMLElement,
+    container: Element
+  ) {
+    let { x, y, width, height } = (node as SVGGraphicsElement).getBBox();
+    if (enclosed.length) {
+      mjx.firstChild.remove();
+      const g = container.querySelector('g').cloneNode(false);
+      for (const child of enclosed) {
+        const clone = g.appendChild(child.cloneNode(true)) as HTMLElement;
+        if (child === node) {
+          clone.setAttribute('data-mjx-clone', 'true');
+        }
+        const [cx, cy] = this.xy(child);
+        clone.setAttribute('transform', `translate(${cx}, ${cy})`);
+      }
+      mjx.appendChild(g);
+      const rect = node.previousSibling as SVGRectElement;
+      const bbox = rect.getBBox();
+      width = bbox.width;
+      height = bbox.height;
+      const [X, Y] = this.xy(rect);
+      x = X;
+      y = Y + bbox.y;
+    }
+    //
+    // Handle top-level expression with a tag
+    //
+    const g = container.querySelector('g');
+    if (
+      container.getAttribute('width') === 'full' &&
+      g.firstChild.lastChild === node
+    ) {
+      mjx.innerHTML = '';
+      mjx.appendChild(container.cloneNode(true).firstChild);
+      mjx.querySelector('.mjx-selected').setAttribute('data-mjx-clone', 'true');
+      mjx.querySelector('[data-sre-highlighter-added]')?.remove();
+      return;
+    }
+    //
+    // All other expressions
+    //
+    (mjx.firstChild as HTMLElement).setAttribute('transform', 'scale(1, -1)');
+    const W = parseFloat(
+      (
+        mjx.getAttribute('viewBox') || mjx.getAttribute('data-mjx-viewBox')
+      ).split(/ /)[2]
+    );
+    const w = parseFloat(mjx.style.minWidth || mjx.getAttribute('width'));
+    mjx.setAttribute('viewBox', [x, -(y + height), width, height].join(' '));
+    mjx.removeAttribute('style');
+    mjx.setAttribute('width', (w / W) * width + 'ex');
+    mjx.setAttribute('height', (w / W) * height + 'ex');
+  }
+
+  /**
+   * @param {Element} node         The node whose position is needed
+   * @returns {[number, number]}   The position in viewport coordinates
+   */
+  protected xy(node: Element): number[] {
+    const P = DOMPoint.fromPoint({ x: 0, y: 0 }).matrixTransform(
+      (node as SVGGraphicsElement).getCTM().inverse()
+    );
+    return [-P.x, -P.y];
   }
 }

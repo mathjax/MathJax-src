@@ -620,6 +620,7 @@ if (typeof MathJax._.startup === 'undefined') {
     typeset: true,
     ready: Startup.defaultReady.bind(Startup),
     pageReady: Startup.defaultPageReady.bind(Startup),
+    polyfillHasOwn: true, // Can be removed with ES2024 implementation of Object.hasown
   });
   combineWithMathJax({
     startup: Startup,

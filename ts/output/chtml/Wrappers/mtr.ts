@@ -54,7 +54,8 @@ import { StyleJson } from '../../../util/StyleJson.js';
  * @template D  The Document class
  */
 export interface ChtmlMtrNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMtr<
       N,
       T,
@@ -78,7 +79,8 @@ export interface ChtmlMtrNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMtrClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMtrClass<
       N,
       T,
@@ -164,6 +166,8 @@ export const ChtmlMtr = (function <N, T, D>(): ChtmlMtrClass<N, T, D> {
       if (align !== 'baseline') {
         this.adaptor.setAttribute(this.dom[0], 'rowalign', align);
       }
+      const { h, d } = this.getBBox();
+      this.adaptor.setStyle(this.dom[0], 'height', this.em(h + d));
     }
   };
 })<any, any, any>();
@@ -177,7 +181,8 @@ export const ChtmlMtr = (function <N, T, D>(): ChtmlMtrClass<N, T, D> {
  * @template D  The Document class
  */
 export interface ChtmlMlabeledtrNTD<N, T, D>
-  extends ChtmlMtrNTD<N, T, D>,
+  extends
+    ChtmlMtrNTD<N, T, D>,
     CommonMlabeledtr<
       N,
       T,
@@ -201,7 +206,8 @@ export interface ChtmlMlabeledtrNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMlabeledtrClass<N, T, D>
-  extends ChtmlMtrClass<N, T, D>,
+  extends
+    ChtmlMtrClass<N, T, D>,
     CommonMlabeledtrClass<
       N,
       T,

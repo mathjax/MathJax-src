@@ -502,13 +502,13 @@ describe('Physics1_2', () => {
     toXmlMatch(
       tex2mml('\\pqty{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pqty{\\frac{a}{b}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left( \\frac{a}{b} \\right)" data-latex="\\pqty{\\frac{a}{b}}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\pqty{\\frac{a}{b}}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
              <mi data-latex="b">b</mi>
            </mfrac>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -560,13 +560,13 @@ describe('Physics1_2', () => {
     toXmlMatch(
       tex2mml('\\Bqty{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Bqty{\\frac{a}{b}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\{ \\frac{a}{b} \\right\\}" data-latex="\\Bqty{\\frac{a}{b}}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\{" data-latex="\\left\\{">{</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\Bqty{\\frac{a}{b}}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\{">{</mo>
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
              <mi data-latex="b">b</mi>
            </mfrac>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\}" data-latex="\\right\\}">}</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\}">}</mo>
          </mrow>
        </math>`
     );
@@ -652,14 +652,14 @@ describe('Physics1_3', () => {
       tex2mml('\\absolutevalue\\Bigg{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\absolutevalue\\Bigg{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="OPEN" data-latex="\\Biggl|">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
          <mfrac data-latex="\\frac{a}{b}">
            <mi data-latex="a">a</mi>
            <mi data-latex="b">b</mi>
          </mfrac>
          <mrow data-mjx-texclass="CLOSE" data-latex="\\absolutevalue\\Bigg{\\frac{a}{b}}">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -671,9 +671,9 @@ describe('Physics1_3', () => {
     toXmlMatch(
       tex2mml('\\absolutevalue{}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\absolutevalue{}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|  \\right|" data-latex="\\absolutevalue{}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\absolutevalue{}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -686,14 +686,14 @@ describe('Physics1_3', () => {
       tex2mml('\\abs\\Bigg{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\abs\\Bigg{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="OPEN" data-latex="\\Biggl|">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
          <mfrac data-latex="\\frac{a}{b}">
            <mi data-latex="a">a</mi>
            <mi data-latex="b">b</mi>
          </mfrac>
          <mrow data-mjx-texclass="CLOSE" data-latex="\\abs\\Bigg{\\frac{a}{b}}">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -722,14 +722,14 @@ describe('Physics1_3', () => {
       tex2mml('\\norm\\Bigg{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\norm\\Bigg{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="OPEN" data-latex="\\Biggl\\|">
-           <mo minsize="2.470em" maxsize="2.470em" symmetric="true">&#x2016;</mo>
+           <mo minsize="2.470em" maxsize="2.470em">&#x2016;</mo>
          </mrow>
          <mfrac data-latex="\\frac{a}{b}">
            <mi data-latex="a">a</mi>
            <mi data-latex="b">b</mi>
          </mfrac>
          <mrow data-mjx-texclass="CLOSE" data-latex="\\norm\\Bigg{\\frac{a}{b}}">
-           <mo minsize="2.470em" maxsize="2.470em" symmetric="true">&#x2016;</mo>
+           <mo minsize="2.470em" maxsize="2.470em">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -757,9 +757,9 @@ describe('Physics1_3', () => {
     toXmlMatch(
       tex2mml('\\norm{}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\norm{}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\|  \\right\\|" data-latex="\\norm{}">
-           <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\|" data-latex="\\left\\|">&#x2016;</mo>
-           <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\|" data-latex="\\right\\|">&#x2016;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\norm{}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\|">&#x2016;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\|">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -781,8 +781,8 @@ describe('Physics1_4', () => {
       tex2mml('\\evaluated{x}_0^\\infty'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\evaluated{x}_0^\\infty" display="block">
          <msubsup data-latex="\\evaluated{x}\\left.x\\vphantom{\\int}\\right|_0 ^\\infty">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left.x\\vphantom{\\int}\\right|" data-latex="\\left.x\\vphantom{\\int}\\right|">
-             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left.x\\vphantom{\\int}\\right|">
+             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
              <mi data-latex="x">x</mi>
              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{\\int}">
                <mpadded width="0">
@@ -791,10 +791,10 @@ describe('Physics1_4', () => {
                  </mphantom>
                </mpadded>
              </mrow>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
            </mrow>
            <mn data-latex="0">0</mn>
-           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+           <mi mathvariant="normal" data-latex="\\infty">&#x221E;</mi>
          </msubsup>
        </math>`
     );
@@ -807,8 +807,8 @@ describe('Physics1_4', () => {
       tex2mml('\\eval{x}_0^\\infty'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eval{x}_0^\\infty" display="block">
          <msubsup data-latex="\\eval{x}\\left.x\\vphantom{\\int}\\right|_0 ^\\infty">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left.x\\vphantom{\\int}\\right|" data-latex="\\left.x\\vphantom{\\int}\\right|">
-             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left.x\\vphantom{\\int}\\right|">
+             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
              <mi data-latex="x">x</mi>
              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{\\int}">
                <mpadded width="0">
@@ -817,10 +817,10 @@ describe('Physics1_4', () => {
                  </mphantom>
                </mpadded>
              </mrow>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
            </mrow>
            <mn data-latex="0">0</mn>
-           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+           <mi mathvariant="normal" data-latex="\\infty">&#x221E;</mi>
          </msubsup>
        </math>`
     );
@@ -833,8 +833,8 @@ describe('Physics1_4', () => {
       tex2mml('\\eval*{x}_0^\\infty'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eval*{x}_0^\\infty" display="block">
          <msubsup data-latex="\\eval*{x}\\left.\\smash{x}\\vphantom{\\int}\\right|_0 ^\\infty">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\smash{x}\\vphantom{\\int}\\right|" data-latex="\\left.\\smash{x}\\vphantom{\\int}\\right|">
-             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left.\\smash{x}\\vphantom{\\int}\\right|">
+             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
              <mrow data-mjx-texclass="ORD" data-latex="\\smash{x}">
                <mpadded height="0" depth="0">
                  <mi data-latex="x">x</mi>
@@ -847,10 +847,10 @@ describe('Physics1_4', () => {
                  </mphantom>
                </mpadded>
              </mrow>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
            </mrow>
            <mn data-latex="0">0</mn>
-           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+           <mi mathvariant="normal" data-latex="\\infty">&#x221E;</mi>
          </msubsup>
        </math>`
     );
@@ -876,7 +876,7 @@ describe('Physics1_4', () => {
              <mo data-mjx-texclass="CLOSE">|</mo>
            </mrow>
            <mn data-latex="0">0</mn>
-           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+           <mi mathvariant="normal" data-latex="\\infty">&#x221E;</mi>
          </msubsup>
        </math>`
     );
@@ -906,7 +906,7 @@ describe('Physics1_4', () => {
              <mo data-mjx-texclass="CLOSE">|</mo>
            </mrow>
            <mn data-latex="0">0</mn>
-           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+           <mi mathvariant="normal" data-latex="\\infty">&#x221E;</mi>
          </msubsup>
        </math>`
     );
@@ -919,8 +919,8 @@ describe('Physics1_4', () => {
       tex2mml('\\eval*{\\frac{A}{\\frac{A}{\\int x}}}_0^\\infty'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eval*{\\frac{A}{\\frac{A}{\\int x}}}_0^\\infty" display="block">
          <msubsup data-latex="\\eval*{\\frac{A}{\\frac{A}{\\int x}}}\\left.\\smash{\\frac{A}{\\frac{A}{\\int x}}}\\vphantom{\\int}\\right|_0 ^\\infty">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\smash{\\frac{A}{\\frac{A}{\\int x}}}\\vphantom{\\int}\\right|" data-latex="\\left.\\smash{\\frac{A}{\\frac{A}{\\int x}}}\\vphantom{\\int}\\right|">
-             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left.\\smash{\\frac{A}{\\frac{A}{\\int x}}}\\vphantom{\\int}\\right|">
+             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
              <mrow data-mjx-texclass="ORD" data-latex="\\smash{\\frac{A}{\\frac{A}{\\int x}}}">
                <mpadded height="0" depth="0">
                  <mfrac data-latex="\\frac{A}{\\frac{A}{\\int x}}">
@@ -942,10 +942,10 @@ describe('Physics1_4', () => {
                  </mphantom>
                </mpadded>
              </mrow>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
            </mrow>
            <mn data-latex="0">0</mn>
-           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+           <mi mathvariant="normal" data-latex="\\infty">&#x221E;</mi>
          </msubsup>
        </math>`
     );
@@ -958,8 +958,8 @@ describe('Physics1_4', () => {
       tex2mml('\\eval{\\frac{A}{\\frac{A}{\\int x}}}_0^\\infty'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eval{\\frac{A}{\\frac{A}{\\int x}}}_0^\\infty" display="block">
          <msubsup data-latex="\\eval{\\frac{A}{\\frac{A}{\\int x}}}\\left.\\frac{A}{\\frac{A}{\\int x}}\\vphantom{\\int}\\right|_0 ^\\infty">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\frac{A}{\\frac{A}{\\int x}}\\vphantom{\\int}\\right|" data-latex="\\left.\\frac{A}{\\frac{A}{\\int x}}\\vphantom{\\int}\\right|">
-             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left.\\frac{A}{\\frac{A}{\\int x}}\\vphantom{\\int}\\right|">
+             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
              <mfrac data-latex="\\frac{A}{\\frac{A}{\\int x}}">
                <mi data-latex="A">A</mi>
                <mfrac data-latex="\\frac{A}{\\int x}">
@@ -977,10 +977,10 @@ describe('Physics1_4', () => {
                  </mphantom>
                </mpadded>
              </mrow>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
            </mrow>
            <mn data-latex="0">0</mn>
-           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+           <mi mathvariant="normal" data-latex="\\infty">&#x221E;</mi>
          </msubsup>
        </math>`
     );
@@ -1019,7 +1019,7 @@ describe('Physics1_4', () => {
              <mo data-mjx-texclass="CLOSE">|</mo>
            </mrow>
            <mn data-latex="0">0</mn>
-           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+           <mi mathvariant="normal" data-latex="\\infty">&#x221E;</mi>
          </msubsup>
        </math>`
     );
@@ -1054,7 +1054,7 @@ describe('Physics1_4', () => {
              <mo data-mjx-texclass="CLOSE">|</mo>
            </mrow>
            <mn data-latex="0">0</mn>
-           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+           <mi mathvariant="normal" data-latex="\\infty">&#x221E;</mi>
          </msubsup>
        </math>`
     );
@@ -1093,7 +1093,7 @@ describe('Physics1_4', () => {
              <mo data-mjx-texclass="CLOSE">|</mo>
            </mrow>
            <mn data-latex="0">0</mn>
-           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+           <mi mathvariant="normal" data-latex="\\infty">&#x221E;</mi>
          </msubsup>
        </math>`
     );
@@ -1128,7 +1128,7 @@ describe('Physics1_4', () => {
              <mo data-mjx-texclass="CLOSE">|</mo>
            </mrow>
            <mn data-latex="0">0</mn>
-           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+           <mi mathvariant="normal" data-latex="\\infty">&#x221E;</mi>
          </msubsup>
        </math>`
     );
@@ -1141,8 +1141,8 @@ describe('Physics1_4', () => {
       tex2mml('\\eval_0^\\infty'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eval_0^\\infty" display="block">
          <msubsup data-latex="\\eval\\left.\\vphantom{\\int}\\right|_0 ^\\infty">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\vphantom{\\int}\\right|" data-latex="\\left.\\vphantom{\\int}\\right|">
-             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left.\\vphantom{\\int}\\right|">
+             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{\\int}">
                <mpadded width="0">
                  <mphantom>
@@ -1150,10 +1150,10 @@ describe('Physics1_4', () => {
                  </mphantom>
                </mpadded>
              </mrow>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
            </mrow>
            <mn data-latex="0">0</mn>
-           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+           <mi mathvariant="normal" data-latex="\\infty">&#x221E;</mi>
          </msubsup>
        </math>`
     );
@@ -1174,9 +1174,9 @@ describe('Physics1_5', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\order{}" display="block">
          <mi data-mjx-variant="-tex-calligraphic" data-mjx-texclass="OP" mathvariant="script">O</mi>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(  \\right)" data-latex="\\left(  \\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left(  \\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -1190,13 +1190,13 @@ describe('Physics1_5', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\order{x^2}" display="block">
          <mi data-mjx-variant="-tex-calligraphic" data-mjx-texclass="OP" mathvariant="script">O</mi>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left( x^2  \\right)" data-latex="\\left( x^2  \\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left( x^2  \\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
            <msup data-latex="x^2">
              <mi data-latex="x">x</mi>
              <mn data-latex="2">2</mn>
            </msup>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -1232,8 +1232,8 @@ describe('Physics1_5', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\order{\\frac{A}{\\frac{A}{\\int x}}}" display="block">
          <mi data-mjx-variant="-tex-calligraphic" data-mjx-texclass="OP" mathvariant="script">O</mi>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left( \\frac{A}{\\frac{A}{\\int x}} \\right)" data-latex="\\left( \\frac{A}{\\frac{A}{\\int x}} \\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left( \\frac{A}{\\frac{A}{\\int x}} \\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
            <mfrac data-latex="\\frac{A}{\\frac{A}{\\int x}}">
              <mi data-latex="A">A</mi>
              <mfrac data-latex="\\frac{A}{\\int x}">
@@ -1244,7 +1244,7 @@ describe('Physics1_5', () => {
                </mrow>
              </mfrac>
            </mfrac>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -1289,12 +1289,12 @@ describe('Physics1_6', () => {
     toXmlMatch(
       tex2mml('\\comm{A}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\comm{A}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left[ A,B \\right]" data-latex="\\comm{A}{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\comm{A}{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
            <mi data-latex="A">A</mi>
            <mo data-latex=",">,</mo>
            <mi data-latex="B">B</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right]" data-latex="\\right]">]</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right]">]</mo>
          </mrow>
        </math>`
     );
@@ -1306,8 +1306,8 @@ describe('Physics1_6', () => {
     toXmlMatch(
       tex2mml('\\comm{\\frac{A}{\\frac{A}{\\int x}}}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\comm{\\frac{A}{\\frac{A}{\\int x}}}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left[ \\frac{A}{\\frac{A}{\\int x}},B \\right]" data-latex="\\comm{\\frac{A}{\\frac{A}{\\int x}}}{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\comm{\\frac{A}{\\frac{A}{\\int x}}}{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
            <mfrac data-latex="\\frac{A}{\\frac{A}{\\int x}}">
              <mi data-latex="A">A</mi>
              <mfrac data-latex="\\frac{A}{\\int x}">
@@ -1320,7 +1320,7 @@ describe('Physics1_6', () => {
            </mfrac>
            <mo data-latex=",">,</mo>
            <mi data-latex="B">B</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right]" data-latex="\\right]">]</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right]">]</mo>
          </mrow>
        </math>`
     );
@@ -1393,12 +1393,12 @@ describe('Physics1_6', () => {
     toXmlMatch(
       tex2mml('\\comm{A}B'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\comm{A}B" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left[ A,B \\right]" data-latex="\\comm{A}B">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\comm{A}B">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
            <mi data-latex="A">A</mi>
            <mo data-latex=",">,</mo>
            <mi data-latex="B">B</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right]" data-latex="\\right]">]</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right]">]</mo>
          </mrow>
        </math>`
     );
@@ -1419,12 +1419,12 @@ describe('Physics1_7', () => {
     toXmlMatch(
       tex2mml('\\acomm{A}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\acomm{A}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\{ A,B \\right\\}" data-latex="\\acomm{A}{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\{" data-latex="\\left\\{">{</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\acomm{A}{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\{">{</mo>
            <mi data-latex="A">A</mi>
            <mo data-latex=",">,</mo>
            <mi data-latex="B">B</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\}" data-latex="\\right\\}">}</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\}">}</mo>
          </mrow>
        </math>`
     );
@@ -1436,12 +1436,12 @@ describe('Physics1_7', () => {
     toXmlMatch(
       tex2mml('\\anticommutator{A}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\anticommutator{A}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\{ A,B \\right\\}" data-latex="\\anticommutator{A}{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\{" data-latex="\\left\\{">{</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\anticommutator{A}{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\{">{</mo>
            <mi data-latex="A">A</mi>
            <mo data-latex=",">,</mo>
            <mi data-latex="B">B</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\}" data-latex="\\right\\}">}</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\}">}</mo>
          </mrow>
        </math>`
     );
@@ -1453,12 +1453,12 @@ describe('Physics1_7', () => {
     toXmlMatch(
       tex2mml('\\poissonbracket{A}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\poissonbracket{A}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\{ A,B \\right\\}" data-latex="\\poissonbracket{A}{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\{" data-latex="\\left\\{">{</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\poissonbracket{A}{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\{">{</mo>
            <mi data-latex="A">A</mi>
            <mo data-latex=",">,</mo>
            <mi data-latex="B">B</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\}" data-latex="\\right\\}">}</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\}">}</mo>
          </mrow>
        </math>`
     );
@@ -1470,12 +1470,12 @@ describe('Physics1_7', () => {
     toXmlMatch(
       tex2mml('\\pb{A}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pb{A}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\{ A,B \\right\\}" data-latex="\\pb{A}{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\{" data-latex="\\left\\{">{</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\pb{A}{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\{">{</mo>
            <mi data-latex="A">A</mi>
            <mo data-latex=",">,</mo>
            <mi data-latex="B">B</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\}" data-latex="\\right\\}">}</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\}">}</mo>
          </mrow>
        </math>`
     );
@@ -1487,8 +1487,8 @@ describe('Physics1_7', () => {
     toXmlMatch(
       tex2mml('\\acomm{\\frac{A}{\\frac{A}{\\int x}}}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\acomm{\\frac{A}{\\frac{A}{\\int x}}}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\{ \\frac{A}{\\frac{A}{\\int x}},B \\right\\}" data-latex="\\acomm{\\frac{A}{\\frac{A}{\\int x}}}{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\{" data-latex="\\left\\{">{</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\acomm{\\frac{A}{\\frac{A}{\\int x}}}{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\{">{</mo>
            <mfrac data-latex="\\frac{A}{\\frac{A}{\\int x}}">
              <mi data-latex="A">A</mi>
              <mfrac data-latex="\\frac{A}{\\int x}">
@@ -1501,7 +1501,7 @@ describe('Physics1_7', () => {
            </mfrac>
            <mo data-latex=",">,</mo>
            <mi data-latex="B">B</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\}" data-latex="\\right\\}">}</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\}">}</mo>
          </mrow>
        </math>`
     );
@@ -1556,12 +1556,12 @@ describe('Physics1_7', () => {
     toXmlMatch(
       tex2mml('\\acomm{A}B'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\acomm{A}B" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\{ A,B \\right\\}" data-latex="\\acomm{A}B">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\{" data-latex="\\left\\{">{</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\acomm{A}B">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\{">{</mo>
            <mi data-latex="A">A</mi>
            <mo data-latex=",">,</mo>
            <mi data-latex="B">B</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\}" data-latex="\\right\\}">}</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\}">}</mo>
          </mrow>
        </math>`
     );
@@ -1863,7 +1863,7 @@ describe('Physics2_1', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vb{\\hat{}}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vb{\\hat{}}">
            <mover>
-             <mrow data-latex=""></mrow>
+             <mrow></mrow>
              <mo mathvariant="bold" stretchy="false">^</mo>
            </mover>
          </mrow>
@@ -2399,10 +2399,8 @@ describe('Physics2_4', () => {
     toXmlMatch(
       tex2mml('\\gradient '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\gradient " display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\gradient ">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+         <mrow data-mjx-texclass="ORD" data-latex="\\gradient">
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
        </math>`
     );
@@ -2415,9 +2413,7 @@ describe('Physics2_4', () => {
       tex2mml('\\gradient(\\frac{a}{b})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\gradient(\\frac{a}{b})" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex=")">
@@ -2439,9 +2435,7 @@ describe('Physics2_4', () => {
       tex2mml('\\gradient[\\frac{a}{b}]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\gradient[\\frac{a}{b}]" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex="]">
@@ -2463,9 +2457,7 @@ describe('Physics2_4', () => {
       tex2mml('\\gradient{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\gradient{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2482,10 +2474,8 @@ describe('Physics2_4', () => {
     toXmlMatch(
       tex2mml('\\grad '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\grad " display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\grad ">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+         <mrow data-mjx-texclass="ORD" data-latex="\\grad">
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
        </math>`
     );
@@ -2498,9 +2488,7 @@ describe('Physics2_4', () => {
       tex2mml('\\grad(\\frac{a}{b})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\grad(\\frac{a}{b})" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex=")">
@@ -2522,9 +2510,7 @@ describe('Physics2_4', () => {
       tex2mml('\\grad[\\frac{a}{b}]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\grad[\\frac{a}{b}]" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex="]">
@@ -2546,9 +2532,7 @@ describe('Physics2_4', () => {
       tex2mml('\\grad{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\grad{\\frac{a}{b}}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2589,10 +2573,8 @@ describe('Physics2_5', () => {
     toXmlMatch(
       tex2mml('\\divergence{\\frac{a}{b}c}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\divergence{\\frac{a}{b}c}" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+         <mrow data-mjx-texclass="ORD" data-latex="{\\gradientnabla}">
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo mathvariant="bold" data-latex="\\vdot">&#x22C5;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2610,10 +2592,8 @@ describe('Physics2_5', () => {
     toXmlMatch(
       tex2mml('\\div{\\frac{a}{b}c}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\div{\\frac{a}{b}c}" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+         <mrow data-mjx-texclass="ORD" data-latex="{\\gradientnabla}">
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo mathvariant="bold" data-latex="\\vdot">&#x22C5;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2631,10 +2611,8 @@ describe('Physics2_5', () => {
     toXmlMatch(
       tex2mml('\\div{(\\frac{a}{b}c)}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\div{(\\frac{a}{b}c)}" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+         <mrow data-mjx-texclass="ORD" data-latex="{\\gradientnabla}">
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo mathvariant="bold" data-latex="\\vdot">&#x22C5;</mo>
          <mo data-latex="(" stretchy="false">(</mo>
@@ -2654,10 +2632,8 @@ describe('Physics2_5', () => {
     toXmlMatch(
       tex2mml('\\div(\\frac{a}{b}c)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\div(\\frac{a}{b}c)" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+         <mrow data-mjx-texclass="ORD" data-latex="{\\gradientnabla}">
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo mathvariant="bold" data-latex="\\vdot">&#x22C5;</mo>
          <mrow data-latex=")">
@@ -2683,14 +2659,14 @@ describe('Physics2_5', () => {
            <mi mathvariant="normal" data-latex="\\nabla">&#x2207;</mi>
          </mrow>
          <mo data-latex="\\cdot">&#x22C5;</mo>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\frac{a}{b}c\\right)" data-latex="\\left(\\frac{a}{b}c\\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left(\\frac{a}{b}c\\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
              <mi data-latex="b">b</mi>
            </mfrac>
            <mi data-latex="c">c</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -2711,10 +2687,8 @@ describe('Physics2_6', () => {
     toXmlMatch(
       tex2mml('\\curl '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\curl " display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+         <mrow data-mjx-texclass="ORD" data-latex="{\\gradientnabla}">
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-latex="\\crossproduct">&#xD7;</mo>
        </math>`
@@ -2727,10 +2701,8 @@ describe('Physics2_6', () => {
     toXmlMatch(
       tex2mml('\\curl(\\frac{a}{b})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\curl(\\frac{a}{b})" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+         <mrow data-mjx-texclass="ORD" data-latex="{\\gradientnabla}">
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-latex="\\crossproduct">&#xD7;</mo>
          <mrow data-latex=")">
@@ -2751,10 +2723,8 @@ describe('Physics2_6', () => {
     toXmlMatch(
       tex2mml('\\curl[\\frac{a}{b}]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\curl[\\frac{a}{b}]" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+         <mrow data-mjx-texclass="ORD" data-latex="{\\gradientnabla}">
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-latex="\\crossproduct">&#xD7;</mo>
          <mrow data-latex="]">
@@ -2775,10 +2745,8 @@ describe('Physics2_6', () => {
     toXmlMatch(
       tex2mml('\\curl{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\curl{\\frac{a}{b}}" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
-           <mrow data-mjx-texclass="ORD">
-             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-           </mrow>
+         <mrow data-mjx-texclass="ORD" data-latex="{\\gradientnabla}">
+           <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
          </mrow>
          <mo data-latex="\\crossproduct">&#xD7;</mo>
          <mfrac data-latex="\\frac{a}{b}">
@@ -2804,7 +2772,7 @@ describe('Physics2_7', () => {
     toXmlMatch(
       tex2mml('\\laplacian '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\laplacian " display="block">
-         <msup data-latex="\\laplacian ">
+         <msup data-latex="\\laplacian">
            <mi mathvariant="normal" data-latex="\\nabla">&#x2207;</mi>
            <mn data-latex="2">2</mn>
          </msup>
@@ -2818,7 +2786,7 @@ describe('Physics2_7', () => {
     toXmlMatch(
       tex2mml('\\laplacian(\\frac{a}{b})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\laplacian(\\frac{a}{b})" display="block">
-         <msup data-latex="\\nabla^2 ">
+         <msup data-latex="\\nabla^2">
            <mi mathvariant="normal" data-latex="\\nabla">&#x2207;</mi>
            <mn data-latex="2">2</mn>
          </msup>
@@ -2841,7 +2809,7 @@ describe('Physics2_7', () => {
     toXmlMatch(
       tex2mml('\\laplacian[\\frac{a}{b}]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\laplacian[\\frac{a}{b}]" display="block">
-         <msup data-latex="\\nabla^2 ">
+         <msup data-latex="\\nabla^2">
            <mi mathvariant="normal" data-latex="\\nabla">&#x2207;</mi>
            <mn data-latex="2">2</mn>
          </msup>
@@ -2864,7 +2832,7 @@ describe('Physics2_7', () => {
     toXmlMatch(
       tex2mml('\\laplacian{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\laplacian{\\frac{a}{b}}" display="block">
-         <msup data-latex="\\nabla^2 ">
+         <msup data-latex="\\nabla^2">
            <mi mathvariant="normal" data-latex="\\nabla">&#x2207;</mi>
            <mn data-latex="2">2</mn>
          </msup>
@@ -3908,7 +3876,7 @@ describe('Physics3_4', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin|\\frac{x}{y}|" display="block">
          <mi data-latex="\\sin">sin</mi>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mfrac data-latex="\\frac{x}{y}">
            <mi data-latex="x">x</mi>
            <mi data-latex="y">y</mi>
@@ -4346,13 +4314,13 @@ describe('Physics3_5', () => {
            <mi data-mjx-auto-op="false" data-latex="Res">Res</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\{ \\frac{x}{y} \\right\\}" data-latex="\\left\\{ \\frac{x}{y} \\right\\}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\{" data-latex="\\left\\{">{</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\{ \\frac{x}{y} \\right\\}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\{">{</mo>
            <mfrac data-latex="\\frac{x}{y}">
              <mi data-latex="x">x</mi>
              <mi data-latex="y">y</mi>
            </mfrac>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\}" data-latex="\\right\\}">}</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\}">}</mo>
          </mrow>
        </math>`
     );
@@ -4368,7 +4336,7 @@ describe('Physics3_5', () => {
            <mi data-mjx-auto-op="false" data-latex="Res">Res</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mfrac data-latex="\\frac{x}{y}">
            <mi data-latex="x">x</mi>
            <mi data-latex="y">y</mi>
@@ -4446,7 +4414,7 @@ describe('Physics3_6', () => {
          <mi data-latex="z">z</mi>
          <mo data-latex=")" stretchy="false">)</mo>
          <mrow data-mjx-texclass="OP" data-latex="\\dd{z}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mi data-latex="z">z</mi>
@@ -4471,7 +4439,7 @@ describe('Physics3_6', () => {
          <mi data-latex="z">z</mi>
          <mo data-latex=")" stretchy="false">)</mo>
          <mrow data-mjx-texclass="OP" data-latex="\\dd{z}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mi data-latex="z">z</mi>
@@ -4496,7 +4464,7 @@ describe('Physics3_6', () => {
          <mi data-latex="z">z</mi>
          <mo data-latex=")" stretchy="false">)</mo>
          <mrow data-mjx-texclass="OP" data-latex="\\dd{z}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mi data-latex="z">z</mi>
@@ -4512,7 +4480,7 @@ describe('Physics3_6', () => {
     toXmlMatch(
       tex2mml('\\pv\\int f(z) \\dd{z}a'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pv\\int f(z) \\dd{z}a" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\pv">
+         <mrow data-mjx-texclass="ORD" data-latex="{\\cal P}">
            <mi data-mjx-variant="-tex-calligraphic" mathvariant="script" data-latex="P">P</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
@@ -4522,7 +4490,7 @@ describe('Physics3_6', () => {
          <mi data-latex="z">z</mi>
          <mo data-latex=")" stretchy="false">)</mo>
          <mrow data-mjx-texclass="OP" data-latex="\\dd{z}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mi data-latex="z">z</mi>
@@ -4538,7 +4506,7 @@ describe('Physics3_6', () => {
     toXmlMatch(
       tex2mml('\\pv(\\int f(z))'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pv(\\int f(z))" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\pv">
+         <mrow data-mjx-texclass="ORD" data-latex="{\\cal P}">
            <mi data-mjx-variant="-tex-calligraphic" mathvariant="script" data-latex="P">P</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
@@ -4559,11 +4527,11 @@ describe('Physics3_6', () => {
     toXmlMatch(
       tex2mml('\\pv|\\int f(z)|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pv|\\int f(z)|" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\pv">
+         <mrow data-mjx-texclass="ORD" data-latex="{\\cal P}">
            <mi data-mjx-variant="-tex-calligraphic" mathvariant="script" data-latex="P">P</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mo data-latex="\\int">&#x222B;</mo>
          <mi data-latex="f">f</mi>
          <mo data-latex="(" stretchy="false">(</mo>
@@ -4580,7 +4548,7 @@ describe('Physics3_6', () => {
     toXmlMatch(
       tex2mml('\\pv[\\int f(z)]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pv[\\int f(z)]" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\pv">
+         <mrow data-mjx-texclass="ORD" data-latex="{\\cal P}">
            <mi data-mjx-variant="-tex-calligraphic" mathvariant="script" data-latex="P">P</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
@@ -4614,7 +4582,7 @@ describe('Physics3_6', () => {
          <mi data-latex="z">z</mi>
          <mo data-latex=")" stretchy="false">)</mo>
          <mrow data-mjx-texclass="OP" data-latex="\\dd{z}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mi data-latex="z">z</mi>
@@ -4642,7 +4610,7 @@ describe('Physics3_6', () => {
          <mi data-latex="z">z</mi>
          <mo data-latex=")" stretchy="false">)</mo>
          <mrow data-mjx-texclass="OP" data-latex="\\dd{z}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mi data-latex="z">z</mi>
@@ -4658,7 +4626,7 @@ describe('Physics3_6', () => {
     toXmlMatch(
       tex2mml('\\PV\\int f(z) \\dd{z}a'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\PV\\int f(z) \\dd{z}a" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\PV">
+         <mrow data-mjx-texclass="ORD" data-latex="{\\rm P.V.}">
            <mi mathvariant="normal" data-latex="P">P</mi>
            <mo data-latex=".">.</mo>
            <mi mathvariant="normal" data-latex="V">V</mi>
@@ -4671,7 +4639,7 @@ describe('Physics3_6', () => {
          <mi data-latex="z">z</mi>
          <mo data-latex=")" stretchy="false">)</mo>
          <mrow data-mjx-texclass="OP" data-latex="\\dd{z}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mi data-latex="z">z</mi>
@@ -4755,13 +4723,13 @@ describe('Physics3_7', () => {
            <mi data-mjx-auto-op="false" data-latex="Re">Re</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\{ \\frac{x}{y} \\right\\}" data-latex="\\left\\{ \\frac{x}{y} \\right\\}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\{" data-latex="\\left\\{">{</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\{ \\frac{x}{y} \\right\\}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\{">{</mo>
            <mfrac data-latex="\\frac{x}{y}">
              <mi data-latex="x">x</mi>
              <mi data-latex="y">y</mi>
            </mfrac>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\}" data-latex="\\right\\}">}</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\}">}</mo>
          </mrow>
        </math>`
     );
@@ -4777,7 +4745,7 @@ describe('Physics3_7', () => {
            <mi data-mjx-auto-op="false" data-latex="Re">Re</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mfrac data-latex="\\frac{x}{y}">
            <mi data-latex="x">x</mi>
            <mi data-latex="y">y</mi>
@@ -4918,13 +4886,13 @@ describe('Physics3_7', () => {
            <mi data-mjx-auto-op="false" data-latex="Im">Im</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\{ \\frac{x}{y} \\right\\}" data-latex="\\left\\{ \\frac{x}{y} \\right\\}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\{" data-latex="\\left\\{">{</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\{ \\frac{x}{y} \\right\\}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\{">{</mo>
            <mfrac data-latex="\\frac{x}{y}">
              <mi data-latex="x">x</mi>
              <mi data-latex="y">y</mi>
            </mfrac>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\}" data-latex="\\right\\}">}</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\}">}</mo>
          </mrow>
        </math>`
     );
@@ -4940,7 +4908,7 @@ describe('Physics3_7', () => {
            <mi data-mjx-auto-op="false" data-latex="Im">Im</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
          <mfrac data-latex="\\frac{x}{y}">
            <mi data-latex="x">x</mi>
            <mi data-latex="y">y</mi>
@@ -5160,11 +5128,11 @@ describe('Physics5_0', () => {
       tex2mml('\\dv x'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv x" display="block">
          <mfrac data-latex="\\dv x">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd ">
+           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
-           <mrow data-latex="\\diffd x  ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd x">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="x">x</mi>
@@ -5181,11 +5149,11 @@ describe('Physics5_0', () => {
       tex2mml('\\dv x(ll)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv x(ll)" display="block">
          <mfrac data-latex="\\frac{\\diffd }{\\diffd x  }">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd ">
+           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
-           <mrow data-latex="\\diffd x  ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd x">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="x">x</mi>
@@ -5209,13 +5177,13 @@ describe('Physics5_0', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv{x}{y}" display="block">
          <mfrac data-latex="\\dv{x}{y}">
            <mrow data-latex="\\diffd x">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="x">x</mi>
            </mrow>
-           <mrow data-latex="\\diffd y  ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd y">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="y">y</mi>
@@ -5233,8 +5201,8 @@ describe('Physics5_0', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv[n]{f}{x}" display="block">
          <mfrac data-latex="\\dv[n]{f}{x}">
            <mrow data-latex="\\diffd^{n}f">
-             <msup data-latex="\\diffd^{n}">
-               <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+             <msup data-latex="{\\rm d}^{n}">
+               <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                  <mi mathvariant="normal" data-latex="d">d</mi>
                </mrow>
                <mrow data-mjx-texclass="ORD" data-latex="{n}">
@@ -5243,8 +5211,8 @@ describe('Physics5_0', () => {
              </msup>
              <mi data-latex="f">f</mi>
            </mrow>
-           <mrow data-latex="\\diffd x^{n} ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd x^{n}">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <msup data-latex="x^{n}">
@@ -5267,13 +5235,13 @@ describe('Physics5_0', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv{f}{x}{y}" display="block">
          <mfrac data-latex="\\dv{f}{x}">
            <mrow data-latex="\\diffd f">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="f">f</mi>
            </mrow>
-           <mrow data-latex="\\diffd x  ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd x">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="x">x</mi>
@@ -5294,13 +5262,13 @@ describe('Physics5_0', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv{f}{x}y" display="block">
          <mfrac data-latex="\\dv{f}{x}">
            <mrow data-latex="\\diffd f">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="f">f</mi>
            </mrow>
-           <mrow data-latex="\\diffd x  ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd x">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="x">x</mi>
@@ -5318,11 +5286,11 @@ describe('Physics5_0', () => {
       tex2mml('\\dv{x}y'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv{x}y" display="block">
          <mfrac data-latex="\\dv{x}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd ">
+           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
-           <mrow data-latex="\\diffd x  ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd x">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="x">x</mi>
@@ -5341,15 +5309,15 @@ describe('Physics5_0', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv[n]{f}(\\frac{x}{y})" display="block">
          <mfrac data-latex="\\frac{\\diffd^{n}}{\\diffd f^{n} }">
            <msup data-latex="\\diffd^{n}">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mrow data-mjx-texclass="ORD" data-latex="{n}">
                <mi data-latex="n">n</mi>
              </mrow>
            </msup>
-           <mrow data-latex="\\diffd f^{n} ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd f^{n}">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <msup data-latex="f^{n}">
@@ -5380,8 +5348,8 @@ describe('Physics5_0', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv[n]{f}{x}{y}(\\frac{x}{y})" display="block">
          <mfrac data-latex="\\dv[n]{f}{x}">
            <mrow data-latex="\\diffd^{n}f">
-             <msup data-latex="\\diffd^{n}">
-               <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+             <msup data-latex="{\\rm d}^{n}">
+               <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                  <mi mathvariant="normal" data-latex="d">d</mi>
                </mrow>
                <mrow data-mjx-texclass="ORD" data-latex="{n}">
@@ -5390,8 +5358,8 @@ describe('Physics5_0', () => {
              </msup>
              <mi data-latex="f">f</mi>
            </mrow>
-           <mrow data-latex="\\diffd x^{n} ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd x^{n}">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <msup data-latex="x^{n}">
@@ -5421,10 +5389,10 @@ describe('Physics5_0', () => {
     toXmlMatch(
       tex2mml('\\dv*[n]{f}{x}{y}(\\frac{x}{y})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv*[n]{f}{x}{y}(\\frac{x}{y})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\diffd^{n}f\\middle/\\diffd x^{n} \\right." data-latex="\\left.\\diffd^{n}f\\middle/\\diffd x^{n} \\right.">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
-           <msup data-latex="\\diffd^{n}">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left.\\diffd^{n}f\\middle/\\diffd x^{n} \\right.">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
+           <msup data-latex="{\\rm d}^{n}">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mrow data-mjx-texclass="ORD" data-latex="{n}">
@@ -5433,9 +5401,9 @@ describe('Physics5_0', () => {
            </msup>
            <mi data-latex="f">f</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <msup data-latex="x^{n}">
@@ -5444,7 +5412,7 @@ describe('Physics5_0', () => {
                <mi data-latex="n">n</mi>
              </mrow>
            </msup>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{y}">
            <mi data-latex="y">y</mi>
@@ -5465,26 +5433,26 @@ describe('Physics5_0', () => {
     toXmlMatch(
       tex2mml('\\dv*[]{f}{x}{y}(\\frac{x}{y})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv*[]{f}{x}{y}(\\frac{x}{y})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\diffd^{}f\\middle/\\diffd x^{} \\right." data-latex="\\left.\\diffd^{}f\\middle/\\diffd x^{} \\right.">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
-           <msup data-latex="\\diffd^{}">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left.\\diffd^{}f\\middle/\\diffd x^{} \\right.">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
+           <msup data-latex="{\\rm d}^{}">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
            </msup>
            <mi data-latex="f">f</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <msup data-latex="x^{}">
              <mi data-latex="x">x</mi>
              <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
            </msup>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{y}">
            <mi data-latex="y">y</mi>
@@ -5507,16 +5475,16 @@ describe('Physics5_0', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv[]{f}{x}{y}(\\frac{x}{y})" display="block">
          <mfrac data-latex="\\dv[]{f}{x}">
            <mrow data-latex="\\diffd^{}f">
-             <msup data-latex="\\diffd^{}">
-               <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+             <msup data-latex="{\\rm d}^{}">
+               <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                  <mi mathvariant="normal" data-latex="d">d</mi>
                </mrow>
                <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
              </msup>
              <mi data-latex="f">f</mi>
            </mrow>
-           <mrow data-latex="\\diffd x^{} ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd x^{}">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <msup data-latex="x^{}">
@@ -5546,15 +5514,15 @@ describe('Physics5_0', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv[5](\\frac{x}{y})" display="block">
          <mfrac data-latex="\\dv[5](">
            <msup data-latex="\\diffd^{5}">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mrow data-mjx-texclass="ORD" data-latex="{5}">
                <mn data-latex="5">5</mn>
              </mrow>
            </msup>
-           <mrow data-latex="\\diffd (^{5} ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd (^{5}">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <msup data-latex="(^{5}">
@@ -5582,15 +5550,15 @@ describe('Physics5_0', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv[5]{f}" display="block">
          <mfrac data-latex="\\dv[5]{f}">
            <msup data-latex="\\diffd^{5}">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mrow data-mjx-texclass="ORD" data-latex="{5}">
                <mn data-latex="5">5</mn>
              </mrow>
            </msup>
-           <mrow data-latex="\\diffd f^{5} ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd f^{5}">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <msup data-latex="f^{5}">
@@ -5612,11 +5580,11 @@ describe('Physics5_0', () => {
       tex2mml('\\dv{f}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dv{f}" display="block">
          <mfrac data-latex="\\dv{f}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd ">
+           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
-           <mrow data-latex="\\diffd f  ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd f">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="f">f</mi>
@@ -5641,14 +5609,14 @@ describe('Physics5_1', () => {
     toXmlMatch(
       tex2mml('\\flatfrac{x}{y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\flatfrac{x}{y}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.x\\middle/y\\right." data-latex="\\left.x\\middle/y\\right.">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left.x\\middle/y\\right.">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
            <mi data-latex="x">x</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
            <mi data-latex="y">y</mi>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
        </math>`
     );
@@ -5660,17 +5628,17 @@ describe('Physics5_1', () => {
     toXmlMatch(
       tex2mml('\\flatfrac{x^2}{y}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\flatfrac{x^2}{y}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.x^2 \\middle/y\\right." data-latex="\\left.x^2 \\middle/y\\right.">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left.x^2 \\middle/y\\right.">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
            <msup data-latex="x^2">
              <mi data-latex="x">x</mi>
              <mn data-latex="2">2</mn>
            </msup>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
            <mi data-latex="y">y</mi>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
        </math>`
     );
@@ -5683,8 +5651,8 @@ describe('Physics5_1', () => {
       tex2mml('\\pdv x'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pdv x" display="block">
          <mfrac data-latex="\\pdv x">
-           <mi data-latex="\\partial ">&#x2202;</mi>
-           <mrow data-latex="\\partial x  ">
+           <mi data-latex="\\partial">&#x2202;</mi>
+           <mrow data-latex="\\partial x">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
@@ -5700,8 +5668,8 @@ describe('Physics5_1', () => {
       tex2mml('\\pdv x(ll)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pdv x(ll)" display="block">
          <mfrac data-latex="\\frac{\\partial }{\\partial x  }">
-           <mi data-latex="\\partial ">&#x2202;</mi>
-           <mrow data-latex="\\partial x  ">
+           <mi data-latex="\\partial">&#x2202;</mi>
+           <mrow data-latex="\\partial x">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
@@ -5723,8 +5691,8 @@ describe('Physics5_1', () => {
       tex2mml('\\pdv{f}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pdv{f}" display="block">
          <mfrac data-latex="\\pdv{f}">
-           <mi data-latex="\\partial ">&#x2202;</mi>
-           <mrow data-latex="\\partial f  ">
+           <mi data-latex="\\partial">&#x2202;</mi>
+           <mrow data-latex="\\partial f">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="f">f</mi>
            </mrow>
@@ -5744,7 +5712,7 @@ describe('Physics5_1', () => {
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
-           <mrow data-latex="\\partial y  ">
+           <mrow data-latex="\\partial y">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="y">y</mi>
            </mrow>
@@ -5769,7 +5737,7 @@ describe('Physics5_1', () => {
              </msup>
              <mi data-latex="f">f</mi>
            </mrow>
-           <mrow data-latex="\\partial x^{n} ">
+           <mrow data-latex="\\partial x^{n}">
              <mi data-latex="\\partial">&#x2202;</mi>
              <msup data-latex="x^{n}">
                <mi data-latex="x">x</mi>
@@ -5821,7 +5789,7 @@ describe('Physics5_1', () => {
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="f">f</mi>
            </mrow>
-           <mrow data-latex="\\partial x  ">
+           <mrow data-latex="\\partial x">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
@@ -5838,8 +5806,8 @@ describe('Physics5_1', () => {
       tex2mml('\\pdv{x}y'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pdv{x}y" display="block">
          <mfrac data-latex="\\pdv{x}">
-           <mi data-latex="\\partial ">&#x2202;</mi>
-           <mrow data-latex="\\partial x  ">
+           <mi data-latex="\\partial">&#x2202;</mi>
+           <mrow data-latex="\\partial x">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
@@ -5855,16 +5823,16 @@ describe('Physics5_1', () => {
     toXmlMatch(
       tex2mml('\\pdv*{f}{x}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pdv*{f}{x}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\partial f\\middle/\\partial x  \\right." data-latex="\\pdv*{f}{x}">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\pdv*{f}{x}">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
            <mi data-latex="\\partial">&#x2202;</mi>
            <mi data-latex="f">f</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
            <mi data-latex="\\partial">&#x2202;</mi>
            <mi data-latex="x">x</mi>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
        </math>`
     );
@@ -5876,8 +5844,8 @@ describe('Physics5_1', () => {
     toXmlMatch(
       tex2mml('\\pdv*[3]{f}{x}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pdv*[3]{f}{x}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\partial^{3}f\\middle/\\partial x^{3} \\right." data-latex="\\pdv*[3]{f}{x}">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\pdv*[3]{f}{x}">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
            <msup data-latex="\\partial^{3}">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mrow data-mjx-texclass="ORD" data-latex="{3}">
@@ -5886,7 +5854,7 @@ describe('Physics5_1', () => {
            </msup>
            <mi data-latex="f">f</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
            <mi data-latex="\\partial">&#x2202;</mi>
            <msup data-latex="x^{3}">
@@ -5895,7 +5863,7 @@ describe('Physics5_1', () => {
                <mn data-latex="3">3</mn>
              </mrow>
            </msup>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
        </math>`
     );
@@ -5914,7 +5882,7 @@ describe('Physics5_1', () => {
                <mi data-latex="n">n</mi>
              </mrow>
            </msup>
-           <mrow data-latex="\\partial f^{n} ">
+           <mrow data-latex="\\partial f^{n}">
              <mi data-latex="\\partial">&#x2202;</mi>
              <msup data-latex="f^{n}">
                <mi data-latex="f">f</mi>
@@ -5969,8 +5937,8 @@ describe('Physics5_1', () => {
     toXmlMatch(
       tex2mml('\\pdv*[n]{f}{x}{y}(\\frac{x}{y})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pdv*[n]{f}{x}{y}(\\frac{x}{y})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\partial^{2}f\\middle/\\partial x  \\partial y\\right." data-latex="\\pdv*[n]{f}{x}{y}(\\frac{x}{y})">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\pdv*[n]{f}{x}{y}(\\frac{x}{y})">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
            <msup data-latex="\\partial^{2}">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mrow data-mjx-texclass="ORD" data-latex="{2}">
@@ -5979,13 +5947,13 @@ describe('Physics5_1', () => {
            </msup>
            <mi data-latex="f">f</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
            <mi data-latex="\\partial">&#x2202;</mi>
            <mi data-latex="x">x</mi>
            <mi data-latex="\\partial">&#x2202;</mi>
            <mi data-latex="y">y</mi>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
        </math>`
     );
@@ -5997,8 +5965,8 @@ describe('Physics5_1', () => {
     toXmlMatch(
       tex2mml('\\pdv*[]{f}{x}{y}(\\frac{x}{y})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pdv*[]{f}{x}{y}(\\frac{x}{y})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\partial^{2}f\\middle/\\partial x  \\partial y\\right." data-latex="\\pdv*[]{f}{x}{y}(\\frac{x}{y})">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\pdv*[]{f}{x}{y}(\\frac{x}{y})">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
            <msup data-latex="\\partial^{2}">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mrow data-mjx-texclass="ORD" data-latex="{2}">
@@ -6007,13 +5975,13 @@ describe('Physics5_1', () => {
            </msup>
            <mi data-latex="f">f</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
            <mi data-latex="\\partial">&#x2202;</mi>
            <mi data-latex="x">x</mi>
            <mi data-latex="\\partial">&#x2202;</mi>
            <mi data-latex="y">y</mi>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
        </math>`
     );
@@ -6059,7 +6027,7 @@ describe('Physics5_1', () => {
                <mn data-latex="5">5</mn>
              </mrow>
            </msup>
-           <mrow data-latex="\\partial (^{5} ">
+           <mrow data-latex="\\partial (^{5}">
              <mi data-latex="\\partial">&#x2202;</mi>
              <msup data-latex="(^{5}">
                <mo data-latex="(" stretchy="false">(</mo>
@@ -6091,7 +6059,7 @@ describe('Physics5_1', () => {
                <mn data-latex="5">5</mn>
              </mrow>
            </msup>
-           <mrow data-latex="\\partial f^{5} ">
+           <mrow data-latex="\\partial f^{5}">
              <mi data-latex="\\partial">&#x2202;</mi>
              <msup data-latex="f^{5}">
                <mi data-latex="f">f</mi>
@@ -6121,8 +6089,8 @@ describe('Physics5_2', () => {
       tex2mml('\\fdv x'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fdv x" display="block">
          <mfrac data-latex="\\fdv x">
-           <mi data-latex="\\delta ">&#x3B4;</mi>
-           <mrow data-latex="\\delta x  ">
+           <mi data-latex="\\delta">&#x3B4;</mi>
+           <mrow data-latex="\\delta x">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
@@ -6138,8 +6106,8 @@ describe('Physics5_2', () => {
       tex2mml('\\fdv x(ll)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fdv x(ll)" display="block">
          <mfrac data-latex="\\frac{\\delta }{\\delta x  }">
-           <mi data-latex="\\delta ">&#x3B4;</mi>
-           <mrow data-latex="\\delta x  ">
+           <mi data-latex="\\delta">&#x3B4;</mi>
+           <mrow data-latex="\\delta x">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
@@ -6165,7 +6133,7 @@ describe('Physics5_2', () => {
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
-           <mrow data-latex="\\delta y  ">
+           <mrow data-latex="\\delta y">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mi data-latex="y">y</mi>
            </mrow>
@@ -6181,8 +6149,8 @@ describe('Physics5_2', () => {
       tex2mml('\\fdv{f}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fdv{f}" display="block">
          <mfrac data-latex="\\fdv{f}">
-           <mi data-latex="\\delta ">&#x3B4;</mi>
-           <mrow data-latex="\\delta f  ">
+           <mi data-latex="\\delta">&#x3B4;</mi>
+           <mrow data-latex="\\delta f">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mi data-latex="f">f</mi>
            </mrow>
@@ -6207,7 +6175,7 @@ describe('Physics5_2', () => {
              </msup>
              <mi data-latex="f">f</mi>
            </mrow>
-           <mrow data-latex="\\delta x^{n} ">
+           <mrow data-latex="\\delta x^{n}">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <msup data-latex="x^{n}">
                <mi data-latex="x">x</mi>
@@ -6232,7 +6200,7 @@ describe('Physics5_2', () => {
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mi data-latex="f">f</mi>
            </mrow>
-           <mrow data-latex="\\delta x  ">
+           <mrow data-latex="\\delta x">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
@@ -6255,7 +6223,7 @@ describe('Physics5_2', () => {
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mi data-latex="f">f</mi>
            </mrow>
-           <mrow data-latex="\\delta x  ">
+           <mrow data-latex="\\delta x">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
@@ -6272,8 +6240,8 @@ describe('Physics5_2', () => {
       tex2mml('\\fdv{x}y'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fdv{x}y" display="block">
          <mfrac data-latex="\\fdv{x}">
-           <mi data-latex="\\delta ">&#x3B4;</mi>
-           <mrow data-latex="\\delta x  ">
+           <mi data-latex="\\delta">&#x3B4;</mi>
+           <mrow data-latex="\\delta x">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
@@ -6289,16 +6257,16 @@ describe('Physics5_2', () => {
     toXmlMatch(
       tex2mml('\\functionalderivative*{F}{x}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\functionalderivative*{F}{x}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\delta F\\middle/\\delta x  \\right." data-latex="\\functionalderivative*{F}{x}">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\functionalderivative*{F}{x}">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
            <mi data-latex="\\delta">&#x3B4;</mi>
            <mi data-latex="F">F</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
            <mi data-latex="\\delta">&#x3B4;</mi>
            <mi data-latex="x">x</mi>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
        </math>`
     );
@@ -6310,16 +6278,16 @@ describe('Physics5_2', () => {
     toXmlMatch(
       tex2mml('\\fderivative*{F}{x}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fderivative*{F}{x}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\delta F\\middle/\\delta x  \\right." data-latex="\\fderivative*{F}{x}">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\fderivative*{F}{x}">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
            <mi data-latex="\\delta">&#x3B4;</mi>
            <mi data-latex="F">F</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
            <mi data-latex="\\delta">&#x3B4;</mi>
            <mi data-latex="x">x</mi>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
        </math>`
     );
@@ -6331,16 +6299,16 @@ describe('Physics5_2', () => {
     toXmlMatch(
       tex2mml('\\fdv*{F}{x}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fdv*{F}{x}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\delta F\\middle/\\delta x  \\right." data-latex="\\fdv*{F}{x}">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\fdv*{F}{x}">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
            <mi data-latex="\\delta">&#x3B4;</mi>
            <mi data-latex="F">F</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
            <mi data-latex="\\delta">&#x3B4;</mi>
            <mi data-latex="x">x</mi>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
        </math>`
     );
@@ -6357,7 +6325,7 @@ describe('Physics5_2', () => {
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mi data-latex="F">F</mi>
            </mrow>
-           <mrow data-latex="\\delta x  ">
+           <mrow data-latex="\\delta x">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
@@ -6382,7 +6350,7 @@ describe('Physics5_2', () => {
              </msup>
              <mi data-latex="F">F</mi>
            </mrow>
-           <mrow data-latex="\\delta x^{2} ">
+           <mrow data-latex="\\delta x^{2}">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <msup data-latex="x^{2}">
                <mi data-latex="x">x</mi>
@@ -6409,7 +6377,7 @@ describe('Physics5_2', () => {
                <mi data-latex="n">n</mi>
              </mrow>
            </msup>
-           <mrow data-latex="\\delta f^{n} ">
+           <mrow data-latex="\\delta f^{n}">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <msup data-latex="f^{n}">
                <mi data-latex="f">f</mi>
@@ -6447,7 +6415,7 @@ describe('Physics5_2', () => {
              </msup>
              <mi data-latex="f">f</mi>
            </mrow>
-           <mrow data-latex="\\delta x^{n} ">
+           <mrow data-latex="\\delta x^{n}">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <msup data-latex="x^{n}">
                <mi data-latex="x">x</mi>
@@ -6476,8 +6444,8 @@ describe('Physics5_2', () => {
     toXmlMatch(
       tex2mml('\\fdv*[n]{f}{x}{y}(\\frac{x}{y})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fdv*[n]{f}{x}{y}(\\frac{x}{y})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\delta^{n}f\\middle/\\delta x^{n} \\right." data-latex="\\left.\\delta^{n}f\\middle/\\delta x^{n} \\right.">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left.\\delta^{n}f\\middle/\\delta x^{n} \\right.">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
            <msup data-latex="\\delta^{n}">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mrow data-mjx-texclass="ORD" data-latex="{n}">
@@ -6486,7 +6454,7 @@ describe('Physics5_2', () => {
            </msup>
            <mi data-latex="f">f</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
            <mi data-latex="\\delta">&#x3B4;</mi>
            <msup data-latex="x^{n}">
@@ -6495,7 +6463,7 @@ describe('Physics5_2', () => {
                <mi data-latex="n">n</mi>
              </mrow>
            </msup>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{y}">
            <mi data-latex="y">y</mi>
@@ -6516,22 +6484,22 @@ describe('Physics5_2', () => {
     toXmlMatch(
       tex2mml('\\fdv*[]{f}{x}{y}(\\frac{x}{y})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fdv*[]{f}{x}{y}(\\frac{x}{y})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\delta^{}f\\middle/\\delta x^{} \\right." data-latex="\\left.\\delta^{}f\\middle/\\delta x^{} \\right.">
-           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left.\\delta^{}f\\middle/\\delta x^{} \\right.">
+           <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
            <msup data-latex="\\delta^{}">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
            </msup>
            <mi data-latex="f">f</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo stretchy="true" data-latex-item="\\middle/" data-latex="\\middle/">/</mo>
+           <mo stretchy="true" data-latex="\\middle/">/</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle/"></mrow>
            <mi data-latex="\\delta">&#x3B4;</mi>
            <msup data-latex="x^{}">
              <mi data-latex="x">x</mi>
              <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
            </msup>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex-item="\\right." data-latex="\\right."></mo>
+           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{y}">
            <mi data-latex="y">y</mi>
@@ -6560,7 +6528,7 @@ describe('Physics5_2', () => {
              </msup>
              <mi data-latex="f">f</mi>
            </mrow>
-           <mrow data-latex="\\delta x^{} ">
+           <mrow data-latex="\\delta x^{}">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <msup data-latex="x^{}">
                <mi data-latex="x">x</mi>
@@ -6594,7 +6562,7 @@ describe('Physics5_2', () => {
                <mn data-latex="5">5</mn>
              </mrow>
            </msup>
-           <mrow data-latex="\\delta f^{5} ">
+           <mrow data-latex="\\delta f^{5}">
              <mi data-latex="\\delta">&#x3B4;</mi>
              <msup data-latex="f^{5}">
                <mi data-latex="f">f</mi>
@@ -6706,7 +6674,7 @@ describe('Physics5_3', () => {
     toXmlMatch(
       tex2mml('\\var(E-TS)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\var(E-TS)" display="block">
-         <mi data-latex="\\delta ">&#x3B4;</mi>
+         <mi data-latex="\\delta">&#x3B4;</mi>
          <mrow data-latex=")">
            <mo data-mjx-texclass="OPEN">(</mo>
            <mi data-latex="E">E</mi>
@@ -6753,13 +6721,13 @@ describe('Physics5_3', () => {
            <mi data-latex="F">F</mi>
            <mo data-latex="[" stretchy="false">[</mo>
            <mi data-latex="g">g</mi>
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\frac{x}{y}\\right)" data-latex="\\left(\\frac{x}{y}\\right)">
-             <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left(\\frac{x}{y}\\right)">
+             <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
              <mfrac data-latex="\\frac{x}{y}">
                <mi data-latex="x">x</mi>
                <mi data-latex="y">y</mi>
              </mfrac>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
            </mrow>
            <mo data-latex="]" stretchy="false">]</mo>
          </mrow>
@@ -6773,7 +6741,7 @@ describe('Physics5_3', () => {
     toXmlMatch(
       tex2mml('\\var(\\frac{a}{b})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\var(\\frac{a}{b})" display="block">
-         <mi data-latex="\\delta ">&#x3B4;</mi>
+         <mi data-latex="\\delta">&#x3B4;</mi>
          <mrow data-latex=")">
            <mo data-mjx-texclass="OPEN">(</mo>
            <mfrac data-latex="\\frac{a}{b}">
@@ -6884,7 +6852,7 @@ describe('Physics5_4', () => {
     toXmlMatch(
       tex2mml('\\dd x'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dd x" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+         <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
            <mi mathvariant="normal" data-latex="d">d</mi>
          </mrow>
          <mi data-latex="\\dd x">x</mi>
@@ -6899,7 +6867,7 @@ describe('Physics5_4', () => {
       tex2mml('\\dd{x}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dd{x}" display="block">
          <mrow data-mjx-texclass="OP" data-latex="\\dd{x}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mi data-latex="x">x</mi>
@@ -6915,8 +6883,8 @@ describe('Physics5_4', () => {
       tex2mml('\\dd[3]{x}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dd[3]{x}" display="block">
          <mrow data-mjx-texclass="OP" data-latex="\\dd[3]{x}">
-           <msup data-latex="\\diffd^{3}">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <msup data-latex="{\\rm d}^{3}">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mrow data-mjx-texclass="ORD" data-latex="{3}">
@@ -6935,8 +6903,8 @@ describe('Physics5_4', () => {
     toXmlMatch(
       tex2mml('\\dd[3]x'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dd[3]x" display="block">
-         <msup data-latex="\\diffd^{3}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+         <msup data-latex="{\\rm d}^{3}">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{3}">
@@ -6954,7 +6922,7 @@ describe('Physics5_4', () => {
     toXmlMatch(
       tex2mml('\\dd(\\frac{\\frac{\\cos}{\\theta}}{\\theta})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dd(\\frac{\\frac{\\cos}{\\theta}}{\\theta})" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\diffd ">
+         <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
            <mi mathvariant="normal" data-latex="d">d</mi>
          </mrow>
          <mrow data-latex=")">
@@ -6979,7 +6947,7 @@ describe('Physics5_4', () => {
       tex2mml('\\dd[4](\\frac{\\frac{\\cos}{\\theta}}{\\theta})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dd[4](\\frac{\\frac{\\cos}{\\theta}}{\\theta})" display="block">
          <msup data-latex="\\diffd^{4}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{4}">
@@ -7008,7 +6976,7 @@ describe('Physics5_4', () => {
       tex2mml('\\dd{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dd{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})" display="block">
          <mrow data-mjx-texclass="OP" data-latex="\\dd{x}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mi data-latex="x">x</mi>
@@ -7033,8 +7001,8 @@ describe('Physics5_4', () => {
       tex2mml('\\dd[4]{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dd[4]{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})" display="block">
          <mrow data-mjx-texclass="OP" data-latex="\\dd[4]{x}">
-           <msup data-latex="\\diffd^{4}">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <msup data-latex="{\\rm d}^{4}">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mrow data-mjx-texclass="ORD" data-latex="{4}">
@@ -7063,7 +7031,7 @@ describe('Physics5_4', () => {
       tex2mml('\\dd[5]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dd[5]" display="block">
          <msup data-latex="\\dd[5]">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{5}">
@@ -7081,7 +7049,7 @@ describe('Physics5_4', () => {
       tex2mml('{\\dd}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="{\\dd}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="{\\dd}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\dd">
+           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
          </mrow>
@@ -7105,7 +7073,7 @@ describe('Physics5_5', () => {
       tex2mml('A\\dd A'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\dd A" display="block">
          <mi data-latex="A">A</mi>
-         <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+         <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
            <mi mathvariant="normal" data-latex="d">d</mi>
          </mrow>
          <mi data-latex="\\dd A">A</mi>
@@ -7120,7 +7088,7 @@ describe('Physics5_5', () => {
       tex2mml('A\\dd x A'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\dd x A" display="block">
          <mi data-latex="A">A</mi>
-         <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+         <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
            <mi mathvariant="normal" data-latex="d">d</mi>
          </mrow>
          <mi data-latex="\\dd x">x</mi>
@@ -7137,7 +7105,7 @@ describe('Physics5_5', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\dd{x} A" display="block">
          <mi data-latex="A">A</mi>
          <mrow data-mjx-texclass="OP" data-latex="\\dd{x}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mi data-latex="x">x</mi>
@@ -7154,7 +7122,7 @@ describe('Physics5_5', () => {
       tex2mml('A\\dd xA'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\dd xA" display="block">
          <mi data-latex="A">A</mi>
-         <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+         <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
            <mi mathvariant="normal" data-latex="d">d</mi>
          </mrow>
          <mi data-latex="\\dd x">x</mi>
@@ -7191,8 +7159,8 @@ describe('Physics5_5', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\dd[3]{x} A" display="block">
          <mi data-latex="A">A</mi>
          <mrow data-mjx-texclass="OP" data-latex="\\dd[3]{x}">
-           <msup data-latex="\\diffd^{3}">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <msup data-latex="{\\rm d}^{3}">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mrow data-mjx-texclass="ORD" data-latex="{3}">
@@ -7213,8 +7181,8 @@ describe('Physics5_5', () => {
       tex2mml('A\\dd[3]x A'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\dd[3]x A" display="block">
          <mi data-latex="A">A</mi>
-         <msup data-latex="\\diffd^{3}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+         <msup data-latex="{\\rm d}^{3}">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{3}">
@@ -7234,7 +7202,7 @@ describe('Physics5_5', () => {
       tex2mml('A\\dd(\\frac{\\frac{\\cos}{\\theta}}{\\theta}) A'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\dd(\\frac{\\frac{\\cos}{\\theta}}{\\theta}) A" display="block">
          <mi data-latex="A">A</mi>
-         <mrow data-mjx-texclass="ORD" data-latex="\\diffd ">
+         <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
            <mi mathvariant="normal" data-latex="d">d</mi>
          </mrow>
          <mrow data-latex=")">
@@ -7261,7 +7229,7 @@ describe('Physics5_5', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\dd[4](\\frac{\\frac{\\cos}{\\theta}}{\\theta})A" display="block">
          <mi data-latex="A">A</mi>
          <msup data-latex="\\diffd^{4}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{4}">
@@ -7292,7 +7260,7 @@ describe('Physics5_5', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\dd{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})A" display="block">
          <mi data-latex="A">A</mi>
          <mrow data-mjx-texclass="OP" data-latex="\\dd{x}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
            <mi data-latex="x">x</mi>
@@ -7319,8 +7287,8 @@ describe('Physics5_5', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\dd[4]{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})A" display="block">
          <mi data-latex="A">A</mi>
          <mrow data-mjx-texclass="OP" data-latex="\\dd[4]{x}">
-           <msup data-latex="\\diffd^{4}">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <msup data-latex="{\\rm d}^{4}">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mrow data-mjx-texclass="ORD" data-latex="{4}">
@@ -7355,8 +7323,8 @@ describe('Physics5_5', () => {
          <mrow data-mjx-texclass="ORD" data-latex="{d}">
            <mi mathvariant="normal" data-latex="d">d</mi>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\frac{\\frac{\\cos}{\\theta}}{\\theta}\\right)" data-latex="\\left(\\frac{\\frac{\\cos}{\\theta}}{\\theta}\\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left(\\frac{\\frac{\\cos}{\\theta}}{\\theta}\\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
            <mfrac data-latex="\\frac{\\frac{\\cos}{\\theta}}{\\theta}">
              <mfrac data-latex="\\frac{\\cos}{\\theta}">
                <mi data-latex="\\cos">cos</mi>
@@ -7364,7 +7332,7 @@ describe('Physics5_5', () => {
              </mfrac>
              <mi data-latex="\\theta">&#x3B8;</mi>
            </mfrac>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
          <mi data-latex="A">A</mi>
        </math>`
@@ -7384,8 +7352,8 @@ describe('Physics5_5', () => {
            <mi mathvariant="normal" data-latex="d">d</mi>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{\\left(\\frac{\\frac{\\cos}{\\theta}}{\\theta}\\right)}">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\frac{\\frac{\\cos}{\\theta}}{\\theta}\\right)" data-latex="\\left(\\frac{\\frac{\\cos}{\\theta}}{\\theta}\\right)">
-             <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
+           <mrow data-mjx-texclass="INNER" data-latex="\\left(\\frac{\\frac{\\cos}{\\theta}}{\\theta}\\right)">
+             <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
              <mfrac data-latex="\\frac{\\frac{\\cos}{\\theta}}{\\theta}">
                <mfrac data-latex="\\frac{\\cos}{\\theta}">
                  <mi data-latex="\\cos">cos</mi>
@@ -7393,7 +7361,7 @@ describe('Physics5_5', () => {
                </mfrac>
                <mi data-latex="\\theta">&#x3B8;</mi>
              </mfrac>
-             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+             <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
            </mrow>
          </mrow>
          <mi data-latex="A">A</mi>
@@ -7416,18 +7384,18 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\bra{\\phi}\\ket{\\psi}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bra{\\phi}\\ket{\\psi}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\phi}\\middle\\vert{\\psi}\\right\\rangle" data-latex="\\bra{\\phi}\\ket{\\psi}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\bra{\\phi}\\ket{\\psi}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\phi}">
              <mi data-latex="\\phi">&#x3D5;</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\psi}">
              <mi data-latex="\\psi">&#x3C8;</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7439,18 +7407,18 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\bra{A}\\ket{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bra{A}\\ket{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{B}\\right\\rangle" data-latex="\\bra{A}\\ket{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\bra{A}\\ket{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7462,30 +7430,30 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\bra{\\phi}\\dyad{\\psi}{\\xi}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bra{\\phi}\\dyad{\\psi}{\\xi}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\phi}\\right\\vert" data-latex="\\left\\langle{\\phi}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{\\phi}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\phi}">
              <mi data-latex="\\phi">&#x3D5;</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
-         <mrow data-mjx-texclass="ORD" data-latex="\\bra{\\phi}"></mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{\\psi}\\middle\\rangle\\!\\middle\\langle{\\xi}\\right\\vert" data-latex="\\left\\vert{\\psi}\\middle\\rangle\\!\\middle\\langle{\\xi}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{\\psi}\\middle\\rangle\\!\\middle\\langle{\\xi}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\psi}">
              <mi data-latex="\\psi">&#x3C8;</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\xi}">
              <mi data-latex="\\xi">&#x3BE;</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -7497,16 +7465,16 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\bra A  \\ket B'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bra A  \\ket B" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{}\\right\\rangle" data-latex="\\left\\langle{A}\\middle\\vert{}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{A}\\middle\\vert{}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
          <mi data-latex="B">B</mi>
        </math>`
@@ -7526,7 +7494,7 @@ describe('Physics6_0', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
@@ -7551,7 +7519,7 @@ describe('Physics6_0', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
@@ -7569,18 +7537,18 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\bra A\\ket{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bra A\\ket{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{B}\\right\\rangle" data-latex="\\bra A\\ket{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\bra A\\ket{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7592,16 +7560,16 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\bra A\\ket '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bra A\\ket " display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{}\\right\\rangle" data-latex="\\bra A\\ket ">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\bra A\\ket">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7613,16 +7581,16 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\bra {A}\\ket '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bra {A}\\ket " display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{}\\right\\rangle" data-latex="\\bra {A}\\ket ">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\bra {A}\\ket">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7634,16 +7602,16 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\bra {A}\\ket B'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bra {A}\\ket B" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{}\\right\\rangle" data-latex="\\left\\langle{A}\\middle\\vert{}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{A}\\middle\\vert{}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
          <mi data-latex="B">B</mi>
        </math>`
@@ -7656,8 +7624,8 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\bra {\\frac{a}{b}} \\ket* \\alpha'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bra {\\frac{a}{b}} \\ket* \\alpha" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{a}{b}}\\middle\\vert{}\\right\\rangle" data-latex="\\left\\langle{\\frac{a}{b}}\\middle\\vert{}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{\\frac{a}{b}}\\middle\\vert{}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
@@ -7665,10 +7633,10 @@ describe('Physics6_0', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
          <mo data-latex="*">&#x2217;</mo>
          <mi data-latex="\\alpha">&#x3B1;</mi>
@@ -7682,12 +7650,12 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\ket{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ket{A}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{A}\\right\\rangle" data-latex="\\ket{A}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ket{A}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7699,15 +7667,15 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\ket{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ket{\\frac{a}{b}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{\\frac{a}{b}}\\right\\rangle" data-latex="\\ket{\\frac{a}{b}}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ket{\\frac{a}{b}}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
                <mi data-latex="b">b</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7734,12 +7702,12 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\ket a'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ket a" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{a}\\right\\rangle" data-latex="\\ket a">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ket a">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{a}">
              <mi data-latex="a">a</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7766,12 +7734,12 @@ describe('Physics6_0', () => {
     toXmlMatch(
       tex2mml('\\ket \\alpha'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ket \\alpha" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{\\alpha}\\right\\rangle" data-latex="\\ket \\alpha">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ket \\alpha">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\alpha}">
              <mi data-latex="\\alpha">&#x3B1;</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7810,18 +7778,18 @@ describe('Physics6_1', () => {
     toXmlMatch(
       tex2mml('\\braket{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\braket{A}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{A}\\right\\rangle" data-latex="\\braket{A}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\braket{A}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7833,8 +7801,8 @@ describe('Physics6_1', () => {
     toXmlMatch(
       tex2mml('\\braket{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\braket{\\frac{a}{b}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{a}{b}}\\middle\\vert{\\frac{a}{b}}\\right\\rangle" data-latex="\\braket{\\frac{a}{b}}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\braket{\\frac{a}{b}}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
@@ -7842,7 +7810,7 @@ describe('Physics6_1', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
@@ -7850,7 +7818,7 @@ describe('Physics6_1', () => {
                <mi data-latex="b">b</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7866,7 +7834,7 @@ describe('Physics6_1', () => {
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
@@ -7888,7 +7856,7 @@ describe('Physics6_1', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
@@ -7906,18 +7874,18 @@ describe('Physics6_1', () => {
     toXmlMatch(
       tex2mml('\\braket a'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\braket a" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{a}\\middle\\vert{a}\\right\\rangle" data-latex="\\braket a">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\braket a">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{a}">
              <mi data-latex="a">a</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{a}">
              <mi data-latex="a">a</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7933,7 +7901,7 @@ describe('Physics6_1', () => {
          <mrow data-mjx-texclass="ORD" data-latex="{a}">
            <mi data-latex="a">a</mi>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{a}">
            <mi data-latex="a">a</mi>
          </mrow>
@@ -7948,18 +7916,18 @@ describe('Physics6_1', () => {
     toXmlMatch(
       tex2mml('\\braket \\alpha'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\braket \\alpha" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\alpha}\\middle\\vert{\\alpha}\\right\\rangle" data-latex="\\braket \\alpha">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\braket \\alpha">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\alpha}">
              <mi data-latex="\\alpha">&#x3B1;</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\alpha}">
              <mi data-latex="\\alpha">&#x3B1;</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -7971,8 +7939,8 @@ describe('Physics6_1', () => {
     toXmlMatch(
       tex2mml('\\braket{\\frac{a}{b}}{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\braket{\\frac{a}{b}}{A}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{a}{b}}\\middle\\vert{A}\\right\\rangle" data-latex="\\braket{\\frac{a}{b}}{A}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\braket{\\frac{a}{b}}{A}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
@@ -7980,12 +7948,12 @@ describe('Physics6_1', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -8004,7 +7972,7 @@ describe('Physics6_1', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
@@ -8019,8 +7987,8 @@ describe('Physics6_1', () => {
     toXmlMatch(
       tex2mml('\\braket{\\frac{a}{b}}  A'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\braket{\\frac{a}{b}}  A" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{a}{b}}\\middle\\vert{\\frac{a}{b}}\\right\\rangle" data-latex="\\left\\langle{\\frac{a}{b}}\\middle\\vert{\\frac{a}{b}}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{\\frac{a}{b}}\\middle\\vert{\\frac{a}{b}}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
@@ -8028,7 +7996,7 @@ describe('Physics6_1', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
@@ -8036,7 +8004,7 @@ describe('Physics6_1', () => {
                <mi data-latex="b">b</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
          <mi data-latex="A">A</mi>
        </math>`
@@ -8056,7 +8024,7 @@ describe('Physics6_1', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
@@ -8075,8 +8043,8 @@ describe('Physics6_1', () => {
     toXmlMatch(
       tex2mml('\\braket{\\frac{a}{b}}{} '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\braket{\\frac{a}{b}}{} " display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{a}{b}}\\middle\\vert{}\\right\\rangle" data-latex="\\braket{\\frac{a}{b}}{} ">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\braket{\\frac{a}{b}}{}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
@@ -8084,10 +8052,10 @@ describe('Physics6_1', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -8106,7 +8074,7 @@ describe('Physics6_1', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
          <mo fence="false" stretchy="false" data-latex="\\braket*{\\frac{a}{b}}{}">&#x27E9;</mo>
        </math>`
@@ -8128,22 +8096,22 @@ describe('Physics6_2', () => {
     toXmlMatch(
       tex2mml('\\ketbra{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ketbra{A}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{A}\\middle\\rangle\\!\\middle\\langle{A}\\right\\vert" data-latex="\\ketbra{A}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ketbra{A}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -8155,8 +8123,8 @@ describe('Physics6_2', () => {
     toXmlMatch(
       tex2mml('\\ketbra{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ketbra{\\frac{a}{b}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{\\frac{a}{b}}\\middle\\rangle\\!\\middle\\langle{\\frac{a}{b}}\\right\\vert" data-latex="\\ketbra{\\frac{a}{b}}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ketbra{\\frac{a}{b}}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
@@ -8164,11 +8132,11 @@ describe('Physics6_2', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
@@ -8176,7 +8144,7 @@ describe('Physics6_2', () => {
                <mi data-latex="b">b</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -8236,22 +8204,22 @@ describe('Physics6_2', () => {
     toXmlMatch(
       tex2mml('\\ketbra a'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ketbra a" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{a}\\middle\\rangle\\!\\middle\\langle{a}\\right\\vert" data-latex="\\ketbra a">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ketbra a">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{a}">
              <mi data-latex="a">a</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{a}">
              <mi data-latex="a">a</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -8284,22 +8252,22 @@ describe('Physics6_2', () => {
     toXmlMatch(
       tex2mml('\\ketbra \\alpha'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ketbra \\alpha" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{\\alpha}\\middle\\rangle\\!\\middle\\langle{\\alpha}\\right\\vert" data-latex="\\ketbra \\alpha">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ketbra \\alpha">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\alpha}">
              <mi data-latex="\\alpha">&#x3B1;</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\alpha}">
              <mi data-latex="\\alpha">&#x3B1;</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -8311,8 +8279,8 @@ describe('Physics6_2', () => {
     toXmlMatch(
       tex2mml('\\ketbra{\\frac{a}{b}}{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ketbra{\\frac{a}{b}}{A}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{\\frac{a}{b}}\\middle\\rangle\\!\\middle\\langle{A}\\right\\vert" data-latex="\\ketbra{\\frac{a}{b}}{A}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ketbra{\\frac{a}{b}}{A}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
@@ -8320,16 +8288,16 @@ describe('Physics6_2', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -8365,8 +8333,8 @@ describe('Physics6_2', () => {
     toXmlMatch(
       tex2mml('\\ketbra{\\frac{a}{b}}  A'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ketbra{\\frac{a}{b}}  A" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{\\frac{a}{b}}\\middle\\rangle\\!\\middle\\langle{\\frac{a}{b}}\\right\\vert" data-latex="\\left\\vert{\\frac{a}{b}}\\middle\\rangle\\!\\middle\\langle{\\frac{a}{b}}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{\\frac{a}{b}}\\middle\\rangle\\!\\middle\\langle{\\frac{a}{b}}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
@@ -8374,11 +8342,11 @@ describe('Physics6_2', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
@@ -8386,7 +8354,7 @@ describe('Physics6_2', () => {
                <mi data-latex="b">b</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mi data-latex="A">A</mi>
        </math>`
@@ -8415,7 +8383,7 @@ describe('Physics6_2', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\ketbra*{\\frac{a}{b}}">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\ketbra*{\\frac{a}{b}}">|</mo>
          <mi data-latex="A">A</mi>
        </math>`
     );
@@ -8427,8 +8395,8 @@ describe('Physics6_2', () => {
     toXmlMatch(
       tex2mml('\\ketbra{\\frac{a}{b}}{} '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ketbra{\\frac{a}{b}}{} " display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{\\frac{a}{b}}\\middle\\rangle\\!\\middle\\langle{}\\right\\vert" data-latex="\\ketbra{\\frac{a}{b}}{} ">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ketbra{\\frac{a}{b}}{}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
@@ -8436,14 +8404,14 @@ describe('Physics6_2', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -8477,17 +8445,17 @@ describe('Physics6_2', () => {
     toXmlMatch(
       tex2mml('\\left\\vert A \\middle\\rangle\\middle\\langle B\\right\\vert'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\left\\vert A \\middle\\rangle\\middle\\langle B\\right\\vert" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert A \\middle\\rangle\\middle\\langle B\\right\\vert" data-latex="\\left\\vert A \\middle\\rangle\\middle\\langle B\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert " data-latex="\\left\\vert ">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert A \\middle\\rangle\\middle\\langle B\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert ">|</mo>
            <mi data-latex="A">A</mi>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle " data-latex="\\middle\\langle ">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle ">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mi data-latex="B">B</mi>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -8499,22 +8467,22 @@ describe('Physics6_2', () => {
     toXmlMatch(
       tex2mml('\\ketbra{A}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ketbra{A}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{A}\\middle\\rangle\\!\\middle\\langle{B}\\right\\vert" data-latex="\\ketbra{A}{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ketbra{A}{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -8526,22 +8494,22 @@ describe('Physics6_2', () => {
     toXmlMatch(
       tex2mml('\\outerproduct{A}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\outerproduct{A}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{A}\\middle\\rangle\\!\\middle\\langle{B}\\right\\vert" data-latex="\\outerproduct{A}{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\outerproduct{A}{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -8553,22 +8521,22 @@ describe('Physics6_2', () => {
     toXmlMatch(
       tex2mml('\\dyad{a}{b}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\dyad{a}{b}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{a}\\middle\\rangle\\!\\middle\\langle{b}\\right\\vert" data-latex="\\dyad{a}{b}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\dyad{a}{b}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{a}">
              <mi data-latex="a">a</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{b}">
              <mi data-latex="b">b</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -8589,12 +8557,12 @@ describe('Physics6_3', () => {
     toXmlMatch(
       tex2mml('\\ev{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ev{A}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle {A} \\right\\rangle" data-latex="\\ev{A}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle " data-latex="\\left\\langle ">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ev{A}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle ">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -8606,15 +8574,15 @@ describe('Physics6_3', () => {
     toXmlMatch(
       tex2mml('\\ev{\\frac{A}{B}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ev{\\frac{A}{B}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle {\\frac{A}{B}} \\right\\rangle" data-latex="\\ev{\\frac{A}{B}}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle " data-latex="\\left\\langle ">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ev{\\frac{A}{B}}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle ">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
                <mi data-latex="A">A</mi>
                <mi data-latex="B">B</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -8662,28 +8630,28 @@ describe('Physics6_3', () => {
     toXmlMatch(
       tex2mml('\\ev{A}{\\frac{A}{B}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ev{A}{\\frac{A}{B}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{A}{B}}\\right\\vert" data-latex="\\left\\langle{\\frac{A}{B}}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{\\frac{A}{B}}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
                <mi data-latex="A">A</mi>
                <mi data-latex="B">B</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{\\frac{A}{B}}\\right\\rangle" data-latex="\\left\\vert{\\frac{A}{B}}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{\\frac{A}{B}}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
                <mi data-latex="A">A</mi>
                <mi data-latex="B">B</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -8695,12 +8663,12 @@ describe('Physics6_3', () => {
     toXmlMatch(
       tex2mml('\\ev{\\frac{A}{B}}{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ev{\\frac{A}{B}}{A}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\right\\vert" data-latex="\\left\\langle{A}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{A}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
            <mfrac data-latex="\\frac{A}{B}">
@@ -8708,12 +8676,12 @@ describe('Physics6_3', () => {
              <mi data-latex="B">B</mi>
            </mfrac>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{A}\\right\\rangle" data-latex="\\left\\vert{A}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{A}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -8732,11 +8700,11 @@ describe('Physics6_3', () => {
              <mi data-latex="B">B</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
            <mfrac data-latex="\\frac{A}{B}">
              <mi data-latex="A">A</mi>
@@ -8754,8 +8722,8 @@ describe('Physics6_3', () => {
     toXmlMatch(
       tex2mml('\\ev**{A} {\\frac{A}{B}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ev**{A} {\\frac{A}{B}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{A}{B}}\\middle\\vert{A}\\middle\\vert{\\frac{A}{B}}\\right\\rangle" data-latex="\\ev**{A} {\\frac{A}{B}}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ev**{A} {\\frac{A}{B}}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
                <mi data-latex="A">A</mi>
@@ -8763,13 +8731,13 @@ describe('Physics6_3', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
@@ -8777,7 +8745,7 @@ describe('Physics6_3', () => {
                <mi data-latex="B">B</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -8789,12 +8757,12 @@ describe('Physics6_3', () => {
     toXmlMatch(
       tex2mml('\\ev A B'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ev A B" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle {A} \\right\\rangle" data-latex="\\left\\langle {A} \\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle " data-latex="\\left\\langle ">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle {A} \\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle ">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
          <mi data-latex="B">B</mi>
        </math>`
@@ -8807,28 +8775,28 @@ describe('Physics6_3', () => {
     toXmlMatch(
       tex2mml('\\ev A {\\frac{A}{B}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ev A {\\frac{A}{B}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{A}{B}}\\right\\vert" data-latex="\\left\\langle{\\frac{A}{B}}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{\\frac{A}{B}}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
                <mi data-latex="A">A</mi>
                <mi data-latex="B">B</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{\\frac{A}{B}}\\right\\rangle" data-latex="\\left\\vert{\\frac{A}{B}}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{\\frac{A}{B}}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
                <mi data-latex="A">A</mi>
                <mi data-latex="B">B</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -8840,15 +8808,15 @@ describe('Physics6_3', () => {
     toXmlMatch(
       tex2mml('\\ev {\\frac{A}{B}} A'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ev {\\frac{A}{B}} A" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle {\\frac{A}{B}} \\right\\rangle" data-latex="\\left\\langle {\\frac{A}{B}} \\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle " data-latex="\\left\\langle ">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle {\\frac{A}{B}} \\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle ">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
                <mi data-latex="A">A</mi>
                <mi data-latex="B">B</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
          <mi data-latex="A">A</mi>
        </math>`
@@ -8868,11 +8836,11 @@ describe('Physics6_3', () => {
              <mi data-latex="B">B</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
            <mfrac data-latex="\\frac{A}{B}">
              <mi data-latex="A">A</mi>
@@ -8890,8 +8858,8 @@ describe('Physics6_3', () => {
     toXmlMatch(
       tex2mml('\\ev** A {\\frac{A}{B}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ev** A {\\frac{A}{B}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{A}{B}}\\middle\\vert{A}\\middle\\vert{\\frac{A}{B}}\\right\\rangle" data-latex="\\ev** A {\\frac{A}{B}}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ev** A {\\frac{A}{B}}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
                <mi data-latex="A">A</mi>
@@ -8899,13 +8867,13 @@ describe('Physics6_3', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
@@ -8913,7 +8881,7 @@ describe('Physics6_3', () => {
                <mi data-latex="B">B</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -8925,15 +8893,15 @@ describe('Physics6_3', () => {
     toXmlMatch(
       tex2mml('\\ev{\\frac{A}{B}}{\\frac{\\Psi}{\\Phi}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ev{\\frac{A}{B}}{\\frac{\\Psi}{\\Phi}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{\\Psi}{\\Phi}}\\right\\vert" data-latex="\\left\\langle{\\frac{\\Psi}{\\Phi}}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{\\frac{\\Psi}{\\Phi}}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{\\Psi}{\\Phi}}">
              <mfrac data-latex="\\frac{\\Psi}{\\Phi}">
                <mi mathvariant="normal" data-latex="\\Psi">&#x3A8;</mi>
                <mi mathvariant="normal" data-latex="\\Phi">&#x3A6;</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
            <mfrac data-latex="\\frac{A}{B}">
@@ -8941,15 +8909,15 @@ describe('Physics6_3', () => {
              <mi data-latex="B">B</mi>
            </mfrac>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{\\frac{\\Psi}{\\Phi}}\\right\\rangle" data-latex="\\left\\vert{\\frac{\\Psi}{\\Phi}}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{\\frac{\\Psi}{\\Phi}}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{\\Psi}{\\Phi}}">
              <mfrac data-latex="\\frac{\\Psi}{\\Phi}">
                <mi mathvariant="normal" data-latex="\\Psi">&#x3A8;</mi>
                <mi mathvariant="normal" data-latex="\\Phi">&#x3A6;</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -8961,14 +8929,14 @@ describe('Physics6_3', () => {
     toXmlMatch(
       tex2mml('\\ev{\\frac{A}{B}}{{\\Psi}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ev{\\frac{A}{B}}{{\\Psi}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{{\\Psi}}\\right\\vert" data-latex="\\left\\langle{{\\Psi}}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{{\\Psi}}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{{\\Psi}}">
              <mrow data-mjx-texclass="ORD" data-latex="{\\Psi}">
                <mi mathvariant="normal" data-latex="\\Psi">&#x3A8;</mi>
              </mrow>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
            <mfrac data-latex="\\frac{A}{B}">
@@ -8976,14 +8944,14 @@ describe('Physics6_3', () => {
              <mi data-latex="B">B</mi>
            </mfrac>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{{\\Psi}}\\right\\rangle" data-latex="\\left\\vert{{\\Psi}}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{{\\Psi}}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{{\\Psi}}">
              <mrow data-mjx-texclass="ORD" data-latex="{\\Psi}">
                <mi mathvariant="normal" data-latex="\\Psi">&#x3A8;</mi>
              </mrow>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -9002,14 +8970,14 @@ describe('Physics6_3', () => {
              <mi mathvariant="normal" data-latex="\\Phi">&#x3A6;</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
            <mfrac data-latex="\\frac{A}{B}">
              <mi data-latex="A">A</mi>
              <mi data-latex="B">B</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{\\Psi}{\\Phi}}">
            <mfrac data-latex="\\frac{\\Psi}{\\Phi}">
              <mi mathvariant="normal" data-latex="\\Psi">&#x3A8;</mi>
@@ -9027,8 +8995,8 @@ describe('Physics6_3', () => {
     toXmlMatch(
       tex2mml('\\ev**{\\frac{A}{B}}{\\frac{\\Psi}{\\Phi}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ev**{\\frac{A}{B}}{\\frac{\\Psi}{\\Phi}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{\\Psi}{\\Phi}}\\middle\\vert{\\frac{A}{B}}\\middle\\vert{\\frac{\\Psi}{\\Phi}}\\right\\rangle" data-latex="\\ev**{\\frac{A}{B}}{\\frac{\\Psi}{\\Phi}}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ev**{\\frac{A}{B}}{\\frac{\\Psi}{\\Phi}}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{\\Psi}{\\Phi}}">
              <mfrac data-latex="\\frac{\\Psi}{\\Phi}">
                <mi mathvariant="normal" data-latex="\\Psi">&#x3A8;</mi>
@@ -9036,7 +9004,7 @@ describe('Physics6_3', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
              <mfrac data-latex="\\frac{A}{B}">
@@ -9045,7 +9013,7 @@ describe('Physics6_3', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{\\Psi}{\\Phi}}">
              <mfrac data-latex="\\frac{\\Psi}{\\Phi}">
@@ -9053,7 +9021,7 @@ describe('Physics6_3', () => {
                <mi mathvariant="normal" data-latex="\\Phi">&#x3A6;</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -9074,22 +9042,22 @@ describe('Physics6_4', () => {
     toXmlMatch(
       tex2mml('\\matrixel{n}{A}{m}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixel{n}{A}{m}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{n}\\right\\vert" data-latex="\\left\\langle{n}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{n}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{n}">
              <mi data-latex="n">n</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{m}\\right\\rangle" data-latex="\\left\\vert{m}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{m}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{m}">
              <mi data-latex="m">m</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -9101,22 +9069,22 @@ describe('Physics6_4', () => {
     toXmlMatch(
       tex2mml('\\mel{n}{A}{m}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mel{n}{A}{m}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{n}\\right\\vert" data-latex="\\left\\langle{n}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{n}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{n}">
              <mi data-latex="n">n</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{m}\\right\\rangle" data-latex="\\left\\vert{m}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{m}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{m}">
              <mi data-latex="m">m</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -9128,15 +9096,15 @@ describe('Physics6_4', () => {
     toXmlMatch(
       tex2mml('\\mel{\\frac{a}{b}}{\\frac{a}{b}}{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mel{\\frac{a}{b}}{\\frac{a}{b}}{\\frac{a}{b}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{a}{b}}\\right\\vert" data-latex="\\left\\langle{\\frac{a}{b}}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{\\frac{a}{b}}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
                <mi data-latex="b">b</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
@@ -9144,15 +9112,15 @@ describe('Physics6_4', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{\\frac{a}{b}}\\right\\rangle" data-latex="\\left\\vert{\\frac{a}{b}}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{\\frac{a}{b}}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
                <mi data-latex="b">b</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -9164,22 +9132,22 @@ describe('Physics6_4', () => {
     toXmlMatch(
       tex2mml('\\mel A B C'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mel A B C" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\right\\vert" data-latex="\\left\\langle{A}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{A}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{B}">
            <mi data-latex="B">B</mi>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{C}\\right\\rangle" data-latex="\\left\\vert{C}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{C}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{C}">
              <mi data-latex="C">C</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -9195,14 +9163,14 @@ describe('Physics6_4', () => {
          <mrow data-mjx-texclass="ORD" data-latex="{n}">
            <mi data-latex="n">n</mi>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{m}">
            <mi data-latex="m">m</mi>
          </mrow>
@@ -9224,14 +9192,14 @@ describe('Physics6_4', () => {
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
              <mi data-latex="b">b</mi>
            </mfrac>
          </mrow>
-         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+         <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
          <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
@@ -9249,13 +9217,13 @@ describe('Physics6_4', () => {
     toXmlMatch(
       tex2mml('\\mel**{n}{\\frac{a}{b}}{m}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mel**{n}{\\frac{a}{b}}{m}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{n}\\middle\\vert{\\frac{a}{b}}\\middle\\vert{m}\\right\\rangle" data-latex="\\mel**{n}{\\frac{a}{b}}{m}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\mel**{n}{\\frac{a}{b}}{m}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{n}">
              <mi data-latex="n">n</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
@@ -9264,12 +9232,12 @@ describe('Physics6_4', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{m}">
              <mi data-latex="m">m</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -9281,8 +9249,8 @@ describe('Physics6_4', () => {
     toXmlMatch(
       tex2mml('\\mel**{\\frac{a}{b}}{\\frac{a}{b}}{\\frac{a}{b}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mel**{\\frac{a}{b}}{\\frac{a}{b}}{\\frac{a}{b}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{\\frac{a}{b}}\\middle\\vert{\\frac{a}{b}}\\middle\\vert{\\frac{a}{b}}\\right\\rangle" data-latex="\\mel**{\\frac{a}{b}}{\\frac{a}{b}}{\\frac{a}{b}}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\mel**{\\frac{a}{b}}{\\frac{a}{b}}{\\frac{a}{b}}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
                <mi data-latex="a">a</mi>
@@ -9290,7 +9258,7 @@ describe('Physics6_4', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
@@ -9299,7 +9267,7 @@ describe('Physics6_4', () => {
              </mfrac>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
              <mfrac data-latex="\\frac{a}{b}">
@@ -9307,7 +9275,7 @@ describe('Physics6_4', () => {
                <mi data-latex="b">b</mi>
              </mfrac>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -9328,8 +9296,8 @@ describe('Physics7_0', () => {
     toXmlMatch(
       tex2mml('\\matrixquantity{Q}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixquantity{Q}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\matrixquantity{Q}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\matrixquantity{Q}">
+           <mtr data-latex="{}">
              <mtd>
                <mi data-latex="Q">Q</mi>
              </mtd>
@@ -9345,8 +9313,8 @@ describe('Physics7_0', () => {
     toXmlMatch(
       tex2mml('\\matrixquantity*{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixquantity*{a &amp; b \\\\ c &amp; d}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\matrixquantity*{a &amp; b \\\\ c &amp; d}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\matrixquantity*{a &amp; b \\\\ c &amp; d}">
+           <mtr data-latex="{}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -9354,7 +9322,7 @@ describe('Physics7_0', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mi data-latex="c">c</mi>
              </mtd>
@@ -9373,10 +9341,10 @@ describe('Physics7_0', () => {
     toXmlMatch(
       tex2mml('\\matrixquantity*(a & b \\\\ c & d)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixquantity*(a &amp; b \\\\ c &amp; d)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right\\rgroup" data-latex="\\matrixquantity*(a &amp; b \\\\ c &amp; d)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\matrixquantity*(a &amp; b \\\\ c &amp; d)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -9384,7 +9352,7 @@ describe('Physics7_0', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -9393,7 +9361,7 @@ describe('Physics7_0', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rgroup" data-latex="\\right\\rgroup">&#x27EF;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rgroup">&#x27EF;</mo>
          </mrow>
        </math>`
     );
@@ -9405,10 +9373,10 @@ describe('Physics7_0', () => {
     toXmlMatch(
       tex2mml('\\matrixquantity(a & b \\\\ c & d)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixquantity(a &amp; b \\\\ c &amp; d)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right)" data-latex="\\matrixquantity(a &amp; b \\\\ c &amp; d)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\matrixquantity(a &amp; b \\\\ c &amp; d)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -9416,7 +9384,7 @@ describe('Physics7_0', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -9425,7 +9393,7 @@ describe('Physics7_0', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -9437,10 +9405,10 @@ describe('Physics7_0', () => {
     toXmlMatch(
       tex2mml('\\matrixquantity[a & b \\\\ c & d]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixquantity[a &amp; b \\\\ c &amp; d]" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right]" data-latex="\\matrixquantity[a &amp; b \\\\ c &amp; d]">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\matrixquantity[a &amp; b \\\\ c &amp; d]">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -9448,7 +9416,7 @@ describe('Physics7_0', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -9457,7 +9425,7 @@ describe('Physics7_0', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right]" data-latex="\\right]">]</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right]">]</mo>
          </mrow>
        </math>`
     );
@@ -9469,10 +9437,10 @@ describe('Physics7_0', () => {
     toXmlMatch(
       tex2mml('\\matrixquantity|a & b \\\\ c & d|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixquantity|a &amp; b \\\\ c &amp; d|" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right|" data-latex="\\matrixquantity|a &amp; b \\\\ c &amp; d|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\matrixquantity|a &amp; b \\\\ c &amp; d|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -9480,7 +9448,7 @@ describe('Physics7_0', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -9489,7 +9457,7 @@ describe('Physics7_0', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -9501,8 +9469,8 @@ describe('Physics7_0', () => {
     toXmlMatch(
       tex2mml('\\mqty{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{a &amp; b \\\\ c &amp; d}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{a &amp; b \\\\ c &amp; d}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{a &amp; b \\\\ c &amp; d}">
+           <mtr data-latex="{}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -9510,7 +9478,7 @@ describe('Physics7_0', () => {
                <mi data-latex="b">b</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mi data-latex="c">c</mi>
              </mtd>
@@ -9529,10 +9497,10 @@ describe('Physics7_0', () => {
     toXmlMatch(
       tex2mml('\\mqty(a & b \\\\ c & d)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(a &amp; b \\\\ c &amp; d)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right)" data-latex="\\mqty(a &amp; b \\\\ c &amp; d)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(a &amp; b \\\\ c &amp; d)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -9540,7 +9508,7 @@ describe('Physics7_0', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -9549,7 +9517,7 @@ describe('Physics7_0', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -9561,10 +9529,10 @@ describe('Physics7_0', () => {
     toXmlMatch(
       tex2mml('\\mqty*(a & b \\\\ c & d)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty*(a &amp; b \\\\ c &amp; d)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right\\rgroup" data-latex="\\mqty*(a &amp; b \\\\ c &amp; d)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty*(a &amp; b \\\\ c &amp; d)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -9572,7 +9540,7 @@ describe('Physics7_0', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -9581,7 +9549,7 @@ describe('Physics7_0', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rgroup" data-latex="\\right\\rgroup">&#x27EF;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rgroup">&#x27EF;</mo>
          </mrow>
        </math>`
     );
@@ -9593,10 +9561,10 @@ describe('Physics7_0', () => {
     toXmlMatch(
       tex2mml('\\mqty[a & b \\\\ c & d]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty[a &amp; b \\\\ c &amp; d]" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right]" data-latex="\\mqty[a &amp; b \\\\ c &amp; d]">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty[a &amp; b \\\\ c &amp; d]">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -9604,7 +9572,7 @@ describe('Physics7_0', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -9613,7 +9581,7 @@ describe('Physics7_0', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right]" data-latex="\\right]">]</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right]">]</mo>
          </mrow>
        </math>`
     );
@@ -9625,10 +9593,10 @@ describe('Physics7_0', () => {
     toXmlMatch(
       tex2mml('\\mqty|a & b \\\\ c & d|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right|" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -9636,7 +9604,7 @@ describe('Physics7_0', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -9645,7 +9613,7 @@ describe('Physics7_0', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -9657,10 +9625,10 @@ describe('Physics7_0', () => {
     toXmlMatch(
       tex2mml('\\mqty*|a & b\\\\ c& d|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty*|a &amp; b\\\\ c&amp; d|" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{array}{} a &amp; b\\\\ c&amp; d\\end{array}\\right|" data-latex="\\mqty*|a &amp; b\\\\ c&amp; d|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty*|a &amp; b\\\\ c&amp; d|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -9668,7 +9636,7 @@ describe('Physics7_0', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -9677,7 +9645,7 @@ describe('Physics7_0', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -9698,14 +9666,14 @@ describe('Physics7_10', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\admat{1,2&3\\\\4&5})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\lefty{1}\\\\ \\mqty{2&amp;3\\\\4&amp;5}\\end{array}\\right)" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -9713,10 +9681,10 @@ describe('Physics7_10', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -9724,7 +9692,7 @@ describe('Physics7_10', () => {
                        <mn data-latex="3">3</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -9736,7 +9704,7 @@ describe('Physics7_10', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -9748,16 +9716,16 @@ describe('Physics7_10', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\admat 1)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\admat 1)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} \\admat 1\\end{array}\\right)" data-latex="\\mqty(\\admat 1)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\admat 1)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -9769,10 +9737,10 @@ describe('Physics7_10', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\admat 1,2)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\admat 1,2)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} \\admat 1,2\\end{array}\\right)" data-latex="\\mqty(\\admat 1,2)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\admat 1,2)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                  <mo data-latex=",">,</mo>
@@ -9780,7 +9748,7 @@ describe('Physics7_10', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -9792,16 +9760,16 @@ describe('Physics7_10', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\admat{1,2&3\\\\4&5&6,7,8})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5&amp;6,7,8})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\leftqty{1}\\\\ &amp;&amp;\\mqty{2&amp;3\\\\4&amp;5&amp;6}\\\\ &amp;\\mqty{7}\\\\ \\mqty{8}\\end{array}\\right)" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5&amp;6,7,8})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5&amp;6,7,8})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -9809,12 +9777,12 @@ describe('Physics7_10', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -9822,7 +9790,7 @@ describe('Physics7_10', () => {
                        <mn data-latex="3">3</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -9836,11 +9804,11 @@ describe('Physics7_10', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="7">7</mn>
                      </mtd>
@@ -9848,10 +9816,10 @@ describe('Physics7_10', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="8">8</mn>
                      </mtd>
@@ -9860,7 +9828,7 @@ describe('Physics7_10', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -9872,17 +9840,17 @@ describe('Physics7_10', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\admat{1,2&3\\\\4&5,6,7,8})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5,6,7,8})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\leftmqty{1}\\\\ &amp;&amp;&amp;\\mqty{2&amp;3\\\\4&amp;5}\\\\ &amp;&amp;\\mqty{6}\\\\ &amp;\\mqty{7}\\\\ \\mqty{8}\\end{array}\\right)" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5,6,7,8})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5,6,7,8})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -9890,13 +9858,13 @@ describe('Physics7_10', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -9904,7 +9872,7 @@ describe('Physics7_10', () => {
                        <mn data-latex="3">3</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -9915,12 +9883,12 @@ describe('Physics7_10', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 6\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="6">6</mn>
                      </mtd>
@@ -9928,11 +9896,11 @@ describe('Physics7_10', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="7">7</mn>
                      </mtd>
@@ -9940,10 +9908,10 @@ describe('Physics7_10', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="8">8</mn>
                      </mtd>
@@ -9952,7 +9920,7 @@ describe('Physics7_10', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -9964,17 +9932,17 @@ describe('Physics7_10', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\admat{1,2&3\\\\4&5&6,7,8,\\dmat{9,10}})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5&amp;6,7,8,\\dmat{9,10}})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\leftmqty{1}\\\\ &amp;&amp;&amp;\\mqty{2&amp;3\\\\4&amp;5&amp;6}\\\\ &amp;&amp;\\mqty{7}\\\\ &amp;\\mqty{8}\\\\ \\mqty{\\dmat{9,10}}\\end{array}\\right)" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5&amp;6,7,8,\\dmat{9,10}})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5&amp;6,7,8,\\dmat{9,10}})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -9982,13 +9950,13 @@ describe('Physics7_10', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -9996,7 +9964,7 @@ describe('Physics7_10', () => {
                        <mn data-latex="3">3</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -10010,12 +9978,12 @@ describe('Physics7_10', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="7">7</mn>
                      </mtd>
@@ -10023,11 +9991,11 @@ describe('Physics7_10', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="8">8</mn>
                      </mtd>
@@ -10035,13 +10003,13 @@ describe('Physics7_10', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{9}\\\\ &amp;\\mqty{10}\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
-                       <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                         <mtr data-latex-item="{}" data-latex="{}">
+                       <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 9\\end{array}">
+                         <mtr data-latex="{}">
                            <mtd>
                              <mn data-latex="9">9</mn>
                            </mtd>
@@ -10049,13 +10017,13 @@ describe('Physics7_10', () => {
                        </mtable>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd></mtd>
                      <mtd>
-                       <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                         <mtr data-latex-item="{}" data-latex="{}">
+                       <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 10\\end{array}">
+                         <mtr data-latex="{}">
                            <mtd>
-                             <mn data-latex="0">10</mn>
+                             <mn data-latex="10">10</mn>
                            </mtd>
                          </mtr>
                        </mtable>
@@ -10065,7 +10033,7 @@ describe('Physics7_10', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -10086,10 +10054,10 @@ describe('Physics7_11', () => {
     toXmlMatch(
       tex2mml('\\mqty a'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty a" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} \\end{array}\\right)" data-latex="\\left(\\begin{array}{} \\end{array}\\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}"></mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left(\\begin{array}{} \\end{array}\\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}"></mtable>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
          <mi data-latex="a">a</mi>
        </math>`
@@ -10102,10 +10070,10 @@ describe('Physics7_11', () => {
     toXmlMatch(
       tex2mml('\\mqty1'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty1" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} \\end{array}\\right)" data-latex="\\left(\\begin{array}{} \\end{array}\\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}"></mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left(\\begin{array}{} \\end{array}\\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}"></mtable>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
          <mn data-latex="1">1</mn>
        </math>`
@@ -10118,18 +10086,18 @@ describe('Physics7_11', () => {
     toXmlMatch(
       tex2mml('\\pmqty* 34'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty* 34" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} *\\end{array}\\right)" data-latex="\\left(\\begin{array}{} *\\end{array}\\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left(\\begin{array}{} *\\end{array}\\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mo data-latex="*">&#x2217;</mo>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
-         <mn data-latex="4">34</mn>
+         <mn data-latex="34">34</mn>
        </math>`
     );
   });
@@ -10142,13 +10110,13 @@ describe('Physics7_11', () => {
         '\\mqty(\\dmat{1,2&3,4&4&5\\\\4&5,33,4,5,7,8\\\\0\\\\10&20\\\\3,200}) '
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\dmat{1,2&amp;3,4&amp;4&amp;5\\\\4&amp;5,33,4,5,7,8\\\\0\\\\10&amp;20\\\\3,200}) " display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{1}\\\\ &amp;\\mqty{2&amp;3}\\\\ &amp;&amp;\\mqty{4&amp;4&amp;5\\\\4&amp;5}\\\\ &amp;&amp;&amp;\\mqty{33}\\\\ &amp;&amp;&amp;&amp;\\mqty{4}\\\\ &amp;&amp;&amp;&amp;&amp;\\mqty{5}\\\\ &amp;&amp;&amp;&amp;&amp;&amp;\\mqty{7}\\\\ &amp;&amp;&amp;&amp;&amp;&amp;&amp;\\mqty{8\\\\0\\\\10&amp;20\\\\3}\\\\ &amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;\\mqty{200}\\end{array}\\right)" data-latex="\\mqty(\\dmat{1,2&amp;3,4&amp;4&amp;5\\\\4&amp;5,33,4,5,7,8\\\\0\\\\10&amp;20\\\\3,200}) ">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3,4&amp;4&amp;5\\\\4&amp;5,33,4,5,7,8\\\\0\\\\10&amp;20\\\\3,200})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -10156,11 +10124,11 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -10171,12 +10139,12 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 4&amp;4&amp;5\\\\4&amp;5\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -10187,7 +10155,7 @@ describe('Physics7_11', () => {
                        <mn data-latex="5">5</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -10198,28 +10166,28 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 33\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
-                       <mn data-latex="3">33</mn>
+                       <mn data-latex="33">33</mn>
                      </mtd>
                    </mtr>
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 4\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -10227,15 +10195,15 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 5\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="5">5</mn>
                      </mtd>
@@ -10243,7 +10211,7 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
@@ -10251,8 +10219,8 @@ describe('Physics7_11', () => {
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="7">7</mn>
                      </mtd>
@@ -10260,7 +10228,7 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
@@ -10269,26 +10237,26 @@ describe('Physics7_11', () => {
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\\\0\\\\10&amp;20\\\\3\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="8">8</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="0">0</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
-                       <mn data-latex="0">10</mn>
+                       <mn data-latex="10">10</mn>
                      </mtd>
                      <mtd>
-                       <mn data-latex="0">20</mn>
+                       <mn data-latex="20">20</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="3">3</mn>
                      </mtd>
@@ -10296,7 +10264,7 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
@@ -10306,17 +10274,17 @@ describe('Physics7_11', () => {
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 200\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
-                       <mn data-latex="00">200</mn>
+                       <mn data-latex="200">200</mn>
                      </mtd>
                    </mtr>
                  </mtable>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -10328,13 +10296,13 @@ describe('Physics7_11', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\dmat{1,2&3\\\\4&5}) '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5}) " display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{1}\\\\ &amp;\\mqty{2&amp;3\\\\4&amp;5}\\end{array}\\right)" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5}) ">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -10342,11 +10310,11 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -10354,7 +10322,7 @@ describe('Physics7_11', () => {
                        <mn data-latex="3">3</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -10366,7 +10334,7 @@ describe('Physics7_11', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -10378,13 +10346,13 @@ describe('Physics7_11', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\dmat{1,2&3\\\\4&5&6,\\imat{3},7,8,\\dmat{9,10}})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5&amp;6,\\imat{3},7,8,\\dmat{9,10}})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{1}\\\\ &amp;\\mqty{2&amp;3\\\\4&amp;5&amp;6}\\\\ &amp;&amp;\\mqty{\\imat{3}}\\\\ &amp;&amp;&amp;\\mqty{7}\\\\ &amp;&amp;&amp;&amp;\\mqty{8}\\\\ &amp;&amp;&amp;&amp;&amp;\\mqty{\\dmat{9,10}}\\end{array}\\right)" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5&amp;6,\\imat{3},7,8,\\dmat{9,10}})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5&amp;6,\\imat{3},7,8,\\dmat{9,10}})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -10392,11 +10360,11 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -10404,7 +10372,7 @@ describe('Physics7_11', () => {
                        <mn data-latex="3">3</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -10418,12 +10386,12 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="1 &amp; 0 &amp; 0\\\\ 0 &amp; 1 &amp; 0\\\\ 0 &amp; 0 &amp; 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -10434,7 +10402,7 @@ describe('Physics7_11', () => {
                        <mn data-latex="0">0</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="0">0</mn>
                      </mtd>
@@ -10445,7 +10413,7 @@ describe('Physics7_11', () => {
                        <mn data-latex="0">0</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="0">0</mn>
                      </mtd>
@@ -10459,13 +10427,13 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="7">7</mn>
                      </mtd>
@@ -10473,14 +10441,14 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="8">8</mn>
                      </mtd>
@@ -10488,18 +10456,18 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{9}\\\\ &amp;\\mqty{10}\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
-                       <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                         <mtr data-latex-item="{}" data-latex="{}">
+                       <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 9\\end{array}">
+                         <mtr data-latex="{}">
                            <mtd>
                              <mn data-latex="9">9</mn>
                            </mtd>
@@ -10507,13 +10475,13 @@ describe('Physics7_11', () => {
                        </mtable>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd></mtd>
                      <mtd>
-                       <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                         <mtr data-latex-item="{}" data-latex="{}">
+                       <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 10\\end{array}">
+                         <mtr data-latex="{}">
                            <mtd>
-                             <mn data-latex="0">10</mn>
+                             <mn data-latex="10">10</mn>
                            </mtd>
                          </mtr>
                        </mtable>
@@ -10523,7 +10491,7 @@ describe('Physics7_11', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -10537,13 +10505,13 @@ describe('Physics7_11', () => {
         '\\mqty(\\mqty{1}\\\\ & \\mqty{2 & 3\\\\ 4 & 5 & 6}\\\\ & & \\mqty{\\imat{3}} \\\\ & & & \\mqty{7})'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\mqty{1}\\\\ &amp; \\mqty{2 &amp; 3\\\\ 4 &amp; 5 &amp; 6}\\\\ &amp; &amp; \\mqty{\\imat{3}} \\\\ &amp; &amp; &amp; \\mqty{7})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} \\mqty{1}\\\\ &amp; \\mqty{2 &amp; 3\\\\ 4 &amp; 5 &amp; 6}\\\\ &amp; &amp; \\mqty{\\imat{3}} \\\\ &amp; &amp; &amp; \\mqty{7}\\end{array}\\right)" data-latex="\\mqty(\\mqty{1}\\\\ &amp; \\mqty{2 &amp; 3\\\\ 4 &amp; 5 &amp; 6}\\\\ &amp; &amp; \\mqty{\\imat{3}} \\\\ &amp; &amp; &amp; \\mqty{7})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\mqty{1}\\\\ &amp; \\mqty{2 &amp; 3\\\\ 4 &amp; 5 &amp; 6}\\\\ &amp; &amp; \\mqty{\\imat{3}} \\\\ &amp; &amp; &amp; \\mqty{7})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -10551,11 +10519,11 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2 &amp; 3\\\\ 4 &amp; 5 &amp; 6\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -10563,7 +10531,7 @@ describe('Physics7_11', () => {
                        <mn data-latex="3">3</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -10577,12 +10545,12 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="1 &amp; 0 &amp; 0\\\\ 0 &amp; 1 &amp; 0\\\\ 0 &amp; 0 &amp; 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -10593,7 +10561,7 @@ describe('Physics7_11', () => {
                        <mn data-latex="0">0</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="0">0</mn>
                      </mtd>
@@ -10604,7 +10572,7 @@ describe('Physics7_11', () => {
                        <mn data-latex="0">0</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="0">0</mn>
                      </mtd>
@@ -10618,13 +10586,13 @@ describe('Physics7_11', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="7">7</mn>
                      </mtd>
@@ -10633,7 +10601,7 @@ describe('Physics7_11', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -10645,13 +10613,13 @@ describe('Physics7_11', () => {
     toXmlMatch(
       tex2mml('\\left\\lgroup\\frac{a}{b}\\right\\rgroup'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\left\\lgroup\\frac{a}{b}\\right\\rgroup" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\frac{a}{b}\\right\\rgroup" data-latex="\\left\\lgroup\\frac{a}{b}\\right\\rgroup">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\lgroup\\frac{a}{b}\\right\\rgroup">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
            <mfrac data-latex="\\frac{a}{b}">
              <mi data-latex="a">a</mi>
              <mi data-latex="b">b</mi>
            </mfrac>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rgroup" data-latex="\\right\\rgroup">&#x27EF;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rgroup">&#x27EF;</mo>
          </mrow>
        </math>`
     );
@@ -10663,7 +10631,7 @@ describe('Physics7_11', () => {
     toXmlMatch(
       tex2mml('\\begin{smallmatrix} a & b \\\\ c & d \\end{smallmatrix}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}" display="block">
-         <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}">
+         <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}">
            <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
              <mtr>
                <mtd>
@@ -10693,7 +10661,7 @@ describe('Physics7_11', () => {
     toXmlMatch(
       tex2mml('\\smqty{\\imat{3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty{\\imat{3}}" display="block">
-         <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\smqty{\\imat{3}}">
+         <mstyle scriptlevel="1" data-latex="\\smqty{\\imat{3}}">
            <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
              <mtr>
                <mtd>
@@ -10741,8 +10709,8 @@ describe('Physics7_11', () => {
     toXmlMatch(
       tex2mml('\\mqty{\\imat{10}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\imat{10}}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{\\imat{10}}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\imat{10}}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="1">1</mn>
              </mtd>
@@ -10774,7 +10742,7 @@ describe('Physics7_11', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -10806,7 +10774,7 @@ describe('Physics7_11', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -10838,7 +10806,7 @@ describe('Physics7_11', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -10870,7 +10838,7 @@ describe('Physics7_11', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -10902,7 +10870,7 @@ describe('Physics7_11', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -10934,7 +10902,7 @@ describe('Physics7_11', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -10966,7 +10934,7 @@ describe('Physics7_11', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -10998,7 +10966,7 @@ describe('Physics7_11', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -11030,7 +10998,7 @@ describe('Physics7_11', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -11082,27 +11050,27 @@ describe('Physics7_1', () => {
     toXmlMatch(
       tex2mml('\\pmqty{Q} \\mqty(R)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{Q} \\mqty(R)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} Q\\end{array}\\right)" data-latex="\\left(\\begin{array}{} Q\\end{array}\\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left(\\begin{array}{} Q\\end{array}\\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="Q">Q</mi>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} R\\end{array}\\right)" data-latex="\\left(\\begin{array}{} R\\end{array}\\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left(\\begin{array}{} R\\end{array}\\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="R">R</mi>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -11114,27 +11082,27 @@ describe('Physics7_1', () => {
     toXmlMatch(
       tex2mml('\\Pmqty{Q} \\mqty*(R)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Pmqty{Q} \\mqty*(R)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{array}{} Q\\end{array}\\right\\rgroup" data-latex="\\left\\lgroup\\begin{array}{} Q\\end{array}\\right\\rgroup">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\lgroup\\begin{array}{} Q\\end{array}\\right\\rgroup">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="Q">Q</mi>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rgroup" data-latex="\\right\\rgroup">&#x27EF;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rgroup">&#x27EF;</mo>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{array}{} R\\end{array}\\right\\rgroup" data-latex="\\left\\lgroup\\begin{array}{} R\\end{array}\\right\\rgroup">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\lgroup\\begin{array}{} R\\end{array}\\right\\rgroup">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="R">R</mi>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rgroup" data-latex="\\right\\rgroup">&#x27EF;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rgroup">&#x27EF;</mo>
          </mrow>
        </math>`
     );
@@ -11146,27 +11114,27 @@ describe('Physics7_1', () => {
     toXmlMatch(
       tex2mml('\\bmqty{Q} \\mqty[R]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bmqty{Q} \\mqty[R]" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{array}{} Q\\end{array}\\right]" data-latex="\\left[\\begin{array}{} Q\\end{array}\\right]">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left[\\begin{array}{} Q\\end{array}\\right]">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="Q">Q</mi>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right]" data-latex="\\right]">]</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right]">]</mo>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{array}{} R\\end{array}\\right]" data-latex="\\left[\\begin{array}{} R\\end{array}\\right]">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left[\\begin{array}{} R\\end{array}\\right]">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="R">R</mi>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right]" data-latex="\\right]">]</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right]">]</mo>
          </mrow>
        </math>`
     );
@@ -11178,27 +11146,27 @@ describe('Physics7_1', () => {
     toXmlMatch(
       tex2mml('\\vmqty{Q} \\mqty|R|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vmqty{Q} \\mqty|R|" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{array}{} Q\\end{array}\\right|" data-latex="\\left|\\begin{array}{} Q\\end{array}\\right|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left|\\begin{array}{} Q\\end{array}\\right|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="Q">Q</mi>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{array}{} R\\end{array}\\right|" data-latex="\\left|\\begin{array}{} R\\end{array}\\right|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left|\\begin{array}{} R\\end{array}\\right|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="R">R</mi>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -11210,10 +11178,10 @@ describe('Physics7_1', () => {
     toXmlMatch(
       tex2mml('\\pmqty{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{a &amp; b \\\\ c &amp; d}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right)" data-latex="\\mqty(a &amp; b \\\\ c &amp; d)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(a &amp; b \\\\ c &amp; d)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -11221,7 +11189,7 @@ describe('Physics7_1', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -11230,7 +11198,7 @@ describe('Physics7_1', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -11242,10 +11210,10 @@ describe('Physics7_1', () => {
     toXmlMatch(
       tex2mml('\\Pmqty{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Pmqty{a &amp; b \\\\ c &amp; d}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right\\rgroup" data-latex="\\mqty*(a &amp; b \\\\ c &amp; d)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty*(a &amp; b \\\\ c &amp; d)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -11253,7 +11221,7 @@ describe('Physics7_1', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -11262,7 +11230,7 @@ describe('Physics7_1', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rgroup" data-latex="\\right\\rgroup">&#x27EF;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rgroup">&#x27EF;</mo>
          </mrow>
        </math>`
     );
@@ -11274,10 +11242,10 @@ describe('Physics7_1', () => {
     toXmlMatch(
       tex2mml('\\bmqty{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bmqty{a &amp; b \\\\ c &amp; d}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right]" data-latex="\\mqty[a &amp; b \\\\ c &amp; d]">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty[a &amp; b \\\\ c &amp; d]">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -11285,7 +11253,7 @@ describe('Physics7_1', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -11294,7 +11262,7 @@ describe('Physics7_1', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right]" data-latex="\\right]">]</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right]">]</mo>
          </mrow>
        </math>`
     );
@@ -11306,10 +11274,10 @@ describe('Physics7_1', () => {
     toXmlMatch(
       tex2mml('\\vmqty{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vmqty{a &amp; b \\\\ c &amp; d}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right|" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -11317,7 +11285,7 @@ describe('Physics7_1', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -11326,7 +11294,7 @@ describe('Physics7_1', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -11347,7 +11315,7 @@ describe('Physics7_2', () => {
     toXmlMatch(
       tex2mml('\\smallmatrixquantity{Q}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smallmatrixquantity{Q}" display="block">
-         <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\smallmatrixquantity{Q}">
+         <mstyle scriptlevel="1" data-latex="\\smallmatrixquantity{Q}">
            <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
              <mtr>
                <mtd>
@@ -11367,7 +11335,7 @@ describe('Physics7_2', () => {
     toXmlMatch(
       tex2mml('\\smallmatrixquantity*{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smallmatrixquantity*{a &amp; b \\\\ c &amp; d}" display="block">
-         <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\smallmatrixquantity*{a &amp; b \\\\ c &amp; d}">
+         <mstyle scriptlevel="1" data-latex="\\smallmatrixquantity*{a &amp; b \\\\ c &amp; d}">
            <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
              <mtr>
                <mtd>
@@ -11398,9 +11366,9 @@ describe('Physics7_2', () => {
     toXmlMatch(
       tex2mml('\\smallmatrixquantity*(a & b \\\\ c & d)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smallmatrixquantity*(a &amp; b \\\\ c &amp; d)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right\\rgroup" data-latex="\\smallmatrixquantity*(a &amp; b \\\\ c &amp; d)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smallmatrixquantity*(a &amp; b \\\\ c &amp; d)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11421,7 +11389,7 @@ describe('Physics7_2', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rgroup" data-latex="\\right\\rgroup">&#x27EF;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rgroup">&#x27EF;</mo>
          </mrow>
        </math>`
     );
@@ -11433,9 +11401,9 @@ describe('Physics7_2', () => {
     toXmlMatch(
       tex2mml('\\smallmatrixquantity(a & b \\\\ c & d)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smallmatrixquantity(a &amp; b \\\\ c &amp; d)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right)" data-latex="\\smallmatrixquantity(a &amp; b \\\\ c &amp; d)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smallmatrixquantity(a &amp; b \\\\ c &amp; d)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11452,11 +11420,11 @@ describe('Physics7_2', () => {
                  </mtd>
                  <mtd>
                    <mi data-latex="d">d</mi>
-                </mtd>
+                 </mtd>
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -11468,9 +11436,9 @@ describe('Physics7_2', () => {
     toXmlMatch(
       tex2mml('\\smallmatrixquantity|a & b \\\\ c & d|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smallmatrixquantity|a &amp; b \\\\ c &amp; d|" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right|" data-latex="\\smallmatrixquantity|a &amp; b \\\\ c &amp; d|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smallmatrixquantity|a &amp; b \\\\ c &amp; d|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11491,7 +11459,7 @@ describe('Physics7_2', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -11503,7 +11471,7 @@ describe('Physics7_2', () => {
     toXmlMatch(
       tex2mml('\\smqty{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty{a &amp; b \\\\ c &amp; d}" display="block">
-         <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\smqty{a &amp; b \\\\ c &amp; d}">
+         <mstyle scriptlevel="1" data-latex="\\smqty{a &amp; b \\\\ c &amp; d}">
            <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
              <mtr>
                <mtd>
@@ -11534,9 +11502,9 @@ describe('Physics7_2', () => {
     toXmlMatch(
       tex2mml('\\smqty(a & b \\\\ c & d)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(a &amp; b \\\\ c &amp; d)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right)" data-latex="\\smqty(a &amp; b \\\\ c &amp; d)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(a &amp; b \\\\ c &amp; d)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11557,7 +11525,7 @@ describe('Physics7_2', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -11569,9 +11537,9 @@ describe('Physics7_2', () => {
     toXmlMatch(
       tex2mml('\\smqty*(a & b \\\\ c & d)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty*(a &amp; b \\\\ c &amp; d)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right\\rgroup" data-latex="\\smqty*(a &amp; b \\\\ c &amp; d)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty*(a &amp; b \\\\ c &amp; d)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11592,7 +11560,7 @@ describe('Physics7_2', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rgroup" data-latex="\\right\\rgroup">&#x27EF;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rgroup">&#x27EF;</mo>
          </mrow>
        </math>`
     );
@@ -11604,9 +11572,9 @@ describe('Physics7_2', () => {
     toXmlMatch(
       tex2mml('\\smqty[a & b \\\\ c & d]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty[a &amp; b \\\\ c &amp; d]" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right]" data-latex="\\smqty[a &amp; b \\\\ c &amp; d]">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty[a &amp; b \\\\ c &amp; d]">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11627,7 +11595,7 @@ describe('Physics7_2', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right]" data-latex="\\right]">]</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right]">]</mo>
          </mrow>
        </math>`
     );
@@ -11639,9 +11607,9 @@ describe('Physics7_2', () => {
     toXmlMatch(
       tex2mml('\\smqty|a & b \\\\ c & d|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty|a &amp; b \\\\ c &amp; d|" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right|" data-latex="\\smqty|a &amp; b \\\\ c &amp; d|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty|a &amp; b \\\\ c &amp; d|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11662,7 +11630,7 @@ describe('Physics7_2', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -11683,9 +11651,9 @@ describe('Physics7_3', () => {
     toXmlMatch(
       tex2mml('\\spmqty{Q} \\smqty(R)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\spmqty{Q} \\smqty(R)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right)" data-latex="\\left(\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left(\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11695,11 +11663,11 @@ describe('Physics7_3', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{smallmatrix}{} R\\end{smallmatrix}\\right)" data-latex="\\left(\\begin{smallmatrix}{} R\\end{smallmatrix}\\right)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left(\\begin{smallmatrix}{} R\\end{smallmatrix}\\right)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11709,7 +11677,7 @@ describe('Physics7_3', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -11721,9 +11689,9 @@ describe('Physics7_3', () => {
     toXmlMatch(
       tex2mml('\\sPmqty{Q} \\smqty*(R)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sPmqty{Q} \\smqty*(R)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right\\rgroup" data-latex="\\left\\lgroup\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right\\rgroup">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\lgroup\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right\\rgroup">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11733,11 +11701,11 @@ describe('Physics7_3', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rgroup" data-latex="\\right\\rgroup">&#x27EF;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rgroup">&#x27EF;</mo>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{smallmatrix}{} R\\end{smallmatrix}\\right\\rgroup" data-latex="\\left\\lgroup\\begin{smallmatrix}{} R\\end{smallmatrix}\\right\\rgroup">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\lgroup\\begin{smallmatrix}{} R\\end{smallmatrix}\\right\\rgroup">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11747,7 +11715,7 @@ describe('Physics7_3', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rgroup" data-latex="\\right\\rgroup">&#x27EF;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rgroup">&#x27EF;</mo>
          </mrow>
        </math>`
     );
@@ -11759,9 +11727,9 @@ describe('Physics7_3', () => {
     toXmlMatch(
       tex2mml('\\sbmqty{Q} \\smqty[R]'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sbmqty{Q} \\smqty[R]" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right]" data-latex="\\left[\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right]">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left[\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right]">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11771,11 +11739,11 @@ describe('Physics7_3', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right]" data-latex="\\right]">]</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right]">]</mo>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{smallmatrix}{} R\\end{smallmatrix}\\right]" data-latex="\\left[\\begin{smallmatrix}{} R\\end{smallmatrix}\\right]">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left[\\begin{smallmatrix}{} R\\end{smallmatrix}\\right]">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11785,7 +11753,7 @@ describe('Physics7_3', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right]" data-latex="\\right]">]</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right]">]</mo>
          </mrow>
        </math>`
     );
@@ -11797,9 +11765,9 @@ describe('Physics7_3', () => {
     toXmlMatch(
       tex2mml('\\svmqty{Q} \\smqty|R|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\svmqty{Q} \\smqty|R|" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right|" data-latex="\\left|\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left|\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11809,11 +11777,11 @@ describe('Physics7_3', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} R\\end{smallmatrix}\\right|" data-latex="\\left|\\begin{smallmatrix}{} R\\end{smallmatrix}\\right|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left|\\begin{smallmatrix}{} R\\end{smallmatrix}\\right|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11823,7 +11791,7 @@ describe('Physics7_3', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -11835,9 +11803,9 @@ describe('Physics7_3', () => {
     toXmlMatch(
       tex2mml('\\spmqty{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\spmqty{a &amp; b \\\\ c &amp; d}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right)" data-latex="\\smqty(a &amp; b \\\\ c &amp; d)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(a &amp; b \\\\ c &amp; d)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11858,7 +11826,7 @@ describe('Physics7_3', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -11870,9 +11838,9 @@ describe('Physics7_3', () => {
     toXmlMatch(
       tex2mml('\\sPmqty{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sPmqty{a &amp; b \\\\ c &amp; d}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right\\rgroup" data-latex="\\smqty*(a &amp; b \\\\ c &amp; d)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty*(a &amp; b \\\\ c &amp; d)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11893,7 +11861,7 @@ describe('Physics7_3', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rgroup" data-latex="\\right\\rgroup">&#x27EF;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rgroup">&#x27EF;</mo>
          </mrow>
        </math>`
     );
@@ -11905,9 +11873,9 @@ describe('Physics7_3', () => {
     toXmlMatch(
       tex2mml('\\sbmqty{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sbmqty{a &amp; b \\\\ c &amp; d}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right]" data-latex="\\smqty[a &amp; b \\\\ c &amp; d]">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty[a &amp; b \\\\ c &amp; d]">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11928,7 +11896,7 @@ describe('Physics7_3', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right]" data-latex="\\right]">]</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right]">]</mo>
          </mrow>
        </math>`
     );
@@ -11940,9 +11908,9 @@ describe('Physics7_3', () => {
     toXmlMatch(
       tex2mml('\\svmqty{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\svmqty{a &amp; b \\\\ c &amp; d}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right|" data-latex="\\smqty|a &amp; b \\\\ c &amp; d|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty|a &amp; b \\\\ c &amp; d|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -11963,7 +11931,7 @@ describe('Physics7_3', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -11984,10 +11952,10 @@ describe('Physics7_4', () => {
     toXmlMatch(
       tex2mml('\\matrixdeterminant{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixdeterminant{a &amp; b \\\\ c &amp; d}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right|" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -11995,7 +11963,7 @@ describe('Physics7_4', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -12004,7 +11972,7 @@ describe('Physics7_4', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -12016,10 +11984,10 @@ describe('Physics7_4', () => {
     toXmlMatch(
       tex2mml('\\mdet{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mdet{a &amp; b \\\\ c &amp; d}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{array}{} a &amp; b \\\\ c &amp; d\\end{array}\\right|" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
@@ -12027,7 +11995,7 @@ describe('Physics7_4', () => {
                  <mi data-latex="b">b</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="c">c</mi>
                </mtd>
@@ -12036,7 +12004,7 @@ describe('Physics7_4', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -12048,9 +12016,9 @@ describe('Physics7_4', () => {
     toXmlMatch(
       tex2mml('\\smdet{a & b \\\\ c & d} '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smdet{a &amp; b \\\\ c &amp; d} " display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right|" data-latex="\\smqty|a &amp; b \\\\ c &amp; d| ">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty|a &amp; b \\\\ c &amp; d|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -12071,7 +12039,7 @@ describe('Physics7_4', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -12083,16 +12051,16 @@ describe('Physics7_4', () => {
     toXmlMatch(
       tex2mml('\\matrixdeterminant a b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixdeterminant a b" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{array}{} a\\end{array}\\right|" data-latex="\\left|\\begin{array}{} a\\end{array}\\right|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left|\\begin{array}{} a\\end{array}\\right|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
          <mi data-latex="b">b</mi>
        </math>`
@@ -12105,16 +12073,16 @@ describe('Physics7_4', () => {
     toXmlMatch(
       tex2mml('\\mdet a b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mdet a b" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{array}{} a\\end{array}\\right|" data-latex="\\left|\\begin{array}{} a\\end{array}\\right|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left|\\begin{array}{} a\\end{array}\\right|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
          <mi data-latex="b">b</mi>
        </math>`
@@ -12127,9 +12095,9 @@ describe('Physics7_4', () => {
     toXmlMatch(
       tex2mml('\\smdet a b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smdet a b" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} a\\end{smallmatrix}\\right|" data-latex="\\left|\\begin{smallmatrix}{} a\\end{smallmatrix}\\right|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left|\\begin{smallmatrix}{} a\\end{smallmatrix}\\right|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -12139,7 +12107,7 @@ describe('Physics7_4', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
          <mi data-latex="b">b</mi>
        </math>`
@@ -12161,8 +12129,8 @@ describe('Physics7_5', () => {
     toXmlMatch(
       tex2mml('\\mqty{\\imat{3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\imat{3}}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{\\imat{3}}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\imat{3}}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="1">1</mn>
              </mtd>
@@ -12173,7 +12141,7 @@ describe('Physics7_5', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -12184,7 +12152,7 @@ describe('Physics7_5', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -12206,10 +12174,10 @@ describe('Physics7_5', () => {
     toXmlMatch(
       tex2mml('\\vmqty{\\imat{5}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vmqty{\\imat{5}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; 0 &amp; 0 &amp; 0\\\\ 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0\\\\ 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0\\\\ 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0\\\\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1\\end{array}\\right|" data-latex="\\mqty|\\imat{5}|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty|\\imat{5}|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
@@ -12226,7 +12194,7 @@ describe('Physics7_5', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -12243,7 +12211,7 @@ describe('Physics7_5', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -12260,7 +12228,7 @@ describe('Physics7_5', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -12277,7 +12245,7 @@ describe('Physics7_5', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -12295,7 +12263,7 @@ describe('Physics7_5', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -12307,16 +12275,16 @@ describe('Physics7_5', () => {
     toXmlMatch(
       tex2mml('\\vmqty{\\imat{0}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vmqty{\\imat{0}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{array}\\right|" data-latex="\\mqty|\\imat{0}|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty|\\imat{0}|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -12328,16 +12296,16 @@ describe('Physics7_5', () => {
     toXmlMatch(
       tex2mml('\\vmqty{\\imat{1}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vmqty{\\imat{1}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{array}\\right|" data-latex="\\mqty|\\imat{1}|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty|\\imat{1}|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -12349,16 +12317,16 @@ describe('Physics7_5', () => {
     toXmlMatch(
       tex2mml('\\vmqty{\\imat{-1}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vmqty{\\imat{-1}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{array}\\right|" data-latex="\\mqty|\\imat{-1}|">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty|\\imat{-1}|">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right|">|</mo>
          </mrow>
        </math>`
     );
@@ -12370,10 +12338,10 @@ describe('Physics7_5', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\imat{3}\\pmat{0}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\imat{3}\\pmat{0}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left0\\\\ 0 &amp; 1\\end{array}\\right)" data-latex="\\mqty(\\imat{3}\\pmat{0})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\imat{3}\\pmat{0})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
@@ -12384,7 +12352,7 @@ describe('Physics7_5', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -12395,7 +12363,7 @@ describe('Physics7_5', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -12410,7 +12378,7 @@ describe('Physics7_5', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -12419,7 +12387,7 @@ describe('Physics7_5', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -12440,9 +12408,9 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\xmat{1}{2}{3})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\xmat{1}{2}{3})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; 1\\\\ 1 &amp; 1 &amp; 1\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat{1}{2}{3})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\xmat{1}{2}{3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -12469,7 +12437,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -12481,9 +12449,9 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\xmat{a}{3}{3}) '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\xmat{a}{3}{3}) " display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; a\\\\ a &amp; a &amp; a\\\\ a &amp; a &amp; a\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat{a}{3}{3}) ">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\xmat{a}{3}{3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -12521,7 +12489,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -12533,9 +12501,9 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\xmat{a}{3}{1}) '),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\xmat{a}{3}{1}) " display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\\\ a\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat{a}{3}{1}) ">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\xmat{a}{3}{1})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -12555,7 +12523,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -12567,15 +12535,15 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\xmat{a}{1}{3})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\xmat{a}{1}{3})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; a\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat{a}{1}{3})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\xmat{a}{1}{3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
                    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
                    <mi data-latex="a">a</mi>
-               </mtd>
+                 </mtd>
                  <mtd>
                    <mi data-latex="a">a</mi>
                  </mtd>
@@ -12585,7 +12553,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -12597,9 +12565,9 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\xmat*{1}{2}{3})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\xmat*{1}{2}{3})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left}{1}} &amp; 1_{{1}{2}} &amp; 1_{{1}{3}}\\\\ 1_{{2}{1}} &amp; 1_{{2}{2}} &amp; 1_{{2}{3}}\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat*{1}{2}{3})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\xmat*{1}{2}{3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -12686,7 +12654,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -12698,9 +12666,9 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\xmat*{a}{3}{3})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\xmat*{a}{3}{3})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left}{1}} &amp; a_{{1}{2}} &amp; a_{{1}{3}}\\\\ a_{{2}{1}} &amp; a_{{2}{2}} &amp; a_{{2}{3}}\\\\ a_{{3}{1}} &amp; a_{{3}{2}} &amp; a_{{3}{3}}\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat*{a}{3}{3})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\xmat*{a}{3}{3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -12815,7 +12783,7 @@ describe('Physics7_6', () => {
                  <mtd>
                    <msub data-latex="a_{{3}{3}}">
                      <mi data-latex="a">a</mi>
-                      <mrow data-mjx-texclass="ORD" data-latex="{{3}{3}}">
+                     <mrow data-mjx-texclass="ORD" data-latex="{{3}{3}}">
                        <mrow data-mjx-texclass="ORD" data-latex="{3}">
                          <mn data-latex="3">3</mn>
                        </mrow>
@@ -12828,7 +12796,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -12840,9 +12808,9 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\xmat*{a}{3}{1})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\xmat*{a}{3}{1})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\\\ a_{2}\\\\ a_{3}\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat*{a}{3}{1})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\xmat*{a}{3}{1})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -12877,7 +12845,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -12889,9 +12857,9 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\xmat*{a}{1}{3})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\xmat*{a}{1}{3})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; a_{2} &amp; a_{3}\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat*{a}{1}{3})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\xmat*{a}{1}{3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -12922,7 +12890,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -12934,9 +12902,9 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\xmat*{a}{1}{1})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\xmat*{a}{1}{1})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{smallmatrix}\\right)" data-latex="\\smqty(\\xmat*{a}{1}{1})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\xmat*{a}{1}{1})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -12946,7 +12914,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -12958,9 +12926,9 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\xmat*{a}{-1}{-1})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\xmat*{a}{-1}{-1})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{smallmatrix}\\right)" data-latex="\\smqty(\\xmat*{a}{-1}{-1})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\xmat*{a}{-1}{-1})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -12970,7 +12938,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -12982,9 +12950,9 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\zmat{1}{3})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\zmat{1}{3})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; 0\\end{smallmatrix}\\right)" data-latex="\\smqty(\\zmat{1}{3})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\zmat{1}{3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -13000,7 +12968,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13012,9 +12980,9 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\zmat{2}{3})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\zmat{2}{3})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; 0\\\\ 0 &amp; 0 &amp; 0\\end{smallmatrix}\\right)" data-latex="\\smqty(\\zmat{2}{3})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\zmat{2}{3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -13041,7 +13009,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13053,9 +13021,9 @@ describe('Physics7_6', () => {
     toXmlMatch(
       tex2mml('\\smqty(\\zmat{3}{1})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty(\\zmat{3}{1})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\\\ 0\\end{smallmatrix}\\right)" data-latex="\\smqty(\\zmat{3}{1})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\smqty(\\zmat{3}{1})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mstyle scriptlevel="1" data-latex="{smallmatrix}">
              <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
                <mtr>
                  <mtd>
@@ -13075,7 +13043,7 @@ describe('Physics7_6', () => {
                </mtr>
              </mtable>
            </mstyle>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13096,8 +13064,8 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\mqty{\\pmat{0}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{0}}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{\\pmat{0}}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{0}}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="1">1</mn>
              </mtd>
@@ -13105,7 +13073,7 @@ describe('Physics7_7', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -13124,10 +13092,10 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\pmat{0}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\pmat{0}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left0\\\\ 0 &amp; 1\\end{array}\\right)" data-latex="\\mqty(\\pmat{0})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{0})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
@@ -13135,7 +13103,7 @@ describe('Physics7_7', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -13144,7 +13112,7 @@ describe('Physics7_7', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13156,8 +13124,8 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\mqty{\\pmat{1}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{1}}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{\\pmat{1}}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{1}}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -13165,7 +13133,7 @@ describe('Physics7_7', () => {
                <mn data-latex="1">1</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="1">1</mn>
              </mtd>
@@ -13184,8 +13152,8 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\mqty{\\pmat{2}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{2}}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{\\pmat{2}}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{2}}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -13194,7 +13162,7 @@ describe('Physics7_7', () => {
                <mi data-latex="i">i</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mi data-latex="i">i</mi>
              </mtd>
@@ -13213,8 +13181,8 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\mqty{\\pmat{3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{3}}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{\\pmat{3}}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{3}}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="1">1</mn>
              </mtd>
@@ -13222,7 +13190,7 @@ describe('Physics7_7', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -13242,7 +13210,7 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\mqty{\\pmat{4}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{4}}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{\\pmat{4}}"></mtable>
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{4}}"></mtable>
        </math>`
     );
   });
@@ -13253,8 +13221,8 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\mqty{\\pmat{x}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{x}}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{\\pmat{x}}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{x}}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -13262,7 +13230,7 @@ describe('Physics7_7', () => {
                <mn data-latex="1">1</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="1">1</mn>
              </mtd>
@@ -13281,8 +13249,8 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\mqty{\\pmat{y}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{y}}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{\\pmat{y}}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{y}}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -13291,7 +13259,7 @@ describe('Physics7_7', () => {
                <mi data-latex="i">i</mi>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mi data-latex="i">i</mi>
              </mtd>
@@ -13310,8 +13278,8 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\mqty{\\pmat{z}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{z}}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{\\pmat{z}}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{z}}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="1">1</mn>
              </mtd>
@@ -13319,7 +13287,7 @@ describe('Physics7_7', () => {
                <mn data-latex="0">0</mn>
              </mtd>
            </mtr>
-           <mtr data-latex-item="{}" data-latex="{}">
+           <mtr data-latex="{}">
              <mtd>
                <mn data-latex="0">0</mn>
              </mtd>
@@ -13339,7 +13307,7 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\mqty{\\pmat{a}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{a}}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{\\pmat{a}}"></mtable>
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{a}}"></mtable>
        </math>`
     );
   });
@@ -13350,10 +13318,10 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\pmat{a}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\pmat{a}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\leftarray}\\right)" data-latex="\\mqty(\\pmat{a})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}"></mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{a})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}"></mtable>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13365,8 +13333,8 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\mqty{\\pmat{aa}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{aa}}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\mqty{\\pmat{aa}}">
-           <mtr data-latex-item="{}" data-latex="{}">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{aa}}">
+           <mtr data-latex="{}">
              <mtd>
                <mi data-latex="a">a</mi>
              </mtd>
@@ -13382,10 +13350,10 @@ describe('Physics7_7', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\pmat{0.a}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\pmat{0.a}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left&amp; 0\\\\ 0 &amp; 1\\end{array}\\right)" data-latex="\\mqty(\\pmat{0.a})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{0.a})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mo data-latex=".">.</mo>
                  <mi data-latex="a">a</mi>
@@ -13395,7 +13363,7 @@ describe('Physics7_7', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -13404,7 +13372,7 @@ describe('Physics7_7', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13425,10 +13393,10 @@ describe('Physics7_8', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\pmat{1}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\pmat{1}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left1\\\\ 1 &amp; 0\\end{array}\\right)" data-latex="\\mqty(\\pmat{1})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{1})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -13436,7 +13404,7 @@ describe('Physics7_8', () => {
                  <mn data-latex="1">1</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
@@ -13445,7 +13413,7 @@ describe('Physics7_8', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13457,10 +13425,10 @@ describe('Physics7_8', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\pmat{2}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\pmat{2}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left-i\\\\ i &amp; 0\\end{array}\\right)" data-latex="\\mqty(\\pmat{2})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{2})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -13469,7 +13437,7 @@ describe('Physics7_8', () => {
                  <mi data-latex="i">i</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="i">i</mi>
                </mtd>
@@ -13478,7 +13446,7 @@ describe('Physics7_8', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13490,10 +13458,10 @@ describe('Physics7_8', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\pmat{3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\pmat{3}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left0\\\\ 0 &amp; -1\\end{array}\\right)" data-latex="\\mqty(\\pmat{3})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
@@ -13501,7 +13469,7 @@ describe('Physics7_8', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -13511,7 +13479,7 @@ describe('Physics7_8', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13523,10 +13491,10 @@ describe('Physics7_8', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\pmat{4}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\pmat{4}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\leftarray}\\right)" data-latex="\\mqty(\\pmat{4})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}"></mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{4})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}"></mtable>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13538,10 +13506,10 @@ describe('Physics7_8', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\pmat{x}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\pmat{x}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left1\\\\ 1 &amp; 0\\end{array}\\right)" data-latex="\\mqty(\\pmat{x})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{x})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -13549,7 +13517,7 @@ describe('Physics7_8', () => {
                  <mn data-latex="1">1</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
@@ -13558,7 +13526,7 @@ describe('Physics7_8', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13570,10 +13538,10 @@ describe('Physics7_8', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\pmat{y}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\pmat{y}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left-i\\\\ i &amp; 0\\end{array}\\right)" data-latex="\\mqty(\\pmat{y})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{y})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -13582,7 +13550,7 @@ describe('Physics7_8', () => {
                  <mi data-latex="i">i</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="i">i</mi>
                </mtd>
@@ -13591,7 +13559,7 @@ describe('Physics7_8', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13603,10 +13571,10 @@ describe('Physics7_8', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\pmat{z}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\pmat{z}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left0\\\\ 0 &amp; -1\\end{array}\\right)" data-latex="\\mqty(\\pmat{z})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{z})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
@@ -13614,7 +13582,7 @@ describe('Physics7_8', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -13624,7 +13592,7 @@ describe('Physics7_8', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13636,16 +13604,16 @@ describe('Physics7_8', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\pmat{aa}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\pmat{aa}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{array}\\right)" data-latex="\\mqty(\\pmat{aa})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{aa})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="a">a</mi>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13666,13 +13634,13 @@ describe('Physics7_9', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\dmat{1,2&3\\\\4&5})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{1}\\\\ &amp;\\mqty{2&amp;3\\\\4&amp;5}\\end{array}\\right)" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -13680,11 +13648,11 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -13692,7 +13660,7 @@ describe('Physics7_9', () => {
                        <mn data-latex="3">3</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -13704,7 +13672,7 @@ describe('Physics7_9', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13716,16 +13684,16 @@ describe('Physics7_9', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\dmat 1)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\dmat 1)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} \\dmat 1\\end{array}\\right)" data-latex="\\mqty(\\dmat 1)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat 1)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13737,10 +13705,10 @@ describe('Physics7_9', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\dmat 1,2)'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\dmat 1,2)" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{array}{} \\dmat 1,2\\end{array}\\right)" data-latex="\\mqty(\\dmat 1,2)">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat 1,2)">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                  <mo data-latex=",">,</mo>
@@ -13748,7 +13716,7 @@ describe('Physics7_9', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13760,13 +13728,13 @@ describe('Physics7_9', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\dmat{1,2&3\\\\4&5&6,7,8})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5&amp;6,7,8})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{1}\\\\ &amp;\\mqty{2&amp;3\\\\4&amp;5&amp;6}\\\\ &amp;&amp;\\mqty{7}\\\\ &amp;&amp;&amp;\\mqty{8}\\end{array}\\right)" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5&amp;6,7,8})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5&amp;6,7,8})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -13774,11 +13742,11 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -13786,7 +13754,7 @@ describe('Physics7_9', () => {
                        <mn data-latex="3">3</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -13800,12 +13768,12 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="7">7</mn>
                      </mtd>
@@ -13813,13 +13781,13 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="8">8</mn>
                      </mtd>
@@ -13828,7 +13796,7 @@ describe('Physics7_9', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13840,13 +13808,13 @@ describe('Physics7_9', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\dmat{1,2&3\\\\4&5,6,7,8})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5,6,7,8})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{1}\\\\ &amp;\\mqty{2&amp;3\\\\4&amp;5}\\\\ &amp;&amp;\\mqty{6}\\\\ &amp;&amp;&amp;\\mqty{7}\\\\ &amp;&amp;&amp;&amp;\\mqty{8}\\end{array}\\right)" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5,6,7,8})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5,6,7,8})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -13854,11 +13822,11 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -13866,7 +13834,7 @@ describe('Physics7_9', () => {
                        <mn data-latex="3">3</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -13877,12 +13845,12 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 6\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="6">6</mn>
                      </mtd>
@@ -13890,13 +13858,13 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="7">7</mn>
                      </mtd>
@@ -13904,14 +13872,14 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="8">8</mn>
                      </mtd>
@@ -13920,7 +13888,7 @@ describe('Physics7_9', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -13932,13 +13900,13 @@ describe('Physics7_9', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\dmat{1,2\\\\3\\\\4\\\\5\\\\6,7,8})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\dmat{1,2\\\\3\\\\4\\\\5\\\\6,7,8})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{1}\\\\ &amp;\\mqty{2\\\\3\\\\4\\\\5\\\\6}\\\\ &amp;&amp;\\mqty{7}\\\\ &amp;&amp;&amp;\\mqty{8}\\end{array}\\right)" data-latex="\\mqty(\\dmat{1,2\\\\3\\\\4\\\\5\\\\6,7,8})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2\\\\3\\\\4\\\\5\\\\6,7,8})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -13946,31 +13914,31 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2\\\\3\\\\4\\\\5\\\\6\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="3">3</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="5">5</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="6">6</mn>
                      </mtd>
@@ -13978,12 +13946,12 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="7">7</mn>
                      </mtd>
@@ -13991,13 +13959,13 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="8">8</mn>
                      </mtd>
@@ -14006,7 +13974,7 @@ describe('Physics7_9', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -14018,13 +13986,13 @@ describe('Physics7_9', () => {
     toXmlMatch(
       tex2mml('\\mqty(\\dmat{1,2&3\\\\4&5&6,7,8,\\dmat{9,10}})'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5&amp;6,7,8,\\dmat{9,10}})" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{1}\\\\ &amp;\\mqty{2&amp;3\\\\4&amp;5&amp;6}\\\\ &amp;&amp;\\mqty{7}\\\\ &amp;&amp;&amp;\\mqty{8}\\\\ &amp;&amp;&amp;&amp;\\mqty{\\dmat{9,10}}\\end{array}\\right)" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5&amp;6,7,8,\\dmat{9,10}})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5&amp;6,7,8,\\dmat{9,10}})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
@@ -14032,11 +14000,11 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -14044,7 +14012,7 @@ describe('Physics7_9', () => {
                        <mn data-latex="3">3</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="4">4</mn>
                      </mtd>
@@ -14058,12 +14026,12 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="7">7</mn>
                      </mtd>
@@ -14071,13 +14039,13 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="8">8</mn>
                      </mtd>
@@ -14085,17 +14053,17 @@ describe('Physics7_9', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{9}\\\\ &amp;\\mqty{10}\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
-                       <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                         <mtr data-latex-item="{}" data-latex="{}">
+                       <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 9\\end{array}">
+                         <mtr data-latex="{}">
                            <mtd>
                              <mn data-latex="9">9</mn>
                            </mtd>
@@ -14103,13 +14071,13 @@ describe('Physics7_9', () => {
                        </mtable>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd></mtd>
                      <mtd>
-                       <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                         <mtr data-latex-item="{}" data-latex="{}">
+                       <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 10\\end{array}">
+                         <mtr data-latex="{}">
                            <mtd>
-                             <mn data-latex="0">10</mn>
+                             <mn data-latex="10">10</mn>
                            </mtd>
                          </mtr>
                        </mtable>
@@ -14119,7 +14087,7 @@ describe('Physics7_9', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -14217,11 +14185,11 @@ describe('Automatic Bracing Macros Rest', () => {
       tex2mml('\\vqty\\Bigg{a}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vqty\\Bigg{a}" display="block">
          <mrow data-mjx-texclass="OPEN" data-latex="\\Biggl|">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
          <mi data-latex="a">a</mi>
          <mrow data-mjx-texclass="CLOSE" data-latex="\\vqty\\Bigg{a}">
-           <mo minsize="2.470em" maxsize="2.470em">|</mo>
+           <mo minsize="2.470em" maxsize="2.470em" fence="true" stretchy="true" symmetric="true">|</mo>
          </mrow>
        </math>`
     );
@@ -14819,11 +14787,11 @@ describe('Derivative Macros Rest', () => {
       tex2mml('\\derivative{x}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\derivative{x}" display="block">
          <mfrac data-latex="\\derivative{x}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\diffd ">
+           <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
              <mi mathvariant="normal" data-latex="d">d</mi>
            </mrow>
-           <mrow data-latex="\\diffd x  ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd x">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="x">x</mi>
@@ -14841,13 +14809,13 @@ describe('Derivative Macros Rest', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\derivative{x}{y}" display="block">
          <mfrac data-latex="\\derivative{x}{y}">
            <mrow data-latex="\\diffd x">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="x">x</mi>
            </mrow>
-           <mrow data-latex="\\diffd y  ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd y">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="y">y</mi>
@@ -14865,13 +14833,13 @@ describe('Derivative Macros Rest', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\derivative{x}{y}{z}" display="block">
          <mfrac data-latex="\\derivative{x}{y}">
            <mrow data-latex="\\diffd x">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="x">x</mi>
            </mrow>
-           <mrow data-latex="\\diffd y  ">
-             <mrow data-mjx-texclass="ORD" data-latex="\\diffd">
+           <mrow data-latex="\\diffd y">
+             <mrow data-mjx-texclass="ORD" data-latex="{\\rm d}">
                <mi mathvariant="normal" data-latex="d">d</mi>
              </mrow>
              <mi data-latex="y">y</mi>
@@ -14891,8 +14859,8 @@ describe('Derivative Macros Rest', () => {
       tex2mml('\\partialderivative{x}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\partialderivative{x}" display="block">
          <mfrac data-latex="\\partialderivative{x}">
-           <mi data-latex="\\partial ">&#x2202;</mi>
-           <mrow data-latex="\\partial x  ">
+           <mi data-latex="\\partial">&#x2202;</mi>
+           <mrow data-latex="\\partial x">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
@@ -14912,7 +14880,7 @@ describe('Derivative Macros Rest', () => {
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
-           <mrow data-latex="\\partial y  ">
+           <mrow data-latex="\\partial y">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="y">y</mi>
            </mrow>
@@ -14985,8 +14953,8 @@ describe('Derivative Macros Rest', () => {
       tex2mml('\\pderivative{x}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pderivative{x}" display="block">
          <mfrac data-latex="\\pderivative{x}">
-           <mi data-latex="\\partial ">&#x2202;</mi>
-           <mrow data-latex="\\partial x  ">
+           <mi data-latex="\\partial">&#x2202;</mi>
+           <mrow data-latex="\\partial x">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
@@ -15006,7 +14974,7 @@ describe('Derivative Macros Rest', () => {
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="x">x</mi>
            </mrow>
-           <mrow data-latex="\\partial y  ">
+           <mrow data-latex="\\partial y">
              <mi data-latex="\\partial">&#x2202;</mi>
              <mi data-latex="y">y</mi>
            </mrow>
@@ -15379,18 +15347,18 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\innerproduct{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\innerproduct{A}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{A}\\right\\rangle" data-latex="\\innerproduct{A}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\innerproduct{A}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -15402,18 +15370,18 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\innerproduct{A}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\innerproduct{A}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{B}\\right\\rangle" data-latex="\\innerproduct{A}{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\innerproduct{A}{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -15425,18 +15393,18 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\innerproduct{A}{B}{C}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\innerproduct{A}{B}{C}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{B}\\right\\rangle" data-latex="\\left\\langle{A}\\middle\\vert{B}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{A}\\middle\\vert{B}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{C}">
            <mi data-latex="C">C</mi>
@@ -15451,18 +15419,18 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\ip{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ip{A}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{A}\\right\\rangle" data-latex="\\ip{A}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ip{A}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -15474,18 +15442,18 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\ip{A}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ip{A}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{B}\\right\\rangle" data-latex="\\ip{A}{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\ip{A}{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -15497,18 +15465,18 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\ip{A}{B}{C}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ip{A}{B}{C}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\middle\\vert{B}\\right\\rangle" data-latex="\\left\\langle{A}\\middle\\vert{B}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{A}\\middle\\vert{B}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\vert" data-latex="\\middle\\vert">|</mo>
+           <mo stretchy="true" data-latex="\\middle\\vert">|</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\vert"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{C}">
            <mi data-latex="C">C</mi>
@@ -15523,22 +15491,22 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\op{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\op{A}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{A}\\middle\\rangle\\!\\middle\\langle{A}\\right\\vert" data-latex="\\op{A}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\op{A}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -15550,22 +15518,22 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\op{A}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\op{A}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{A}\\middle\\rangle\\!\\middle\\langle{B}\\right\\vert" data-latex="\\op{A}{B}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\op{A}{B}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
        </math>`
     );
@@ -15577,22 +15545,22 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\op{A}{B}{C}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\op{A}{B}{C}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{A}\\middle\\rangle\\!\\middle\\langle{B}\\right\\vert" data-latex="\\left\\vert{A}\\middle\\rangle\\!\\middle\\langle{B}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{A}\\middle\\rangle\\!\\middle\\langle{B}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\rangle" data-latex="\\middle\\rangle">&#x27E9;</mo>
+           <mo data-latex="\\middle\\rangle">&#x27E9;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\rangle"></mrow>
            <mspace width="-0.167em" data-latex="\\!"></mspace>
            <mrow data-mjx-texclass="CLOSE"></mrow>
-           <mo data-latex-item="\\middle\\langle" data-latex="\\middle\\langle">&#x27E8;</mo>
+           <mo data-latex="\\middle\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\langle"></mrow>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{C}">
            <mi data-latex="C">C</mi>
@@ -15607,12 +15575,12 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\expectationvalue{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\expectationvalue{A}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle {A} \\right\\rangle" data-latex="\\expectationvalue{A}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle " data-latex="\\left\\langle ">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\expectationvalue{A}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle ">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -15624,22 +15592,22 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\expectationvalue{A}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\expectationvalue{A}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{B}\\right\\vert" data-latex="\\left\\langle{B}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{B}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{B}\\right\\rangle" data-latex="\\left\\vert{B}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{B}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -15651,22 +15619,22 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\expectationvalue{A}{B}{C}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\expectationvalue{A}{B}{C}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{B}\\right\\vert" data-latex="\\left\\langle{B}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{B}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{B}\\right\\rangle" data-latex="\\left\\vert{B}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{B}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{C}">
            <mi data-latex="C">C</mi>
@@ -15681,12 +15649,12 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\expval{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\expval{A}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle {A} \\right\\rangle" data-latex="\\expval{A}">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle " data-latex="\\left\\langle ">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\expval{A}">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle ">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -15698,22 +15666,22 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\expval{A}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\expval{A}{B}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{B}\\right\\vert" data-latex="\\left\\langle{B}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{B}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{B}\\right\\rangle" data-latex="\\left\\vert{B}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{B}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -15725,22 +15693,22 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\expval{A}{B}{C}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\expval{A}{B}{C}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{B}\\right\\vert" data-latex="\\left\\langle{B}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{B}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{A}">
            <mi data-latex="A">A</mi>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{B}\\right\\rangle" data-latex="\\left\\vert{B}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{B}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{B}">
              <mi data-latex="B">B</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{C}">
            <mi data-latex="C">C</mi>
@@ -15755,22 +15723,22 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\matrixelement{A}{B}{C}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixelement{A}{B}{C}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\right\\vert" data-latex="\\left\\langle{A}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{A}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{B}">
            <mi data-latex="B">B</mi>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{C}\\right\\rangle" data-latex="\\left\\vert{C}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{C}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{C}">
              <mi data-latex="C">C</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
        </math>`
     );
@@ -15782,22 +15750,22 @@ describe('Bra-Ket Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\matrixelement{A}{B}{C}{D}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixelement{A}{B}{C}{D}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\langle{A}\\right\\vert" data-latex="\\left\\langle{A}\\right\\vert">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\langle" data-latex="\\left\\langle">&#x27E8;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\langle{A}\\right\\vert">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\langle">&#x27E8;</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{A}">
              <mi data-latex="A">A</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\vert" data-latex="\\right\\vert">|</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\vert">|</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{B}">
            <mi data-latex="B">B</mi>
          </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\vert{C}\\right\\rangle" data-latex="\\left\\vert{C}\\right\\rangle">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\vert" data-latex="\\left\\vert">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\vert{C}\\right\\rangle">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\vert">|</mo>
            <mrow data-mjx-texclass="ORD" data-latex="{C}">
              <mi data-latex="C">C</mi>
            </mrow>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\rangle" data-latex="\\right\\rangle">&#x27E9;</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\rangle">&#x27E9;</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="{D}">
            <mi data-latex="D">D</mi>
@@ -15821,10 +15789,10 @@ describe('Matrix Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\zeromatrix{2}{3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\zeromatrix{2}{3}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; 0\\\\ 0 &amp; 0 &amp; 0\\end{array}\\right)" data-latex="\\mqty(\\zeromatrix{2}{3})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\zeromatrix{2}{3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -15835,7 +15803,7 @@ describe('Matrix Macros Rest', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -15847,7 +15815,7 @@ describe('Matrix Macros Rest', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -15859,10 +15827,10 @@ describe('Matrix Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\paulimatrix{0}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\paulimatrix{0}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left0\\\\ 0 &amp; 1\\end{array}\\right)" data-latex="\\mqty(\\paulimatrix{0})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\paulimatrix{0})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
@@ -15870,7 +15838,7 @@ describe('Matrix Macros Rest', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -15879,7 +15847,7 @@ describe('Matrix Macros Rest', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -15891,10 +15859,10 @@ describe('Matrix Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\paulimatrix{1}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\paulimatrix{1}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left1\\\\ 1 &amp; 0\\end{array}\\right)" data-latex="\\mqty(\\paulimatrix{1})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\paulimatrix{1})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -15902,7 +15870,7 @@ describe('Matrix Macros Rest', () => {
                  <mn data-latex="1">1</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
@@ -15911,7 +15879,7 @@ describe('Matrix Macros Rest', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -15923,10 +15891,10 @@ describe('Matrix Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\paulimatrix{2}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\paulimatrix{2}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left-i\\\\ i &amp; 0\\end{array}\\right)" data-latex="\\mqty(\\paulimatrix{2})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\paulimatrix{2})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -15935,7 +15903,7 @@ describe('Matrix Macros Rest', () => {
                  <mi data-latex="i">i</mi>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mi data-latex="i">i</mi>
                </mtd>
@@ -15944,7 +15912,7 @@ describe('Matrix Macros Rest', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -15956,10 +15924,10 @@ describe('Matrix Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\paulimatrix{3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\paulimatrix{3}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left0\\\\ 0 &amp; -1\\end{array}\\right)" data-latex="\\mqty(\\paulimatrix{3})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\paulimatrix{3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="1">1</mn>
                </mtd>
@@ -15967,7 +15935,7 @@ describe('Matrix Macros Rest', () => {
                  <mn data-latex="0">0</mn>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
                  <mn data-latex="0">0</mn>
                </mtd>
@@ -15977,7 +15945,7 @@ describe('Matrix Macros Rest', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -15989,10 +15957,10 @@ describe('Matrix Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\paulimatrix{4}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\paulimatrix{4}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\leftarray}\\right)" data-latex="\\mqty(\\paulimatrix{4})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}"></mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\paulimatrix{4})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}"></mtable>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -16004,13 +15972,13 @@ describe('Matrix Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\diagonalmatrix{0,1\\\\2&3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\diagonalmatrix{0,1\\\\2&amp;3}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\left{0}\\\\ &amp;\\mqty{1\\\\2&amp;3}\\end{array}\\right)" data-latex="\\mqty(\\diagonalmatrix{0,1\\\\2&amp;3})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\diagonalmatrix{0,1\\\\2&amp;3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 0\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="0">0</mn>
                      </mtd>
@@ -16018,16 +15986,16 @@ describe('Matrix Macros Rest', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\\\2&amp;3\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -16039,7 +16007,7 @@ describe('Matrix Macros Rest', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -16051,14 +16019,14 @@ describe('Matrix Macros Rest', () => {
     toXmlMatch(
       tex2mml('\\pmqty{\\antidiagonalmatrix{0,1\\\\2&3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\pmqty{\\antidiagonalmatrix{0,1\\\\2&amp;3}}" display="block">
-         <mrow data-mjx-texclass="INNER" data-latex-item="\\lefty{0}\\\\ \\mqty{1\\\\2&amp;3}\\end{array}\\right)" data-latex="\\mqty(\\antidiagonalmatrix{0,1\\\\2&amp;3})">
-           <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-             <mtr data-latex-item="{}" data-latex="{}">
+         <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\antidiagonalmatrix{0,1\\\\2&amp;3})">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+             <mtr data-latex="{}">
                <mtd></mtd>
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 0\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="0">0</mn>
                      </mtd>
@@ -16066,15 +16034,15 @@ describe('Matrix Macros Rest', () => {
                  </mtable>
                </mtd>
              </mtr>
-             <mtr data-latex-item="{}" data-latex="{}">
+             <mtr data-latex="{}">
                <mtd>
-                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="{array}">
-                   <mtr data-latex-item="{}" data-latex="{}">
+                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\\\2&amp;3\\end{array}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="1">1</mn>
                      </mtd>
                    </mtr>
-                   <mtr data-latex-item="{}" data-latex="{}">
+                   <mtr data-latex="{}">
                      <mtd>
                        <mn data-latex="2">2</mn>
                      </mtd>
@@ -16086,7 +16054,7 @@ describe('Matrix Macros Rest', () => {
                </mtd>
              </mtr>
            </mtable>
-           <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
          </mrow>
        </math>`
     );
@@ -16137,7 +16105,7 @@ describe('Rest for Completion', () => {
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
          <mrow data-latex=")">
            <mo data-mjx-texclass="OPEN">(</mo>
-           <mfrac data-latex-item="\\over">
+           <mfrac>
              <mn data-latex="1">1</mn>
              <mn data-latex="2">2</mn>
            </mfrac>
@@ -16165,9 +16133,7 @@ describe('Options', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vnabla" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\vnabla">
            <mover>
-             <mrow data-mjx-texclass="ORD">
-               <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
-             </mrow>
+             <mo mathvariant="bold" data-latex="\\gradientnabla">&#x2207;</mo>
              <mo stretchy="false">&#x2192;</mo>
            </mover>
          </mrow>

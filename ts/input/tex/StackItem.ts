@@ -25,6 +25,7 @@ import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { FactoryNodeClass } from '../../core/Tree/Factory.js';
 import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
+import { TexConstant } from './TexConstants.js';
 
 // Union types for abbreviation.
 export type EnvProp = string | number | boolean;
@@ -351,6 +352,14 @@ export interface StackItem extends NodeStack {
    * @returns {CheckType} True/false or an item or node.
    */
   checkItem(item: StackItem): CheckType;
+
+  /**
+   * Adds auxiliary attributes for LaTeX output to node.
+   *
+   * @param {MmlNode} node The current node.
+   * @param {string=} prefix A prefix for the LaTeX command.
+   */
+  addLatexItem(node: MmlNode, prefix?: string): void;
 }
 
 export interface StackItemClass extends FactoryNodeClass<StackItem> {
@@ -562,5 +571,22 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   public getErrors(kind: string): string[] {
     const CLASS = this.constructor as typeof BaseItem;
     return CLASS.errors[kind] || BaseItem.errors[kind];
+  }
+
+  /**
+   * Adds auxiliary attributes for LaTeX output to node.
+   *
+   * @param {MmlNode} node The current node.
+   * @param {string=} prefix A prefix for the LaTeX command.
+   */
+  public addLatexItem(node: MmlNode, prefix: string = '') {
+    const str = this.startStr.slice(this.startI, this.stopI);
+    if (str) {
+      const tex = prefix ? prefix + str : str;
+      node.attributes.set(TexConstant.Attr.LATEXITEM, tex);
+      if (tex !== '}') {
+        node.attributes.set(TexConstant.Attr.LATEX, tex);
+      }
+    }
   }
 }

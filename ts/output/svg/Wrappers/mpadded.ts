@@ -48,7 +48,8 @@ import { MmlMpadded } from '../../../core/MmlTree/MmlNodes/mpadded.js';
  * @template D  The Document class
  */
 export interface SvgMpaddedNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMpadded<
       N,
       T,
@@ -72,7 +73,8 @@ export interface SvgMpaddedNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMpaddedClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMpaddedClass<
       N,
       T,

@@ -171,6 +171,18 @@ export function CommonMpaddedMixin<
     extends Base
     implements CommonMpadded<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
   {
+    get containerWidth(): number {
+      const attributes = this.node.attributes;
+      const w = attributes.get('width').toString();
+      if (
+        !w.match(/^[-+]|%$/) &&
+        attributes.get('data-overflow') === 'linebreak'
+      ) {
+        return this.length2em(w);
+      }
+      return this.parent.containerWidth;
+    }
+
     /**
      * @override
      */

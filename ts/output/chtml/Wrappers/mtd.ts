@@ -49,7 +49,8 @@ import { StyleJson } from '../../../util/StyleJson.js';
  * @template D  The Document class
  */
 export interface ChtmlMtdNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMtd<
       N,
       T,
@@ -73,7 +74,8 @@ export interface ChtmlMtdNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMtdClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMtdClass<
       N,
       T,

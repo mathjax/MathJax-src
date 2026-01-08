@@ -56,7 +56,8 @@ import { STATE } from '../../../core/MathItem.js';
  * @template D  The Document class
  */
 export interface SvgMactionNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMaction<
       N,
       T,
@@ -91,7 +92,8 @@ export interface SvgMactionNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMactionClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMactionClass<
       N,
       T,
@@ -186,6 +188,24 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
         'font-size': '90%',
         'background-color': '#F8F8F8',
         color: 'black',
+      },
+      'g[data-mjx-collapsed]': {
+        fill: '#55F',
+      },
+
+      '@media (prefers-color-scheme: dark) /* svg maction */': {
+        'mjx-tool > mjx-tip': {
+          'background-color': '#303030',
+          color: '#E0E0E0',
+          'box-shadow': '2px 2px 5px #000',
+        },
+        'mjx-status': {
+          'background-color': '#303030',
+          color: '#E0E0E0',
+        },
+        'g[data-mjx-collapsed]': {
+          fill: '#88F',
+        },
       },
     };
 

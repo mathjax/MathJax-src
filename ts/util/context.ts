@@ -75,6 +75,6 @@ export const context = {
 if (context.os === 'Windows') {
   context.path = (file: string) =>
     file.match(/^[/\\]?[a-zA-Z]:[/\\]/)
-      ? file.replace(/\\/g, '/').replace(/^\//, '')
-      : file;
+      ? 'file://' + file.replace(/\\/g, '/').replace(/^\//, '')
+      : file.replace(/^\//, 'file:///');
 }

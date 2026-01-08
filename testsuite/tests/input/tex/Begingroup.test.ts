@@ -40,10 +40,10 @@ describe('Begingroup', () => {
   test('Begingroup Def Single', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\endgroup \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\endgroup \\x\" display=\"block\">
-         <mi data-latex=\"\\def\\x{B}\">A</mi>
-         <mi data-latex=\"\\endgroup\">B</mi>
-         <mi data-latex=\"A\">A</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\endgroup \\x" display="block">
+         <mi data-latex="\\def\\x{B}">A</mi>
+         <mi data-latex="\\endgroup">B</mi>
+         <mi data-latex="A">A</mi>
        </math>`
     );
   });
@@ -53,12 +53,12 @@ describe('Begingroup', () => {
   test('Begingroup Def Nested', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\begingroup \\def\\x{C} \\x \\endgroup \\x \\endgroup \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\begingroup \\def\\x{C} \\x \\endgroup \\x \\endgroup \\x\" display=\"block\">
-         <mi data-latex=\"\\def\\x{B}\">A</mi>
-         <mi data-latex=\"\\def\\x{C}\">B</mi>
-         <mi data-latex=\"\\endgroup\">C</mi>
-         <mi data-latex=\"\\endgroup\">B</mi>
-         <mi data-latex=\"A\">A</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\begingroup \\def\\x{C} \\x \\endgroup \\x \\endgroup \\x" display="block">
+         <mi data-latex="\\def\\x{B}">A</mi>
+         <mi data-latex="\\def\\x{C}">B</mi>
+         <mi data-latex="\\endgroup">C</mi>
+         <mi data-latex="\\endgroup">B</mi>
+         <mi data-latex="A">A</mi>
        </math>`
     );
   });
@@ -68,10 +68,10 @@ describe('Begingroup', () => {
   test('Begingroup Let Single', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\x \\begingroup \\let\\x=B \\x \\endgroup \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\x \\begingroup \\let\\x=B \\x \\endgroup \\x\" display=\"block\">
-         <mi data-latex=\"\\let\\x=B\">A</mi>
-         <mi data-latex=\"\\endgroup\">B</mi>
-         <mi data-latex=\"A\">A</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\let\\x=B \\x \\endgroup \\x" display="block">
+         <mi data-latex="\\let\\x=B">A</mi>
+         <mi data-latex="\\endgroup">B</mi>
+         <mi data-latex="A">A</mi>
        </math>`
     );
   });
@@ -81,12 +81,12 @@ describe('Begingroup', () => {
   test('Begingroup Let Nested', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\x \\begingroup \\let\\x=B \\x \\begingroup \\let\\x=C \\x \\endgroup \\x \\endgroup \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\x \\begingroup \\let\\x=B \\x \\begingroup \\let\\x=C \\x \\endgroup \\x \\endgroup \\x\" display=\"block\">
-         <mi data-latex=\"\\let\\x=B\">A</mi>
-         <mi data-latex=\"\\let\\x=C\">B</mi>
-         <mi data-latex=\"\\endgroup\">C</mi>
-         <mi data-latex=\"\\endgroup\">B</mi>
-         <mi data-latex=\"A\">A</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\let\\x=B \\x \\begingroup \\let\\x=C \\x \\endgroup \\x \\endgroup \\x" display="block">
+         <mi data-latex="\\let\\x=B">A</mi>
+         <mi data-latex="\\let\\x=C">B</mi>
+         <mi data-latex="\\endgroup">C</mi>
+         <mi data-latex="\\endgroup">B</mi>
+         <mi data-latex="A">A</mi>
        </math>`
     );
   });
@@ -96,16 +96,16 @@ describe('Begingroup', () => {
   test('Begingroup Env Single', () => {
     toXmlMatch(
       tex2mml('\\newenvironment{test}{[}{]}\\begin{test}X\\end{test}\\begingroup\\newenvironment{test}{(}{)}\\begin{test}X\\end{test}\\endgroup\\begin{test}X\\end{test}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\newenvironment{test}{[}{]}\\begin{test}X\\end{test}\\begingroup\\newenvironment{test}{(}{)}\\begin{test}X\\end{test}\\endgroup\\begin{test}X\\end{test}\" display=\"block\">
-         <mo data-latex=\"[\" stretchy=\"false\">[</mo>
-         <mi data-latex=\"X\">X</mi>
-         <mo data-latex=\"]\" stretchy=\"false\">]</mo>
-         <mo data-latex=\"(\" stretchy=\"false\">(</mo>
-         <mi data-latex=\"X\">X</mi>
-         <mo data-latex=\")\" stretchy=\"false\">)</mo>
-         <mo data-latex=\"[\" stretchy=\"false\">[</mo>
-         <mi data-latex=\"X\">X</mi>
-         <mo data-latex=\"]\" stretchy=\"false\">]</mo>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newenvironment{test}{[}{]}\\begin{test}X\\end{test}\\begingroup\\newenvironment{test}{(}{)}\\begin{test}X\\end{test}\\endgroup\\begin{test}X\\end{test}" display="block">
+         <mo data-latex="[" stretchy="false">[</mo>
+         <mi data-latex="X">X</mi>
+         <mo data-latex="]" stretchy="false">]</mo>
+         <mo data-latex="(" stretchy="false">(</mo>
+         <mi data-latex="X">X</mi>
+         <mo data-latex=")" stretchy="false">)</mo>
+         <mo data-latex="[" stretchy="false">[</mo>
+         <mi data-latex="X">X</mi>
+         <mo data-latex="]" stretchy="false">]</mo>
        </math>`
     );
   });
@@ -115,21 +115,21 @@ describe('Begingroup', () => {
   test('Begingroup Delimiter Single', () => {
     toXmlMatch(
       tex2mml('\\let\\x=\\| \\left\\x A\\right\\x \\begingroup \\let\\x=| \\left\\x B \\right\\x \\endgroup \\left\\x C \\right\\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\let\\x=\\| \\left\\x A\\right\\x \\begingroup \\let\\x=| \\left\\x B \\right\\x \\endgroup \\left\\x C \\right\\x\" display=\"block\">
-         <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\x A\\right\\x \" data-latex=\"\\left\\x A\\right\\x \">
-           <mo data-mjx-texclass=\"OPEN\" symmetric=\"true\" data-latex-item=\"\\left\\x \" data-latex=\"\\left\\x \">&#x2016;</mo>
-           <mi data-latex=\"A\">A</mi>
-           <mo data-mjx-texclass=\"CLOSE\" symmetric=\"true\" data-latex-item=\"\\right\\x \" data-latex=\"\\right\\x \">&#x2016;</mo>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\x=\\| \\left\\x A\\right\\x \\begingroup \\let\\x=| \\left\\x B \\right\\x \\endgroup \\left\\x C \\right\\x" display="block">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\x A\\right\\x ">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">&#x2016;</mo>
+           <mi data-latex="A">A</mi>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x ">&#x2016;</mo>
          </mrow>
-         <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\x B \\right\\x \" data-latex=\"\\left\\x B \\right\\x \">
-           <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left\\x \" data-latex=\"\\left\\x \">|</mo>
-           <mi data-latex=\"B\">B</mi>
-           <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right\\x \" data-latex=\"\\right\\x \">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\x B \\right\\x ">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">|</mo>
+           <mi data-latex="B">B</mi>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x ">|</mo>
          </mrow>
-         <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\x C \\right\\x\" data-latex=\"\\left\\x C \\right\\x\">
-           <mo data-mjx-texclass=\"OPEN\" symmetric=\"true\" data-latex-item=\"\\left\\x \" data-latex=\"\\left\\x \">&#x2016;</mo>
-           <mi data-latex=\"C\">C</mi>
-           <mo data-mjx-texclass=\"CLOSE\" symmetric=\"true\" data-latex-item=\"\\right\\x\" data-latex=\"\\right\\x\">&#x2016;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\x C \\right\\x">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">&#x2016;</mo>
+           <mi data-latex="C">C</mi>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -140,31 +140,31 @@ describe('Begingroup', () => {
   test('Begingroup Delimiter Nested', () => {
     toXmlMatch(
       tex2mml('\\let\\x=\\| \\left\\x A\\right\\x \\begingroup \\let\\x=| \\left\\x B \\right\\x \\begingroup \\let\\x=( \\left\\x C \\right\\x \\endgroup \\left\\x D \\right\\x \\endgroup \\left\\x E \\right\\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\let\\x=\\| \\left\\x A\\right\\x \\begingroup \\let\\x=| \\left\\x B \\right\\x \\begingroup \\let\\x=( \\left\\x C \\right\\x \\endgroup \\left\\x D \\right\\x \\endgroup \\left\\x E \\right\\x\" display=\"block\">
-         <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\x A\\right\\x \" data-latex=\"\\left\\x A\\right\\x \">
-           <mo data-mjx-texclass=\"OPEN\" symmetric=\"true\" data-latex-item=\"\\left\\x \" data-latex=\"\\left\\x \">&#x2016;</mo>
-           <mi data-latex=\"A\">A</mi>
-           <mo data-mjx-texclass=\"CLOSE\" symmetric=\"true\" data-latex-item=\"\\right\\x \" data-latex=\"\\right\\x \">&#x2016;</mo>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\x=\\| \\left\\x A\\right\\x \\begingroup \\let\\x=| \\left\\x B \\right\\x \\begingroup \\let\\x=( \\left\\x C \\right\\x \\endgroup \\left\\x D \\right\\x \\endgroup \\left\\x E \\right\\x" display="block">
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\x A\\right\\x ">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">&#x2016;</mo>
+           <mi data-latex="A">A</mi>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x ">&#x2016;</mo>
          </mrow>
-         <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\x B \\right\\x \" data-latex=\"\\left\\x B \\right\\x \">
-           <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left\\x \" data-latex=\"\\left\\x \">|</mo>
-           <mi data-latex=\"B\">B</mi>
-           <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right\\x \" data-latex=\"\\right\\x \">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\x B \\right\\x ">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">|</mo>
+           <mi data-latex="B">B</mi>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x ">|</mo>
          </mrow>
-         <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\x C \\right\\x \" data-latex=\"\\left\\x C \\right\\x \">
-           <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left\\x \" data-latex=\"\\left\\x \">(</mo>
-           <mi data-latex=\"C\">C</mi>
-           <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right\\x \" data-latex=\"\\right\\x \">(</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\x C \\right\\x ">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">(</mo>
+           <mi data-latex="C">C</mi>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x ">(</mo>
          </mrow>
-         <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\x D \\right\\x \" data-latex=\"\\left\\x D \\right\\x \">
-           <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left\\x \" data-latex=\"\\left\\x \">|</mo>
-           <mi data-latex=\"D\">D</mi>
-           <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right\\x \" data-latex=\"\\right\\x \">|</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\x D \\right\\x ">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">|</mo>
+           <mi data-latex="D">D</mi>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x ">|</mo>
          </mrow>
-         <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\x E \\right\\x\" data-latex=\"\\left\\x E \\right\\x\">
-           <mo data-mjx-texclass=\"OPEN\" symmetric=\"true\" data-latex-item=\"\\left\\x \" data-latex=\"\\left\\x \">&#x2016;</mo>
-           <mi data-latex=\"E\">E</mi>
-           <mo data-mjx-texclass=\"CLOSE\" symmetric=\"true\" data-latex-item=\"\\right\\x\" data-latex=\"\\right\\x\">&#x2016;</mo>
+         <mrow data-mjx-texclass="INNER" data-latex="\\left\\x E \\right\\x">
+           <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">&#x2016;</mo>
+           <mi data-latex="E">E</mi>
+           <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x">&#x2016;</mo>
          </mrow>
        </math>`
     );
@@ -175,11 +175,11 @@ describe('Begingroup', () => {
   test('Begingroup Global', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\global\\def\\x{C} \\x \\endgroup \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\global\\def\\x{C} \\x \\endgroup \\x\" display=\"block\">
-         <mi data-latex=\"\\def\\x{B}\">A</mi>
-         <mi data-latex=\"\\def\\x{C}\">B</mi>
-         <mi data-latex=\"\\endgroup\">C</mi>
-         <mi data-latex=\"C\">C</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\global\\def\\x{C} \\x \\endgroup \\x" display="block">
+         <mi data-latex="\\def\\x{B}">A</mi>
+         <mi data-latex="\\def\\x{C}">B</mi>
+         <mi data-latex="\\endgroup">C</mi>
+         <mi data-latex="C">C</mi>
        </math>`
     );
   });
@@ -189,12 +189,12 @@ describe('Begingroup', () => {
   test('Begingroup Global Nested', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\begingroup \\gdef\\x{C} \\x \\endgroup \\x \\endgroup \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\begingroup \\gdef\\x{C} \\x \\endgroup \\x \\endgroup \\x\" display=\"block\">
-         <mi data-latex=\"\\def\\x{B}\">A</mi>
-         <mi data-latex=\"\\def\\x{C}\">B</mi>
-         <mi data-latex=\"\\endgroup\">C</mi>
-         <mi data-latex=\"\\endgroup\">C</mi>
-         <mi data-latex=\"C\">C</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\begingroup \\gdef\\x{C} \\x \\endgroup \\x \\endgroup \\x" display="block">
+         <mi data-latex="\\def\\x{B}">A</mi>
+         <mi data-latex="\\def\\x{C}">B</mi>
+         <mi data-latex="\\endgroup">C</mi>
+         <mi data-latex="\\endgroup">C</mi>
+         <mi data-latex="C">C</mi>
        </math>`
     );
   });
@@ -204,11 +204,11 @@ describe('Begingroup', () => {
   test('Begingroup Global Let', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\x \\begingroup \\let\\x=B \\x \\global\\let\\x=C \\x \\endgroup \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\x \\begingroup \\let\\x=B \\x \\global\\let\\x=C \\x \\endgroup \\x\" display=\"block\">
-         <mi data-latex=\"\\let\\x=B\">A</mi>
-         <mi data-latex=\"\\let\\x=C\">B</mi>
-         <mi data-latex=\"\\endgroup\">C</mi>
-         <mi data-latex=\"C\">C</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\let\\x=B \\x \\global\\let\\x=C \\x \\endgroup \\x" display="block">
+         <mi data-latex="\\let\\x=B">A</mi>
+         <mi data-latex="\\let\\x=C">B</mi>
+         <mi data-latex="\\endgroup">C</mi>
+         <mi data-latex="C">C</mi>
        </math>`
     );
   });
@@ -218,13 +218,13 @@ describe('Begingroup', () => {
   test('Begingroup Persists', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\begingroup \\def\\x{B}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\begingroup \\def\\x{B}\" display=\"block\"></math>`
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\begingroup \\def\\x{B}" display="block"></math>`
          );
          toXmlMatch(
            tex2mml('\\x \\endgroup \\x'),
-           `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\x \\endgroup \\x\" display=\"block\">
-              <mi data-latex=\"\\endgroup\">B</mi>
-              <mi data-latex=\"A\">A</mi>
+           `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\x \\endgroup \\x" display="block">
+              <mi data-latex="\\endgroup">B</mi>
+              <mi data-latex="A">A</mi>
             </math>`
     );
   });
@@ -234,8 +234,8 @@ describe('Begingroup', () => {
   test('Begingroup Reset', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\begingroup \\def\\x{B} \\begingroupReset \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\begingroup \\def\\x{B} \\begingroupReset \\x\" display=\"block\">
-         <mi data-latex=\"A\">A</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\begingroup \\def\\x{B} \\begingroupReset \\x" display="block">
+         <mi data-latex="A">A</mi>
        </math>`
     );
   });
@@ -270,8 +270,8 @@ describe('Begingroup', () => {
   test('Begingroup reset 2', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\begingroup \\def\\x{B} \\begingroupReset \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\begingroup \\def\\x{B} \\begingroupReset \\x\" display=\"block\">
-         <mi data-latex=\"A\">A</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\begingroup \\def\\x{B} \\begingroupReset \\x" display="block">
+         <mi data-latex="A">A</mi>
        </math>`
     );
   });
@@ -288,8 +288,8 @@ describe('Begingroup', () => {
   test('Begingroup let undefined 2', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\begingroup \\let\\x=\\undefined \\endgroup \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\begingroup \\let\\x=\\undefined \\endgroup \\x\" display=\"block\">
-         <mi data-latex=\"A\">A</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\begingroup \\let\\x=\\undefined \\endgroup \\x" display="block">
+         <mi data-latex="A">A</mi>
        </math>`
     );
   });
@@ -299,12 +299,12 @@ describe('Begingroup', () => {
   test('Begingroup global def undefines local delimiter', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\x \\begingroup \\let\\x=\\| \\x \\begingroup \\gdef\\x{C} \\x \\endgroup \\x \\endgroup \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\x \\begingroup \\let\\x=\\| \\x \\begingroup \\gdef\\x{C} \\x \\endgroup \\x \\endgroup \\x\" display=\"block\">
-         <mi data-latex=\"\\let\\x=\\|\">A</mi>
-         <mo data-mjx-texclass=\"ORD\" fence=\"false\" stretchy=\"false\" data-latex=\"\\def\\x{C}\">&#x2016;</mo>
-         <mi data-latex=\"\\endgroup\">C</mi>
-         <mi data-latex=\"\\endgroup\">C</mi>
-         <mi data-latex=\"C\">C</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\let\\x=\\| \\x \\begingroup \\gdef\\x{C} \\x \\endgroup \\x \\endgroup \\x" display="block">
+         <mi data-latex="\\let\\x=\\|">A</mi>
+         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\def\\x{C}">&#x2016;</mo>
+         <mi data-latex="\\endgroup">C</mi>
+         <mi data-latex="\\endgroup">C</mi>
+         <mi data-latex="C">C</mi>
        </math>`
     );
   });
@@ -314,12 +314,12 @@ describe('Begingroup', () => {
   test('Begingroup global let delimiter undefines local def', () => {
     toXmlMatch(
       tex2mml('\\let\\x=| \\x \\begingroup \\def\\x{A} \\x \\begingroup \\global\\let\\x=\\| \\x \\endgroup \\x \\endgroup \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\let\\x=| \\x \\begingroup \\def\\x{A} \\x \\begingroup \\global\\let\\x=\\| \\x \\endgroup \\x \\endgroup \\x\" display=\"block\">
-         <mo data-mjx-texclass=\"ORD\" fence=\"false\" stretchy=\"false\" data-latex=\"\\def\\x{A}\">|</mo>
-         <mi data-latex=\"\\let\\x=\\|\">A</mi>
-         <mo data-mjx-texclass=\"ORD\" fence=\"false\" stretchy=\"false\" data-latex=\"\\endgroup\">&#x2016;</mo>
-         <mo data-mjx-texclass=\"ORD\" fence=\"false\" stretchy=\"false\" data-latex=\"\\endgroup\">&#x2016;</mo>
-         <mo data-mjx-texclass=\"ORD\" fence=\"false\" stretchy=\"false\" data-latex=\"\\x\">&#x2016;</mo>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\x=| \\x \\begingroup \\def\\x{A} \\x \\begingroup \\global\\let\\x=\\| \\x \\endgroup \\x \\endgroup \\x" display="block">
+         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\def\\x{A}">|</mo>
+         <mi data-latex="\\let\\x=\\|">A</mi>
+         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\endgroup">&#x2016;</mo>
+         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\endgroup">&#x2016;</mo>
+         <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\x">&#x2016;</mo>
        </math>`
     );
   });
@@ -329,8 +329,8 @@ describe('Begingroup', () => {
   test('Begingroup sandbox', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\begingroupSandbox \\def\\x{B} \\begingroupReset \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\begingroupSandbox \\def\\x{B} \\begingroupReset \\x\" display=\"block\">
-         <mi data-latex=\"B\">B</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\begingroupSandbox \\def\\x{B} \\begingroupReset \\x" display="block">
+         <mi data-latex="B">B</mi>
        </math>`
     );
   });
@@ -340,8 +340,8 @@ describe('Begingroup', () => {
   test('Begingroup double sandbox', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\begingroupSandbox \\def\\x{B} \\begingroupSandbox \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\begingroupSandbox \\def\\x{B} \\begingroupSandbox \\x\" display=\"block\">
-         <mi data-latex=\"A\">A</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\begingroupSandbox \\def\\x{B} \\begingroupSandbox \\x" display="block">
+         <mi data-latex="A">A</mi>
        </math>`
     );
   });

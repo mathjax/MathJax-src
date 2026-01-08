@@ -110,9 +110,20 @@ export class SVG<N, T, D> extends CommonOutputJax<
       fill: 'blue',
       stroke: 'blue',
     },
-    'rect[sre-highlighter-added]:has(+ .mjx-selected)': {
+    [[
+      'rect[data-sre-highlighter-added]:has(+ .mjx-selected)',
+      'rect[data-sre-highlighter-bbox].mjx-selected',
+    ].join(', ')]: {
       stroke: 'black',
       'stroke-width': '80px',
+    },
+    '@media (prefers-color-scheme: dark)': {
+      [[
+        'rect[data-sre-highlighter-added]:has(+ .mjx-selected)',
+        'rect[data-sre-highlighter-bbox].mjx-selected',
+      ].join(', ')]: {
+        stroke: '#C8C8C8',
+      },
     },
   };
 
@@ -299,6 +310,11 @@ export class SVG<N, T, D> extends CommonOutputJax<
       const adaptor = this.adaptor;
       adaptor.setStyle(svg, 'min-width', adaptor.getStyle(svg, 'width'));
       adaptor.setAttribute(svg, 'width', pwidth);
+      adaptor.setAttribute(
+        svg,
+        'data-mjx-viewBox',
+        adaptor.getAttribute(svg, 'viewBox')
+      );
       adaptor.removeAttribute(svg, 'viewBox');
       const scale = this.fixed(
         wrapper.metrics.ex / (this.font.params.x_height * 1000),

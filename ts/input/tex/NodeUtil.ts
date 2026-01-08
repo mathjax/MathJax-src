@@ -228,7 +228,9 @@ const NodeUtil = {
    */
   copyAttributes(oldNode: MmlNode, newNode: MmlNode) {
     newNode.attributes = oldNode.attributes;
-    this.setProperties(newNode, oldNode.getAllProperties());
+    for (const [prop, value] of Object.entries(oldNode.getAllProperties())) {
+      newNode.setProperty(prop, value);
+    }
   },
 
   /**

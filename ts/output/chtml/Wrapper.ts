@@ -71,31 +71,30 @@ export type ChtmlConstructor<N, T, D> = Constructor<ChtmlWrapper<N, T, D>>;
 /**
  *  The type of the ChtmlWrapper class (used when creating the wrapper factory for this class)
  */
-export interface ChtmlWrapperClass<N, T, D>
-  extends CommonWrapperClass<
-    //
-    // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
-    //
-    N,
-    T,
-    D,
-    //
-    // The Wrapper type and its Factory and Class (these need to know N, T, and D)
-    //
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    //
-    // These are font-related objects that depend on the output jax; e,g. the character options
-    //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
-    //
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass
-  > {
+export interface ChtmlWrapperClass<N, T, D> extends CommonWrapperClass<
+  //
+  // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
+  //
+  N,
+  T,
+  D,
+  //
+  // The Wrapper type and its Factory and Class (these need to know N, T, and D)
+  //
+  CHTML<N, T, D>,
+  ChtmlWrapper<N, T, D>,
+  ChtmlWrapperFactory<N, T, D>,
+  ChtmlWrapperClass<N, T, D>,
+  //
+  // These are font-related objects that depend on the output jax; e,g. the character options
+  //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
+  //
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass
+> {
   /**
    * If true, this causes a style for the node type to be generated automatically
    * that sets display:inline-block (as needed for the output for MmlNodes).
@@ -444,11 +443,15 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
     const adaptor = this.adaptor;
     if (align === 'center' || align === 'left') {
       const L = this.getBBox().L;
-      adaptor.setStyle(chtml, 'margin-left', this.em(shift + L));
+      if (shift + L) {
+        adaptor.setStyle(chtml, 'margin-left', this.em(shift + L));
+      }
     }
     if (align === 'center' || align === 'right') {
       const R = this.getBBox().R;
-      adaptor.setStyle(chtml, 'margin-right', this.em(-shift + R));
+      if (shift + R) {
+        adaptor.setStyle(chtml, 'margin-right', this.em(-shift + R));
+      }
     }
   }
 

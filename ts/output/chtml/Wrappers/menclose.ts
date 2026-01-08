@@ -70,7 +70,8 @@ const ANGLE = Angle(Notation.ARROWDX, Notation.ARROWY);
  * @template D  The Document class
  */
 export interface ChtmlMencloseNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMenclose<
       N,
       T,
@@ -124,7 +125,8 @@ export interface ChtmlMencloseNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMencloseClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMencloseClass<
       N,
       T,
@@ -250,45 +252,63 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
         height: 0,
         width: 0,
       },
-      'mjx-menclose > mjx-arrow > *': {
+      'mjx-menclose > mjx-arrow > mjx-aline': {
         display: 'block',
         position: 'absolute',
-        'transform-origin': 'bottom',
-        'border-left': em(Notation.THICKNESS * Notation.ARROWX) + ' solid',
-        'border-right': 0,
         'box-sizing': 'border-box',
-      },
-      'mjx-menclose > mjx-arrow > mjx-aline': {
+        'transform-origin': 'bottom',
         left: 0,
         top: em(-Notation.THICKNESS / 2),
         right: em(Notation.THICKNESS * (Notation.ARROWX - 1)),
         height: 0,
         'border-top': em(Notation.THICKNESS) + ' solid',
         'border-left': 0,
+        'border-right': 0,
       },
       'mjx-menclose > mjx-arrow[double] > mjx-aline': {
+        display: 'block',
+        position: 'absolute',
+        'box-sizing': 'border-box',
+        'transform-origin': 'bottom',
         left: em(Notation.THICKNESS * (Notation.ARROWX - 1)),
         height: 0,
+        'border-left': em(Notation.THICKNESS * Notation.ARROWX) + ' solid',
+        'border-right': 0,
       },
       'mjx-menclose > mjx-arrow > mjx-rthead': {
+        display: 'block',
+        position: 'absolute',
+        'box-sizing': 'border-box',
+        'transform-origin': 'bottom',
         transform: 'skewX(' + ANGLE + 'rad)',
         right: 0,
         bottom: '-1px',
+        'border-left': em(Notation.THICKNESS * Notation.ARROWX) + ' solid',
+        'border-right': 0,
         'border-bottom': '1px solid transparent',
         'border-top':
           em(Notation.THICKNESS * Notation.ARROWY) + ' solid transparent',
       },
       'mjx-menclose > mjx-arrow > mjx-rbhead': {
+        display: 'block',
+        position: 'absolute',
+        'box-sizing': 'border-box',
         transform: 'skewX(-' + ANGLE + 'rad)',
         'transform-origin': 'top',
         right: 0,
         top: '-1px',
+        'border-left': em(Notation.THICKNESS * Notation.ARROWX) + ' solid',
+        'border-right': 0,
         'border-top': '1px solid transparent',
         'border-bottom':
           em(Notation.THICKNESS * Notation.ARROWY) + ' solid transparent',
       },
       'mjx-menclose > mjx-arrow > mjx-lthead': {
+        display: 'block',
+        position: 'absolute',
+        'box-sizing': 'border-box',
         transform: 'skewX(-' + ANGLE + 'rad)',
+        'transform-origin': 'bottom',
         left: 0,
         bottom: '-1px',
         'border-left': 0,
@@ -298,6 +318,9 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
           em(Notation.THICKNESS * Notation.ARROWY) + ' solid transparent',
       },
       'mjx-menclose > mjx-arrow > mjx-lbhead': {
+        display: 'block',
+        position: 'absolute',
+        'box-sizing': 'border-box',
         transform: 'skewX(' + ANGLE + 'rad)',
         'transform-origin': 'top',
         left: 0,
@@ -314,7 +337,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
         bottom: '50%',
         left: 0,
         width: em(1.5 * Notation.PADDING),
-        border: em(Notation.THICKNESS) + ' solid',
+        'border-width': em(Notation.THICKNESS),
         'border-style': 'solid solid none none',
         'border-radius': '0 100% 0 0',
         'box-sizing': 'border-box',
