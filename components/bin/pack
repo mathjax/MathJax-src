@@ -74,7 +74,7 @@ async function readJSON(dir) {
   return new Promise((ok, fail) => {
     const buffer = [];
     const child = spawn(
-      'npx',
+      'pnpm',
       [
         'webpack',
         '--env', `dir=${path.relative(packDir, path.resolve(dir))}`,
@@ -84,7 +84,7 @@ async function readJSON(dir) {
       ],
       {
         cwd: packDir,
-        shell: true,
+        shell: false,
       }
     );
     child.stdout.on('data', (data) => buffer.push(String(data)));
