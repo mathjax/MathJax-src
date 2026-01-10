@@ -27,7 +27,12 @@ import { context } from '../context.js';
 declare const System: { import: (name: string, url?: string) => any };
 declare const __dirname: string;
 
-let root = 'file://' + context.path(__dirname).replace(/\/[^/]*\/[^/]*$/, '/');
+let root =
+  'file://' +
+  context
+    .path(__dirname)
+    .replace(/\/[^/]*\/[^/]*$/, '/')
+    .replace(/^file:\/\//, '');
 
 if (!mathjax.asyncLoad && typeof System !== 'undefined' && System.import) {
   mathjax.asyncLoad = (name: string) => {
