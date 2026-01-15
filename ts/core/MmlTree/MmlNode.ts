@@ -1182,10 +1182,11 @@ export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
       if (this.isEmbellished || base.isKind('mi')) {
         result = base.setTeXclass(prev);
         this.updateTeXclass(this.core());
-      } else if (base.isKind('TeXAtom')) {
-        this.texClass = base.texClass;
       } else {
         base.setTeXclass(null);
+        if (base.isKind('TeXAtom')) {
+          this.texClass = base.texClass;
+        }
       }
     }
     for (const child of this.childNodes.slice(1)) {
