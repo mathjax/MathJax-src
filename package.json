@@ -142,7 +142,7 @@
     "@eslint/js": "^9.39.2",
     "@xmldom/xmldom": "^0.8.11",
     "copyfiles": "^2.4.1",
-    "diff": "^8.0.2",
+    "diff": "^8.0.3",
     "eslint": "^9.39.2",
     "eslint-formatter-unix": "^9.0.1",
     "eslint-plugin-jsdoc": "^61.5.0",
