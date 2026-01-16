@@ -372,7 +372,7 @@ export class ExplorerPool {
   protected setSecondaryHighlighter() {
     this.secondaryHighlighter = getHighlighter(
       LiveRegion.priority.secondary,
-      { color: 'red' },
+      { color: 'red', alpha: 0.8 },
       { color: 'black' },
       this.document.outputJax.name
     );
