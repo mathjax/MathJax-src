@@ -3,7 +3,8 @@
     "to": "[bundle]",
     "from": "../..",
     "copy": [
-      "require.mjs"
+      "require.mjs",
+      "json.cjs"
     ]
   }
 }
