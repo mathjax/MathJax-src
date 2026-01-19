@@ -22,12 +22,17 @@
  */
 
 import { AbstractInputJax } from '../core/InputJax.js';
-import { LegacyAsciiMath } from './asciimath/legacy.js';
-import { separateOptions, OptionList } from '../util/Options.js';
+import { userOptions, separateOptions, OptionList } from '../util/Options.js';
 import { MathDocument } from '../core/MathDocument.js';
 import { MathItem } from '../core/MathItem.js';
+import { MmlNode } from '../core/MmlTree/MmlNode.js';
+import { MmlFactory } from '../core/MmlTree/MmlFactory.js';
 
 import { FindAsciiMath } from './asciimath/FindAsciiMath.js';
+import AsciiMathParser from './asciimath/AsciiMathParser.js';
+import AsciiMathError from './asciimath/AsciiMathError.js';
+import ParseOptions from './asciimath/ParseOptions.js';
+import NodeUtil from './asciimath/NodeUtil.js';
 
 /*****************************************************************/
 /**
@@ -39,44 +44,118 @@ import { FindAsciiMath } from './asciimath/FindAsciiMath.js';
  */
 export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
   /**
-   * The name of the input jax
+   * Name of input jax.
+   *
+   * @type {string}
    */
   public static NAME: string = 'AsciiMath';
 
   /**
-   * @override
+   * Default options for the jax.
+   *
+   * @type {OptionList}
    */
   public static OPTIONS: OptionList = {
     ...AbstractInputJax.OPTIONS,
     FindAsciiMath: null,
+    // Decimal sign character
+    decimalsign: '.',
+    // Display style (for limits)
+    displaystyle: true,
+    // Show ASCII formula on hover
+    showAsciiformulaOnHover: true,
+    // Math color
+    mathcolor: '',
+    formatError: (jax: AsciiMath<any, any, any>, err: AsciiMathError) =>
+      jax.formatError(err),
   };
 
   /**
-   * The FindMath object used to search for AsciiMath in the document
+   * The FindAsciiMath instance used for locating AsciiMath in strings
    */
   protected findAsciiMath: FindAsciiMath<N, T, D>;
 
   /**
+   * The AsciiMath code that is parsed.
+   *
+   * @type {string}
+   */
+  protected asciimath: string;
+
+  /**
+   * The Math node that results from parsing.
+   *
+   * @type {MmlNode}
+   */
+  protected mathNode: MmlNode;
+
+  private _parseOptions: ParseOptions;
+
+  /**
    * @override
    */
-  constructor(options: OptionList) {
-    const [, find, am] = separateOptions(
+  constructor(options: OptionList = {}) {
+    const [rest, am, find] = separateOptions(
       options,
-      FindAsciiMath.OPTIONS,
-      AsciiMath.OPTIONS
+      AsciiMath.OPTIONS,
+      FindAsciiMath.OPTIONS
     );
     super(am);
     this.findAsciiMath =
       this.options['FindAsciiMath'] || new FindAsciiMath(find);
+    this._parseOptions = new ParseOptions(this.mmlFactory, [this.options]);
+    userOptions(this._parseOptions.options, rest);
   }
 
   /**
-   * Use legacy AsciiMath input jax for now
-   *
    * @override
    */
-  public compile(math: MathItem<N, T, D>, _document: MathDocument<N, T, D>) {
-    return LegacyAsciiMath.Compile(math.math, math.display);
+  public setMmlFactory(mmlFactory: MmlFactory) {
+    super.setMmlFactory(mmlFactory);
+    this._parseOptions.mmlFactory = mmlFactory;
+  }
+
+  /**
+   * @returns {ParseOptions} The parse options that configure this JaX instance.
+   */
+  public get parseOptions(): ParseOptions {
+    return this._parseOptions;
+  }
+
+  /**
+   * @override
+   */
+  public compile(
+    math: MathItem<N, T, D>,
+    document: MathDocument<N, T, D>
+  ): MmlNode {
+    this.parseOptions.clear();
+    this.parseOptions.mathItem = math;
+    this.executeFilters(this.preFilters, math, document, this.parseOptions);
+    this.asciimath = math.math;
+    let node: MmlNode;
+
+    try {
+      const parser = new AsciiMathParser(this.asciimath, this.parseOptions);
+      node = parser.mml();
+    } catch (err) {
+      if (!(err instanceof AsciiMathError)) {
+        throw err;
+      }
+      this.parseOptions.error = true;
+      node = this.options.formatError(this, err);
+    }
+
+    node = this.parseOptions.create('math', [node]);
+    node.attributes.set('data-asciimath', this.asciimath);
+    if (math.display) {
+      NodeUtil.setAttribute(node, 'display', 'block');
+    }
+
+    this.parseOptions.root = node;
+    this.executeFilters(this.postFilters, math, document, this.parseOptions);
+    this.mathNode = this.parseOptions.root;
+    return this.mathNode;
   }
 
   /**
@@ -84,5 +163,17 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   public findMath(strings: string[]) {
     return this.findAsciiMath.findMath(strings);
+  }
+
+  /**
+   * Default formatter for error messages:
+   * wrap an error into a node for output.
+   *
+   * @param {AsciiMathError} err The AsciiMathError.
+   * @returns {MmlNode} The merror node.
+   */
+  public formatError(err: AsciiMathError): MmlNode {
+    const message = err.message.replace(/\n.*/, '');
+    return this.parseOptions.createError(message, err.id, this.asciimath);
   }
 }
