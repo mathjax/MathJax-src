@@ -273,6 +273,25 @@ export default class AsciiMathParser {
   }
 
   /**
+   * Append, unwrapping if needed
+   * Since MmlNodes don't have document fragments,
+   * we'll treat inferredMrow as a fragment here, so 
+   * its children get appended instead of the inferredMrow itself.
+   *
+   * @param {MmlNode} toappend The node to append
+   * @param {MmlNode} node The node to append to
+   */
+  private appendUnwrap(toappend: MmlNode, node: MmlNode) {
+    if (toappend.kind === 'inferredMrow') { // 
+      for (const child of toappend.childNodes) {
+        node.appendChild(child);
+      }
+    } else {
+      node.appendChild(toappend);
+    }
+  }
+
+  /**
    * Parse a simple expression
    *
    * @param {string} str The string to parse
@@ -298,8 +317,7 @@ export default class AsciiMathParser {
     }
 
     if (symbol.ttype === TokenType.DEFINITION) {
-      str =
-        symbol.output + this.removeCharsAndBlanks(str, symbol.input.length);
+      str = symbol.output + this.removeCharsAndBlanks(str, symbol.input.length);
       symbol = this.getSymbol(str);
     }
 
@@ -318,13 +336,17 @@ export default class AsciiMathParser {
         this.nestingDepth--;
         if (symbol.invisible) {
           node = this.configuration.create('mrow');
-          if (result[0]) node.appendChild(result[0]);
+          if (result[0]) {
+            this.appendUnwrap(result[0], node);
+          }
         } else {
           const mo = this.configuration.create('mo');
           mo.appendChild(this.configuration.createText(symbol.output));
           node = this.configuration.create('mrow');
           node.appendChild(mo);
-          if (result[0]) node.appendChild(result[0]);
+          if (result[0]) {
+            this.appendUnwrap(result[0], node);
+          }
         }
         return [node, result[1]];
 
@@ -346,31 +368,35 @@ export default class AsciiMathParser {
         if (i === -1) i = str.length;
         st = str.slice(1, i);
 
-        newFrag = this.configuration.create('mrow');
+        node = this.configuration.create('mrow');
         if (st.charAt(0) === ' ') {
           const mspace = this.configuration.create('mspace');
           NodeUtil.setAttribute(mspace, 'width', '1ex');
-          newFrag.appendChild(mspace);
+          node.appendChild(mspace);
         }
         const mtext = this.configuration.create(symbol.tag);
         mtext.appendChild(this.configuration.createText(st));
-        newFrag.appendChild(mtext);
+        node.appendChild(mtext);
         if (st.charAt(st.length - 1) === ' ') {
           const mspace = this.configuration.create('mspace');
           NodeUtil.setAttribute(mspace, 'width', '1ex');
-          newFrag.appendChild(mspace);
+          node.appendChild(mspace);
         }
         str = this.removeCharsAndBlanks(str, i + 1);
-        return [newFrag, str];
+        return [node, str];
 
       case TokenType.UNARYUNDEROVER:
       case TokenType.UNARY:
         str = this.removeCharsAndBlanks(str, symbol.input.length);
         result = this.parseSexpr(str);
         if (result[0] == null) {
-          node = this.configuration.create(symbol.tag);
-          node.appendChild(this.configuration.createText(symbol.output));
-          return [node, str];
+          if (symbol.tag=="mi" || symbol.tag=="mo") {
+            node = this.configuration.create(symbol.tag);
+            node.appendChild(this.configuration.createText(symbol.output));
+            return [node, str];
+          } else {
+            result[0] = this.configuration.create('mi');
+          }
         }
 
         if (symbol.func) {
@@ -393,7 +419,7 @@ export default class AsciiMathParser {
             mo.appendChild(this.configuration.createText(symbol.output));
             node = this.configuration.create('mrow');
             node.appendChild(mo);
-            node.appendChild(result[0]);
+            this.appendUnwrap(result[0], node);
             return [node, result[1]];
           }
         }
@@ -401,7 +427,9 @@ export default class AsciiMathParser {
         NodeUtil.removeBrackets(result[0]);
 
         if (symbol.input === 'sqrt') {
-          return [this.configuration.create(symbol.tag, [result[0]]), result[1]];
+          node = this.configuration.create(symbol.tag);
+          this.appendUnwrap(result[0], node);
+          return [node, result[1]];
         } else if (symbol.rewriteleftright) {
           const mo1 = this.configuration.create('mo');
           mo1.appendChild(
@@ -413,38 +441,25 @@ export default class AsciiMathParser {
           );
           node = this.configuration.create('mrow');
           node.appendChild(mo1);
-          if (result[0].kind === 'mrow') {
-            for (const child of result[0].childNodes) {
-              node.appendChild(child);
-            }
-          } else {
-            node.appendChild(result[0]);
-          }
+          this.appendUnwrap(result[0], node);
           node.appendChild(mo2);
           return [node, result[1]];
         } else if (symbol.input === 'cancel') {
-          node = this.configuration.create(symbol.tag, [result[0]]);
+          node = this.configuration.create(symbol.tag);
+          this.appendUnwrap(result[0], node);
           NodeUtil.setAttribute(node, 'notation', 'updiagonalstrike');
           return [node, result[1]];
         } else if (symbol.acc) {
-          node = this.configuration.create(symbol.tag, [result[0]]);
+          node = this.configuration.create(symbol.tag);
+          this.appendUnwrap(result[0], node);
           const accnode = this.configuration.create('mo');
           accnode.appendChild(this.configuration.createText(symbol.output));
-
-          // Special handling for vec
-          if (symbol.input === 'vec') {
-            const r0 = result[0];
-            if (
-              (r0.kind === 'mrow' &&
-                r0.childNodes.length === 1 &&
-                r0.childNodes[0].childNodes[0] &&
-                (r0.childNodes[0].childNodes[0] as any).text?.length === 1) ||
-              (r0.childNodes[0] &&
-                (r0.childNodes[0] as any).text?.length === 1)
-            ) {
-              NodeUtil.setAttribute(accnode, 'stretchy', 'false');
-            }
+          if (symbol.tag == 'mover' && symbol.ttype === TokenType.UNARY) {
+            NodeUtil.setAttribute(accnode, 'accent', 'true');
+          } else if (symbol.tag == 'munder' && symbol.ttype === TokenType.UNARY) {
+            NodeUtil.setAttribute(accnode, 'accentunder', 'true');
           }
+          NodeUtil.setAttribute(accnode, 'stretchy', 'true');
           node.appendChild(accnode);
           return [node, result[1]];
         } else {
@@ -481,7 +496,8 @@ export default class AsciiMathParser {
               }
             }
           }
-          node = this.configuration.create(symbol.tag, [result[0]]);
+          node = this.configuration.create(symbol.tag);
+          this.appendUnwrap(result[0], node);
           if (symbol.atname && symbol.atval) {
             NodeUtil.setAttribute(node, symbol.atname, symbol.atval);
           }
@@ -516,7 +532,8 @@ export default class AsciiMathParser {
           }
           st = str.slice(1, i);
 
-          node = this.configuration.create(symbol.tag, [result2[0]]);
+          node = this.configuration.create(symbol.tag);
+          this.appendUnwrap(result2[0], node);
           if (symbol.input === 'color') {
             NodeUtil.setAttribute(node, 'mathcolor', st);
           } else if (symbol.input === 'class') {
@@ -531,15 +548,13 @@ export default class AsciiMathParser {
         if (symbol.input === 'root' || symbol.output === 'stackrel') {
           newFrag.appendChild(result2[0]);
         }
-        newFrag.appendChild(result[0]);
+        this.appendUnwrap(result[0], newFrag);
         if (symbol.input === 'frac') {
-          newFrag.appendChild(result2[0]);
+          this.appendUnwrap(result2[0], newFrag);
         }
 
         node = this.configuration.create(symbol.tag);
-        for (const child of newFrag.childNodes) {
-          node.appendChild(child);
-        }
+        this.appendUnwrap(newFrag, node);
         return [node, result2[1]];
 
       case TokenType.INFIX:
@@ -550,21 +565,21 @@ export default class AsciiMathParser {
 
       case TokenType.SPACE:
         str = this.removeCharsAndBlanks(str, symbol.input.length);
-        newFrag = this.configuration.create('mrow');
+        node = this.configuration.create('mrow');
 
         const mspace1 = this.configuration.create('mspace');
         NodeUtil.setAttribute(mspace1, 'width', '1ex');
-        newFrag.appendChild(mspace1);
+        node.appendChild(mspace1);
 
         const mtext2 = this.configuration.create(symbol.tag);
         mtext2.appendChild(this.configuration.createText(symbol.output));
-        newFrag.appendChild(mtext2);
+        node.appendChild(mtext2);
 
         const mspace2 = this.configuration.create('mspace');
         NodeUtil.setAttribute(mspace2, 'width', '1ex');
-        newFrag.appendChild(mspace2);
+        node.appendChild(mspace2);
 
-        return [newFrag, str];
+        return [node, str];
 
       case TokenType.LEFTRIGHT:
         this.nestingDepth++;
@@ -589,14 +604,14 @@ export default class AsciiMathParser {
           }
         }
 
-        if (st === '|' && str.charAt(0) !== ',') {
+        if (st === '|' && str.charAt(0) !== ',') { // its an absolute value subterm
           const mo = this.configuration.create('mo');
           mo.appendChild(this.configuration.createText(symbol.output));
           node = this.configuration.create('mrow');
           node.appendChild(mo);
-          node.appendChild(result[0]);
+          this.appendUnwrap(result[0], node);
           return [node, result[1]];
-        } else {
+        } else { // the "|" is a \mid so use unicode 2223 (divides) for spacing
           const mo = this.configuration.create('mo');
           mo.appendChild(this.configuration.createText('\u2223'));
           node = this.configuration.create('mrow');
@@ -657,18 +672,31 @@ export default class AsciiMathParser {
           NodeUtil.removeBrackets(res2[0]);
           str = res2[1];
           const tag = underover ? 'munderover' : 'msubsup';
-          node = this.configuration.create(tag, [node, result[0], res2[0]]);
+          const lastnode = node;
+          node = this.configuration.create(tag);
+          this.appendUnwrap(lastnode, node);
+          this.appendUnwrap(result[0], node);
+          this.appendUnwrap(res2[0], node);
           const mrow = this.configuration.create('mrow');
           mrow.appendChild(node);
           node = mrow;
         } else {
           const tag = underover ? 'munder' : 'msub';
-          node = this.configuration.create(tag, [node, result[0]]);
+          const lastnode = node;
+          node = this.configuration.create(tag);
+          this.appendUnwrap(lastnode, node);
+          this.appendUnwrap(result[0], node);
         }
       } else if (symbol.input === '^' && underover) {
-        node = this.configuration.create('mover', [node, result[0]]);
+        const lastnode = node;
+        node = this.configuration.create('mover');
+        this.appendUnwrap(lastnode, node);
+        this.appendUnwrap(result[0], node);
       } else {
-        node = this.configuration.create(symbol.tag, [node, result[0]]);
+        const lastnode = node;
+        node = this.configuration.create(symbol.tag);
+        this.appendUnwrap(lastnode, node);
+        this.appendUnwrap(result[0], node);
       }
 
       if (sym1.func) {
@@ -680,8 +708,8 @@ export default class AsciiMathParser {
         ) {
           result = this.parseIexpr(str);
           const mrow = this.configuration.create('mrow');
-          mrow.appendChild(node);
-          mrow.appendChild(result[0]);
+          this.appendUnwrap(node, mrow);
+          this.appendUnwrap(result[0], mrow);
           node = mrow;
           str = result[1];
         }
@@ -690,7 +718,6 @@ export default class AsciiMathParser {
 
     return [node, str];
   }
-
   /**
    * Parse a full expression
    *
@@ -723,11 +750,13 @@ export default class AsciiMathParser {
         }
         str = result[1];
         NodeUtil.removeBrackets(node);
-        const frac = this.configuration.create(symbol.tag, [node, result[0]]);
+        const frac = this.configuration.create(symbol.tag);
+        this.appendUnwrap(node, frac);
+        this.appendUnwrap(result[0], frac);
         newFrag.appendChild(frac);
         symbol = this.getSymbol(str);
       } else if (node != null) {
-        newFrag.appendChild(node);
+        this.appendUnwrap(node, newFrag);
       }
     } while (
       ((symbol.ttype !== TokenType.RIGHTBRACKET &&

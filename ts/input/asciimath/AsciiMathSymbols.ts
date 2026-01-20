@@ -305,6 +305,7 @@ export const AMsymbols: Symbol[] = [
   {input:"harr", tag:"mo", output:"\u2194", tex:"leftrightarrow", ttype:TokenType.CONST},
   {input:"rArr", tag:"mo", output:"\u21D2", tex:"Rightarrow", ttype:TokenType.CONST},
   {input:"lArr", tag:"mo", output:"\u21D0", tex:"Leftarrow", ttype:TokenType.CONST},
+  {input:"dArr", tag:"mo", output:"\u21D3", tex:"Downarrow", ttype:TokenType.CONST},
   {input:"hArr", tag:"mo", output:"\u21D4", tex:"Leftrightarrow", ttype:TokenType.CONST},
 
   // Commands with argument

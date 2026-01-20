@@ -76,7 +76,6 @@ export default class NodeUtil {
           node.childNodes.pop();
         }
       }
-      console.log(node);
     }
   }
 
