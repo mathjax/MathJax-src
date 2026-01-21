@@ -27,6 +27,29 @@ import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
 import TexError from '../TexError.js';
+import { Locale } from '../../../util/Locale.js';
+
+/**
+ * The component name
+ */
+export const COMPONENT = '[tex]/bbox';
+
+/**
+ * Register the locales
+ */
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/bbox');
+
+/**
+ * Throw a TexError for this component (eventually, TexError will handle the message directly).
+ *
+ * @param {string} id       The ID of the error message
+ * @param {string[]} args   The values to substitute into the message
+ */
+function bboxError(id: string, ...args: string[]) {
+  const error = new TexError('', '');
+  error.message = Locale.message(COMPONENT, id, ...args);
+  throw error;
+}
 
 // Namespace
 const BboxMethods: { [key: string]: ParseMethod } = {
@@ -50,12 +73,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
         // @test Bbox-Padding
         if (def) {
           // @test Bbox-Padding-Error
-          throw new TexError(
-            'MultipleBBoxProperty',
-            '%1 specified twice in %2',
-            'Padding',
-            name
-          );
+          bboxError('MultipleBBoxProperty', 'Padding', name);
         }
         const pad = BBoxPadding(match[1] + match[3]);
         if (pad) {
@@ -71,33 +89,19 @@ const BboxMethods: { [key: string]: ParseMethod } = {
         // @test Bbox-Background
         if (background) {
           // @test Bbox-Background-Error
-          throw new TexError(
-            'MultipleBBoxProperty',
-            '%1 specified twice in %2',
-            'Background',
-            name
-          );
+          bboxError('MultipleBBoxProperty', 'Background', name);
         }
         background = part;
       } else if (part.match(/^[-a-z]+:/i)) {
         // @test Bbox-Frame
         if (style) {
           // @test Bbox-Frame-Error
-          throw new TexError(
-            'MultipleBBoxProperty',
-            '%1 specified twice in %2',
-            'Style',
-            name
-          );
+          bboxError('MultipleBBoxProperty', 'Style', name);
         }
         style = BBoxStyle(part);
       } else if (part !== '') {
         // @test Bbox-General-Error
-        throw new TexError(
-          'InvalidBBoxProperty',
-          '"%1" doesn\'t look like a color, a padding dimension, or a style',
-          part
-        );
+        bboxError('InvalidBBoxProperty', part);
       }
     }
     if (def) {

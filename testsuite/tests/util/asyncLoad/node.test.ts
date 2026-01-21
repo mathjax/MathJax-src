@@ -14,14 +14,21 @@ describe('asyncLoad() for node', () => {
   test('asyncLoad()', async () => {
     const cjsFile = path.join('..', 'testsuite', 'lib', 'AsyncLoad.child.cjs');
     const mjsFile = path.join('..', 'testsuite', 'lib', 'AsyncLoad.child.mjs');
+    const jsonFile = path.join('..', 'testsuite', 'lib', 'AsyncLoad.child.json');
     const relUnknown = path.join('..', 'testsuite', 'lib', 'AsyncLoad.unknown.cjs');
+    const jsonUnknown = path.join('..', 'testsuite', 'lib', 'AsyncLoad.unknown.json');
     const absFile = path.join(root, cjsFile);
+    const absJson = path.join(root, jsonFile);
     const absUnknown = path.join(root, relUnknown);
 
     await expect(asyncLoad(cjsFile)).resolves.toEqual({loaded: true});          // relative file found
     await expect(asyncLoad(relUnknown).catch(() => true)).resolves.toBe(true);  // relative file not found
     await expect(asyncLoad(absFile)).resolves.toEqual({loaded: true});          // absolute file found
     await expect(asyncLoad(absUnknown).catch(() => true)).resolves.toBe(true);  // absolute file not found
+
+    await expect(asyncLoad(jsonFile)).resolves.toEqual({json: true});           // relative json file found
+    await expect(asyncLoad(absJson)).resolves.toEqual({json: true});            // absolute json file found
+    await expect(asyncLoad(jsonUnknown).catch(() => true)).resolves.toBe(true); // unknown file not found
 
     await expect(asyncLoad('#js/../cjs/components/version.js')                  // load using package exports
                  .then((result: any) => result.VERSION)).resolves.toBe(mathjax.version);
@@ -30,6 +37,14 @@ describe('asyncLoad() for node', () => {
 
     await expect(asyncLoad(mjsFile).catch(() => true)).resolves.toBe(true);     // mjs file fails
     expect(mathjax.asyncIsSynchronous).toBe(true);                              // node.js is synchronous
+
+    //
+    // Test mathjax.json separately, as asyncLoad doesn't call it.
+    //
+    await expect(mathjax.json(jsonFile)).resolves.toEqual({json: true});
+    await expect(mathjax.json(absJson)).resolves.toEqual({json: true});
+    await expect(mathjax.json(jsonUnknown).catch(() => true)).resolves.toBe(true);
+
   });
 
   test('setBaseURL() for node', async () => {

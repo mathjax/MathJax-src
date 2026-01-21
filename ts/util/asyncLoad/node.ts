@@ -22,6 +22,7 @@
  */
 
 import { mathjax } from '../../mathjax.js';
+import { resolvePath } from '../AsyncLoad.js';
 import * as path from 'path';
 import { dirname } from '#source/source.cjs';
 
@@ -29,11 +30,15 @@ declare const require: (name: string) => any;
 
 let root = path.resolve(dirname, '..', '..', 'cjs');
 
-if (!mathjax.asyncLoad && typeof require !== 'undefined') {
-  mathjax.asyncLoad = (name: string) => {
-    return require(name.charAt(0) === '.' ? path.resolve(root, name) : name);
-  };
-  mathjax.asyncIsSynchronous = true;
+if (typeof require !== 'undefined') {
+  mathjax.json = async (name: string) => require(name);
+
+  if (!mathjax.asyncLoad) {
+    mathjax.asyncLoad = (name: string) => {
+      return require(resolvePath(name, (name) => path.resolve(root, name)));
+    };
+    mathjax.asyncIsSynchronous = true;
+  }
 }
 
 /**

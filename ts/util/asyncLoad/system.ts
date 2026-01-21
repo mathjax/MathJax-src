@@ -23,6 +23,7 @@
 
 import { mathjax } from '../../mathjax.js';
 import { context } from '../context.js';
+import { resolvePath } from '../AsyncLoad.js';
 
 declare const System: { import: (name: string, url?: string) => any };
 declare const __dirname: string;
@@ -36,9 +37,11 @@ let root =
 
 if (!mathjax.asyncLoad && typeof System !== 'undefined' && System.import) {
   mathjax.asyncLoad = (name: string) => {
-    const file = (
-      name.charAt(0) === '.' ? new URL(name, root) : new URL(name, 'file://')
-    ).href;
+    const file = resolvePath(
+      name,
+      (name) => new URL(name, root).href,
+      (name) => new URL(name, 'file://').href
+    );
     return System.import(file).then((result: any) => result.default ?? result);
   };
 }
