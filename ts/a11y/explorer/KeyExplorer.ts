@@ -815,17 +815,19 @@ export class SpeechExplorer
       if (this.triggerLinkKeyboard(event)) {
         this.Stop();
       } else {
-        const tabs = this.getInternalTabs(this.current);
+        const expandable = this.actionable(this.current);
+        if (expandable) {
+          this.refocus = expandable;
+          expandable.dispatchEvent(new Event('click'));
+          return;
+        }
+        const tabs = this.getInternalTabs(this.current).filter(
+          (node) => !node.getAttribute('data-mjx-href')
+        );
         if (tabs.length) {
           tabs[0].focus();
           return;
         }
-        const expandable = this.actionable(this.current);
-        if (!expandable) {
-          return false;
-        }
-        this.refocus = expandable;
-        expandable.dispatchEvent(new Event('click'));
       }
     } else {
       this.Start();
@@ -1511,9 +1513,11 @@ export class SpeechExplorer
    * @returns {HTMLElement[]}    The list of focusable element within the given one
    */
   protected getInternalTabs(node: HTMLElement): HTMLElement[] {
-    return Array.from(node.querySelectorAll(
-      'button, [data-mjx-href], input, select, textarea, [tabindex]:not([tabindex="-1"],mjx-speech)'
-    ));
+    return Array.from(
+      node.querySelectorAll(
+        'button, [data-mjx-href], input, select, textarea, [tabindex]:not([tabindex="-1"],mjx-speech)'
+      )
+    );
   }
 
   /**
