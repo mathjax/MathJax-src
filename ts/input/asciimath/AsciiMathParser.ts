@@ -89,12 +89,6 @@ export default class AsciiMathParser {
    */
   private displaystyle: boolean = true;
 
-  /**
-   * Math color
-   *
-   * @type {string}
-   */
-  private mathcolor: string = '';
 
   /**
    * @constructor
@@ -105,8 +99,25 @@ export default class AsciiMathParser {
     private _string: string,
     public configuration: ParseOptions
   ) {
+    this.decimalsign = configuration.options.decimalsign;
+    this.displaystyle = configuration.options.displaystyle;
     this.initSymbols();
   }
+
+  private TokenTypeMap: Record<string, TokenType> = {
+    CONST: TokenType.CONST,
+    UNARY: TokenType.UNARY,
+    BINARY: TokenType.BINARY,
+    INFIX: TokenType.INFIX,
+    LEFTBRACKET: TokenType.LEFTBRACKET,
+    RIGHTBRACKET: TokenType.RIGHTBRACKET,
+    SPACE: TokenType.SPACE,
+    UNDEROVER: TokenType.UNDEROVER,
+    DEFINITION: TokenType.DEFINITION,
+    LEFTRIGHT: TokenType.LEFTRIGHT,
+    TEXT: TokenType.TEXT,
+    UNARYUNDEROVER: TokenType.UNARYUNDEROVER
+  };
 
   /**
    * Initialize the symbol table
@@ -114,6 +125,19 @@ export default class AsciiMathParser {
   private initSymbols() {
     // Copy base symbols
     this.symbols = [...AMsymbols];
+
+    if (this.configuration.options.additionalSymbols) {
+      for (const sym of this.configuration.options.additionalSymbols) {
+        const ttypeUpper = sym.ttype?.toUpperCase();
+        if (ttypeUpper && (ttypeUpper in this.TokenTypeMap) && sym.input && sym.tag && sym.output) {
+          this.symbols.push({
+            ...sym,
+            ttype: this.TokenTypeMap[ttypeUpper],
+            tex: sym.tex ?? null,
+          });
+        }
+      }
+    }
 
     // Add TeX aliases
     const symlen = this.symbols.length;
@@ -940,10 +964,6 @@ export default class AsciiMathParser {
 
     const frag = this.parseExpr(str.replace(/^\s+/g, ''), false)[0];
     const node = this.configuration.create('mstyle', [frag]);
-
-    if (this.mathcolor !== '') {
-      NodeUtil.setAttribute(node, 'mathcolor', this.mathcolor);
-    }
 
     if (this.displaystyle) {
       NodeUtil.setAttribute(node, 'displaystyle', 'true');

@@ -62,10 +62,8 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
     decimalsign: '.',
     // Display style (for limits)
     displaystyle: true,
-    // Show ASCII formula on hover
-    showAsciiformulaOnHover: true,
-    // Math color
-    mathcolor: '',
+    // Additional symbols to add
+    additionalSymbols: [],
     formatError: (jax: AsciiMath<any, any, any>, err: AsciiMathError) =>
       jax.formatError(err),
   };
