@@ -484,6 +484,20 @@ export default class AsciiMathParser {
             NodeUtil.setAttribute(accnode, 'accentunder', 'true');
           }
           NodeUtil.setAttribute(accnode, 'stretchy', 'true');
+          // Special handling for vec with single character base
+          if (symbol.input === 'vec') {
+            const r0 = result[0];
+            if (
+              (r0.kind === 'mrow' &&
+                r0.childNodes.length === 1 &&
+                r0.childNodes[0].childNodes[0] &&
+                (r0.childNodes[0].childNodes[0] as any).text?.length === 1) ||
+              (r0.childNodes[0] &&
+                (r0.childNodes[0] as any).text?.length === 1)
+            ) {
+              NodeUtil.setAttribute(accnode, 'stretchy', 'false');
+            }
+          }
           node.appendChild(accnode);
           return [node, result[1]];
         } else {
