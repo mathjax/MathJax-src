@@ -487,7 +487,8 @@ export default class AsciiMathParser {
           node.appendChild(accnode);
           return [node, result[1]];
         } else {
-          // Font change command
+          /*
+          // old Font change command
           if (symbol.codes) {
             for (i = 0; i < result[0].childNodes.length; i++) {
               const child = result[0].childNodes[i];
@@ -502,9 +503,9 @@ export default class AsciiMathParser {
                   for (let j = 0; j < st.length; j++) {
                     const code = st.charCodeAt(j);
                     if (code > 64 && code < 91) {
-                      newst += symbol.codes[code - 65];
+                      newst += String.fromCodePoint(symbol.codes[code - 65]);
                     } else if (code > 96 && code < 123) {
-                      newst += symbol.codes[code - 71];
+                      newst += String.fromCodePoint(symbol.codes[code - 71]);
                     } else {
                       newst += st.charAt(j);
                     }
@@ -526,6 +527,13 @@ export default class AsciiMathParser {
             NodeUtil.setAttribute(node, symbol.atname, symbol.atval);
           }
           return [node, result[1]];
+          */
+
+          // New Font change method
+          if (symbol.codes) {
+            this.AMmapChars(result[0], symbol.codes);
+          }
+          return [result[0], result[1]];
         }
 
       case TokenType.BINARY:
@@ -648,6 +656,45 @@ export default class AsciiMathParser {
         node = this.configuration.create(symbol.tag);
         node.appendChild(this.configuration.createText(symbol.output));
         return [node, str];
+    }
+  }
+
+  /*
+  * Map characters in a node according to codemap
+  * for font changes like double-struck, bold, etc.
+  *
+  * @param {MmlNode} node The node to process
+  * @param {number[]} codemap The code mapping array
+  */
+  private AMmapChars(node: MmlNode, codemap: number[]): void {
+    const tag = node.kind;
+    if (tag == "mi" || tag == "mo" || tag == "mn") {
+      const st = (node.childNodes[0] as any).text;
+      let newst = "";
+      for (let j=0; j < st.length; j++) {
+        if (st.charCodeAt(j)>64 && st.charCodeAt(j)<91) {
+          if (codemap.length == 3) {
+            newst += String.fromCodePoint(codemap[0] + st.charCodeAt(j) - 65);
+          } else {
+            newst += String.fromCodePoint(codemap[st.charCodeAt(j)-65]);
+          }
+        } else if (st.charCodeAt(j)>96 && st.charCodeAt(j)<123) {
+          if (codemap.length == 3) {
+            newst += String.fromCodePoint(codemap[1] + st.charCodeAt(j) - 97);
+          } else {
+            newst += String.fromCodePoint(codemap[st.charCodeAt(j)-71]);
+          }
+        } else if (st.charCodeAt(j)>47 && st.charCodeAt(j)<58 && (codemap.length == 3 || codemap.length == 53)) {
+          newst += String.fromCodePoint((codemap.length==3?codemap[2]:codemap[52]) + st.charCodeAt(j) - 48);
+        } else {
+          newst += st.charAt(j);
+        }
+      }
+      node.replaceChild(this.configuration.createText(newst), node.childNodes[0]);
+    } else {
+      for (let i=0; i<node.childNodes.length; i++) {
+        this.AMmapChars(node.childNodes[i], codemap);
+      }
     }
   }
 
