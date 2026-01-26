@@ -68,7 +68,7 @@ export interface CommonMo<
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   CC extends CharOptions,
-  VV extends VariantData<CC>,
+  VV extends VariantData<CC, DD>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
@@ -220,7 +220,7 @@ export interface CommonMoClass<
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   CC extends CharOptions,
-  VV extends VariantData<CC>,
+  VV extends VariantData<CC, DD>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
@@ -256,7 +256,7 @@ export function CommonMoMixin<
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   CC extends CharOptions,
-  VV extends VariantData<CC>,
+  VV extends VariantData<CC, DD>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
@@ -387,7 +387,7 @@ export function CommonMoMixin<
       const C = this.getText().codePointAt(0);
       let delim = this.stretch;
       if (this.size) {
-        this.stretch = delim = this.font.getDelimiter(C) as DD;
+        this.stretch = delim = this.font.getDelimiter(C, this.variant) as DD;
         this.size = null;
       }
       const c = delim.c || C;
@@ -426,7 +426,7 @@ export function CommonMoMixin<
      */
     protected setDelimSize(c: number, i: number) {
       const delim = this.stretch;
-      this.variant = this.font.getSizeVariant(c, i);
+      this.variant = this.font.getSizeVariant(c, i, this.variant);
       this.size = i;
       const schar = delim.schar
         ? delim.schar[Math.min(i, delim.schar.length - 1)] || c
@@ -667,7 +667,7 @@ export function CommonMoMixin<
       if (!attributes.get('stretchy')) return false;
       const c = this.getText();
       if (Array.from(c).length !== 1) return false;
-      const delim = this.font.getDelimiter(c.codePointAt(0));
+      const delim = this.font.getDelimiter(c.codePointAt(0), this.variant);
       this.stretch = (
         delim && delim.dir === direction ? delim : NOSTRETCH
       ) as DD;
