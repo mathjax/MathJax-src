@@ -87,17 +87,22 @@ export type CharMapMap<C extends CharOptions> = {
  * Data for a variant
  *
  * @template C  The CharOptions type
+ * @template D  The DelimiterData type
  */
-export interface VariantData<C extends CharOptions> {
+export interface VariantData<C extends CharOptions, D extends DelimiterData> {
   /**
    * A list of CharMaps that must be updated when characters are
    * added to this variant
    */
-  linked: CharMap<C>[];
+  linked: [CharMap<C>, DelimiterMap<D>][];
   /**
    * The character data for this variant
    */
   chars: CharMap<C>;
+  /**
+   * The delimiters for the variant
+   */
+  delims: DelimiterMap<D>;
 }
 
 /**
@@ -106,7 +111,11 @@ export interface VariantData<C extends CharOptions> {
  * @template C  The CharOptions type
  * @template V  The VariantData type
  */
-export type VariantMap<C extends CharOptions, V extends VariantData<C>> = {
+export type VariantMap<
+  C extends CharOptions,
+  V extends VariantData<C, D>,
+  D extends DelimiterData,
+> = {
   [name: string]: V;
 };
 
@@ -144,6 +153,7 @@ export type DelimiterData = {
   ext?: number;         // The extenders left- plus right-bearing
   min?: number;         // The minimum size a multi-character version can be
   c?: number;           // The character number (for aliased delimiters)
+  v?: string;           // The variant where this delimiter is defined (normal if not present)
   fullExt?: [number, number]  // When present, extenders must be full sized, and the first number is
                               //   the size of the extender, while the second is the total size of the ends
 };
@@ -155,6 +165,15 @@ export type DelimiterData = {
  */
 export type DelimiterMap<D extends DelimiterData> = {
   [n: number]: D | DynamicFile;
+};
+
+/**
+ * An object mapping variant names to delimiter data maps
+ *
+ * @template D  The DelimiterData type
+ */
+export type VDelimiterMap<D extends DelimiterData> = {
+  [variant: string]: DelimiterMap<D>;
 };
 
 /**
@@ -253,7 +272,7 @@ export type FontParameterList = {
  */
 export type Font = FontData<
   CharOptions,
-  VariantData<CharOptions>,
+  VariantData<CharOptions, DelimiterData>,
   DelimiterData
 >;
 
@@ -344,6 +363,7 @@ export interface FontExtensionData<
   sizeVariants?: string[] | { '[+]'?: string[]; '[-]'?: string[] };
   stretchVariants?: string[] | { '[+]'?: string[]; '[-]'?: string[] };
   ranges?: DynamicFileDef[];
+  variantDelimiters?: VDelimiterMap<D>;
 }
 
 /**
@@ -373,7 +393,7 @@ export function mergeOptions(
  */
 export class FontData<
   C extends CharOptions,
-  V extends VariantData<C>,
+  V extends VariantData<C, D>,
   D extends DelimiterData,
 > {
   /**
@@ -643,6 +663,11 @@ export class FontData<
   protected static defaultDelimiters: DelimiterMap<DelimiterData> = {};
 
   /**
+   * The default VariantDelimiter data
+   */
+  protected static defaultVariantDelimiters: VDelimiterMap<DelimiterData> = {};
+
+  /**
    * The default character data
    */
   protected static defaultChars: CharMapMap<CharOptions> = {};
@@ -675,7 +700,7 @@ export class FontData<
   /**
    * The actual variant information for this font
    */
-  protected variant: VariantMap<C, V> = {};
+  protected variant: VariantMap<C, V, D> = {};
 
   /**
    * The actual delimiter information for this font
@@ -902,6 +927,18 @@ export class FontData<
         extension.stretchN
       );
     }
+    if (data.variantDelimiters) {
+      Object.entries(data.variantDelimiters).forEach(([name, delims]) => {
+        this.defaultVariantDelimiters[name] ??= {};
+        Object.assign(this.defaultVariantDelimiters[name], delims);
+        this.adjustDelimiters(
+          this.defaultVariantDelimiters[name],
+          Object.keys(delims),
+          extension.sizeN,
+          extension.stretchN
+        );
+      });
+    }
   }
 
   /**
@@ -923,6 +960,12 @@ export class FontData<
     this.defineDelimiters(CLASS.defaultDelimiters as DelimiterMap<D>);
     Object.keys(CLASS.defaultChars).forEach((name) =>
       this.defineChars(name, CLASS.defaultChars[name] as CharMap<C>)
+    );
+    Object.keys(CLASS.defaultVariantDelimiters).forEach((name) =>
+      this.defineDelimiters(
+        CLASS.defaultVariantDelimiters[name] as DelimiterMap<D>,
+        name
+      )
     );
     this.defineRemap('accent', CLASS.defaultAccentMap);
     this.defineRemap('mo', CLASS.defaultMoMap);
@@ -984,6 +1027,20 @@ export class FontData<
         dynamicFont.sizeN,
         dynamicFont.stretchN
       );
+    }
+    if (data.variantDelimiters) {
+      Object.entries(data.variantDelimiters).forEach(([name, delims]) => {
+        this.defineDelimiters(
+          mergeOptions({ delimiters: {} }, 'delimiters', delims),
+          name
+        );
+        this.CLASS.adjustDelimiters(
+          this.variant[name].delims,
+          Object.keys(delims),
+          dynamicFont.sizeN,
+          dynamicFont.stretchN
+        );
+      });
     }
     for (const name of Object.keys(data.chars || {})) {
       this.defineChars(name, data.chars[name]);
@@ -1052,11 +1109,17 @@ export class FontData<
       chars: Object.create(
         inherit ? this.variant[inherit].chars : {}
       ) as CharMap<C>,
+      delims:
+        name === 'normal'
+          ? this.delimiters
+          : Object.create(inherit ? this.variant[inherit].delims : {}),
     } as unknown as V;
     if (this.variant[link]) {
       Object.assign(variant.chars, this.variant[link].chars);
-      this.variant[link].linked.push(variant.chars);
+      Object.assign(variant.delims, this.variant[link].delims);
+      this.variant[link].linked.push([variant.chars, variant.delims]);
       variant.chars = Object.create(variant.chars);
+      variant.delims = Object.create(variant.delims);
     }
     this.remapSmpChars(variant.chars, name);
     this.variant[name] = variant;
@@ -1131,7 +1194,7 @@ export class FontData<
     const variant = this.variant[name];
     Object.assign(variant.chars, chars);
     for (const link of variant.linked) {
-      Object.assign(link, chars);
+      Object.assign(link[0], chars);
     }
   }
 
@@ -1153,9 +1216,20 @@ export class FontData<
    * Defines stretchy delimiters
    *
    * @param {DelimiterMap} delims  The delimiters to define
+   * @param {string} name          The name of the variant for the delimiter (or normal if missing)
    */
-  public defineDelimiters(delims: DelimiterMap<D>) {
-    Object.assign(this.delimiters, delims);
+  public defineDelimiters(delims: DelimiterMap<D>, name?: string) {
+    if (name && name !== 'normal') {
+      delims = { ...delims };
+      Object.values(delims).forEach((delim: D) => {
+        delim.v = name;
+      });
+    }
+    const variant = this.variant[name || 'normal'];
+    Object.assign(variant.delims, delims);
+    for (const link of variant.linked) {
+      Object.assign(link[1], delims);
+    }
   }
 
   /**
@@ -1318,13 +1392,15 @@ export class FontData<
   public addDynamicFontCss(_fonts: string[], _root?: string) {}
 
   /**
-   * @param {number} n  The delimiter character number whose data is desired
+   * @param {number} n         The delimiter character number whose data is desired
+   * @param {string} name      The name of the variant for the delimiter
    * @returns {DelimiterData}  The data for that delimiter (or undefined)
    */
-  public getDelimiter(n: number): DelimiterData {
-    const delim = this.delimiters[n];
+  public getDelimiter(n: number, name?: string): DelimiterData {
+    const variant = this.variant[name || 'normal'];
+    const delim = variant.delims[n];
     if (delim && !('dir' in delim)) {
-      this.delimiters[n] = null;
+      variant.delims[n] = null;
       retryAfter(this.loadDynamicFile(delim));
       return null;
     }
@@ -1332,12 +1408,13 @@ export class FontData<
   }
 
   /**
-   * @param {number} n  The delimiter character number whose variant is needed
-   * @param {number} i  The index in the size array of the size whose variant is needed
-   * @returns {string}   The variant of the i-th size for delimiter n
+   * @param {number} n     The delimiter character number whose variant is needed
+   * @param {number} i     The index in the size array of the size whose variant is needed
+   * @param {string} name  The name of the variant for the delimiter
+   * @returns {string}     The variant of the i-th size for delimiter n
    */
-  public getSizeVariant(n: number, i: number): string {
-    const delim = this.getDelimiter(n);
+  public getSizeVariant(n: number, i: number, name?: string): string {
+    const delim = this.getDelimiter(n, name || 'normal');
     if (delim && delim.variants) {
       i = delim.variants[i];
     }
@@ -1345,21 +1422,23 @@ export class FontData<
   }
 
   /**
-   * @param {number} n  The delimiter character number whose variant is needed
-   * @param {number} i  The index in the stretch array of the part whose variant is needed
-   * @returns {string}   The variant of the i-th part for delimiter n
+   * @param {number} n     The delimiter character number whose variant is needed
+   * @param {number} i     The index in the stretch array of the part whose variant is needed
+   * @param {string} name  The name of the variant for the delimiter
+   * @returns {string}     The variant of the i-th part for delimiter n
    */
-  public getStretchVariant(n: number, i: number): string {
-    const delim = this.getDelimiter(n);
+  public getStretchVariant(n: number, i: number, name?: string): string {
+    const delim = this.getDelimiter(n, name);
     return this.stretchVariants[delim.stretchv ? delim.stretchv[i] : 0];
   }
 
   /**
-   * @param {number} n   The delimiter character number whose variants are needed
-   * @returns {string[]}  The variants for the parts of the delimiter
+   * @param {number} n     The delimiter character number whose variants are needed
+   * @param {string} name  The name of the variant for the delimiter
+   * @returns {string[]}   The variants for the parts of the delimiter
    */
-  public getStretchVariants(n: number): string[] {
-    return [0, 1, 2, 3].map((i) => this.getStretchVariant(n, i));
+  public getStretchVariants(n: number, name?: string): string[] {
+    return [0, 1, 2, 3].map((i) => this.getStretchVariant(n, i, name));
   }
 
   /**
@@ -1423,7 +1502,7 @@ export class FontData<
  */
 export interface FontDataClass<
   C extends CharOptions,
-  V extends VariantData<C>,
+  V extends VariantData<C, D>,
   D extends DelimiterData,
 > {
   OPTIONS: OptionList;

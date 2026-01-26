@@ -210,11 +210,11 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      *
      * @returns {string[]} The variants array
      */
-    protected getStretchVariants() {
+    protected getStretchVariants(): string[] {
       const c = this.stretch.c || this.getText().codePointAt(0);
       const variants = [] as string[];
       for (const i of this.stretch.stretch.keys()) {
-        variants[i] = this.font.getStretchVariant(c, i);
+        variants[i] = this.font.getStretchVariant(c, i, this.variant);
       }
       return variants;
     }

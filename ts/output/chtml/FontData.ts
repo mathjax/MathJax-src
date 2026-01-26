@@ -64,7 +64,10 @@ export type ChtmlCharData = CharDataArray<ChtmlCharOptions>;
 /**
  * The extra data needed for a Variant in CHTML output
  */
-export interface ChtmlVariantData extends VariantData<ChtmlCharOptions> {
+export interface ChtmlVariantData extends VariantData<
+  ChtmlCharOptions,
+  ChtmlDelimiterData
+> {
   letter: string; // the font letter(s) for the default font for this variant
 }
 
@@ -141,7 +144,7 @@ export class ChtmlFontData extends FontData<
   /**
    * Data about the delimiters used (for adpative CSS)
    */
-  public delimUsage: Usage<number> = new Usage<number>();
+  public delimUsage: Usage<[number, string]> = new Usage<[number, string]>();
 
   /**
    * New styles since last update
@@ -354,8 +357,8 @@ export class ChtmlFontData extends FontData<
    * @returns {StyleJson}        The modified style list.
    */
   public updateStyles(styles: StyleJson): StyleJson {
-    for (const N of this.delimUsage.update()) {
-      this.addDelimiterStyles(styles, N, this.getDelimiter(N));
+    for (const [N, v] of this.delimUsage.update()) {
+      this.addDelimiterStyles(styles, N, this.getDelimiter(N, v));
     }
     for (const [name, N] of this.charUsage.update()) {
       const variant = this.variant[name];
@@ -440,7 +443,7 @@ export class ChtmlFontData extends FontData<
   ) {
     const HDW = data.HDW as ChtmlCharData;
     const [beg, ext, end, mid] = data.stretch;
-    const [begV, extV, endV, midV] = this.getStretchVariants(n);
+    const [begV, extV, endV, midV] = this.getStretchVariants(n, data.v);
     const Hb = this.addDelimiterVPart(styles, c, 'beg', beg, begV, HDW);
     this.addDelimiterVPart(styles, c, 'ext', ext, extV, HDW);
     const He = this.addDelimiterVPart(styles, c, 'end', end, endV, HDW);
@@ -524,7 +527,7 @@ export class ChtmlFontData extends FontData<
   ) {
     const HDW = [...data.HDW] as ChtmlCharData;
     const [beg, ext, end, mid] = data.stretch;
-    const [begV, extV, endV, midV] = this.getStretchVariants(n);
+    const [begV, extV, endV, midV] = this.getStretchVariants(n, data.v);
     if (data.hd && !this.options.mathmlSpacing) {
       //
       // Interpolate between full character height/depth and that of the extender,
