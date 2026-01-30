@@ -2051,7 +2051,7 @@ export class SpeechExplorer
    */
   protected addHtmlEvents() {
     for (const html of Array.from(this.node.querySelectorAll('mjx-html'))) {
-      const stop = function (event: Event) {
+      const stop = (event: Event) => {
         if (html.contains(document.activeElement)) {
           if (event instanceof KeyboardEvent) {
             this.clicked = null;
@@ -2059,10 +2059,10 @@ export class SpeechExplorer
               event.stopPropagation();
             }
           } else {
-            this.clicked = event.target;
+            this.clicked = event.target as HTMLElement;
           }
         }
-      }.bind(this);
+      };
       html.addEventListener('mousedown', stop);
       html.addEventListener('click', stop);
       html.addEventListener('keydown', stop);
