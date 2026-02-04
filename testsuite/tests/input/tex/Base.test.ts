@@ -4371,8 +4371,8 @@ describe('Multirel', () => {
       tex2mml('a||b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a||b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4765,7 +4765,7 @@ describe('Other', () => {
     toXmlMatch(
       tex2mml('|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="|" display="block">
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
        </math>`
     );
   });
@@ -4777,7 +4777,7 @@ describe('Other', () => {
       tex2mml('a|b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a|b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -5194,7 +5194,7 @@ describe('Base Complex', () => {
            <mrow data-mjx-texclass="ORD">
              <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
              <mi data-latex="q">q</mi>
-             <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+             <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
              <mo data-latex="&lt;">&lt;</mo>
              <mn data-latex="1">1</mn>
            </mrow>
