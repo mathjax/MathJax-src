@@ -3876,7 +3876,7 @@ describe('Physics3_4', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin|\\frac{x}{y}|" display="block">
          <mi data-latex="\\sin">sin</mi>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
          <mfrac data-latex="\\frac{x}{y}">
            <mi data-latex="x">x</mi>
            <mi data-latex="y">y</mi>
@@ -4336,7 +4336,7 @@ describe('Physics3_5', () => {
            <mi data-mjx-auto-op="false" data-latex="Res">Res</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
          <mfrac data-latex="\\frac{x}{y}">
            <mi data-latex="x">x</mi>
            <mi data-latex="y">y</mi>
@@ -4531,7 +4531,7 @@ describe('Physics3_6', () => {
            <mi data-mjx-variant="-tex-calligraphic" mathvariant="script" data-latex="P">P</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
          <mo data-latex="\\int">&#x222B;</mo>
          <mi data-latex="f">f</mi>
          <mo data-latex="(" stretchy="false">(</mo>
@@ -4745,7 +4745,7 @@ describe('Physics3_7', () => {
            <mi data-mjx-auto-op="false" data-latex="Re">Re</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
          <mfrac data-latex="\\frac{x}{y}">
            <mi data-latex="x">x</mi>
            <mi data-latex="y">y</mi>
@@ -4908,7 +4908,7 @@ describe('Physics3_7', () => {
            <mi data-mjx-auto-op="false" data-latex="Im">Im</mi>
          </mrow>
          <mo data-mjx-texclass="NONE">&#x2061;</mo>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
          <mfrac data-latex="\\frac{x}{y}">
            <mi data-latex="x">x</mi>
            <mi data-latex="y">y</mi>
