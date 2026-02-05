@@ -717,10 +717,11 @@ export function CommonMtableMixin<
         //
         const TW = this.getTableData().W;
         for (const child of stretchy) {
-          const w = child.getBBox().w;
+          let w = child.getBBox().w;
           child
             .coreMO()
             .getStretchedVariant([Math.max(W, w) / child.coreRScale()]);
+          w = child.getBBox().w;
           if (w > TW[i]) {
             TW[i] = w;
           }
