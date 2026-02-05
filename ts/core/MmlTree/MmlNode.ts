@@ -144,6 +144,7 @@ export interface MmlNode extends Node<MmlNode, MmlNodeClass> {
   readonly isSpacelike: boolean;
   readonly linebreakContainer: boolean;
   readonly linebreakAlign: string;
+  readonly isEmpty: boolean;
 
   /**
    *  The expected number of children (-1 means use inferred mrow)
@@ -538,6 +539,16 @@ export abstract class AbstractMmlNode
    */
   public get linebreakAlign(): string {
     return 'data-align';
+  }
+
+  /**
+   * @returns {string}  True if all child nodes are empty
+   */
+  public get isEmpty(): boolean {
+    for (const child of this.childNodes) {
+      if (!child.isEmpty) return false;
+    }
+    return true;
   }
 
   /**
@@ -1024,6 +1035,18 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
   }
 
   /**
+   * @override
+   */
+  public get isEmpty() {
+    for (const child of this.childNodes) {
+      if (!(child instanceof TextNode) || child.getText().length) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
    * Get the text of the token node (skipping mglyphs, and combining
    *   multiple text nodes)
    *
@@ -1226,6 +1249,13 @@ export abstract class AbstractMmlEmptyNode
    */
   public get isToken(): boolean {
     return false;
+  }
+
+  /**
+   * @returns {boolean}   Is empty
+   */
+  public get isEmpty(): boolean {
+    return true;
   }
 
   /**

@@ -12191,11 +12191,26 @@ describe('Character Class Changes', () => {
 
   /********************************************************************************/
 
-  it('Mathop No Apply', () => {
+  it('Mathop No Apply I', () => {
     toXmlMatch(
       tex2mml('\\mathop{} x'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{} x" display="block">
          <mrow data-mjx-texclass="OP" data-latex="\\mathop{}"></mrow>
+         <mi data-latex="x">x</mi>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
+  it('Mathop no Apply II', () => {
+    toXmlMatch(
+      tex2mml('\\mathop{\\mathrm{}{}} x'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{\\mathrm{}{}} x" display="block">
+         <mrow data-mjx-texclass="OP" data-latex="\\mathop{\\mathrm{}{}}">
+           <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{}"></mrow>
+           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+         </mrow>
          <mi data-latex="x">x</mi>
        </math>`
     );
