@@ -1252,6 +1252,13 @@ export abstract class AbstractMmlEmptyNode
   }
 
   /**
+   * @returns {boolean}   Is empty
+   */
+  public get isEmpty(): boolean {
+    return true;
+  }
+
+  /**
    * @returns {boolean}  Not embellished
    */
   public get isEmbellished(): boolean {
