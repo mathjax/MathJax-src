@@ -157,6 +157,7 @@ function splitSame(name: string) {
  * @param {string} name   The style to be processed
  */
 function combineSame(name: string) {
+  if (!Styles.connect[name]) return;
   const children = [...Styles.connect[name].children];
   const value = this.styles[this.childName(name, children.shift())];
   for (const child of children) {

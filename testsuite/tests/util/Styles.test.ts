@@ -439,6 +439,9 @@ describe('CssStyles object', () => {
       'font-family': 'arial',
       'font-style': 'italic'
     });
+    cssFontTest('font-size-adjust: none', {
+      'font-size-adjust': 'none',
+    });
   });
 
   test('get()', () => {
