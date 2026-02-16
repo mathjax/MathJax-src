@@ -304,6 +304,14 @@ export class CommonWrapper<
     href: true,
     style: true,
     xmlns: true,
+    // SSML-containing attributes are set directly on output DOM by the
+    // speech system (WebWorker.setSpeechAttribute), so skip them here to
+    // avoid copying raw SSML markup from enriched MathML, which produces
+    // invalid XML when SVG output is serialized via outerHTML.
+    'data-semantic-speech': true,
+    'data-semantic-prefix': true,
+    'data-semantic-postfix': true,
+    'data-semantic-summary': true,
   };
 
   /**
