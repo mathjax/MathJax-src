@@ -56,6 +56,7 @@
     "#menu/*": "mj-context-menu/js/*",
     "#sre/*": "speech-rule-engine/js/*",
     "#mhchem/*": "mhchemparser/esm/*",
+    "#asciimathml/*": "asciimathml/dist/esm/*",
     "#default-font/*": "@mathjax/mathjax-newcm-font/mjs/*"
   },
   "files": [
@@ -168,6 +169,7 @@
   },
   "dependencies": {
     "@mathjax/mathjax-newcm-font": "4.1.0",
+    "asciimathml": "^2.3.5",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^1.0.0",
     "speech-rule-engine": "5.0.0-beta.3"

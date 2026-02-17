@@ -27,12 +27,59 @@ import { MathDocument } from '../core/MathDocument.js';
 import { MathItem } from '../core/MathItem.js';
 import { MmlNode } from '../core/MmlTree/MmlNode.js';
 import { MmlFactory } from '../core/MmlTree/MmlFactory.js';
+import { Property } from '../core/Tree/Node.js';
 
 import { FindAsciiMath } from './asciimath/FindAsciiMath.js';
-import AsciiMathParser from './asciimath/AsciiMathParser.js';
 import AsciiMathError from './asciimath/AsciiMathError.js';
 import ParseOptions from './asciimath/ParseOptions.js';
-import NodeUtil from './asciimath/NodeUtil.js';
+import { AsciiMathParser } from '#asciimathml/AsciiMathParser.js';
+import { INodeAdapter, IParseOptions } from '#asciimathml/NodeAdapter.js';
+
+export class MmlNodeAdapter implements INodeAdapter {
+  constructor(private node: MmlNode) {}
+  
+  get kind() { return this.node.kind; }
+  get text() { return (this.node as any).text; }
+  get childNodes() { 
+    return this.node.childNodes.map(n => new MmlNodeAdapter(n)); 
+  }
+  
+  setAttribute(name: string, value: string): void {
+    this.node.attributes.set(name, value);
+  }
+  
+  getAttribute(name: string): Property {
+    return this.node.attributes.get(name);
+  }
+
+  appendChild(child: INodeAdapter): void {
+    if ((child as MmlNodeAdapter).node.parent !== null) {
+      const childNode = (child as MmlNodeAdapter).node.parent.removeChild((child as MmlNodeAdapter).node);
+      this.node.appendChild(childNode);
+    } else {
+      this.node.appendChild((child as MmlNodeAdapter).node);
+    }
+  }
+  
+  replaceChild(newChild: INodeAdapter, oldChild: INodeAdapter): void {
+    this.node.replaceChild(
+      (newChild as MmlNodeAdapter).node, 
+      (oldChild as MmlNodeAdapter).node
+    );
+  }
+
+  removeFirstChild(): void {
+    this.node.removeChild(this.node.childNodes[0]);
+  }
+
+  removeLastChild(): void {
+    this.node.removeChild(this.node.childNodes[this.node.childNodes.length - 1]);
+  }
+  
+  // Expose underlying node when needed
+  get underlyingNode() { return this.node; }
+}
+
 
 /*****************************************************************/
 /**
@@ -133,9 +180,27 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
     this.asciimath = math.math;
     let node: MmlNode;
 
+    const mmlConfig: IParseOptions<MmlNodeAdapter> = {
+      create: (tag, children) => {
+        const node = this.mmlFactory.create(tag);
+        children?.forEach(c => node.appendChild(c.underlyingNode));
+        return new MmlNodeAdapter(node);
+      },
+      createText: (text) => {
+        const textNode = this.mmlFactory.create('text');
+        (textNode as any).text = text;
+        return new MmlNodeAdapter(textNode);
+      },
+      options: { 
+        decimalsign: this.parseOptions.options.decimalsign, 
+        displaystyle: this.parseOptions.options.displaystyle
+      }
+    };
+
     try {
-      const parser = new AsciiMathParser(this.asciimath, this.parseOptions);
-      node = parser.mml();
+      const parser = new AsciiMathParser(mmlConfig);
+      const result = parser.mml(this.asciimath);
+      node = (result as MmlNodeAdapter).underlyingNode;
     } catch (err) {
       if (!(err instanceof AsciiMathError)) {
         throw err;
@@ -146,10 +211,12 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
 
     node = this.parseOptions.create('math', [node]);
     node.attributes.set('data-asciimath', this.asciimath);
-    if (math.display) {
-      NodeUtil.setAttribute(node, 'display', 'block');
-    }
+    node.setInheritedAttributes({}, false, 0, false);
 
+    if (math.display) {
+      node.attributes.set('display', 'block')
+    }
+    
     this.parseOptions.root = node;
     this.executeFilters(this.postFilters, math, document, this.parseOptions);
     this.mathNode = this.parseOptions.root;
