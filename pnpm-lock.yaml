@@ -18,8 +18,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       speech-rule-engine:
-        specifier: 5.0.0-beta.4
-        version: 5.0.0-beta.4
+        specifier: 5.0.0-beta.5
+        version: 5.0.0-beta.5
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.2
@@ -1308,8 +1308,8 @@ packages:
   spdx-license-ids@3.0.21:
     resolution: {integrity: sha512-Bvg/8F5XephndSK3JffaRqdT+gyhfqIPwDHpX80tJrF8QQRYMo8sNMeaZ2Dp5+jhwKnUmIOyFFQfHRkjJm5nXg==}
 
-  speech-rule-engine@5.0.0-beta.4:
-    resolution: {integrity: sha512-4IpjLM7GnV6SFmvro9dZlzoN4Jz1pdpLgRL5wepCvKQQD4SlRVmZOi2yWY4tjJK8vepH4EzvZfguhW6uU5YFdw==}
+  speech-rule-engine@5.0.0-beta.5:
+    resolution: {integrity: sha512-g1sv3U5X9Z2uRGqXQqRFK9SwSFrU8GRfU1TZB8Bk7r3wCi7HVzQ+a1zC8U83Z5iDjBo51h2blbKJiMqn6r7Y9A==}
     hasBin: true
 
   string-argv@0.3.2:
@@ -2760,7 +2760,7 @@ snapshots:
 
   spdx-license-ids@3.0.21: {}
 
-  speech-rule-engine@5.0.0-beta.4:
+  speech-rule-engine@5.0.0-beta.5:
     dependencies:
       '@xmldom/xmldom': 0.9.8
       commander: 14.0.2
