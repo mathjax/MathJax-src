@@ -193,7 +193,8 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
       },
       options: { 
         decimalsign: this.parseOptions.options.decimalsign, 
-        displaystyle: this.parseOptions.options.displaystyle
+        displaystyle: this.parseOptions.options.displaystyle,
+        additionalSymbols: this.parseOptions.options?.additionalSymbols || []
       }
     };
 
