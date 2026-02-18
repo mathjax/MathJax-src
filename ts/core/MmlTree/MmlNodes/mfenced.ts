@@ -96,7 +96,9 @@ export class MmlMfenced extends AbstractMmlNode {
     if (this.close) {
       prev = this.close.setTeXclass(prev);
     }
-    this.updateTeXclass(this.open);
+    if (!this.open || !this.close) {
+      this.updateTeXclass(this.open || this.childNodes[0] || this.close);
+    }
     return prev;
   }
 
