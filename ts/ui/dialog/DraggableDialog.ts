@@ -207,7 +207,7 @@ export class DraggableDialog {
       display: 'flex',
       'flex-direction': 'column',
       'align-items': 'center',
-      position: 'relative',
+      position: 'fixed',
       top: '-4%',
     },
     '.mjx-dialog.mjx-moving': {
@@ -420,10 +420,10 @@ export class DraggableDialog {
         border: '2px inset #7C7C7C',
         'background-color': '#222025',
       },
-      'a[href]': {
+      '.mjx-dialog a[href]': {
         color: '#86A7F5',
       },
-      'a[href]:visited': {
+      '.mjx-dialog a[href]:visited': {
         color: '#DD98E2',
       },
       'mjx-dialog kbd': {

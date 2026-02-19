@@ -22,4 +22,4 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-export const VERSION = '4.1.0';
+export const VERSION = '4.1.1';

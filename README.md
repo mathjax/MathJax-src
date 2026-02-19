@@ -99,7 +99,7 @@ await MathJax.init({
   loader: {load: ['input/tex', 'output/svg']}
 });
 const svg = await MathJax.tex2svgPromise('\\frac{1}{x^2-1}', {display: true});
-console.log(MathJax.startup.adaptor.outerHTML(svg));
+console.log(MathJax.startup.adaptor.serializeXML(svg));
 ```
 
 
@@ -119,7 +119,7 @@ MathJax.init({
   loader: {load: ['input/tex', 'output/svg']}
 }).then(() => {
   const svg = MathJax.tex2svg('\\frac{1}{x^2-1}', {display: true});
-  console.log(MathJax.startup.adaptor.outerHTML(svg));
+  console.log(MathJax.startup.adaptor.serializeXML(svg));
 }).catch((err) => console.log(err.message));
 ```
 

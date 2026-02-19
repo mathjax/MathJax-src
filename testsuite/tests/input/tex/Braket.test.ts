@@ -542,8 +542,8 @@ describe('Braket', () => {
            <mo data-mjx-texclass="BIN" data-braketbar="true">&#x2016;</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
            <mi data-latex="y">y</mi>
-           <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
-           <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+           <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+           <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
            <mi data-latex="z">z</mi>
            <mspace width="0.167em"></mspace>
            <mo data-mjx-texclass="CLOSE">}</mo>
@@ -568,10 +568,10 @@ describe('Braket', () => {
            <mrow data-mjx-texclass="CLOSE"></mrow>
            <mo data-mjx-texclass="BIN" data-braketbar="true">&#x2016;</mo>
            <mrow data-mjx-texclass="OPEN"></mrow>
-           <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+           <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
            <mi data-latex="y">y</mi>
            <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\|">&#x2016;</mo>
-           <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+           <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
            <mi data-latex="z">z</mi>
            <mspace width="0.167em"></mspace>
            <mo data-mjx-texclass="CLOSE">}</mo>
@@ -608,7 +608,7 @@ describe('Braket', () => {
            <mi>a</mi>
            <mo data-mjx-texclass="CLOSE" stretchy="false">&#x27E9;</mo>
          </mrow>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -628,7 +628,7 @@ describe('Braket', () => {
            </mfrac>
            <mo data-mjx-texclass="CLOSE" stretchy="false">&#x27E9;</mo>
          </mrow>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );

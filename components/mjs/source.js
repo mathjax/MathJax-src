@@ -82,6 +82,7 @@ export const source = {
   '[mathmaps]': `${src}/../../bundle/sre/mathmaps`,
   'ui/lazy': `${src}/ui/lazy/lazy.js`,
   'ui/menu': `${src}/ui/menu/menu.js`,
+  'ui/no-dark-mode': `${src}/ui/nodarkmode/nodarkmode.js`,
   'ui/safe': `${src}/ui/safe/safe.js`,
   'mml-chtml': `${src}/mml-chtml/mml-chtml.js`,
   'mml-chtml-nofont': `${src}/mml-chtml-nofont/mml-chtml-nofont.js`,

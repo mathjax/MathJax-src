@@ -4371,8 +4371,8 @@ describe('Multirel', () => {
       tex2mml('a||b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a||b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4765,7 +4765,7 @@ describe('Other', () => {
     toXmlMatch(
       tex2mml('|'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="|" display="block">
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
        </math>`
     );
   });
@@ -4777,7 +4777,7 @@ describe('Other', () => {
       tex2mml('a|b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a|b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -5194,7 +5194,7 @@ describe('Base Complex', () => {
            <mrow data-mjx-texclass="ORD">
              <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
              <mi data-latex="q">q</mi>
-             <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+             <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
              <mo data-latex="&lt;">&lt;</mo>
              <mn data-latex="1">1</mn>
            </mrow>
@@ -7928,7 +7928,7 @@ describe('Mathchar0mo', () => {
     toXmlMatch(
       tex2mml('\\surd'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\surd" display="block">
-         <mo stretchy="false" data-latex="\\surd">&#x221A;</mo>
+         <mo symmetric="true" stretchy="false" data-latex="\\surd">&#x221A;</mo>
        </math>`
     );
   });
@@ -12191,11 +12191,26 @@ describe('Character Class Changes', () => {
 
   /********************************************************************************/
 
-  it('Mathop No Apply', () => {
+  it('Mathop No Apply I', () => {
     toXmlMatch(
       tex2mml('\\mathop{} x'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{} x" display="block">
          <mrow data-mjx-texclass="OP" data-latex="\\mathop{}"></mrow>
+         <mi data-latex="x">x</mi>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
+  it('Mathop no Apply II', () => {
+    toXmlMatch(
+      tex2mml('\\mathop{\\mathrm{}{}} x'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{\\mathrm{}{}} x" display="block">
+         <mrow data-mjx-texclass="OP" data-latex="\\mathop{\\mathrm{}{}}">
+           <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{}"></mrow>
+           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+         </mrow>
          <mi data-latex="x">x</mi>
        </math>`
     );

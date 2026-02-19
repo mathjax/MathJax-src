@@ -152,14 +152,14 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * @param {string} c The parsed character.
    */
   Bar(parser: TexParser, c: string) {
-    parser.Push(
-      parser.create(
-        'token',
-        'mo',
-        { stretchy: false, texClass: TEXCLASS.ORD },
-        c
-      )
+    const mo = parser.create(
+      'token',
+      'mo',
+      { stretchy: false, texClass: TEXCLASS.ORD },
+      c
     );
+    mo.setProperty('keep-attrs', 'stretchy');
+    parser.Push(mo);
   },
 
   /**

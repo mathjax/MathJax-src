@@ -19,7 +19,7 @@ describe('context object', () => {
 
   test('context', () => {
     if (OS === 'Windows') {
-      expect(context.path('C:\\test.js')).toBe('C:/test.js');
+      expect(context.path('C:\\test.js')).toBe('file://C:/test.js');
     } else {
       expect(context.path('C:\\test.js')).toBe('C:\\test.js');
     }
