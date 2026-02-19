@@ -168,7 +168,7 @@
     ]
   },
   "dependencies": {
-    "@mathjax/mathjax-newcm-font": "4.1.0",
+    "@mathjax/mathjax-newcm-font": "4.1.1",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^1.0.0",
     "speech-rule-engine": "5.0.0-beta.6"
