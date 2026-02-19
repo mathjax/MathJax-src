@@ -1087,12 +1087,7 @@ export class Menu {
       this.settings.renderer.replace(/[^a-zA-Z0-9]/g, '') || 'CHTML';
     (Menu._loadingPromise || Promise.resolve()).then(() => {
       const settings = this.settings;
-      const options = this.document.outputJax.options;
-      options.scale = parseFloat(settings.scale);
-      options.displayOverflow = settings.overflow.toLowerCase();
-      if (options.linebreaks) {
-        options.linebreaks.inline = settings.breakInline;
-      }
+      this.applyRendererOptions(this.document.outputJax);
       if (!settings.speechRules) {
         const sre = this.document.options.sre;
         settings.speechRules = `${sre.domain || 'clearspeak'}-${sre.style || 'default'}`;
@@ -1143,6 +1138,7 @@ export class Menu {
    */
   protected setRenderer(jax: string, rerender: boolean = true): Promise<void> {
     if (Object.hasOwn(this.jax, jax) && this.jax[jax]) {
+      this.applyRendererOptions(this.jax[jax]);
       return this.setOutputJax(jax, rerender);
     }
     const name = jax.toLowerCase();
@@ -1153,7 +1149,7 @@ export class Menu {
           return fail(new Error(`Component ${name} not loaded`));
         }
         startup.useOutput(name, true);
-        startup.output = startup.getOutputJax();
+        startup.output = this.applyRendererOptions(startup.getOutputJax());
         startup.output.setAdaptor(this.document.adaptor);
         startup.output.initialize();
         this.jax[jax] = startup.output;
@@ -1162,6 +1158,23 @@ export class Menu {
           .catch((err) => fail(err));
       });
     });
+  }
+
+  /**
+   * @param {OutputJax<HTMLElement, Text, Document>} output   The output jax to adjust.
+   * @returns {OutputJax<HTMLElement, Text, Document>}        The adjusted output jax.
+   */
+  protected applyRendererOptions(
+    output: OutputJax<HTMLElement, Text, Document>
+  ): OutputJax<HTMLElement, Text, Document> {
+    const settings = this.settings;
+    const options = output.options;
+    options.scale = parseFloat(settings.scale);
+    options.displayOverflow = settings.overflow.toLowerCase();
+    if (options.linebreaks) {
+      options.linebreaks.inline = settings.breakInline;
+    }
+    return output;
   }
 
   /**
