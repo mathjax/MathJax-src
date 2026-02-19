@@ -36,10 +36,12 @@ jobs:
       - name: Compile MathJax
         run: |
           pnpm -s mjs:compile
-          components/bin/makeAll --mjs --terse --build components/mjs
+          pnpm -s copy:assets mjs
+          components/bin/makeAll --mjs --terse --build --copy components/mjs
           pnpm -s cjs:compile
           pnpm -s cjs:components:src:build
-          components/bin/makeAll --cjs --terse --build components/cjs
+          pnpm -s copy:assets cjs
+          components/bin/makeAll --cjs --terse --build --copy components/cjs
           pnpm -s copy:pkg cjs
 
       - name: Build tests

@@ -21,16 +21,16 @@
 
 import '../startup/init.js';
 import {Loader, CONFIG} from '#js/components/loader.js';
-import {Package} from '#js/components/package.js';
-import {combineDefaults, combineConfig} from '#js/components/global.js';
+import {MathJax, combineDefaults, combineConfig} from '#js/components/global.js';
+import {resolvePath} from '#js/util/AsyncLoad.js';
 import {context} from '#js/util/context.js';
 import '../core/core.js';
 import '../adaptors/liteDOM/liteDOM.js';
 import {source} from '../source.js';
 
-const MathJax = global.MathJax;
-
-const path = eval('require("path")');   // get path from node, not webpack
+const REQUIRE = eval('require');          // get require from node, not webpack
+const path = REQUIRE("path");
+const fs = REQUIRE("fs").promises;
 const dir = context.path(MathJax.config.__dirname);   // set up by node-main.mjs or node-main.cjs
 
 /*
@@ -48,23 +48,26 @@ combineDefaults(MathJax.config, 'output', {font: 'mathjax-newcm'});
  */
 Loader.preLoaded('loader', 'startup', 'core', 'adaptors/liteDOM');
 
+/*
+ * Set the paths.
+ */
 if (path.basename(dir) === 'node-main') {
   CONFIG.paths.esm = CONFIG.paths.mathjax;
   CONFIG.paths.sre = '[esm]/sre';
-  CONFIG.paths.mathjax = path.dirname(dir);
+  CONFIG.paths.mathjax = path.resolve(dir, '..', '..', '..', 'bundle');
   combineDefaults(CONFIG, 'source', source);
 } else {
   CONFIG.paths.mathjax = dir;
 }
-//
-//  Set the asynchronous loader to use the js directory, so we can load
-//  other files like entity definitions
-//
-const ROOT = path.resolve(dir, '..', '..', '..', path.basename(path.dirname(dir)));
-const REQUIRE = MathJax.config.loader.require;
+
+/*
+ * Set the asynchronous loader to handle json files
+ */
 MathJax._.mathjax.mathjax.asyncLoad = function (name) {
-  return REQUIRE(name.charAt(0) === '.' ? path.resolve(ROOT, name) :
-                 name.charAt(0) === '[' ? Package.resolvePath(name) : name);
+  const file = resolvePath(name, (name) => path.resolve(CONFIG.paths.mathjax, name));
+  return file.match(/\.json$/)
+    ? fs.readFile(REQUIRE.resolve(file)).then((json) => JSON.parse(json))
+    : REQUIRE(file);
 };
 
 /*
