@@ -1,6 +1,6 @@
 {
   "name": "@mathjax/src",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Beautiful and accessible math in all browsers. MathJax is an open-source JavaScript display engine for LaTeX, MathML, and AsciiMath notation that works in all browsers and in server-side node applications. This package includes the source code as well as the packaged components.",
   "keywords": [
     "MathJax",
@@ -142,21 +142,21 @@
     "@eslint/js": "^9.39.2",
     "@xmldom/xmldom": "^0.8.11",
     "copyfiles": "^2.4.1",
-    "diff": "^8.0.2",
+    "diff": "^8.0.3",
     "eslint": "^9.39.2",
     "eslint-formatter-unix": "^9.0.1",
-    "eslint-plugin-jsdoc": "^61.5.0",
-    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-jsdoc": "^62.5.5",
+    "eslint-plugin-prettier": "^5.5.5",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "prettier": "^3.7.4",
-    "rimraf": "^6.1.2",
+    "prettier": "^3.8.1",
+    "rimraf": "^6.1.3",
     "terser-webpack-plugin": "^5.3.16",
-    "typedoc": "^0.28.15",
+    "typedoc": "^0.28.17",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.50.0",
+    "typescript-eslint": "^8.56.0",
     "typescript-tools": "^0.3.1",
-    "webpack": "^5.103.0",
+    "webpack": "^5.105.2",
     "webpack-cli": "^6.0.1",
     "wicked-good-xpath": "^1.3.0",
     "xslt3": "^2.7.0"
@@ -168,9 +168,9 @@
     ]
   },
   "dependencies": {
-    "@mathjax/mathjax-newcm-font": "4.1.0",
+    "@mathjax/mathjax-newcm-font": "4.1.1",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^1.0.0",
-    "speech-rule-engine": "5.0.0-beta.5"
+    "speech-rule-engine": "5.0.0-beta.6"
   }
 }
