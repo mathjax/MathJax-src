@@ -37,9 +37,4 @@ jobs:
           pnpm -s build-all
         
       - name: Publish to npmjs
-        run: npm publish --provenance
-
-#        run: pnpm publish --access public --no-git-checks
-#        env:
-#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
+        run: pnpm publish --provenance --no-git-checks
