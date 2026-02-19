@@ -41,6 +41,7 @@ import {
   AbstractMmlTokenNode,
 } from '../../../core/MmlTree/MmlNode.js';
 import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
+import { OptionList } from '../../../util/Options.js';
 
 /**
  * Utility for breaking the \sideset scripts from any other material.
@@ -541,6 +542,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * @param {number} l Left width.
    * @param {number} r Right width.
    * @param {number} m Min width
+   * @param {string} variant The variant for the arrow
    */
   xArrow(
     parser: TexParser,
@@ -548,7 +550,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     chr: number,
     l: number,
     r: number,
-    m: number = 0
+    m: number = 0,
+    variant: string = ''
   ) {
     const def = {
       width: '+' + UnitUtil.em((l + r) / 18),
@@ -557,12 +560,14 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     const bot = parser.GetBrackets(name);
     const first = parser.ParseArg(name);
     const dstrut = parser.create('node', 'mspace', [], { depth: '.2em' });
-    let arrow = parser.create(
-      'token',
-      'mo',
-      { stretchy: true, texClass: TEXCLASS.ORD }, // REL is applied in a TeXAtom below
-      String.fromCodePoint(chr)
-    );
+    const attrs: OptionList = {
+      stretchy: true,
+      texClass: TEXCLASS.ORD, // REL is applied in a TeXAtom below
+    };
+    if (variant) {
+      attrs.mathvariant = variant;
+    }
+    let arrow = parser.create('token', 'mo', attrs, String.fromCodePoint(chr));
     if (m) {
       arrow.attributes.set('minsize', UnitUtil.em(m));
     }

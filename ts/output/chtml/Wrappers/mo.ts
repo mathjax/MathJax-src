@@ -247,11 +247,11 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
      */
     protected stretchHTML(chtml: N[]) {
       const c = this.getText().codePointAt(0);
-      this.font.delimUsage.add(c);
+      this.font.delimUsage.add([c, this.variant]);
       this.childNodes[0].markUsed();
       const delim = this.stretch;
       const stretch = delim.stretch;
-      const stretchv = this.font.getStretchVariants(c);
+      const stretchv = this.font.getStretchVariants(c, this.variant);
       const dom: N[] = [];
 
       //

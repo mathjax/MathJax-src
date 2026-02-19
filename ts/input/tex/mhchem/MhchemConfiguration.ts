@@ -34,6 +34,11 @@ import { mhchemParser } from '#mhchem/mhchemParser.js';
 import { TEXCLASS } from '../../../core/MmlTree/MmlNode.js';
 
 /**
+ * The variant to use for mhchem arrows and bonds
+ */
+export const MHCHEM = '-mhchem';
+
+/**
  * Creates mo token elements with the proper attributes
  */
 export const MhchemUtils = {
@@ -41,7 +46,7 @@ export const MhchemUtils = {
     const def = {
       stretchy: true,
       texClass: TEXCLASS.REL,
-      mathvariant: '-mhchem',
+      mathvariant: MHCHEM,
       ...(mchar.attributes || {}),
     };
     const node = parser.create('token', 'mo', def, mchar.char);
@@ -121,13 +126,13 @@ export const MhchemMethods: { [key: string]: ParseMethod } = {
 const mhchemMacros = new CommandMap('mhchem', {
   ce: [MhchemMethods.Machine, 'ce'],
   pu: [MhchemMethods.Machine, 'pu'],
-  mhchemxrightarrow: [MhchemMethods.xArrow, 0xe429, 5, 9],
-  mhchemxleftarrow: [MhchemMethods.xArrow, 0xe428, 9, 5],
-  mhchemxleftrightarrow: [MhchemMethods.xArrow, 0xe42a, 9, 9],
-  mhchemxleftrightarrows: [MhchemMethods.xArrow, 0xe42b, 9, 9],
-  mhchemxrightleftharpoons: [MhchemMethods.xArrow, 0xe408, 5, 9],
-  mhchemxRightleftharpoons: [MhchemMethods.xArrow, 0xe409, 5, 9],
-  mhchemxLeftrightharpoons: [MhchemMethods.xArrow, 0xe40a, 9, 11],
+  mhchemxleftarrow: [MhchemMethods.xArrow, 0x27f5, 9, 5, 0, MHCHEM],
+  mhchemxrightarrow: [MhchemMethods.xArrow, 0x27f6, 5, 9, 0, MHCHEM],
+  mhchemxleftrightarrow: [MhchemMethods.xArrow, 0x27f7, 9, 9, 0, MHCHEM],
+  mhchemxleftrightarrows: [MhchemMethods.xArrow, 0x21c4, 9, 9, 0, MHCHEM],
+  mhchemxrightleftharpoons: [MhchemMethods.xArrow, 0x21cc, 5, 9, 0, MHCHEM],
+  mhchemxRightleftharpoons: [MhchemMethods.xArrow, 0x1f8d2, 5, 9, 0, MHCHEM],
+  mhchemxLeftrightharpoons: [MhchemMethods.xArrow, 0x1f8d3, 9, 11, 0, MHCHEM],
 });
 
 /**
@@ -138,16 +143,16 @@ const mhchemChars = new CharacterMap('mhchem-chars', MhchemUtils.relmo, {
   mhchemBondTD: ['\uE411', { stretchy: false }],
   mhchemBondTDD: ['\uE412', { stretchy: false }],
   mhchemBondDTD: ['\uE413', { stretchy: false }],
-  mhchemlongleftarrow: '\uE428',
-  mhchemlongrightarrow: '\uE429',
-  mhchemlongleftrightarrow: '\uE42A',
-  mhchemlongrightleftharpoons: '\uE408',
-  mhchemlongRightleftharpoons: '\uE409',
-  mhchemlongLeftrightharpoons: '\uE40A',
-  mhchemlongleftrightarrows: '\uE42B',
-  mhchemrightarrow: '\uE42D',
-  mhchemleftarrow: '\uE42C',
-  mhchemleftrightarrow: '\uE42E',
+  mhchemlongleftarrow: '\u27F5',
+  mhchemlongrightarrow: '\u27F6',
+  mhchemlongleftrightarrow: '\u27F7',
+  mhchemlongrightleftharpoons: '\u21CC',
+  mhchemlongRightleftharpoons: '\u{1F8D2}',
+  mhchemlongLeftrightharpoons: '\u{1F8D3}',
+  mhchemlongleftrightarrows: '\u21C4',
+  mhchemrightarrow: '\u2192',
+  mhchemleftarrow: '\u2190',
+  mhchemleftrightarrow: '\u2194',
 });
 
 /**
