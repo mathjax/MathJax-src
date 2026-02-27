@@ -39,6 +39,7 @@ import {
   StyleJsonSheet,
 } from '../../util/StyleJson.js';
 import { em } from '../../util/lengths.js';
+import { VFUZZ, HFUZZ } from '../common/FontData.js';
 
 export * from '../common/FontData.js';
 
@@ -479,6 +480,7 @@ export class ChtmlFontData extends FontData<
     HDW: ChtmlCharData
   ): number {
     if (!n) return 0;
+    let fuzz = 0;
     const [h, d, w] = this.getChar(v, n);
     const css: StyleJsonData = { width: this.em0(w) };
     if (part !== 'ext') {
@@ -494,18 +496,25 @@ export class ChtmlFontData extends FontData<
       css.margin = `${this.em(y)} ${dw} ${this.em(-y)}`;
     } else {
       //
+      // Adjust the height and depth for a little overlap.
       // Set the line-height to have the extenders touch,
-      // (plus a little extra for Safari, whose line-height is
-      // not accurate), and shift the extender stack to overlap
-      // the ends.
+      // and shift the extender stack to overlap the ends.
       //
-      css['line-height'] = this.em0(h + d + 0.005);
-      styles[`mjx-stretchy-v${c} > mjx-${part} > mjx-spacer`] = {
-        'margin-top': this.em(-d),
-      };
+      fuzz = VFUZZ;
+      const lh = Math.max(VFUZZ, h + d - VFUZZ);
+      css['line-height'] = this.em0(lh);
+      //
+      // Adjust the top margin to make sure we have overlap with the top part
+      //
+      const D = h - lh / 2 - VFUZZ;
+      if (D) {
+        styles[`mjx-stretchy-v${c} > mjx-ext > mjx-spacer`] = {
+          'margin-top': this.em(D),
+        };
+      }
     }
     styles[`mjx-stretchy-v${c} > mjx-${part}`] = css;
-    return h + d;
+    return Math.max(0, h + d - fuzz);
   }
 
   /*******************************************************/
@@ -556,7 +565,7 @@ export class ChtmlFontData extends FontData<
     }
     if (data.ext) {
       styles[`mjx-stretchy-h${c} > mjx-ext > mjx-spacer`]['letter-spacing'] =
-        this.em(-data.ext);
+        this.em(-data.ext - HFUZZ);
     }
   }
 

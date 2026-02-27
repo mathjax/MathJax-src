@@ -30,6 +30,8 @@ import {
   SvgDelimiterData,
   SvgFontData,
   SvgFontDataClass,
+  VFUZZ,
+  HFUZZ,
 } from '../FontData.js';
 import {
   CommonMo,
@@ -40,11 +42,6 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
 import { BBox } from '../../../util/BBox.js';
 import { DIRECTION, SvgCharData } from '../FontData.js';
-
-/*****************************************************************/
-
-const VFUZZ = 0.1; // overlap for vertical stretchy glyphs
-const HFUZZ = 0.1; // overlap for horizontal stretchy glyphs
 
 /*****************************************************************/
 /**
@@ -333,27 +330,40 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {number} B    The height of the bottom glyph in the delimiter
      * @param {number} W    The width of the stretched delimiter
      */
-    /* prettier-ignore */
-    protected addExtV(n: number, v: string, H: number, D: number, T: number, B: number, W: number) {
+    protected addExtV(
+      n: number,
+      v: string,
+      H: number,
+      D: number,
+      T: number,
+      B: number,
+      W: number
+    ) {
       if (!n) return;
-      T = Math.max(0, T - VFUZZ);              // A little overlap on top
-      B = Math.max(0, B - VFUZZ);              // A little overlap on bottom
+      T = Math.max(0, T - VFUZZ); //             // A little overlap on top
+      B = Math.max(0, B - VFUZZ); //             // A little overlap on bottom
       const adaptor = this.adaptor;
       const [h, d, w] = this.getChar(n, v);
-      const Y = H + D - T - B;                 // The height of the extender
-      const s = 1.5 * Y / (h + d);             // Scale height by 1.5 to avoid bad ends
-                                               //   (glyphs with rounded or anti-aliased ends don't stretch well,
-                                               //    so this makes for sharper ends)
-      const y = (s * (h - d) - Y) / 2;         // The bottom point to clip the extender
+      const Y = H + D - T - B; //                // The height of the extender
+      const s = (1.5 * Y) / (h + d); //          // Scale height by 1.5 to avoid bad ends
+      //                                         //   (glyphs with rounded or anti-aliased ends don't stretch well,
+      //                                         //    so this makes for sharper ends)
+      const y = (s * (h - d) - Y) / 2; //        // The bottom point to clip the extender
       if (Y <= 0) return;
       const svg = this.svg('svg', {
-        width: this.fixed(w), height: this.fixed(Y),
-        y: this.fixed(B - D), x: this.fixed((W - w) / 2),
-        viewBox: [0, y, w, Y].map(x => this.fixed(x)).join(' ')
+        width: this.fixed(w),
+        height: this.fixed(Y),
+        y: this.fixed(B - D),
+        x: this.fixed((W - w) / 2),
+        viewBox: [0, y, w, Y].map((x) => this.fixed(x)).join(' '),
       });
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
-      adaptor.setAttribute(glyph as N, 'transform', `scale(1,${this.jax.fixed(s)})`);
+      adaptor.setAttribute(
+        glyph as N,
+        'transform',
+        `scale(1,${this.jax.fixed(s)})`
+      );
       if (this.dom[0]) {
         adaptor.append(this.dom[0], svg);
       }

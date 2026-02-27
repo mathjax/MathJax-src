@@ -30,6 +30,11 @@ import { retryAfter } from '../../util/Retries.js';
 import { DIRECTION } from './Direction.js';
 export { DIRECTION } from './Direction.js';
 
+/*****************************************************************/
+
+export const VFUZZ = 0.07; // overlap for vertical stretchy glyphs
+export const HFUZZ = 0.07; // overlap for horizontal stretchy glyphs
+
 /****************************************************************************/
 
 /**
