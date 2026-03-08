@@ -393,16 +393,13 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
           //
           if (W < 0 && nl) {
             dom.push(
-              this.html(
-                part,
-                {
-                  ...(font ? { class: font } : {}),
-                  style: {
-                    'border-width': `${this.em(Wb + W / 2)} 0 ${this.em(We + W / 2)}`,
-                    'clip-path': 'none',
-                  },
-                }
-              )
+              this.html(part, {
+                ...(font ? { class: font } : {}),
+                style: {
+                  'border-width': `${this.em(Wb + W / 2)} 0 ${this.em(We + W / 2)}`,
+                  'clip-path': 'none',
+                },
+              })
             );
             return;
           }
