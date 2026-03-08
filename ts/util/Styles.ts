@@ -33,8 +33,10 @@ export type StyleList = { [name: string]: string };
 /* prettier-ignore */
 export type connection = {
   children: string[],               // suffix names to add to the base name
+  parts?: string[],                 // suffix names for sub-parts
   split: (name: string) => void,    // function to split the value for the children
   combine: (name: string) => void   // function to combine the child values when one changes
+  subPart?: boolean                 // true means children combine to a different parent
 };
 
 /**
@@ -53,7 +55,7 @@ export const WSC = ['width', 'style', 'color'];
  * Split a style at spaces (taking quotation marks and commas into account)
  *
  * @param {string} text  The combined styles to be split at spaces
- * @returns {string[]}    Array of parts of the style (separated by spaces)
+ * @returns {string[]}   Array of parts of the style (separated by spaces)
  */
 function splitSpaces(text: string): string[] {
   const parts = text.split(/((?:'[^'\n]*'|"[^"\n]*"|,[\s\n]|[^\s\n])*)/g);
@@ -105,7 +107,7 @@ function combineTRBL(name: string) {
   const children = Styles.connect[name].children;
   const parts = [] as string[];
   for (const child of children) {
-    const part = this.styles[name + '-' + child];
+    const part = this.styles[this.childName(name, child)];
     if (!part) {
       delete this.styles[name];
       return;
@@ -122,6 +124,18 @@ function combineTRBL(name: string) {
     }
   }
   this.styles[name] = parts.join(' ');
+}
+
+/**
+ * Combine styles for a given border part (e.g., border-color)
+ *
+ * @param {string} name  The name of the part to process
+ */
+function combinePart(name: string) {
+  combineTRBL.call(this, name);
+  this.combineChildren(name);
+  combineSame.call(this, name);
+  this.combineParent(name);
 }
 
 /*********************************************************/
@@ -143,6 +157,7 @@ function splitSame(name: string) {
  * @param {string} name   The style to be processed
  */
 function combineSame(name: string) {
+  if (!Styles.connect[name]) return;
   const children = [...Styles.connect[name].children];
   const value = this.styles[this.childName(name, children.shift())];
   for (const child of children) {
@@ -151,7 +166,9 @@ function combineSame(name: string) {
       return;
     }
   }
-  this.styles[name] = value;
+  if (value) {
+    this.styles[name] = value;
+  }
 }
 
 /*********************************************************/
@@ -198,7 +215,7 @@ function combineWSC(name: string) {
       parts.push(value);
     }
   }
-  if (parts.length) {
+  if (parts.length > 1) {
     this.styles[name] = parts.join(' ');
   } else {
     delete this.styles[name];
@@ -373,6 +390,7 @@ export class Styles {
 
     border: {
       children: TRBL,
+      parts: WSC,
       split: splitSame,
       combine: combineSame,
     },
@@ -399,17 +417,20 @@ export class Styles {
     'border-width': {
       children: TRBL,
       split: splitTRBL,
-      combine: null, // means its children combine to a different parent
+      combine: combinePart,
+      subPart: true,
     },
     'border-style': {
       children: TRBL,
       split: splitTRBL,
-      combine: null, // means its children combine to a different parent
+      combine: combinePart,
+      subPart: true,
     },
     'border-color': {
       children: TRBL,
       split: splitTRBL,
-      combine: null, // means its children combine to a different parent
+      combine: combinePart,
+      subPart: true,
     },
 
     font: {
@@ -469,9 +490,12 @@ export class Styles {
     for (const name of Object.keys(this.styles)) {
       const parent = this.parentName(name);
       const cname = name.replace(/.*-/, '');
+      const pname = this.childName(this.parentName(parent), cname);
       if (
-        !this.styles[parent] ||
-        !Styles.connect[parent]?.children?.includes(cname)
+        this.styles[name] &&
+        !this.styles[pname] &&
+        (!this.styles[parent] ||
+          !Styles.connect[parent]?.children?.includes(cname))
       ) {
         styles.push(`${name}: ${this.styles[name]};`);
       }
@@ -493,37 +517,49 @@ export class Styles {
   public set(name: string, value: string | number | boolean) {
     name = this.normalizeName(name);
     this.setStyle(name, String(value));
-    //
-    // If there is no combine function, the children combine to
-    // a separate parent (e.g., border-width sets border-top-width, etc.
-    // and combines to border-top)
-    //
-    if (Styles.connect[name] && !Styles.connect[name].combine) {
-      this.combineChildren(name);
-      delete this.styles[name];
+    const connect = Styles.connect[name];
+    if (connect?.subPart) {
+      connect.combine.call(this, name);
+      return;
     }
-    //
-    // If we just changed a child, we need to try to combine
-    // it with its parent's other children
-    //
+    this.combineParent(name);
+    if (name.match(/-.*-/)) {
+      const pname = name.replace(/-.*-/, '-');
+      combineSame.call(this, pname);
+    }
+  }
+
+  /**
+   * When we change a child, we need to try to combine
+   * it with its parent's other children.
+   *
+   * @param {string} name   The child that was changed
+   */
+  public combineParent(name: string) {
     while (name.match(/-/)) {
       const cname = name;
       name = this.parentName(name);
+      const connect = Styles.connect[name];
       if (
         !Styles.connect[cname] &&
-        !Styles.connect[name]?.children?.includes(
-          cname.substring(name.length + 1)
-        )
+        !connect?.children?.includes(cname.substring(name.length + 1))
       ) {
         break;
       }
-      Styles.connect[name].combine.call(this, name);
+      connect.combine.call(this, name);
+    }
+    if (!this.styles[name]) {
+      return;
+    }
+    const connect = Styles.connect[name];
+    for (const cname of connect?.parts || []) {
+      delete this.styles[this.childName(name, cname)];
     }
   }
 
   /**
    * @param {string} name  The name of the style to get
-   * @returns {string}      The value of the style (or empty string if not defined)
+   * @returns {string}     The value of the style (or empty string if not defined)
    */
   public get(name: string): string {
     name = this.normalizeName(name);
@@ -536,7 +572,7 @@ export class Styles {
    */
   protected setStyle(name: string, value: string) {
     this.styles[name] = this.sanitizeValue(value);
-    if (Styles.connect[name] && Styles.connect[name].children) {
+    if (Styles.connect[name]?.children) {
       Styles.connect[name].split.call(this, name);
     }
     if (value === '') {
@@ -577,10 +613,10 @@ export class Styles {
       return child;
     }
     //
-    // For non-combining styles, like border-width, insert
-    //   the child name before the find word, e.g., border-top-width
+    // For sub-part styles, like border-width, insert
+    //   the child name before the final word, e.g., border-top-width
     //
-    if (Styles.connect[name] && !Styles.connect[name].combine) {
+    if (Styles.connect[name]?.subPart) {
       child += name.replace(/.*-/, '-');
       name = this.parentName(name);
     }
@@ -589,7 +625,7 @@ export class Styles {
 
   /**
    * @param {string} name  The name of a style to normalize
-   * @returns {string}      The name converted from CamelCase to lowercase with dashes
+   * @returns {string}     The name converted from CamelCase to lowercase with dashes
    */
   protected normalizeName(name: string): string {
     return name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase());

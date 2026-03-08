@@ -301,7 +301,7 @@ export class SpeechExplorer
    */
   protected static keyMap: Map<string, [keyMapping, boolean?]> = new Map([
     ['Tab', [(explorer, event) => explorer.tabKey(event)]],
-    ['Escape', [(explorer) => explorer.escapeKey()]],
+    ['Escape', [(explorer, event) => explorer.escapeKey(event)]],
     ['Enter', [(explorer, event) => explorer.enterKey(event)]],
     ['Home', [(explorer) => explorer.homeKey()]],
     [
@@ -469,6 +469,11 @@ export class SpeechExplorer
   protected anchors: HTMLElement[];
 
   /**
+   * The elements that are focusable for tab navigation
+   */
+  protected tabs: HTMLElement[];
+
+  /**
    * Whether the expression was focused by a back tab
    */
   protected backTab: boolean = false;
@@ -498,7 +503,8 @@ export class SpeechExplorer
   /**
    * @override
    */
-  public FocusIn(_event: FocusEvent) {
+  public FocusIn(event: FocusEvent) {
+    if ((event.target as HTMLElement).closest('mjx-html')) return;
     if (this.item.outputData.nofocus) {
       //
       // we are refocusing after a menu or dialog box has closed
@@ -508,7 +514,7 @@ export class SpeechExplorer
     }
     if (!this.clicked) {
       this.Start();
-      this.backTab = _event.target === this.img;
+      this.backTab = event.target === this.img;
     }
     this.clicked = null;
   }
@@ -639,8 +645,7 @@ export class SpeechExplorer
     //   focus on the clicked element when focusin occurs
     //   start the explorer if this isn't a link
     //
-    if (!clicked || this.node.contains(clicked)) {
-      this.stopEvent(event);
+    if (!this.clicked && (!clicked || this.node.contains(clicked))) {
       this.refocus = clicked;
       if (!this.triggerLinkMouse()) {
         this.Start();
@@ -658,7 +663,6 @@ export class SpeechExplorer
     if (hasModifiers(event) || event.buttons === 2 || direction !== 'none') {
       this.FocusOut(null);
     } else {
-      this.stopEvent(event);
       this.refocus = this.rootNode();
       this.Start();
     }
@@ -696,48 +700,108 @@ export class SpeechExplorer
   /**
    * Stop exploring and focus the top element
    *
-   * @returns {boolean}  Don't cancel the event
+   * @param {KeyboardEvent} event   The event for the escape key
+   * @returns {boolean}             Don't cancel the event
    */
-  protected escapeKey(): boolean {
-    this.Stop();
-    this.focusTop();
-    this.setCurrent(null);
+  protected escapeKey(event: KeyboardEvent): void | boolean {
+    if ((event.target as HTMLElement).closest('mjx-html')) {
+      this.refocus = (event.target as HTMLElement).closest(nav);
+      this.Start();
+    } else {
+      this.Stop();
+      this.focusTop();
+      this.setCurrent(null);
+    }
     return true;
   }
 
   /**
-   * Tab to the next internal link, if any, and stop the event from
-   * propagating, or if no more links, let it propagate so that the
-   * browser moves to the next focusable item.
+   * Tab to the next internal link or focusable HTML elelemt, if any,
+   * and stop the event from propagating, or if no more focusable
+   * elements, let it propagate so that the browser moves to the next
+   * focusable item.
    *
    * @param {KeyboardEvent} event  The event for the enter key
    * @returns {void | boolean}     False means play the honk sound
    */
   protected tabKey(event: KeyboardEvent): void | boolean {
-    if (this.anchors.length === 0 || !this.current) return true;
+    //
+    // Get the currently active element in the expression
+    //
+    const active =
+      this.current ??
+      (this.node.contains(document.activeElement)
+        ? document.activeElement
+        : null);
+    if (this.tabs.length === 0 || !active) return true;
+    //
+    // If we back tabbed into the expression, tab to the first focusable item.
+    //
     if (this.backTab) {
       if (!event.shiftKey) return true;
-      const link = this.linkFor(this.anchors[this.anchors.length - 1]);
-      if (this.anchors.length === 1 && link === this.current) {
-        return true;
-      }
-      this.setCurrent(link);
+      this.tabTo(this.tabs[this.tabs.length - 1]);
       return;
     }
-    const [anchors, position, current] = event.shiftKey
+    //
+    // Otherwise, look through the list of focusable items to find the
+    // next one after (or before) the active item, and tab to it.
+    //
+    const [tabs, position, current] = event.shiftKey
       ? [
-          this.anchors.slice(0).reverse(),
+          this.tabs.slice(0).reverse(),
           Node.DOCUMENT_POSITION_PRECEDING,
-          this.isLink() ? this.getAnchor() : this.current,
+          this.current && this.isLink() ? this.getAnchor() : active,
         ]
-      : [this.anchors, Node.DOCUMENT_POSITION_FOLLOWING, this.current];
-    for (const anchor of anchors) {
-      if (current.compareDocumentPosition(anchor) & position) {
-        this.setCurrent(this.linkFor(anchor));
+      : [this.tabs, Node.DOCUMENT_POSITION_FOLLOWING, active];
+    for (const tab of tabs) {
+      if (current.compareDocumentPosition(tab) & position) {
+        this.tabTo(tab);
         return;
       }
     }
+    //
+    // If we are shift-tabbing from the root node, set up to tab out of
+    // the expression.
+    //
+    if (event.shiftKey && this.current === this.rootNode()) {
+      this.tabOut();
+    }
+    //
+    // Process the tab as normal
+    //
     return true;
+  }
+
+  /**
+   * @param {HTMLElement} node   The node within the expression to receive the focus
+   */
+  protected tabTo(node: HTMLElement) {
+    if (node.getAttribute('data-mjx-href')) {
+      this.setCurrent(this.linkFor(node));
+    } else {
+      node.focus();
+    }
+  }
+
+  /**
+   * Shift-Tab to previous focusable element (by temporarily making
+   * any focusable elements in the expression have display none, so
+   * they will be skipped by tabbing).
+   */
+  protected tabOut() {
+    const html = Array.from(
+      this.node.querySelectorAll('mjx-html')
+    ) as HTMLElement[];
+    if (html.length) {
+      html.forEach((node) => {
+        node.style.display = 'none';
+      });
+      setTimeout(() => {
+        html.forEach((node) => {
+          node.style.display = '';
+        });
+      }, 0);
+    }
   }
 
   /**
@@ -752,11 +816,18 @@ export class SpeechExplorer
         this.Stop();
       } else {
         const expandable = this.actionable(this.current);
-        if (!expandable) {
-          return false;
+        if (expandable) {
+          this.refocus = expandable;
+          expandable.dispatchEvent(new Event('click'));
+          return;
         }
-        this.refocus = expandable;
-        expandable.dispatchEvent(new Event('click'));
+        const tabs = this.getInternalTabs(this.current).filter(
+          (node) => !node.getAttribute('data-mjx-href')
+        );
+        if (tabs.length) {
+          tabs[0].focus();
+          return;
+        }
       }
     } else {
       this.Start();
@@ -1277,7 +1348,7 @@ export class SpeechExplorer
       if (this.img) {
         this.node.append(this.img);
       }
-      this.node.setAttribute('tabindex', '0');
+      this.node.setAttribute('tabindex', this.tabIndex);
     }
   }
 
@@ -1387,6 +1458,7 @@ export class SpeechExplorer
     }
     container.appendChild(this.img);
     this.adjustAnchors();
+    this.getTabs();
   }
 
   /**
@@ -1427,6 +1499,25 @@ export class SpeechExplorer
       anchor.removeAttribute('data-mjx-href');
     }
     this.anchors = [];
+  }
+
+  /**
+   * Find all the focusable elements in the expression (for tabbing)
+   */
+  protected getTabs() {
+    this.tabs = this.getInternalTabs(this.node);
+  }
+
+  /**
+   * @param {HTMLElement} node   The node whose internal focusable elements are to be found
+   * @returns {HTMLElement[]}    The list of focusable element within the given one
+   */
+  protected getInternalTabs(node: HTMLElement): HTMLElement[] {
+    return Array.from(
+      node.querySelectorAll(
+        'button, [data-mjx-href], input, select, textarea, [tabindex]:not([tabindex="-1"],mjx-speech)'
+      )
+    );
   }
 
   /**
@@ -1904,12 +1995,19 @@ export class SpeechExplorer
   }
 
   /**
+   * @returns {string}   The tabIndex to use when not exploring
+   */
+  protected get tabIndex(): string {
+    return this.document.options.a11y.inTabOrder ? '0' : '-1';
+  }
+
+  /**
    * @override
    */
   public Attach() {
     if (this.attached) return;
     super.Attach();
-    this.node.setAttribute('tabindex', '0');
+    this.node.setAttribute('tabindex', this.tabIndex);
     this.attached = true;
   }
 
@@ -1923,7 +2021,7 @@ export class SpeechExplorer
     this.node.removeAttribute('aria-label');
     this.img?.remove();
     if (this.active) {
-      this.node.setAttribute('tabindex', '0');
+      this.node.setAttribute('tabindex', this.tabIndex);
     }
     this.attached = false;
   }
@@ -1941,7 +2039,34 @@ export class SpeechExplorer
   public AddEvents() {
     if (!this.eventsAttached) {
       super.AddEvents();
+      this.addHtmlEvents();
       this.eventsAttached = true;
+    }
+  }
+
+  /**
+   * Prevent clicks in mjx-html nodes from propagating, so clicks in
+   * HTML input elements or other selectable nodes will stop
+   * the explorer from processing the click.
+   */
+  protected addHtmlEvents() {
+    for (const html of Array.from(this.node.querySelectorAll('mjx-html'))) {
+      const stop = (event: Event) => {
+        if (html.contains(document.activeElement)) {
+          if (event instanceof KeyboardEvent) {
+            this.clicked = null;
+            if (event.key !== 'Tab' && event.key !== 'Escape') {
+              event.stopPropagation();
+            }
+          } else {
+            this.clicked = event.target as HTMLElement;
+          }
+        }
+      };
+      html.addEventListener('mousedown', stop);
+      html.addEventListener('click', stop);
+      html.addEventListener('keydown', stop);
+      html.addEventListener('dblclick', stop);
     }
   }
 

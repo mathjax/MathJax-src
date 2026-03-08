@@ -369,6 +369,7 @@ export function ExplorerMathDocumentMixin<
         brailleCombine: false,             // combine Braille with speech output
         help: true,                        // include "press h for help" messages on focus
         roleDescription: 'math',           // the role description to use for math expressions
+        inTabOrder: true,                  // true if expressin get tabindex = 0
         tabSelects: 'all',                 // 'all' for whole expression, 'last' for last explored node
       }
     };

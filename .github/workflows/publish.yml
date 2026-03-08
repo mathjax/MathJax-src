@@ -4,13 +4,14 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     name: Build and publish MathJax
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,6 +21,10 @@ jobs:
         with:
           version: 10
           run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install packages
@@ -31,13 +36,10 @@ jobs:
           pnpm -s link:src
           pnpm -s build-all
         
-      - name: Temp fix to publish
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-          echo "always-auth=true" >> ~/.npmrc
-
       - name: Publish to npmjs
-        run: pnpm publish --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance
+
+#        run: pnpm publish --access public --no-git-checks
+#        env:
+#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

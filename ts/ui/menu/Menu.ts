@@ -84,7 +84,6 @@ export interface MenuSettings {
   autocollapse: boolean;
   collapsible: boolean;
   enrich: boolean;
-  inTabOrder: boolean;
   assistiveMml: boolean;
   // A11y settings
   backgroundColor: string;
@@ -99,6 +98,7 @@ export interface MenuSettings {
   infoPrefix: boolean;
   infoRole: boolean;
   infoType: boolean;
+  inTabOrder: boolean;
   locale: string;
   magnification: string;
   magnify: string;
@@ -153,7 +153,6 @@ export class Menu {
       autocollapse: false,
       collapsible: false,
       enrich: true,
-      inTabOrder: true,
       assistiveMml: false,
       speech: true,
       braille: true,
@@ -162,6 +161,7 @@ export class Menu {
       brailleCombine: false,
       speechRules: 'clearspeak-default',
       roleDescription: 'math',
+      inTabOrder: true,
       tabSelects: 'all',
       help: true,
     },
@@ -669,7 +669,7 @@ export class Menu {
         this.variable<boolean>('enrich', (enrich) =>
           this.setEnrichment(enrich)
         ),
-        this.variable<boolean>('inTabOrder', (tab) => this.setTabOrder(tab)),
+        this.a11yVar<boolean>('inTabOrder', (tab) => this.setTabOrder(tab)),
         this.a11yVar<string>('tabSelects'),
         this.variable<boolean>('assistiveMml', (mml) =>
           this.setAssistiveMml(mml)
@@ -1087,12 +1087,7 @@ export class Menu {
       this.settings.renderer.replace(/[^a-zA-Z0-9]/g, '') || 'CHTML';
     (Menu._loadingPromise || Promise.resolve()).then(() => {
       const settings = this.settings;
-      const options = this.document.outputJax.options;
-      options.scale = parseFloat(settings.scale);
-      options.displayOverflow = settings.overflow.toLowerCase();
-      if (options.linebreaks) {
-        options.linebreaks.inline = settings.breakInline;
-      }
+      this.applyRendererOptions(this.document.outputJax);
       if (!settings.speechRules) {
         const sre = this.document.options.sre;
         settings.speechRules = `${sre.domain || 'clearspeak'}-${sre.style || 'default'}`;
@@ -1143,6 +1138,7 @@ export class Menu {
    */
   protected setRenderer(jax: string, rerender: boolean = true): Promise<void> {
     if (Object.hasOwn(this.jax, jax) && this.jax[jax]) {
+      this.applyRendererOptions(this.jax[jax]);
       return this.setOutputJax(jax, rerender);
     }
     const name = jax.toLowerCase();
@@ -1153,7 +1149,7 @@ export class Menu {
           return fail(new Error(`Component ${name} not loaded`));
         }
         startup.useOutput(name, true);
-        startup.output = startup.getOutputJax();
+        startup.output = this.applyRendererOptions(startup.getOutputJax());
         startup.output.setAdaptor(this.document.adaptor);
         startup.output.initialize();
         this.jax[jax] = startup.output;
@@ -1162,6 +1158,23 @@ export class Menu {
           .catch((err) => fail(err));
       });
     });
+  }
+
+  /**
+   * @param {OutputJax<HTMLElement, Text, Document>} output   The output jax to adjust.
+   * @returns {OutputJax<HTMLElement, Text, Document>}        The adjusted output jax.
+   */
+  protected applyRendererOptions(
+    output: OutputJax<HTMLElement, Text, Document>
+  ): OutputJax<HTMLElement, Text, Document> {
+    const settings = this.settings;
+    const options = output.options;
+    options.scale = parseFloat(settings.scale);
+    options.displayOverflow = settings.overflow.toLowerCase();
+    if (options.linebreaks) {
+      options.linebreaks.inline = settings.breakInline;
+    }
+    return output;
   }
 
   /**

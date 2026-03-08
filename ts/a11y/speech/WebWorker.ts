@@ -334,13 +334,11 @@ export class WorkerHandler<N, T, D> {
       adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
       this.setSpecialAttributes(node, sid, '');
     }
-    this.setSpeechAttributes(
-      adaptor.childNodes(container)[0],
-      '',
-      data,
-      speech,
-      braille
-    );
+    for (const child of adaptor.childNodes(container)) {
+      if (adaptor.kind(child) === 'mjx-math' || adaptor.kind(child) === 'svg') {
+        this.setSpeechAttributes(child, '', data, speech, braille);
+      }
+    }
     if (speech) {
       if (data.label) {
         adaptor.setAttribute(container, SemAttr.SPEECH, data.label);

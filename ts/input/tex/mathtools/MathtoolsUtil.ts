@@ -158,7 +158,7 @@ export const MathtoolsUtil = {
       parser.stack.env,
       parser.configuration
     ).mml();
-    return mml.isKind('TeXAtom') && mml.childNodes[0].childNodes.length === 0
+    return mml.isKind('TeXAtom') && mml.isEmpty
       ? parser.create('node', 'none')
       : mml;
   },

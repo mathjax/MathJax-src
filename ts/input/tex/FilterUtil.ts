@@ -187,10 +187,7 @@ const FilterUtil = {
       const attribs = mml.attributes;
       attribs.unset(TexConstant.Attr.LATEXITEM);
       for (const key of attribs.getExplicitNames()) {
-        if (
-          !keep.has(key) &&
-          attribs.get(key) === mml.attributes.getInherited(key)
-        ) {
+        if (!keep.has(key) && attribs.get(key) === attribs.getInherited(key)) {
           attribs.unset(key);
         }
       }

@@ -1,12 +1,20 @@
 import {combineDefaults, combineWithMathJax} from '#js/components/global.js';
 import {Package} from '#js/components/package.js';
 import {hasWindow} from '#js/util/context.js';
+import {mathjax} from '#js/mathjax.js'
 
 export function configFont(font, jax, config, extension = '') {
-  const path = (config.fontPath || `[fonts]/%%FONT%%-font${extension}`);
+  const version =
+        (MathJax.config.loader?.paths?.fonts || '').substring(0, 24) === 'https://cdn.jsdelivr.net'
+          ? `@%%VERSION%%` : '';
+  const path = (config.fontPath || `[fonts]/%%FONT%%-font${extension}${version}`);
   const name = (font.match(/^[a-z]+:/) ? (font.match(/[^/:\\]*$/) || [jax])[0] : font);
   combineDefaults(MathJax.config.loader, 'paths', {
-    [name+extension]: (name === font ? path.replace(/%%FONT%%/g, font) : font)
+    [name+extension]: (
+      name === font
+        ? path.replace(/%%FONT%%/g, font).replace(/%%VERSION%%/g, mathjax.version)
+        : font
+    )
   });
   return `[${name}${extension}]`;
 }

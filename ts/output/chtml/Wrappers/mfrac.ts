@@ -388,12 +388,12 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
       //
       //  Place the parts
       //
-      const { u, v, delta, nbox, dbox } = this.getBevelData(display);
+      const { u, v, delta } = this.getBevelData(display);
       if (u) {
-        adaptor.setStyle(num, 'verticalAlign', this.em(u / nbox.scale));
+        adaptor.setStyle(num, 'verticalAlign', this.em(u));
       }
       if (v) {
-        adaptor.setStyle(den, 'verticalAlign', this.em(v / dbox.scale));
+        adaptor.setStyle(den, 'verticalAlign', this.em(v));
       }
       const dx = this.em(-delta / 2);
       adaptor.setStyle(this.bevel.dom[0], 'marginLeft', dx);

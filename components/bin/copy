@@ -48,11 +48,10 @@ const bundle = (process.argv[3] || 'bundle');
 const json = path.resolve(process.argv[4] || '.', 'config.json');
 let configs = require(json).copy;
 if (!configs) process.exit();
-const wd = path.dirname(json);
-process.chdir(wd);
 if (!Array.isArray(configs)) {
   configs = [configs];
 }
+process.chdir(path.dirname(json));
 
 /**
  * Get the directory for node modules (either the parent of the MathJax directory,
@@ -60,6 +59,13 @@ if (!Array.isArray(configs)) {
  */
 const parent = path.resolve(__dirname, '..', '..');
 const nodeDir = (dir => (fs.existsSync(dir) ? dir : path.resolve(parent, '..')))(path.join(parent, 'node_modules'));
+
+/**
+ * Other top-level directories
+ */
+const tsDir = path.resolve(parent, 'ts');
+const jsDir = path.resolve(parent, target);
+const bundleDir = path.resolve(parent, bundle);
 
 /**
  * Copy a file or directory tree
@@ -85,13 +91,27 @@ function copyFile(from, to, name, space) {
 }
 
 /**
+ * @param {string} name   The file name to process
+ * @returns {string}      The name with paths replaced by full directories
+ */
+function resolvePaths(name) {
+  return path.resolve(
+    process.cwd(),
+    name.replace(/^\[node\]/, nodeDir)
+      .replace(/^\[ts\]/, tsDir)
+      .replace(/^\[js\]/, jsDir)
+      .replace(/^\[bundle\]/, bundleDir)
+  );
+}
+
+/**
  * Handle the copying for a given configuration
  *
  * @param {{from: string, to: string, copy: string[]}} config  The configuration for the copy operation
  */
 function processConfig(config) {
-  const to = path.resolve(wd, config.to.replace(/\/bundle(\/|$)/, '/' + bundle + '$1'));
-  const from = path.resolve(wd, config.from.replace(/\[node\]/, nodeDir));
+  const to = resolvePaths(config.to);
+  const from = resolvePaths(config.from);
   for (const name of config.copy) {
     copyFile(from, to, name, '');
   }

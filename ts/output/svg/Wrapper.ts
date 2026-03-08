@@ -155,7 +155,13 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @returns {boolean}     True when embellished output is produced, false if not
    */
   public toEmbellishedSVG(parents: N[]): boolean {
-    if (parents.length <= 1 || !this.node.isEmbellished) return false;
+    if (
+      parents.length <= 1 ||
+      !this.node.isEmbellished ||
+      this.node.parent.isEmbellished
+    ) {
+      return false;
+    }
     const style = this.coreMO().embellishedBreakStyle;
     //
     // At the end of the first line or beginning of the second,

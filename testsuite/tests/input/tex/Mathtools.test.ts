@@ -6285,7 +6285,7 @@ describe('Mathtools options', () => {
          <mo data-latex="[" stretchy="false">[</mo>
          <mi data-latex="x">x</mi>
          <mo data-latex="]" stretchy="false">]</mo>
-         <mo data-mjx-texclass="ORD" data-latex="|">|</mo>
+         <mo data-mjx-texclass="ORD" stretchy="false" data-latex="|">|</mo>
          <mrow data-mjx-texclass="OPEN" data-latex="\\mathopen{\\left|[x]\\right|}">
            <mrow data-mjx-texclass="INNER" data-latex="\\left|[x]\\right|">
              <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>

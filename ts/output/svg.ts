@@ -141,7 +141,11 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * @override
    */
   get forceInlineBreaks() {
-    return true; // We need to break up the output into several separate SVGs
+    //
+    // When inlinebreaks are enabled, we need to break up the output
+    // into several separate SVGs.
+    //
+    return this.options.linebreaks.inline;
   }
 
   /**

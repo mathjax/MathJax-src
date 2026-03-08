@@ -169,7 +169,7 @@ new sm.CharacterMap('mathchar0mi', ParseMethods.mathchar0mi, {
  * Macros for operators.
  */
 new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
-  surd: '\u221A',
+  surd: ['\u221A', { symmetric: true }],
 
   // big ops
   coprod: ['\u2210', { movesupsub: true }],

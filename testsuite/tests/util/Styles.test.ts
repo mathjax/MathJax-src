@@ -311,11 +311,14 @@ describe('CssStyles object', () => {
     cssTest('border-radius: 3px', {
       'border-radius': '3px',
     });
-    cssTest('background: red; background-clip: none', {
-      'background': 'red',
-      'background-clip': 'none',
+    cssTest('border-color: red', {
+      'border-bottom-color': 'red',
+      'border-color': 'red',
+      'border-left-color': 'red',
+      'border-right-color': 'red',
+      'border-top-color': 'red',
     });
-    cssTest(' border-top: inset blue 2px; border: 3px solid red', {
+    cssTest('border-top: inset blue 2px; border: 3px solid red', {
       'border': '3px solid red',
       'border-top': '3px solid red',
       'border-top-color': 'red',
@@ -340,6 +343,13 @@ describe('CssStyles object', () => {
       'border-top-style': 'solid',
       'border-top-width': '3px',
     }, 'border-top: 3px solid red;');
+  });
+
+  test('background', () => {
+    cssTest('background: red; background-clip: none', {
+      'background': 'red',
+      'background-clip': 'none',
+    });
   });
 
   test('font', () => {
@@ -428,6 +438,9 @@ describe('CssStyles object', () => {
       'font-size': '120%',
       'font-family': 'arial',
       'font-style': 'italic'
+    });
+    cssFontTest('font-size-adjust: none', {
+      'font-size-adjust': 'none',
     });
   });
 
