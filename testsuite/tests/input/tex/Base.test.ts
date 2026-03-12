@@ -10,65 +10,32 @@ beforeEach(() => setupTex(['base']));
 describe('Identifiers', () => {
 
   /********************************************************************************/
-
   it('Identifier', () => {
-    toXmlMatch(
-      tex2mml('x'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x" display="block">
-         <mi data-latex="x">x</mi>
-       </math>`
-    );
+    expect(tex2mml('x')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Two Identifiers', () => {
-    toXmlMatch(
-      tex2mml('xy'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="xy" display="block">
-         <mi data-latex="x">x</mi>
-         <mi data-latex="y">y</mi>
-       </math>`
-    );
+    expect(tex2mml('xy')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Capital', () => {
-    toXmlMatch(
-      tex2mml('A'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A" display="block">
-         <mi data-latex="A">A</mi>
-       </math>`
-    );
+    expect(tex2mml('A')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Other Characters', () => {
-     toXmlMatch(
-       tex2mml('x + \u00eb'),
-       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x + &#xEB;" display="block">
-          <mi data-latex="x">x</mi>
-          <mo data-latex="+">+</mo>
-          <mi data-latex="&#xEB;">&#xEB;</mi>
-        </math>`
-     );
+    expect(tex2mml('x + \u00eb')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Other Character Variant', () => {
-     toXmlMatch(
-       tex2mml('\\mathbf{\u0391}\u0391\u3333'),
-       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbf{&#x391;}&#x391;&#x3333;" display="block">
-          <mrow data-mjx-texclass="ORD" data-latex="\\mathbf{&#x391;}">
-            <mi mathvariant="bold" data-latex="&#x391;">&#x391;</mi>
-          </mrow>
-          <mi mathvariant="normal" data-latex="&#x391;">&#x391;</mi>
-          <mi mathvariant="normal" data-latex="&#x3333;">&#x3333;</mi>
-        </math>`
-     );
+    expect(tex2mml('\\mathbf{\u0391}\u0391\u3333')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -83,169 +50,67 @@ describe('Sub and Superscripts', () => {
   /********************************************************************************/
 
   it('Empty base', () => {
-    toXmlMatch(
-      tex2mml('^2'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="^2" display="block">
-         <msup data-latex="^2">
-           <mi></mi>
-           <mn data-latex="2">2</mn>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml('^2')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Empty base2', () => {
-    toXmlMatch(
-      tex2mml('{}^2'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="{}^2" display="block">
-         <msup data-latex="{}^2">
-           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-           <mn data-latex="2">2</mn>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml('{}^2')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Square', () => {
-    toXmlMatch(
-      tex2mml('x^2'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x^2" display="block">
-         <msup data-latex="x^2">
-           <mi data-latex="x">x</mi>
-           <mn data-latex="2">2</mn>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml('x^2')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Cube', () => {
-    toXmlMatch(
-      tex2mml('x^3'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x^3" display="block">
-         <msup data-latex="x^3">
-           <mi data-latex="x">x</mi>
-           <mn data-latex="3">3</mn>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml('x^3')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Large Operator', () => {
-    toXmlMatch(
-      tex2mml('\\sum^2_1'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sum^2_1" display="block">
-         <munderover data-latex="\\sum^2 _1">
-           <mo data-latex="\\sum">&#x2211;</mo>
-           <mn data-latex="1">1</mn>
-           <mn data-latex="2">2</mn>
-         </munderover>
-       </math>`
-    );
+    expect(tex2mml('\\sum^2_1')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Move Superscript', () => {
-    toXmlMatch(
-      tex2mml('\\left( \\sum_1^n \\right)^{2}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\left( \\sum_1^n \\right)^{2}" display="block">
-         <msup data-latex="\\left( \\sum_1 ^n \\right)^{2}">
-           <mrow data-mjx-texclass="INNER" data-latex="\\left( \\sum_1 ^n \\right)">
-             <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
-             <munderover data-latex="\\sum_1^n">
-               <mo data-latex="\\sum">&#x2211;</mo>
-               <mn data-latex="1">1</mn>
-               <mi data-latex="n">n</mi>
-             </munderover>
-             <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
-           </mrow>
-           <mrow data-mjx-texclass="ORD" data-latex="{2}">
-             <mn data-latex="2">2</mn>
-           </mrow>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml('\\left( \\sum_1^n \\right)^{2}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Empty Base Index', () => {
-    toXmlMatch(
-      tex2mml('_3'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="_3" display="block">
-         <msub data-latex="_3">
-           <mi></mi>
-           <mn data-latex="3">3</mn>
-         </msub>
-       </math>`
-    );
+    expect(tex2mml('_3')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Empty Base Index2', () => {
-    toXmlMatch(
-      tex2mml('{}_3'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="{}_3" display="block">
-         <msub data-latex="{}_3">
-           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-           <mn data-latex="3">3</mn>
-         </msub>
-       </math>`
-    );
+    expect(tex2mml('{}_3')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Index', () => {
-    toXmlMatch(
-      tex2mml('x_3'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x_3" display="block">
-         <msub data-latex="x_3">
-           <mi data-latex="x">x</mi>
-           <mn data-latex="3">3</mn>
-         </msub>
-       </math>`
-    );
+    expect(tex2mml('x_3')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('SubSup', () => {
-    toXmlMatch(
-      tex2mml('x^a_3'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x^a_3" display="block">
-         <msubsup data-latex="x^a_3">
-           <mi data-latex="x">x</mi>
-           <mn data-latex="3">3</mn>
-           <mi data-latex="a">a</mi>
-         </msubsup>
-       </math>`
-    );
+    expect(tex2mml('x^a_3')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Inline OP Sup', () => {
-    toXmlMatch(
-      tex2mml('\\mathop{X}^2', false),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{X}^2">
-         <msup data-latex="\\mathop{X}^2">
-           <mrow data-mjx-texclass="OP" data-latex="\\mathop{X}">
-             <mi data-latex="X">X</mi>
-           </mrow>
-           <mn data-latex="2">2</mn>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml('\\mathop{X}^2', false)).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -260,77 +125,31 @@ describe('Negations', () => {
   /********************************************************************************/
 
   it('Negation Simple', () => {
-    toXmlMatch(
-      tex2mml('a \\not= b'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a \\not= b" display="block">
-         <mi data-latex="a">a</mi>
-         <mo data-latex="=">&#x2260;</mo>
-         <mi data-latex="b">b</mi>
-       </math>`
-    );
+    expect(tex2mml('a \\not= b')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Negation Complex', () => {
-    toXmlMatch(
-      tex2mml('a \\not= b \\not\\rightarrow c \\not\\leq d'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a \\not= b \\not\\rightarrow c \\not\\leq d" display="block">
-         <mi data-latex="a">a</mi>
-         <mo data-latex="=">&#x2260;</mo>
-         <mi data-latex="b">b</mi>
-         <mo stretchy="false" data-latex="\\rightarrow">&#x219B;</mo>
-         <mi data-latex="c">c</mi>
-         <mo data-latex="\\leq">&#x2270;</mo>
-         <mi data-latex="d">d</mi>
-       </math>`
-    );
+    expect(tex2mml('a \\not= b \\not\\rightarrow c \\not\\leq d')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Negation Explicit', () => {
-    toXmlMatch(
-      tex2mml(' \\not\\longrightarrow'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex=" \\not\\longrightarrow" display="block">
-         <mo data-latex="\\not\\longrightarrow">&#x27F6;&#x338;</mo>
-       </math>`
-    );
+    expect(tex2mml(' \\not\\longrightarrow')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Negation Large', () => {
-    toXmlMatch(
-      tex2mml(' \\not3'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex=" \\not3" display="block">
-         <mrow data-mjx-texclass="REL">
-           <mpadded width="0">
-             <mtext>&#x29F8;</mtext>
-           </mpadded>
-         </mrow>
-         <mn data-latex="3">3</mn>
-       </math>`
-    );
+    expect(tex2mml(' \\not3')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Negation Left Paren', () => {
-    toXmlMatch(
-      tex2mml('\\not\\left(\\right.'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\not\\left(\\right." display="block">
-         <mrow data-mjx-texclass="REL">
-           <mpadded width="0">
-             <mtext>&#x29F8;</mtext>
-           </mpadded>
-         </mrow>
-         <mrow data-mjx-texclass="INNER" data-latex="\\left(\\right.">
-           <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
-           <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
-         </mrow>
-       </math>`
-    );
+    expect(tex2mml('\\not\\left(\\right.')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -345,105 +164,43 @@ describe('Primes', () => {
   /********************************************************************************/
 
   it('Prime', () => {
-    toXmlMatch(
-      tex2mml("x'"),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\'" display="block">
-         <msup data-latex="x\'">
-           <mi data-latex="x">x</mi>
-           <mo data-mjx-alternate="1" data-latex="\'">&#x2032;</mo>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml("x'")).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('PrimeSup', () => {
-    toXmlMatch(
-      tex2mml("x^{'}"),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x^{\'}" display="block">
-         <msup data-latex="x^{\'}">
-           <mi data-latex="x">x</mi>
-           <mrow data-mjx-texclass="ORD" data-latex="{}">
-             <msup>
-               <mi></mi>
-               <mo data-mjx-alternate="1" data-latex="\'">&#x2032;</mo>
-             </msup>
-           </mrow>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml("x^{'}")).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Double Prime', () => {
-    toXmlMatch(
-      tex2mml("x''"),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x''" display="block">
-         <msup data-latex="x''">
-           <mi data-latex="x">x</mi>
-           <mo data-mjx-alternate="1" data-latex="''">&#x2033;</mo>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml("x''")).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Triple Prime', () => {
-    toXmlMatch(
-      tex2mml("x'''"),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x'''" display="block">
-         <msup data-latex="x'''">
-           <mi data-latex="x">x</mi>
-           <mo data-mjx-alternate="1" data-latex="'''">&#x2034;</mo>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml("x'''")).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Quadruple Prime', () => {
-    toXmlMatch(
-      tex2mml("x''''"),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x''''" display="block">
-         <msup data-latex="x''''">
-           <mi data-latex="x">x</mi>
-           <mo data-mjx-alternate="1" data-latex="''''">&#x2057;</mo>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml("x''''")).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Quintuple Prime', () => {
-    toXmlMatch(
-      tex2mml("x'''''"),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x'''''" display="block">
-         <msup data-latex="x'''''">
-           <mi data-latex="x">x</mi>
-           <mo data-mjx-alternate="1" data-latex="'''''">&#x2032;&#x2032;&#x2032;&#x2032;&#x2032;</mo>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml("x'''''")).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('PrePrime', () => {
-    toXmlMatch(
-      tex2mml("'x"),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\'x" display="block">
-         <msup>
-           <mi></mi>
-           <mo data-mjx-alternate="1" data-latex="\'">&#x2032;</mo>
-         </msup>
-         <mi data-latex="x">x</mi>
-       </math>`
-    );
+    expect(tex2mml("'x")).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -455,98 +212,25 @@ describe('Primes', () => {
   /********************************************************************************/
 
   it('Prime on Sub', () => {
-    toXmlMatch(
-      tex2mml("x^{'_{a}}"),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x^{'_{a}}" display="block">
-         <msup data-latex="x^{'_{a}}">
-           <mi data-latex="x">x</mi>
-           <mrow data-mjx-texclass="ORD" data-latex="{^'_{a}}">
-             <msubsup data-latex="^'_{a}">
-               <mi></mi>
-               <mrow data-mjx-texclass="ORD" data-latex="{a}">
-                 <mi data-latex="a">a</mi>
-               </mrow>
-               <mo data-mjx-alternate="1" data-latex="'">&#x2032;</mo>
-             </msubsup>
-           </mrow>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml("x^{'_{a}}")).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Prime on Sup', () => {
-    toXmlMatch(
-      tex2mml("x^{a^{'}}"),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x^{a^{\'}}" display="block">
-         <msup data-latex="x^{a^{\'}}">
-           <mi data-latex="x">x</mi>
-           <mrow data-mjx-texclass="ORD" data-latex="{a^{}}">
-             <msup data-latex="a^{}">
-               <mi data-latex="a">a</mi>
-               <mrow data-mjx-texclass="ORD" data-latex="{}">
-                 <msup>
-                   <mi></mi>
-                   <mo data-mjx-alternate="1" data-latex="\'">&#x2032;</mo>
-                 </msup>
-               </mrow>
-             </msup>
-           </mrow>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml("x^{a^{'}}")).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Sup on Prime', () => {
-    toXmlMatch(
-      tex2mml("x^{'^{a}}"),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x^{'^{a}}" display="block">
-         <msup data-latex="x^{'^{a}}">
-           <mi data-latex="x">x</mi>
-           <mrow data-mjx-texclass="ORD" data-latex="{^{}}">
-             <msup data-latex="^{}">
-               <mi></mi>
-               <mrow data-latex="{}">
-                 <mo data-mjx-alternate="1" data-mjx-pseudoscript="true" data-latex="'">&#x2032;</mo>
-                 <mrow data-mjx-texclass="ORD">
-                   <mi data-latex="a">a</mi>
-                 </mrow>
-               </mrow>
-             </msup>
-           </mrow>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml("x^{'^{a}}")).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Prime on Prime', () => {
-    toXmlMatch(
-      tex2mml("x^{'^{'}}"),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x^{'^{'}}" display="block">
-         <msup data-latex="x^{'^{'}}">
-           <mi data-latex="x">x</mi>
-           <mrow data-mjx-texclass="ORD" data-latex="{^{}}">
-             <msup data-latex="^{}">
-               <mi></mi>
-               <mrow data-latex="{}">
-                 <mo data-mjx-alternate="1" data-mjx-pseudoscript="true" data-latex="'">&#x2032;</mo>
-                 <mrow data-mjx-texclass="ORD">
-                   <msup>
-                     <mi></mi>
-                     <mo data-mjx-alternate="1" data-latex="'">&#x2032;</mo>
-                   </msup>
-                 </mrow>
-               </mrow>
-             </msup>
-           </mrow>
-         </msup>
-       </math>`
-    );
+    expect(tex2mml("x^{'^{'}}")).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -561,81 +245,43 @@ describe('Digits', () => {
   /********************************************************************************/
 
   it('Integer', () => {
-    toXmlMatch(
-      tex2mml('2'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="2" display="block">
-         <mn data-latex="2">2</mn>
-       </math>`
-    );
+    expect(tex2mml('2')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Number', () => {
-    toXmlMatch(
-      tex2mml('3.14'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="3.14" display="block">
-         <mn data-latex="3.14">3.14</mn>
-       </math>`
-    );
+    expect(tex2mml('3.14')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Decimal', () => {
-    toXmlMatch(
-      tex2mml('.14'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex=".14" display="block">
-         <mn data-latex=".14">.14</mn>
-       </math>`
-    );
+    expect(tex2mml('.14')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Thousands', () => {
-    toXmlMatch(
-      tex2mml('1{,}000.10'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="1{,}000.10" display="block">
-         <mn data-latex="1{,}000.10">1,000.10</mn>
-       </math>`
-    );
+    expect(tex2mml('1{,}000.10')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Wrong Thousands', () => {
-    toXmlMatch(
-      tex2mml('1{,}0000.10'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="1{,}0000.10" display="block">
-         <mn data-latex="1{,}000">1,000</mn>
-         <mn data-latex="0.10">0.10</mn>
-       </math>`
-    );
+    expect(tex2mml('1{,}0000.10')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Decimal Point', () => {
-    toXmlMatch(
-      tex2mml('.'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="." display="block">
-         <mo data-latex=".">.</mo>
-       </math>`
-    );
+    expect(tex2mml('.')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Integer Font', () => {
-    toXmlMatch(
-      tex2mml('\\mathbf{2}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbf{2}" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\mathbf{2}">
-           <mn mathvariant="bold" data-latex="2">2</mn>
-         </mrow>
-       </math>`
-    );
+    expect(tex2mml('\\mathbf{2}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -655,68 +301,37 @@ describe('DigitsEuropean', () => {
   /********************************************************************************/
 
   it('Integer European', () => {
-    toXmlMatch(
-      tex2mml('2'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="2" display="block">
-         <mn data-latex="2">2</mn>
-       </math>`
-    );
+    expect(tex2mml('2')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Number European', () => {
-    toXmlMatch(
-      tex2mml('3,14'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="3,14" display="block">
-         <mn data-latex="3,14">3,14</mn>
-       </math>`
-    );
+    expect(tex2mml('3,14')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Thousands European', () => {
-    toXmlMatch(
-      tex2mml('1{.}000,10'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="1{.}000,10" display="block">
-         <mn data-latex="1{.}000,10">1.000,10</mn>
-       </math>`
-    );
+    expect(tex2mml('1{.}000,10')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Wrong Thousands European', () => {
-    toXmlMatch(
-      tex2mml('1{.}0000,10'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="1{.}0000,10" display="block">
-         <mn data-latex="1{.}000">1.000</mn>
-         <mn data-latex="0,10">0,10</mn>
-       </math>`
-    );
+    expect(tex2mml('1{.}0000,10')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Decimal European', () => {
-    toXmlMatch(
-      tex2mml(',14'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex=",14" display="block">
-         <mn data-latex=",14">,14</mn>
-       </math>`
-    );
+    expect(tex2mml(',14')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Decimal Point European', () => {
-    toXmlMatch(
-      tex2mml(','),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="," display="block">
-         <mo data-latex=",">,</mo>
-       </math>`
-    );
+    expect(tex2mml(',')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -731,74 +346,31 @@ describe('Roots', () => {
   /********************************************************************************/
 
   it('Square Root', () => {
-    toXmlMatch(
-      tex2mml('\\sqrt{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sqrt{x}" display="block">
-         <msqrt data-latex="\\sqrt{x}">
-           <mi data-latex="x">x</mi>
-         </msqrt>
-       </math>`
-    );
+    expect(tex2mml('\\sqrt{x}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Square Root Fraction', () => {
-    toXmlMatch(
-      tex2mml('\\sqrt\\frac{a}{b}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sqrt\\frac{a}{b}" display="block">
-         <msqrt data-latex="\\sqrt\\frac{a}{b}">
-           <mfrac data-latex="\\frac{a}{b}">
-             <mi data-latex="a">a</mi>
-             <mi data-latex="b">b</mi>
-           </mfrac>
-         </msqrt>
-       </math>`
-    );
+    expect(tex2mml('\\sqrt\\frac{a}{b}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Nth Root', () => {
-    toXmlMatch(
-      tex2mml('\\sqrt[n]{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sqrt[n]{x}" display="block">
-         <mroot data-latex="\\sqrt[n]{x}">
-           <mi data-latex="x">x</mi>
-           <mi data-latex="n">n</mi>
-         </mroot>
-       </math>`
-    );
+    expect(tex2mml('\\sqrt[n]{x}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Explicit Root', () => {
-    toXmlMatch(
-      tex2mml('\\root 4 \\of x'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\root 4 \\of x" display="block">
-         <mroot data-latex="\\root 4 \\of x">
-           <mi data-latex="x">x</mi>
-           <mn data-latex="4">4</mn>
-         </mroot>
-       </math>`
-    );
+    expect(tex2mml('\\root 4 \\of x')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Tweaked Root', () => {
-    toXmlMatch(
-      tex2mml('\\sqrt[\\leftroot{-2}\\uproot{2}\\beta]{k}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sqrt[\\leftroot{-2}\\uproot{2}\\beta]{k}" display="block">
-         <mroot data-latex="\\sqrt[\\leftroot{-2}\\uproot{2}\\beta]{k}">
-           <mi data-latex="k">k</mi>
-           <mpadded width="-0.13333333333333333em" voffset="+0.13333333333333333em" height="+0.13333333333333333em">
-             <mi data-latex="\\leftroot{-2}\\uproot{2}\\beta">&#x3B2;</mi>
-           </mpadded>
-         </mroot>
-       </math>`
-    );
+    expect(tex2mml('\\sqrt[\\leftroot{-2}\\uproot{2}\\beta]{k}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
