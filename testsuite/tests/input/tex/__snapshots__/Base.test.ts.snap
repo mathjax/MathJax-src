@@ -353,6 +353,17 @@ exports[`Roots Square Root Fraction 1`] = `
 </math>"
 `;
 
+exports[`Roots Tweaked Root 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sqrt[\\leftroot{-2}\\uproot{2}\\beta]{k}" display="block">
+  <mroot data-latex="\\sqrt[\\leftroot{-2}\\uproot{2}\\beta]{k}">
+    <mi data-latex="k">k</mi>
+    <mpadded width="-0.13333333333333333em" voffset="+0.13333333333333333em" height="+0.13333333333333333em">
+      <mi data-latex="\\leftroot{-2}\\uproot{2}\\beta">&#x3B2;</mi>
+    </mpadded>
+  </mroot>
+</math>"
+`;
+
 exports[`Sub and Superscripts Cube 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x^3" display="block">
   <msup data-latex="x^3">
