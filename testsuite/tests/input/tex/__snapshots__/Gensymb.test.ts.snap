@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Gensymb celcius 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\celsius" display="block">
+  <mi mathvariant="normal" class="MathML-Unit" data-latex="\\celsius">&#x2103;</mi>
+</math>"
+`;
+
+exports[`Gensymb degree 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\degree" display="block">
+  <mi mathvariant="normal" class="MathML-Unit" data-latex="\\degree">&#xB0;</mi>
+</math>"
+`;
+
+exports[`Gensymb micro 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\micro" display="block">
+  <mi mathvariant="normal" class="MathML-Unit" data-latex="\\micro">&#xB5;</mi>
+</math>"
+`;
+
+exports[`Gensymb ohm 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ohm" display="block">
+  <mi mathvariant="normal" class="MathML-Unit" data-latex="\\ohm">&#x2126;</mi>
+</math>"
+`;
+
+exports[`Gensymb perthousand 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\perthousand" display="block">
+  <mi mathvariant="normal" class="MathML-Unit" data-latex="\\perthousand">&#x2030;</mi>
+</math>"
+`;

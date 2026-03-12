@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Texhtml Html 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x + &lt;tex-html&gt;&lt;b&gt;bold&lt;/b&gt;&lt;/tex-html&gt; + y" display="block">
+  <mi data-latex="x">x</mi>
+  <mo data-latex="+">+</mo>
+  <mtext data-latex="&lt;tex-html&gt;&lt;b&gt;bold&lt;/b&gt;&lt;/tex-html&gt;"><b>bold</b></mtext>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="y">y</mi>
+</math>"
+`;
+
+exports[`Texhtml Html empty tag 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x + &lt;tex-html&gt;&lt;/tex-html&gt; + y" display="block">
+  <mi data-latex="x">x</mi>
+  <mo data-latex="&lt;tex-html&gt;&lt;/tex-html&gt;">+</mo>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="y">y</mi>
+</math>"
+`;
+
+exports[`Texhtml Html multiple 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x + &lt;tex-html&gt;&lt;b&gt;bold&lt;/b&gt;&lt;/tex-html&gt; + &lt;tex-html&gt;&lt;i&gt;italic&lt;/i&gt;&lt;/tex-html&gt;y" display="block">
+  <mi data-latex="x">x</mi>
+  <mo data-latex="+">+</mo>
+  <mtext data-latex="&lt;tex-html&gt;&lt;b&gt;bold&lt;/b&gt;&lt;/tex-html&gt;"><b>bold</b></mtext>
+  <mo data-latex="+">+</mo>
+  <mtext data-latex="&lt;tex-html&gt;&lt;i&gt;italic&lt;/i&gt;&lt;/tex-html&gt;"><i>italic</i></mtext>
+  <mi data-latex="y">y</mi>
+</math>"
+`;
+
+exports[`Texhtml Html nested 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x + &lt;tex-html n=&quot;2&quot;&gt;&lt;b&gt;bold&lt;/b&gt; and &lt;tex-html&gt;html&lt;/tex-html&gt;&lt;!2&gt;&lt;/tex-html&gt; + y" display="block">
+  <mi data-latex="x">x</mi>
+  <mo data-latex="+">+</mo>
+  <mtext data-latex="&lt;tex-html n=&quot;2&quot;&gt;&lt;b&gt;bold&lt;/b&gt; and &lt;tex-html&gt;html&lt;/tex-html&gt;&lt;!2&gt;&lt;/tex-html&gt;"><div><b>bold</b> and <tex-html>html</tex-html></div></mtext>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="y">y</mi>
+</math>"
+`;
+
+exports[`Texhtml Html no tag 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x &lt; y" display="block">
+  <mi data-latex="x">x</mi>
+  <mo data-latex="&lt;">&lt;</mo>
+  <mi data-latex="y">y</mi>
+</math>"
+`;
+
+exports[`Texhtml not enabled Html not allowed 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x + &lt;tex-html&gt;&lt;b&gt;a&lt;/b&gt;&lt;/tex-html&gt; + y" display="block">
+  <mi data-latex="x">x</mi>
+  <mo data-latex="+">+</mo>
+  <mo data-latex="&lt;">&lt;</mo>
+  <mi data-latex="t">t</mi>
+  <mi data-latex="e">e</mi>
+  <mi data-latex="x">x</mi>
+  <mo data-latex="-">&#x2212;</mo>
+  <mi data-latex="h">h</mi>
+  <mi data-latex="t">t</mi>
+  <mi data-latex="m">m</mi>
+  <mi data-latex="l">l</mi>
+  <mo data-mjx-texclass="REL" data-latex="&gt;&lt;">&gt;&lt;</mo>
+  <mi data-latex="b">b</mi>
+  <mo data-latex="&gt;">&gt;</mo>
+  <mi data-latex="a">a</mi>
+  <mo data-latex="&lt;">&lt;</mo>
+  <mo data-latex="/">/</mo>
+  <mi data-latex="b">b</mi>
+  <mo data-mjx-texclass="REL" data-latex="&gt;&lt;">&gt;&lt;</mo>
+  <mo data-latex="/">/</mo>
+  <mi data-latex="t">t</mi>
+  <mi data-latex="e">e</mi>
+  <mi data-latex="x">x</mi>
+  <mo data-latex="-">&#x2212;</mo>
+  <mi data-latex="h">h</mi>
+  <mi data-latex="t">t</mi>
+  <mi data-latex="m">m</mi>
+  <mi data-latex="l">l</mi>
+  <mo data-latex="&gt;">&gt;</mo>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="y">y</mi>
+</math>"
+`;

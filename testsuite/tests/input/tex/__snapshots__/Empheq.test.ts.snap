@@ -1,0 +1,704 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Empheq Characters  empheqlVert 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqlVert" display="block">
+  <mo data-latex="\\empheqlVert">&#x2016;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbigl 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbigl(" display="block">
+  <mo data-latex="\\empheqbigl(">(</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbiglVert 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbiglVert" display="block">
+  <mo data-latex="\\empheqbiglVert">&#x2016;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbiglangle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbiglangle" display="block">
+  <mo data-latex="\\empheqbiglangle">&#x27E8;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbiglbrace 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbiglbrace" display="block">
+  <mo data-latex="\\empheqbiglbrace">{</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbiglbrack 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbiglbrack" display="block">
+  <mo data-latex="\\empheqbiglbrack">[</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbiglceil 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbiglceil" display="block">
+  <mo data-latex="\\empheqbiglceil">&#x2308;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbiglfloor 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbiglfloor" display="block">
+  <mo data-latex="\\empheqbiglfloor">&#x230A;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbiglparen 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbiglparen" display="block">
+  <mo data-latex="\\empheqbiglparen">(</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbiglvert 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbiglvert" display="block">
+  <mo data-latex="\\empheqbiglvert">|</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbigr 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbigr)" display="block">
+  <mo data-latex="\\empheqbigr)">)</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbigrVert 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbigrVert" display="block">
+  <mo data-latex="\\empheqbigrVert">&#x2016;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbigrangle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbigrangle" display="block">
+  <mo data-latex="\\empheqbigrangle">&#x27E9;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbigrbrace 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbigrbrace" display="block">
+  <mo data-latex="\\empheqbigrbrace">}</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbigrbrack 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbigrbrack" display="block">
+  <mo data-latex="\\empheqbigrbrack">]</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbigrceil 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbigrceil" display="block">
+  <mo data-latex="\\empheqbigrceil">&#x2309;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbigrfloor 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbigrfloor" display="block">
+  <mo data-latex="\\empheqbigrfloor">&#x230B;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbigrparen 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbigrparen" display="block">
+  <mo data-latex="\\empheqbigrparen">)</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqbigrvert 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqbigrvert" display="block">
+  <mo data-latex="\\empheqbigrvert">|</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheql 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheql(" display="block">
+  <mo data-latex="\\empheql(">(</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqlangle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqlangle" display="block">
+  <mo data-latex="\\empheqlangle">&#x27E8;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqlbrace 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqlbrace" display="block">
+  <mo data-latex="\\empheqlbrace">{</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqlbrace 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqlbrace" display="block">
+  <mo data-latex="\\empheqlbrace">{</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqlbrack 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqlbrack" display="block">
+  <mo data-latex="\\empheqlbrack">[</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqlceil 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqlceil" display="block">
+  <mo data-latex="\\empheqlceil">&#x2308;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqlfloor 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqlfloor" display="block">
+  <mo data-latex="\\empheqlfloor">&#x230A;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqlparen 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqlparen" display="block">
+  <mo data-latex="\\empheqlparen">(</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqlvert 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqlvert" display="block">
+  <mo data-latex="\\empheqlvert">|</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqr 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqr)" display="block">
+  <mo data-latex="\\empheqr)">)</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqrVert 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqrVert" display="block">
+  <mo data-latex="\\empheqrVert">&#x2016;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqrangle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqrangle" display="block">
+  <mo data-latex="\\empheqrangle">&#x27E9;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqrbrace 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqrbrace" display="block">
+  <mo data-latex="\\empheqrbrace">}</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqrbrack 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqrbrack" display="block">
+  <mo data-latex="\\empheqrbrack">]</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqrceil 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqrceil" display="block">
+  <mo data-latex="\\empheqrceil">&#x2309;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqrfloor 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqrfloor" display="block">
+  <mo data-latex="\\empheqrfloor">&#x230B;</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqrparen 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqrparen" display="block">
+  <mo data-latex="\\empheqrparen">)</mo>
+</math>"
+`;
+
+exports[`Empheq Characters empheqrvert 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\empheqrvert" display="block">
+  <mo data-latex="\\empheqrvert">|</mo>
+</math>"
+`;
+
+exports[`Empheq Empheq Left 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{empheq}[left=L\\Rightarrow]{align} a&amp;=b\\\\ c&amp;=d \\end{empheq}" display="block">
+  <mtable displaystyle="true" columnalign="right right left" columnspacing="0em 0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a&amp;=b\\\\ c&amp;=d \\end{empheq}">
+    <mlabeledtr>
+      <mtd id="mjx-eqn:1">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mpadded height="0" depth="0" voffset="height">
+          <mpadded height="0" depth="0" voffset="-1height">
+            <mi data-latex="L">L</mi>
+            <mo stretchy="false" data-latex="\\Rightarrow">&#x21D2;</mo>
+            <mphantom>
+              <mpadded width="0">
+                <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top">
+                  <mlabeledtr>
+                    <mtd>
+                      <mtext data-latex="\\text{(}">(</mtext>
+                      <mtext data-latex="\\text{1}">1</mtext>
+                      <mtext data-latex="\\text{)}">)</mtext>
+                    </mtd>
+                    <mtd>
+                      <mi data-latex="a">a</mi>
+                    </mtd>
+                    <mtd>
+                      <mstyle indentshift="2em">
+                        <mi></mi>
+                        <mo data-latex="=">=</mo>
+                        <mi data-latex="b">b</mi>
+                      </mstyle>
+                    </mtd>
+                  </mlabeledtr>
+                  <mlabeledtr>
+                    <mtd>
+                      <mtext data-latex="\\text{(}">(</mtext>
+                      <mtext data-latex="\\text{2}">2</mtext>
+                      <mtext data-latex="\\text{)}">)</mtext>
+                    </mtd>
+                    <mtd>
+                      <mi data-latex="c">c</mi>
+                    </mtd>
+                    <mtd>
+                      <mstyle indentshift="2em">
+                        <mi></mi>
+                        <mo data-latex="=">=</mo>
+                        <mi data-latex="d">d</mi>
+                      </mstyle>
+                    </mtd>
+                  </mlabeledtr>
+                </mtable>
+              </mpadded>
+            </mphantom>
+          </mpadded>
+          <mphantom>
+            <mpadded width="0">
+              <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" align="baseline 1">
+                <mlabeledtr>
+                  <mtd>
+                    <mtext data-latex="\\text{(}">(</mtext>
+                    <mtext data-latex="\\text{1}">1</mtext>
+                    <mtext data-latex="\\text{)}">)</mtext>
+                  </mtd>
+                  <mtd>
+                    <mi data-latex="a">a</mi>
+                  </mtd>
+                  <mtd>
+                    <mstyle indentshift="2em">
+                      <mi></mi>
+                      <mo data-latex="=">=</mo>
+                      <mi data-latex="b">b</mi>
+                    </mstyle>
+                  </mtd>
+                </mlabeledtr>
+              </mtable>
+            </mpadded>
+          </mphantom>
+        </mpadded>
+      </mtd>
+      <mtd>
+        <mi data-latex="a">a</mi>
+      </mtd>
+      <mtd>
+        <mstyle indentshift="2em">
+          <mi></mi>
+          <mo data-latex="=">=</mo>
+          <mi data-latex="b">b</mi>
+        </mstyle>
+      </mtd>
+    </mlabeledtr>
+    <mlabeledtr>
+      <mtd id="mjx-eqn:2">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{2}">2</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd></mtd>
+      <mtd>
+        <mi data-latex="c">c</mi>
+      </mtd>
+      <mtd>
+        <mstyle indentshift="2em">
+          <mi></mi>
+          <mo data-latex="=">=</mo>
+          <mi data-latex="d">d</mi>
+        </mstyle>
+      </mtd>
+    </mlabeledtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Empheq Empheq Right 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{empheq}[right=\\Leftarrow R]{align} a&amp;=b\\\\ c&amp;=d \\end{empheq}" display="block">
+  <mtable displaystyle="true" columnalign="right left left" columnspacing="0em 0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a&amp;=b\\\\ c&amp;=d \\end{empheq}">
+    <mlabeledtr>
+      <mtd id="mjx-eqn:1">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mi data-latex="a">a</mi>
+      </mtd>
+      <mtd>
+        <mstyle indentshift="2em">
+          <mi></mi>
+          <mo data-latex="=">=</mo>
+          <mi data-latex="b">b</mi>
+        </mstyle>
+      </mtd>
+      <mtd>
+        <mpadded height="0" depth="0" voffset="height">
+          <mpadded height="0" depth="0" voffset="-1height">
+            <mo stretchy="false" data-latex="\\Leftarrow">&#x21D0;</mo>
+            <mi data-latex="R">R</mi>
+            <mphantom>
+              <mpadded width="0">
+                <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top">
+                  <mlabeledtr>
+                    <mtd>
+                      <mtext data-latex="\\text{(}">(</mtext>
+                      <mtext data-latex="\\text{1}">1</mtext>
+                      <mtext data-latex="\\text{)}">)</mtext>
+                    </mtd>
+                    <mtd>
+                      <mi data-latex="a">a</mi>
+                    </mtd>
+                    <mtd>
+                      <mstyle indentshift="2em">
+                        <mi></mi>
+                        <mo data-latex="=">=</mo>
+                        <mi data-latex="b">b</mi>
+                      </mstyle>
+                    </mtd>
+                  </mlabeledtr>
+                  <mlabeledtr>
+                    <mtd>
+                      <mtext data-latex="\\text{(}">(</mtext>
+                      <mtext data-latex="\\text{2}">2</mtext>
+                      <mtext data-latex="\\text{)}">)</mtext>
+                    </mtd>
+                    <mtd>
+                      <mi data-latex="c">c</mi>
+                    </mtd>
+                    <mtd>
+                      <mstyle indentshift="2em">
+                        <mi></mi>
+                        <mo data-latex="=">=</mo>
+                        <mi data-latex="d">d</mi>
+                      </mstyle>
+                    </mtd>
+                  </mlabeledtr>
+                </mtable>
+              </mpadded>
+            </mphantom>
+          </mpadded>
+          <mphantom>
+            <mpadded width="0">
+              <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" align="baseline 1">
+                <mlabeledtr>
+                  <mtd>
+                    <mtext data-latex="\\text{(}">(</mtext>
+                    <mtext data-latex="\\text{1}">1</mtext>
+                    <mtext data-latex="\\text{)}">)</mtext>
+                  </mtd>
+                  <mtd>
+                    <mi data-latex="a">a</mi>
+                  </mtd>
+                  <mtd>
+                    <mstyle indentshift="2em">
+                      <mi></mi>
+                      <mo data-latex="=">=</mo>
+                      <mi data-latex="b">b</mi>
+                    </mstyle>
+                  </mtd>
+                </mlabeledtr>
+              </mtable>
+            </mpadded>
+          </mphantom>
+        </mpadded>
+      </mtd>
+    </mlabeledtr>
+    <mlabeledtr>
+      <mtd id="mjx-eqn:2">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{2}">2</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mi data-latex="c">c</mi>
+      </mtd>
+      <mtd>
+        <mstyle indentshift="2em">
+          <mi></mi>
+          <mo data-latex="=">=</mo>
+          <mi data-latex="d">d</mi>
+        </mstyle>
+      </mtd>
+    </mlabeledtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Empheq Numcases  1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{empheq}[right=x]{align} a \\\\ b&amp;=c \\end{empheq}" display="block">
+  <mtable displaystyle="true" columnalign="right left left" columnspacing="0em 0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a \\\\ b&amp;=c \\end{empheq}">
+    <mlabeledtr>
+      <mtd id="mjx-eqn:1">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mi data-latex="a">a</mi>
+      </mtd>
+      <mtd></mtd>
+      <mtd>
+        <mpadded height="0" depth="0" voffset="height">
+          <mpadded height="0" depth="0" voffset="-1height">
+            <mi data-latex="x">x</mi>
+            <mphantom>
+              <mpadded width="0">
+                <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top">
+                  <mlabeledtr>
+                    <mtd>
+                      <mtext data-latex="\\text{(}">(</mtext>
+                      <mtext data-latex="\\text{1}">1</mtext>
+                      <mtext data-latex="\\text{)}">)</mtext>
+                    </mtd>
+                    <mtd>
+                      <mi data-latex="a">a</mi>
+                    </mtd>
+                  </mlabeledtr>
+                  <mlabeledtr>
+                    <mtd>
+                      <mtext data-latex="\\text{(}">(</mtext>
+                      <mtext data-latex="\\text{2}">2</mtext>
+                      <mtext data-latex="\\text{)}">)</mtext>
+                    </mtd>
+                    <mtd>
+                      <mi data-latex="b">b</mi>
+                    </mtd>
+                    <mtd>
+                      <mstyle indentshift="2em">
+                        <mi></mi>
+                        <mo data-latex="=">=</mo>
+                        <mi data-latex="c">c</mi>
+                      </mstyle>
+                    </mtd>
+                  </mlabeledtr>
+                </mtable>
+              </mpadded>
+            </mphantom>
+          </mpadded>
+          <mphantom>
+            <mpadded width="0">
+              <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" align="baseline 1">
+                <mlabeledtr>
+                  <mtd>
+                    <mtext data-latex="\\text{(}">(</mtext>
+                    <mtext data-latex="\\text{1}">1</mtext>
+                    <mtext data-latex="\\text{)}">)</mtext>
+                  </mtd>
+                  <mtd>
+                    <mi data-latex="a">a</mi>
+                  </mtd>
+                </mlabeledtr>
+              </mtable>
+            </mpadded>
+          </mphantom>
+        </mpadded>
+      </mtd>
+    </mlabeledtr>
+    <mlabeledtr>
+      <mtd id="mjx-eqn:2">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{2}">2</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mi data-latex="b">b</mi>
+      </mtd>
+      <mtd>
+        <mstyle indentshift="2em">
+          <mi></mi>
+          <mo data-latex="=">=</mo>
+          <mi data-latex="c">c</mi>
+        </mstyle>
+      </mtd>
+    </mlabeledtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Empheq Numcases alignedat 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{empheq}{alignat=2} a &amp; b &amp; c &amp; d \\end{empheq}" display="block">
+  <mtable displaystyle="true" columnalign="right left right left" columnspacing="0em 0em 0em" rowspacing="3pt" data-break-align="bottom top bottom top" data-latex="\\begin{alignat}{2} a &amp; b &amp; c &amp; d \\end{empheq}">
+    <mlabeledtr data-latex="{2}">
+      <mtd id="mjx-eqn:1">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mi data-latex="a">a</mi>
+      </mtd>
+      <mtd>
+        <mstyle indentshift="2em">
+          <mi data-latex="b">b</mi>
+        </mstyle>
+      </mtd>
+      <mtd>
+        <mi data-latex="c">c</mi>
+      </mtd>
+      <mtd>
+        <mstyle indentshift="2em">
+          <mi data-latex="d">d</mi>
+        </mstyle>
+      </mtd>
+    </mlabeledtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Empheq Numcases empty left 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{empheq}[left=x]{multline}  \\end{empheq}" display="block">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="0em 100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" columnalign="right center" data-latex="\\begin{multline}  \\end{empheq}">
+    <mtr>
+      <mtd>
+        <mpadded height="0" depth="0" voffset="height">
+          <mpadded height="0" depth="0" voffset="-1height">
+            <mi data-latex="x">x</mi>
+            <mphantom>
+              <mpadded width="0">
+                <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true"></mtable>
+              </mpadded>
+            </mphantom>
+          </mpadded>
+          <mphantom>
+            <mpadded width="0">
+              <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" align="baseline 1"></mtable>
+            </mpadded>
+          </mphantom>
+        </mpadded>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Empheq Numcases empty right 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{empheq}[right=x]{align}  \\end{empheq}" display="block">
+  <mtable displaystyle="true" columnalign=" left" columnspacing=" 0em" rowspacing="3pt" data-break-align="" data-latex="\\begin{align}  \\end{empheq}">
+    <mtr>
+      <mtd>
+        <mpadded height="0" depth="0" voffset="height">
+          <mpadded height="0" depth="0" voffset="-1height">
+            <mi data-latex="x">x</mi>
+            <mphantom>
+              <mpadded width="0">
+                <mtable displaystyle="true" columnalign="" columnspacing="0em" rowspacing="3pt" data-break-align=""></mtable>
+              </mpadded>
+            </mphantom>
+          </mpadded>
+          <mphantom>
+            <mpadded width="0">
+              <mtable displaystyle="true" columnalign="" columnspacing="0em" rowspacing="3pt" data-break-align="" align="baseline 1"></mtable>
+            </mpadded>
+          </mphantom>
+        </mpadded>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Empheq Numcases with label 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{numcases}{A=\\label{test}} a&amp;=b \\end{numcases}" display="block">
+  <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{A=\\label{test}} a&amp;=b \\end{numcases}">
+    <mlabeledtr data-latex="{A=\\label{test}}">
+      <mtd id="mjx-eqn:1">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mpadded height="0" depth="0" voffset="height">
+          <mpadded height="0" depth="0" voffset="-1height">
+            <mi data-latex="A">A</mi>
+            <mo data-latex="\\label{test}">=</mo>
+            <mo data-latex="\\mmlToken{mo}{\\U{7B}}">{</mo>
+            <mspace width="0.167em" data-latex="\\,"></mspace>
+            <mphantom>
+              <mpadded width="0">
+                <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
+                  <mlabeledtr data-latex="{A=\\label{test}}">
+                    <mtd>
+                      <mtext data-latex="\\text{(}">(</mtext>
+                      <mtext data-latex="\\text{1}">1</mtext>
+                      <mtext data-latex="\\text{)}">)</mtext>
+                    </mtd>
+                    <mtd>
+                      <mi data-latex="a">a</mi>
+                    </mtd>
+                    <mtd>
+                      <mstyle indentshift="2em">
+                        <mtext>=b&#xA0;</mtext>
+                      </mstyle>
+                    </mtd>
+                    <mtd>
+                      <mstyle indentshift="2em"></mstyle>
+                    </mtd>
+                  </mlabeledtr>
+                </mtable>
+              </mpadded>
+            </mphantom>
+          </mpadded>
+          <mphantom>
+            <mpadded width="0">
+              <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
+                <mlabeledtr data-latex="{A=\\label{test}}">
+                  <mtd>
+                    <mtext data-latex="\\text{(}">(</mtext>
+                    <mtext data-latex="\\text{1}">1</mtext>
+                    <mtext data-latex="\\text{)}">)</mtext>
+                  </mtd>
+                  <mtd>
+                    <mi data-latex="a">a</mi>
+                  </mtd>
+                  <mtd>
+                    <mstyle indentshift="2em">
+                      <mtext>=b&#xA0;</mtext>
+                    </mstyle>
+                  </mtd>
+                  <mtd>
+                    <mstyle indentshift="2em"></mstyle>
+                  </mtd>
+                </mlabeledtr>
+              </mtable>
+            </mpadded>
+          </mphantom>
+        </mpadded>
+      </mtd>
+      <mtd>
+        <mi data-latex="a">a</mi>
+      </mtd>
+      <mtd>
+        <mstyle indentshift="2em">
+          <mtext>=b&#xA0;</mtext>
+        </mstyle>
+      </mtd>
+      <mtd>
+        <mstyle indentshift="2em"></mstyle>
+      </mtd>
+    </mlabeledtr>
+  </mtable>
+</math>"
+`;

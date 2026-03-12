@@ -1,6 +1,5 @@
-import { beforeEach, describe, test } from '@jest/globals';
+import { beforeEach, describe, expect, test } from '@jest/globals';
 import {
-  toXmlMatch,
   setupTex,
   setupTexTypeset,
   tex2mml,
@@ -22,25 +21,7 @@ describe('Setoptions', () => {
   /********************************************************************************/
 
   test('Set TeX option', () => {
-    toXmlMatch(
-      tex2mml('\\setOptions{tagSide=left} a=b\\tag{1}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions{tagSide=left} a=b\\tag{1}" display="block">
-         <mtable side="left" displaystyle="true" data-latex="\\setOptions{tagSide=left} a=b\\tag{1}">
-           <mlabeledtr>
-             <mtd id="mjx-eqn:1">
-               <mtext data-latex="\\text{(}">(</mtext>
-               <mtext data-latex="\\text{1}">1</mtext>
-               <mtext data-latex="\\text{)}">)</mtext>
-             </mtd>
-             <mtd>
-               <mi data-latex="a">a</mi>
-               <mo data-latex="=">=</mo>
-               <mi data-latex="\\tag{1}">b</mi>
-             </mtd>
-           </mlabeledtr>
-         </mtable>
-       </math>`
-    );
+    expect(tex2mml('\\setOptions{tagSide=left} a=b\\tag{1}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -74,55 +55,25 @@ describe('Setoptions', () => {
   /********************************************************************************/
 
   test('Set package string option', () => {
-    toXmlMatch(
-      tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
-         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="50%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
-           <mtr>
-             <mtd columnalign="left">
-               <mi data-latex="a">a</mi>
-             </mtd>
-           </mtr>
-         </mtable>
-       </math>`
-    );
+    expect(tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('Set package boolean option', () => {
-    toXmlMatch(
-      tex2mml('\\setOptions[units]{loose=true} \\units[1]{kg}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[units]{loose=true} \\units[1]{kg}" display="block">
-         <mn data-latex="1">1</mn>
-         <mtext data-latex="~">&#xA0;</mtext>
-         <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{kg}">
-           <mi data-mjx-auto-op="false" data-latex="kg">kg</mi>
-         </mrow>
-       </math>`
-    );
+    expect(tex2mml('\\setOptions[units]{loose=true} \\units[1]{kg}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('Set pacjage regexp option', () => {
-    toXmlMatch(
-      tex2mml('\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/} \\operatorname{ab1}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/} \\operatorname{ab1}" display="block">
-         <mi data-latex="\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/} \\operatorname{ab1}">ab1</mi>
-       </math>`
-    );
+    expect(tex2mml('\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/} \\operatorname{ab1}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('Set regexp option with flags', () => {
-    toXmlMatch(
-      tex2mml('\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/i} \\operatorname{ab1}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/i} \\operatorname{ab1}" display="block">
-         <mi data-latex="\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/i} \\operatorname{ab1}">ab1</mi>
-       </math>`
-    );
+    expect(tex2mml('\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/i} \\operatorname{ab1}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -158,18 +109,7 @@ describe('Setoptions options', () => {
         allowOptions: {ams: true}
       }
     });
-    toXmlMatch(
-      tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
-         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="50%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
-           <mtr>
-             <mtd columnalign="left">
-               <mi data-latex="a">a</mi>
-             </mtd>
-           </mtr>
-         </mtable>
-       </math>`
-    );
+    expect(tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -204,18 +144,7 @@ describe('Setoptions options', () => {
         }
       }
     });
-    toXmlMatch(
-      tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
-         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="50%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
-           <mtr>
-             <mtd columnalign="left">
-               <mi data-latex="a">a</mi>
-             </mtd>
-           </mtr>
-         </mtable>
-       </math>`
-    );
+    expect(tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}')).toMatchSnapshot();
     expectTexError('\\setOptions[ams]{multlineIndent=50%} \\begin{multline} a \\end{multline}')
       .toBe('Option "multlineIndent" is not allowed to be set for package ams');
   });
@@ -228,18 +157,7 @@ describe('Setoptions options', () => {
         filterPackage: (_parser: any, _extension: string) => false
       }
     });
-    toXmlMatch(
-      tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
-         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
-           <mtr>
-             <mtd columnalign="left">
-               <mi data-latex="a">a</mi>
-             </mtd>
-           </mtr>
-         </mtable>
-       </math>`
-    );
+    expect(tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -250,18 +168,7 @@ describe('Setoptions options', () => {
         filterOption: (_parser: any, _extension: string, _key: string) => false
       }
     });
-    toXmlMatch(
-      tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
-         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
-           <mtr>
-             <mtd columnalign="left">
-               <mi data-latex="a">a</mi>
-             </mtd>
-           </mtr>
-         </mtable>
-       </math>`
-    );
+    expect(tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -272,18 +179,7 @@ describe('Setoptions options', () => {
         filterValue: (_parser: any, _extension: string, _option: string, _value: string) => '25%'
       }
     });
-    toXmlMatch(
-      tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
-         <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="25%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
-           <mtr>
-             <mtd columnalign="left">
-               <mi data-latex="a">a</mi>
-             </mtd>
-           </mtr>
-         </mtable>
-       </math>`
-    );
+    expect(tex2mml('\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -304,32 +200,13 @@ describe('Setoptions Require', () => {
   /********************************************************************************/
 
   test('Require', async () => {
-    toXmlMatch(
-      await typeset2mml('\\require{bbox} \\bbox[red]{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{bbox} \\bbox[red]{x}" display="block">
-         <mstyle mathbackground="red" data-latex="\\Require{bbox}\\setOptions[bbox]{} \\bbox[red]{x}">
-           <mi data-latex="x">x</mi>
-         </mstyle>
-       </math>`
-    );
+    expect(await typeset2mml('\\require{bbox} \\bbox[red]{x}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('Require with option', async () => {
-    toXmlMatch(
-      await typeset2mml('\\require[ugly=true]{units} \\nicefrac{a}{b}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require[ugly=true]{units} \\nicefrac{a}{b}" display="block">
-         <mfrac data-latex="\\Require{units}\\setOptions[units]{ugly=true} \\nicefrac{a}{b}">
-           <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{a}">
-             <mi mathvariant="normal" data-latex="a">a</mi>
-           </mrow>
-           <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{b}">
-             <mi mathvariant="normal" data-latex="b">b</mi>
-           </mrow>
-         </mfrac>
-       </math>`
-    );
+    expect(await typeset2mml('\\require[ugly=true]{units} \\nicefrac{a}{b}')).toMatchSnapshot();
   });
 
   /********************************************************************************/

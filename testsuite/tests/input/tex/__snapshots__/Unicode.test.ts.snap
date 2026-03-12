@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unicode Complete Unicode Bold 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbf{\\unicode[bold]{8922}}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathbf{\\unicode[bold]{8922}}">
+    <mtext fontfamily="bold" fontweight="bold" data-latex="\\unicode[bold]{8922}">&#x22DA;</mtext>
+  </mrow>
+</math>"
+`;
+
+exports[`Unicode Complete Unicode Caligraphic 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathtt{\\unicode{8922}}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathtt{\\unicode{8922}}">
+    <mtext mathvariant="monospace" data-latex="\\unicode{8922}">&#x22DA;</mtext>
+  </mrow>
+</math>"
+`;
+
+exports[`Unicode Complete Unicode Italic 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathit{\\unicode[bold]{8922}}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathit{\\unicode[bold]{8922}}">
+    <mtext fontfamily="bold" fontstyle="italic" data-latex="\\unicode[bold]{8922}">&#x22DA;</mtext>
+  </mrow>
+</math>"
+`;
+
+exports[`Unicode Unicode Blackboard 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\unicode{x1D538}" display="block">
+  <mtext data-latex="\\unicode{x1D538}">&#x1D538;</mtext>
+</math>"
+`;
+
+exports[`Unicode Unicode Blackboard Geramond 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\unicode{x1D538}" display="block">
+  <mtext data-latex="\\unicode{x1D538}">&#x1D538;</mtext>
+</math>"
+`;
+
+exports[`Unicode Unicode Combined 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mbox{A}\\unicode{65}{B}" display="block">
+  <mstyle displaystyle="false" data-latex="\\mbox{A}">
+    <mtext>A</mtext>
+  </mstyle>
+  <mtext data-latex="\\unicode{65}">A</mtext>
+  <mrow data-mjx-texclass="ORD" data-latex="{B}">
+    <mi data-latex="B">B</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Unicode Unicode Dec 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\unicode{8922}" display="block">
+  <mtext data-latex="\\unicode{8922}">&#x22DA;</mtext>
+</math>"
+`;
+
+exports[`Unicode Unicode Dec A 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\unicode{65}" display="block">
+  <mtext data-latex="\\unicode{65}">A</mtext>
+</math>"
+`;
+
+exports[`Unicode Unicode Font 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\unicode[Garamond]{x22D6}" display="block">
+  <mtext fontfamily="Garamond" data-latex="\\unicode[Garamond]{x22D6}">&#x22D6;</mtext>
+</math>"
+`;
+
+exports[`Unicode Unicode Hex 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\unicode{0x22DA}" display="block">
+  <mtext data-latex="\\unicode{0x22DA}">&#x22DA;</mtext>
+</math>"
+`;
+
+exports[`Unicode Unicode Hex A 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\unicode{x41}" display="block">
+  <mtext data-latex="\\unicode{x41}">A</mtext>
+</math>"
+`;
+
+exports[`Unicode Unicode Scale 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\unicode[.55,0.05]{x22D6}" display="block">
+  <mtext data-latex="\\unicode[.55,0.05]{x22D6}">&#x22D6;</mtext>
+</math>"
+`;
+
+exports[`Unicode Unicode Scale Font 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\unicode[.55,0.05][Geramond]{x22D6}" display="block">
+  <mtext fontfamily="Geramond" data-latex="\\unicode[.55,0.05][Geramond]{x22D6}">&#x22D6;</mtext>
+</math>"
+`;
+
+exports[`Unicode Unicode Surrogate Dec 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\unicode{120224}" display="block">
+  <mtext data-latex="\\unicode{120224}">&#x1D5A0;</mtext>
+</math>"
+`;
+
+exports[`Unicode Unicode Surrogate Hex 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\unicode{x1D5A0}" display="block">
+  <mtext data-latex="\\unicode{x1D5A0}">&#x1D5A0;</mtext>
+</math>"
+`;
+
+exports[`Unicode others Char Yen 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\char&quot;A5" display="block">
+  <mo data-latex="\\char&quot;A5">&#xA5;</mo>
+</math>"
+`;
+
+exports[`Unicode others Char alpha 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\char\`A" display="block">
+  <mi data-latex="\\char\`A">A</mi>
+</math>"
+`;
+
+exports[`Unicode others Char command number 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\char\`\\3" display="block">
+  <mn data-latex="\\char\`\\3">3</mn>
+</math>"
+`;
+
+exports[`Unicode others Char number 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\char55" display="block">
+  <mn data-latex="\\char55">7</mn>
+</math>"
+`;
+
+exports[`Unicode others Char numerical 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\char'777" display="block">
+  <mi data-latex="\\char'777">&#x1FF;</mi>
+</math>"
+`;
+
+exports[`Unicode others Raw Unicode 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\U{892F}" display="block">
+  <mi mathvariant="normal" data-latex="&#x892F;">&#x892F;</mi>
+</math>"
+`;
