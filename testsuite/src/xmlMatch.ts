@@ -24,7 +24,7 @@ expect.extend({
  * @param {string} received  The string received from the tests
  * @param {string} expected  The string expected to be produced by the tests
  */
-export function toXmlMatch(received: string, expected: string) {
+function toXmlMatch(received: string, expected: string) {
   // This is slightly awkward way of getting around ts-jest problems with custom
   // matcher extensions.
   (expect(received) as any).toBeXmlMatch(expected);
