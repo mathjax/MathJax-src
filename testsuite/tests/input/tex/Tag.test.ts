@@ -4,7 +4,6 @@ import {
   tex2mml,
   setupTexPage,
   page2mml,
-  toXmlArrayMatch,
   setupComponents,
   expectTexError
 } from '#helpers';
@@ -604,61 +603,15 @@ describe('Page References', () => {
   beforeEach(() => setupTexPage(['base', 'ams']));
 
   it('Forward Reference', async () => {
-    toXmlArrayMatch(
-      await page2mml('<p>$$a=b\\label{eq1}\\tag{1}$$</p><p>Refer to \\eqref{eq1}</p>'),
-      [
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a=b\\label{eq1}\\tag{1}" display="block">
-           <mtable displaystyle="true" data-latex="a=b\\label{eq1}\\tag{1}">
-             <mlabeledtr>
-               <mtd id="mjx-eqn:eq1">
-               <mtext data-latex="\\text{(}">(</mtext>
-               <mtext data-latex="\\text{1}">1</mtext>
-               <mtext data-latex="\\text{)}">)</mtext>
-               </mtd>
-               <mtd>
-                 <mi data-latex="a">a</mi>
-                 <mo data-latex="=">=</mo>
-                 <mi data-latex="\\tag{1}">b</mi>
-               </mtd>
-             </mlabeledtr>
-           </mtable>
-         </math>`,
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eqref{eq1}">
-           <mrow href="#mjx-eqn%3Aeq1" class="MathJax_ref" data-latex="\\eqref{eq1}">
-             <mtext>(1)</mtext>
-           </mrow>
-         </math>`
-      ]
-    );
+    expect(
+      await page2mml('<p>$$a=b\\label{eq1}\\tag{1}$$</p><p>Refer to \\eqref{eq1}</p>')).
+      toMatchSnapshot();
   });
 
   it('Forward Reference', async () => {
-    toXmlArrayMatch(
-      await page2mml('<p>Refer to \\eqref{eq1}</p><p>$$a=b\\label{eq1}\\tag{1}$$</p>'),
-      [
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eqref{eq1}">
-           <mrow href="#mjx-eqn%3Aeq1" class="MathJax_ref" data-latex="\\eqref{eq1}">
-             <mtext>(1)</mtext>
-           </mrow>
-         </math>`,
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a=b\\label{eq1}\\tag{1}" display="block">
-           <mtable displaystyle="true" data-latex="a=b\\label{eq1}\\tag{1}">
-             <mlabeledtr>
-               <mtd id="mjx-eqn:eq1">
-               <mtext data-latex="\\text{(}">(</mtext>
-               <mtext data-latex="\\text{1}">1</mtext>
-               <mtext data-latex="\\text{)}">)</mtext>
-               </mtd>
-               <mtd>
-                 <mi data-latex="a">a</mi>
-                 <mo data-latex="=">=</mo>
-                 <mi data-latex="\\tag{1}">b</mi>
-               </mtd>
-             </mlabeledtr>
-           </mtable>
-         </math>`
-      ]
-    );
+    expect(
+      await page2mml('<p>Refer to \\eqref{eq1}</p><p>$$a=b\\label{eq1}\\tag{1}$$</p>')).
+      toMatchSnapshot();
   });
 
   it('LabelIds', () => {

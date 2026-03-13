@@ -1,5 +1,57 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Page References Forward Reference 1`] = `
+[
+  "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a=b\\label{eq1}\\tag{1}" display="block">
+  <mtable displaystyle="true" data-latex="a=b\\label{eq1}\\tag{1}">
+    <mlabeledtr>
+      <mtd id="mjx-eqn:eq1">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mi data-latex="a">a</mi>
+        <mo data-latex="=">=</mo>
+        <mi data-latex="\\tag{1}">b</mi>
+      </mtd>
+    </mlabeledtr>
+  </mtable>
+</math>",
+  "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eqref{eq1}">
+  <mrow href="#mjx-eqn%3Aeq1" class="MathJax_ref" data-latex="\\eqref{eq1}">
+    <mtext>(1)</mtext>
+  </mrow>
+</math>",
+]
+`;
+
+exports[`Page References Forward Reference 2`] = `
+[
+  "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eqref{eq1}">
+  <mrow href="#mjx-eqn%3Aeq1" class="MathJax_ref" data-latex="\\eqref{eq1}">
+    <mtext>(1)</mtext>
+  </mrow>
+</math>",
+  "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a=b\\label{eq1}\\tag{1}" display="block">
+  <mtable displaystyle="true" data-latex="a=b\\label{eq1}\\tag{1}">
+    <mlabeledtr>
+      <mtd id="mjx-eqn:eq1">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mi data-latex="a">a</mi>
+        <mo data-latex="=">=</mo>
+        <mi data-latex="\\tag{1}">b</mi>
+      </mtd>
+    </mlabeledtr>
+  </mtable>
+</math>",
+]
+`;
+
 exports[`Page References LabelIds 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{eq1}\\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="a\\label{eq1}\\tag{1}">
