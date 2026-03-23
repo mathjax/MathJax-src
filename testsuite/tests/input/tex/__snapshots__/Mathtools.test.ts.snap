@@ -3901,7 +3901,7 @@ exports[`Mathtools Symbols Other 1`] = `
   </mrow>
   <munder data-latex="\\mathop{\\Large\\kern-.1em\\boldsymbol{\\times}\\kern-.1em}_n">
     <mrow data-mjx-texclass="OP" data-latex="\\mathop{\\Large\\kern-.1em\\boldsymbol{\\times}\\kern-.1em}">
-      <mstyle mathsize="1.44em" data-latex="\\Large\\kern-.1em\\boldsymbol{\\times}\\kern-.1em">
+      <mstyle mathsize="1.2em" data-latex="\\Large\\kern-.1em\\boldsymbol{\\times}\\kern-.1em">
         <mspace width="-.1em" linebreak="nobreak" data-latex="\\kern-.1em"></mspace>
         <mo data-latex="\\boldsymbol{\\times}" mathvariant="bold">&#xD7;</mo>
         <mspace width="-.1em" linebreak="nobreak" data-latex="\\kern-.1em"></mspace>
