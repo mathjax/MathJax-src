@@ -5,7 +5,6 @@ import '#js/input/tex/units/UnitsConfiguration';
 /**********************************************************************************/
 
 describe('Units', () => {
-
   beforeEach(() => setupTex(['base', 'units']));
 
   test('Unit', () => {
@@ -35,14 +34,14 @@ describe('Units', () => {
   test('Nicefrac with font', () => {
     expect(tex2mml('\\nicefrac[\\mathsf]{1}{2}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Units loose ugly', () => {
-
-  beforeEach(() => setupTex(['base', 'units'], {units: {loose: true, ugly: true}}));
+  beforeEach(() =>
+    setupTex(['base', 'units'], { units: { loose: true, ugly: true } })
+  );
 
   test('Unit with value', () => {
     expect(tex2mml('\\units[5]{kg}')).toMatchSnapshot();
@@ -55,7 +54,6 @@ describe('Units loose ugly', () => {
   test('nicefrac', () => {
     expect(tex2mml('\\nicefrac{1}{2}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

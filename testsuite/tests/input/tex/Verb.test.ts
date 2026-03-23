@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'verb']));
 /**********************************************************************************/
 
 describe('Verb', () => {
-
   it('Verb Plus ', () => {
     expect(tex2mml('\\verb+{a}+')).toMatchSnapshot();
   });
@@ -29,13 +28,12 @@ describe('Verb', () => {
   });
 
   it('Verb Error', () => {
-    expectTexError('\\verb{a}').toBe('Can\'t find closing delimiter for \\verb');
+    expectTexError('\\verb{a}').toBe("Can't find closing delimiter for \\verb");
   });
 
   it('Verb Missing Arg', () => {
     expectTexError('\\verb').toBe('Missing argument for \\verb');
   });
-
 });
 
 /**********************************************************************************/

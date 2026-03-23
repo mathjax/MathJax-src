@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'action']));
 /**********************************************************************************/
 
 describe('Action', () => {
-
   it('TextTip', () => {
     expect(tex2mml('\\texttip{A}{B}')).toMatchSnapshot();
   });
@@ -19,7 +18,6 @@ describe('Action', () => {
   it('Toggle', () => {
     expect(tex2mml('\\toggle A B C \\endtoggle')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

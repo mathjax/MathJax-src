@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'bbox']));
 /**********************************************************************************/
 
 describe('Bbox', () => {
-
   it('Bbox-Background', () => {
     expect(tex2mml('\\bbox[yellow]{a}')).toMatchSnapshot();
   });
@@ -29,29 +28,34 @@ describe('Bbox', () => {
   });
 
   it('Bbox-Background-Padding-Frame', () => {
-    expect(tex2mml('\\bbox[yellow,5px,border:2px solid red]{a}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\bbox[yellow,5px,border:2px solid red]{a}')
+    ).toMatchSnapshot();
   });
 
   it('Bbox-Background-Error', () => {
-    expectTexError('\\bbox[yellow,green]{a}')
-      .toBe('Background specified twice in \\bbox');
+    expectTexError('\\bbox[yellow,green]{a}').toBe(
+      'Background specified twice in \\bbox'
+    );
   });
 
   it('Bbox-Padding-Error', () => {
-    expectTexError('\\bbox[5px,6px]{a}')
-      .toBe('Padding specified twice in \\bbox');
+    expectTexError('\\bbox[5px,6px]{a}').toBe(
+      'Padding specified twice in \\bbox'
+    );
   });
 
   it('Bbox-Frame-Error', () => {
-    expectTexError('\\bbox[border:2px solid red,border:2px solid green]{a}')
-      .toBe('Style specified twice in \\bbox');
+    expectTexError(
+      '\\bbox[border:2px solid red,border:2px solid green]{a}'
+    ).toBe('Style specified twice in \\bbox');
   });
 
   it('Bbox-General-Error', () => {
-    expectTexError('\\bbox[22-11=color]{a}')
-      .toBe(`"22-11=color" doesn't look like a color, a padding dimension, or a style`);
+    expectTexError('\\bbox[22-11=color]{a}').toBe(
+      `"22-11=color" doesn't look like a color, a padding dimension, or a style`
+    );
   });
-
 });
 
 /**********************************************************************************/

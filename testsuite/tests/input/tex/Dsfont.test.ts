@@ -5,25 +5,21 @@ import '#js/input/tex/dsfont/DsfontConfiguration';
 /**********************************************************************************/
 
 describe('Dsfont', () => {
-
   beforeEach(() => setupTex(['base', 'dsfont']));
 
   test('mathds', () => {
     expect(tex2mml('\\mathds{Aa}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Dsfont sans', () => {
-
-  beforeEach(() => setupTex(['base', 'dsfont'], {dsfont: {sans: true}}));
+  beforeEach(() => setupTex(['base', 'dsfont'], { dsfont: { sans: true } }));
 
   test('mathds', () => {
     expect(tex2mml('\\mathds{Aa}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

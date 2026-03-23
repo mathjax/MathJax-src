@@ -5,9 +5,10 @@ import '#js/input/tex/configmacros/ConfigMacrosConfiguration';
 beforeEach(() => {});
 
 function runMacroTests(
-  macros: {[key: string]: any},
+  macros: { [key: string]: any },
   control: string,
-  macro: string) {
+  macro: string
+) {
   setupTex(['base', 'configmacros'], macros);
   expect(tex2mml(control)).toMatchSnapshot();
   expect(tex2mml(macro)).toMatchSnapshot();
@@ -16,24 +17,21 @@ function runMacroTests(
 /**********************************************************************************/
 
 describe('Config Macros Active', () => {
-
   it('Macros Simple', () => {
-    runMacroTests({active: {"@": "~"}}, 'A~a', 'A@a');
+    runMacroTests({ active: { '@': '~' } }, 'A~a', 'A@a');
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Config Macros Commands', () => {
-
   it('Commands Simple', () => {
-    runMacroTests({macros: {"RR": "{\\bf R}"}}, '{\\bf R}', '\\RR');
+    runMacroTests({ macros: { RR: '{\\bf R}' } }, '{\\bf R}', '\\RR');
   });
 
   it('Commands Argument', () => {
     runMacroTests(
-      {macros: {"bold": ["{\\bf #1}", 1]}},
+      { macros: { bold: ['{\\bf #1}', 1] } },
       '{\\bf bold}',
       '\\bold{bold}'
     );
@@ -41,26 +39,27 @@ describe('Config Macros Commands', () => {
 
   it('Commands Aux Argument', () => {
     runMacroTests(
-      {macros: {"foo": ["\\mbox{first } #1 \\mbox{ second } #2", 2, ["[", "]"]]}},
+      {
+        macros: {
+          foo: ['\\mbox{first } #1 \\mbox{ second } #2', 2, ['[', ']']],
+        },
+      },
       '\\mbox{first } hi \\mbox{ second } there',
       '\\foo[hi]{there}'
     );
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Config Macros Environment', () => {
-
   it('Environment Simple', () => {
     runMacroTests(
-      {environments: {"myHeartEnv": ["\\heartsuit", "\\spadesuit"]}},
+      { environments: { myHeartEnv: ['\\heartsuit', '\\spadesuit'] } },
       '\\begin{myHeartEnv}a\\end{myHeartEnv}',
       '\\begin{myHeartEnv}a\\end{myHeartEnv}'
     );
   });
-
 });
 
 /**********************************************************************************/

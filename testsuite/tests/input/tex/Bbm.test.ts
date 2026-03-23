@@ -5,7 +5,6 @@ import '#js/input/tex/bbm/BbmConfiguration';
 /**********************************************************************************/
 
 describe('Bbm', () => {
-
   beforeEach(() => setupTex(['base', 'bbm']));
 
   test('mathbbm', () => {
@@ -21,24 +20,34 @@ describe('Bbm', () => {
   });
 
   test('mathbbm mathversion', () => {
-    expect(tex2mml('\\mathversion{bold}\\mathbbm{Aa}\\mathversion{normal}\\mathbbm{Aa}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\mathversion{bold}\\mathbbm{Aa}\\mathversion{normal}\\mathbbm{Aa}'
+      )
+    ).toMatchSnapshot();
   });
 
   test('mathbbmss mathversion', () => {
-    expect(tex2mml('\\mathversion{bold}\\mathbbmss{Aa}\\mathversion{normal}\\mathbbmss{Aa}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\mathversion{bold}\\mathbbmss{Aa}\\mathversion{normal}\\mathbbmss{Aa}'
+      )
+    ).toMatchSnapshot();
   });
 
   test('mathbbmtt mathversion', () => {
-    expect(tex2mml('\\mathversion{bold}\\mathbbmtt{Aa}\\mathversion{normal}\\mathbbmtt{Aa}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\mathversion{bold}\\mathbbmtt{Aa}\\mathversion{normal}\\mathbbmtt{Aa}'
+      )
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Bbm', () => {
-
-  beforeEach(() => setupTex(['base', 'bbm'], {bbm: {bold: true}}));
+  beforeEach(() => setupTex(['base', 'bbm'], { bbm: { bold: true } }));
 
   test('mathbbm', () => {
     expect(tex2mml('\\mathbbm{Aa}')).toMatchSnapshot();
@@ -51,19 +60,19 @@ describe('Bbm', () => {
   test('mathbbmtt', () => {
     expect(tex2mml('\\mathbbmtt{Aa}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 declare const MathJax: any;
 
-setupComponents({loader: {load: ['input/tex-base', 'output/chtml']}});
+setupComponents({ loader: { load: ['input/tex-base', 'output/chtml'] } });
 
 describe('Bbm', () => {
-
-  test('bbm with no output', async() => {
-    await expect(MathJax.loader.load('[tex]/bbm').then(() => true)).resolves.toBe(true);
+  test('bbm with no output', async () => {
+    await expect(
+      MathJax.loader.load('[tex]/bbm').then(() => true)
+    ).resolves.toBe(true);
   });
 });
 

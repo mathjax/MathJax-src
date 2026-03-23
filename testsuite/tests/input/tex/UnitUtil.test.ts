@@ -77,7 +77,8 @@ describe('Dimension matching', () => {
   it('10mm', () => expect(matchDimension('10mm')).toEqual(['10', 'mm', 4]));
   it('9mu', () => expect(matchDimension('9mu')).toEqual(['0.5', 'em', 3]));
   it('10mu', () => expect(matchDimension('10mu')).toEqual(['0.556', 'em', 4]));
-  it('rest', () => expect(UnitUtil.matchDimen('9em rest', true)).toEqual(['9', 'em', 4]));
+  it('rest', () =>
+    expect(UnitUtil.matchDimen('9em rest', true)).toEqual(['9', 'em', 4]));
 });
 
 /**********************************************************************************/
@@ -124,9 +125,11 @@ describe('Remove Unit', () => {
 /**********************************************************************************/
 
 describe('Trim spaces', () => {
-  it('removes spaces and tabs', () => expect(UnitUtil.trimSpaces(' \t abc \t ')).toBe('abc'));
+  it('removes spaces and tabs', () =>
+    expect(UnitUtil.trimSpaces(' \t abc \t ')).toBe('abc'));
   it('non-text argument', () => expect(UnitUtil.trimSpaces(null)).toBe(null));
-  it('space macro at end', () => expect(UnitUtil.trimSpaces('\\ ')).toBe('\\ '));
+  it('space macro at end', () =>
+    expect(UnitUtil.trimSpaces('\\ ')).toBe('\\ '));
 });
 
 /**********************************************************************************/

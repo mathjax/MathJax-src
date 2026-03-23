@@ -8,13 +8,14 @@ beforeEach(() => setupTex(['base', 'mhchem']));
 /**********************************************************************************/
 
 describe('Mhchem0', () => {
-
   it('Chem-1', () => {
     expect(tex2mml('\\ce{CO2 + C -> 2 CO}')).toMatchSnapshot();
   });
 
   it('Chem-3', () => {
-    expect(tex2mml('C_p[\\ce{H2O(l)}] = \\pu{75.3 J // mol K}')).toMatchSnapshot();
+    expect(
+      tex2mml('C_p[\\ce{H2O(l)}] = \\pu{75.3 J // mol K}')
+    ).toMatchSnapshot();
   });
 
   it('Chem-4', () => {
@@ -40,13 +41,11 @@ describe('Mhchem0', () => {
   it('Chem-9', () => {
     expect(tex2mml('\\ce{Y^99+}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Mhchem1', () => {
-
   it('Chem-10', () => {
     expect(tex2mml('\\ce{Y^{99+}}')).toMatchSnapshot();
   });
@@ -86,13 +85,11 @@ describe('Mhchem1', () => {
   it('Chem-19', () => {
     expect(tex2mml('\\ce{^{0}_{-1}n^{-}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Mhchem2', () => {
-
   it('Chem-20', () => {
     expect(tex2mml('\\ce{^0_-1n-}')).toMatchSnapshot();
   });
@@ -132,13 +129,11 @@ describe('Mhchem2', () => {
   it('Chem-29', () => {
     expect(tex2mml('\\ce{A <<=> B}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Mhchem3', () => {
-
   it('Chem-33', () => {
     expect(tex2mml('\\ce{(NH4)2S}')).toMatchSnapshot();
   });
@@ -148,7 +143,9 @@ describe('Mhchem3', () => {
   });
 
   it('Chem-35', () => {
-    expect(tex2mml('\\ce{CH4 + 2 $\\left( \\ce{O2 + 79/21 N2} \\right)$}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\ce{CH4 + 2 $\\left( \\ce{O2 + 79/21 N2} \\right)$}')
+    ).toMatchSnapshot();
   });
 
   it('Chem-36', () => {
@@ -166,13 +163,11 @@ describe('Mhchem3', () => {
   it('Chem-39', () => {
     expect(tex2mml('\\ce{ZnS($c$)}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Mhchem4', () => {
-
   it('Chem-40', () => {
     expect(tex2mml('\\ce{ZnS(\\ca$c$)}')).toMatchSnapshot();
   });
@@ -208,13 +203,11 @@ describe('Mhchem4', () => {
   it('Chem-49', () => {
     expect(tex2mml('\\ce{Fe(CN)_{$\\frac{6}{2}$}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Mhchem5', () => {
-
   it('Chem-50', () => {
     expect(tex2mml('\\ce{X_{$i$}^{$x$}}')).toMatchSnapshot();
   });
@@ -254,13 +247,11 @@ describe('Mhchem5', () => {
   it('Chem-59', () => {
     expect(tex2mml('\\ce{A\\bond{-}B\\bond{=}C\\bond{#}D}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Mhchem6', () => {
-
   it('Chem-60', () => {
     expect(tex2mml('\\ce{A\\bond{1}B\\bond{2}C\\bond{3}D}')).toMatchSnapshot();
   });
@@ -270,7 +261,9 @@ describe('Mhchem6', () => {
   });
 
   it('Chem-62', () => {
-    expect(tex2mml('\\ce{A\\bond{~--}B\\bond{~=}C\\bond{-~-}D}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\ce{A\\bond{~--}B\\bond{~=}C\\bond{-~-}D}')
+    ).toMatchSnapshot();
   });
 
   it('Chem-63', () => {
@@ -300,13 +293,11 @@ describe('Mhchem6', () => {
   it('Chem-69', () => {
     expect(tex2mml('\\ce{OCO^{.-}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Mhchem7', () => {
-
   it('Chem-70', () => {
     expect(tex2mml('\\ce{NO^{(2.)-}}')).toMatchSnapshot();
   });
@@ -346,13 +337,11 @@ describe('Mhchem7', () => {
   it('Chem-79', () => {
     expect(tex2mml('\\ce{SO4^2- + Ba^2+ -> BaSO4 v}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Mhchem8', () => {
-
   it('Chem-80', () => {
     expect(tex2mml('\\ce{A v B (v) -> B ^ B (^)}')).toMatchSnapshot();
   });
@@ -386,23 +375,27 @@ describe('Mhchem8', () => {
   });
 
   it('Chem-88', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\ce{Zn^2+  <=>[+ 2OH-][+ 2H+]  $\\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}$  <=>[+ 2OH-][+ 2H+]  $\\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}}$}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Chem-89', () => {
-    expect(tex2mml('\\ce{$K = \\frac{[\\ce{Hg^2+}][\\ce{Hg}]}{[\\ce{Hg2^2+}]}$}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\ce{$K = \\frac{[\\ce{Hg^2+}][\\ce{Hg}]}{[\\ce{Hg2^2+}]}$}')
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Mhchem9', () => {
-
   it('Chem-90', () => {
-    expect(tex2mml('\\ce{$K = \\ce{\\frac{[Hg^2+][Hg]}{[Hg2^2+]}}$}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\ce{$K = \\ce{\\frac{[Hg^2+][Hg]}{[Hg2^2+]}}$}')
+    ).toMatchSnapshot();
   });
 
   it('Chem-92', () => {
@@ -452,7 +445,6 @@ describe('Mhchem9', () => {
   it('Chem-103', () => {
     expect(tex2mml('\\pu{1,2E3 kJ}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
@@ -461,7 +453,9 @@ describe('Mhchem-Ams', () => {
   beforeEach(() => setupTex(['base', 'ams', 'mhchem']));
 
   it('Chem-2', () => {
-    expect(tex2mml('\\ce{Hg^2+ ->[I-] HgI2 ->[I-] [Hg^{II}I4]^2-}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\ce{Hg^2+ ->[I-] HgI2 ->[I-] [Hg^{II}I4]^2-}')
+    ).toMatchSnapshot();
   });
 
   it('Chem-30', () => {
@@ -469,7 +463,9 @@ describe('Mhchem-Ams', () => {
   });
 
   it('Chem-31', () => {
-    expect(tex2mml('\\ce{A ->[{text above}][{text below}] B}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\ce{A ->[{text above}][{text below}] B}')
+    ).toMatchSnapshot();
   });
 
   it('Chem-32', () => {
@@ -477,18 +473,21 @@ describe('Mhchem-Ams', () => {
   });
 
   it('Chem-43', () => {
-    expect(tex2mml('\\ce{x Na(NH4)HPO4 ->[\\Delta] (NaPO3)_x + x NH3 ^ + x H2O}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\ce{x Na(NH4)HPO4 ->[\\Delta] (NaPO3)_x + x NH3 ^ + x H2O}')
+    ).toMatchSnapshot();
   });
 
   it('Chem-91', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\ce{Hg^2+ ->[I-]  $\\underset{\\mathrm{red}}{\\ce{HgI2}}$  ->[I-]  $\\underset{\\mathrm{red}}{\\ce{[Hg^{II}I4]^2-}}$}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Mhchem Error', () => {
-    expectTexError('\\ce{A\\bond{x}B}')
-      .toBe('mhchem bug T. Please report.');
+    expectTexError('\\ce{A\\bond{x}B}').toBe('mhchem bug T. Please report.');
   });
 
   it('Mhchem stretchy <-', () => {
@@ -526,7 +525,6 @@ describe('Mhchem-Ams', () => {
   it('Mhchem rightleftharpoons', () => {
     expect(tex2mml('\\ce{A\\rightleftharpoons B}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'gensymb']));
 /**********************************************************************************/
 
 describe('Gensymb', () => {
-
   test('ohm', () => {
     expect(tex2mml('\\ohm')).toMatchSnapshot();
   });
@@ -27,7 +26,6 @@ describe('Gensymb', () => {
   test('micro', () => {
     expect(tex2mml('\\micro')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

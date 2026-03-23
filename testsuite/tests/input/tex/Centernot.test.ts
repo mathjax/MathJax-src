@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'centernot']));
 /**********************************************************************************/
 
 describe('Centernot', () => {
-
   test('Centernot', () => {
     expect(tex2mml('\\centernot{\\longrightarrow}')).toMatchSnapshot();
   });
@@ -15,7 +14,6 @@ describe('Centernot', () => {
   test('Centerover', () => {
     expect(tex2mml('\\centerOver{\\bigcirc}{1}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

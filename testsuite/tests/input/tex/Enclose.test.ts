@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'enclose']));
 /**********************************************************************************/
 
 describe('Enclose', () => {
-
   it('Enclose 1', () => {
     expect(tex2mml('\\enclose{updiagonalstrike}{x}')).toMatchSnapshot();
   });
@@ -21,17 +20,22 @@ describe('Enclose', () => {
   });
 
   it('Enclose Attr 2', () => {
-    expect(tex2mml('\\enclose{updiagonalarrow}[mathbackground=red]{x}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\enclose{updiagonalarrow}[mathbackground=red]{x}')
+    ).toMatchSnapshot();
   });
 
   it('Enclose Attr 1', () => {
-    expect(tex2mml('\\enclose{horizontalstrike}[data-thickness=5]{x}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\enclose{horizontalstrike}[data-thickness=5]{x}')
+    ).toMatchSnapshot();
   });
 
   it('Enclose Attrs', () => {
-    expect(tex2mml('\\enclose{circle}[data-thickness=10,data-padding=5]{x}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\enclose{circle}[data-thickness=10,data-padding=5]{x}')
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

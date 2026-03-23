@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'upgreek']));
 /**********************************************************************************/
 
 describe('Upgreek', () => {
-
   test('upalpha', () => {
     expect(tex2mml('\\upalpha')).toMatchSnapshot();
   });
@@ -171,7 +170,6 @@ describe('Upgreek', () => {
   test('Upomega', () => {
     expect(tex2mml('\\Upomega')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

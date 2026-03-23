@@ -2,13 +2,11 @@ import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
 import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
 import '#js/input/tex/physics/PhysicsConfiguration';
 
-
 beforeEach(() => setupTex(['base', 'physics']));
 
 /**********************************************************************************/
 
 describe('Physics1_0', () => {
-
   it('Quantities_Quantities_0', () => {
     expect(tex2mml('\\quantity')).toMatchSnapshot();
   });
@@ -18,8 +16,9 @@ describe('Physics1_0', () => {
   });
 
   it('Quantities_Quantities_2', () => {
-    expectTexError('\\quantity\\bigg a')
-      .toBe('Missing or unrecognized delimiter for \\bigg');
+    expectTexError('\\quantity\\bigg a').toBe(
+      'Missing or unrecognized delimiter for \\bigg'
+    );
   });
 
   it('Quantities_Quantities_3', () => {
@@ -31,13 +30,15 @@ describe('Physics1_0', () => {
   });
 
   it('Quantities_Quantities_5', () => {
-    expectTexError('\\qty\\Bigg ab')
-      .toBe('Missing or unrecognized delimiter for \\Bigg');
+    expectTexError('\\qty\\Bigg ab').toBe(
+      'Missing or unrecognized delimiter for \\Bigg'
+    );
   });
 
   it('Quantities_Quantities_6', () => {
-    expectTexError('\\quantity\\bigg\\sin')
-      .toBe('Missing or unrecognized delimiter for \\bigg');
+    expectTexError('\\quantity\\bigg\\sin').toBe(
+      'Missing or unrecognized delimiter for \\bigg'
+    );
   });
 
   it('Quantities_Quantities_7', () => {
@@ -55,13 +56,11 @@ describe('Physics1_0', () => {
   it('Quantities_Quantities_10', () => {
     expect(tex2mml('\\qty\\Bigg{a}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics1_1', () => {
-
   it('Quantities_Empty_0', () => {
     expect(tex2mml('\\qty\\big{}[]')).toMatchSnapshot();
   });
@@ -105,13 +104,11 @@ describe('Physics1_1', () => {
   it('Quantities_Empty_10', () => {
     expect(tex2mml('\\qty<\\frac{a}{b}>\\langle\\rangle')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics1_2', () => {
-
   it('Quantities_Big_0', () => {
     expect(tex2mml('\\quantity\\big(\\frac{a}{b})')).toMatchSnapshot();
   });
@@ -159,13 +156,11 @@ describe('Physics1_2', () => {
   it('Quantities_Big_11', () => {
     expect(tex2mml('\\quantity*\\Bigg(\\frac{a}{b})')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics1_3', () => {
-
   it('Quantities_Absval_0', () => {
     expect(tex2mml('\\absolutevalue\\Bigg{\\frac{a}{b}}')).toMatchSnapshot();
   });
@@ -193,13 +188,11 @@ describe('Physics1_3', () => {
   it('Quantities_Absval_6', () => {
     expect(tex2mml('\\norm{}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics1_4', () => {
-
   it('Quantities_Eval_0', () => {
     expect(tex2mml('\\evaluated{x}_0^\\infty')).toMatchSnapshot();
   });
@@ -221,39 +214,49 @@ describe('Physics1_4', () => {
   });
 
   it('Quantities_Eval_5', () => {
-    expect(tex2mml('\\eval*{\\frac{A}{\\frac{A}{\\int x}}}_0^\\infty')).toMatchSnapshot();
+    expect(
+      tex2mml('\\eval*{\\frac{A}{\\frac{A}{\\int x}}}_0^\\infty')
+    ).toMatchSnapshot();
   });
 
   it('Quantities_Eval_6', () => {
-    expect(tex2mml('\\eval{\\frac{A}{\\frac{A}{\\int x}}}_0^\\infty')).toMatchSnapshot();
+    expect(
+      tex2mml('\\eval{\\frac{A}{\\frac{A}{\\int x}}}_0^\\infty')
+    ).toMatchSnapshot();
   });
 
   it('Quantities_Eval_7', () => {
-    expect(tex2mml('\\eval*(\\frac{A}{\\frac{A}{\\int x}}|_0^\\infty')).toMatchSnapshot();
+    expect(
+      tex2mml('\\eval*(\\frac{A}{\\frac{A}{\\int x}}|_0^\\infty')
+    ).toMatchSnapshot();
   });
 
   it('Quantities_Eval_8', () => {
-    expect(tex2mml('\\eval(\\frac{A}{\\frac{A}{\\int x}}|_0^\\infty')).toMatchSnapshot();
+    expect(
+      tex2mml('\\eval(\\frac{A}{\\frac{A}{\\int x}}|_0^\\infty')
+    ).toMatchSnapshot();
   });
 
   it('Quantities_Eval_9', () => {
-    expect(tex2mml('\\eval*[\\frac{A}{\\frac{A}{\\int x}}|_0^\\infty')).toMatchSnapshot();
+    expect(
+      tex2mml('\\eval*[\\frac{A}{\\frac{A}{\\int x}}|_0^\\infty')
+    ).toMatchSnapshot();
   });
 
   it('Quantities_Eval_10', () => {
-    expect(tex2mml('\\eval[\\frac{A}{\\frac{A}{\\int x}}|_0^\\infty')).toMatchSnapshot();
+    expect(
+      tex2mml('\\eval[\\frac{A}{\\frac{A}{\\int x}}|_0^\\infty')
+    ).toMatchSnapshot();
   });
 
   it('Quantities_Eval_11', () => {
     expect(tex2mml('\\eval_0^\\infty')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics1_5', () => {
-
   it('Quantities_Order_0', () => {
     expect(tex2mml('\\order{}')).toMatchSnapshot();
   });
@@ -271,21 +274,23 @@ describe('Physics1_5', () => {
   });
 
   it('Quantities_Order_4', () => {
-    expect(tex2mml('\\order*{\\frac{A}{\\frac{A}{\\int x}}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\order*{\\frac{A}{\\frac{A}{\\int x}}}')
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics1_6', () => {
-
   it('Quantities_Comm_0', () => {
     expect(tex2mml('\\comm{A}{B}')).toMatchSnapshot();
   });
 
   it('Quantities_Comm_1', () => {
-    expect(tex2mml('\\comm{\\frac{A}{\\frac{A}{\\int x}}}{B}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\comm{\\frac{A}{\\frac{A}{\\int x}}}{B}')
+    ).toMatchSnapshot();
   });
 
   it('Quantities_Comm_2', () => {
@@ -293,7 +298,9 @@ describe('Physics1_6', () => {
   });
 
   it('Quantities_Comm_3', () => {
-    expect(tex2mml('\\comm*{\\frac{A}{\\frac{A}{\\int x}}}{B}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\comm*{\\frac{A}{\\frac{A}{\\int x}}}{B}')
+    ).toMatchSnapshot();
   });
 
   it('Quantities_Comm_4', () => {
@@ -303,13 +310,11 @@ describe('Physics1_6', () => {
   it('Quantities_Comm_5', () => {
     expect(tex2mml('\\comm{A}B')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics1_7', () => {
-
   it('Quantities_Acomm_0', () => {
     expect(tex2mml('\\acomm{A}{B}')).toMatchSnapshot();
   });
@@ -327,7 +332,9 @@ describe('Physics1_7', () => {
   });
 
   it('Quantities_Acomm_4', () => {
-    expect(tex2mml('\\acomm{\\frac{A}{\\frac{A}{\\int x}}}{B}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\acomm{\\frac{A}{\\frac{A}{\\int x}}}{B}')
+    ).toMatchSnapshot();
   });
 
   it('Quantities_Acomm_5', () => {
@@ -335,19 +342,19 @@ describe('Physics1_7', () => {
   });
 
   it('Quantities_Acomm_6', () => {
-    expect(tex2mml('\\acomm*{\\frac{A}{\\frac{A}{\\int x}}}{B}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\acomm*{\\frac{A}{\\frac{A}{\\int x}}}{B}')
+    ).toMatchSnapshot();
   });
 
   it('Quantities_Acomm_7', () => {
     expect(tex2mml('\\acomm{A}B')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics2_0', () => {
-
   it('Vector_Bold_0', () => {
     expect(tex2mml('\\vectorbold{a}')).toMatchSnapshot();
   });
@@ -373,9 +380,11 @@ describe('Physics2_0', () => {
   });
 
   it('Vector_Bold_6', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\vb{\\theta\\Gamma a\\delta \\frac{\\theta}{b}}\\frac{\\theta}{b}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Vector_Bold_7', () => {
@@ -393,13 +402,11 @@ describe('Physics2_0', () => {
   it('Vector_Bold_10', () => {
     expect(tex2mml('\\vb*{\\theta}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics2_1', () => {
-
   it('Vector_Special_0', () => {
     expect(tex2mml('\\vb{\\mbox{ab}}')).toMatchSnapshot();
   });
@@ -451,13 +458,11 @@ describe('Physics2_1', () => {
   it('Vector_Special_12', () => {
     expect(tex2mml('\\vb{\\hat{=}}\\hat{=}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics2_2', () => {
-
   it('Vector_Arrow_0', () => {
     expect(tex2mml('\\va{=}')).toMatchSnapshot();
   });
@@ -483,9 +488,11 @@ describe('Physics2_2', () => {
   });
 
   it('Vector_Arrow_6', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\va{\\theta\\Gamma a\\delta \\frac{\\theta}{b}}\\frac{\\theta}{b}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Vector_Arrow_7', () => {
@@ -511,13 +518,11 @@ describe('Physics2_2', () => {
   it('Vector_Arrow_12', () => {
     expect(tex2mml('\\va{a}\\vec{a}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics2_3', () => {
-
   it('Vector_Unit_0', () => {
     expect(tex2mml('\\vu{=}')).toMatchSnapshot();
   });
@@ -543,9 +548,11 @@ describe('Physics2_3', () => {
   });
 
   it('Vector_Unit_6', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\vu{\\theta\\Gamma a\\delta \\frac{\\theta}{b}}\\frac{\\theta}{b}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Vector_Unit_7', () => {
@@ -571,13 +578,11 @@ describe('Physics2_3', () => {
   it('Vector_Unit_12', () => {
     expect(tex2mml('\\vu{a}\\hat{a}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics2_4', () => {
-
   it('Vector_Gradient_0', () => {
     expect(tex2mml('\\gradient ')).toMatchSnapshot();
   });
@@ -609,13 +614,11 @@ describe('Physics2_4', () => {
   it('Vector_Gradient_7', () => {
     expect(tex2mml('\\grad{\\frac{a}{b}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics2_5', () => {
-
   it('Vector_Divergence_0', () => {
     expect(tex2mml('a\\dotproduct b \\vdot c')).toMatchSnapshot();
   });
@@ -637,15 +640,15 @@ describe('Physics2_5', () => {
   });
 
   it('Vector_Divergence_5', () => {
-    expect(tex2mml('{\\bf\\nabla} \\cdot \\left(\\frac{a}{b}c\\right)')).toMatchSnapshot();
+    expect(
+      tex2mml('{\\bf\\nabla} \\cdot \\left(\\frac{a}{b}c\\right)')
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics2_6', () => {
-
   it('Vector_Curl_0', () => {
     expect(tex2mml('\\curl ')).toMatchSnapshot();
   });
@@ -661,13 +664,11 @@ describe('Physics2_6', () => {
   it('Vector_Curl_3', () => {
     expect(tex2mml('\\curl{\\frac{a}{b}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics2_7', () => {
-
   it('Vector_Laplace_0', () => {
     expect(tex2mml('\\laplacian ')).toMatchSnapshot();
   });
@@ -683,13 +684,11 @@ describe('Physics2_7', () => {
   it('Vector_Laplace_3', () => {
     expect(tex2mml('\\laplacian{\\frac{a}{b}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics3_0', () => {
-
   it('Operators_Trig_0', () => {
     expect(tex2mml('\\sin(x)')).toMatchSnapshot();
   });
@@ -737,13 +736,11 @@ describe('Physics3_0', () => {
   it('Operators_Trig_11', () => {
     expect(tex2mml('\\atan(x)')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics3_1', () => {
-
   it('Operators_Arc_0', () => {
     expect(tex2mml('\\csc(x)')).toMatchSnapshot();
   });
@@ -791,13 +788,11 @@ describe('Physics3_1', () => {
   it('Operators_Arc_11', () => {
     expect(tex2mml('\\acot(x)')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics3_2', () => {
-
   it('Operators_TrigLarge_0', () => {
     expect(tex2mml('\\sin(\\frac{x}{y})')).toMatchSnapshot();
   });
@@ -845,13 +840,11 @@ describe('Physics3_2', () => {
   it('Operators_TrigLarge_11', () => {
     expect(tex2mml('\\atan(\\frac{x}{y})')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics3_3', () => {
-
   it('Operators_ArcLarge_0', () => {
     expect(tex2mml('\\csc(\\frac{x}{y})')).toMatchSnapshot();
   });
@@ -899,13 +892,11 @@ describe('Physics3_3', () => {
   it('Operators_ArcLarge_11', () => {
     expect(tex2mml('\\acot(\\frac{x}{y})')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics3_4', () => {
-
   it('Operators_Exp_0', () => {
     expect(tex2mml('\\sin x')).toMatchSnapshot();
   });
@@ -973,13 +964,11 @@ describe('Physics3_4', () => {
   it('Operators_Exp_16', () => {
     expect(tex2mml('\\Pr[2](x)')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics3_5', () => {
-
   it('Operators_Operators_0', () => {
     expect(tex2mml('\\tr\\rho')).toMatchSnapshot();
   });
@@ -1043,13 +1032,11 @@ describe('Physics3_5', () => {
   it('Operators_Operators_15', () => {
     expect(tex2mml('\\Res[2](\\frac{x}{y})')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics3_6', () => {
-
   it('Operators_PV_0', () => {
     expect(tex2mml('\\principalvalue{\\int f(z) \\dd{z}}')).toMatchSnapshot();
   });
@@ -1089,13 +1076,11 @@ describe('Physics3_6', () => {
   it('Operators_PV_9', () => {
     expect(tex2mml('\\PV\\int f(z) \\dd{z}a')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics3_7', () => {
-
   it('Operators_Imaginary_0', () => {
     expect(tex2mml('\\Re\\rho')).toMatchSnapshot();
   });
@@ -1167,13 +1152,11 @@ describe('Physics3_7', () => {
   it('Operators_Imaginary_17', () => {
     expect(tex2mml('\\imaginary{x}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics4_0', () => {
-
   it('QuickQuad_0_0', () => {
     expect(tex2mml('\\qcc')).toMatchSnapshot();
   });
@@ -1205,13 +1188,11 @@ describe('Physics4_0', () => {
   it('QuickQuad_0_7', () => {
     expect(tex2mml('three\\qif two')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics5_0', () => {
-
   it('Derivatives_Deriv_0', () => {
     expect(tex2mml('\\dv x')).toMatchSnapshot();
   });
@@ -1271,13 +1252,11 @@ describe('Physics5_0', () => {
   it('Derivatives_Deriv_14', () => {
     expect(tex2mml('\\dv{f}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics5_1', () => {
-
   it('Derivatives_Partial_0', () => {
     expect(tex2mml('\\flatfrac{x}{y}')).toMatchSnapshot();
   });
@@ -1353,13 +1332,11 @@ describe('Physics5_1', () => {
   it('Derivatives_Partial_18', () => {
     expect(tex2mml('\\pdv[5]{f}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics5_2', () => {
-
   it('Derivatives_Functional_0', () => {
     expect(tex2mml('\\fdv x')).toMatchSnapshot();
   });
@@ -1435,13 +1412,11 @@ describe('Physics5_2', () => {
   it('Derivatives_Functional_18', () => {
     expect(tex2mml('\\fdv[5]{f}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics5_3', () => {
-
   it('Derivatives_Var_0', () => {
     expect(tex2mml('\\var A')).toMatchSnapshot();
   });
@@ -1493,13 +1468,11 @@ describe('Physics5_3', () => {
   it('Derivatives_Var_12', () => {
     expect(tex2mml('A \\var[4]{A} B')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics5_4', () => {
-
   it('Derivatives_Differ_0', () => {
     expect(tex2mml('\\dd')).toMatchSnapshot();
   });
@@ -1521,19 +1494,27 @@ describe('Physics5_4', () => {
   });
 
   it('Derivatives_Differ_5', () => {
-    expect(tex2mml('\\dd(\\frac{\\frac{\\cos}{\\theta}}{\\theta})')).toMatchSnapshot();
+    expect(
+      tex2mml('\\dd(\\frac{\\frac{\\cos}{\\theta}}{\\theta})')
+    ).toMatchSnapshot();
   });
 
   it('Derivatives_Differ_6', () => {
-    expect(tex2mml('\\dd[4](\\frac{\\frac{\\cos}{\\theta}}{\\theta})')).toMatchSnapshot();
+    expect(
+      tex2mml('\\dd[4](\\frac{\\frac{\\cos}{\\theta}}{\\theta})')
+    ).toMatchSnapshot();
   });
 
   it('Derivatives_Differ_7', () => {
-    expect(tex2mml('\\dd{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})')).toMatchSnapshot();
+    expect(
+      tex2mml('\\dd{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})')
+    ).toMatchSnapshot();
   });
 
   it('Derivatives_Differ_8', () => {
-    expect(tex2mml('\\dd[4]{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})')).toMatchSnapshot();
+    expect(
+      tex2mml('\\dd[4]{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})')
+    ).toMatchSnapshot();
   });
 
   it('Derivatives_Differ_9', () => {
@@ -1543,13 +1524,11 @@ describe('Physics5_4', () => {
   it('Derivatives_Differ_10', () => {
     expect(tex2mml('{\\dd}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics5_5', () => {
-
   it('Derivatives_PDiff_0', () => {
     expect(tex2mml('A\\dd A')).toMatchSnapshot();
   });
@@ -1579,39 +1558,49 @@ describe('Physics5_5', () => {
   });
 
   it('Derivatives_PDiff_7', () => {
-    expect(tex2mml('A\\dd(\\frac{\\frac{\\cos}{\\theta}}{\\theta}) A')).toMatchSnapshot();
+    expect(
+      tex2mml('A\\dd(\\frac{\\frac{\\cos}{\\theta}}{\\theta}) A')
+    ).toMatchSnapshot();
   });
 
   it('Derivatives_PDiff_8', () => {
-    expect(tex2mml('A\\dd[4](\\frac{\\frac{\\cos}{\\theta}}{\\theta})A')).toMatchSnapshot();
+    expect(
+      tex2mml('A\\dd[4](\\frac{\\frac{\\cos}{\\theta}}{\\theta})A')
+    ).toMatchSnapshot();
   });
 
   it('Derivatives_PDiff_9', () => {
-    expect(tex2mml('A\\dd{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})A')).toMatchSnapshot();
+    expect(
+      tex2mml('A\\dd{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})A')
+    ).toMatchSnapshot();
   });
 
   it('Derivatives_PDiff_10', () => {
-    expect(tex2mml('A\\dd[4]{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})A')).toMatchSnapshot();
+    expect(
+      tex2mml('A\\dd[4]{x}(\\frac{\\frac{\\cos}{\\theta}}{\\theta})A')
+    ).toMatchSnapshot();
   });
 
   it('Derivatives_PDiff_11', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         'A{\\rm d}\\left(\\frac{\\frac{\\cos}{\\theta}}{\\theta}\\right) A'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Derivatives_PDiff_12', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         'A{\\rm d}{\\left(\\frac{\\frac{\\cos}{\\theta}}{\\theta}\\right)} A'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics6_0', () => {
-
   it('BraKet_Bra_0', () => {
     expect(tex2mml('\\bra{\\phi}\\ket{\\psi}')).toMatchSnapshot();
   });
@@ -1629,11 +1618,15 @@ describe('Physics6_0', () => {
   });
 
   it('BraKet_Bra_4', () => {
-    expect(tex2mml('\\bra*{\\frac{a}{b}}  \\ket{\\frac{a}{b}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\bra*{\\frac{a}{b}}  \\ket{\\frac{a}{b}}')
+    ).toMatchSnapshot();
   });
 
   it('BraKet_Bra_5', () => {
-    expect(tex2mml('\\bra{\\frac{a}{b}}  \\ket*{\\frac{a}{b}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\bra{\\frac{a}{b}}  \\ket*{\\frac{a}{b}}')
+    ).toMatchSnapshot();
   });
 
   it('BraKet_Bra_6', () => {
@@ -1683,13 +1676,11 @@ describe('Physics6_0', () => {
   it('BraKet_Bra_17', () => {
     expect(tex2mml('\\bra*{\\frac{1}{2}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics6_1', () => {
-
   it('BraKet_Braket_0', () => {
     expect(tex2mml('\\braket{A}')).toMatchSnapshot();
   });
@@ -1741,13 +1732,11 @@ describe('Physics6_1', () => {
   it('BraKet_Braket_12', () => {
     expect(tex2mml('\\braket*{\\frac{a}{b}}{}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics6_2', () => {
-
   it('BraKet_Ketbra_0', () => {
     expect(tex2mml('\\ketbra{A}')).toMatchSnapshot();
   });
@@ -1801,7 +1790,9 @@ describe('Physics6_2', () => {
   });
 
   it('BraKet_Ketbra_13', () => {
-    expect(tex2mml('\\left\\vert A \\middle\\rangle\\middle\\langle B\\right\\vert')).toMatchSnapshot();
+    expect(
+      tex2mml('\\left\\vert A \\middle\\rangle\\middle\\langle B\\right\\vert')
+    ).toMatchSnapshot();
   });
 
   it('BraKet_Ketbra_14', () => {
@@ -1815,13 +1806,11 @@ describe('Physics6_2', () => {
   it('BraKet_Ketbra_16', () => {
     expect(tex2mml('\\dyad{a}{b}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics6_3', () => {
-
   it('BraKet_Expect_0', () => {
     expect(tex2mml('\\ev{A}')).toMatchSnapshot();
   });
@@ -1875,7 +1864,9 @@ describe('Physics6_3', () => {
   });
 
   it('BraKet_Expect_13', () => {
-    expect(tex2mml('\\ev{\\frac{A}{B}}{\\frac{\\Psi}{\\Phi}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\ev{\\frac{A}{B}}{\\frac{\\Psi}{\\Phi}}')
+    ).toMatchSnapshot();
   });
 
   it('BraKet_Expect_14', () => {
@@ -1883,19 +1874,21 @@ describe('Physics6_3', () => {
   });
 
   it('BraKet_Expect_15', () => {
-    expect(tex2mml('\\ev*{\\frac{A}{B}}{\\frac{\\Psi}{\\Phi}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\ev*{\\frac{A}{B}}{\\frac{\\Psi}{\\Phi}}')
+    ).toMatchSnapshot();
   });
 
   it('BraKet_Expect_16', () => {
-    expect(tex2mml('\\ev**{\\frac{A}{B}}{\\frac{\\Psi}{\\Phi}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\ev**{\\frac{A}{B}}{\\frac{\\Psi}{\\Phi}}')
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics6_4', () => {
-
   it('BraKet_MatrixEl_0', () => {
     expect(tex2mml('\\matrixel{n}{A}{m}')).toMatchSnapshot();
   });
@@ -1905,7 +1898,9 @@ describe('Physics6_4', () => {
   });
 
   it('BraKet_MatrixEl_2', () => {
-    expect(tex2mml('\\mel{\\frac{a}{b}}{\\frac{a}{b}}{\\frac{a}{b}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\mel{\\frac{a}{b}}{\\frac{a}{b}}{\\frac{a}{b}}')
+    ).toMatchSnapshot();
   });
 
   it('BraKet_MatrixEl_3', () => {
@@ -1917,7 +1912,9 @@ describe('Physics6_4', () => {
   });
 
   it('BraKet_MatrixEl_5', () => {
-    expect(tex2mml('\\mel*{\\frac{a}{b}}{\\frac{a}{b}}{\\frac{a}{b}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\mel*{\\frac{a}{b}}{\\frac{a}{b}}{\\frac{a}{b}}')
+    ).toMatchSnapshot();
   });
 
   it('BraKet_MatrixEl_6', () => {
@@ -1925,15 +1922,15 @@ describe('Physics6_4', () => {
   });
 
   it('BraKet_MatrixEl_7', () => {
-    expect(tex2mml('\\mel**{\\frac{a}{b}}{\\frac{a}{b}}{\\frac{a}{b}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\mel**{\\frac{a}{b}}{\\frac{a}{b}}{\\frac{a}{b}}')
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics7_0', () => {
-
   it('Matrices_Quantity_0', () => {
     expect(tex2mml('\\matrixquantity{Q}')).toMatchSnapshot();
   });
@@ -1981,13 +1978,11 @@ describe('Physics7_0', () => {
   it('Matrices_Quantity_11', () => {
     expect(tex2mml('\\mqty*|a & b\\\\ c& d|')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics7_10', () => {
-
   it('Matrices_Adiag_0', () => {
     expect(tex2mml('\\mqty(\\admat{1,2&3\\\\4&5})')).toMatchSnapshot();
   });
@@ -2009,15 +2004,15 @@ describe('Physics7_10', () => {
   });
 
   it('Matrices_Adiag_5', () => {
-    expect(tex2mml('\\mqty(\\admat{1,2&3\\\\4&5&6,7,8,\\dmat{9,10}})')).toMatchSnapshot();
+    expect(
+      tex2mml('\\mqty(\\admat{1,2&3\\\\4&5&6,7,8,\\dmat{9,10}})')
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics7_11', () => {
-
   it('Matrices_Other_0', () => {
     expect(tex2mml('\\mqty a')).toMatchSnapshot();
   });
@@ -2031,9 +2026,11 @@ describe('Physics7_11', () => {
   });
 
   it('Matrices_Other_3', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\mqty(\\dmat{1,2&3,4&4&5\\\\4&5,33,4,5,7,8\\\\0\\\\10&20\\\\3,200}) '
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Matrices_Other_4', () => {
@@ -2041,21 +2038,29 @@ describe('Physics7_11', () => {
   });
 
   it('Matrices_Other_5', () => {
-    expect(tex2mml('\\mqty(\\dmat{1,2&3\\\\4&5&6,\\imat{3},7,8,\\dmat{9,10}})')).toMatchSnapshot();
+    expect(
+      tex2mml('\\mqty(\\dmat{1,2&3\\\\4&5&6,\\imat{3},7,8,\\dmat{9,10}})')
+    ).toMatchSnapshot();
   });
 
   it('Matrices_Other_6', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\mqty(\\mqty{1}\\\\ & \\mqty{2 & 3\\\\ 4 & 5 & 6}\\\\ & & \\mqty{\\imat{3}} \\\\ & & & \\mqty{7})'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Matrices_Other_7', () => {
-    expect(tex2mml('\\left\\lgroup\\frac{a}{b}\\right\\rgroup')).toMatchSnapshot();
+    expect(
+      tex2mml('\\left\\lgroup\\frac{a}{b}\\right\\rgroup')
+    ).toMatchSnapshot();
   });
 
   it('Matrices_Other_8', () => {
-    expect(tex2mml('\\begin{smallmatrix} a & b \\\\ c & d \\end{smallmatrix}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{smallmatrix} a & b \\\\ c & d \\end{smallmatrix}')
+    ).toMatchSnapshot();
   });
 
   it('Matrices_Other_9', () => {
@@ -2065,13 +2070,11 @@ describe('Physics7_11', () => {
   it('Matrices_Other_10', () => {
     expect(tex2mml('\\mqty{\\imat{10}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics7_1', () => {
-
   it('Matrices_Fenced_0', () => {
     expect(tex2mml('\\pmqty{Q} \\mqty(R)')).toMatchSnapshot();
   });
@@ -2103,31 +2106,37 @@ describe('Physics7_1', () => {
   it('Matrices_Fenced_7', () => {
     expect(tex2mml('\\vmqty{a & b \\\\ c & d}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics7_2', () => {
-
   it('Matrices_Small_0', () => {
     expect(tex2mml('\\smallmatrixquantity{Q}')).toMatchSnapshot();
   });
 
   it('Matrices_Small_1', () => {
-    expect(tex2mml('\\smallmatrixquantity*{a & b \\\\ c & d}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\smallmatrixquantity*{a & b \\\\ c & d}')
+    ).toMatchSnapshot();
   });
 
   it('Matrices_Small_2', () => {
-    expect(tex2mml('\\smallmatrixquantity*(a & b \\\\ c & d)')).toMatchSnapshot();
+    expect(
+      tex2mml('\\smallmatrixquantity*(a & b \\\\ c & d)')
+    ).toMatchSnapshot();
   });
 
   it('Matrices_Small_3', () => {
-    expect(tex2mml('\\smallmatrixquantity(a & b \\\\ c & d)')).toMatchSnapshot();
+    expect(
+      tex2mml('\\smallmatrixquantity(a & b \\\\ c & d)')
+    ).toMatchSnapshot();
   });
 
   it('Matrices_Small_5', () => {
-    expect(tex2mml('\\smallmatrixquantity|a & b \\\\ c & d|')).toMatchSnapshot();
+    expect(
+      tex2mml('\\smallmatrixquantity|a & b \\\\ c & d|')
+    ).toMatchSnapshot();
   });
 
   it('Matrices_Small_6', () => {
@@ -2149,13 +2158,11 @@ describe('Physics7_2', () => {
   it('Matrices_Small_10', () => {
     expect(tex2mml('\\smqty|a & b \\\\ c & d|')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics7_3', () => {
-
   it('Matrices_SmallFenced_0', () => {
     expect(tex2mml('\\spmqty{Q} \\smqty(R)')).toMatchSnapshot();
   });
@@ -2187,13 +2194,11 @@ describe('Physics7_3', () => {
   it('Matrices_SmallFenced_7', () => {
     expect(tex2mml('\\svmqty{a & b \\\\ c & d}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics7_4', () => {
-
   it('Matrices_Det_0', () => {
     expect(tex2mml('\\matrixdeterminant{a & b \\\\ c & d}')).toMatchSnapshot();
   });
@@ -2217,13 +2222,11 @@ describe('Physics7_4', () => {
   it('Matrices_Det_5', () => {
     expect(tex2mml('\\smdet a b')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics7_5', () => {
-
   it('Matrices_Identity_0', () => {
     expect(tex2mml('\\mqty{\\imat{3}}')).toMatchSnapshot();
   });
@@ -2247,13 +2250,11 @@ describe('Physics7_5', () => {
   it('Matrices_Identity_5', () => {
     expect(tex2mml('\\pmqty{\\imat{3}\\pmat{0}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics7_6', () => {
-
   it('Matrices_XMatrix_0', () => {
     expect(tex2mml('\\smqty(\\xmat{1}{2}{3})')).toMatchSnapshot();
   });
@@ -2305,13 +2306,11 @@ describe('Physics7_6', () => {
   it('Matrices_XMatrix_12', () => {
     expect(tex2mml('\\smqty(\\zmat{3}{1})')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics7_7', () => {
-
   it('Matrices_Pauli_0', () => {
     expect(tex2mml('\\mqty{\\pmat{0}}')).toMatchSnapshot();
   });
@@ -2363,13 +2362,11 @@ describe('Physics7_7', () => {
   it('Matrices_Pauli_12', () => {
     expect(tex2mml('\\pmqty{\\pmat{0.a}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics7_8', () => {
-
   it('Matrices_PauliFenced_0', () => {
     expect(tex2mml('\\pmqty{\\pmat{1}}')).toMatchSnapshot();
   });
@@ -2401,13 +2398,11 @@ describe('Physics7_8', () => {
   it('Matrices_PauliFenced_7', () => {
     expect(tex2mml('\\pmqty{\\pmat{aa}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics7_9', () => {
-
   it('Matrices_Diag_0', () => {
     expect(tex2mml('\\mqty(\\dmat{1,2&3\\\\4&5})')).toMatchSnapshot();
   });
@@ -2429,31 +2424,33 @@ describe('Physics7_9', () => {
   });
 
   it('Matrices_Diag_5', () => {
-    expect(tex2mml('\\mqty(\\dmat{1,2\\\\3\\\\4\\\\5\\\\6,7,8})')).toMatchSnapshot();
+    expect(
+      tex2mml('\\mqty(\\dmat{1,2\\\\3\\\\4\\\\5\\\\6,7,8})')
+    ).toMatchSnapshot();
   });
 
   it('Matrices_Diag_6', () => {
-    expect(tex2mml('\\mqty(\\dmat{1,2&3\\\\4&5&6,7,8,\\dmat{9,10}})')).toMatchSnapshot();
+    expect(
+      tex2mml('\\mqty(\\dmat{1,2&3\\\\4&5&6,7,8,\\dmat{9,10}})')
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Physics Errors', () => {
-
   it('MissingArgFor Quantity', () => {
     expectTexError('\\pqty').toBe('Missing argument for \\pqty');
   });
 
   it('MissingArgFor Commutator 1', () => {
-    expectTexError('\\commutator\\nix')
-      .toBe('Missing argument for \\commutator');
+    expectTexError('\\commutator\\nix').toBe(
+      'Missing argument for \\commutator'
+    );
   });
 
   it('MissingArgFor Commutator 2', () => {
-    expectTexError('\\commutator')
-      .toBe('Missing argument for \\commutator');
+    expectTexError('\\commutator').toBe('Missing argument for \\commutator');
   });
 
   it('InvalidNumber IdentityMatrix', () => {
@@ -2475,13 +2472,11 @@ describe('Physics Errors', () => {
   it('InvalidNumber XMatrix m+', () => {
     expectTexError('\\smqty(\\xmatrix{a}{2}{2.0})').toBe('Invalid number');
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Automatic Bracing Macros Rest', () => {
-
   it('Quantities_Bracket', () => {
     expect(tex2mml('\\bqty\\Bigg{a}')).toMatchSnapshot();
   });
@@ -2489,13 +2484,11 @@ describe('Automatic Bracing Macros Rest', () => {
   it('Quantities_Vert', () => {
     expect(tex2mml('\\vqty\\Bigg{a}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Vector Mo Rest', () => {
-
   it('dotproduct', () => {
     expect(tex2mml('A \\dotproduct B')).toMatchSnapshot();
   });
@@ -2519,13 +2512,11 @@ describe('Vector Mo Rest', () => {
   it('divisionsymbol', () => {
     expect(tex2mml('A \\divisionsymbol B')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Expressions Macros Rest', () => {
-
   it('trace', () => {
     expect(tex2mml('\\trace(x)')).toMatchSnapshot();
   });
@@ -2645,13 +2636,11 @@ describe('Expressions Macros Rest', () => {
   it('Probability', () => {
     expect(tex2mml('\\Probability(x)')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Derivative Macros Rest', () => {
-
   it('differential', () => {
     expect(tex2mml('\\differential')).toMatchSnapshot();
   });
@@ -2703,13 +2692,11 @@ describe('Derivative Macros Rest', () => {
   it('pderivative four arg', () => {
     expect(tex2mml('\\pderivative{x}{y}{z}{a}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Quick Quad Macros Rest', () => {
-
   it('qq', () => {
     expect(tex2mml('A \\qq B')).toMatchSnapshot();
   });
@@ -2785,13 +2772,11 @@ describe('Quick Quad Macros Rest', () => {
   it('qin', () => {
     expect(tex2mml('A \\qin B')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Bra-Ket Macros Rest', () => {
-
   it('innerproduct arg one', () => {
     expect(tex2mml('\\innerproduct{A}')).toMatchSnapshot();
   });
@@ -2859,13 +2844,11 @@ describe('Bra-Ket Macros Rest', () => {
   it('matrixelement arg four', () => {
     expect(tex2mml('\\matrixelement{A}{B}{C}{D}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Matrix Macros Rest', () => {
-
   it('zeromatrix', () => {
     expect(tex2mml('\\pmqty{\\zeromatrix{2}{3}}')).toMatchSnapshot();
   });
@@ -2895,15 +2878,15 @@ describe('Matrix Macros Rest', () => {
   });
 
   it('antidiagonalmatrix', () => {
-    expect(tex2mml('\\pmqty{\\antidiagonalmatrix{0,1\\\\2&3}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\pmqty{\\antidiagonalmatrix{0,1\\\\2&3}}')
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Rest for Completion', () => {
-
   it('Issue 2831', () => {
     expect(tex2mml('\\exp((\\frac{a}{a}a){a})')).toMatchSnapshot();
   });
@@ -2911,13 +2894,16 @@ describe('Rest for Completion', () => {
   it('Issue 3000', () => {
     expect(tex2mml('\\sin(1\\over2)')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Options', () => {
-  beforeEach(() => setupTex(['base', 'physics'], { physics: { arrowdel: true, italicdiff: true } }));
+  beforeEach(() =>
+    setupTex(['base', 'physics'], {
+      physics: { arrowdel: true, italicdiff: true },
+    })
+  );
 
   it('Arrowdel true', () => {
     expect(tex2mml('\\vnabla')).toMatchSnapshot();
@@ -2926,7 +2912,6 @@ describe('Options', () => {
   it('Italicdif true', () => {
     expect(tex2mml('\\dd{x}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

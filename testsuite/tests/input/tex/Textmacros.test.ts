@@ -7,7 +7,7 @@ import {
   typeset2mml,
   setupComponents,
   expectTexError,
-  expectTypesetError
+  expectTypesetError,
 } from '#helpers';
 import '#js/input/tex/textmacros/TextMacrosConfiguration';
 import '#js/input/tex/newcommand/NewcommandConfiguration';
@@ -15,13 +15,12 @@ import '#js/input/tex/color/ColorConfiguration';
 import '#js/input/tex/html/HtmlConfiguration';
 import '#js/input/tex/unicode/UnicodeConfiguration';
 
-import {Configuration} from '#js/input/tex/Configuration.js';
-import {HandlerType, ConfigurationType} from '#js/input/tex/HandlerTypes.js';
+import { Configuration } from '#js/input/tex/Configuration.js';
+import { HandlerType, ConfigurationType } from '#js/input/tex/HandlerTypes.js';
 
 /**********************************************************************************/
 
 describe('Textmacros', () => {
-
   beforeEach(() => setupTex(['base', 'newcommand', 'color', 'textmacros']));
 
   test('Text plain', () => {
@@ -33,8 +32,7 @@ describe('Textmacros', () => {
   });
 
   test('Text unknown macro', () => {
-    expectTexError('\\text{\\xyz}')
-      .toBe('Undefined control sequence \\xyz');
+    expectTexError('\\text{\\xyz}').toBe('Undefined control sequence \\xyz');
   });
 
   test('Text substitution macro', () => {
@@ -42,8 +40,9 @@ describe('Textmacros', () => {
   });
 
   test('Text mathmode macro', () => {
-    expectTexError('\\text{\\frac{1}{2}}')
-      .toBe('\\frac is only supported in math mode');
+    expectTexError('\\text{\\frac{1}{2}}').toBe(
+      '\\frac is only supported in math mode'
+    );
   });
 
   test('Text internal math', () => {
@@ -79,26 +78,27 @@ describe('Textmacros', () => {
   });
 
   test('Unbalanced Braces', () => {
-    expectTexError('\\text{a ${$ b }}')
-      .toBe('Math mode is not properly terminated');
+    expectTexError('\\text{a ${$ b }}').toBe(
+      'Math mode is not properly terminated'
+    );
   });
 
   test('Unbalanced Braces', () => {
-    expectTexError('\\text{{a $}$ b }')
-      .toBe('Extra close brace or missing open brace');
+    expectTexError('\\text{{a $}$ b }').toBe(
+      'Extra close brace or missing open brace'
+    );
   });
 
   test('Unbalanced Braces', () => {
-    expectTexError('\\let\\x=}\\text{a \\x}')
-      .toBe('Extra close brace or missing open brace');
+    expectTexError('\\let\\x=}\\text{a \\x}').toBe(
+      'Extra close brace or missing open brace'
+    );
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Textmacros Specials', () => {
-
   beforeEach(() => setupTex(['base', 'textmacros']));
 
   test('Dollar', () => {
@@ -140,14 +140,14 @@ describe('Textmacros Specials', () => {
   test('Quotes', () => {
     expect(tex2mml("\\text{a ``b'' `c' d}")).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Textmacros Macros', () => {
-
-  beforeEach(() => setupTex(['base', 'newcommand', 'color', 'html', 'unicode', 'textmacros']));
+  beforeEach(() =>
+    setupTex(['base', 'newcommand', 'color', 'html', 'unicode', 'textmacros'])
+  );
 
   test('Internal Math', () => {
     expect(tex2mml('\\text{a\\(b\\)}')).toMatchSnapshot();
@@ -162,7 +162,11 @@ describe('Textmacros Macros', () => {
   });
 
   test('Accents', () => {
-    expect(tex2mml("\\text{\\'a\\\u2019a\\`a\\\u2018a\\^a\\\"a\\~a\\=a\\.a\\u a\\v a}")).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\text{\\\'a\\\u2019a\\`a\\\u2018a\\^a\\"a\\~a\\=a\\.a\\u a\\v a}'
+      )
+    ).toMatchSnapshot();
   });
 
   test('emph', () => {
@@ -210,19 +214,31 @@ describe('Textmacros Macros', () => {
   });
 
   test('Sizes small', () => {
-    expect(tex2mml('\\text{{\\tiny a\\Tiny a \\scriptsize a \\small a\\normalsize a}a}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\text{{\\tiny a\\Tiny a \\scriptsize a \\small a\\normalsize a}a}'
+      )
+    ).toMatchSnapshot();
   });
 
   test('Sizes large', () => {
-    expect(tex2mml('\\text{a\\large a\\Large a\\LARGE a\\huge a\\Huge a}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\text{a\\large a\\Large a\\LARGE a\\huge a\\Huge a}')
+    ).toMatchSnapshot();
   });
 
   test('Text fonts', () => {
-    expect(tex2mml('\\text{\\Bbb a\\textnormal{a}\\textup{a}\\textrm{a}\\textit{a}\\textbf{a}\\textsf{a}\\texttt{a}}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\text{\\Bbb a\\textnormal{a}\\textup{a}\\textrm{a}\\textit{a}\\textbf{a}\\textsf{a}\\texttt{a}}'
+      )
+    ).toMatchSnapshot();
   });
 
   test('Text symbols', () => {
-    expect(tex2mml('\\text{\\dagger\\ddagger\\S\\AA a\\ldots b\\vdots c}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\text{\\dagger\\ddagger\\S\\AA a\\ldots b\\vdots c}')
+    ).toMatchSnapshot();
   });
 
   test('Text space macros 1', () => {
@@ -230,27 +246,49 @@ describe('Textmacros Macros', () => {
   });
 
   test('Text space macros 2', () => {
-    expect(tex2mml('\\text{a\\enspace b\\quad c\\qquad d\\thinspace e\\negthinspace f}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\text{a\\enspace b\\quad c\\qquad d\\thinspace e\\negthinspace f}'
+      )
+    ).toMatchSnapshot();
   });
 
   test('Text spacing macros', () => {
-    expect(tex2mml('\\text{a\\hskip 1emb\\hspace{1em}c\\kern{.1em}d\\mskip{1em}e\\mspace{1em}f\\mkern{.1em}g}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\text{a\\hskip 1emb\\hspace{1em}c\\kern{.1em}d\\mskip{1em}e\\mspace{1em}f\\mkern{.1em}g}'
+      )
+    ).toMatchSnapshot();
   });
 
   test('Text rules and spaces', () => {
-    expect(tex2mml('\\text{\\Rule{1em}{.5em}{.5em}\\Space{1em}{.5em}{0em}\\rule[.25em]{1em}{.5em}}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\text{\\Rule{1em}{.5em}{.5em}\\Space{1em}{.5em}{0em}\\rule[.25em]{1em}{.5em}}'
+      )
+    ).toMatchSnapshot();
   });
 
   test('Color', () => {
-    expect(tex2mml('\\text{{\\color{red}{x}}\\textcolor{yellow}{A}\\colorbox{green}{x}\\fcolorbox{blue}{orange}{x}}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\text{{\\color{red}{x}}\\textcolor{yellow}{A}\\colorbox{green}{x}\\fcolorbox{blue}{orange}{x}}'
+      )
+    ).toMatchSnapshot();
   });
 
   test('HTML', () => {
-    expect(tex2mml('\\text{\\href{tmp.html}{x}\\style{padding:3px}{x}\\class{test}{x}\\data{test=1}{x}\\cssId{test}{x}}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\text{\\href{tmp.html}{x}\\style{padding:3px}{x}\\class{test}{x}\\data{test=1}{x}\\cssId{test}{x}}'
+      )
+    ).toMatchSnapshot();
   });
 
   test('Unicode', () => {
-    expect(tex2mml('\\text{\\unicode{x61}\\U{3333}\\char"65}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\text{\\unicode{x61}\\U{3333}\\char"65}')
+    ).toMatchSnapshot();
   });
 
   test('Ref and Eqref', () => {
@@ -266,46 +304,44 @@ describe('Textmacros Macros', () => {
   });
 
   test('Phantoms', () => {
-    expect(tex2mml('\\text{\\phantom{a}a\\vphantom{a}a\\hphantom{a}a\\smash{a}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\text{\\phantom{a}a\\vphantom{a}a\\hphantom{a}a\\smash{a}}')
+    ).toMatchSnapshot();
   });
 
   test('mmlToken', () => {
     expect(tex2mml('\\text{\\mmlToken{mo}{a}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Textmacros Autoload', () => {
-
   setupComponents({
-    loader: {load: ['input/tex-base', '[tex]/textmacros', '[tex]/autoload']}
+    loader: { load: ['input/tex-base', '[tex]/textmacros', '[tex]/autoload'] },
   });
 
   test('Autoload not present', async () => {
     setupTexTypeset(['base', 'textmacros']);
-    await expectTypesetError('\\text{\\href{tmp.html}{a}}')
-      .toBe('Undefined control sequence \\href');
+    await expectTypesetError('\\text{\\href{tmp.html}{a}}').toBe(
+      'Undefined control sequence \\href'
+    );
   });
 
   test('Autoload', async () => {
-    setupTexTypeset(['base', 'textmacros', 'autoload'])
-    expect(
-      await typeset2mml('\\text{\\href{tmp.html}{a}}')).toMatchSnapshot();
+    setupTexTypeset(['base', 'textmacros', 'autoload']);
+    expect(await typeset2mml('\\text{\\href{tmp.html}{a}}')).toMatchSnapshot();
   });
 
   test('No Autoload', async () => {
     Configuration.create('no-autoload', {
       [ConfigurationType.FALLBACK]: {
-        [HandlerType.MACRO]: () => {}
-      }
+        [HandlerType.MACRO]: () => {},
+      },
     });
-    setupTexTypeset(['base', 'textmacros', 'no-autoload'])
-    expect(
-      await typeset2mml('\\text{\\href{tmp.html}{a}}')).toMatchSnapshot();
+    setupTexTypeset(['base', 'textmacros', 'no-autoload']);
+    expect(await typeset2mml('\\text{\\href{tmp.html}{a}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
