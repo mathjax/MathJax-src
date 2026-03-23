@@ -1,6 +1,5 @@
 import { beforeEach, describe, test, expect } from '@jest/globals';
 import {
-  toXmlArrayMatch,
   toMathML,
   tex2mml,
   page2mml,
@@ -175,78 +174,36 @@ describe('FindTeX', () => {
   /********************************************************************************/
 
   test('display math', async () => {
-    toXmlArrayMatch(
-      await page2mml('abc $$ x + 1 $$ def'),
-      [
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex=" x + 1 " display="block">
-           <mi data-latex="x">x</mi>
-           <mo data-latex="+">+</mo>
-           <mn data-latex="1">1</mn>
-         </math>`
-      ]
-    );
+    expect(
+      await page2mml('abc $$ x + 1 $$ def')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('environment', async () => {
-    toXmlArrayMatch(
-      await page2mml('abc \\begin{equation} x=y \\end{equation} def'),
-      [
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{equation} x=y \\end{equation}" display="block">
-           <mi data-latex="x">x</mi>
-           <mo data-latex="=">=</mo>
-           <mi data-latex="y">y</mi>
-         </math>`
-      ]
-    );
+    expect(
+      await page2mml('abc \\begin{equation} x=y \\end{equation} def')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('Nested braces', async () => {
-    toXmlArrayMatch(
-      await page2mml('abc $$a + {\\bf b} + c$$ def'),
-      [
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a + {\\bf b} + c" display="block">
-           <mi data-latex="a">a</mi>
-           <mo data-latex="+">+</mo>
-           <mrow data-mjx-texclass="ORD" data-latex="{b}">
-             <mi mathvariant="bold" data-latex="b">b</mi>
-           </mrow>
-           <mo data-latex="+">+</mo>
-           <mi data-latex="c">c</mi>
-         </math>`
-      ]
-    );
+    expect(
+      await page2mml('abc $$a + {\\bf b} + c$$ def')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('processEscapes', async () => {
-    toXmlArrayMatch(
-      await page2mml('abc \\$ def'),
-      [
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="$">
-           <mo data-latex="$">$</mo>
-         </math>`
-      ]
-    );
+    expect(
+      await page2mml('abc \\$ def')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('ref undefined', async () => {
-    toXmlArrayMatch(
-      await page2mml('abc \\ref{x} def'),
-      [
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ref{x}">
-           <mrow href="#" class="MathJax_ref" data-latex="\\ref{x}">
-             <mtext>???</mtext>
-           </mrow>
-         </math>`
-      ]
-    );
+    expect(
+      await page2mml('abc \\ref{x} def')).toMatchSnapshot();
   });
 
   /********************************************************************************/

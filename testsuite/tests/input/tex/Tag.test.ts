@@ -4,9 +4,8 @@ import {
   tex2mml,
   setupTexPage,
   page2mml,
-  toXmlArrayMatch,
   setupComponents,
-  expectTexError
+  expectTexError,
 } from '#helpers';
 import '#js/input/tex/ams/AmsConfiguration';
 
@@ -31,7 +30,9 @@ describe('TagAll', () => {
   /********************************************************************************/
 
   it('MultLine', () => {
-    expect(tex2mml('\\begin{multline}a\\\\ b\\\\ c\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline}a\\\\ b\\\\ c\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -55,65 +56,81 @@ describe('TagAll', () => {
   /********************************************************************************/
 
   it('Notag Multline', () => {
-    expect(tex2mml('\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Notag Tag', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\notag\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\notag\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref', () => {
-    expect(tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Unknown', () => {
-    expect(tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{B}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{B}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Eqref', () => {
-    expect(tex2mml('\\begin{align}a\\label{A}\\end{align}\\eqref{A}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\label{A}\\end{align}\\eqref{A}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Align Two labels', () => {
-    expect(tex2mml('\\begin{align}a=b\\label{A}\\\\ c&=d \\label{B}\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a=b\\label{A}\\\\ c&=d \\label{B}\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Illegal Tag Error', () => {
-    expectTexError('\\begin{split}a\\tag{A}\\end{split}')
-      .toBe('\\tag not allowed in split environment');
+    expectTexError('\\begin{split}a\\tag{A}\\end{split}').toBe(
+      '\\tag not allowed in split environment'
+    );
   });
 
   /********************************************************************************/
 
   it('Double Tag Error', () => {
-    expectTexError('\\begin{align}a\\tag{A}\\tag{B}\\end{align}')
-      .toBe('Multiple \\tag');
+    expectTexError('\\begin{align}a\\tag{A}\\tag{B}\\end{align}').toBe(
+      'Multiple \\tag'
+    );
   });
 
   /********************************************************************************/
 
   it('Double Label Error', () => {
-    expectTexError('\\begin{align}a\\label{A}\\label{B}\\end{align}')
-      .toBe('Multiple \\label');
+    expectTexError('\\begin{align}a\\label{A}\\label{B}\\end{align}').toBe(
+      'Multiple \\label'
+    );
   });
 
   /********************************************************************************/
 
   it('Duplicate Label Error', () => {
-    expectTexError('\\begin{align}a\\label{A}\\\\ b\\label{A}\\end{align}')
-      .toBe("Label 'A' multiply defined");
+    expectTexError(
+      '\\begin{align}a\\label{A}\\\\ b\\label{A}\\end{align}'
+    ).toBe("Label 'A' multiply defined");
   });
 
   /********************************************************************************/
@@ -131,13 +148,17 @@ describe('TagAll', () => {
   /********************************************************************************/
 
   it('Tag Named Default', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\\\b\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\\\b\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Tag Named Named', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -149,53 +170,66 @@ describe('TagAll', () => {
   /********************************************************************************/
 
   it('Label Named', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Label Named Default', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Label Named Named', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Default', () => {
-    expect(tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Named', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Named Default', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}\\ref{A}\\ref{B}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Named Named', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}\\ref{A}\\ref{B}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
-
 });
 
 /**********************************************************************************/
@@ -231,7 +265,9 @@ describe('TagNone', () => {
   /********************************************************************************/
 
   it('MultLine', () => {
-    expect(tex2mml('\\begin{multline}a\\\\ b\\\\ c\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline}a\\\\ b\\\\ c\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -255,66 +291,81 @@ describe('TagNone', () => {
   /********************************************************************************/
 
   it('Notag Multline', () => {
-    expect(tex2mml('\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Notag Tag', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\notag\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\notag\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref', () => {
-    expect(tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Unknown', () => {
-    expect(tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{B}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{B}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Eqref', () => {
-    expect(tex2mml('\\begin{align}a\\label{A}\\end{align}\\eqref{A}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\label{A}\\end{align}\\eqref{A}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Align Two labels', () => {
-    expectTexError('\\begin{align}a=b\\label{A}\\\\ c&=d \\label{B}\\end{align}')
-      .toBe('Multiple \\label');
+    expectTexError(
+      '\\begin{align}a=b\\label{A}\\\\ c&=d \\label{B}\\end{align}'
+    ).toBe('Multiple \\label');
   });
 
   /********************************************************************************/
 
   it('Illegal Tag Error', () => {
-    expectTexError('\\begin{split}a\\tag{A}\\end{split}')
-      .toBe('\\tag not allowed in split environment');
+    expectTexError('\\begin{split}a\\tag{A}\\end{split}').toBe(
+      '\\tag not allowed in split environment'
+    );
   });
 
   /********************************************************************************/
 
   it('Double Tag Error', () => {
-    expectTexError('\\begin{align}a\\tag{A}\\tag{B}\\end{align}')
-      .toBe('Multiple \\tag');
+    expectTexError('\\begin{align}a\\tag{A}\\tag{B}\\end{align}').toBe(
+      'Multiple \\tag'
+    );
   });
 
   /********************************************************************************/
 
   it('Double Label Error', () => {
-    expectTexError('\\begin{align}a\\label{A}\\label{B}\\end{align}')
-      .toBe('Multiple \\label');
+    expectTexError('\\begin{align}a\\label{A}\\label{B}\\end{align}').toBe(
+      'Multiple \\label'
+    );
   });
 
   /********************************************************************************/
 
   it('Duplicate Label Error', () => {
-    expectTexError('\\begin{align}a\\label{A}\\\\ b\\label{A}\\end{align}')
-      .toBe('Multiple \\label');
+    expectTexError(
+      '\\begin{align}a\\label{A}\\\\ b\\label{A}\\end{align}'
+    ).toBe('Multiple \\label');
   });
 
   /********************************************************************************/
@@ -332,13 +383,17 @@ describe('TagNone', () => {
   /********************************************************************************/
 
   it('Tag Named Default', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\\\b\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\\\b\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Tag Named Named', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -350,53 +405,66 @@ describe('TagNone', () => {
   /********************************************************************************/
 
   it('Label Named', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Label Named Default', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Label Named Named', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Default', () => {
-    expect(tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Named', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Named Default', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}\\ref{A}\\ref{B}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Named Named', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}\\ref{A}\\ref{B}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
-
 });
 
 /**********************************************************************************/
@@ -426,7 +494,9 @@ describe('TagAms', () => {
   /********************************************************************************/
 
   it('MultLine', () => {
-    expect(tex2mml('\\begin{multline}a\\\\ b\\\\ c\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline}a\\\\ b\\\\ c\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -450,65 +520,81 @@ describe('TagAms', () => {
   /********************************************************************************/
 
   it('Notag Multline', () => {
-    expect(tex2mml('\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Notag Tag', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\notag\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\notag\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref', () => {
-    expect(tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Unknown', () => {
-    expect(tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{B}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{B}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Eqref', () => {
-    expect(tex2mml('\\begin{align}a\\label{A}\\end{align}\\eqref{A}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\label{A}\\end{align}\\eqref{A}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Align Two labels', () => {
-    expect(tex2mml('\\begin{align}a=b\\label{A}\\\\ c&=d \\label{B}\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a=b\\label{A}\\\\ c&=d \\label{B}\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Illegal Tag Error', () => {
-    expectTexError('\\begin{split}a\\tag{A}\\end{split}')
-      .toBe('\\tag not allowed in split environment');
+    expectTexError('\\begin{split}a\\tag{A}\\end{split}').toBe(
+      '\\tag not allowed in split environment'
+    );
   });
 
   /********************************************************************************/
 
   it('Double Tag Error', () => {
-    expectTexError('\\begin{align}a\\tag{A}\\tag{B}\\end{align}')
-      .toBe('Multiple \\tag');
+    expectTexError('\\begin{align}a\\tag{A}\\tag{B}\\end{align}').toBe(
+      'Multiple \\tag'
+    );
   });
 
   /********************************************************************************/
 
   it('Double Label Error', () => {
-    expectTexError('\\begin{align}a\\label{A}\\label{B}\\end{align}')
-      .toBe('Multiple \\label');
+    expectTexError('\\begin{align}a\\label{A}\\label{B}\\end{align}').toBe(
+      'Multiple \\label'
+    );
   });
 
   /********************************************************************************/
 
   it('Duplicate Label Error', () => {
-    expectTexError('\\begin{align}a\\label{A}\\\\ b\\label{A}\\end{align}')
-      .toBe('Label \'A\' multiply defined');
+    expectTexError(
+      '\\begin{align}a\\label{A}\\\\ b\\label{A}\\end{align}'
+    ).toBe("Label 'A' multiply defined");
   });
 
   /********************************************************************************/
@@ -526,13 +612,17 @@ describe('TagAms', () => {
   /********************************************************************************/
 
   it('Tag Named Default', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\\\b\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\\\b\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Tag Named Named', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -544,128 +634,98 @@ describe('TagAms', () => {
   /********************************************************************************/
 
   it('Label Named', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Label Named Default', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Label Named Named', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Default', () => {
-    expect(tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Named', () => {
-    expect(tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}')
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Named Default', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}\\ref{A}\\ref{B}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   it('Ref Named Named', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}\\ref{A}\\ref{B}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   /********************************************************************************/
-
 });
 
 /**********************************************************************************/
 /**********************************************************************************/
 
 setupComponents({
-  loader: {load: ['input/tex-base', '[tex]/ams']}
+  loader: { load: ['input/tex-base', '[tex]/ams'] },
 });
 
 describe('Page References', () => {
   beforeEach(() => setupTexPage(['base', 'ams']));
 
   it('Forward Reference', async () => {
-    toXmlArrayMatch(
-      await page2mml('<p>$$a=b\\label{eq1}\\tag{1}$$</p><p>Refer to \\eqref{eq1}</p>'),
-      [
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a=b\\label{eq1}\\tag{1}" display="block">
-           <mtable displaystyle="true" data-latex="a=b\\label{eq1}\\tag{1}">
-             <mlabeledtr>
-               <mtd id="mjx-eqn:eq1">
-               <mtext data-latex="\\text{(}">(</mtext>
-               <mtext data-latex="\\text{1}">1</mtext>
-               <mtext data-latex="\\text{)}">)</mtext>
-               </mtd>
-               <mtd>
-                 <mi data-latex="a">a</mi>
-                 <mo data-latex="=">=</mo>
-                 <mi data-latex="\\tag{1}">b</mi>
-               </mtd>
-             </mlabeledtr>
-           </mtable>
-         </math>`,
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eqref{eq1}">
-           <mrow href="#mjx-eqn%3Aeq1" class="MathJax_ref" data-latex="\\eqref{eq1}">
-             <mtext>(1)</mtext>
-           </mrow>
-         </math>`
-      ]
-    );
+    expect(
+      await page2mml(
+        '<p>$$a=b\\label{eq1}\\tag{1}$$</p><p>Refer to \\eqref{eq1}</p>'
+      )
+    ).toMatchSnapshot();
   });
 
   it('Forward Reference', async () => {
-    toXmlArrayMatch(
-      await page2mml('<p>Refer to \\eqref{eq1}</p><p>$$a=b\\label{eq1}\\tag{1}$$</p>'),
-      [
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eqref{eq1}">
-           <mrow href="#mjx-eqn%3Aeq1" class="MathJax_ref" data-latex="\\eqref{eq1}">
-             <mtext>(1)</mtext>
-           </mrow>
-         </math>`,
-        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a=b\\label{eq1}\\tag{1}" display="block">
-           <mtable displaystyle="true" data-latex="a=b\\label{eq1}\\tag{1}">
-             <mlabeledtr>
-               <mtd id="mjx-eqn:eq1">
-               <mtext data-latex="\\text{(}">(</mtext>
-               <mtext data-latex="\\text{1}">1</mtext>
-               <mtext data-latex="\\text{)}">)</mtext>
-               </mtd>
-               <mtd>
-                 <mi data-latex="a">a</mi>
-                 <mo data-latex="=">=</mo>
-                 <mi data-latex="\\tag{1}">b</mi>
-               </mtd>
-             </mlabeledtr>
-           </mtable>
-         </math>`
-      ]
-    );
+    expect(
+      await page2mml(
+        '<p>Refer to \\eqref{eq1}</p><p>$$a=b\\label{eq1}\\tag{1}$$</p>'
+      )
+    ).toMatchSnapshot();
   });
 
   it('LabelIds', () => {
-    setupTex(['base', 'ams'], {useLabelIds: false});
+    setupTex(['base', 'ams'], { useLabelIds: false });
     expect(tex2mml('a\\label{eq1}\\tag{1}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
