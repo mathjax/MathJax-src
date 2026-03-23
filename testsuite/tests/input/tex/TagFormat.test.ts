@@ -80,7 +80,7 @@ describe('Tagformat', () => {
   test('Array tag with null entry', () => {
     setupTex(['base', 'ams', 'tagformat'], {
       tagformat: {
-        tag: (tag: string) => [, tag, '.'],
+        tag: (tag: string) => ['', tag, '.'],
       },
       tags: 'ams',
     });

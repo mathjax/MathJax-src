@@ -129,7 +129,7 @@ describe('CssStyles object', () => {
     cssTest('padding:', {}, '');
   });
 
-  (test('margin', () => {
+  test('margin', () => {
     cssTest(
       'margin-left: 2px; margin: 0',
       {
@@ -204,9 +204,216 @@ describe('CssStyles object', () => {
       'margin: 0;'
     );
     cssTest('margin:', {}, '');
-  }),
-    test('border', () => {
-      cssTest('border: 3px solid red', {
+  })
+
+  test('border', () => {
+    cssTest('border: 3px solid red', {
+      border: '3px solid red',
+      'border-top': '3px solid red',
+      'border-top-color': 'red',
+      'border-top-style': 'solid',
+      'border-top-width': '3px',
+      'border-right': '3px solid red',
+      'border-right-color': 'red',
+      'border-right-style': 'solid',
+      'border-right-width': '3px',
+      'border-bottom': '3px solid red',
+      'border-bottom-color': 'red',
+      'border-bottom-style': 'solid',
+      'border-bottom-width': '3px',
+      'border-left': '3px solid red',
+      'border-left-color': 'red',
+      'border-left-style': 'solid',
+      'border-left-width': '3px',
+    });
+    cssTest(
+      'border: 3px solid red; border-top: inset blue 2px',
+      {
+        'border-top': 'inset blue 2px',
+        'border-top-color': 'blue',
+        'border-top-style': 'inset',
+        'border-top-width': '2px',
+        'border-right': '3px solid red',
+        'border-right-color': 'red',
+        'border-right-style': 'solid',
+        'border-right-width': '3px',
+        'border-bottom': '3px solid red',
+        'border-bottom-color': 'red',
+        'border-bottom-style': 'solid',
+        'border-bottom-width': '3px',
+        'border-left': '3px solid red',
+        'border-left-color': 'red',
+        'border-left-style': 'solid',
+        'border-left-width': '3px',
+      },
+      [
+        'border-top: inset blue 2px; border-right: 3px solid red;',
+        'border-bottom: 3px solid red; border-left: 3px solid red;',
+      ].join(' ')
+    );
+    cssTest(
+      'border: 3px solid red; border-top-color: blue',
+      {
+        'border-top': '3px solid blue',
+        'border-top-color': 'blue',
+        'border-top-style': 'solid',
+        'border-top-width': '3px',
+        'border-right': '3px solid red',
+        'border-right-color': 'red',
+        'border-right-style': 'solid',
+        'border-right-width': '3px',
+        'border-bottom': '3px solid red',
+        'border-bottom-color': 'red',
+        'border-bottom-style': 'solid',
+        'border-bottom-width': '3px',
+        'border-left': '3px solid red',
+        'border-left-color': 'red',
+        'border-left-style': 'solid',
+        'border-left-width': '3px',
+      },
+      [
+        'border-top: 3px solid blue; border-right: 3px solid red;',
+        'border-bottom: 3px solid red; border-left: 3px solid red;',
+      ].join(' ')
+    );
+    cssTest(
+      'border-top: 3px solid red; border-top-color: blue',
+      {
+        'border-top': '3px solid blue',
+        'border-top-color': 'blue',
+        'border-top-style': 'solid',
+        'border-top-width': '3px',
+      },
+      'border-top: 3px solid blue;'
+    );
+    cssTest(
+      'border-top: 3px solid red; border-top-style: groove',
+      {
+        'border-top': '3px groove red',
+        'border-top-color': 'red',
+        'border-top-style': 'groove',
+        'border-top-width': '3px',
+      },
+      'border-top: 3px groove red;'
+    );
+    cssTest(
+      'border-top: 3px solid red; border-top-width: 2px',
+      {
+        'border-top': '2px solid red',
+        'border-top-color': 'red',
+        'border-top-style': 'solid',
+        'border-top-width': '2px',
+      },
+      'border-top: 2px solid red;'
+    );
+    cssTest('border: 3px solid', {
+      border: '3px solid',
+      'border-bottom': '3px solid',
+      'border-bottom-style': 'solid',
+      'border-bottom-width': '3px',
+      'border-left': '3px solid',
+      'border-left-style': 'solid',
+      'border-left-width': '3px',
+      'border-right': '3px solid',
+      'border-right-style': 'solid',
+      'border-right-width': '3px',
+      'border-top': '3px solid',
+      'border-top-style': 'solid',
+      'border-top-width': '3px',
+    });
+    cssTest('border: 3px blue', {
+      border: '3px blue',
+      'border-bottom': '3px blue',
+      'border-bottom-color': 'blue',
+      'border-bottom-width': '3px',
+      'border-left': '3px blue',
+      'border-left-color': 'blue',
+      'border-left-width': '3px',
+      'border-right': '3px blue',
+      'border-right-color': 'blue',
+      'border-right-width': '3px',
+      'border-top': '3px blue',
+      'border-top-color': 'blue',
+      'border-top-width': '3px',
+    });
+    cssTest('border: solid blue', {
+      border: 'solid blue',
+      'border-bottom': 'solid blue',
+      'border-bottom-color': 'blue',
+      'border-bottom-style': 'solid',
+      'border-left': 'solid blue',
+      'border-left-color': 'blue',
+      'border-left-style': 'solid',
+      'border-right': 'solid blue',
+      'border-right-color': 'blue',
+      'border-right-style': 'solid',
+      'border-top': 'solid blue',
+      'border-top-color': 'blue',
+      'border-top-style': 'solid',
+    });
+    cssTest(
+      'border-top: red; border-right: red; border-bottom: red; border-left: red',
+      {
+        border: 'red',
+        'border-bottom': 'red',
+        'border-bottom-color': 'red',
+        'border-left': 'red',
+        'border-left-color': 'red',
+        'border-right': 'red',
+        'border-right-color': 'red',
+        'border-top': 'red',
+        'border-top-color': 'red',
+      },
+      'border: red;'
+    );
+    cssTest(
+      'border: 3px solid red; border-width: 2px',
+      {
+        border: '2px solid red',
+        'border-bottom': '2px solid red',
+        'border-bottom-color': 'red',
+        'border-bottom-style': 'solid',
+        'border-bottom-width': '2px',
+        'border-left': '2px solid red',
+        'border-left-color': 'red',
+        'border-left-style': 'solid',
+        'border-left-width': '2px',
+        'border-right': '2px solid red',
+        'border-right-color': 'red',
+        'border-right-style': 'solid',
+        'border-right-width': '2px',
+        'border-top': '2px solid red',
+        'border-top-color': 'red',
+        'border-top-style': 'solid',
+        'border-top-width': '2px',
+      },
+      'border: 2px solid red;'
+    );
+    cssTest(
+      'border: red; border-left-color:',
+      {
+        'border-bottom': 'red',
+        'border-bottom-color': 'red',
+        'border-right': 'red',
+        'border-right-color': 'red',
+        'border-top': 'red',
+        'border-top-color': 'red',
+      },
+      'border-top: red; border-right: red; border-bottom: red;'
+    );
+    cssTest('border-radius: 3px', {
+      'border-radius': '3px',
+    });
+    cssTest('border-color: red', {
+      'border-bottom-color': 'red',
+      'border-color': 'red',
+      'border-left-color': 'red',
+      'border-right-color': 'red',
+      'border-top-color': 'red',
+    });
+    cssTest(
+      'border-top: inset blue 2px; border: 3px solid red',
+      {
         border: '3px solid red',
         'border-top': '3px solid red',
         'border-top-color': 'red',
@@ -224,226 +431,20 @@ describe('CssStyles object', () => {
         'border-left-color': 'red',
         'border-left-style': 'solid',
         'border-left-width': '3px',
-      });
-      cssTest(
-        'border: 3px solid red; border-top: inset blue 2px',
-        {
-          'border-top': 'inset blue 2px',
-          'border-top-color': 'blue',
-          'border-top-style': 'inset',
-          'border-top-width': '2px',
-          'border-right': '3px solid red',
-          'border-right-color': 'red',
-          'border-right-style': 'solid',
-          'border-right-width': '3px',
-          'border-bottom': '3px solid red',
-          'border-bottom-color': 'red',
-          'border-bottom-style': 'solid',
-          'border-bottom-width': '3px',
-          'border-left': '3px solid red',
-          'border-left-color': 'red',
-          'border-left-style': 'solid',
-          'border-left-width': '3px',
-        },
-        [
-          'border-top: inset blue 2px; border-right: 3px solid red;',
-          'border-bottom: 3px solid red; border-left: 3px solid red;',
-        ].join(' ')
-      );
-      cssTest(
-        'border: 3px solid red; border-top-color: blue',
-        {
-          'border-top': '3px solid blue',
-          'border-top-color': 'blue',
-          'border-top-style': 'solid',
-          'border-top-width': '3px',
-          'border-right': '3px solid red',
-          'border-right-color': 'red',
-          'border-right-style': 'solid',
-          'border-right-width': '3px',
-          'border-bottom': '3px solid red',
-          'border-bottom-color': 'red',
-          'border-bottom-style': 'solid',
-          'border-bottom-width': '3px',
-          'border-left': '3px solid red',
-          'border-left-color': 'red',
-          'border-left-style': 'solid',
-          'border-left-width': '3px',
-        },
-        [
-          'border-top: 3px solid blue; border-right: 3px solid red;',
-          'border-bottom: 3px solid red; border-left: 3px solid red;',
-        ].join(' ')
-      );
-      cssTest(
-        'border-top: 3px solid red; border-top-color: blue',
-        {
-          'border-top': '3px solid blue',
-          'border-top-color': 'blue',
-          'border-top-style': 'solid',
-          'border-top-width': '3px',
-        },
-        'border-top: 3px solid blue;'
-      );
-      cssTest(
-        'border-top: 3px solid red; border-top-style: groove',
-        {
-          'border-top': '3px groove red',
-          'border-top-color': 'red',
-          'border-top-style': 'groove',
-          'border-top-width': '3px',
-        },
-        'border-top: 3px groove red;'
-      );
-      cssTest(
-        'border-top: 3px solid red; border-top-width: 2px',
-        {
-          'border-top': '2px solid red',
-          'border-top-color': 'red',
-          'border-top-style': 'solid',
-          'border-top-width': '2px',
-        },
-        'border-top: 2px solid red;'
-      );
-      cssTest('border: 3px solid', {
-        border: '3px solid',
-        'border-bottom': '3px solid',
-        'border-bottom-style': 'solid',
-        'border-bottom-width': '3px',
-        'border-left': '3px solid',
-        'border-left-style': 'solid',
-        'border-left-width': '3px',
-        'border-right': '3px solid',
-        'border-right-style': 'solid',
-        'border-right-width': '3px',
-        'border-top': '3px solid',
-        'border-top-style': 'solid',
-        'border-top-width': '3px',
-      });
-      cssTest('border: 3px blue', {
-        border: '3px blue',
-        'border-bottom': '3px blue',
-        'border-bottom-color': 'blue',
-        'border-bottom-width': '3px',
-        'border-left': '3px blue',
-        'border-left-color': 'blue',
-        'border-left-width': '3px',
-        'border-right': '3px blue',
-        'border-right-color': 'blue',
-        'border-right-width': '3px',
-        'border-top': '3px blue',
-        'border-top-color': 'blue',
-        'border-top-width': '3px',
-      });
-      cssTest('border: solid blue', {
-        border: 'solid blue',
-        'border-bottom': 'solid blue',
-        'border-bottom-color': 'blue',
-        'border-bottom-style': 'solid',
-        'border-left': 'solid blue',
-        'border-left-color': 'blue',
-        'border-left-style': 'solid',
-        'border-right': 'solid blue',
-        'border-right-color': 'blue',
-        'border-right-style': 'solid',
-        'border-top': 'solid blue',
-        'border-top-color': 'blue',
-        'border-top-style': 'solid',
-      });
-      cssTest(
-        'border-top: red; border-right: red; border-bottom: red; border-left: red',
-        {
-          border: 'red',
-          'border-bottom': 'red',
-          'border-bottom-color': 'red',
-          'border-left': 'red',
-          'border-left-color': 'red',
-          'border-right': 'red',
-          'border-right-color': 'red',
-          'border-top': 'red',
-          'border-top-color': 'red',
-        },
-        'border: red;'
-      );
-      cssTest(
-        'border: 3px solid red; border-width: 2px',
-        {
-          border: '2px solid red',
-          'border-bottom': '2px solid red',
-          'border-bottom-color': 'red',
-          'border-bottom-style': 'solid',
-          'border-bottom-width': '2px',
-          'border-left': '2px solid red',
-          'border-left-color': 'red',
-          'border-left-style': 'solid',
-          'border-left-width': '2px',
-          'border-right': '2px solid red',
-          'border-right-color': 'red',
-          'border-right-style': 'solid',
-          'border-right-width': '2px',
-          'border-top': '2px solid red',
-          'border-top-color': 'red',
-          'border-top-style': 'solid',
-          'border-top-width': '2px',
-        },
-        'border: 2px solid red;'
-      );
-      cssTest(
-        'border: red; border-left-color:',
-        {
-          'border-bottom': 'red',
-          'border-bottom-color': 'red',
-          'border-right': 'red',
-          'border-right-color': 'red',
-          'border-top': 'red',
-          'border-top-color': 'red',
-        },
-        'border-top: red; border-right: red; border-bottom: red;'
-      );
-      cssTest('border-radius: 3px', {
-        'border-radius': '3px',
-      });
-      cssTest('border-color: red', {
-        'border-bottom-color': 'red',
-        'border-color': 'red',
-        'border-left-color': 'red',
-        'border-right-color': 'red',
+      },
+      'border: 3px solid red;'
+    );
+    cssTest(
+      'border-top-color: blue; border-top: 3px solid red',
+      {
+        'border-top': '3px solid red',
         'border-top-color': 'red',
-      });
-      cssTest(
-        'border-top: inset blue 2px; border: 3px solid red',
-        {
-          border: '3px solid red',
-          'border-top': '3px solid red',
-          'border-top-color': 'red',
-          'border-top-style': 'solid',
-          'border-top-width': '3px',
-          'border-right': '3px solid red',
-          'border-right-color': 'red',
-          'border-right-style': 'solid',
-          'border-right-width': '3px',
-          'border-bottom': '3px solid red',
-          'border-bottom-color': 'red',
-          'border-bottom-style': 'solid',
-          'border-bottom-width': '3px',
-          'border-left': '3px solid red',
-          'border-left-color': 'red',
-          'border-left-style': 'solid',
-          'border-left-width': '3px',
-        },
-        'border: 3px solid red;'
-      );
-      cssTest(
-        'border-top-color: blue; border-top: 3px solid red',
-        {
-          'border-top': '3px solid red',
-          'border-top-color': 'red',
-          'border-top-style': 'solid',
-          'border-top-width': '3px',
-        },
-        'border-top: 3px solid red;'
-      );
-    }));
+        'border-top-style': 'solid',
+        'border-top-width': '3px',
+      },
+      'border-top: 3px solid red;'
+    );
+  });
 
   test('background', () => {
     cssTest('background: red; background-clip: none', {

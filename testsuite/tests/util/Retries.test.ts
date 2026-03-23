@@ -6,6 +6,7 @@ import { MathJax as MJX, MathJaxObject } from '#js/components/global.js';
  * Add the legacy MathJax.CallBack for teting v2-style restarts
  */
 type MathJaxGlobal = MathJaxObject & {
+  /* eslint-disable @typescript-eslint/no-unsafe-function-type */
   Callback: {
     After(code: Function): void;
     mock(): Function;

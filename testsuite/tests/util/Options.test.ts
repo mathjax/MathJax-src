@@ -360,7 +360,9 @@ describe('Options utility', () => {
     OPTIONS.invalidOption = 'warn';
     try {
       copy = Options.userOptions({}, { a: 1 });
-    } catch (err) {}
+    } catch {
+      // Should not throw an error
+    }
     expect(copy).toEqual({});
     console.warn = warn;
   });
