@@ -2298,11 +2298,11 @@ exports[`Mathtools Paired Delimiters DeclarePairedDelimiterX 1`] = `
 exports[`Mathtools Paired Delimiters DeclarePairedDelimiterXPP 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\DeclarePairedDelimiterXPP\\x[1]{A}{\\lvert}{\\rvert}{B}{a#1b} \\x{X}" display="block">
   <mi data-latex="A">A</mi>
-  <mo data-mjx-texclass="OPEN" data-latex="\\lvert">|</mo>
+  <mo data-mjx-texclass="OPEN" stretchy="false" data-latex="\\lvert">|</mo>
   <mi data-latex="a">a</mi>
   <mi data-latex="X">X</mi>
   <mi data-latex="b">b</mi>
-  <mo data-mjx-texclass="CLOSE" data-latex="\\rvert">|</mo>
+  <mo data-mjx-texclass="CLOSE" stretchy="false" data-latex="\\rvert">|</mo>
   <mi data-latex="B">B</mi>
 </math>"
 `;

@@ -80,7 +80,7 @@ exports[`Nested Environments Newenvironment with Begin 1`] = `
 exports[`Newcommand Ams Let Bar 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\b\\lvert\\let\\lvert\\langle\\vert\\b\\lvert" display="block">
   <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
-  <mo data-mjx-texclass="OPEN" data-latex="\\b">|</mo>
+  <mo data-mjx-texclass="OPEN" stretchy="false" data-latex="\\b">|</mo>
   <mo fence="false" stretchy="false" data-latex="\\lvert">&#x27E8;</mo>
 </math>"
 `;
