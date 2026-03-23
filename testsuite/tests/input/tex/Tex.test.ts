@@ -1,6 +1,5 @@
 import { beforeEach, describe, test, expect } from '@jest/globals';
 import {
-  toXmlMatch,
   toXmlArrayMatch,
   toMathML,
   tex2mml,
@@ -46,10 +45,8 @@ describe('NodeFactory', () => {
   });
 
   test('create null kind', () => {
-    toXmlMatch(
-      toMathML(tex.parseOptions.nodeFactory.create('undefined', 'mi')),
-      `<mi></mi>`
-    );
+    expect(
+      toMathML(tex.parseOptions.nodeFactory.create('undefined', 'mi'))).toMatchSnapshot();
   });
 
 });
@@ -93,22 +90,14 @@ describe('Stack', () => {
   /********************************************************************************/
 
   test('toString', () => {
-    toXmlMatch(
-      tex2mml('\\showStack'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\showStack" display="block"></math>`
-    );
+    expect(tex2mml('\\showStack')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('getTop', () => {
     setupTex(['base', 'stackMacros']);
-    toXmlMatch(
-      tex2mml('\\getTop'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\getTop" display="block">
-         <mtext data-latex="\\getTop">yes</mtext>
-       </math>`
-    );
+    expect(tex2mml('\\getTop')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -433,29 +422,7 @@ describe('TexParser', () => {
 
   test('GetBrackets nested [', () => {
     setupTex(['base', 'ams']);
-    toXmlMatch(
-      tex2mml('\\xrightarrow[{[x]}]{a}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xrightarrow[{[x]}]{a}" display="block">
-         <mrow data-mjx-texclass="REL" data-latex="\\xrightarrow[{[x]}]{a}">
-           <mrow data-mjx-texclass="NONE"></mrow>
-           <munderover>
-             <mo data-mjx-texclass="ORD">&#x2192;</mo>
-             <mpadded width="+0.833em" lspace="0.278em" voffset=".15em" depth="-.15em">
-               <mrow data-mjx-texclass="ORD" data-latex="{[x]}">
-                 <mo data-latex="[" stretchy="false">[</mo>
-                 <mi data-latex="x">x</mi>
-                 <mo data-latex="]" stretchy="false">]</mo>
-               </mrow>
-               <mspace height=".75em"></mspace>
-             </mpadded>
-             <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-               <mi data-latex="a">a</mi>
-               <mspace depth=".2em"></mspace>
-             </mpadded>
-           </munderover>
-         </mrow>
-       </math>`
-    );
+    expect(tex2mml('\\xrightarrow[{[x]}]{a}')).toMatchSnapshot();
   });
 
   test('GetBrackets matchBrakets', () => {
@@ -471,12 +438,7 @@ describe('TexParser', () => {
       }
     });
     setupTex(['base', 'matchBrackets']);
-    toXmlMatch(
-      tex2mml('\\matchbrackets[[x]]'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matchbrackets[[x]]" display="block">
-         <mtext data-latex="\\matchbrackets[[x]]">[x]</mtext>
-       </math>`
-    );
+    expect(tex2mml('\\matchbrackets[[x]]')).toMatchSnapshot();
   });
 
   test('mml', () => {
@@ -491,28 +453,12 @@ describe('TexParser', () => {
       }
     });
     setupTex(['base', 'mml']);
-    toXmlMatch(
-      tex2mml('{\\mml}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="{\\mml}" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="{\\mml}"></mrow>
-       </math>`
-    );
+    expect(tex2mml('{\\mml}')).toMatchSnapshot();
   });
 
   test('Removed delimiter', () => {
     setupTex(['base', 'ams', 'newcommand']);
-    toXmlMatch(
-      tex2mml('\\let\\vert=x \\begin{vmatrix} a \\end{vmatrix}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\vert=x \\begin{vmatrix} a \\end{vmatrix}" display="block">
-         <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\let\\vert=x \\begin{vmatrix} a \\end{vmatrix}">
-           <mtr>
-             <mtd>
-               <mi data-latex="a">a</mi>
-             </mtd>
-           </mtr>
-         </mtable>
-       </math>`
-    );
+    expect(tex2mml('\\let\\vert=x \\begin{vmatrix} a \\end{vmatrix}')).toMatchSnapshot();
   });
 
 });

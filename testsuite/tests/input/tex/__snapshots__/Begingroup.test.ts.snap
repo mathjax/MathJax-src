@@ -1,0 +1,188 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Begingroup Begingroup Def Nested 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\begingroup \\def\\x{C} \\x \\endgroup \\x \\endgroup \\x" display="block">
+  <mi data-latex="\\def\\x{B}">A</mi>
+  <mi data-latex="\\def\\x{C}">B</mi>
+  <mi data-latex="\\endgroup">C</mi>
+  <mi data-latex="\\endgroup">B</mi>
+  <mi data-latex="A">A</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup Def Single 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\endgroup \\x" display="block">
+  <mi data-latex="\\def\\x{B}">A</mi>
+  <mi data-latex="\\endgroup">B</mi>
+  <mi data-latex="A">A</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup Delimiter Nested 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\x=\\| \\left\\x A\\right\\x \\begingroup \\let\\x=| \\left\\x B \\right\\x \\begingroup \\let\\x=( \\left\\x C \\right\\x \\endgroup \\left\\x D \\right\\x \\endgroup \\left\\x E \\right\\x" display="block">
+  <mrow data-mjx-texclass="INNER" data-latex="\\left\\x A\\right\\x ">
+    <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">&#x2016;</mo>
+    <mi data-latex="A">A</mi>
+    <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x ">&#x2016;</mo>
+  </mrow>
+  <mrow data-mjx-texclass="INNER" data-latex="\\left\\x B \\right\\x ">
+    <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">|</mo>
+    <mi data-latex="B">B</mi>
+    <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x ">|</mo>
+  </mrow>
+  <mrow data-mjx-texclass="INNER" data-latex="\\left\\x C \\right\\x ">
+    <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">(</mo>
+    <mi data-latex="C">C</mi>
+    <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x ">(</mo>
+  </mrow>
+  <mrow data-mjx-texclass="INNER" data-latex="\\left\\x D \\right\\x ">
+    <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">|</mo>
+    <mi data-latex="D">D</mi>
+    <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x ">|</mo>
+  </mrow>
+  <mrow data-mjx-texclass="INNER" data-latex="\\left\\x E \\right\\x">
+    <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">&#x2016;</mo>
+    <mi data-latex="E">E</mi>
+    <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x">&#x2016;</mo>
+  </mrow>
+</math>"
+`;
+
+exports[`Begingroup Begingroup Delimiter Single 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\x=\\| \\left\\x A\\right\\x \\begingroup \\let\\x=| \\left\\x B \\right\\x \\endgroup \\left\\x C \\right\\x" display="block">
+  <mrow data-mjx-texclass="INNER" data-latex="\\left\\x A\\right\\x ">
+    <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">&#x2016;</mo>
+    <mi data-latex="A">A</mi>
+    <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x ">&#x2016;</mo>
+  </mrow>
+  <mrow data-mjx-texclass="INNER" data-latex="\\left\\x B \\right\\x ">
+    <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">|</mo>
+    <mi data-latex="B">B</mi>
+    <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x ">|</mo>
+  </mrow>
+  <mrow data-mjx-texclass="INNER" data-latex="\\left\\x C \\right\\x">
+    <mo data-mjx-texclass="OPEN" data-latex="\\left\\x ">&#x2016;</mo>
+    <mi data-latex="C">C</mi>
+    <mo data-mjx-texclass="CLOSE" data-latex="\\right\\x">&#x2016;</mo>
+  </mrow>
+</math>"
+`;
+
+exports[`Begingroup Begingroup Env Single 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newenvironment{test}{[}{]}\\begin{test}X\\end{test}\\begingroup\\newenvironment{test}{(}{)}\\begin{test}X\\end{test}\\endgroup\\begin{test}X\\end{test}" display="block">
+  <mo data-latex="[" stretchy="false">[</mo>
+  <mi data-latex="X">X</mi>
+  <mo data-latex="]" stretchy="false">]</mo>
+  <mo data-latex="(" stretchy="false">(</mo>
+  <mi data-latex="X">X</mi>
+  <mo data-latex=")" stretchy="false">)</mo>
+  <mo data-latex="[" stretchy="false">[</mo>
+  <mi data-latex="X">X</mi>
+  <mo data-latex="]" stretchy="false">]</mo>
+</math>"
+`;
+
+exports[`Begingroup Begingroup Global 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\global\\def\\x{C} \\x \\endgroup \\x" display="block">
+  <mi data-latex="\\def\\x{B}">A</mi>
+  <mi data-latex="\\def\\x{C}">B</mi>
+  <mi data-latex="\\endgroup">C</mi>
+  <mi data-latex="C">C</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup Global Let 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\let\\x=B \\x \\global\\let\\x=C \\x \\endgroup \\x" display="block">
+  <mi data-latex="\\let\\x=B">A</mi>
+  <mi data-latex="\\let\\x=C">B</mi>
+  <mi data-latex="\\endgroup">C</mi>
+  <mi data-latex="C">C</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup Global Nested 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\def\\x{B} \\x \\begingroup \\gdef\\x{C} \\x \\endgroup \\x \\endgroup \\x" display="block">
+  <mi data-latex="\\def\\x{B}">A</mi>
+  <mi data-latex="\\def\\x{C}">B</mi>
+  <mi data-latex="\\endgroup">C</mi>
+  <mi data-latex="\\endgroup">C</mi>
+  <mi data-latex="C">C</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup Let Nested 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\let\\x=B \\x \\begingroup \\let\\x=C \\x \\endgroup \\x \\endgroup \\x" display="block">
+  <mi data-latex="\\let\\x=B">A</mi>
+  <mi data-latex="\\let\\x=C">B</mi>
+  <mi data-latex="\\endgroup">C</mi>
+  <mi data-latex="\\endgroup">B</mi>
+  <mi data-latex="A">A</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup Let Single 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\let\\x=B \\x \\endgroup \\x" display="block">
+  <mi data-latex="\\let\\x=B">A</mi>
+  <mi data-latex="\\endgroup">B</mi>
+  <mi data-latex="A">A</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup Persists 1`] = `"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\begingroup \\def\\x{B}" display="block"></math>"`;
+
+exports[`Begingroup Begingroup Persists 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\x \\endgroup \\x" display="block">
+  <mi data-latex="\\endgroup">B</mi>
+  <mi data-latex="A">A</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup Reset 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\begingroup \\def\\x{B} \\begingroupReset \\x" display="block">
+  <mi data-latex="A">A</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup double sandbox 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\begingroupSandbox \\def\\x{B} \\begingroupSandbox \\x" display="block">
+  <mi data-latex="A">A</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup global def undefines local delimiter 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\x \\begingroup \\let\\x=\\| \\x \\begingroup \\gdef\\x{C} \\x \\endgroup \\x \\endgroup \\x" display="block">
+  <mi data-latex="\\let\\x=\\|">A</mi>
+  <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\def\\x{C}">&#x2016;</mo>
+  <mi data-latex="\\endgroup">C</mi>
+  <mi data-latex="\\endgroup">C</mi>
+  <mi data-latex="C">C</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup global let delimiter undefines local def 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\x=| \\x \\begingroup \\def\\x{A} \\x \\begingroup \\global\\let\\x=\\| \\x \\endgroup \\x \\endgroup \\x" display="block">
+  <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\def\\x{A}">|</mo>
+  <mi data-latex="\\let\\x=\\|">A</mi>
+  <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\endgroup">&#x2016;</mo>
+  <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\endgroup">&#x2016;</mo>
+  <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\x">&#x2016;</mo>
+</math>"
+`;
+
+exports[`Begingroup Begingroup let undefined 2 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\begingroup \\let\\x=\\undefined \\endgroup \\x" display="block">
+  <mi data-latex="A">A</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup reset 2 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\begingroup \\def\\x{B} \\begingroupReset \\x" display="block">
+  <mi data-latex="A">A</mi>
+</math>"
+`;
+
+exports[`Begingroup Begingroup sandbox 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{A} \\begingroupSandbox \\def\\x{B} \\begingroupReset \\x" display="block">
+  <mi data-latex="B">B</mi>
+</math>"
+`;

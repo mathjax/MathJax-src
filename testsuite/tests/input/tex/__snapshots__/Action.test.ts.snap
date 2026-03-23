@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Action MathTip 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathtip{A}{B}" display="block">
+  <maction actiontype="tooltip" data-latex="\\mathtip{A}{B}">
+    <mi data-latex="A">A</mi>
+    <mi data-latex="B">B</mi>
+  </maction>
+</math>"
+`;
+
+exports[`Action TextTip 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\texttip{A}{B}" display="block">
+  <maction actiontype="tooltip" data-latex="\\mathtip{A}{\\text{B}}">
+    <mi data-latex="A">A</mi>
+    <mtext data-latex="\\text{B}">B</mtext>
+  </maction>
+</math>"
+`;
+
+exports[`Action Toggle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\toggle A B C \\endtoggle" display="block">
+  <maction data-latex="\\toggle A B C \\endtoggle">
+    <mi data-latex="A">A</mi>
+    <mi data-latex="B">B</mi>
+    <mi data-latex="C">C</mi>
+  </maction>
+</math>"
+`;

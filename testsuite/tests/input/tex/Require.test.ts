@@ -1,7 +1,6 @@
 import { afterAll, beforeEach, describe, test, expect } from '@jest/globals';
 import {
   getTokens,
-  toXmlMatch,
   setupTexTypeset,
   typeset2mml,
   setupComponents,
@@ -57,73 +56,31 @@ describe('Require', () => {
   /********************************************************************************/
 
   test('Require package', async () => {
-    toXmlMatch(
-      await typeset2mml('\\require{bbox} \\bbox[red]{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{bbox} \\bbox[red]{x}" display="block">
-         <mstyle mathbackground="red" data-latex="\\require{bbox} \\bbox[red]{x}">
-           <mi data-latex="x">x</mi>
-         </mstyle>
-       </math>`
-    );
+    expect(await typeset2mml('\\require{bbox} \\bbox[red]{x}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('Require with dependencies', async () => {
-    toXmlMatch(
-      await typeset2mml('\\require{cancel} \\cancel{x+1}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{cancel} \\cancel{x+1}" display="block">
-         <menclose notation="updiagonalstrike" data-latex="\\require{cancel} \\cancel{x+1}">
-           <mi data-latex="x">x</mi>
-           <mo data-latex="+">+</mo>
-           <mn data-latex="1">1</mn>
-         </menclose>
-       </math>`
-    );
+    expect(await typeset2mml('\\require{cancel} \\cancel{x+1}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('Require with preprocessors', async () => {
-    toXmlMatch(
-      await typeset2mml('\\require{textcomp} \\text{a \\bf b}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{textcomp} \\text{a \\bf b}" display="block">
-         <mrow data-latex="\\require{textcomp} \\text{a \\bf b}">
-           <mtext>a&#xA0;</mtext>
-           <mtext mathvariant="bold">b</mtext>
-         </mrow>
-       </math>`
-    );
+    expect(await typeset2mml('\\require{textcomp} \\text{a \\bf b}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('Require with stack items', async () => {
-    toXmlMatch(
-      await typeset2mml('\\require{braket} \\bra{a}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{braket} \\bra{a}" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="{\\langle {a} \\vert}">
-           <mo fence="false" stretchy="false" data-latex="\\langle">&#x27E8;</mo>
-           <mrow data-mjx-texclass="ORD" data-latex="{a}">
-             <mi data-latex="a">a</mi>
-           </mrow>
-           <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
-         </mrow>
-       </math>`
-    );
+    expect(await typeset2mml('\\require{braket} \\bra{a}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('Require with menu extensions', async () => {
-    toXmlMatch(
-      await typeset2mml('\\require{bbm} \\mathbbm{A}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{bbm} \\mathbbm{A}" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\require{bbm} \\mathbbm{A}">
-           <mi data-mjx-variant="-bbm-normal" data-latex="A">A</mi>
-         </mrow>
-       </math>`
-    );
+    expect(await typeset2mml('\\require{bbm} \\mathbbm{A}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -182,28 +139,14 @@ describe('Require Options', () => {
 
   test('DefaultAllow with allow', async () => {
     setupTexTypeset(['base', 'require'], {require: {defaultAllow: false, allow: {bbox: true}}});
-    toXmlMatch(
-      await typeset2mml('\\require{bbox} \\bbox[red]{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{bbox} \\bbox[red]{x}" display="block">
-         <mstyle mathbackground="red" data-latex="\\require{bbox} \\bbox[red]{x}">
-           <mi data-latex="x">x</mi>
-         </mstyle>
-       </math>`
-    );
+    expect(await typeset2mml('\\require{bbox} \\bbox[red]{x}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
 
   test('Prefixed options', async () => {
     setupTexTypeset(['base', 'require'], {require: {defaultAllow: false, allow: {'[tex]/bbox': true}}});
-    toXmlMatch(
-      await typeset2mml('\\require{bbox} \\bbox[red]{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{bbox} \\bbox[red]{x}" display="block">
-         <mstyle mathbackground="red" data-latex="\\require{bbox} \\bbox[red]{x}">
-           <mi data-latex="x">x</mi>
-         </mstyle>
-       </math>`
-    );
+    expect(await typeset2mml('\\require{bbox} \\bbox[red]{x}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -220,14 +163,7 @@ describe('Require Options', () => {
       }
     });
     setupTexTypeset(['base', 'require', 'require-load']);
-    toXmlMatch(
-      await typeset2mml('\\requireLoad \\bbox[red]{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\requireLoad \\bbox[red]{x}" display="block">
-         <mstyle mathbackground="red" data-latex="\\requireLoad \\bbox[red]{x}">
-           <mi data-latex="x">x</mi>
-         </mstyle>
-       </math>`
-    );
+    expect(await typeset2mml('\\requireLoad \\bbox[red]{x}')).toMatchSnapshot();
   });
 
   /********************************************************************************/

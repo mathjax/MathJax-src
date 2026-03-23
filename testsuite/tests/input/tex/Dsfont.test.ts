@@ -1,5 +1,5 @@
-import { afterAll, beforeEach, describe, test } from '@jest/globals';
-import { getTokens, toXmlMatch, setupTex, tex2mml } from '#helpers';
+import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
+import { getTokens, setupTex, tex2mml } from '#helpers';
 import '#js/input/tex/dsfont/DsfontConfiguration';
 
 /**********************************************************************************/
@@ -12,14 +12,7 @@ describe('Dsfont', () => {
   /********************************************************************************/
 
   test('mathds', () => {
-    toXmlMatch(
-      tex2mml('\\mathds{Aa}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathds{Aa}" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\mathds{Aa}">
-           <mi data-mjx-variant="-ds-rm" data-latex="Aa">Aa</mi>
-         </mrow>
-       </math>`
-    );
+    expect(tex2mml('\\mathds{Aa}')).toMatchSnapshot();
   });
 
   /********************************************************************************/
@@ -36,14 +29,7 @@ describe('Dsfont sans', () => {
   /********************************************************************************/
 
   test('mathds', () => {
-    toXmlMatch(
-      tex2mml('\\mathds{Aa}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathds{Aa}" display="block">
-         <mrow data-mjx-texclass="ORD" data-latex="\\mathds{Aa}">
-           <mi data-mjx-variant="-ds-ss" data-latex="Aa">Aa</mi>
-         </mrow>
-       </math>`
-    );
+    expect(tex2mml('\\mathds{Aa}')).toMatchSnapshot();
   });
 
   /********************************************************************************/

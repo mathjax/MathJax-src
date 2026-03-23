@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dsfont mathds 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathds{Aa}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathds{Aa}">
+    <mi data-mjx-variant="-ds-rm" data-latex="Aa">Aa</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Dsfont sans mathds 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathds{Aa}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathds{Aa}">
+    <mi data-mjx-variant="-ds-ss" data-latex="Aa">Aa</mi>
+  </mrow>
+</math>"
+`;
