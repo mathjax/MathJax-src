@@ -3448,7 +3448,7 @@ describe('Linebreaks', () => {
   });
 
   it('allowbreak cdot', () => {
-    expect(tex2mml('a\\allowbreak \cdot b')).toMatchSnapshot();
+    expect(tex2mml('a\\allowbreak \\cdot b')).toMatchSnapshot();
   });
 
   it('goodbreak', () => {

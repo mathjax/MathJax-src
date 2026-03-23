@@ -4480,13 +4480,10 @@ exports[`Linebreaks allowbreak 1`] = `
 `;
 
 exports[`Linebreaks allowbreak cdot 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\allowbreak cdot b" display="block">
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\allowbreak \\cdot b" display="block">
   <mi data-latex="a">a</mi>
   <mspace data-latex="\\allowbreak"></mspace>
-  <mi data-latex="c">c</mi>
-  <mi data-latex="d">d</mi>
-  <mi data-latex="o">o</mi>
-  <mi data-latex="t">t</mi>
+  <mo data-latex="\\cdot">&#x22C5;</mo>
   <mi data-latex="b">b</mi>
 </math>"
 `;
