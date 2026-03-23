@@ -16,7 +16,7 @@ export default tseslint.config({
       project: true,
     }
   },
-  files: ['ts/**/*.ts'],
+  files: ['**/*.ts'],
   ignores: ["**/*.d.ts", "**/*.js", "**/cjs/*"],
   "rules": {
     "@typescript-eslint/prefer-includes": "error",
@@ -33,4 +33,3 @@ export default tseslint.config({
     "jsdoc/reject-function-type": "off"
   }
 });
-
