@@ -43,7 +43,7 @@ describe('handleRetriesFor() and retryAfter()', () => {
     let n = 0;
     handleRetriesFor(() => {
       if (++n < 3) {
-        let p = new Promise<void>((ok, _fail) => {
+        const p = new Promise<void>((ok, _fail) => {
           setTimeout(() => ok(), 1);
         });
         retryAfter(p);
@@ -61,7 +61,7 @@ describe('handleRetriesFor() and retryAfter()', () => {
     let n = 0;
     handleRetriesFor(() => {
       if (++n < 3) {
-        let p = new Promise<void>((ok, fail) => {
+        const p = new Promise<void>((ok, fail) => {
           setTimeout(() => (n < 2 ? ok() : fail('fail')), 1);
         });
         retryAfter(p);
@@ -79,7 +79,7 @@ describe('handleRetriesFor() and retryAfter()', () => {
     let n = 0;
     handleRetriesFor(() => {
       if (++n < 3) {
-        let p = new Promise<void>((ok, _fail) => {
+        const p = new Promise<void>((ok, _fail) => {
           setTimeout(() => ok(), 1);
         });
         retryAfter(p);
@@ -141,7 +141,7 @@ describe('handleRetriesFor() and retryAfter()', () => {
     handleRetriesFor(async () => {
       if (++n < 3) {
         await new Promise<void>((ok, _fail) => setTimeout(ok, 1));
-        let p = new Promise<void>((ok, _fail) => {
+        const p = new Promise<void>((ok, _fail) => {
           setTimeout(() => ok(), 1);
         });
         retryAfter(p);

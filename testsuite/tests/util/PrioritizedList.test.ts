@@ -5,7 +5,7 @@ import { PrioritizedList } from '#js/util/PrioritizedList.js';
 //  Turn the item list into a list of just that data
 //
 function ARRAY(list: PrioritizedList<any>) {
-  let array = [];
+  const array = [];
   for (const { item } of list) array.push(item);
   return array;
 }

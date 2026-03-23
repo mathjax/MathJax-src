@@ -143,7 +143,7 @@ describe('BBox object', () => {
   });
 
   test('append()', () => {
-    let bbox = BBox.empty();
+    const bbox = BBox.empty();
     const cbox = new BBox({ w: 1, h: 2, d: 3 });
     bbox.append(cbox);
     expect(bbox).toEqual(expect.objectContaining({ w: 1, h: 2, d: 3 }));

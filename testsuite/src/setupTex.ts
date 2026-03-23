@@ -58,11 +58,12 @@ export const toMathML = (node: MmlNode) => visitor.visitTree(node);
 
 /**
  * Trap output produced while running code.
- * @param method The console method to trap.
- * @param code The code to run.
- * @return The output sent to the given method.
+ *
+ * @param {string} method The console method to trap.
+ * @param {Function} code The code to run.
+ * @returns {string} The output sent to the given method.
  */
-export function trapOutput(method: string, code: () => void) {
+export function trapOutput(method: string, code: () => void): string {
   const saved = (console as any)[method];
   let message = '';
   (console as any)[method] = (...msg: any[]) => {
@@ -75,10 +76,11 @@ export function trapOutput(method: string, code: () => void) {
 
 /**
  * Trap errors produced while running code.
- * @param code The code to run.
- * @return The error message produced.
+ *
+ * @param {Function} code The code to run.
+ * @returns {string} The error message produced.
  */
-export function trapErrors(code: () => void) {
+export function trapErrors(code: () => void): string {
   let message = '(no error)';
   reportErrors = true;
   try {
@@ -92,8 +94,9 @@ export function trapErrors(code: () => void) {
 
 /**
  * Trap errors produced while running code.
- * @param code The code to run.
- * @return The error message produced.
+ *
+ * @param {Function} code The code to run.
+ * @returns {string} The error message produced.
  */
 export async function trapAsyncErrors(code: () => Promise<void>) {
   let message = '(no error)';
@@ -136,9 +139,11 @@ export const throwCompileErrors = {
 
 /**
  * Trap TeX processing errors and return an expect() result
- * @param string The TeX string to process
- * @param display True for display style, false for in-line
- * @param typeset The function used to typeset the TeX (tex2mml, typeset2mml, etc)
+ *
+ * @param {string} tex The TeX string to process
+ * @param {boolean} display True for display style, false for in-line
+ * @param {Function} fn The function used to typeset the TeX (tex2mml, typeset2mml, etc)
+ * @returns {any} The test output
  */
 export function expectTexError(
   tex: string,
@@ -152,9 +157,11 @@ export function expectTexError(
 
 /**
  * Trap TeX processing errors and return an expect() result
- * @param string The TeX string to process
- * @param display True for display style, false for in-line
- * @param typeset The function used to typeset the TeX (tex2mml, typeset2mml, etc)
+ *
+ * @param {string} tex The TeX string to process
+ * @param {boolean} display True for display style, false for in-line
+ * @param {Function} fn The function used to typeset the TeX (tex2mml, typeset2mml, etc)
+ * @returns {any} The test output
  */
 export function expectTypesetError(
   tex: string,
@@ -360,7 +367,8 @@ export function page2mml(text: string): Promise<string[]> {
  * Initialize the component framework (for typeset2mml() and
  * page2mml()), setting a promise for when that is complete (the
  * conversion functions with for that promise to resolve).
- * @param config The MathJax configuration
+ *
+ * @param {any} config The MathJax configuration
  */
 export async function setupComponents(config: any) {
   mathjax.handlers.unregister(handler);
@@ -388,6 +396,7 @@ const tokens: Map<string, Set<string>> = new Map();
 
 /**
  * Adds a token to the token set.
+ *
  * @param {string} name Table name.
  * @param {string} token Token string.
  */
@@ -402,9 +411,10 @@ function addToken(name: string, token: string) {
 
 /**
  * Set difference.
+ *
  * @param {Set<string>} exp Expected elements.
  * @param {Set<string>} act Actual elements.
- * @return {Set<string>} Expected setminus actual.
+ * @returns {Set<string>} Expected setminus actual.
  */
 function setdifference(exp: Set<string>, act: Set<string>): Set<string> {
   act.forEach((x) => exp.delete(x));
@@ -413,8 +423,10 @@ function setdifference(exp: Set<string>, act: Set<string>): Set<string> {
 
 /**
  * Diff between macros
- * @param {string} handler
- * @return {[Set<string>, number, number]}
+ *
+ * @param {string} handler The handler name.
+ * @returns {[Set<string>, number, number]} Set of missing macros, expected
+ * size, actual size.
  */
 function diffMacros(handler: string): [Set<string>, number, number] {
   const expected = MapHandler.getMap(handler);
@@ -455,8 +467,8 @@ export function getTokens(configuration: string) {
     handlers[HandlerType.MACRO],
     handlers[HandlerType.ENVIRONMENT]
   );
-  let tables: tables[] = [];
-  let outJSON: {
+  const tables: tables[] = [];
+  const outJSON: {
     configuration: string;
     tables: tables[];
   } = { configuration: configuration, tables: tables };

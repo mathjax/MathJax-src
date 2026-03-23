@@ -176,7 +176,7 @@ describe('Options utility', () => {
   });
 
   test('expandable()', () => {
-    let warnings = [] as string[];
+    const warnings = [] as string[];
     OPTIONS.optionError = (_msg: string, key: string) => {
       warnings.push(key);
     };

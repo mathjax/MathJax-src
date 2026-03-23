@@ -5,7 +5,7 @@ const window = { document: {}, navigator: { appVersion: 'Win' } };
 
 describe('context object', () => {
   test('context', async () => {
-    let { context, hasWindow } = await import('#js/util/context.js');
+    const { context, hasWindow } = await import('#js/util/context.js');
     expect(context.path('C:\\test.js')).toBe('file://C:/test.js');
     expect(context.path('/C:/test.js')).toBe('file://C:/test.js');
     expect(context.path('/test.js')).toBe('file:///test.js');
