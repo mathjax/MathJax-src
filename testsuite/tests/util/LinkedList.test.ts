@@ -84,8 +84,8 @@ describe('LinkedList functionality', () => {
     const list = new LinkedList(0, 1, 2, 3, 4, 5, 6);
     let j = 0;
     for (const item of list) {
-      if (item === j) j++;
-      else break;
+      if (item !== j) break;
+      j++;
     }
     expect(j).toBe(7);
   });
@@ -94,8 +94,8 @@ describe('LinkedList functionality', () => {
     const list = new LinkedList(0, 1, 2, 3, 4, 5, 6);
     let j = 6;
     for (const item of list.reversed()) {
-      if (item === j) j--;
-      else break;
+      if (item !== j) break;
+      j--;
     }
     expect(j).toBe(-1);
   });
