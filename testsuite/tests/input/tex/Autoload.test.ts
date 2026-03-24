@@ -4,13 +4,10 @@ import { getTokens, setupTexTypeset, typeset2mml, setupComponents } from '#helpe
 setupComponents({loader: {load: ['input/tex-base', '[tex]/autoload']}});
 
 /**********************************************************************************/
-/**********************************************************************************/
 
 beforeEach(() => setupTexTypeset(['base', 'autoload']));
 
 describe('Autoload', () => {
-
-  /********************************************************************************/
 
   test('Autoload package', async () => {
     expect(await typeset2mml('\\bbox[red]{x}')).toMatchSnapshot();
@@ -21,7 +18,6 @@ describe('Autoload', () => {
   });
 });
 
-/**********************************************************************************/
 /**********************************************************************************/
 
 afterAll(() => getTokens('autoload'));
