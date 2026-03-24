@@ -1,25 +1,29 @@
-import {TeX} from '#js/input/tex.js';
-import {AbstractParseMap, RegExpMap, CommandMap} from '#js/input/tex/TokenMap.js';
-import {ConfigurationHandler} from '#js/input/tex/Configuration.js';
-import {HandlerType, ConfigurationType} from '#js/input/tex/HandlerTypes.js';
-import {MapHandler} from '#js/input/tex/MapHandler.js';
-import {HTMLDocument} from '#js/handlers/html/HTMLDocument.js';
-import {RegisterHTMLHandler} from '#js/handlers/html.js';
-import {liteAdaptor} from '#js/adaptors/liteAdaptor.js';
-import {MathItem, STATE} from '#js/core/MathItem.js';
-import {SerializedMmlVisitor} from '#js/core/MmlTree/SerializedMmlVisitor.js';
-import {MmlNode} from '#js/core/MmlTree/MmlNode.js';
-import {mathjax} from '#js/mathjax.js';
-import {OptionList} from '#js/util/Options.js';
-import {tmpJsonFile} from '#src/constants.js';
+import { TeX } from '#js/input/tex.js';
+import {
+  AbstractParseMap,
+  RegExpMap,
+  CommandMap,
+} from '#js/input/tex/TokenMap.js';
+import { ConfigurationHandler } from '#js/input/tex/Configuration.js';
+import { HandlerType, ConfigurationType } from '#js/input/tex/HandlerTypes.js';
+import { MapHandler } from '#js/input/tex/MapHandler.js';
+import { HTMLDocument } from '#js/handlers/html/HTMLDocument.js';
+import { RegisterHTMLHandler } from '#js/handlers/html.js';
+import { liteAdaptor } from '#js/adaptors/liteAdaptor.js';
+import { MathItem, STATE } from '#js/core/MathItem.js';
+import { SerializedMmlVisitor } from '#js/core/MmlTree/SerializedMmlVisitor.js';
+import { MmlNode } from '#js/core/MmlTree/MmlNode.js';
+import { mathjax } from '#js/mathjax.js';
+import { OptionList } from '#js/util/Options.js';
+import { tmpJsonFile } from '#src/constants.js';
 import * as fs from 'fs';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import {init} from '#source/node-main/node-main.mjs';
-import {expect} from '@jest/globals';
+import { init } from '#source/node-main/node-main.mjs';
+import { expect } from '@jest/globals';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import {source} from '#source/source.js';
+import { source } from '#source/source.js';
 
 declare const MathJax: any;
 type MATHITEM = MathItem<any, any, any>;
@@ -48,20 +52,23 @@ const handler = RegisterHTMLHandler(adaptor);
  * A vistor to convert MmlNodes to serialized MathML.
  */
 const visitor = new SerializedMmlVisitor();
-export const toMathML = ((node: MmlNode) => visitor.visitTree(node));
+export const toMathML = (node: MmlNode) => visitor.visitTree(node);
 
 /*********************************************************************/
 
 /**
  * Trap output produced while running code.
- * @param method The console method to trap.
- * @param code The code to run.
- * @return The output sent to the given method.
+ *
+ * @param {string} method The console method to trap.
+ * @param {Function} code The code to run.
+ * @returns {string} The output sent to the given method.
  */
-export function trapOutput(method: string, code: () => void) {
+export function trapOutput(method: string, code: () => void): string {
   const saved = (console as any)[method];
   let message = '';
-  (console as any)[method] = (...msg: any[]) => {message += (message ? '\n' : '') + msg.join(' ')};
+  (console as any)[method] = (...msg: any[]) => {
+    message += (message ? '\n' : '') + msg.join(' ');
+  };
   code();
   (console as any)[method] = saved;
   return message;
@@ -69,26 +76,34 @@ export function trapOutput(method: string, code: () => void) {
 
 /**
  * Trap errors produced while running code.
- * @param code The code to run.
- * @return The error message produced.
+ *
+ * @param {Function} code The code to run.
+ * @returns {string} The error message produced.
  */
-export function trapErrors(code: () => void) {
+export function trapErrors(code: () => void): string {
   let message = '(no error)';
   reportErrors = true;
-  try {code()} catch (e) {message = e.message}
+  try {
+    code();
+  } catch (e) {
+    message = e.message;
+  }
   reportErrors = false;
   return message;
 }
 
 /**
  * Trap errors produced while running code.
- * @param code The code to run.
- * @return The error message produced.
+ *
+ * @param {Function} code The code to run.
+ * @returns {string} The error message produced.
  */
 export async function trapAsyncErrors(code: () => Promise<void>) {
   let message = '(no error)';
   reportErrors = true;
-  await code().catch((e) => {message = e.message});
+  await code().catch((e) => {
+    message = e.message;
+  });
   reportErrors = false;
   return message;
 }
@@ -106,8 +121,8 @@ export const throwTexErrors = {
   formatError(jax: any, err: Error) {
     if (reportErrors) throw err;
     return jax.formatError(err);
-  }
-}
+  },
+};
 
 /**
  * Configuration that causes compile errors to throw rather than
@@ -118,34 +133,42 @@ export const throwCompileErrors = {
     compileError(jax: any, math: any, err: Error) {
       if (reportErrors) throw err;
       return jax.compileError(math, err);
-    }
-  }
-}
+    },
+  },
+};
 
 /**
  * Trap TeX processing errors and return an expect() result
- * @param string The TeX string to process
- * @param display True for display style, false for in-line
- * @param typeset The function used to typeset the TeX (tex2mml, typeset2mml, etc)
+ *
+ * @param {string} tex The TeX string to process
+ * @param {boolean} display True for display style, false for in-line
+ * @param {Function} fn The function used to typeset the TeX (tex2mml, typeset2mml, etc)
+ * @returns {any} The test output
  */
 export function expectTexError(
   tex: string,
   display: boolean = true,
-  fn: (((tex: string, display?: boolean) => any) | ((tex: string) => any)) = tex2mml,
+  fn:
+    | ((tex: string, display?: boolean) => any)
+    | ((tex: string) => any) = tex2mml
 ): any {
   return expect(trapErrors(() => fn(tex, display)));
 }
 
 /**
  * Trap TeX processing errors and return an expect() result
- * @param string The TeX string to process
- * @param display True for display style, false for in-line
- * @param typeset The function used to typeset the TeX (tex2mml, typeset2mml, etc)
+ *
+ * @param {string} tex The TeX string to process
+ * @param {boolean} display True for display style, false for in-line
+ * @param {Function} fn The function used to typeset the TeX (tex2mml, typeset2mml, etc)
+ * @returns {any} The test output
  */
 export function expectTypesetError(
   tex: string,
   display: boolean = true,
-  fn: (((tex: string, display?: boolean) => Promise<any>) | ((tex: string) => Promise<any>)) = typeset2mml,
+  fn:
+    | ((tex: string, display?: boolean) => Promise<any>)
+    | ((tex: string) => Promise<any>) = typeset2mml
 ): any {
   return expect(trapAsyncErrors(() => fn(tex, display))).resolves;
 }
@@ -159,12 +182,20 @@ export function expectTypesetError(
  * @param {string[]} packages    The TeX packages to configure
  * @param {OptionList} options   The TeX options to include
  */
-export function setupTex(packages: PackageList = ['base'], options: OptionList = {}) {
-  const parserOptions = Object.assign({}, {packages}, throwTexErrors, options);
+export function setupTex(
+  packages: PackageList = ['base'],
+  options: OptionList = {}
+) {
+  const parserOptions = Object.assign(
+    {},
+    { packages },
+    throwTexErrors,
+    options
+  );
   const tex = new TeX(parserOptions);
-  const html = new HTMLDocument('', adaptor, {InputJax: tex});
+  const html = new HTMLDocument('', adaptor, { InputJax: tex });
   convert = (expr: string, display: boolean) =>
-    toMathML(html.convert(expr, {display: display, end: STATE.CONVERT}));
+    toMathML(html.convert(expr, { display: display, end: STATE.CONVERT }));
 }
 
 /**
@@ -174,10 +205,13 @@ export function setupTex(packages: PackageList = ['base'], options: OptionList =
  * @param {string[]} packages    The TeX packages to configure
  * @param {OptionList} options   The TeX options to include
  */
-export function setupTexRender(packages: PackageList = ['base'], options: OptionList = {}) {
+export function setupTexRender(
+  packages: PackageList = ['base'],
+  options: OptionList = {}
+) {
   const parserOptions = Object.assign(
     {},
-    {packages: packages, inlineMath: {'[+]': [['$', '$']]}},
+    { packages: packages, inlineMath: { '[+]': [['$', '$']] } },
     throwTexErrors,
     options
   );
@@ -185,10 +219,10 @@ export function setupTexRender(packages: PackageList = ['base'], options: Option
   render = (text: string, display: boolean) => {
     const delim = display ? '$$' : '$';
     const document = `<html><head></head><body>${delim}${text}${delim}</body></html>`;
-    const html = mathjax.document(document, {InputJax: tex});
+    const html = mathjax.document(document, { InputJax: tex });
     html.findMath().compile();
     return toMathML((Array.from(html.math)[0] as MATHITEM).root);
-  }
+  };
 }
 
 /**
@@ -199,23 +233,25 @@ export function setupTexRender(packages: PackageList = ['base'], options: Option
  * @param {string[]} packages    The TeX packages to configure
  * @param {OptionList} options   The TeX options to include
  */
-export function setupTexTypeset(packages: PackageList = ['base'], options: OptionList = {}) {
+export function setupTexTypeset(
+  packages: PackageList = ['base'],
+  options: OptionList = {}
+) {
   MathJax.config.tex = Object.assign(
     {},
-    {packages: packages, inlineMath: {'[+]': [['$', '$']]}},
+    { packages: packages, inlineMath: { '[+]': [['$', '$']] } },
     throwTexErrors,
     options
   );
   typeset = async (text: string, display: boolean) => {
     await componentPromise;
     const delim = display ? '$$' : '$';
-    MathJax.config.startup.document =
-      `<html><head></head><body>${delim}${text}${delim}</body></html>`;
+    MathJax.config.startup.document = `<html><head></head><body>${delim}${text}${delim}</body></html>`;
     MathJax.startup.getComponents();
     const mathdoc = MathJax.startup.document;
     await mathjax.handleRetriesFor(() => mathdoc.findMath().compile());
     return toMathML((Array.from(mathdoc.math) as MATHITEM[])[0].root);
-  }
+  };
 }
 
 /**
@@ -227,26 +263,28 @@ export function setupTexTypeset(packages: PackageList = ['base'], options: Optio
  * @param {string[]} packages    The TeX packages to configure
  * @param {OptionList} options   The TeX options to include
  */
-export function setupTexPage(packages: PackageList = ['base'], options: OptionList = {}) {
+export function setupTexPage(
+  packages: PackageList = ['base'],
+  options: OptionList = {}
+) {
   MathJax.config.tex = Object.assign(
     {},
-    {packages: packages, inlineMath: {'[+]': [['$', '$']]}},
+    { packages: packages, inlineMath: { '[+]': [['$', '$']] } },
     throwTexErrors,
     options
   );
   page = async (text: string) => {
     await componentPromise;
-    MathJax.config.startup.document =
-      `<html><head></head><body>${text}</body></html>`;
+    MathJax.config.startup.document = `<html><head></head><body>${text}</body></html>`;
     MathJax.startup.getComponents();
     const mathdoc = MathJax.startup.document;
     await mathjax.handleRetriesFor(() => mathdoc.findMath().compile());
     const math = Array.from(mathdoc.math) as MATHITEM[];
     return math.map((mi) => toMathML(mi.root));
-  }
+  };
 }
 
-import {SVG} from '#js/output/svg.js';
+import { SVG } from '#js/output/svg.js';
 
 /**
  * Set up TeX input packages and options for tex2mml(), and create the convert() function,
@@ -255,14 +293,20 @@ import {SVG} from '#js/output/svg.js';
  * @param {string[]} packages    The TeX packages to configure
  * @param {OptionList} options   The TeX options to include
  */
-export function setupTexWithOutput(packages: string[] = ['base'], options: OptionList = {}) {
-  const parserOptions = Object.assign({}, {packages: packages}, options);
+export function setupTexWithOutput(
+  packages: string[] = ['base'],
+  options: OptionList = {}
+) {
+  const parserOptions = Object.assign({}, { packages: packages }, options);
   const tex = new TeX(parserOptions);
-  const html = new HTMLDocument('', adaptor, {InputJax: tex, OutputJax: new SVG()});
+  const html = new HTMLDocument('', adaptor, {
+    InputJax: tex,
+    OutputJax: new SVG(),
+  });
   const visitor = new SerializedMmlVisitor();
-  const toMathML = ((node: MmlNode) => visitor.visitTree(node));
+  const toMathML = (node: MmlNode) => visitor.visitTree(node);
   convert = (expr: string, display: boolean) =>
-    toMathML(html.convert(expr, {display: display, end: STATE.CONVERT}));
+    toMathML(html.convert(expr, { display: display, end: STATE.CONVERT }));
 }
 
 /*********************************************************************/
@@ -276,7 +320,7 @@ export function setupTexWithOutput(packages: string[] = ['base'], options: Optio
  */
 export function tex2mml(tex: string, display: boolean = true): string {
   return convert(tex, display);
-};
+}
 
 /**
  * Convert TeX to MathML using MathDocument.findMath().compile() on a document
@@ -298,7 +342,10 @@ export function render2mml(tex: string, display: boolean = true): string {
  * @param {boolean} display     True for display math, false for in-line math
  * @returns {Promise<string>}   A promise for the MathML for the TeX expression
  */
-export function typeset2mml(tex: string, display: boolean = true): Promise<string> {
+export function typeset2mml(
+  tex: string,
+  display: boolean = true
+): Promise<string> {
   return typeset(tex, display);
 }
 
@@ -320,7 +367,8 @@ export function page2mml(text: string): Promise<string[]> {
  * Initialize the component framework (for typeset2mml() and
  * page2mml()), setting a promise for when that is complete (the
  * conversion functions with for that promise to resolve).
- * @param config The MathJax configuration
+ *
+ * @param {any} config The MathJax configuration
  */
 export async function setupComponents(config: any) {
   mathjax.handlers.unregister(handler);
@@ -329,8 +377,10 @@ export async function setupComponents(config: any) {
   //   so wrap it in a real promise, so Package will properly identify it.
   //
   MathJax.config.loader.require = (file: string) => {
-    return new Promise((ok, fail) => import(file).then(ok).catch(e => fail(e)));
-  }
+    return new Promise((ok, fail) =>
+      import(file).then(ok).catch((e) => fail(e))
+    );
+  };
   MathJax.config.loader.source = source;
   config.startup ??= {};
   config.startup.typeset ??= false;
@@ -346,6 +396,7 @@ const tokens: Map<string, Set<string>> = new Map();
 
 /**
  * Adds a token to the token set.
+ *
  * @param {string} name Table name.
  * @param {string} token Token string.
  */
@@ -360,19 +411,22 @@ function addToken(name: string, token: string) {
 
 /**
  * Set difference.
+ *
  * @param {Set<string>} exp Expected elements.
  * @param {Set<string>} act Actual elements.
- * @return {Set<string>} Expected setminus actual.
+ * @returns {Set<string>} Expected setminus actual.
  */
 function setdifference(exp: Set<string>, act: Set<string>): Set<string> {
-  act.forEach(x => exp.delete(x));
+  act.forEach((x) => exp.delete(x));
   return exp;
 }
 
 /**
  * Diff between macros
- * @param {string} handler
- * @return {[Set<string>, number, number]}
+ *
+ * @param {string} handler The handler name.
+ * @returns {[Set<string>, number, number]} Set of missing macros, expected
+ * size, actual size.
  */
 function diffMacros(handler: string): [Set<string>, number, number] {
   const expected = MapHandler.getMap(handler);
@@ -389,10 +443,10 @@ function diffMacros(handler: string): [Set<string>, number, number] {
 }
 
 interface tables {
-  table: string,
-  size: number,
-  actual: number,
-  missing: string[]
+  table: string;
+  size: number;
+  actual: number;
+  missing: string[];
 }
 
 /**
@@ -411,12 +465,13 @@ export function getTokens(configuration: string) {
   const allHandlers = [].concat(
     handlers[HandlerType.CHARACTER],
     handlers[HandlerType.MACRO],
-    handlers[HandlerType.ENVIRONMENT]);
-  let tables: tables[] = [];
-  let outJSON: {
-    configuration: string,
-    tables: tables[]
-  } = {configuration: configuration, tables: tables};
+    handlers[HandlerType.ENVIRONMENT]
+  );
+  const tables: tables[] = [];
+  const outJSON: {
+    configuration: string;
+    tables: tables[];
+  } = { configuration: configuration, tables: tables };
   allHandlers.forEach((handler) => {
     const [diff, exp, act] = diffMacros(handler);
     if (diff) {
@@ -424,8 +479,8 @@ export function getTokens(configuration: string) {
         table: handler,
         size: exp,
         actual: act,
-        missing: Array.from(diff)
-      })
+        missing: Array.from(diff),
+      });
     }
   });
   fs.appendFileSync(tmpJsonFile, ',' + JSON.stringify(outJSON, null, 2));
@@ -434,13 +489,15 @@ export function getTokens(configuration: string) {
 //
 // Force the original lookup to be called (so we get coverage for it) before we change it.
 //
-(function () {new CommandMap('', {}).lookup('x')})();
+(function () {
+  new CommandMap('', {}).lookup('x');
+})();
 
 // A prototype extension for the macro table lookups.
-AbstractParseMap.prototype.lookup = function(token: string) {
+AbstractParseMap.prototype.lookup = function (token: string) {
   const result = this.map.get(token);
   if (result) {
     addToken(this.name, token);
   }
   return result;
-}
+};

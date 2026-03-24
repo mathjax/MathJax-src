@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'braket']));
 /**********************************************************************************/
 
 describe('Braket', () => {
-
   it('Braket-bra', () => {
     expect(tex2mml('\\bra{x}')).toMatchSnapshot();
   });
@@ -129,20 +128,16 @@ describe('Braket', () => {
   });
 
   it('Braket-error', () => {
-    expectTexError('\\braket')
-      .toBe('Missing argument for \\braket');
+    expectTexError('\\braket').toBe('Missing argument for \\braket');
   });
 
   it('Braket-braces', () => {
-    expectTexError('\\braket{')
-      .toBe('Missing close brace');
+    expectTexError('\\braket{').toBe('Missing close brace');
   });
 
   it('Braket-braces', () => {
-    expectTexError('\\braket}')
-      .toBe('Extra close brace or missing open brace');
+    expectTexError('\\braket}').toBe('Extra close brace or missing open brace');
   });
-
 });
 
 /**********************************************************************************/

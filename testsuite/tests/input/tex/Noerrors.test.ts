@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'noerrors']));
 /**********************************************************************************/
 
 describe('NoError', () => {
-
   it('Ampersand-error', () => {
     expect(tex2mml('&')).toMatchSnapshot();
   });
@@ -73,7 +72,9 @@ describe('NoError', () => {
   });
 
   it('Multiple Move Root', () => {
-    expect(tex2mml('\\sqrt[\\uproot{-2}\\uproot{2}\\beta]{k}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\sqrt[\\uproot{-2}\\uproot{2}\\beta]{k}')
+    ).toMatchSnapshot();
   });
 
   it('Incorrect Move Root', () => {
@@ -193,9 +194,11 @@ describe('NoError', () => {
   });
 
   it('ErroneousNestingEq', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{equation}\\begin{eqnarray}\\end{eqnarray}\\end{equation}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('ExtraAlignTab', () => {
@@ -233,7 +236,6 @@ describe('NoError', () => {
   it('EnvMissingEnd Equation', () => {
     expect(tex2mml('\\begin{equation}a')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

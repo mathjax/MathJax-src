@@ -8,7 +8,6 @@ beforeEach(() => setupTex(['base', 'textcomp']));
 /**********************************************************************************/
 
 describe('Textcomp', () => {
-
   test('textasciicircum', () => {
     expect(tex2mml('\\textasciicircum')).toMatchSnapshot();
   });
@@ -428,7 +427,6 @@ describe('Textcomp', () => {
   test('textmarried', () => {
     expect(tex2mml('\\textmarried')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
@@ -487,7 +485,6 @@ describe('Textcompwith Textmacros', () => {
   test('textnineoldstyle', () => {
     expect(tex2mml('\\text{\\textnineoldstyle}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

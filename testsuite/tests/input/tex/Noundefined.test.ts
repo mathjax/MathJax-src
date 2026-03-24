@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'noundefined']));
 /**********************************************************************************/
 
 describe('Noundefined', () => {
-
   it('Noundefined Single', () => {
     expect(tex2mml('\\a')).toMatchSnapshot();
   });
@@ -15,7 +14,6 @@ describe('Noundefined', () => {
   it('Noundefined Context', () => {
     expect(tex2mml('a\\b c')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'colorv2']));
 /**********************************************************************************/
 
 describe('ColorV2', () => {
-
   it('Color Open', () => {
     expect(tex2mml('\\color{red}{ab}')).toMatchSnapshot();
   });
@@ -17,13 +16,14 @@ describe('ColorV2', () => {
   });
 
   it('Color Frac', () => {
-    expect(tex2mml('\\frac{{\\cal \\color{red}{X}}}{\\color{blue}{\\sf y}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\frac{{\\cal \\color{red}{X}}}{\\color{blue}{\\sf y}}')
+    ).toMatchSnapshot();
   });
 
   it('Color Nested', () => {
     expect(tex2mml('\\color{red}{a\\color{blue}{b}c}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

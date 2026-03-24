@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'extpfeil']));
 /**********************************************************************************/
 
 describe('Extpfeil', () => {
-
   it('Xtwoheadrightarrow', () => {
     expect(tex2mml('\\xtwoheadrightarrow{abcxyz}')).toMatchSnapshot();
   });
@@ -29,40 +28,44 @@ describe('Extpfeil', () => {
   });
 
   it('Newextarrow', () => {
-    expect(tex2mml('\\Newextarrow{\\ab}{10,20}{8672}\\ab{xyz}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\Newextarrow{\\ab}{10,20}{8672}\\ab{xyz}')
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Extpfeil Errors', () => {
-
   it('NewextarrowArg1', () => {
-    expectTexError('\\Newextarrow{ab}{10,20}{8672}\\ab{xyz}')
-      .toBe('First argument to \\Newextarrow must be a control sequence name');
+    expectTexError('\\Newextarrow{ab}{10,20}{8672}\\ab{xyz}').toBe(
+      'First argument to \\Newextarrow must be a control sequence name'
+    );
   });
 
   it('NewextarrowArg2 One', () => {
-    expectTexError('\\Newextarrow{\\ab}{10}{8672}\\ab{xyz}')
-      .toBe('Second argument to \\Newextarrow must be two integers separated by a comma');
+    expectTexError('\\Newextarrow{\\ab}{10}{8672}\\ab{xyz}').toBe(
+      'Second argument to \\Newextarrow must be two integers separated by a comma'
+    );
   });
 
   it('NewextarrowArg2 Two', () => {
-    expectTexError('\\Newextarrow{\\ab}{10 20}{8672}\\ab{xyz}')
-      .toBe('Second argument to \\Newextarrow must be two integers separated by a comma');
+    expectTexError('\\Newextarrow{\\ab}{10 20}{8672}\\ab{xyz}').toBe(
+      'Second argument to \\Newextarrow must be two integers separated by a comma'
+    );
   });
 
   it('NewextarrowArg2 Three', () => {
-    expectTexError('\\Newextarrow{\\ab}{aa}{8672}\\ab{xyz}')
-      .toBe('Second argument to \\Newextarrow must be two integers separated by a comma');
+    expectTexError('\\Newextarrow{\\ab}{aa}{8672}\\ab{xyz}').toBe(
+      'Second argument to \\Newextarrow must be two integers separated by a comma'
+    );
   });
 
   it('NewextarrowArg3', () => {
-    expectTexError('\\Newextarrow{\\ab}{10,20}{AG}\\ab{xyz}')
-      .toBe('Third argument to \\Newextarrow must be a unicode character number');
+    expectTexError('\\Newextarrow{\\ab}{10,20}{AG}\\ab{xyz}').toBe(
+      'Third argument to \\Newextarrow must be a unicode character number'
+    );
   });
-
 });
 
 /**********************************************************************************/

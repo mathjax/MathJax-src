@@ -4,51 +4,67 @@ import '#js/input/tex/empheq/EmpheqConfiguration';
 import '#js/input/tex/cases/CasesConfiguration';
 import '#js/input/tex/ams/AmsConfiguration';
 
-beforeEach(() => setupTex(['base', 'ams', 'empheq', 'cases'], {tags: 'ams'}));
+beforeEach(() => setupTex(['base', 'ams', 'empheq', 'cases'], { tags: 'ams' }));
 
 /**********************************************************************************/
 
 describe('Empheq', () => {
-
   test('Empheq Left', () => {
-    expect(tex2mml('\\begin{empheq}[left=L\\Rightarrow]{align} a&=b\\\\ c&=d \\end{empheq}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\begin{empheq}[left=L\\Rightarrow]{align} a&=b\\\\ c&=d \\end{empheq}'
+      )
+    ).toMatchSnapshot();
   });
 
   test('Empheq Right', () => {
-    expect(tex2mml('\\begin{empheq}[right=\\Leftarrow R]{align} a&=b\\\\ c&=d \\end{empheq}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\begin{empheq}[right=\\Leftarrow R]{align} a&=b\\\\ c&=d \\end{empheq}'
+      )
+    ).toMatchSnapshot();
   });
 
   test('Numcases with label', () => {
-    expect(tex2mml('\\begin{numcases}{A=\\label{test}} a&=b \\end{numcases}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{numcases}{A=\\label{test}} a&=b \\end{numcases}')
+    ).toMatchSnapshot();
   });
 
   test('Numcases empty right', () => {
-    expect(tex2mml('\\begin{empheq}[right=x]{align}  \\end{empheq}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{empheq}[right=x]{align}  \\end{empheq}')
+    ).toMatchSnapshot();
   });
 
   test('Numcases empty left', () => {
-    expect(tex2mml('\\begin{empheq}[left=x]{multline}  \\end{empheq}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{empheq}[left=x]{multline}  \\end{empheq}')
+    ).toMatchSnapshot();
   });
 
   test('Numcases ', () => {
-    expect(tex2mml('\\begin{empheq}[right=x]{align} a \\\\ b&=c \\end{empheq}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{empheq}[right=x]{align} a \\\\ b&=c \\end{empheq}')
+    ).toMatchSnapshot();
   });
 
   test('Numcases alignedat', () => {
-    expect(tex2mml('\\begin{empheq}{alignat=2} a & b & c & d \\end{empheq}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{empheq}{alignat=2} a & b & c & d \\end{empheq}')
+    ).toMatchSnapshot();
   });
 
   test('Numcases invalid env', () => {
-    expectTexError('\\begin{empheq}{split} \\end{empheq}')
-      .toBe('Invalid environment "split" for empheq');
+    expectTexError('\\begin{empheq}{split} \\end{empheq}').toBe(
+      'Invalid environment "split" for empheq'
+    );
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Empheq Characters', () => {
-
   test('empheqlbrace', () => {
     expect(tex2mml('\\empheqlbrace')).toMatchSnapshot();
   });
@@ -185,7 +201,7 @@ describe('Empheq Characters', () => {
     expect(tex2mml('\\empheql(')).toMatchSnapshot();
   });
 
-  test('empheqr',() => {
+  test('empheqr', () => {
     expect(tex2mml('\\empheqr)')).toMatchSnapshot();
   });
 
@@ -196,7 +212,6 @@ describe('Empheq Characters', () => {
   test('empheqbigr', () => {
     expect(tex2mml('\\empheqbigr)')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

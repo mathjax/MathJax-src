@@ -7,33 +7,44 @@ beforeEach(() => setupTex(['base', 'html']));
 /**********************************************************************************/
 
 describe('Html', () => {
-
   it('Html Href Simple', () => {
     expect(tex2mml('\\href{https://mathjax.org}{a}')).toMatchSnapshot();
   });
 
   it('Html Href Complex', () => {
-    expect(tex2mml('\\href{https://mathjax.org}{\\frac{a}{b}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\href{https://mathjax.org}{\\frac{a}{b}}')
+    ).toMatchSnapshot();
   });
 
   it('Html Href Inner', () => {
-    expect(tex2mml('\\frac{a}{\\href{https://mathjax.org}{b}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\frac{a}{\\href{https://mathjax.org}{b}}')
+    ).toMatchSnapshot();
   });
 
   it('Html Style Simple', () => {
-    expect(tex2mml('\\style{color:green;background-color:blue}{a}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\style{color:green;background-color:blue}{a}')
+    ).toMatchSnapshot();
   });
 
   it('Html Style Complex', () => {
-    expect(tex2mml('\\style{color:green;background-color:blue}{\\frac{a}{b}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\style{color:green;background-color:blue}{\\frac{a}{b}}')
+    ).toMatchSnapshot();
   });
 
   it('Html Style Inner', () => {
-    expect(tex2mml('\\frac{a}{\\style{color:green;background-color:blue}{b}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\frac{a}{\\style{color:green;background-color:blue}{b}}')
+    ).toMatchSnapshot();
   });
 
   it('Html Style Nested', () => {
-    expect(tex2mml('\\style{color:red}{\\style{background:blue}{x}}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\style{color:red}{\\style{background:blue}{x}}')
+    ).toMatchSnapshot();
   });
 
   it('Html Style Row', () => {
@@ -73,9 +84,10 @@ describe('Html', () => {
   });
 
   it('Html Data Invalid', () => {
-    expectTexError('\\data{a/b=bar}{x}').toBe('Invalid HTML attribute: data-a/b');
+    expectTexError('\\data{a/b=bar}{x}').toBe(
+      'Invalid HTML attribute: data-a/b'
+    );
   });
-
 });
 
 /**********************************************************************************/

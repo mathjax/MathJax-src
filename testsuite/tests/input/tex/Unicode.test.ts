@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'unicode']));
 /**********************************************************************************/
 
 describe('Unicode', () => {
-
   it('Unicode Dec', () => {
     expect(tex2mml('\\unicode{8922}')).toMatchSnapshot();
   });
@@ -55,14 +54,12 @@ describe('Unicode', () => {
   it('Unicode Blackboard Geramond', () => {
     expect(tex2mml('\\unicode{x1D538}')).toMatchSnapshot();
   });
-
 });
 
 // Here the order is important! As otherwise bold stays.
 /**********************************************************************************/
 
 describe('Unicode Complete', () => {
-
   it('Unicode Caligraphic', () => {
     expect(tex2mml('\\mathtt{\\unicode{8922}}')).toMatchSnapshot();
   });
@@ -74,19 +71,17 @@ describe('Unicode Complete', () => {
   it('Unicode Italic', () => {
     expect(tex2mml('\\mathit{\\unicode[bold]{8922}}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Unicode others', () => {
-
   it('Raw Unicode', () => {
     expect(tex2mml('\\U{892F}')).toMatchSnapshot();
   });
 
   it('Char numerical', () => {
-    expect(tex2mml('\\char\'777')).toMatchSnapshot();
+    expect(tex2mml("\\char'777")).toMatchSnapshot();
   });
 
   it('Char alpha', () => {
@@ -104,38 +99,38 @@ describe('Unicode others', () => {
   it('Char number', () => {
     expect(tex2mml('\\char55')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Unicode Errors', () => {
-
   it('Unicode BadFont', () => {
-    expectTexError('\\unicode[arial;]{8922}')
-      .toBe("Font name for \\unicode can't contain semicolons");
+    expectTexError('\\unicode[arial;]{8922}').toBe(
+      "Font name for \\unicode can't contain semicolons"
+    );
   });
 
   it('Unicode BadUnicode', () => {
-    expectTexError('\\unicode{4A}')
-      .toBe('Argument to \\unicode must be a number');
+    expectTexError('\\unicode{4A}').toBe(
+      'Argument to \\unicode must be a number'
+    );
   });
 
   it('Unicode BadRawUnicode', () => {
-    expectTexError('\\U{892G}')
-      .toBe('Argument to \\U must a hexadecimal number with 1 to 6 digits');
+    expectTexError('\\U{892G}').toBe(
+      'Argument to \\U must a hexadecimal number with 1 to 6 digits'
+    );
   });
 
   it('Unicode InvalidAlphanumeric', () => {
-    expectTexError('\\char`\\nix')
-      .toBe('Invalid alphanumeric constant for \\char');
+    expectTexError('\\char`\\nix').toBe(
+      'Invalid alphanumeric constant for \\char'
+    );
   });
 
   it('Unicode MissingNumber', () => {
-    expectTexError('\\char {40}')
-      .toBe('Missing numeric constant for \\char');
+    expectTexError('\\char {40}').toBe('Missing numeric constant for \\char');
   });
-
 });
 
 /**********************************************************************************/

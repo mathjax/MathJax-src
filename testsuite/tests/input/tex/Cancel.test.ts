@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'cancel']));
 /**********************************************************************************/
 
 describe('Cancel', () => {
-
   it('Cancel', () => {
     expect(tex2mml('\\cancel{x}')).toMatchSnapshot();
   });
@@ -29,7 +28,9 @@ describe('Cancel', () => {
   });
 
   it('Cancel Attrs', () => {
-    expect(tex2mml('\\cancel[mathcolor=green,mathbackground=yellow]{x}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\cancel[mathcolor=green,mathbackground=yellow]{x}')
+    ).toMatchSnapshot();
   });
 
   it('Cancel Attr Not Allowed', () => {
@@ -37,9 +38,10 @@ describe('Cancel', () => {
   });
 
   it('CancelTo Attrs', () => {
-    expect(tex2mml('\\cancelto[data-padding=5,data-arrowhead=15]{x}{y}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\cancelto[data-padding=5,data-arrowhead=15]{x}{y}')
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

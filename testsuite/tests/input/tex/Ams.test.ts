@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'ams']));
 /**********************************************************************************/
 
 describe('Ams', () => {
-
   it('Symbol', () => {
     expect(tex2mml('\\digamma')).toMatchSnapshot();
   });
@@ -167,75 +166,99 @@ describe('Ams', () => {
   it('Operatorname Followed by CS', () => {
     expect(tex2mml('\\operatorname{a+}\\alpha')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Ams Environments', () => {
-
   it('Subarray', () => {
     expect(tex2mml('\\begin{subarray}{c}a\\end{subarray}')).toMatchSnapshot();
   });
 
   it('Small Matrix', () => {
-    expect(tex2mml('\\begin{smallmatrix}a\\end{smallmatrix}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{smallmatrix}a\\end{smallmatrix}')
+    ).toMatchSnapshot();
   });
 
   it('Align', () => {
-    expect(tex2mml('\\begin{align} a&=b \\\\ c&=d \\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align} a&=b \\\\ c&=d \\end{align}')
+    ).toMatchSnapshot();
   });
 
   it('Align Star', () => {
-    expect(tex2mml('\\begin{align*} a&=b \\\\ c&=d \\end{align*}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align*} a&=b \\\\ c&=d \\end{align*}')
+    ).toMatchSnapshot();
   });
 
   it('Multline', () => {
-    expect(tex2mml('\\begin{multline} a\\\\ b \\\\ c \\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline} a\\\\ b \\\\ c \\end{multline}')
+    ).toMatchSnapshot();
   });
 
   it('Multline Star', () => {
-    expect(tex2mml('\\begin{multline*} a\\\\ b \\\\ c \\end{multline*}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline*} a\\\\ b \\\\ c \\end{multline*}')
+    ).toMatchSnapshot();
   });
 
   it('Split', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align*} a&=b \\begin{split} r&=s\\\\ & =t \\end{split} \\\\ c&=d \\end{align*}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Gather', () => {
-    expect(tex2mml('\\begin{gather} a=b \\\\ c=d \\end{gather}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{gather} a=b \\\\ c=d \\end{gather}')
+    ).toMatchSnapshot();
   });
 
   it('Gather Star', () => {
-    expect(tex2mml('\\begin{gather*} a=b \\\\ c=d \\end{gather*}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{gather*} a=b \\\\ c=d \\end{gather*}')
+    ).toMatchSnapshot();
   });
 
   it('Alignat', () => {
-    expect(tex2mml('\\begin{alignat}{2} a&=b \\\\ c&=d \\end{alignat}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{alignat}{2} a&=b \\\\ c&=d \\end{alignat}')
+    ).toMatchSnapshot();
   });
 
   it('Alignat Star', () => {
-    expect(tex2mml('\\begin{alignat*}{2} a&=b \\\\ c&=d \\end{alignat*}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{alignat*}{2} a&=b \\\\ c&=d \\end{alignat*}')
+    ).toMatchSnapshot();
   });
 
   it('Alignedat', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align*} a&=b \\begin{alignedat}{2} r&=s\\\\ & =t \\end{alignedat} \\\\ c&=d \\end{align*}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Aligned', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align*} a&=b \\begin{aligned} r&=s\\\\ & =t \\end{aligned} \\\\ c&=d \\end{align*}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Gathered', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align*} a&=b \\begin{gathered} r=s\\\\  =t \\end{gathered} \\\\ c&=d \\end{align*}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Equation', () => {
@@ -247,41 +270,57 @@ describe('Ams Environments', () => {
   });
 
   it('Eqnarray', () => {
-    expect(tex2mml('\\begin{eqnarray} a & = & b\\\\ c & = & d \\end{eqnarray}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{eqnarray} a & = & b\\\\ c & = & d \\end{eqnarray}')
+    ).toMatchSnapshot();
   });
 
   it('Eqnarray Star', () => {
-    expect(tex2mml('\\begin{eqnarray*} a & = & b\\\\ c & = & d \\end{eqnarray*}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{eqnarray*} a & = & b\\\\ c & = & d \\end{eqnarray*}')
+    ).toMatchSnapshot();
   });
 
   it('flalign', () => {
-    expect(tex2mml('\\begin{flalign} a & = & b\\\\ c & = & d \\end{flalign}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{flalign} a & = & b\\\\ c & = & d \\end{flalign}')
+    ).toMatchSnapshot();
   });
 
   it('xalignat', () => {
-    expect(tex2mml('\\begin{xalignat}{2} a&b & c&d \\end{xalignat}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{xalignat}{2} a&b & c&d \\end{xalignat}')
+    ).toMatchSnapshot();
   });
 
   it('xalignat error', () => {
-    expectTexError('\\begin{xalignat}{x} \\and{xalignat}')
-      .toBe('Argument to \\begin{xalignat} must be a positive integer');
+    expectTexError('\\begin{xalignat}{x} \\and{xalignat}').toBe(
+      'Argument to \\begin{xalignat} must be a positive integer'
+    );
   });
 
   it('xxalignat', () => {
-    expect(tex2mml('\\begin{xxalignat}{2} a&b & c&d \\end{xxalignat}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{xxalignat}{2} a&b & c&d \\end{xxalignat}')
+    ).toMatchSnapshot();
   });
 
   it('xalignat error 2', () => {
-    expectTexError('\\begin{xalignat}{1} a&b & \\end{xalignat}')
-      .toBe('Extra & in row of xalignat');
+    expectTexError('\\begin{xalignat}{1} a&b & \\end{xalignat}').toBe(
+      'Extra & in row of xalignat'
+    );
   });
 
   it('xalignat padding', () => {
-    expect(tex2mml('\\begin{xalignat}{2} a&b \\end{xalignat}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{xalignat}{2} a&b \\end{xalignat}')
+    ).toMatchSnapshot();
   });
 
   it('xalign tagged', () => {
-    expect(tex2mml('\\begin{xalignat}{2} a & b \\tag{1}\\end{xalignat}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{xalignat}{2} a & b \\tag{1}\\end{xalignat}')
+    ).toMatchSnapshot();
   });
 
   it('flalign small', () => {
@@ -289,29 +328,42 @@ describe('Ams Environments', () => {
   });
 
   it('matrix', () => {
-    expect(tex2mml('\\begin{matrix} a & b \\\\ c & d \\end{matrix}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{matrix} a & b \\\\ c & d \\end{matrix}')
+    ).toMatchSnapshot();
   });
 
   it('pmatrix', () => {
-    expect(tex2mml('\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}')
+    ).toMatchSnapshot();
   });
 
   it('bmatrix', () => {
-    expect(tex2mml('\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}')
+    ).toMatchSnapshot();
   });
 
   it('Bmatrix', () => {
-    expect(tex2mml('\\begin{Bmatrix} a & b \\\\ c & d \\end{Bmatrix}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{Bmatrix} a & b \\\\ c & d \\end{Bmatrix}')
+    ).toMatchSnapshot();
   });
 
   it('Vmatrix', () => {
-    expect(tex2mml('\\begin{Vmatrix} a & b \\\\ c & d \\end{Vmatrix}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{Vmatrix} a & b \\\\ c & d \\end{Vmatrix}')
+    ).toMatchSnapshot();
   });
 
   it('cases', () => {
-    expect(tex2mml('f(x) = \\begin{cases} 1 & \\text{if $x > 1$} \\\\ 0 & \\text{otherwise} \\end{cases}')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        'f(x) = \\begin{cases} 1 & \\text{if $x > 1$} \\\\ 0 & \\text{otherwise} \\end{cases}'
+      )
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
@@ -324,63 +376,89 @@ describe('Ams Tagged Environments', () => {
   });
 
   it('Small Matrix', () => {
-    expect(tex2mml('\\begin{smallmatrix}a\\end{smallmatrix}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{smallmatrix}a\\end{smallmatrix}')
+    ).toMatchSnapshot();
   });
 
   it('Align', () => {
-    expect(tex2mml('\\begin{align} a&=b \\\\ c&=d \\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align} a&=b \\\\ c&=d \\end{align}')
+    ).toMatchSnapshot();
   });
 
   it('Align Star', () => {
-    expect(tex2mml('\\begin{align*} a&=b \\\\ c&=d \\end{align*}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align*} a&=b \\\\ c&=d \\end{align*}')
+    ).toMatchSnapshot();
   });
 
   it('Multline', () => {
-    expect(tex2mml('\\begin{multline} a\\\\ b \\\\ c \\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline} a\\\\ b \\\\ c \\end{multline}')
+    ).toMatchSnapshot();
   });
 
   it('Multline Star', () => {
-    expect(tex2mml('\\begin{multline*} a\\\\ b \\\\ c \\end{multline*}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline*} a\\\\ b \\\\ c \\end{multline*}')
+    ).toMatchSnapshot();
   });
 
   it('Split', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align*} a&=b \\begin{split} r&=s\\\\ & =t \\end{split} \\\\ c&=d \\end{align*}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Gather', () => {
-    expect(tex2mml('\\begin{gather} a=b \\\\ c=d \\end{gather}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{gather} a=b \\\\ c=d \\end{gather}')
+    ).toMatchSnapshot();
   });
 
   it('Gather Star', () => {
-    expect(tex2mml('\\begin{gather*} a=b \\\\ c=d \\end{gather*}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{gather*} a=b \\\\ c=d \\end{gather*}')
+    ).toMatchSnapshot();
   });
 
   it('Alignat', () => {
-    expect(tex2mml('\\begin{alignat}{2} a&=b \\\\ c&=d \\end{alignat}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{alignat}{2} a&=b \\\\ c&=d \\end{alignat}')
+    ).toMatchSnapshot();
   });
 
   it('Alignat Star', () => {
-    expect(tex2mml('\\begin{alignat*}{2} a&=b \\\\ c&=d \\end{alignat*}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{alignat*}{2} a&=b \\\\ c&=d \\end{alignat*}')
+    ).toMatchSnapshot();
   });
 
   it('Alignedat', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align*} a&=b \\begin{alignedat}{2} r&=s\\\\ & =t \\end{alignedat} \\\\ c&=d \\end{align*}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Aligned', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align*} a&=b \\begin{aligned} r&=s\\\\ & =t \\end{aligned} \\\\ c&=d \\end{align*}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Gathered', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align*} a&=b \\begin{gathered} r=s\\\\  =t \\end{gathered} \\\\ c&=d \\end{align*}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Equation', () => {
@@ -392,23 +470,33 @@ describe('Ams Tagged Environments', () => {
   });
 
   it('Eqnarray', () => {
-    expect(tex2mml('\\begin{eqnarray} a & = & b\\\\ c & = & d \\end{eqnarray}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{eqnarray} a & = & b\\\\ c & = & d \\end{eqnarray}')
+    ).toMatchSnapshot();
   });
 
   it('Eqnarray Star', () => {
-    expect(tex2mml('\\begin{eqnarray*} a & = & b\\\\ c & = & d \\end{eqnarray*}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{eqnarray*} a & = & b\\\\ c & = & d \\end{eqnarray*}')
+    ).toMatchSnapshot();
   });
 
   it('Align Notag', () => {
-    expect(tex2mml('\\begin{align} a&=b \\\\ &=c \\notag \\end{align}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{align} a&=b \\\\ &=c \\notag \\end{align}')
+    ).toMatchSnapshot();
   });
 
   it('xalignet', () => {
-    expect(tex2mml('\\begin{xalignat}{1} a&b \\end{xalignat}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{xalignat}{1} a&b \\end{xalignat}')
+    ).toMatchSnapshot();
   });
 
   it('xalignet star', () => {
-    expect(tex2mml('\\begin{xalignat*}{1} a&b \\end{xalignat*}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{xalignat*}{1} a&b \\end{xalignat*}')
+    ).toMatchSnapshot();
   });
 
   it('flalign', () => {
@@ -416,17 +504,22 @@ describe('Ams Tagged Environments', () => {
   });
 
   it('xalignet star', () => {
-    expect(tex2mml('\\begin{flalign*} a&b & \\end{flalign*}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{flalign*} a&b & \\end{flalign*}')
+    ).toMatchSnapshot();
   });
 
   it('aligned [b]', () => {
-    expect(tex2mml('\\begin{aligned} [b] a \\\\ b \\end{aligned}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{aligned} [b] a \\\\ b \\end{aligned}')
+    ).toMatchSnapshot();
   });
 
   it('aligned [x]', () => {
-    expect(tex2mml('\\begin{aligned} [x] a \\\\ b \\end{aligned}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{aligned} [x] a \\\\ b \\end{aligned}')
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
@@ -435,92 +528,99 @@ describe('Ams Tagged Environments Left', () => {
   beforeEach(() => setupTex(['base', 'ams'], { tags: 'ams', tagSide: 'left' }));
 
   it('xalign tagged left', () => {
-    expect(tex2mml('\\begin{xalignat}{2} a & b \\tag{1}\\end{xalignat}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{xalignat}{2} a & b \\tag{1}\\end{xalignat}')
+    ).toMatchSnapshot();
   });
 
   it('multline tagged left', () => {
-    expect(tex2mml('\\begin{multline} a\\tag{1} \\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline} a\\tag{1} \\end{multline}')
+    ).toMatchSnapshot();
   });
 
   it('Nesting error', () => {
-    expectTexError('\\begin{align}\\begin{align} \\end{align}\\end{align}')
-      .toBe('Erroneous nesting of equation structures')
+    expectTexError(
+      '\\begin{align}\\begin{align} \\end{align}\\end{align}'
+    ).toBe('Erroneous nesting of equation structures');
   });
 
   it('Gather Align', () => {
-    expect(tex2mml('\\begin{gather}\\begin{align} a &= b \\end{align}\\end{gather}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{gather}\\begin{align} a &= b \\end{align}\\end{gather}')
+    ).toMatchSnapshot();
   });
 
   it('Gather Gather', () => {
-    expectTexError('\\begin{gather}\\begin{gather} \\end{gather}\\end{gather}')
-      .toBe('Erroneous nesting of equation structures')
+    expectTexError(
+      '\\begin{gather}\\begin{gather} \\end{gather}\\end{gather}'
+    ).toBe('Erroneous nesting of equation structures');
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Amserror', () => {
-
   it('Center Fraction Error', () => {
-    expectTexError('\\cfrac[c]{a}{b}')
-      .toBe('Illegal alignment specified in \\cfrac');
+    expectTexError('\\cfrac[c]{a}{b}').toBe(
+      'Illegal alignment specified in \\cfrac'
+    );
   });
 
   it('Genfrac Error', () => {
-    expectTexError('\\genfrac{[}{]}{0pt}{4}{a}{b}')
-      .toBe('Bad math style for \\genfrac');
+    expectTexError('\\genfrac{[}{]}{0pt}{4}{a}{b}').toBe(
+      'Bad math style for \\genfrac'
+    );
   });
 
   it('MissingOrUnrecognizedDelim', () => {
-    expectTexError('\\genfrac{(}{a}{}{2}{1}{2}')
-      .toBe('Missing or unrecognized delimiter for \\genfrac');
+    expectTexError('\\genfrac{(}{a}{}{2}{1}{2}').toBe(
+      'Missing or unrecognized delimiter for \\genfrac'
+    );
   });
 
   it('PositiveIntegerArg', () => {
     expectTexError(
-        '\\begin{align*} a&=b \\begin{alignedat}{-2} r&=s \\end{alignedat} \\\\ c&=d \\end{align*}'
-      )
-      .toBe('Argument to \\begin{alignedat} must be a positive integer');
+      '\\begin{align*} a&=b \\begin{alignedat}{-2} r&=s \\end{alignedat} \\\\ c&=d \\end{align*}'
+    ).toBe('Argument to \\begin{alignedat} must be a positive integer');
   });
 
   it('MultlineRowsOneCol', () => {
-    expectTexError('\\begin{multline}a\\\\b&c\\end{multline}')
-      .toBe('The rows within the multline environment must have exactly one column');
+    expectTexError('\\begin{multline}a\\\\b&c\\end{multline}').toBe(
+      'The rows within the multline environment must have exactly one column'
+    );
   });
 
   it('CommandNotAllowedInEnv', () => {
-    expectTexError('\\begin{split}a\\tag{1}\\end{split}')
-      .toBe('\\tag not allowed in split environment');
+    expectTexError('\\begin{split}a\\tag{1}\\end{split}').toBe(
+      '\\tag not allowed in split environment'
+    );
   });
 
   it('MultipleCommand', () => {
-    expectTexError('a\\tag{1}\\tag{2}')
-      .toBe('Multiple \\tag');
+    expectTexError('a\\tag{1}\\tag{2}').toBe('Multiple \\tag');
   });
-
 });
 
 /**********************************************************************************/
 
 describe('InternalMath', () => {
-
   it('Mbox Eqref', () => {
     expect(tex2mml('a\\mbox{ \\eqref{1} } c')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Multirel', () => {
-
   it('Multirel Mathvariant 1', () => {
     expect(tex2mml('a <\\equiv \\mathrm{=>}\\thickapprox b')).toMatchSnapshot();
   });
 
   it('Multirel Mathvariant 2', () => {
-    expect(tex2mml('a <\\equiv \\mathrm{=>}\\thickapprox\\thicksim b')).toMatchSnapshot();
+    expect(
+      tex2mml('a <\\equiv \\mathrm{=>}\\thickapprox\\thicksim b')
+    ).toMatchSnapshot();
   });
 
   it('Multirel Mathvariant 3', () => {
@@ -528,9 +628,11 @@ describe('Multirel', () => {
   });
 
   it('Multirel Mathvariant 4', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         'a <\\equiv \\mathrm{=}\\mathrm{>}\\thickapprox\\thicksim\\frown\\smile=\\updownarrow b'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Preset Lspace Rspace', () => {
@@ -540,109 +642,133 @@ describe('Multirel', () => {
   it('Preset Rspace Lspace', () => {
     expect(tex2mml('a\\gtrsim\\lesssim b')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('MultlineShove', () => {
-
   it('Shove None', () => {
-    expect(tex2mml('\\begin{multline} a\\\\ b\\\\ c\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline} a\\\\ b\\\\ c\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   it('Shove Left Top', () => {
-    expect(tex2mml('\\begin{multline}\\shoveleft a\\\\ b\\\\ c\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline}\\shoveleft a\\\\ b\\\\ c\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   it('Shove Left Middle', () => {
-    expect(tex2mml('\\begin{multline} a\\\\\\shoveleft b\\\\ c\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline} a\\\\\\shoveleft b\\\\ c\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   it('Shove Left Bottom', () => {
-    expect(tex2mml('\\begin{multline} a\\\\ b\\\\\\shoveleft c\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline} a\\\\ b\\\\\\shoveleft c\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   it('Shove Right Top', () => {
-    expect(tex2mml('\\begin{multline}\\shoveright a\\\\ b\\\\ c\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline}\\shoveright a\\\\ b\\\\ c\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   it('Shove Right Middle', () => {
-    expect(tex2mml('\\begin{multline} a\\\\\\shoveright b\\\\ c\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline} a\\\\\\shoveright b\\\\ c\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   it('Shove Right Bottom', () => {
-    expect(tex2mml('\\begin{multline} a\\\\ b\\\\\\shoveright c\\end{multline}')).toMatchSnapshot();
+    expect(
+      tex2mml('\\begin{multline} a\\\\ b\\\\\\shoveright c\\end{multline}')
+    ).toMatchSnapshot();
   });
 
   it('Shove Right Left', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{multline} a\\\\\\shoveright\\shoveleft b\\\\ c\\end{multline}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Shove Left Right', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{multline} a\\\\\\shoveleft\\shoveright b\\\\ c\\end{multline}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Shove Error Top', () => {
-    expectTexError('\\begin{multline}a \\shoveleft\\\\ b\\\\ c\\end{multline}')
-      .toBe('\\shoveleft must come at the beginning of the line');
+    expectTexError(
+      '\\begin{multline}a \\shoveleft\\\\ b\\\\ c\\end{multline}'
+    ).toBe('\\shoveleft must come at the beginning of the line');
   });
 
   it('Shove Error Middle', () => {
-    expectTexError('\\begin{multline} a\\\\ b \\shoveleft\\\\ c\\end{multline}')
-      .toBe('\\shoveleft must come at the beginning of the line');
+    expectTexError(
+      '\\begin{multline} a\\\\ b \\shoveleft\\\\ c\\end{multline}'
+    ).toBe('\\shoveleft must come at the beginning of the line');
   });
 
   it('Shove Error Bottom', () => {
-    expectTexError('\\begin{multline} a\\\\ b\\\\ c \\shoveleft\\end{multline}')
-      .toBe('\\shoveleft must come at the beginning of the line');
+    expectTexError(
+      '\\begin{multline} a\\\\ b\\\\ c \\shoveleft\\end{multline}'
+    ).toBe('\\shoveleft must come at the beginning of the line');
   });
 
   it('Shove Error Environment', () => {
-    expectTexError('\\begin{align}\\shoveleft a\\end{align}')
-      .toBe('\\shoveleft only allowed in multline environment');
+    expectTexError('\\begin{align}\\shoveleft a\\end{align}').toBe(
+      '\\shoveleft only allowed in multline environment'
+    );
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Ams Complex', () => {
-
   it('The Lorenz Equations', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align}\\dot{x} & = \\sigma(y-x) \\\\\\dot{y} & = \\rho x - y - xz \\\\\\dot{z} & = -\\beta z + xy\\end{align}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it("Maxwell's Equations", () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{align} \\nabla \\times \\vec{\\mathbf{B}} -\\, \\frac1c\\, \\frac{\\partial\\vec{\\mathbf{E}}}{\\partial t} & = \\frac{4\\pi}{c}\\vec{\\mathbf{j}} \\\\  \\nabla \\cdot \\vec{\\mathbf{E}} & = 4 \\pi \\rho \\\\  \\nabla \\times \\vec{\\mathbf{E}}\\, +\\, \\frac1c\\, \\frac{\\partial\\vec{\\mathbf{B}}}{\\partial t} & = \\vec{\\mathbf{0}} \\\\  \\nabla \\cdot \\vec{\\mathbf{B}} & = 0 \\end{align}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Cubic Binomial', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\begin{eqnarray}(x+y)^{3}&=&(x+y)(x+y)(x+y)\\\\&=&xxx+xxy+xyx+{\\underline {xyy}}+yxx+{\\underline {yxy}}+{\\underline {yyx}}+yyy\\\\&=&x^{3}+3x^{2}y+{\\underline {3xy^{2}}}+y^{3}.\\end{eqnarray}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('A Cross Product Formula', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\mathbf{V}_1 \\times \\mathbf{V}_2 =   \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\    \\frac{\\partial X}{\\partial u} & \\frac{\\partial Y}{\\partial u} & 0 \\\\    \\frac{\\partial X}{\\partial v} & \\frac{\\partial Y}{\\partial v} & 0 \\\\   \\end{vmatrix}'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Ams SideSet', () => {
-
   it('Sideset Empty', () => {
     expect(tex2mml('\\sideset{}{}{}')).toMatchSnapshot();
   });
@@ -652,19 +778,19 @@ describe('Ams SideSet', () => {
   });
 
   it('Sideset Simple Right', () => {
-    expect(tex2mml('\\sideset{}{\'}{a}')).toMatchSnapshot();
+    expect(tex2mml("\\sideset{}{'}{a}")).toMatchSnapshot();
   });
 
   it('Sideset Simple Left', () => {
-    expect(tex2mml('\\sideset{\'}{}{a}')).toMatchSnapshot();
+    expect(tex2mml("\\sideset{'}{}{a}")).toMatchSnapshot();
   });
 
   it('Sideset Simple Left Right', () => {
-    expect(tex2mml('\\sideset{\'}{\'}{a}')).toMatchSnapshot();
+    expect(tex2mml("\\sideset{'}{'}{a}")).toMatchSnapshot();
   });
 
   it('Sideset Simple Sum', () => {
-    expect(tex2mml('\\sideset{}{\'}\\sum_{n=0}^{k}n')).toMatchSnapshot();
+    expect(tex2mml("\\sideset{}{'}\\sum_{n=0}^{k}n")).toMatchSnapshot();
   });
 
   it('Sideset Extra Post', () => {
@@ -682,21 +808,23 @@ describe('Ams SideSet', () => {
   it('Sideset Pre with Post Sub', () => {
     expect(tex2mml('\\sideset{^a}{_b}{x}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
 
 describe('Ams symbols', () => {
-
   it('Delimiters', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\left\\llcorner X \\right\\lrcorner \\left\\lvert X \\right\\rvert \\left\\lVert X \\right\\rVert'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('Spaces', () => {
-    expect(tex2mml('\\nobreakspace\\negmedspace\\negthickspace')).toMatchSnapshot();
+    expect(
+      tex2mml('\\nobreakspace\\negmedspace\\negthickspace')
+    ).toMatchSnapshot();
   });
 
   it('Accents', () => {
@@ -704,7 +832,11 @@ describe('Ams symbols', () => {
   });
 
   it('Limits', () => {
-    expect(tex2mml('\\injlim \\projlim \\varliminf \\varlimsup \\varinjlim \\varprojlim')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\injlim \\projlim \\varliminf \\varlimsup \\varinjlim \\varprojlim'
+      )
+    ).toMatchSnapshot();
   });
 
   it('boxed', () => {
@@ -720,141 +852,188 @@ describe('Ams symbols', () => {
   });
 
   it('math0mi 1', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\varkappa\\varGamma\\varDelta\\varTheta\\varLambda\\varXi\\varPi\\varSigma\\varUpsilon\\varPhi\\varPsi\\varOmega'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mi 2', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\beth\\gimel\\daleth\\backprime\\hslash\\varnothing\\blacktriangle\\triangledown\\blacktriangledown\\square\\Box'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mi 3', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\blacksquare\\lozenge\\Diamond\\blacklozenge\\circledS\\bigstar\\sphericalangle\\measuredangle\\nexists\\complement'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mi 4', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\mho\\eth\\Finv\\diagup\\Game\\diagdown\\Bbbk\\yen\\circledR\\checkmark\\maltese'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 1', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\ltimes\\smallsetminus\\rtimes\\Cap\\doublecap\\leftthreetimes\\Cup\\doublecup\\rightthreetimes\\barwedge\\curlywedge'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 2', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\veebar\\curlyvee\\doublebarwedge\\boxminus\\circleddash\\boxtimes\\circledast\\boxdot\\circledcirc\\boxplus'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 3', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\centerdot\\divideontimes\\intercal\\leqq\\geqq\\leqslant\\geqslant\\eqslantless\\eqslantgtr\\lessapprox\\gtrapprox'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 4', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\approxeq\\lessdot\\gtrdot\\lll\\llless\\ggg\\gggtr\\lessgtr\\gtrless\\lesseqgtr\\gtreqless\\lesseqqgtr\\gtreqqless'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 5', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\doteqdot\\Doteq\\eqcirc\\risingdotseq\\circeq\\fallingdotseq\\triangleq\\backsim\\backsimeq\\subseteqq\\supseteqq'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 6', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\Subset\\Supset\\sqsubset\\sqsupset\\preccurlyeq\\succcurlyeq\\curlyeqprec\\curlyeqsucc\\precsim\\succsim\\precapprox'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 7', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\succapprox\\vartriangleleft\\lhd\\vartriangleright\\rhd\\trianglelefteq\\unlhd\\trianglerighteq\\unrhd\\vDash\\Vdash'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 8', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\Vvdash\\smallsmile\\shortmid\\smallfrown\\shortparallel\\bumpeq\\between\\Bumpeq\\pitchfork\\varpropto\\backepsilon'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 9', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\blacktriangleleft\\blacktriangleright\\therefore\\because\\eqsim\\vartriangle\\Join\\nless\\ngtr\\nleq\\ngeq'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 10', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\nleqslant\\ngeqslant\\nleqq\\ngeqq\\lneq\\gneq\\lneqq\\gneqq\\lvertneqq\\gvertneqq\\lnsim\\gnsim\\lnapprox\\gnapprox'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 11', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\nprec\\nsucc\\npreceq\\nsucceq\\precneqq\\succneqq\\precnsim\\succnsim\\precnapprox\\succnapprox\\nsim\\ncong'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 12', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\nshortmid\\nshortparallel\\nmid\\nparallel\\nvdash\\nvDash\\nVdash\\nVDash\\ntriangleleft\\ntriangleright'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 13', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\ntrianglelefteq\\ntrianglerighteq\\nsubseteq\\nsupseteq\\nsubseteqq\\nsupseteqq\\subsetneq\\supsetneq\\varsubsetneq'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 14', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\varsupsetneq\\subsetneqq\\supsetneqq\\varsubsetneqq\\varsupsetneqq\\leftleftarrows\\rightrightarrows\\leftrightarrows'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 15', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\rightleftarrows\\Lleftarrow\\Rrightarrow\\twoheadleftarrow\\twoheadrightarrow\\leftarrowtail\\rightarrowtail'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 16', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\looparrowleft\\looparrowright\\leftrightharpoons\\rightleftharpoons\\curvearrowleft\\curvearrowright\\circlearrowleft'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 17', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\circlearrowright\\Lsh\\Rsh\\upuparrows\\downdownarrows\\upharpoonleft\\upharpoonright\\downharpoonleft\\restriction'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 18', () => {
-    expect(tex2mml(
+    expect(
+      tex2mml(
         '\\multimap\\downharpoonright\\leftrightsquigarrow\\rightsquigarrow\\leadsto\\dashrightarrow\\dashleftarrow\\nleftarrow'
-    )).toMatchSnapshot();
+      )
+    ).toMatchSnapshot();
   });
 
   it('math0mo 19', () => {
-    expect(tex2mml('\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow')).toMatchSnapshot();
+    expect(
+      tex2mml(
+        '\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow'
+      )
+    ).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/

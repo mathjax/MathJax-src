@@ -7,7 +7,6 @@ beforeEach(() => setupTex(['base', 'boldsymbol']));
 /**********************************************************************************/
 
 describe('Boldsymbol', () => {
-
   it('Boldsymbol Single', () => {
     expect(tex2mml('\\boldsymbol{a}')).toMatchSnapshot();
   });
@@ -25,13 +24,14 @@ describe('Boldsymbol', () => {
   });
 
   it('Boldsymbol Recursive', () => {
-    expect(tex2mml('\\boldsymbol{a+b\\mbox{ w $c+\\boldsymbol{d+e}$ w } q-} -q')).toMatchSnapshot();
+    expect(
+      tex2mml('\\boldsymbol{a+b\\mbox{ w $c+\\boldsymbol{d+e}$ w } q-} -q')
+    ).toMatchSnapshot();
   });
 
   it('Boldsymbol Variant', () => {
     expect(tex2mml('\\boldsymbol{A\\mathbb{B}C}')).toMatchSnapshot();
   });
-
 });
 
 /**********************************************************************************/
