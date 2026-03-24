@@ -555,7 +555,7 @@ describe('Nested Environments', () => {
       tex2mml(
         [
           '\\newenvironment{boxed}{\\begin{array}{|c|c|}\\hline}{\\\\\\hline\\end{array}}',
-          '\\begin{boxed}\\begin{boxed}a&b\\\\c&d\\end{boxed} & X \\\end{boxed}',
+          '\\begin{boxed}\\begin{boxed}a&b\\\\c&d\\end{boxed} & X \\end{boxed}',
         ].join('')
       )
     ).toMatchSnapshot();

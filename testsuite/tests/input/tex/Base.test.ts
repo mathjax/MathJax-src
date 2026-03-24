@@ -1542,7 +1542,7 @@ describe('Environment Errors', () => {
   });
 
   it('Template loop', () => {
-    expectTexError('\\begin{array}{r@{a\\\\b}l}a&b\\\end{array}').toBe(
+    expectTexError('\\begin{array}{r@{a\\\\b}l}a&b\\end{array}').toBe(
       'Maximum template substitutions exceeded; is there an invalid use of \\\\ in the template?'
     );
   });
@@ -3448,7 +3448,7 @@ describe('Linebreaks', () => {
   });
 
   it('allowbreak cdot', () => {
-    expect(tex2mml('a\\allowbreak \cdot b')).toMatchSnapshot();
+    expect(tex2mml('a\\allowbreak \\cdot b')).toMatchSnapshot();
   });
 
   it('goodbreak', () => {
