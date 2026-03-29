@@ -7654,13 +7654,13 @@ exports[`Roots Tweaked Root 1`] = `
 
 exports[`Setting sizes Empty 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Huge" display="block">
-  <mstyle mathsize="2.49em" data-latex="\\Huge"></mstyle>
+  <mstyle mathsize="2.074em" data-latex="\\Huge"></mstyle>
 </math>"
 `;
 
 exports[`Setting sizes Huge 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Huge a" display="block">
-  <mstyle mathsize="2.49em" data-latex="\\Huge a">
+  <mstyle mathsize="2.074em" data-latex="\\Huge a">
     <mi data-latex="a">a</mi>
   </mstyle>
 </math>"
@@ -7668,7 +7668,7 @@ exports[`Setting sizes Huge 1`] = `
 
 exports[`Setting sizes LARGE 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\LARGE a" display="block">
-  <mstyle mathsize="1.73em" data-latex="\\LARGE a">
+  <mstyle mathsize="1.44em" data-latex="\\LARGE a">
     <mi data-latex="a">a</mi>
   </mstyle>
 </math>"
@@ -7676,7 +7676,7 @@ exports[`Setting sizes LARGE 1`] = `
 
 exports[`Setting sizes Large 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Large a" display="block">
-  <mstyle mathsize="1.44em" data-latex="\\Large a">
+  <mstyle mathsize="1.2em" data-latex="\\Large a">
     <mi data-latex="a">a</mi>
   </mstyle>
 </math>"
@@ -7684,7 +7684,7 @@ exports[`Setting sizes Large 1`] = `
 
 exports[`Setting sizes Tiny 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Tiny a" display="block">
-  <mstyle mathsize="0.6em" data-latex="\\Tiny a">
+  <mstyle mathsize="0.5em" data-latex="\\Tiny a">
     <mi data-latex="a">a</mi>
   </mstyle>
 </math>"
@@ -7692,7 +7692,7 @@ exports[`Setting sizes Tiny 1`] = `
 
 exports[`Setting sizes huge 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\huge a" display="block">
-  <mstyle mathsize="2.07em" data-latex="\\huge a">
+  <mstyle mathsize="1.728em" data-latex="\\huge a">
     <mi data-latex="a">a</mi>
   </mstyle>
 </math>"
@@ -7700,7 +7700,7 @@ exports[`Setting sizes huge 1`] = `
 
 exports[`Setting sizes large 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\large a" display="block">
-  <mstyle mathsize="1.2em" data-latex="\\large a">
+  <mstyle mathsize="1.095em" data-latex="\\large a">
     <mi data-latex="a">a</mi>
   </mstyle>
 </math>"
@@ -7724,7 +7724,7 @@ exports[`Setting sizes scriptsize 1`] = `
 
 exports[`Setting sizes small 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\small a" display="block">
-  <mstyle mathsize="0.85em" data-latex="\\small a">
+  <mstyle mathsize="0.9em" data-latex="\\small a">
     <mi data-latex="a">a</mi>
   </mstyle>
 </math>"
@@ -7732,7 +7732,7 @@ exports[`Setting sizes small 1`] = `
 
 exports[`Setting sizes tiny 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\tiny a" display="block">
-  <mstyle mathsize="0.5em" data-latex="\\tiny a">
+  <mstyle mathsize="0.6em" data-latex="\\tiny a">
     <mi data-latex="a">a</mi>
   </mstyle>
 </math>"
