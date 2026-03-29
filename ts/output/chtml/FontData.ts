@@ -630,13 +630,19 @@ export class ChtmlFontData extends FontData<
       options.ff || (letter ? `${this.cssFontPrefix}-${letter}` : '');
     const selector = 'mjx-c' + this.charSelector(n) + (font ? '.' + font : '');
     const padding = options.oc || options.ic || 0;
-    styles[selector] = {
+    const css = {
       padding: this.padding(data, padding),
     } as StyleJsonData;
     if (options.oc) {
       styles[selector + '[noic]'] = { 'padding-right': this.em(data[2]) };
     }
-    this.checkCombiningChar(options, styles[selector] as StyleJsonData);
+    this.checkCombiningChar(options, css);
+    styles[
+      selector +
+        (css['margin-left'] && !font
+          ? `:not([class*="${this.cssFontPrefix}-"])`
+          : '')
+    ] = css;
   }
 
   /**
