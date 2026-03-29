@@ -546,7 +546,7 @@ export abstract class AbstractMmlNode
    */
   public get isEmpty(): boolean {
     for (const child of this.childNodes) {
-      if (!child.isEmpty) return false;
+      if (child && !child.isEmpty) return false;
     }
     return true;
   }
