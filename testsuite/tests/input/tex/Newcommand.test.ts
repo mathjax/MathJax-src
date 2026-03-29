@@ -631,4 +631,4 @@ describe('Nested Environments', () => {
 
 /**********************************************************************************/
 
-afterAll(() => getTokens('newcommand'));
+  afterAll(() => getTokens('newcommand'));

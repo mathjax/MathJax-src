@@ -195,6 +195,9 @@ const ParseMethods = {
     // @test Fenced2, Delimiter (AMS)
     def = Object.assign({ fence: false, stretchy: false }, def);
     const node = parser.create('token', 'mo', def, delim.char);
+    if (delim.char === '|') {
+      node.setProperty('keep-attrs', 'stretchy');
+    }
     parser.Push(node);
   },
 

@@ -6566,7 +6566,7 @@ exports[`Physics6_0 BraKet_Bra_4 1`] = `
       <mi data-latex="b">b</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
     <mfrac data-latex="\\frac{a}{b}">
       <mi data-latex="a">a</mi>
@@ -6586,7 +6586,7 @@ exports[`Physics6_0 BraKet_Bra_5 1`] = `
       <mi data-latex="b">b</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
     <mfrac data-latex="\\frac{a}{b}">
       <mi data-latex="a">a</mi>
@@ -6817,7 +6817,7 @@ exports[`Physics6_1 BraKet_Braket_2 1`] = `
   <mrow data-mjx-texclass="ORD" data-latex="{A}">
     <mi data-latex="A">A</mi>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{A}">
     <mi data-latex="A">A</mi>
   </mrow>
@@ -6834,7 +6834,7 @@ exports[`Physics6_1 BraKet_Braket_3 1`] = `
       <mi data-latex="b">b</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
     <mfrac data-latex="\\frac{a}{b}">
       <mi data-latex="a">a</mi>
@@ -6869,7 +6869,7 @@ exports[`Physics6_1 BraKet_Braket_5 1`] = `
   <mrow data-mjx-texclass="ORD" data-latex="{a}">
     <mi data-latex="a">a</mi>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{a}">
     <mi data-latex="a">a</mi>
   </mrow>
@@ -6925,7 +6925,7 @@ exports[`Physics6_1 BraKet_Braket_8 1`] = `
       <mi data-latex="b">b</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{A}">
     <mi data-latex="A">A</mi>
   </mrow>
@@ -6967,7 +6967,7 @@ exports[`Physics6_1 BraKet_Braket_10 1`] = `
       <mi data-latex="b">b</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
     <mfrac data-latex="\\frac{a}{b}">
       <mi data-latex="a">a</mi>
@@ -7007,7 +7007,7 @@ exports[`Physics6_1 BraKet_Braket_12 1`] = `
       <mi data-latex="b">b</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
   <mo fence="false" stretchy="false" data-latex="\\braket*{\\frac{a}{b}}{}">&#x27E9;</mo>
 </math>"
@@ -7252,7 +7252,7 @@ exports[`Physics6_2 BraKet_Ketbra_10 1`] = `
       <mi data-latex="b">b</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\ketbra*{\\frac{a}{b}}">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\ketbra*{\\frac{a}{b}}">|</mo>
   <mi data-latex="A">A</mi>
 </math>"
 `;
@@ -7495,11 +7495,11 @@ exports[`Physics6_3 BraKet_Expect_6 1`] = `
       <mi data-latex="B">B</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{A}">
     <mi data-latex="A">A</mi>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
     <mfrac data-latex="\\frac{A}{B}">
       <mi data-latex="A">A</mi>
@@ -7606,11 +7606,11 @@ exports[`Physics6_3 BraKet_Expect_11 1`] = `
       <mi data-latex="B">B</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{A}">
     <mi data-latex="A">A</mi>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
     <mfrac data-latex="\\frac{A}{B}">
       <mi data-latex="A">A</mi>
@@ -7720,14 +7720,14 @@ exports[`Physics6_3 BraKet_Expect_15 1`] = `
       <mi mathvariant="normal" data-latex="\\Phi">&#x3A6;</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{\\frac{A}{B}}">
     <mfrac data-latex="\\frac{A}{B}">
       <mi data-latex="A">A</mi>
       <mi data-latex="B">B</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{\\frac{\\Psi}{\\Phi}}">
     <mfrac data-latex="\\frac{\\Psi}{\\Phi}">
       <mi mathvariant="normal" data-latex="\\Psi">&#x3A8;</mi>
@@ -7874,14 +7874,14 @@ exports[`Physics6_4 BraKet_MatrixEl_4 1`] = `
   <mrow data-mjx-texclass="ORD" data-latex="{n}">
     <mi data-latex="n">n</mi>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
     <mfrac data-latex="\\frac{a}{b}">
       <mi data-latex="a">a</mi>
       <mi data-latex="b">b</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{m}">
     <mi data-latex="m">m</mi>
   </mrow>
@@ -7898,14 +7898,14 @@ exports[`Physics6_4 BraKet_MatrixEl_5 1`] = `
       <mi data-latex="b">b</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
     <mfrac data-latex="\\frac{a}{b}">
       <mi data-latex="a">a</mi>
       <mi data-latex="b">b</mi>
     </mfrac>
   </mrow>
-  <mo data-mjx-texclass="ORD" data-latex="\\vert">|</mo>
+  <mo data-mjx-texclass="ORD" stretchy="false" data-latex="\\vert">|</mo>
   <mrow data-mjx-texclass="ORD" data-latex="{\\frac{a}{b}}">
     <mfrac data-latex="\\frac{a}{b}">
       <mi data-latex="a">a</mi>
