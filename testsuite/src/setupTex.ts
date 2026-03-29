@@ -24,7 +24,7 @@ import { expect } from '@jest/globals';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { source } from '#source/source.js';
-import {Locale} from '#js/util/Locale.js';
+import { Locale } from '#js/util/Locale.js';
 
 declare const MathJax: any;
 type MATHITEM = MathItem<any, any, any>;
