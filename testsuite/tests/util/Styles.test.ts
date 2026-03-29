@@ -204,7 +204,7 @@ describe('CssStyles object', () => {
       'margin: 0;'
     );
     cssTest('margin:', {}, '');
-  })
+  });
 
   test('border', () => {
     cssTest('border: 3px solid red', {

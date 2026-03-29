@@ -22,31 +22,31 @@ describe('asyncLoad() for node', () => {
     const absFile = path.join(root, cjsFile);
     const absUnknown = path.join(root, relUnknown);
 
-    await expect(asyncLoad(cjsFile)).resolves.toEqual({ loaded: true }); // relative file found
-    await expect(asyncLoad(relUnknown).catch(() => true)).resolves.toBe(true); // relative file not found
-    await expect(asyncLoad(absFile)).resolves.toEqual({ loaded: true }); // absolute file found
-    await expect(asyncLoad(absUnknown).catch(() => true)).resolves.toBe(true); // absolute file not found
+    await expect(asyncLoad(cjsFile)).resolves.toEqual({ loaded: true }); //        relative file found
+    await expect(asyncLoad(relUnknown).catch(() => true)).resolves.toBe(true); //  relative file not found
+    await expect(asyncLoad(absFile)).resolves.toEqual({ loaded: true }); //        absolute file found
+    await expect(asyncLoad(absUnknown).catch(() => true)).resolves.toBe(true); //  absolute file not found
 
     await expect(
-      asyncLoad('#js/components/version.js') // can't load using package exports
+      asyncLoad('#js/components/version.js') //                                    can't load using package exports
         .catch(() => true)
     ).resolves.toBe(true);
     await expect(
-      asyncLoad('mathjax-full/js/components/version.js') // can't load from module
+      asyncLoad('mathjax-full/js/components/version.js') //                        can't load from module
         .catch(() => true)
     ).resolves.toBe(true);
 
     await expect(
-      asyncLoad(mjsFile).then((result: any) => result.loaded)
-    ).resolves.toBe(true); // mjs file loads
-    expect(mathjax.asyncIsSynchronous).toBe(false); // system.js is asynchronous
+      asyncLoad(mjsFile).then((result: any) => result.loaded) //                   mjs file loads
+    ).resolves.toBe(true);
+    expect(mathjax.asyncIsSynchronous).toBe(false); //                             system.js is asynchronous
   });
 
   test('setBaseURL() for node', async () => {
     setBaseURL(lib);
     const relFile = './AsyncLoad.child.cjs';
     const relUnknown = './AsyncLoad.unknown.cjs';
-    await expect(asyncLoad(relFile)).resolves.toEqual({ loaded: true }); // relative file found
-    await expect(asyncLoad(relUnknown).catch(() => true)).resolves.toBe(true); // relative file not found
+    await expect(asyncLoad(relFile)).resolves.toEqual({ loaded: true }); //        relative file found
+    await expect(asyncLoad(relUnknown).catch(() => true)).resolves.toBe(true); //  relative file not found
   });
 });
