@@ -18,15 +18,15 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       speech-rule-engine:
-        specifier: 5.0.0-beta.6
-        version: 5.0.0-beta.6
+        specifier: 5.0.0-beta.7
+        version: 5.0.0-beta.7
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.2
         version: 9.39.2
       '@xmldom/xmldom':
-        specifier: ^0.8.11
-        version: 0.8.11
+        specifier: ^0.9.9
+        version: 0.9.9
       copyfiles:
         specifier: ^2.4.1
         version: 2.4.1
@@ -682,12 +682,8 @@ packages:
       webpack-dev-server:
         optional: true
 
-  '@xmldom/xmldom@0.8.11':
-    resolution: {integrity: sha512-cQzWCtO6C8TQiYl1ruKNn2U6Ao4o4WBBcbL61yJl84x+j5sOWWFU9X7DpND8XZG3daDppSsigMdfAIl2upQBRw==}
-    engines: {node: '>=10.0.0'}
-
-  '@xmldom/xmldom@0.9.8':
-    resolution: {integrity: sha512-p96FSY54r+WJ50FIOsCOjyj/wavs8921hG5+kVMmZgKcvIKxMXHTrjNJvRgWa/zuX3B6t2lijLNFaOyuxUH+2A==}
+  '@xmldom/xmldom@0.9.9':
+    resolution: {integrity: sha512-qycIHAucxy/LXAYIjmLmtQ8q9GPnMbnjG1KXhWm9o5sCr6pOYDATkMPiTNa6/v8eELyqOQ2FsEqeoFYmgv/gJg==}
     engines: {node: '>=14.6'}
 
   '@xtuc/ieee754@1.2.0':
@@ -2088,8 +2084,8 @@ packages:
   spdx-license-ids@3.0.22:
     resolution: {integrity: sha512-4PRT4nh1EImPbt2jASOKHX7PB7I+e4IWNLvkKFDxNhJlfjbYlleYQh285Z/3mPTHSAK/AvdMmw5BNNuYH8ShgQ==}
 
-  speech-rule-engine@5.0.0-beta.6:
-    resolution: {integrity: sha512-ohK2DizQ9s/JeiHhIraATNBwYpg2jSlSIF4Sq8pgHgSqMq2tkLRZLUq1BT2DjnmCWzkKeGSOaz6t/KzDGRGhPg==}
+  speech-rule-engine@5.0.0-beta.7:
+    resolution: {integrity: sha512-9wd/bFdE9dibPp56UrYczyQOTLtdF2g0Drp9liPInMXwfIWpi9Lo5pYJHrSSz7+3p+jyX0e+YOanCP0V3HODSA==}
     hasBin: true
 
   sprintf-js@1.0.3:
@@ -3219,9 +3215,7 @@ snapshots:
       webpack: 5.105.2(webpack-cli@6.0.1)
       webpack-cli: 6.0.1(webpack@5.105.2)
 
-  '@xmldom/xmldom@0.8.11': {}
-
-  '@xmldom/xmldom@0.9.8': {}
+  '@xmldom/xmldom@0.9.9': {}
 
   '@xtuc/ieee754@1.2.0': {}
 
@@ -4736,9 +4730,9 @@ snapshots:
 
   spdx-license-ids@3.0.22: {}
 
-  speech-rule-engine@5.0.0-beta.6:
+  speech-rule-engine@5.0.0-beta.7:
     dependencies:
-      '@xmldom/xmldom': 0.9.8
+      '@xmldom/xmldom': 0.9.9
       commander: 14.0.2
       wicked-good-xpath: 1.3.0
 
