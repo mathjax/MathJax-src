@@ -140,7 +140,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@xmldom/xmldom": "^0.8.11",
+    "@xmldom/xmldom": "^0.9.9",
     "copyfiles": "^2.4.1",
     "diff": "^8.0.3",
     "eslint": "^9.39.2",
