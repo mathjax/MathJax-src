@@ -327,6 +327,34 @@ exports[`Newcommand Def Template Matching 1`] = `
 </math>"
 `;
 
+exports[`Newcommand Def insignificant spaces 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x  #1  {[#1]} \\x{x}" display="block">
+  <mo data-latex="[" stretchy="false">[</mo>
+  <mi data-latex="x">x</mi>
+  <mo data-latex="]" stretchy="false">]</mo>
+</math>"
+`;
+
+exports[`Newcommand Def significant spaces 1 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x#1 #2{[#1,#2]} \\x{a} {b}" display="block">
+  <mo data-latex="[" stretchy="false">[</mo>
+  <mi data-latex="a">a</mi>
+  <mo data-latex=",">,</mo>
+  <mi data-latex="b">b</mi>
+  <mo data-latex="]" stretchy="false">]</mo>
+</math>"
+`;
+
+exports[`Newcommand Def significant spaces 2 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x#1 #2{[#1,#2]} \\x{a} {b} " display="block">
+  <mo data-latex="[" stretchy="false">[</mo>
+  <mi data-latex="a">a</mi>
+  <mo data-latex=",">,</mo>
+  <mi data-latex="b">b</mi>
+  <mo data-latex="]" stretchy="false">]</mo>
+</math>"
+`;
+
 exports[`Newcommand Let Angle Circular 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\lp\\langle\\let\\rp\\rangle\\let\\mp\\rp\\left\\lp \\frac{a}{b}\\middle\\mp c \\right\\rp" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\let\\lp\\langle\\let\\rp\\rangle\\let\\mp\\rp\\left\\lp \\frac{a}{b}\\middle\\mp c \\right\\rp">

@@ -166,6 +166,9 @@ export const NewcommandUtil = {
           // @test Optional Brace Error
           // parser.i >= i!
           params[n] = parser.string.substring(i, parser.i);
+          if (params[n].replace(/^ +/, '') === '' && params.slice(0, n).join('') === '') {
+            return n;
+          }
         }
         if (params.length > 0) {
           // @test Def Let, Def Optional Brace
