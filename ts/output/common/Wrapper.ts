@@ -104,6 +104,7 @@ export const SPACE: StringMap = {
  * Padding and border data from the style attribute
  */
 export type StyleData = {
+  margin: [number, number, number, number];
   padding: [number, number, number, number];
   border: {
     width: [number, number, number, number];
@@ -596,9 +597,10 @@ export class CommonWrapper<
     if (!this.styleData) return bbox;
     const padding = this.styleData.padding;
     const border = this.styleData.border?.width || [0, 0, 0, 0];
+    const margin = this.styleData.margin || [0, 0, 0, 0];
     const obox = bbox.copy();
     for (const [, i, side] of BBox.boxSides) {
-      (obox as any)[side] += padding[i] + border[i];
+      (obox as any)[side] += padding[i] + border[i] + margin[i];
     }
     return obox;
   }
@@ -748,7 +750,9 @@ export class CommonWrapper<
     if (!this.styleData) return;
     const border = this.styleData.border;
     const padding = this.styleData.padding;
-    bbox.w += (border?.width?.[3] || 0) + (padding?.[3] || 0);
+    const margin = this.styleData.margin;
+    bbox.w +=
+      (border?.width?.[3] || 0) + (padding?.[3] || 0) + (margin?.[3] || 0);
   }
 
   /**
@@ -758,8 +762,11 @@ export class CommonWrapper<
     if (!this.styleData) return;
     const border = this.styleData.border;
     const padding = this.styleData.padding;
-    bbox.h += (border?.width?.[0] || 0) + (padding?.[0] || 0);
-    bbox.d += (border?.width?.[2] || 0) + (padding?.[2] || 0);
+    const margin = this.styleData.margin;
+    bbox.h +=
+      (border?.width?.[0] || 0) + (padding?.[0] || 0) + (margin?.[0] || 0);
+    bbox.d +=
+      (border?.width?.[2] || 0) + (padding?.[2] || 0) + (margin?.[2] || 0);
   }
 
   /**
@@ -769,7 +776,9 @@ export class CommonWrapper<
     if (!this.styleData) return;
     const border = this.styleData.border;
     const padding = this.styleData.padding;
-    bbox.w += (border?.width?.[1] || 0) + (padding?.[1] || 0);
+    const margin = this.styleData.margin;
+    bbox.w +=
+      (border?.width?.[1] || 0) + (padding?.[1] || 0) + (margin?.[1] || 0);
   }
 
   /**
@@ -875,11 +884,13 @@ export class CommonWrapper<
   protected getStyleData() {
     if (!this.styles) return;
     const padding = Array(4).fill(0);
+    const margin = Array(4).fill(0);
     const width = Array(4).fill(0);
     const style = Array(4);
     const color = Array(4);
     let hasPadding = false;
     let hasBorder = false;
+    let hasMargin = false;
     for (const [name, i] of BBox.boxSides) {
       const key = 'border' + name;
       const w = this.styles.get(key + 'Width');
@@ -894,11 +905,17 @@ export class CommonWrapper<
         hasPadding = true;
         padding[i] = Math.max(0, this.length2em(p, 1));
       }
+      const m = this.styles.get('margin' + name);
+      if (m) {
+        hasMargin = true;
+        margin[i] = this.length2em(m, 1);
+      }
     }
     this.styleData =
-      hasPadding || hasBorder
+      hasPadding || hasBorder || hasMargin
         ? ({
             padding,
+            margin,
             border: hasBorder ? { width, style, color } : null,
           } as StyleData)
         : null;
