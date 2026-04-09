@@ -744,15 +744,22 @@ export class CommonWrapper<
   }
 
   /**
+   * @param {number} n   The side number (0 to 3) whose size is needed
+   * @returns {number}   The side's size in ems
+   */
+  protected sideStyleSize(n: number): number {
+    const border = this.styleData.border;
+    const padding = this.styleData.padding;
+    const margin = this.styleData.margin;
+    return (border?.width?.[n] || 0) + (padding?.[n] || 0) + (margin?.[n] || 0);
+  }
+
+  /**
    * @param {BBox} bbox   The bounding box where left borders are to be added
    */
   protected addLeftBorders(bbox: BBox) {
     if (!this.styleData) return;
-    const border = this.styleData.border;
-    const padding = this.styleData.padding;
-    const margin = this.styleData.margin;
-    bbox.w +=
-      (border?.width?.[3] || 0) + (padding?.[3] || 0) + (margin?.[3] || 0);
+    bbox.w += this.sideStyleSize(3);
   }
 
   /**
@@ -760,13 +767,8 @@ export class CommonWrapper<
    */
   protected addMiddleBorders(bbox: BBox) {
     if (!this.styleData) return;
-    const border = this.styleData.border;
-    const padding = this.styleData.padding;
-    const margin = this.styleData.margin;
-    bbox.h +=
-      (border?.width?.[0] || 0) + (padding?.[0] || 0) + (margin?.[0] || 0);
-    bbox.d +=
-      (border?.width?.[2] || 0) + (padding?.[2] || 0) + (margin?.[2] || 0);
+    bbox.h += this.sideStyleSize(0);
+    bbox.d += this.sideStyleSize(2);
   }
 
   /**
@@ -774,11 +776,7 @@ export class CommonWrapper<
    */
   protected addRightBorders(bbox: BBox) {
     if (!this.styleData) return;
-    const border = this.styleData.border;
-    const padding = this.styleData.padding;
-    const margin = this.styleData.margin;
-    bbox.w +=
-      (border?.width?.[1] || 0) + (padding?.[1] || 0) + (margin?.[1] || 0);
+    bbox.w += this.sideStyleSize(1);
   }
 
   /**
