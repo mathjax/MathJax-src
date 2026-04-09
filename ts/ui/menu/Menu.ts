@@ -1015,10 +1015,11 @@ export class Menu {
    */
   protected mergeUserSettings() {
     try {
-      const settings = localStorage.getItem(Menu.MENU_STORAGE);
-      if (!settings) return;
-      Object.assign(this.settings, JSON.parse(settings));
-      this.setA11y(this.settings);
+      const json = localStorage.getItem(Menu.MENU_STORAGE);
+      if (!json) return;
+      const settings = JSON.parse(json);
+      Object.assign(this.settings, settings);
+      this.setA11y(settings);
     } catch (err) {
       console.log('MathJax localStorage error: ' + err.message);
     }
