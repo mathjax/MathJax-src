@@ -216,11 +216,6 @@ const getSpaces = function (
   if (inf !== rule.parent) {
     result +=
       (inf.getProperty(right ? 'proof-right' : 'proof-left') as number) || 0;
-    const children = inf.childNodes;
-    const index = right ? children.length - 1 : 0;
-    if (NodeUtil.isType(children[index], 'mspace')) {
-      result += getBBox(children[index]);
-    }
     inf = rule.parent;
   }
   if (inf === rule) {
