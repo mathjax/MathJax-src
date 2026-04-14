@@ -107,6 +107,8 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
     FindAsciiMath: null,
     // Decimal sign character
     decimalsign: '.',
+    // List separator
+    listseparator: ',',
     // Display style (for limits)
     displaystyle: true,
     // Additional symbols to add
@@ -193,7 +195,9 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
       },
       options: { 
         decimalsign: this.parseOptions.options.decimalsign, 
+        listseparator: this.parseOptions.options.listseparator, 
         displaystyle: this.parseOptions.options.displaystyle,
+        addmathvariant: true,
         additionalSymbols: this.parseOptions.options?.additionalSymbols || []
       }
     };
