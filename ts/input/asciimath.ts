@@ -214,9 +214,10 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
       node = this.options.formatError(this, err);
     }
 
-    node = this.parseOptions.create('math', [node]);
+    // parser returns mstyle node at base. We don't need it, just the children.
+    node = this.parseOptions.create('math', node.childNodes);
     node.attributes.set('data-asciimath', this.asciimath);
-    node.setInheritedAttributes({}, false, 0, false);
+    node.setInheritedAttributes({}, this.parseOptions.options.displaystyle, 0, false);
 
     if (math.display) {
       node.attributes.set('display', 'block')
