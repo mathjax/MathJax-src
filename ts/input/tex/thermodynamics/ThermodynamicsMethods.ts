@@ -252,18 +252,17 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
   SubscriptedSymbol (parser: TexParser, name: string,
         symbol: string, subscript: string) {
     var arg = parser.GetArgument(name, true);
-    if ( arg == '_' )
-    {
-      arg = parser.GetArgument(name);
-      BaseMethods.Macro (parser, 'SubscriptedSymbol',
-        symbol + '_{' + subscript + ',' + arg + '}');
-    }
-    else
-    {
-      if ( arg == null )
+    switch ( arg ) {
+      case '_' :
+        arg = parser.GetArgument(name);
+        BaseMethods.Macro (parser, 'SubscriptedSymbol',
+          symbol + '_{' + subscript + ',' + arg + '}');
+        break;
+      case null :
         BaseMethods.Macro (parser, 'SubscriptedSymbol',
           symbol + '_{' + subscript + '}');
-      else
+        break;
+      default :
         BaseMethods.Macro (parser, 'SubscriptedSymbol',
           symbol + '_{' + subscript + '}' + arg);
     }
@@ -281,7 +280,7 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
       case null :
         BaseMethods.Macro (parser, 'SubscriptedSymbol',
           symbol + '^{' + superscript + '}');
-        break
+        break;
       default :
         BaseMethods.Macro (parser, 'SubscriptedSymbol',
           symbol + '^{' + superscript + '}' + arg);
@@ -354,16 +353,73 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
         subs = '';
     if ( typeof supers !== "undefined" )
     {
-      // \mkern2mu\overline{\mkern-2mu{symbol_{subs}^{superscript,supers}\mkern-1mu}\mkern1mu
       BaseMethods.Macro (parser, 'PartialMolarSubscripted',
         '\\mkern2mu\\overline{\\mkern-2mu{' + symbol + '}_{' + subs + '}^{'
         + superscript + ',' + supers + '}\\mkern-1mu}\\mkern1mu');
     } else {
-      // \mkern2mu\overline{\mkern-2mu{symbol_{subs}}\mkern-1mu}\mkern1mu
       BaseMethods.Macro (parser, 'PartialMolarSubscripted',
         '\\mkern2mu\\overline{\\mkern-2mu{' + symbol + '}_{'
             + subs + '}^{' + superscript + '}\\mkern-1mu}\\mkern1mu');
     }
+  },
+
+  ChangeonSomething (parser: TexParser, name: string,
+      subscript = null, superscript = null) {
+    const symbol = parser.GetArgument(name);
+    const nextchar = parser.string.charAt(parser.i);
+    var nextnextchar = null;
+    var subs = '';
+    var supers = '';
+    // look for subscripts or superscripts
+    switch ( nextchar ) {
+      case '_' :
+        parser.i++;
+        subs = parser.GetArgument(name);
+        // now check for additional superscript
+        nextnextchar = parser.string.charAt(parser.i);
+        if ( nextnextchar == '^' ) {
+          parser.i++;
+          supers = parser.GetArgument(name);
+        }
+        break;
+      case '^' :
+        parser.i++;
+        supers = parser.GetArgument(name);
+        // now check for additional subscript
+        nextnextchar = parser.string.charAt(parser.i);
+        if ( nextnextchar == '_' ) {
+          parser.i++;
+          subs = parser.GetArgument(name);
+        }
+        break;
+    }
+    // Add the "intrinsic" subscripts/superscripts
+    if ( subscript != null ) {
+      if ( subs == '' )
+        subs = subscript;
+      else
+        subs = subscript + ',' + subs;
+    }
+    if ( superscript != null ) {
+      if ( supers == '' )
+        supers = superscript;
+      else
+        supers = superscript + ',' + supers;
+    }
+    // Print symbol with non-null superscripts and subscripts
+console.log('DEBUG: symbol is ', symbol, '; subs is ', subs, '; supers is ', supers);
+    if ( subs == '' && supers == '' )
+      // will this EVER happen? (it is an implied check that BOTH are not null)
+      BaseMethods.Macro (parser, 'ChangeonSomething', '\\Delta ' + symbol);
+    else if ( subs == '' )
+      BaseMethods.Macro (parser, 'ChangeonSomething', '\\Delta ' + symbol
+        + '^{' + supers + '}');
+    else if ( supers == '' )
+      BaseMethods.Macro (parser, 'ChangeonSomething', '\\Delta ' + symbol
+        + '_{' + subs + '}');
+    else
+      BaseMethods.Macro (parser, 'ChangeonSomething', '\\Delta ' + symbol
+        + '_{' + subs + '}^{' + supers + '}');
   },
 
   Macro: BaseMethods.Macro,
