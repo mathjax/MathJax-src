@@ -136,11 +136,9 @@ export function AssistiveMmlMathItemMixin<
         // Hide the typeset math from assistive technology and append the MathML that is visually
         //   hidden from other users
         //
-        adaptor.setAttribute(
-          adaptor.firstChild(this.typesetRoot) as N,
-          'aria-hidden',
-          'true'
-        );
+        for (const child of adaptor.childNodes(this.typesetRoot) as N[]) {
+          adaptor.setAttribute(child, 'aria-hidden', 'true');
+        }
         adaptor.setStyle(this.typesetRoot, 'position', 'relative');
         adaptor.append(this.typesetRoot, node);
       }
