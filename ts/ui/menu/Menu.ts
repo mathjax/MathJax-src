@@ -348,7 +348,11 @@ export class Menu {
       extraNodes: [
         this.document.adaptor.node(
           'a',
-          { href: 'https://www.mathjax.org', 'data-drag': 'false' },
+          {
+            href: 'https://www.mathjax.org',
+            'data-drag': 'false',
+            target: '_blank',
+          },
           [this.document.adaptor.text('https://www.mathjax.org')]
         ),
       ],
