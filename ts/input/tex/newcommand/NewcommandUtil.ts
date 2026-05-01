@@ -166,7 +166,10 @@ export const NewcommandUtil = {
           // @test Optional Brace Error
           // parser.i >= i!
           params[n] = parser.string.substring(i, parser.i);
-          if (params[n].replace(/^ +/, '') === '' && params.slice(0, n).join('') === '') {
+          if (
+            params[n].replace(/^ +/, '') === '' &&
+            params.slice(0, n).join('') === ''
+          ) {
             return n;
           }
         }
