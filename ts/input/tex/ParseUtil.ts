@@ -32,6 +32,8 @@ import { entities } from '../../util/Entities.js';
 import { MmlMunderover } from '../../core/MmlTree/MmlNodes/munderover.js';
 import { UnitUtil } from './UnitUtil.js';
 
+const COMPONENT = '[tex]';
+
 /**
  * The data needed for checking the value of a key-value pair.
  */
@@ -186,7 +188,7 @@ function readValue(
       case '}':
         if (!braces) {
           // Closing braces.
-          throw new TexError('ExtraCloseMissingOpen');
+          throw new TexError(COMPONENT, 'ExtraCloseMissingOpen');
         }
         braces--;
         countBraces = false; // Stop counting start left braces.
@@ -209,7 +211,7 @@ function readValue(
     value += c;
   }
   if (braces) {
-    throw new TexError('ExtraOpenMissingClose');
+    throw new TexError(COMPONENT, 'ExtraOpenMissingClose');
   }
   return dropBrace && start
     ? ['', '', removeBraces(value, 1)]
@@ -541,7 +543,7 @@ export const ParseUtil = {
                 .substring(i)
                 .match(/^\s*(?:([0-9A-F])|\{\s*([0-9A-F]+)\s*\})/);
               if (!arg) {
-                throw new TexError('BadRawUnicode', '\\U');
+                throw new TexError(COMPONENT, 'BadRawUnicode', '\\U');
               }
               //  Replace \U{...} with specified character
               const c = String.fromCodePoint(parseInt(arg[1] || arg[2], 16));
@@ -556,7 +558,7 @@ export const ParseUtil = {
       }
       if (match !== '') {
         // @test Internal Math Error
-        throw new TexError('MathNotTerminated');
+        throw new TexError(COMPONENT, 'MathNotTerminated');
       }
     }
     if (k < text.length) {
@@ -721,7 +723,7 @@ export const ParseUtil = {
           text += c;
         } else {
           if (!c.match(/[1-9]/) || parseInt(c, 10) > args.length) {
-            throw new TexError('IllegalMacroParam');
+            throw new TexError(COMPONENT, 'IllegalMacroParam');
           }
           newstring = ParseUtil.addArgs(
             parser,
@@ -752,7 +754,7 @@ export const ParseUtil = {
       s1 += ' ';
     }
     if (s1.length + s2.length > parser.configuration.options['maxBuffer']) {
-      throw new TexError('MaxBufferSize');
+      throw new TexError(COMPONENT, 'MaxBufferSize');
     }
     return s1 + s2;
   },
@@ -768,9 +770,9 @@ export const ParseUtil = {
       return;
     }
     if (isMacro) {
-      throw new TexError('MaxMacroSub1');
+      throw new TexError(COMPONENT, 'MaxMacroSub1');
     } else {
-      throw new TexError('MaxMacroSub2');
+      throw new TexError(COMPONENT, 'MaxMacroSub2');
     }
   },
 
@@ -793,7 +795,7 @@ export const ParseUtil = {
       return;
     }
     if (!top.isKind('start') || first) {
-      throw new TexError('ErroneousNestingEq');
+      throw new TexError(COMPONENT, 'ErroneousNestingEq');
     }
   },
 
@@ -872,13 +874,13 @@ export const ParseUtil = {
             const type = allowed[key] as KeyValueDef<any>;
             const value = String(def[key]);
             if (!type.verify(value)) {
-              throw new TexError('InvalidValue', key);
+              throw new TexError(COMPONENT, 'InvalidValue', key);
             }
             def[key] = type.convert(value);
           }
         } else {
           if (error) {
-            throw new TexError('InvalidOption', key);
+            throw new TexError(COMPONENT, 'InvalidOption', key);
           }
           delete def[key];
         }

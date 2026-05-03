@@ -25,6 +25,10 @@ import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { BraketItem } from './BraketItems.js';
 import './BraketMappings.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/braket';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/braket');
 
 export const BraketConfiguration = Configuration.create('braket', {
   [ConfigurationType.HANDLER]: {

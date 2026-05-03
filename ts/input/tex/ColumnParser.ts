@@ -28,6 +28,8 @@ import { lookup } from '../../util/Options.js';
 import { ParseUtil } from './ParseUtil.js';
 import { UnitUtil } from './UnitUtil.js';
 
+const COMPONENT = '[tex]';
+
 /***********************************************************************/
 
 /**
@@ -145,7 +147,7 @@ export class ColumnParser {
     let n = 0;
     while (state.i < state.template.length) {
       if (n++ > this.MAXCOLUMNS) {
-        throw new TexError('MaxColumns');
+        throw new TexError(COMPONENT, 'MaxColumns');
       }
       const code = state.template.codePointAt(state.i);
       const c = (state.c = String.fromCodePoint(code));
@@ -283,7 +285,7 @@ export class ColumnParser {
   public getDimen(state: ColumnState): string {
     const dim = this.getBraces(state);
     if (!UnitUtil.matchDimen(dim)[0]) {
-      throw new TexError('MissingColumnDimOrUnits', state.c);
+      throw new TexError(COMPONENT, 'MissingColumnDimOrUnits', state.c);
     }
     return dim;
   }
@@ -314,7 +316,7 @@ export class ColumnParser {
   public getBraces(state: ColumnState): string {
     while (state.template[state.i] === ' ') state.i++;
     if (state.i > state.template.length) {
-      throw new TexError('MissingArgForColumn', state.c);
+      throw new TexError(COMPONENT, 'MissingArgForColumn', state.c);
     }
     if (state.template[state.i] !== '{') {
       return state.template[state.i++];
@@ -336,7 +338,7 @@ export class ColumnParser {
           break;
       }
     }
-    throw new TexError('MissingCloseBrace');
+    throw new TexError(COMPONENT, 'MissingCloseBrace');
   }
 
   /**
@@ -421,7 +423,7 @@ export class ColumnParser {
     const cols = this.getBraces(state);
     const n = parseInt(num);
     if (String(n) !== num) {
-      throw new TexError('ColArgNotNum', '*');
+      throw new TexError(COMPONENT, 'ColArgNotNum', '*');
     }
     state.template =
       new Array(n).fill(cols).join('') + state.template.substring(state.i);

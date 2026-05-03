@@ -30,6 +30,10 @@ import TexError from '../TexError.js';
 import { BeginItem } from '../base/BaseItems.js';
 import { EmpheqUtil } from './EmpheqUtil.js';
 import ParseMethods from '../ParseMethods.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/empheq';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/empheq');
 
 /**
  * The methods that implement the empheq package.
@@ -62,7 +66,7 @@ export const EmpheqMethods = {
         .GetArgument('\\begin{' + begin.getName() + '}')
         .split(/=/);
       if (!EmpheqUtil.checkEnv(env)) {
-        throw new TexError('UnknownEnv', env);
+        throw new TexError(COMPONENT, 'UnknownEnv', env);
       }
       begin.setProperty('nestStart', true);
       if (opts) {

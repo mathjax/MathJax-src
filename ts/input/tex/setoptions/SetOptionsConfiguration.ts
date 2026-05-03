@@ -36,6 +36,10 @@ import { Macro } from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
 import { expandable, isObject } from '../../../util/Options.js';
 import { PrioritizedList } from '../../../util/PrioritizedList.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/setoptions';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/setoptions');
 
 export const SetOptionsUtil = {
   /**
@@ -47,7 +51,7 @@ export const SetOptionsUtil = {
    */
   filterPackage(parser: TexParser, extension: string): boolean {
     if (extension !== 'tex' && !ConfigurationHandler.get(extension)) {
-      throw new TexError('NotAPackage', extension);
+      throw new TexError(COMPONENT, 'NotAPackage', extension);
     }
     const config = parser.options.setoptions;
     const options = config.allowOptions[extension];
@@ -55,7 +59,7 @@ export const SetOptionsUtil = {
       (options === undefined && !config.allowPackageDefault) ||
       options === false
     ) {
-      throw new TexError('PackageNotSettable', extension);
+      throw new TexError(COMPONENT, 'PackageNotSettable', extension);
     }
     return true;
   },
@@ -78,17 +82,17 @@ export const SetOptionsUtil = {
         : null;
     if (allow === false || (allow === null && !config.allowOptionsDefault)) {
       if (isTex) {
-        throw new TexError('TeXOptionNotSettable', option);
+        throw new TexError(COMPONENT, 'TeXOptionNotSettable', option);
       } else {
-        throw new TexError('OptionNotSettable', option, extension);
+        throw new TexError(COMPONENT, 'OptionNotSettable', option, extension);
       }
     }
     const extOptions = isTex ? parser.options : parser.options[extension];
     if (!extOptions || !Object.hasOwn(extOptions, option)) {
       if (isTex) {
-        throw new TexError('InvalidTexOption', option);
+        throw new TexError(COMPONENT, 'InvalidTexOption', option);
       } else {
-        throw new TexError('InvalidOptionKey', option, extension);
+        throw new TexError(COMPONENT, 'InvalidOptionKey', option, extension);
       }
     }
     return true;

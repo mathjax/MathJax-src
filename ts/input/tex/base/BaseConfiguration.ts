@@ -37,6 +37,10 @@ import ParseMethods from '../ParseMethods.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { TexConstant } from '../TexConstants.js';
 import { context } from '../../../util/context.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/base';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/base');
 
 const MATHVARIANT = TexConstant.Variant;
 
@@ -89,7 +93,7 @@ export function Other(parser: TexParser, char: string) {
  */
 function csUndefined(_parser: TexParser, name: string) {
   // @test Undefined-CS
-  throw new TexError('UndefinedControlSequence', '\\' + name);
+  throw new TexError(COMPONENT, 'UndefinedControlSequence', '\\' + name);
 }
 
 /**
@@ -100,7 +104,7 @@ function csUndefined(_parser: TexParser, name: string) {
  */
 function envUndefined(_parser: TexParser, env: string) {
   // @test Undefined-Env
-  throw new TexError('UnknownEnv', env);
+  throw new TexError(COMPONENT, 'UnknownEnv', env);
 }
 
 /**

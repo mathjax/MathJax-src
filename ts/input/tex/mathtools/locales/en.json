@@ -10,5 +10,7 @@
   "CommandInMultlined": "%1 can only appear within the multline or multlined environments",
   "BadWidth": "Width for %1 must be a dimension",
   "NotANumber": "Argument to %1 is not a number",
-  "NotInAlignment": "%1 can only be used in alignment environments"
+  "NotInAlignment": "%1 can only be used in alignment environments",
+  "AlreadyDefined": "%1 is already defined",
+  "CommadExists": "Command %1 already defined"
 }

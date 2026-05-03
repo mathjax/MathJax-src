@@ -39,5 +39,6 @@
   "DoubleSubscripts": "Double subscripts: use braces to clarify",
   "DoubleExponent": "Double exponent: use braces to clarify",
   "TooManyAligns": "Too many alignment characters: %1",
-  "BadBreakAlign": "Invalid alignment character: %1"
+  "BadBreakAlign": "Invalid alignment character: %1",
+  "MaxTemplateSubs": "Maximum template substitutions exceeded; is there an invalid use of \\\\ in the template?"
 }

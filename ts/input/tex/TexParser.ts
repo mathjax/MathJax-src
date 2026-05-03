@@ -36,6 +36,8 @@ import { Token } from './Token.js';
 import { OptionList } from '../../util/Options.js';
 import { TexConstant } from './TexConstants.js';
 
+const COMPONENT = '[tex]';
+
 /**
  * The main Tex Parser class.
  */
@@ -331,13 +333,13 @@ export default class TexParser {
       case '':
         if (!noneOK) {
           // @test MissingArgFor
-          throw new TexError('MissingArgFor', this.currentCS);
+          throw new TexError(COMPONENT, 'MissingArgFor', this.currentCS);
         }
         return null;
       case '}':
         if (!noneOK) {
           // @test ExtraCloseMissingOpen
-          throw new TexError('ExtraCloseMissingOpen');
+          throw new TexError(COMPONENT, 'ExtraCloseMissingOpen');
         }
         return null;
       case '\\':
@@ -362,7 +364,7 @@ export default class TexParser {
           }
         }
         // @test MissingCloseBrace
-        throw new TexError('MissingCloseBrace');
+        throw new TexError(COMPONENT, 'MissingCloseBrace');
       }
     }
     const c = this.getCodePoint();
@@ -400,7 +402,7 @@ export default class TexParser {
         case '}':
           if (braces-- <= 0) {
             // @test ExtraCloseLooking1
-            throw new TexError('ExtraCloseLooking', "']'");
+            throw new TexError(COMPONENT, 'ExtraCloseLooking', "']'");
           }
           break;
         case '[':
@@ -417,7 +419,7 @@ export default class TexParser {
       }
     }
     // @test MissingCloseBracket
-    throw new TexError('MissingCloseBracket', this.currentCS);
+    throw new TexError(COMPONENT, 'MissingCloseBracket', this.currentCS);
   }
 
   /**
@@ -442,7 +444,7 @@ export default class TexParser {
       }
     }
     // @test MissingOrUnrecognizedDelim1, MissingOrUnrecognizedDelim2
-    throw new TexError('MissingOrUnrecognizedDelim', this.currentCS);
+    throw new TexError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
   }
 
   /**
@@ -469,7 +471,7 @@ export default class TexParser {
       }
     }
     // @test MissingDimOrUnits
-    throw new TexError('MissingDimOrUnits', this.currentCS);
+    throw new TexError(COMPONENT, 'MissingDimOrUnits', this.currentCS);
   }
 
   /**
@@ -499,7 +501,7 @@ export default class TexParser {
         case '}':
           if (braces === 0) {
             // @test ExtraCloseLooking2
-            throw new TexError('ExtraCloseLooking', token);
+            throw new TexError(COMPONENT, 'ExtraCloseLooking', token);
           }
           braces--;
           break;
@@ -509,7 +511,7 @@ export default class TexParser {
       }
     }
     // @test TokenNotFoundForCommand
-    throw new TexError('TokenNotFoundForCommand', token, this.currentCS);
+    throw new TexError(COMPONENT, 'TokenNotFoundForCommand', token, this.currentCS);
   }
 
   /**
@@ -556,7 +558,7 @@ export default class TexParser {
       return c;
     }
     // @test MissingOrUnrecognizedDelim
-    throw new TexError('MissingOrUnrecognizedDelim', this.currentCS);
+    throw new TexError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
   }
 
   /**

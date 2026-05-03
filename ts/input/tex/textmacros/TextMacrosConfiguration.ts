@@ -31,6 +31,10 @@ import { StartItem, StopItem, MmlItem, StyleItem } from '../base/BaseItems.js';
 import { TextParser } from './TextParser.js';
 import { TextMacrosMethods } from './TextMacrosMethods.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/textmacros';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/textmacros');
 
 import './TextMacrosMappings.js';
 
@@ -62,11 +66,7 @@ export const TextBaseConfiguration = Configuration.create('text-base', {
       const texParser = parser.texParser;
       const macro = texParser.lookup(HandlerType.MACRO, name);
       if (macro && macro._func !== TextMacrosMethods.Macro) {
-        parser.Error(
-          'MathMacro',
-          '%1 is only supported in math mode',
-          '\\' + name
-        );
+        parser.Error(COMPONENT, 'MathMacro', '\\' + name);
       }
       texParser.parse(HandlerType.MACRO, [parser, name]);
     },

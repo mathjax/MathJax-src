@@ -42,6 +42,8 @@ import {
 } from '../../../core/MmlTree/MmlNode.js';
 import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 
+const COMPONENT = '[tex]/ams';
+
 /**
  * Utility for breaking the \sideset scripts from any other material.
  *
@@ -147,7 +149,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     const n = parser.GetArgument('\\begin{' + name + '}');
     if (n.match(/[^0-9]/)) {
       // @test PositiveIntegerArg
-      throw new TexError('PositiveIntegerArg');
+      throw new TexError(COMPONENT, 'PositiveIntegerArg');
     }
     let count = parseInt(n, 10);
     while (count > 0) {
@@ -236,7 +238,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
   ): ParseResult {
     const n = parser.GetArgument('\\begin{' + begin.getName() + '}');
     if (n.match(/[^0-9]/)) {
-      throw new TexError('PositiveIntegerArg');
+      throw new TexError(COMPONENT, 'PositiveIntegerArg');
     }
     const align = padded ? 'crl' : 'rlc';
     const balign = padded ? 'mbt' : 'btm';
@@ -611,11 +613,11 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     // @test Shove (Left|Right) (Top|Middle|Bottom)
     if (top.kind !== 'multline') {
       // @test Shove Error Environment
-      throw new TexError('CommandOnlyAllowedInEnv', parser.currentCS);
+      throw new TexError(COMPONENT, 'CommandOnlyAllowedInEnv', parser.currentCS);
     }
     if (top.Size()) {
       // @test Shove Error (Top|Middle|Bottom)
-      throw new TexError('CommandAtTheBeginingOfLine');
+      throw new TexError(COMPONENT, 'CommandAtTheBeginingOfLine');
     }
     top.setProperty('shove', shove);
   },
@@ -649,7 +651,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     lr = lrMap[lr];
     if (lr == null) {
       // @test Center Fraction Error
-      throw new TexError('IllegalAlign', parser.currentCS);
+      throw new TexError(COMPONENT, 'IllegalAlign', parser.currentCS);
     }
     if (lr) {
       // @test Right Fraction, Left Fraction
@@ -710,7 +712,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       const styleAlpha = ['D', 'T', 'S', 'SS'][styleDigit];
       if (styleAlpha == null) {
         // @test Genfrac Error
-        throw new TexError('BadMathStyleFor', parser.currentCS);
+        throw new TexError(COMPONENT, 'BadMathStyleFor', parser.currentCS);
       }
       frac = parser.create('node', 'mstyle', [frac]);
       if (styleAlpha === 'D') {
@@ -739,11 +741,11 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
   HandleTag(parser: TexParser, name: string) {
     if (!parser.tags.currentTag.taggable && parser.tags.env) {
       // @test Illegal Tag Error
-      throw new TexError('CommandNotAllowedInEnv', parser.currentCS);
+      throw new TexError(COMPONENT, 'CommandNotAllowedInEnv', parser.currentCS);
     }
     if (parser.tags.currentTag.tag) {
       // @test Double Tag Error
-      throw new TexError('MultipleCommand', parser.currentCS);
+      throw new TexError(COMPONENT, 'MultipleCommand', parser.currentCS);
     }
     const star = parser.GetStar();
     const tagId = UnitUtil.trimSpaces(parser.GetArgument(name));

@@ -30,6 +30,8 @@ import { StackItem } from '../StackItem.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import * as BussproofsUtil from './BussproofsUtil.js';
 
+const COMPONENT = '[tex]/bussproofs';
+
 /**
  * Pads content of an inference rule.
  *
@@ -160,12 +162,12 @@ function createRule(
 function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   const dollar = parser.GetNext();
   if (dollar !== '$') {
-    throw new TexError('IllegalUseOfCommand', name);
+    throw new TexError(COMPONENT, 'IllegalUseOfCommand', name);
   }
   parser.i++;
   let axiom = parser.GetUpTo(name, '$');
   if (axiom.indexOf('\\fCenter') === -1) {
-    throw new TexError('MissingProofCommand', '\\fCenter', name);
+    throw new TexError(COMPONENT, 'MissingProofCommand', '\\fCenter', name);
   }
   // Check for fCenter and throw error?
   const [prem, conc] = axiom.split('\\fCenter');
@@ -216,7 +218,7 @@ function doInference(
 ) {
   const top = getProofTree(parser);
   if (top.Size() < n) {
-    throw new TexError('BadProofTree', 'Proof tree badly specified.');
+    throw new TexError(COMPONENT, 'BadProofTree');
   }
   const rootAtTop = top.getProperty('rootAtTop') as boolean;
   const childCount = n === 1 && !top.Peek()[0].childNodes.length ? 0 : n;
@@ -419,13 +421,13 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
   DisplayProof(parser: TexParser, _name: string) {
     const top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
-      throw new TexError('BadProofTree', 'Proof tree badly specified.');
+      throw new TexError(COMPONENT, 'BadProofTree');
     }
     if (!top.getProperty('implicit')) {
       return;
     }
     if (top.Size() !== 1) {
-      throw new TexError('BadProofTree', 'Proof tree badly specified.');
+      throw new TexError(COMPONENT, 'BadProofTree');
     }
     const node = top.toMml();
     BussproofsUtil.setProperty(node, 'proof', true);

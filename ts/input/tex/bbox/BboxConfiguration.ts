@@ -39,18 +39,6 @@ export const COMPONENT = '[tex]/bbox';
  */
 Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/bbox');
 
-/**
- * Throw a TexError for this component (eventually, TexError will handle the message directly).
- *
- * @param {string} id       The ID of the error message
- * @param {string[]} args   The values to substitute into the message
- */
-function bboxError(id: string, ...args: string[]) {
-  const error = new TexError('', '');
-  error.message = Locale.message(COMPONENT, id, ...args);
-  throw error;
-}
-
 // Namespace
 const BboxMethods: { [key: string]: ParseMethod } = {
   /**
@@ -73,7 +61,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
         // @test Bbox-Padding
         if (def) {
           // @test Bbox-Padding-Error
-          bboxError('MultipleBBoxProperty', 'Padding', name);
+          throw new TexError(COMPONENT, 'MultipleBBoxProperty', 'Padding', name);
         }
         const pad = BBoxPadding(match[1] + match[3]);
         if (pad) {
@@ -89,19 +77,19 @@ const BboxMethods: { [key: string]: ParseMethod } = {
         // @test Bbox-Background
         if (background) {
           // @test Bbox-Background-Error
-          bboxError('MultipleBBoxProperty', 'Background', name);
+          throw new TexError(COMPONENT, 'MultipleBBoxProperty', 'Background', name);
         }
         background = part;
       } else if (part.match(/^[-a-z]+:/i)) {
         // @test Bbox-Frame
         if (style) {
           // @test Bbox-Frame-Error
-          bboxError('MultipleBBoxProperty', 'Style', name);
+          throw new TexError(COMPONENT, 'MultipleBBoxProperty', 'Style', name);
         }
         style = BBoxStyle(part);
       } else if (part !== '') {
         // @test Bbox-General-Error
-        bboxError('InvalidBBoxProperty', part);
+        throw new TexError(COMPONENT, 'InvalidBBoxProperty', part);
       }
     }
     if (def) {

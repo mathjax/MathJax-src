@@ -3,5 +3,6 @@
   "ModelArg2": "Color values for the %1 model must be between %2 and %3",
   "InvalidDecimalNumber": "Invalid decimal number",
   "InvalidNumber": "Invalid number",
-  "UndefinedColorModel": "Color model '%1' not defined"
+  "UndefinedColorModel": "Color model '%1' not defined",
+  "BadColorValue": "Invalid color value"
 }
