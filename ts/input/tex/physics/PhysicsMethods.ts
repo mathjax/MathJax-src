@@ -899,7 +899,12 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     const arg3 = parser.GetArgument(name);
     let n = parseInt(arg2, 10);
     let m = parseInt(arg3, 10);
-    if (isNaN(n) || isNaN(m) || m.toString() !== arg3 || n.toString() !== arg2) {
+    if (
+      isNaN(n) ||
+      isNaN(m) ||
+      m.toString() !== arg3 ||
+      n.toString() !== arg2
+    ) {
       throw new TexError('InvalidNumber');
     }
     n = n < 1 ? 1 : n;

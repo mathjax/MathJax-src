@@ -58,7 +58,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
       }
     }
     if (font.match(/;/)) {
-      throw new TexError('BadFont',  parser.currentCS);
+      throw new TexError('BadFont', parser.currentCS);
     }
     const n = UnitUtil.trimSpaces(parser.GetArgument(name)).replace(/^0x/, 'x');
     if (!n.match(/^(x[0-9A-Fa-f]+|[0-9]+)$/)) {
@@ -138,7 +138,6 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
           }
           c = cs[0];
           match = [''];
-
         }
       }
     } else if (next === '"') {

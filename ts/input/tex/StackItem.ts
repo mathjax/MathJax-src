@@ -389,7 +389,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * A list of basic errors.
    * @type {{[key: string]: string}}
    */
-  protected static errors: {[key: string]: string} = {
+  protected static errors: { [key: string]: string } = {
     // @test ExtraOpenMissingClose
     end: 'MissingBeginExtraEnd',
     // @test ExtraCloseMissingOpen
@@ -567,7 +567,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * @returns {string[]} The list of arguments for the TeXError.
    */
   public getErrors(kind: string): string {
-    const CLASS = (this.constructor as typeof BaseItem);
+    const CLASS = this.constructor as typeof BaseItem;
     return (CLASS.errors || {})[kind] || BaseItem.errors[kind];
   }
 

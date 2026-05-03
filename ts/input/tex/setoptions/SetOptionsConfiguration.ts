@@ -51,7 +51,10 @@ export const SetOptionsUtil = {
     }
     const config = parser.options.setoptions;
     const options = config.allowOptions[extension];
-    if ((options === undefined && !config.allowPackageDefault) || options === false) {
+    if (
+      (options === undefined && !config.allowPackageDefault) ||
+      options === false
+    ) {
       throw new TexError('PackageNotSettable', extension);
     }
     return true;
@@ -74,10 +77,15 @@ export const SetOptionsUtil = {
         ? options[option]
         : null;
     if (allow === false || (allow === null && !config.allowOptionsDefault)) {
-      throw new TexError('OptionNotSettable', option);
+      if (isTex) {
+        throw new TexError('TeXOptionNotSettable', option);
+      } else {
+        throw new TexError('OptionNotSettable', option, extension);
+      }
     }
-    if (!(extension === 'tex' ? parser.options : parser.options[extension])?.hasOwnProperty(option)) {
-      if (extension === 'tex') {
+    const extOptions = isTex ? parser.options : parser.options[extension];
+    if (!extOptions || !Object.hasOwn(extOptions, option)) {
+      if (isTex) {
         throw new TexError('InvalidTexOption', option);
       } else {
         throw new TexError('InvalidOptionKey', option, extension);

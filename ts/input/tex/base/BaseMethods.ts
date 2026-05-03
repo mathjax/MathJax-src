@@ -64,13 +64,16 @@ const MmlTokenAllow: { [key: string]: number } = {
  * @returns {string} String with space separated alignment characters
  */
 export function splitAlignArray(align: string, n: number = Infinity) {
-  const list = align.replace(/\s+/g, '').split('').map((s: string) => {
-    const name = {t: 'top', b: 'bottom', m: 'middle', c: 'center'}[s];
-    if (!name) {
-      throw new TexError('BadBreakAlign', s);
-    }
-    return name;
-  });
+  const list = align
+    .replace(/\s+/g, '')
+    .split('')
+    .map((s: string) => {
+      const name = { t: 'top', b: 'bottom', m: 'middle', c: 'center' }[s];
+      if (!name) {
+        throw new TexError('BadBreakAlign', s);
+      }
+      return name;
+    });
   if (list.length > n) {
     throw new TexError('TooManyAligns', align);
   }
@@ -990,13 +993,13 @@ const BaseMethods: { [key: string]: ParseMethod } = {
         break;
       case 'r':
         if (top.row.length || top.First) {
-          throw new TexError('BreakFirstInRow', parser.currentCS +'{r}');
+          throw new TexError('BreakFirstInRow', parser.currentCS + '{r}');
         }
         top.breakAlign.row = splitAlignArray(parser.GetArgument(name));
         break;
       case 't':
         if (top.table.length || top.row.length || top.First) {
-          throw new TexError('BreakFirstInTable', parser.currentCS +'{c}');
+          throw new TexError('BreakFirstInTable', parser.currentCS + '{c}');
         }
         top.breakAlign.table = splitAlignArray(parser.GetArgument(name));
         break;
@@ -1932,7 +1935,8 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     if (
       (first && !UnitUtil.matchDimen(first)[0]) ||
       (shift && !UnitUtil.matchDimen(shift)[0]) ||
-      (last && !UnitUtil.matchDimen(last)[0])) {
+      (last && !UnitUtil.matchDimen(last)[0])
+    ) {
       throw new TexError('BracketMustBeDimension', name);
     }
     //

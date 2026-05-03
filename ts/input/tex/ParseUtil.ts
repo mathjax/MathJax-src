@@ -184,7 +184,8 @@ function readValue(
         break;
       // Closing braces.
       case '}':
-        if (!braces) {          // Closing braces.
+        if (!braces) {
+          // Closing braces.
           throw new TexError('ExtraCloseMissingOpen');
         }
         braces--;

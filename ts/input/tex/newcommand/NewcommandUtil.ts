@@ -167,7 +167,6 @@ export const NewcommandUtil = {
     throw new TexError('MissingReplacementString', cmd);
   },
 
-
   /**
    * Find a single parameter delimited by a trailing template.
    *
@@ -221,7 +220,6 @@ export const NewcommandUtil = {
     // @test Runaway Argument
     throw new TexError('RunawayArgument', name);
   },
-
 
   /**
    * Check if a template is at the current location.

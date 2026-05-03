@@ -611,8 +611,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     // @test Shove (Left|Right) (Top|Middle|Bottom)
     if (top.kind !== 'multline') {
       // @test Shove Error Environment
-      throw new TexError('CommandOnlyAllowedInEnv',
-                         parser.currentCS);
+      throw new TexError('CommandOnlyAllowedInEnv', parser.currentCS);
     }
     if (top.Size()) {
       // @test Shove Error (Top|Middle|Bottom)
@@ -740,8 +739,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
   HandleTag(parser: TexParser, name: string) {
     if (!parser.tags.currentTag.taggable && parser.tags.env) {
       // @test Illegal Tag Error
-      throw new TexError('CommandNotAllowedInEnv',
-                         parser.currentCS);
+      throw new TexError('CommandNotAllowedInEnv', parser.currentCS);
     }
     if (parser.tags.currentTag.tag) {
       // @test Double Tag Error
