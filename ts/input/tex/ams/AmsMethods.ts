@@ -149,7 +149,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     const n = parser.GetArgument('\\begin{' + name + '}');
     if (n.match(/[^0-9]/)) {
       // @test PositiveIntegerArg
-      throw new TexError(COMPONENT, 'PositiveIntegerArg');
+      throw new TexError(COMPONENT, 'PositiveIntegerArg', '\\begin{' + name + '}');
     }
     let count = parseInt(n, 10);
     while (count > 0) {
@@ -238,7 +238,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
   ): ParseResult {
     const n = parser.GetArgument('\\begin{' + begin.getName() + '}');
     if (n.match(/[^0-9]/)) {
-      throw new TexError(COMPONENT, 'PositiveIntegerArg');
+      throw new TexError(COMPONENT, 'PositiveIntegerArg', '\\begin{' + begin.getName() + '}');
     }
     const align = padded ? 'crl' : 'rlc';
     const balign = padded ? 'mbt' : 'btm';
@@ -613,11 +613,11 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     // @test Shove (Left|Right) (Top|Middle|Bottom)
     if (top.kind !== 'multline') {
       // @test Shove Error Environment
-      throw new TexError(COMPONENT, 'CommandOnlyAllowedInEnv', parser.currentCS);
+      throw new TexError(COMPONENT, 'CommandOnlyAllowedInEnv', parser.currentCS, 'multline');
     }
     if (top.Size()) {
       // @test Shove Error (Top|Middle|Bottom)
-      throw new TexError(COMPONENT, 'CommandAtTheBeginingOfLine');
+      throw new TexError(COMPONENT, 'CommandAtTheBeginingOfLine', parser.currentCS);
     }
     top.setProperty('shove', shove);
   },
@@ -741,7 +741,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
   HandleTag(parser: TexParser, name: string) {
     if (!parser.tags.currentTag.taggable && parser.tags.env) {
       // @test Illegal Tag Error
-      throw new TexError(COMPONENT, 'CommandNotAllowedInEnv', parser.currentCS);
+      throw new TexError(COMPONENT, 'CommandNotAllowedInEnv', parser.currentCS, parser.tags.env);
     }
     if (parser.tags.currentTag.tag) {
       // @test Double Tag Error
