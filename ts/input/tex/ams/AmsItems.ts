@@ -77,9 +77,7 @@ export class MultlineItem extends ArrayItem {
   public EndRow() {
     if (this.row.length !== 1) {
       // @test MultlineRowsOneCol
-      throw new TexError(
-        'MultlineRowsOneCol',
-        'multline');
+      throw new TexError('MultlineRowsOneCol', 'multline');
     }
     const row = this.create('node', 'mtr', this.row);
     this.table.push(row);

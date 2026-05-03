@@ -39,9 +39,15 @@ const BraketMethods: { [key: string]: ParseMethod } = {
    * @param {number} barmax Maximum number of bars allowed.
    * @param {boolean} space True to add space inside the delimiters
    */
-  Braket(parser: TexParser, _name: string,
-         open: string, close: string,
-         stretchy: boolean, barmax: number, space: boolean = false) {
+  Braket(
+    parser: TexParser,
+    _name: string,
+    open: string,
+    close: string,
+    stretchy: boolean,
+    barmax: number,
+    space: boolean = false
+  ) {
     let next = parser.GetNext();
     if (next === '') {
       throw new TexError('MissingArgFor', parser.currentCS);

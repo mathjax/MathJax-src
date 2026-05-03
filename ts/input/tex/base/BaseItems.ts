@@ -111,7 +111,7 @@ export class OpenItem extends BaseItem {
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
     // @test ExtraOpenMissingClose
-    'stop': 'ExtraOpenMissingClose'
+    stop: 'ExtraOpenMissingClose',
   });
 
   /**
@@ -222,11 +222,11 @@ export class SubsupItem extends BaseItem {
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
     // @test MissingScript Sub, MissingScript Sup
-    'stop': 'MissingScript',
+    stop: 'MissingScript',
     // @test MissingOpenForSup
-    'sup': 'MissingOpenForSup',
+    sup: 'MissingOpenForSup',
     // @test MissingOpenForSub
-    'sub': 'MissingOpenForSub'
+    sub: 'MissingOpenForSub',
   });
 
   /**
@@ -317,8 +317,7 @@ export class OverItem extends BaseItem {
   public checkItem(item: StackItem): CheckType {
     if (item.isKind('over')) {
       // @test Double Over
-      throw new TexError(
-        'AmbiguousUseOf', item.getName());
+      throw new TexError('AmbiguousUseOf', item.getName());
     }
     if (item.isClose) {
       // @test Over
@@ -372,7 +371,7 @@ export class LeftItem extends BaseItem {
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
     // @test ExtraLeftMissingRight
-    'stop': 'ExtraLeftMissingRight'
+    stop: 'ExtraLeftMissingRight',
   });
 
   /**
@@ -585,8 +584,7 @@ export class BeginItem extends BaseItem {
     if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
         // @test EnvBadEnd
-        throw new TexError('EnvBadEnd',
-                           this.getName(), item.getName());
+        throw new TexError('EnvBadEnd', this.getName(), item.getName());
       }
       // @test Hfill
       const node = this.toMml();

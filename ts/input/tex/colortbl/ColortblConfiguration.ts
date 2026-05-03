@@ -130,14 +130,14 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
   //
   const top = parser.stack.Top() as ColorArrayItem;
   if (!(top instanceof ColorArrayItem)) {
-    throw new TexError('UnsupportedTableColor',  parser.currentCS);
+    throw new TexError('UnsupportedTableColor', parser.currentCS);
   }
   //
   //  Check the position of the macro and save the color.
   //
   if (type === 'col') {
     if (top.table.length && top.color.col[top.row.length] !== color) {
-      throw new TexError('ColumnColorNotTop',  name);
+      throw new TexError('ColumnColorNotTop', name);
     }
     top.color.col[top.row.length] = color;
     //
