@@ -165,7 +165,7 @@ export const NewcommandUtil = {
     }
     // @test No Replacement
     throw new TexError('MissingReplacementString', cmd);
-  }
+  },
 
 
   /**
@@ -220,7 +220,7 @@ export const NewcommandUtil = {
     }
     // @test Runaway Argument
     throw new TexError('RunawayArgument', name);
-  }
+  },
 
 
   /**
