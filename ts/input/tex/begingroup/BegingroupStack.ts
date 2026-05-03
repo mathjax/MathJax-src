@@ -32,6 +32,8 @@ import {
 import { Token } from '../Token.js';
 import { MapHandler, SubHandlers } from '../MapHandler.js';
 import TexError from '../TexError.js';
+
+const COMPONENT = '[tex]/begingroup';
 import {
   NewcommandTables as NT,
   NewcommandPriority,
@@ -170,10 +172,7 @@ export class BegingroupStack {
    */
   public pop() {
     if (this.i === this.base) {
-      throw new TexError(
-        'MissingBegingroup',
-        'Missing \\begingroup or extra \\endgroup'
-      );
+      throw new TexError(COMPONENT, 'MissingBegingroup');
     }
     this.handlers.remove(BegingroupStack.handlerConfig, {});
     //

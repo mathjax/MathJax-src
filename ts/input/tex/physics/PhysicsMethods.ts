@@ -33,6 +33,8 @@ import { NodeFactory } from '../NodeFactory.js';
 import { Macro } from '../Token.js';
 import { AutoOpen } from './PhysicsItems.js';
 
+const COMPONENT = '[tex]/physics';
+
 /**
  * Pairs open and closed fences.
  *
@@ -243,7 +245,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     }
     let right = pairs[next];
     if (arg && next !== '{') {
-      throw new TexError('MissingArgFor', parser.currentCS);
+      throw new TexError(COMPONENT, 'MissingArgFor', parser.currentCS);
     }
     if (!right) {
       const empty = parser.create('node', 'mrow');
@@ -293,7 +295,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
-  Eval(parser: TexParser, name: string) {
+  Eval(parser: TexParser, _name: string) {
     const star = parser.GetStar();
     const next = parser.GetNext();
     if (next === '(' || next === '[') {
@@ -308,7 +310,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       );
       return;
     }
-    throw new TexError('MissingArgFor', parser.currentCS);
+    throw new TexError(COMPONENT, 'MissingArgFor', parser.currentCS);
   },
 
   /**
@@ -333,12 +335,12 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       big = parser.GetCS();
       if (!big.match(biggs)) {
         // Actually a commutator error arg1 error.
-        throw new TexError('MissingArgFor', parser.currentCS);
+        throw new TexError(COMPONENT, 'MissingArgFor', parser.currentCS);
       }
       next = parser.GetNext();
     }
     if (next !== '{') {
-      throw new TexError('MissingArgFor', parser.currentCS);
+      throw new TexError(COMPONENT, 'MissingArgFor', parser.currentCS);
     }
     const arg1 = parser.GetArgument(name);
     const arg2 = parser.GetArgument(name);
@@ -868,7 +870,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     const arg = parser.GetArgument(name);
     const size = parseInt(arg, 10);
     if (isNaN(size)) {
-      throw new TexError('InvalidNumber');
+      throw new TexError(COMPONENT, 'InvalidNumber');
     }
     if (size <= 1) {
       parser.string = '1' + parser.string.slice(parser.i);
@@ -905,7 +907,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       m.toString() !== arg3 ||
       n.toString() !== arg2
     ) {
-      throw new TexError('InvalidNumber');
+      throw new TexError(COMPONENT, 'InvalidNumber');
     }
     n = n < 1 ? 1 : n;
     m = m < 1 ? 1 : m;

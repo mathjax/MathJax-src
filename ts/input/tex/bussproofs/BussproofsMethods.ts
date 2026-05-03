@@ -30,6 +30,8 @@ import { StackItem } from '../StackItem.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import * as BussproofsUtil from './BussproofsUtil.js';
 
+const COMPONENT = '[tex]/bussproofs';
+
 /**
  * Pads content of an inference rule.
  *
@@ -136,12 +138,12 @@ function createRule(
 function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   const dollar = parser.GetNext();
   if (dollar !== '$') {
-    throw new TexError('IllegalUseOfCommand', name);
+    throw new TexError(COMPONENT, 'IllegalUseOfCommand', name);
   }
   parser.i++;
   let axiom = parser.GetUpTo(name, '$');
   if (axiom.indexOf('\\fCenter') === -1) {
-    throw new TexError('MissingProofCommand', '\\fCenter', name);
+    throw new TexError(COMPONENT, 'MissingProofCommand', '\\fCenter', name);
   }
   // Check for fCenter and throw error?
   const [prem, conc] = axiom.split('\\fCenter');
@@ -207,7 +209,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
     const top = parser.stack.Top();
     // TODO: Label error
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand');
+      throw new TexError(COMPONENT, 'IllegalProofCommand');
     }
     const content = paddedContent(parser, parser.GetArgument(name));
     BussproofsUtil.setProperty(content, 'axiom', true);
@@ -224,10 +226,10 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
   Inference(parser: TexParser, name: string, n: number) {
     const top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand');
+      throw new TexError(COMPONENT, 'IllegalProofCommand');
     }
     if (top.Size() < n) {
-      throw new TexError('BadProofTree');
+      throw new TexError(COMPONENT, 'BadProofTree');
     }
     const rootAtTop = top.getProperty('rootAtTop') as boolean;
     const childCount = n === 1 && !top.Peek()[0].childNodes.length ? 0 : n;
@@ -279,7 +281,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
     const top = parser.stack.Top();
     // Label error
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand');
+      throw new TexError(COMPONENT, 'IllegalProofCommand');
     }
     const content = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
     const label =
@@ -301,7 +303,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
     const top = parser.stack.Top();
     // Label error
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand');
+      throw new TexError(COMPONENT, 'IllegalProofCommand');
     }
     top.setProperty('currentLine', style);
     if (always) {
@@ -319,7 +321,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
   RootAtTop(parser: TexParser, _name: string, where: boolean) {
     const top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand');
+      throw new TexError(COMPONENT, 'IllegalProofCommand');
     }
     top.setProperty('rootAtTop', where);
   },
@@ -333,7 +335,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
   AxiomF(parser: TexParser, name: string) {
     const top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand');
+      throw new TexError(COMPONENT, 'IllegalProofCommand');
     }
     const line = parseFCenterLine(parser, name);
     BussproofsUtil.setProperty(line, 'axiom', true);
@@ -358,10 +360,10 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
   InferenceF(parser: TexParser, name: string, n: number) {
     const top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand');
+      throw new TexError(COMPONENT, 'IllegalProofCommand');
     }
     if (top.Size() < n) {
-      throw new TexError('BadProofTree');
+      throw new TexError(COMPONENT, 'BadProofTree');
     }
     const rootAtTop = top.getProperty('rootAtTop') as boolean;
     const childCount = n === 1 && !top.Peek()[0].childNodes.length ? 0 : n;

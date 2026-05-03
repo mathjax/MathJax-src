@@ -31,6 +31,10 @@ import {
   makeBsprAttributes,
 } from './BussproofsUtil.js';
 import './BussproofsMappings.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/bussproofs';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/bussproofs');
 
 export const BussproofsConfiguration = Configuration.create('bussproofs', {
   [ConfigurationType.HANDLER]: {

@@ -27,6 +27,8 @@ import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
 import { TexConstant } from './TexConstants.js';
 
+const COMPONENT = '[tex]/base';
+
 // Union types for abbreviation.
 export type EnvProp = string | number | boolean;
 
@@ -513,12 +515,12 @@ export abstract class BaseItem extends MmlStack implements StackItem {
         return BaseItem.fail;
       }
       // @test Ampersand-error
-      throw new TexError('Misplaced', item.getName());
+      throw new TexError(COMPONENT, 'Misplaced', item.getName());
     }
     if (item.isClose && this.getErrors(item.kind)) {
       // @test ExtraOpenMissingClose, ExtraCloseMissingOpen,
       //       MissingLeftExtraRight, MissingBeginExtraEnd
-      throw new TexError(this.getErrors(item.kind), item.getName());
+      throw new TexError(COMPONENT, this.getErrors(item.kind), item.getName());
     }
     if (!item.isFinal) {
       return BaseItem.success;

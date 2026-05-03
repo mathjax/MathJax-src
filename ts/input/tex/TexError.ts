@@ -21,75 +21,21 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-export default class TexError {
-  private static pattern =
-    /%(\d+|\{\d+\}|\{[a-z]+:%\d+(?:\|(?:%\{\d+\}|%.|[^}])*)+\}|.)/g;
+import { Locale } from '../../util/Locale.js';
 
-  /**
-   * Default error message.
-   *
-   * @type {string}
-   */
+export default class TexError {
   public message: string;
 
   /**
-   * The old MathJax processing function.
-   *
-   * @param {string} str The basic error message.
-   * @param {string[]} args The arguments to be replaced in the error message.
-   * @returns {string} The processed error string.
-   */
-  private static processString(str: string, args: string[]): string {
-    const parts = str.split(TexError.pattern);
-    for (let i = 1, m = parts.length; i < m; i += 2) {
-      let c = parts[i].charAt(0); // first char will be { or \d or a char to be
-      // kept literally
-      if (c >= '0' && c <= '9') {
-        // %n
-        parts[i] = args[parseInt(parts[i], 10) - 1];
-        if (typeof parts[i] === 'number') {
-          parts[i] = parts[i].toString();
-        }
-      } else if (c === '{') {
-        // %{n} or %{plural:%n|...}
-        c = parts[i].substring(1);
-        if (c >= '0' && c <= '9') {
-          // %{n}
-          parts[i] =
-            args[
-              parseInt(
-                // parts[i] = %{n}
-                parts[i].substring(1, parts[i].length - 1),
-                10
-              ) - 1
-            ];
-          if (typeof parts[i] === 'number') {
-            parts[i] = parts[i].toString();
-          }
-        } else {
-          // %{plural:%n|...}
-          const match = parts[i].match(/^\{([a-z]+):%(\d+)\|(.*)\}$/);
-          if (match) {
-            // Removed plural here.
-            parts[i] = '%' + parts[i];
-          }
-        }
-      }
-    }
-    return parts.join('');
-  }
-
-  /**
-   * @class
-   * @param {string} id        message id (for localization)
-   * @param {string} message   text of English message
-   * @param {string[]=} rest   any substitution arguments
+   * @param {string} component  locale component (e.g. '[tex]/base')
+   * @param {string} id         message id
+   * @param {string[]} args     substitution arguments
    */
   constructor(
+    public component: string,
     public id: string,
-    message: string,
-    ...rest: string[]
+    ...args: string[]
   ) {
-    this.message = TexError.processString(message, rest);
+    this.message = Locale.message(component, id, ...args);
   }
 }

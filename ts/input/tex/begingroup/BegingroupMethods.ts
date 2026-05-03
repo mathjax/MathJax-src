@@ -24,6 +24,8 @@
 import { CommandMap } from '../TokenMap.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
+
+const COMPONENT = '[tex]/begingroup';
 import BaseMethods from '../base/BaseMethods.js';
 import { begingroupStack } from './BegingroupStack.js';
 
@@ -83,11 +85,7 @@ export const BegingroupMethods = {
     // Check that \global can be used with the following CS
     //
     if (!parser.options.begingroup.allowGlobal.includes(cs)) {
-      throw new TexError(
-        'IllegalGlobal',
-        'Invalid use of %1',
-        parser.currentCS
-      );
+      throw new TexError(COMPONENT, 'IllegalGlobal', parser.currentCS);
     }
     parser.stack.env.isGlobal = true;
   },

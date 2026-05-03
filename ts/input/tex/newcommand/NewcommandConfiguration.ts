@@ -29,6 +29,10 @@ import { NewcommandTables, NewcommandPriority } from './NewcommandUtil.js';
 import './NewcommandMappings.js';
 import ParseMethods from '../ParseMethods.js';
 import * as sm from '../TokenMap.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/newcommand';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/newcommand');
 
 /**
  * Initialize the newcommand maps for delimiters, commands, and environments,
