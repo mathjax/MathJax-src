@@ -171,7 +171,7 @@ export class FlalignItem extends EqnArrayItem {
     const n = this.getProperty('xalignat') as number;
     if (!n) return;
     if (this.row.length > n) {
-      throw new TexError(COMPONENT, 'XalignOverflow', this.name);
+      throw new TexError(COMPONENT, 'XalignOverflow', '&', this.name);
     }
   }
 
