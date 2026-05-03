@@ -109,7 +109,7 @@ export abstract class CommonOutputJax<
     WW, WF, WC, CC, VV, DD, FD, FC
   >,
   CC extends CharOptions,
-  VV extends VariantData<CC>,
+  VV extends VariantData<CC, DD>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
@@ -189,7 +189,7 @@ export abstract class CommonOutputJax<
    */
   public static genericFont: FontDataClass<
     CharOptions,
-    VariantData<CharOptions>,
+    VariantData<CharOptions, DelimiterData>,
     DelimiterData
   >;
 
