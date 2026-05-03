@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Noundefined Noundefined Context 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\b c" display="block">
+  <mi data-latex="a">a</mi>
+  <mtext mathcolor="red" data-latex="\\b">\\b</mtext>
+  <mi data-latex="c">c</mi>
+</math>"
+`;
+
+exports[`Noundefined Noundefined Single 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\a" display="block">
+  <mtext mathcolor="red" data-latex="\\a">\\a</mtext>
+</math>"
+`;

@@ -6,16 +6,13 @@ import { tmpJsonFile, ESC } from './constants.js';
 import * as fs from 'fs';
 
 export default class TexReporter {
-
   constructor(globalConfig, reporterOptions, reporterContext) {
     this._globalConfig = globalConfig;
     this._options = reporterOptions;
     this._context = reporterContext;
   }
 
-  onRunStart(
-    aggregatedResults, options
-  ) {
+  onRunStart(aggregatedResults, options) {
     fs.writeFileSync(tmpJsonFile, '[{}');
   }
 
@@ -47,18 +44,27 @@ export default class TexReporter {
  */
 function combineCoverage(coverage) {
   const maps = [];
-  coverage = coverage.sort((a, b) => a.configuration < b.configuration ? -1 : 1);
+  coverage = coverage.sort((a, b) =>
+    a.configuration < b.configuration ? -1 : 1
+  );
   for (const configuration of coverage) {
     const rows = [];
     let actual = 0;
     let size = 0;
-    for (const table of configuration.tables.sort((a, b) => a.table < b.table ? -1 : 1)) {
+    for (const table of configuration.tables.sort((a, b) =>
+      a.table < b.table ? -1 : 1
+    )) {
       if (table.actual > table.size) {
         table.actual = table.size;
       }
       actual += table.actual;
       size += table.size;
-      rows.push([' ' + table.table, table.size, table.actual, table.missing.join(', ')]);
+      rows.push([
+        ' ' + table.table,
+        table.size,
+        table.actual,
+        table.missing.join(', '),
+      ]);
     }
     maps.push([configuration.configuration, size, actual, ''], ...rows);
   }
@@ -77,20 +83,25 @@ function createCoverageOutput(coverage) {
   const line = [
     makeColumn('', width).replaceAll(' ', '-'),
     '--------|--------|------------|',
-    makeColumn('', mwidth).replaceAll(' ', '-').replace('|-', '')
+    makeColumn('', mwidth).replaceAll(' ', '-').replace('|-', ''),
   ].join('');
   console.log(line);
-  console.log(makeColumn('Table', width, 0, true) + 'Entries | Tested | Percentage | Missing');
+  console.log(
+    makeColumn('Table', width, 0, true) +
+      'Entries | Tested | Percentage | Missing'
+  );
   console.log(line);
   for (const [table, size, actual, missing] of rows) {
     const color = getColor(actual, size);
-    console.log([
-      makeColumn(table, width, color, true),
-      makeColumn(size, 7, color),
-      makeColumn(actual, 6, color),
-      makeColumn(percentage(actual, size), 10, color),
-      colorize(missing, color)
-    ].join(''));
+    console.log(
+      [
+        makeColumn(table, width, color, true),
+        makeColumn(size, 7, color),
+        makeColumn(actual, 6, color),
+        makeColumn(percentage(actual, size), 10, color),
+        colorize(missing, color),
+      ].join('')
+    );
   }
   console.log(line);
   console.log('');
@@ -108,7 +119,8 @@ function trimMissing(rows, width) {
   for (const row of rows) {
     let missing = row[3];
     if (missing.length > rest) {
-      row[3] = missing = '...' + missing.slice(missing.length - rest + 4).replace(/.*?, /, '');
+      row[3] = missing =
+        '...' + missing.slice(missing.length - rest + 4).replace(/.*?, /, '');
     }
     if (missing.length > mwidth) {
       mwidth = missing.length;
@@ -144,7 +156,7 @@ function makeColumn(cell, size, color = 0, left = false) {
  * @return The percentage for table size to tested elements.
  */
 function percentage(actual, size) {
-  return Math.round((actual/size) * 10000) / 100;
+  return Math.round((actual / size) * 10000) / 100;
 }
 
 /**
@@ -154,7 +166,7 @@ function percentage(actual, size) {
  * @return The color number for use in a color escape sequence
  */
 function getColor(actual, size) {
-  const percent = actual/size * 100;
+  const percent = (actual / size) * 100;
   return percent >= 80 ? 32 : percent >= 50 ? 33 : 31;
 }
 
@@ -165,6 +177,7 @@ function getColor(actual, size) {
  * @return The cell contents with color sequences
  */
 function colorize(cell, color) {
-  return color && process.stdout.isTTY ? `${ESC}[1m${ESC}[${color}m${cell}${ESC}[0m` : cell;
+  return color && process.stdout.isTTY
+    ? `${ESC}[1m${ESC}[${color}m${cell}${ESC}[0m`
+    : cell;
 }
-

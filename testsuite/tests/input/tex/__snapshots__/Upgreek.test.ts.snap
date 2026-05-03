@@ -1,0 +1,247 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Upgreek Updelta 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Updelta" display="block">
+  <mi mathvariant="normal" data-latex="\\Updelta">&#x394;</mi>
+</math>"
+`;
+
+exports[`Upgreek Upgamma 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Upgamma" display="block">
+  <mi mathvariant="normal" data-latex="\\Upgamma">&#x393;</mi>
+</math>"
+`;
+
+exports[`Upgreek Uplambda 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Uplambda" display="block">
+  <mi mathvariant="normal" data-latex="\\Uplambda">&#x39B;</mi>
+</math>"
+`;
+
+exports[`Upgreek Upomega 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Upomega" display="block">
+  <mi mathvariant="normal" data-latex="\\Upomega">&#x3A9;</mi>
+</math>"
+`;
+
+exports[`Upgreek Upphi 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Upphi" display="block">
+  <mi mathvariant="normal" data-latex="\\Upphi">&#x3A6;</mi>
+</math>"
+`;
+
+exports[`Upgreek Uppi 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Uppi" display="block">
+  <mi mathvariant="normal" data-latex="\\Uppi">&#x3A0;</mi>
+</math>"
+`;
+
+exports[`Upgreek Uppsi 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Uppsi" display="block">
+  <mi mathvariant="normal" data-latex="\\Uppsi">&#x3A8;</mi>
+</math>"
+`;
+
+exports[`Upgreek Upsigma 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Upsigma" display="block">
+  <mi mathvariant="normal" data-latex="\\Upsigma">&#x3A3;</mi>
+</math>"
+`;
+
+exports[`Upgreek Uptheta 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Uptheta" display="block">
+  <mi mathvariant="normal" data-latex="\\Uptheta">&#x398;</mi>
+</math>"
+`;
+
+exports[`Upgreek Upupsilon 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Upupsilon" display="block">
+  <mi mathvariant="normal" data-latex="\\Upupsilon">&#x3A5;</mi>
+</math>"
+`;
+
+exports[`Upgreek Upxi 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Upxi" display="block">
+  <mi mathvariant="normal" data-latex="\\Upxi">&#x39E;</mi>
+</math>"
+`;
+
+exports[`Upgreek upalpha 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upalpha" display="block">
+  <mi mathvariant="normal" data-latex="\\upalpha">&#x3B1;</mi>
+</math>"
+`;
+
+exports[`Upgreek upbeta 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upbeta" display="block">
+  <mi mathvariant="normal" data-latex="\\upbeta">&#x3B2;</mi>
+</math>"
+`;
+
+exports[`Upgreek upchi 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upchi" display="block">
+  <mi mathvariant="normal" data-latex="\\upchi">&#x3C7;</mi>
+</math>"
+`;
+
+exports[`Upgreek updelta 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\updelta" display="block">
+  <mi mathvariant="normal" data-latex="\\updelta">&#x3B4;</mi>
+</math>"
+`;
+
+exports[`Upgreek upepsilon 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upepsilon" display="block">
+  <mi mathvariant="normal" data-latex="\\upepsilon">&#x3F5;</mi>
+</math>"
+`;
+
+exports[`Upgreek upeta 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upeta" display="block">
+  <mi mathvariant="normal" data-latex="\\upeta">&#x3B7;</mi>
+</math>"
+`;
+
+exports[`Upgreek upgamma 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upgamma" display="block">
+  <mi mathvariant="normal" data-latex="\\upgamma">&#x3B3;</mi>
+</math>"
+`;
+
+exports[`Upgreek upiota 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upiota" display="block">
+  <mi mathvariant="normal" data-latex="\\upiota">&#x3B9;</mi>
+</math>"
+`;
+
+exports[`Upgreek upkappa 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upkappa" display="block">
+  <mi mathvariant="normal" data-latex="\\upkappa">&#x3BA;</mi>
+</math>"
+`;
+
+exports[`Upgreek uplambda 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\uplambda" display="block">
+  <mi mathvariant="normal" data-latex="\\uplambda">&#x3BB;</mi>
+</math>"
+`;
+
+exports[`Upgreek upmu 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upmu" display="block">
+  <mi mathvariant="normal" data-latex="\\upmu">&#x3BC;</mi>
+</math>"
+`;
+
+exports[`Upgreek upnu 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upnu" display="block">
+  <mi mathvariant="normal" data-latex="\\upnu">&#x3BD;</mi>
+</math>"
+`;
+
+exports[`Upgreek upomega 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upomega" display="block">
+  <mi mathvariant="normal" data-latex="\\upomega">&#x3C9;</mi>
+</math>"
+`;
+
+exports[`Upgreek upomicron 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upomicron" display="block">
+  <mi mathvariant="normal" data-latex="\\upomicron">&#x3BF;</mi>
+</math>"
+`;
+
+exports[`Upgreek upphi 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upphi" display="block">
+  <mi mathvariant="normal" data-latex="\\upphi">&#x3D5;</mi>
+</math>"
+`;
+
+exports[`Upgreek uppi 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\uppi" display="block">
+  <mi mathvariant="normal" data-latex="\\uppi">&#x3C0;</mi>
+</math>"
+`;
+
+exports[`Upgreek uppsi 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\uppsi" display="block">
+  <mi mathvariant="normal" data-latex="\\uppsi">&#x3C8;</mi>
+</math>"
+`;
+
+exports[`Upgreek uprho 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\uprho" display="block">
+  <mi mathvariant="normal" data-latex="\\uprho">&#x3C1;</mi>
+</math>"
+`;
+
+exports[`Upgreek upsigma 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upsigma" display="block">
+  <mi mathvariant="normal" data-latex="\\upsigma">&#x3C3;</mi>
+</math>"
+`;
+
+exports[`Upgreek uptau 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\uptau" display="block">
+  <mi mathvariant="normal" data-latex="\\uptau">&#x3C4;</mi>
+</math>"
+`;
+
+exports[`Upgreek uptheta 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\uptheta" display="block">
+  <mi mathvariant="normal" data-latex="\\uptheta">&#x3B8;</mi>
+</math>"
+`;
+
+exports[`Upgreek upupsilon 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upupsilon" display="block">
+  <mi mathvariant="normal" data-latex="\\upupsilon">&#x3C5;</mi>
+</math>"
+`;
+
+exports[`Upgreek upvarepsilon 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upvarepsilon" display="block">
+  <mi mathvariant="normal" data-latex="\\upvarepsilon">&#x3B5;</mi>
+</math>"
+`;
+
+exports[`Upgreek upvarphi 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upvarphi" display="block">
+  <mi mathvariant="normal" data-latex="\\upvarphi">&#x3C6;</mi>
+</math>"
+`;
+
+exports[`Upgreek upvarpi 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upvarpi" display="block">
+  <mi mathvariant="normal" data-latex="\\upvarpi">&#x3D6;</mi>
+</math>"
+`;
+
+exports[`Upgreek upvarrho 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upvarrho" display="block">
+  <mi mathvariant="normal" data-latex="\\upvarrho">&#x3F1;</mi>
+</math>"
+`;
+
+exports[`Upgreek upvarsigma 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upvarsigma" display="block">
+  <mi mathvariant="normal" data-latex="\\upvarsigma">&#x3C2;</mi>
+</math>"
+`;
+
+exports[`Upgreek upvartheta 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upvartheta" display="block">
+  <mi mathvariant="normal" data-latex="\\upvartheta">&#x3D1;</mi>
+</math>"
+`;
+
+exports[`Upgreek upxi 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upxi" display="block">
+  <mi mathvariant="normal" data-latex="\\upxi">&#x3BE;</mi>
+</math>"
+`;
+
+exports[`Upgreek upzeta 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\upzeta" display="block">
+  <mi mathvariant="normal" data-latex="\\upzeta">&#x3B6;</mi>
+</math>"
+`;

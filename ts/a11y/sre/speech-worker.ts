@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -182,7 +182,7 @@ declare const SRE: any;
      * @returns {WorkerResult} Promise fulfilled when computation is complete.
      */
     speech(data: Message): WorkerResult {
-      return Speech(SRE.workerSpeech, data.mml, data.options);
+      return Speech(SRE.worker.speech, data.mml, data.options);
     },
 
     /**
@@ -192,7 +192,7 @@ declare const SRE: any;
      * @returns {WorkerResult} Promise fulfilled when computation is complete.
      */
     nextRules(data: Message): WorkerResult {
-      return Speech(SRE.workerNextRules, data.mml, data.options);
+      return Speech(SRE.worker.nextRules, data.mml, data.options);
     },
 
     /**
@@ -202,7 +202,7 @@ declare const SRE: any;
      * @returns {WorkerResult} Promise fulfilled when computation is complete.
      */
     nextStyle(data: Message): WorkerResult {
-      return Speech(SRE.workerNextStyle, data.mml, data.options, data.nodeId);
+      return Speech(SRE.worker.nextStyle, data.mml, data.options, data.nodeId);
     },
 
     /**
@@ -212,7 +212,7 @@ declare const SRE: any;
      * @returns {WorkerResult} Promise fulfilled when computation is complete.
      */
     async localePreferences(data: Message): WorkerResult {
-      const structure = await SRE.workerLocalePreferences(data.options);
+      const structure = await SRE.worker.localePreferences(data.options);
       // Not strictly necessary for the menu as there should not be one in node.
       // However, it allows for getting the preferences in a different context.
       return structure ? JSON.stringify(structure) : structure;
@@ -225,7 +225,7 @@ declare const SRE: any;
      * @returns {WorkerResult} Promise fulfilled when computation is complete.
      */
     async relevantPreferences(data: Message): WorkerResult {
-      return (await SRE.workerRelevantPreferences(data.mml, data.id)) ?? '';
+      return (await SRE.worker.relevantPreferences(data.mml, data.id)) ?? '';
     },
   };
 

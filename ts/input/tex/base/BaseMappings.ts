@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -452,16 +452,20 @@ new sm.CommandMap('macros', {
   textsf: [BaseMethods.HBox, null, VARIANT.SANSSERIF],
   texttt: [BaseMethods.HBox, null, VARIANT.MONOSPACE],
 
-  tiny: [BaseMethods.SetSize, 0.5],
-  Tiny: [BaseMethods.SetSize, 0.6], // non-standard
+  Tiny: [BaseMethods.SetSize, 0.5],
+  tiny: [BaseMethods.SetSize, 0.6],
   scriptsize: [BaseMethods.SetSize, 0.7],
-  small: [BaseMethods.SetSize, 0.85],
+  SMALL: [BaseMethods.SetSize, 0.7],
+  Small: [BaseMethods.SetSize, 0.8],
+  footnotesize: [BaseMethods.SetSize, 0.8],
+  small: [BaseMethods.SetSize, 0.9],
   normalsize: [BaseMethods.SetSize, 1.0],
-  large: [BaseMethods.SetSize, 1.2],
-  Large: [BaseMethods.SetSize, 1.44],
-  LARGE: [BaseMethods.SetSize, 1.73],
-  huge: [BaseMethods.SetSize, 2.07],
-  Huge: [BaseMethods.SetSize, 2.49],
+  large: [BaseMethods.SetSize, 1.095],
+  Large: [BaseMethods.SetSize, 1.2],
+  LARGE: [BaseMethods.SetSize, 1.44],
+  huge: [BaseMethods.SetSize, 1.728],
+  Huge: [BaseMethods.SetSize, 2.074],
+  HUGE: [BaseMethods.SetSize, 2.49],
 
   arcsin: BaseMethods.NamedFn,
   arccos: BaseMethods.NamedFn,

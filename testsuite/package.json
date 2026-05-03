@@ -4,7 +4,11 @@
   "description": "MathJax jest tests for v4",
   "type": "module",
   "scripts": {
-    "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --localstorage-file ./lib/localstorage' pnpm jest"
+    "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --localstorage-file ./lib/localstorage' pnpm jest",
+    "lint": "pnpm -w lint testsuite/tests; pnpm -w lint testsuite/src",
+    "lint:fix": "pnpm -w lint:fix testsuite/tests; pnpm -w lint:fix testsuite/src",
+    "format": "pnpm -w format testsuite/tests; pnpm -w format testsuite/src",
+    "format:fix": "pnpm -w format:fix testsuite/tests; pnpm -w format:fix testsuite/src"
   },
   "imports": {
     "#js/*": "../mjs/*",
@@ -14,11 +18,10 @@
   },
   "dependencies": {
     "@jest/globals": "^29.7.0",
-    "@mathjax/mathjax-bbm-font-extension": "^4.1.1",
+    "@mathjax/mathjax-bbm-font-extension": "^4.1.2",
     "@types/jest": "^29.5.14",
     "jest": "^29.7.0",
     "ts-jest": "^29.4.6",
-    "ts-node": "^10.9.2",
-    "xml-js": "^1.6.11"
+    "ts-node": "^10.9.2"
   }
 }

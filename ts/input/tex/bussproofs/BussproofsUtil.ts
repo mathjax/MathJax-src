@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ let item: MATHITEM = null;
  * @param {MmlNode} node The target node.
  * @returns {number} Width of the proof node.
  */
-const getBBox = function (node: MmlNode) {
+const getBBox = function (node: MmlNode): number {
   item.root = node;
   const { w: width } = (doc.outputJax as any).getBBox(item, doc);
   return width;
@@ -190,8 +190,8 @@ const getParentInf = function (inf: MmlNode): MmlNode {
   return inf;
 };
 
-// Computes bbox spaces
 //
+// Computes bbox spaces
 //
 
 /**
@@ -214,11 +214,8 @@ const getSpaces = function (
     return result;
   }
   if (inf !== rule.parent) {
-    const children = inf.childNodes;
-    const index = right ? children.length - 1 : 0;
-    if (NodeUtil.isType(children[index], 'mspace')) {
-      result += getBBox(children[index]);
-    }
+    result +=
+      (inf.getProperty(right ? 'proof-right' : 'proof-left') as number) || 0;
     inf = rule.parent;
   }
   if (inf === rule) {
@@ -278,29 +275,16 @@ const addSpace = function (
     moveProperties(inf, mrow);
     inf = mrow;
   }
-  // TODO: Simplify below as we now have a definite mrow.
-  const index = right ? inf.childNodes.length - 1 : 0;
-  let mspace = inf.childNodes[index];
-  if (NodeUtil.isType(mspace, 'mspace')) {
-    NodeUtil.setAttribute(
-      mspace,
-      'width',
-      UnitUtil.em(
-        UnitUtil.dimen2em(NodeUtil.getAttribute(mspace, 'width') as string) +
-          space
-      )
-    );
-    return;
+  const prop = right ? 'proof-right' : 'proof-left';
+  inf.setProperty(prop, ((inf.getProperty(prop) as number) || 0) + space);
+  const styles = [];
+  for (const side of ['left', 'right']) {
+    const margin = inf.getProperty(`proof-${side}`) as number;
+    if (margin) {
+      styles.push(`margin-${side}: ${UnitUtil.em(margin)}`);
+    }
   }
-  mspace = config.nodeFactory.create('node', 'mspace', [], {
-    width: UnitUtil.em(space),
-  });
-  if (right) {
-    inf.appendChild(mspace);
-    return;
-  }
-  mspace.parent = inf;
-  inf.childNodes.unshift(mspace);
+  inf.attributes.set('style', styles.join('; '));
 };
 
 /**

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,6 +29,11 @@ import { asyncLoad } from '../../util/AsyncLoad.js';
 import { retryAfter } from '../../util/Retries.js';
 import { DIRECTION } from './Direction.js';
 export { DIRECTION } from './Direction.js';
+
+/*****************************************************************/
+
+export const VFUZZ = 0.07; // overlap for vertical stretchy glyphs
+export const HFUZZ = 0.07; // overlap for horizontal stretchy glyphs
 
 /****************************************************************************/
 

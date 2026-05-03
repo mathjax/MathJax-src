@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FindTeX Nested braces 1`] = `
+[
+  "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a + {\\bf b} + c" display="block">
+  <mi data-latex="a">a</mi>
+  <mo data-latex="+">+</mo>
+  <mrow data-mjx-texclass="ORD" data-latex="{b}">
+    <mi mathvariant="bold" data-latex="b">b</mi>
+  </mrow>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="c">c</mi>
+</math>",
+]
+`;
+
+exports[`FindTeX display math 1`] = `
+[
+  "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex=" x + 1 " display="block">
+  <mi data-latex="x">x</mi>
+  <mo data-latex="+">+</mo>
+  <mn data-latex="1">1</mn>
+</math>",
+]
+`;
+
+exports[`FindTeX environment 1`] = `
+[
+  "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{equation} x=y \\end{equation}" display="block">
+  <mi data-latex="x">x</mi>
+  <mo data-latex="=">=</mo>
+  <mi data-latex="y">y</mi>
+</math>",
+]
+`;
+
+exports[`FindTeX processEscapes 1`] = `
+[
+  "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="$">
+  <mo data-latex="$">$</mo>
+</math>",
+]
+`;
+
+exports[`FindTeX ref undefined 1`] = `
+[
+  "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ref{x}">
+  <mrow href="#" class="MathJax_ref" data-latex="\\ref{x}">
+    <mtext>???</mtext>
+  </mrow>
+</math>",
+]
+`;
+
+exports[`NodeFactory create null kind 1`] = `"<mi></mi>"`;
+
+exports[`Stack getTop 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\getTop" display="block">
+  <mtext data-latex="\\getTop">yes</mtext>
+</math>"
+`;
+
+exports[`Stack toString 1`] = `"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\showStack" display="block"></math>"`;
+
+exports[`TexParser GetBrackets matchBrakets 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matchbrackets[[x]]" display="block">
+  <mtext data-latex="\\matchbrackets[[x]]">[x]</mtext>
+</math>"
+`;
+
+exports[`TexParser GetBrackets nested [ 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xrightarrow[{[x]}]{a}" display="block">
+  <mrow data-mjx-texclass="REL" data-latex="\\xrightarrow[{[x]}]{a}">
+    <mrow data-mjx-texclass="NONE"></mrow>
+    <munderover>
+      <mo data-mjx-texclass="ORD">&#x2192;</mo>
+      <mpadded width="+0.833em" lspace="0.278em" voffset=".15em" depth="-.15em">
+        <mrow data-mjx-texclass="ORD" data-latex="{[x]}">
+          <mo data-latex="[" stretchy="false">[</mo>
+          <mi data-latex="x">x</mi>
+          <mo data-latex="]" stretchy="false">]</mo>
+        </mrow>
+        <mspace height=".75em"></mspace>
+      </mpadded>
+      <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
+        <mi data-latex="a">a</mi>
+        <mspace depth=".2em"></mspace>
+      </mpadded>
+    </munderover>
+  </mrow>
+</math>"
+`;
+
+exports[`TexParser Removed delimiter 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\vert=x \\begin{vmatrix} a \\end{vmatrix}" display="block">
+  <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\let\\vert=x \\begin{vmatrix} a \\end{vmatrix}">
+    <mtr>
+      <mtd>
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`TexParser mml 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="{\\mml}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="{\\mml}"></mrow>
+</math>"
+`;

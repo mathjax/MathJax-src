@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2025 The MathJax Consortium
+ *  Copyright (c) 2019-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -348,7 +348,11 @@ export class Menu {
       extraNodes: [
         this.document.adaptor.node(
           'a',
-          { href: 'https://www.mathjax.org', 'data-drag': 'false' },
+          {
+            href: 'https://www.mathjax.org',
+            'data-drag': 'false',
+            target: '_blank',
+          },
           [this.document.adaptor.text('https://www.mathjax.org')]
         ),
       ],
@@ -1015,10 +1019,11 @@ export class Menu {
    */
   protected mergeUserSettings() {
     try {
-      const settings = localStorage.getItem(Menu.MENU_STORAGE);
-      if (!settings) return;
-      Object.assign(this.settings, JSON.parse(settings));
-      this.setA11y(this.settings);
+      const json = localStorage.getItem(Menu.MENU_STORAGE);
+      if (!json) return;
+      const settings = JSON.parse(json);
+      Object.assign(this.settings, settings);
+      this.setA11y(settings);
     } catch (err) {
       console.log('MathJax localStorage error: ' + err.message);
     }

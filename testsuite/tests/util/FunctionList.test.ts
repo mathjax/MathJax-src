@@ -1,5 +1,5 @@
 import { describe, test, expect } from '@jest/globals';
-import {FunctionList, AnyFunction} from '#js/util/FunctionList.js';
+import { FunctionList, AnyFunction } from '#js/util/FunctionList.js';
 
 //
 //  Set up a function list with 6 functions that captures output
@@ -7,7 +7,9 @@ import {FunctionList, AnyFunction} from '#js/util/FunctionList.js';
 function LIST(): [FunctionList, string[]] {
   const output = [] as string[];
   const list = new FunctionList();
-  for (const i of [5, 0, 2, 1, 6, 3, 4]) {list.add(FN(i, output), i)}
+  for (const i of [5, 0, 2, 1, 6, 3, 4]) {
+    list.add(FN(i, output), i);
+  }
   return [list, output];
 }
 
@@ -23,7 +25,9 @@ function FN(i: number, output: string[] = []) {
     output.push(x === undefined ? String(i) : y == null ? x + i : x + y + i);
     if (x === 'delay' && i === 3) {
       return new Promise<void>((ok, fail) => {
-        setTimeout(() => {y === 'fail' ? fail('Failed!') : ok()}, 10);
+        setTimeout(() => {
+          y === 'fail' ? fail('Failed!') : ok();
+        }, 10);
       });
     }
     return true;
@@ -39,16 +43,19 @@ describe('FunctionList functionality', () => {
     const list = new FunctionList();
     const fn = FN(0);
     const item = list.add(fn);
-    expect(Array.from(list)).toEqual([{item: item, priority: 5}]);
+    expect(Array.from(list)).toEqual([{ item: item, priority: 5 }]);
     expect(item).toBe(fn);
   });
 
   test('Adding a list of items', () => {
-    const fns = [(_: any) => {}, [(_: any) => {}, 1]] as [AnyFunction, [AnyFunction, number]];
+    const fns = [(_: any) => {}, [(_: any) => {}, 1]] as [
+      AnyFunction,
+      [AnyFunction, number],
+    ];
     const list = new FunctionList(fns);
     expect(Array.from(list)).toEqual([
-      {item: fns[1][0], priority: 1},
-      {item: fns[0], priority: 5},
+      { item: fns[1][0], priority: 1 },
+      { item: fns[0], priority: 5 },
     ]);
   });
 
@@ -65,7 +72,7 @@ describe('FunctionList functionality', () => {
     const list = new FunctionList();
     list.add(FN(0, output));
     expect(list.execute()).toBe(true);
-    expect(output).toEqual(["0"]);
+    expect(output).toEqual(['0']);
   });
 
   test('Sorting of list', () => {
@@ -134,7 +141,7 @@ describe('FunctionList functionality', () => {
     expect.assertions(2);
     list.asyncExecute('fail').catch((err: Error) => {
       expect(output).toEqual(['fail0', 'fail1', 'fail2']);
-      expect(err.message).toBe("fail");
+      expect(err.message).toBe('fail');
     });
   });
 
@@ -142,16 +149,28 @@ describe('FunctionList functionality', () => {
     const [list, output] = LIST();
     list.asyncExecute('delay', '').then((result: boolean) => {
       expect(result).toBe(true);
-      expect(output).toEqual(['delay0', 'delay1', 'delay2', 'delay3', 'delay4', 'delay5', 'delay6']);
+      expect(output).toEqual([
+        'delay0',
+        'delay1',
+        'delay2',
+        'delay3',
+        'delay4',
+        'delay5',
+        'delay6',
+      ]);
     });
   });
 
   test('Failed promise in asyncExecute()', () => {
     const [list, output] = LIST();
     list.asyncExecute('delay', 'fail').catch((result: string) => {
-      expect(output).toEqual(['delayfail0', 'delayfail1', 'delayfail2', 'delayfail3']);
-      expect(result).toBe("Failed!");
+      expect(output).toEqual([
+        'delayfail0',
+        'delayfail1',
+        'delayfail2',
+        'delayfail3',
+      ]);
+      expect(result).toBe('Failed!');
     });
   });
-
 });

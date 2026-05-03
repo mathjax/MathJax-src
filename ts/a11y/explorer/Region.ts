@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2025 The MathJax Consortium
+ *  Copyright (c) 2009-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -364,7 +364,7 @@ export class LiveRegion extends StringRegion {
       '--mjx-live-bg-color': 'white',
       '--mjx-live-shadow-color': '#888',
       '--mjx-live-border-color': '#CCCCCC',
-      '--mjx-bg1-color': 'rgba(var(--mjx-bg-blue), var(--mjx-bg-alpha))',
+      '--mjx-bg1-color': 'rgba(var(--mjx-bg-blue), var(--mjx-bg1-alpha))',
       '--mjx-fg1-color': 'rgba(var(--mjx-fg-black), 1)',
       '--mjx-bg2-color': 'rgba(var(--mjx-bg-red), 1)',
       '--mjx-fg2-color': 'rgba(var(--mjx-fg-black), 1)',

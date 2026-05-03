@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -195,6 +195,9 @@ const ParseMethods = {
     // @test Fenced2, Delimiter (AMS)
     def = Object.assign({ fence: false, stretchy: false }, def);
     const node = parser.create('token', 'mo', def, delim.char);
+    if (delim.char === '|') {
+      node.setProperty('keep-attrs', 'stretchy');
+    }
     parser.Push(node);
   },
 
