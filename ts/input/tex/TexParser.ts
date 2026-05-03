@@ -327,41 +327,16 @@ export default class TexParser {
    */
   public GetArgument(_name: string, noneOK: boolean = false): string {
     switch (this.GetNext()) {
-    case '':
-      if (!noneOK) {
-        // @test MissingArgFor
-        throw new TexError('MissingArgFor', this.currentCS);
-      }
-      return null;
-    case '}':
-      if (!noneOK) {
-        // @test ExtraCloseMissingOpen
-        throw new TexError('ExtraCloseMissingOpen');
-      }
-      return null;
-    case '\\':
-      this.i++;
-      return '\\' + this.GetCS();
-    case '{':
-      let j = ++this.i, parens = 1;
-      while (this.i < this.string.length) {
-        switch (this.string.charAt(this.i++)) {
-        case '\\':  this.i++; break;
-        case '{':   parens++; break;
-        case '}':
-          if (--parens === 0) {
-            return this.string.slice(j, this.i - 1);
-          }
-          break;
+      case '':
+        if (!noneOK) {
+          // @test MissingArgFor
+          throw new TexError('MissingArgFor', this.currentCS);
         }
         return null;
       case '}':
         if (!noneOK) {
           // @test ExtraCloseMissingOpen
-          throw new TexError(
-            'ExtraCloseMissingOpen',
-            'Extra close brace or missing open brace'
-          );
+          throw new TexError('ExtraCloseMissingOpen');
         }
         return null;
       case '\\':
@@ -424,7 +399,7 @@ export default class TexParser {
         case '}':
           if (braces-- <= 0) {
             // @test ExtraCloseLooking1
-          throw new TexError('ExtraCloseLooking', '\']\'');
+            throw new TexError('ExtraCloseLooking', "']'");
           }
           break;
         case '[':
