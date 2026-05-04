@@ -126,7 +126,16 @@ export class Locale {
     data: string | namedData = {},
     ...args: string[]
   ): string {
-    const message = this.lookupMessage(component, id);
+    let message = '';
+    if (component) {
+      message = this.lookupMessage(component, id);
+    } else {
+      if (typeof data !== 'string') {
+        return '';
+      }
+      message = data;
+      data = args.shift()?.toString() ?? {};
+    }
     if (typeof data === 'string') {
       data = { 1: data };
       for (let i = 0; i < args.length; i++) {
