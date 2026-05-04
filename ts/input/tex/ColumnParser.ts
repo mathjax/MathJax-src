@@ -293,7 +293,7 @@ export class ColumnParser {
    */
   public getBraces(state: ColumnState): string {
     while (state.template[state.i] === ' ') state.i++;
-    if (state.i > state.template.length) {
+    if (state.i >= state.template.length) {
       throw new TexError(COMPONENT, 'MissingArgForColumn', state.c);
     }
     if (state.template[state.i] !== '{') {
