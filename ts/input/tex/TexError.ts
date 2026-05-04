@@ -36,6 +36,8 @@ export default class TexError {
     public id: string,
     ...args: string[]
   ) {
-    this.message = Locale.message(component, id, ...args);
+    this.message = component
+      ? Locale.message(component, id, ...args)
+      : args.join(' ');
   }
 }
