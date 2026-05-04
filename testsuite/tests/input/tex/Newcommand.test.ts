@@ -438,7 +438,7 @@ describe('NewcommandError', () => {
 
   it('Recursive Macro', () => {
     expectTexError('\\def\\x{\\x} \\x').toBe(
-      'MathJax maximum macro substitution count exceeded; is here a recursive macro call?'
+      'MathJax maximum macro substitution count exceeded; is there a recursive macro call?'
     );
   });
 
