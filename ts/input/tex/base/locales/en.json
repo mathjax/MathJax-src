@@ -1,9 +1,13 @@
 {
   "ExtraLeftMissingRight": "Extra \\left or missing \\right",
   "ExtraOpenMissingClose": "Extra open brace or missing close brace",
+  "ExtraCloseMissingOpen": "Extra close brace or missing open brace",
+  "ExtraMiddle": "Extra \\middle",
+  "MissingBeginExtraEnd": "Missing \\begin{%1} or extra \\end{%1}",
   "MissingScript": "Missing superscript or subscript argument",
   "MissingOpenForSup": "Missing open brace for superscript",
   "MissingOpenForSub": "Missing open brace for subscript",
+  "MissingLeftExtraRight": "Missing \\left or extra \\right",
   "UnknownEnv": "Unknown environment '%1'",
   "UndefinedControlSequence": "Undefined control sequence %1",
   "EnvMissingEnd": "Missing \\end{%1}",

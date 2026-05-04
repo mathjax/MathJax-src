@@ -66,7 +66,7 @@ export const EmpheqMethods = {
         .GetArgument('\\begin{' + begin.getName() + '}')
         .split(/=/);
       if (!EmpheqUtil.checkEnv(env)) {
-        throw new TexError(COMPONENT, 'UnknownEnv', env);
+        throw new TexError(COMPONENT, 'EmpheqInvalidEnv', env, begin.getName());
       }
       begin.setProperty('nestStart', true);
       if (opts) {

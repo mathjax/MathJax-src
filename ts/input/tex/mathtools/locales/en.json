@@ -1,5 +1,5 @@
 {
-  "InvalidTagFormDef": "The tag form definition for %1 should be an array of three strings",
+  "InvalidTagFormDef": "The tag form definition for \"%1\" should be an array of three strings",
   "ForbiddenMathtoolsSet": "%1 is disabled",
   "UndefinedTagForm": "Undefined tag form: %1",
   "TagsNotMT": "%1 can only be used with ams or mathtools tags",
