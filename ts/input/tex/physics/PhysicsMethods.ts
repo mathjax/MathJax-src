@@ -295,7 +295,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
-  Eval(parser: TexParser, _name: string) {
+  Eval(parser: TexParser, name: string) {
     const star = parser.GetStar();
     const next = parser.GetNext();
     if (next === '(' || next === '[') {
@@ -310,7 +310,15 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       );
       return;
     }
-    throw new TexError(COMPONENT, 'MissingArgFor', parser.currentCS);
+    let replace = '\\left.\\vphantom{\\int}\\right|';
+    if (next === '{') {
+      const arg = parser.GetArgument(name);
+      replace = `\\left.${star ? `\\smash{${arg}}` : arg}\\vphantom{\\int}\\right|`;
+    }
+    parser.string =
+      parser.string.substring(0, parser.i) +
+      replace +
+      parser.string.slice(parser.i);
   },
 
   /**
