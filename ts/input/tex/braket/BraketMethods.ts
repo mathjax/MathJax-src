@@ -23,12 +23,9 @@
 
 import { ParseMethod, ParseResult } from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
-import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import { TEXCLASS } from '../../../core/MmlTree/MmlNode.js';
 import { BraketItem } from './BraketItems.js';
-
-const COMPONENT = '[tex]/braket';
 
 const BraketMethods: { [key: string]: ParseMethod } = {
   /**
@@ -44,17 +41,17 @@ const BraketMethods: { [key: string]: ParseMethod } = {
    */
   Braket(
     parser: TexParser,
-    _name: string,
+    name: string,
     open: string,
     close: string,
     stretchy: boolean,
     barmax: number,
     space: boolean = false
   ) {
-    let next = parser.GetNext();
-    if (next === '') {
-      throw new TexError(COMPONENT, 'MissingArgFor', parser.currentCS);
-    }
+    const i = parser.i;
+    parser.GetArgument(name); // Error if there isn't a proper argument
+    parser.i = i;
+    const next = parser.GetNext();
     let single = true;
     if (next === '{') {
       parser.i++;
