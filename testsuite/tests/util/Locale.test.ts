@@ -31,8 +31,11 @@ describe('Locale', () => {
     console.error = (message) => {
       throw message;
     };
-    await expect(Locale.setLocale('de')).rejects.toMatch(
-      "MathJax(component): Can't load 'de.json': ENOENT: no such file or directory"
+    await expect(Locale.setLocale('xy')).rejects.toContain(
+      "MathJax(component): Can't load 'xy.json': ENOENT: no such file or directory"
+    );
+    await expect(Locale.setLocale('de')).rejects.toContain(
+      "MathJax(component): 'de.json' kann nicht geladen werden: ENOENT: no such file or directory"
     );
     console.error = error;
     await Locale.setLocale('en');
@@ -62,10 +65,10 @@ describe('Locale', () => {
     ).toBe('Named HELLO WORLD');
     expect(Locale.message('component', 'Id1', 'a', 'b')).toBe('Test of a in b');
     expect(Locale.message('component', 'Id2')).toBe(
-      "No localized or default version for message with id 'Id2' from 'component'"
+      "MathJax(Locale): No localized or default version for message with id 'Id2' from 'component'"
     );
     expect(Locale.message('undefined', 'Id1')).toBe(
-      "No localized or default version for message with id 'Id1' from 'undefined'"
+      "MathJax(Locale): No localized or default version for message with id 'Id1' from 'undefined'"
     );
     expect(() => Locale.error('component', 'error', 'x')).toThrow('Error in x');
   });
