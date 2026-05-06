@@ -44,7 +44,7 @@ import { lookup } from '../../../util/Options.js';
 import { ColumnState } from '../ColumnParser.js';
 import { replaceUnicode } from '../../../util/string.js';
 
-const COMPONENT = '[tex]/base';
+import { COMPONENT } from './locales/Component.js';
 
 const P_HEIGHT = 1.2 / 0.85; // cmex10 height plus depth over .85
 const MmlTokenAllow: { [key: string]: number } = {

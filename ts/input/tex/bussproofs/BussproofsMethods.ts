@@ -30,7 +30,7 @@ import { StackItem } from '../StackItem.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import * as BussproofsUtil from './BussproofsUtil.js';
 
-const COMPONENT = '[tex]/bussproofs';
+import { COMPONENT } from './locales/Component.js';
 
 /**
  * Pads content of an inference rule.

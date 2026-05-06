@@ -32,10 +32,7 @@ import { HTMLDocument } from '../../../handlers/html/HTMLDocument.js';
 import { HtmlNode } from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
 import { HTMLDomStrings } from '../../../handlers/html/HTMLDomStrings.js';
 import { DOMAdaptor } from '../../../core/DOMAdaptor.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/texhtml';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/texhtml');
+export { COMPONENT } from './locales/Component.js';
 
 export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
   /**

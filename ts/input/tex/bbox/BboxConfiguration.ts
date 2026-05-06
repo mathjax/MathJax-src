@@ -27,17 +27,7 @@ import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
 import TexError from '../TexError.js';
-import { Locale } from '../../../util/Locale.js';
-
-/**
- * The component name
- */
-export const COMPONENT = '[tex]/bbox';
-
-/**
- * Register the locales
- */
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/bbox');
+export { COMPONENT } from './locales/Component.js';
 
 // Namespace
 const BboxMethods: { [key: string]: ParseMethod } = {

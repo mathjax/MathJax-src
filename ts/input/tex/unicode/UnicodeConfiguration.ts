@@ -32,10 +32,7 @@ import { UnitUtil } from '../UnitUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import { numeric } from '../../../util/Entities.js';
 import { Other } from '../base/BaseConfiguration.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/unicode';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/unicode');
+export { COMPONENT } from './locales/Component.js';
 
 const UnicodeCache: { [key: number]: [number, number, string, number] } = {};
 

@@ -36,7 +36,7 @@ import { Token } from './Token.js';
 import { OptionList } from '../../util/Options.js';
 import { TexConstant } from './TexConstants.js';
 
-const COMPONENT = '[tex]';
+import { COMPONENT } from './locales/Component.js';
 
 /**
  * The main Tex Parser class.

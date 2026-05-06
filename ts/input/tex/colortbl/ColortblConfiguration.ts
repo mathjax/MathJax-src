@@ -33,10 +33,7 @@ import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 
 import { TeX } from '../../tex.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/colortbl';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/colortbl');
+export { COMPONENT } from './locales/Component.js';
 
 /**
  * Information about table colors.

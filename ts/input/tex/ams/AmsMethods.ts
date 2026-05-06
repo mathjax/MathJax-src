@@ -42,7 +42,7 @@ import {
 } from '../../../core/MmlTree/MmlNode.js';
 import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 
-const COMPONENT = '[tex]/ams';
+import { COMPONENT } from './locales/Component.js';
 
 /**
  * Utility for breaking the \sideset scripts from any other material.

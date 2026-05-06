@@ -41,8 +41,7 @@ import { expandable } from '../../../util/Options.js';
 import { MenuMathDocument } from '../../../ui/menu/MenuHandler.js';
 import { Locale } from '../../../util/Locale.js';
 
-export const COMPONENT = '[tex]/require';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/require');
+export { COMPONENT } from './locales/Component.js';
 
 /**
  * The MathJax configuration block (for looking up user-defined package options)
