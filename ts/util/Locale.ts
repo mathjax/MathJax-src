@@ -38,7 +38,7 @@ export class Locale {
   /**
    * The current locale
    */
-  public static current: string = 'en';
+  public static current: string = 'de';
 
   /**
    * The default locale for when a message has no current localization
@@ -254,17 +254,19 @@ export class Locale {
   }
 
   /**
-   * Report an error thrown when loading a component's locale file
+   * Report an error thrown when loading a component's locale file, and fall
+   * back to loading the default locale if the failed locale was not the default.
    *
    * @param {string} component   The component whose localization is being loaded
    * @param {string} locale      The locale being loaded
    * @param {Error} error        The Error object causing the issue
+   * @returns {Promise<void>|void}  A promise for loading the default locale, or void
    */
   protected static localeError(
     component: string,
     locale: string,
     error: Error
-  ) {
+  ): Promise<void> | void {
     const message = this.message(
       'locale',
       'LocaleJsonError',
@@ -273,5 +275,19 @@ export class Locale {
       error.message
     );
     console.error(message);
+    if (locale !== this.default) {
+      const location = this.locations[component];
+      if (location) {
+        const [directory, loaded] = location;
+        if (!loaded.has(this.default)) {
+          loaded.add(this.default);
+          return this.getLocaleData(
+            component,
+            this.default,
+            `${directory}/${this.default}.json`
+          );
+        }
+      }
+    }
   }
 }
