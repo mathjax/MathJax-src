@@ -58,6 +58,13 @@ export class Locale {
     locale: {
       en: {
         LocaleJsonError: "MathJax(%1): Can't load '%2': %3",
+        LocaleMessageNotFound:
+          "MathJax(Locales): No localized or default version for message with id '%1' from '%2'",
+      },
+      de: {
+        LocaleJsonError: "MathJax(%1): '%2' kann nicht geladen werden: %3",
+        LocaleMessageNotFound:
+          "MathJax(Locales): Keine lokalisierte oder Standardversion für die Meldung mit der ID '%1' aus '%2'",
       },
     },
   };
@@ -157,7 +164,11 @@ export class Locale {
     return (
       this.data[component]?.[this.current]?.[id] ||
       this.data[component]?.[this.default]?.[id] ||
-      `No localized or default version for message with id '${id}' from '${component}'`
+      this.substituteArguments(
+        this.data.locale[this.current]['LocaleMessageNotFound'] ||
+          this.data.locale[this.default]['LocaleMessageNotFound'],
+        { 1: id, 2: component }
+      )
     );
   }
 
