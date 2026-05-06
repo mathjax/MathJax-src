@@ -586,7 +586,12 @@ export class BeginItem extends BaseItem {
     if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
         // @test EnvBadEnd
-        throw new TexError(COMPONENT, 'EnvBadEnd', this.getName(), item.getName());
+        throw new TexError(
+          COMPONENT,
+          'EnvBadEnd',
+          this.getName(),
+          item.getName()
+        );
       }
       // @test Hfill
       const node = this.toMml();

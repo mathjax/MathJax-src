@@ -511,7 +511,12 @@ export default class TexParser {
       }
     }
     // @test TokenNotFoundForCommand
-    throw new TexError(COMPONENT, 'TokenNotFoundForCommand', token, this.currentCS);
+    throw new TexError(
+      COMPONENT,
+      'TokenNotFoundForCommand',
+      token,
+      this.currentCS
+    );
   }
 
   /**

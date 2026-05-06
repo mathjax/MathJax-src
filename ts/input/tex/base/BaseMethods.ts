@@ -989,19 +989,31 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     switch (type) {
       case 'c':
         if (top.First) {
-          throw new TexError(COMPONENT, 'BreakFirstInEntry', parser.currentCS + '{c}');
+          throw new TexError(
+            COMPONENT,
+            'BreakFirstInEntry',
+            parser.currentCS + '{c}'
+          );
         }
         top.breakAlign.cell = splitAlignArray(parser.GetArgument(name), 1);
         break;
       case 'r':
         if (top.row.length || top.First) {
-          throw new TexError(COMPONENT, 'BreakFirstInRow', parser.currentCS + '{r}');
+          throw new TexError(
+            COMPONENT,
+            'BreakFirstInRow',
+            parser.currentCS + '{r}'
+          );
         }
         top.breakAlign.row = splitAlignArray(parser.GetArgument(name));
         break;
       case 't':
         if (top.table.length || top.row.length || top.First) {
-          throw new TexError(COMPONENT, 'BreakFirstInTable', parser.currentCS + '{t}');
+          throw new TexError(
+            COMPONENT,
+            'BreakFirstInTable',
+            parser.currentCS + '{t}'
+          );
         }
         top.breakAlign.table = splitAlignArray(parser.GetArgument(name));
         break;
@@ -1039,7 +1051,11 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       );
       if (!match) {
         // @test Token Invalid Attribute
-        throw new TexError(COMPONENT, 'InvalidMathMLAttr', attr.split(/[\s\n=]/)[0]);
+        throw new TexError(
+          COMPONENT,
+          'InvalidMathMLAttr',
+          attr.split(/[\s\n=]/)[0]
+        );
       }
       if (!node.attributes.hasDefault(match[1]) && !MmlTokenAllow[match[1]]) {
         // @test Token Unknown Attribute, Token Wrong Attribute

@@ -389,6 +389,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
 
   /**
    * A list of basic errors.
+   *
    * @type {{[key: string]: string}}
    */
   protected static errors: { [key: string]: string } = {

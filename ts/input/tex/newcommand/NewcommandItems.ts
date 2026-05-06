@@ -54,7 +54,12 @@ export class BeginEnvItem extends BaseItem {
       // @test Newenvironment Empty, Newenvironment Align
       if (item.getName() !== this.getName()) {
         // @test (missing) \newenvironment{env}{aa}{bb}\begin{env}cc\end{equation}
-        throw new TexError(COMPONENT, 'EnvBadEnd', this.getName(), item.getName());
+        throw new TexError(
+          COMPONENT,
+          'EnvBadEnd',
+          this.getName(),
+          item.getName()
+        );
       }
       return [[this.factory.create('mml', this.toMml())], true];
     }

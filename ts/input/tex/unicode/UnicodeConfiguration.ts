@@ -135,7 +135,11 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
           parser.i += 2;
           const cs = [...parser.GetCS()];
           if (cs.length > 1) {
-            throw new TexError(COMPONENT, 'InvalidAlphanumeric', parser.currentCS);
+            throw new TexError(
+              COMPONENT,
+              'InvalidAlphanumeric',
+              parser.currentCS
+            );
           }
           c = cs[0];
           match = [''];
@@ -157,7 +161,11 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
           parser.i += 2;
           const cs = [...parser.GetCS()];
           if (cs.length > 1) {
-            throw new TexError(COMPONENT, 'InvalidAlphanumeric', parser.currentCS);
+            throw new TexError(
+              COMPONENT,
+              'InvalidAlphanumeric',
+              parser.currentCS
+            );
           }
           c = cs[0];
           match = [''];
