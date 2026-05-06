@@ -1,7 +1,7 @@
 {
   "BadProofTree": "Proof tree badly specified.",
+  "EnvMissingEnd": "Missing \\end{%1}",
   "IllegalProofCommand": "Proof commands only allowed in prooftree environment.",
-  "MissingProofCommand": "Missing %1 in %2.",
   "IllegalUseOfCommand": "Use of %1 does not match its definition.",
-  "EnvMissingEnd": "Missing \\end{%1}"
+  "MissingProofCommand": "Missing %1 in %2."
 }
