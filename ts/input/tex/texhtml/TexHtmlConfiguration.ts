@@ -32,7 +32,8 @@ import { HTMLDocument } from '../../../handlers/html/HTMLDocument.js';
 import { HtmlNode } from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
 import { HTMLDomStrings } from '../../../handlers/html/HTMLDomStrings.js';
 import { DOMAdaptor } from '../../../core/DOMAdaptor.js';
-export { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './locales/Component.js';
+export { COMPONENT };
 
 export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
   /**

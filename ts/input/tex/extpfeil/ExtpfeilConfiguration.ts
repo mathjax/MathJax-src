@@ -31,7 +31,8 @@ import { AmsMethods } from '../ams/AmsMethods.js';
 import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 import { NewcommandConfig } from '../newcommand/NewcommandConfiguration.js';
 import TexError from '../TexError.js';
-export { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './locales/Component.js';
+export { COMPONENT };
 
 // Namespace
 const ExtpfeilMethods: { [key: string]: ParseMethod } = {
