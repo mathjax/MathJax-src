@@ -31,10 +31,7 @@ import { StartItem, StopItem, MmlItem, StyleItem } from '../base/BaseItems.js';
 import { TextParser } from './TextParser.js';
 import { TextMacrosMethods } from './TextMacrosMethods.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/textmacros';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/textmacros');
+export { COMPONENT } from './locales/Component.js';
 
 import './TextMacrosMappings.js';
 

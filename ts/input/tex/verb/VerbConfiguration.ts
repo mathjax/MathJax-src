@@ -28,10 +28,7 @@ import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
 import TexError from '../TexError.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/verb';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/verb');
+export { COMPONENT } from './locales/Component.js';
 
 // Namespace
 const VerbMethods: { [key: string]: ParseMethod } = {

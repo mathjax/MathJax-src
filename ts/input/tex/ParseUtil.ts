@@ -32,7 +32,7 @@ import { entities } from '../../util/Entities.js';
 import { MmlMunderover } from '../../core/MmlTree/MmlNodes/munderover.js';
 import { UnitUtil } from './UnitUtil.js';
 
-const COMPONENT = '[tex]';
+import { COMPONENT } from './locales/Component.js';
 
 /**
  * The data needed for checking the value of a key-value pair.

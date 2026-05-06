@@ -11,10 +11,7 @@ import { AmsTags } from '../ams/AmsConfiguration.js';
 import { StackItem, CheckType } from '../StackItem.js';
 import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
 import { EmpheqUtil } from '../empheq/EmpheqUtil.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/cases';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/cases');
+export { COMPONENT } from './locales/Component.js';
 
 /**
  * The StackItem for the numcases environment.

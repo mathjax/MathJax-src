@@ -33,7 +33,7 @@ import { NodeFactory } from '../NodeFactory.js';
 import { Macro } from '../Token.js';
 import { AutoOpen } from './PhysicsItems.js';
 
-const COMPONENT = '[tex]/physics';
+import { COMPONENT } from './locales/Component.js';
 
 /**
  * Pairs open and closed fences.

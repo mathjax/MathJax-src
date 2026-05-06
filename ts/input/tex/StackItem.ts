@@ -27,7 +27,7 @@ import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
 import { TexConstant } from './TexConstants.js';
 
-const COMPONENT = '[tex]/base';
+import { COMPONENT } from './base/locales/Component.js';
 
 // Union types for abbreviation.
 export type EnvProp = string | number | boolean;

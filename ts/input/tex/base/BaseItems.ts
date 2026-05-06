@@ -39,7 +39,7 @@ import { CheckType, BaseItem, StackItem, EnvList } from '../StackItem.js';
 import { TRBL } from '../../../util/Styles.js';
 import { TexConstant } from '../TexConstants.js';
 
-const COMPONENT = '[tex]/base';
+import { COMPONENT } from './locales/Component.js';
 
 /**
  * Initial item on the stack. It's pushed when parsing begins.
