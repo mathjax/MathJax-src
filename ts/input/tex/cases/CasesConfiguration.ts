@@ -11,7 +11,8 @@ import { AmsTags } from '../ams/AmsConfiguration.js';
 import { StackItem, CheckType } from '../StackItem.js';
 import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
 import { EmpheqUtil } from '../empheq/EmpheqUtil.js';
-export { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './locales/Component.js';
+export { COMPONENT };
 
 /**
  * The StackItem for the numcases environment.

@@ -38,7 +38,7 @@ export class Locale {
   /**
    * The current locale
    */
-  public static current: string = 'de';
+  public static current: string = 'en';
 
   /**
    * The default locale for when a message has no current localization

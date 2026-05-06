@@ -32,7 +32,8 @@ import { UnitUtil } from '../UnitUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import { numeric } from '../../../util/Entities.js';
 import { Other } from '../base/BaseConfiguration.js';
-export { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './locales/Component.js';
+export { COMPONENT };
 
 const UnicodeCache: { [key: number]: [number, number, string, number] } = {};
 

@@ -41,7 +41,8 @@ import { expandable } from '../../../util/Options.js';
 import { MenuMathDocument } from '../../../ui/menu/MenuHandler.js';
 import { Locale } from '../../../util/Locale.js';
 
-export { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './locales/Component.js';
+export { COMPONENT };
 
 /**
  * The MathJax configuration block (for looking up user-defined package options)

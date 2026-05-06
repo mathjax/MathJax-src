@@ -36,7 +36,8 @@ import { Macro } from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
 import { expandable, isObject } from '../../../util/Options.js';
 import { PrioritizedList } from '../../../util/PrioritizedList.js';
-export { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './locales/Component.js';
+export { COMPONENT };
 
 export const SetOptionsUtil = {
   /**
