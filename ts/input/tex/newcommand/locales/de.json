@@ -1,0 +1,13 @@
+{
+  "CantUseHash2": "Unzulässige Verwendung von # in der Vorlage für %1",
+  "EnvBadEnd": "\\begin{%1} endete mit \\end{%2}",
+  "EnvMissingEnd": "Fehlendes \\end{%1}",
+  "IllegalControlSequenceName": "Ungültiger Name der Steuerungssequenz für %1",
+  "IllegalParamNumber": "Ungültige Anzahl von Parametern in %1 angegeben",
+  "MismatchUseDef": "Die Verwendung von %1 stimmt nicht mit der Definition überein",
+  "MissingCS": "Auf %1 muss eine Steuerungssequenz folgen",
+  "MissingReplacementString": "Ersetzungszeichenfolge für die Definition von %1 fehlt",
+  "ProtectedMacro": "Die Steuerungssequenz %1 kann nicht neu definiert werden",
+  "RunawayArgument": "Fehlerhaftes Argument für %1?",
+  "SequentialParam": "Parameter für %1 müssen fortlaufend nummeriert sein"
+}

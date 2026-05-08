@@ -1,0 +1,16 @@
+{
+  "AlreadyDefined": "%1 ist bereits definiert",
+  "BadWidth": "Die Breite für %1 muss eine Abmessung sein",
+  "BetweenLines": "%1 muss in einer eigenen Zeile stehen",
+  "BefehlExistiert": "Befehl %1 ist bereits definiert",
+  "BefehlAmZeilenanfang": "%1 muss am Zeilenanfang stehen",
+  "BefehlInMultlined": "%1 darf nur innerhalb der Umgebungen multline oder multlined vorkommen",
+  "DoppelteTagForm": "Doppelte Tag-Form: %1",
+  "ForbiddenMathtoolsSet": "%1 ist deaktiviert",
+  "InvalidTagFormDef": "Die Tag-Form-Definition für \"%1\" sollte ein Array aus drei Strings sein",
+  "InvalidTagFormID": "Der Name der Tag-Form darf nicht leer sein",
+  "NotANumber": "Das Argument für %1 ist keine Zahl",
+  "NotInAlignment": "%1 kann nur in Ausrichtungsumgebungen verwendet werden",
+  "TagsNotMT": "%1 kann nur mit ams- oder mathtools-Tags verwendet werden",
+  "UndefinedTagForm": "Undefinierte Tag-Form: %1"
+}
