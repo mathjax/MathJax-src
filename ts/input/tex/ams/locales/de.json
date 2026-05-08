@@ -1,0 +1,11 @@
+{
+  "BadMathStyleFor": "Falscher mathematischer Stil für %1",
+  "CommandAtTheBeginingOfLine": "%1 muss am Zeilenanfang stehen",
+  "CommandNotAllowedInEnv": "%1 ist in der Umgebung %2 nicht zulässig",
+  "CommandOnlyAllowedInEnv": "%1 ist nur in der Umgebung %2 zulässig",
+  "IllegalAlign": "Ungültige Ausrichtung in %1 angegeben",
+  "MultipleCommand": "Mehrere %1",
+  "MultlineRowsOneCol": "Die Zeilen innerhalb der %1-Umgebung müssen genau eine Spalte haben",
+  "PositiveIntegerArg": "Das Argument für %1 muss eine positive ganze Zahl sein",
+  "XalignOverflow": "Zusätzliches %1 in Zeile %2"
+}
