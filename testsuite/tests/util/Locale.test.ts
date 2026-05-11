@@ -24,7 +24,7 @@ describe('Locale', () => {
     const locale = Locale as any;
     Locale.registerLocaleFiles('component', '../testsuite/lib/component');
     expect(locale.locations.component).toEqual([
-      '../testsuite/lib/component/locales',
+      '../testsuite/lib/component/__locales__',
       new Set(),
     ]);
     const error = console.error;
