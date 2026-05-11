@@ -166,7 +166,8 @@ export class Locale {
       this.data[component]?.[this.default]?.[id] ||
       this.substituteArguments(
         this.data.locale[this.current]?.['LocaleMessageNotFound'] ||
-          this.data.locale[this.default]?.['LocaleMessageNotFound'],
+          this.data.locale[this.default]?.['LocaleMessageNotFound'] ||
+          '',
         { 1: id, 2: component }
       )
     );

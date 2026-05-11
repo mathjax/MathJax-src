@@ -71,6 +71,15 @@ describe('Locale', () => {
       "MathJax(Locale): No localized or default version for message with id 'Id1' from 'undefined'"
     );
     expect(() => Locale.error('component', 'error', 'x')).toThrow('Error in x');
+    Locale.current = 'de';
+    expect(Locale.message('undefined', 'Id1')).toBe(
+      "MathJax(Locale): Keine lokalisierte oder Standardversion für die Meldung mit der ID 'Id1' aus 'undefined'"
+    );
+    Locale.current = 'xy';
+    Locale.default = 'xy';
+    expect(Locale.message('undefined', 'Id1')).toBe('');
+    Locale.current = 'en';
+    Locale.default = 'en';
   });
 
   /********************************************************************************/
@@ -81,6 +90,33 @@ describe('Locale', () => {
     await Locale.setLocale('test');
     expect(Locale.message('component', 'test1')).toBe('Has % percent');
     Locale.isComponent = false;
+  });
+
+  /********************************************************************************/
+
+  test('Message with empty component', () => {
+    expect(Locale.message('', 'any')).toBe('');
+    expect(Locale.message('', 'any', {})).toBe('');
+    expect(Locale.message('', 'any', 'raw text')).toBe('raw text');
+    expect(Locale.message('', 'any', '%1 + %2', 'a', 'b')).toBe('a + b');
+  });
+
+  /********************************************************************************/
+
+  test('Locale error falls back to default locale', async () => {
+    const locale = Locale as any;
+    Locale.registerLocaleFiles('fallback', '../testsuite/lib/component');
+
+    const errors: string[] = [];
+    const origError = console.error;
+    console.error = (msg: string) => errors.push(msg);
+
+    await locale.localeError('fallback', 'xy', new Error('xy.json not found'));
+
+    console.error = origError;
+
+    expect(errors[0]).toContain("MathJax(fallback): Can't load 'xy.json'");
+    expect(locale.data.fallback?.en).toEqual({ Id1: 'Test of %1 in %2' });
   });
 
   /********************************************************************************/
