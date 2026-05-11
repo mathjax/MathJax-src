@@ -30,7 +30,7 @@ import TexError from '../TexError.js';
 import { BeginItem } from '../base/BaseItems.js';
 import { EmpheqUtil } from './EmpheqUtil.js';
 import ParseMethods from '../ParseMethods.js';
-import { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
 /**

@@ -47,7 +47,7 @@ import { PrioritizedList } from '../../../util/PrioritizedList.js';
 import { MathtoolsTags } from './MathtoolsTags.js';
 import { MathtoolsUtil } from './MathtoolsUtil.js';
 
-import { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './__locales__/Component.js';
 
 export const LEGACYCONFIG = {
   [HandlerType.MACRO]: ['mathtools-legacycolonsymbols'],

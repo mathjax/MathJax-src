@@ -31,7 +31,7 @@ import { FunctionList } from '../../util/FunctionList.js';
 import { TeX } from '../tex.js';
 import { PrioritizedList } from '../../util/PrioritizedList.js';
 import { TagsFactory } from './Tags.js';
-export { COMPONENT } from './locales/Component.js';
+export { COMPONENT } from './__locales__/Component.js';
 
 export type StackItemConfig = { [kind: string]: StackItemClass };
 export type TagsConfig = { [kind: string]: TagsClass };

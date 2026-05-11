@@ -86,7 +86,7 @@ export class Locale {
     prefix: string = component
   ) {
     this.locations[component] = [
-      `${this.isComponent ? component : prefix}/locales`,
+      `${this.isComponent ? component : prefix}/__locales__`,
       new Set(),
     ];
   }

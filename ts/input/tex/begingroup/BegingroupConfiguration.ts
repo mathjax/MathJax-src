@@ -26,7 +26,7 @@ import { Configuration } from '../Configuration.js';
 import { CommandMap } from '../TokenMap.js';
 import { BegingroupStack, begingroupStack } from './BegingroupStack.js';
 import { BegingroupMethods } from './BegingroupMethods.js';
-export { COMPONENT } from './locales/Component.js';
+export { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Create the begingroup command map.

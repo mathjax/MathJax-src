@@ -41,7 +41,7 @@ import { expandable } from '../../../util/Options.js';
 import { MenuMathDocument } from '../../../ui/menu/MenuHandler.js';
 import { Locale } from '../../../util/Locale.js';
 
-import { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
 /**

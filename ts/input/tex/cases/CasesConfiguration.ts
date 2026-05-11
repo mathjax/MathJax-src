@@ -11,7 +11,7 @@ import { AmsTags } from '../ams/AmsConfiguration.js';
 import { StackItem, CheckType } from '../StackItem.js';
 import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
 import { EmpheqUtil } from '../empheq/EmpheqUtil.js';
-import { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
 /**
