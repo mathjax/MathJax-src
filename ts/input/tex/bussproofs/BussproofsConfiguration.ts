@@ -31,7 +31,7 @@ import {
   makeBsprAttributes,
 } from './BussproofsUtil.js';
 import './BussproofsMappings.js';
-export { COMPONENT } from './locales/Component.js';
+export { COMPONENT } from './__locales__/Component.js';
 
 export const BussproofsConfiguration = Configuration.create('bussproofs', {
   [ConfigurationType.HANDLER]: {

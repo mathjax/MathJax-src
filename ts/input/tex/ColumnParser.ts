@@ -28,7 +28,7 @@ import { lookup } from '../../util/Options.js';
 import { ParseUtil } from './ParseUtil.js';
 import { UnitUtil } from './UnitUtil.js';
 
-import { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './__locales__/Component.js';
 
 /***********************************************************************/
 

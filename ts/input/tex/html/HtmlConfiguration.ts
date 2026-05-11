@@ -25,7 +25,7 @@ import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { CommandMap } from '../TokenMap.js';
 import HtmlMethods from './HtmlMethods.js';
-export { COMPONENT } from './locales/Component.js';
+export { COMPONENT } from './__locales__/Component.js';
 
 new CommandMap('html_macros', {
   data: HtmlMethods.Data,

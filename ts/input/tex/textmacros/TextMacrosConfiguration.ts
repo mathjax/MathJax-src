@@ -31,7 +31,7 @@ import { StartItem, StopItem, MmlItem, StyleItem } from '../base/BaseItems.js';
 import { TextParser } from './TextParser.js';
 import { TextMacrosMethods } from './TextMacrosMethods.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
-import { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
 import './TextMacrosMappings.js';

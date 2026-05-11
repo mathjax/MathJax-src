@@ -29,7 +29,7 @@ import { NewcommandTables, NewcommandPriority } from './NewcommandUtil.js';
 import './NewcommandMappings.js';
 import ParseMethods from '../ParseMethods.js';
 import * as sm from '../TokenMap.js';
-export { COMPONENT } from './locales/Component.js';
+export { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Initialize the newcommand maps for delimiters, commands, and environments,

@@ -33,7 +33,7 @@ import { Token } from '../Token.js';
 import { MapHandler, SubHandlers } from '../MapHandler.js';
 import TexError from '../TexError.js';
 
-import { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './__locales__/Component.js';
 import {
   NewcommandTables as NT,
   NewcommandPriority,

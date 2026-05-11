@@ -24,7 +24,7 @@
 import TexError from '../TexError.js';
 import { CheckType, BaseItem, StackItem } from '../StackItem.js';
 
-import { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Opening Item dealing with definitions of new environments. It's pushed onto
