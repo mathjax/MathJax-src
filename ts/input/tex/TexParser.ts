@@ -327,14 +327,32 @@ export default class TexParser {
    */
   public GetArgument(_name: string, noneOK: boolean = false): string {
     switch (this.GetNext()) {
-      case '':
-        if (!noneOK) {
-          // @test MissingArgFor
-          throw new TexError(
-            'MissingArgFor',
-            'Missing argument for %1',
-            this.currentCS
-          );
+    case '':
+      if (!noneOK) {
+        // @test MissingArgFor
+        throw new TexError('MissingArgFor', this.currentCS);
+      }
+      return null;
+    case '}':
+      if (!noneOK) {
+        // @test ExtraCloseMissingOpen
+        throw new TexError('ExtraCloseMissingOpen');
+      }
+      return null;
+    case '\\':
+      this.i++;
+      return '\\' + this.GetCS();
+    case '{':
+      let j = ++this.i, parens = 1;
+      while (this.i < this.string.length) {
+        switch (this.string.charAt(this.i++)) {
+        case '\\':  this.i++; break;
+        case '{':   parens++; break;
+        case '}':
+          if (--parens === 0) {
+            return this.string.slice(j, this.i - 1);
+          }
+          break;
         }
         return null;
       case '}':
@@ -368,7 +386,7 @@ export default class TexParser {
           }
         }
         // @test MissingCloseBrace
-        throw new TexError('MissingCloseBrace', 'Missing close brace');
+        throw new TexError('MissingCloseBrace');
       }
     }
     const c = this.getCodePoint();
@@ -406,11 +424,7 @@ export default class TexParser {
         case '}':
           if (braces-- <= 0) {
             // @test ExtraCloseLooking1
-            throw new TexError(
-              'ExtraCloseLooking',
-              'Extra close brace while looking for %1',
-              "']'"
-            );
+          throw new TexError('ExtraCloseLooking', '\']\'');
           }
           break;
         case '[':
@@ -427,11 +441,7 @@ export default class TexParser {
       }
     }
     // @test MissingCloseBracket
-    throw new TexError(
-      'MissingCloseBracket',
-      "Could not find closing ']' for argument to %1",
-      this.currentCS
-    );
+    throw new TexError('MissingCloseBracket', this.currentCS);
   }
 
   /**
@@ -456,11 +466,7 @@ export default class TexParser {
       }
     }
     // @test MissingOrUnrecognizedDelim1, MissingOrUnrecognizedDelim2
-    throw new TexError(
-      'MissingOrUnrecognizedDelim',
-      'Missing or unrecognized delimiter for %1',
-      this.currentCS
-    );
+    throw new TexError('MissingOrUnrecognizedDelim', this.currentCS);
   }
 
   /**
@@ -487,11 +493,7 @@ export default class TexParser {
       }
     }
     // @test MissingDimOrUnits
-    throw new TexError(
-      'MissingDimOrUnits',
-      'Missing dimension or its units for %1',
-      this.currentCS
-    );
+    throw new TexError('MissingDimOrUnits', this.currentCS);
   }
 
   /**
@@ -521,11 +523,7 @@ export default class TexParser {
         case '}':
           if (braces === 0) {
             // @test ExtraCloseLooking2
-            throw new TexError(
-              'ExtraCloseLooking',
-              'Extra close brace while looking for %1',
-              token
-            );
+            throw new TexError('ExtraCloseLooking', token);
           }
           braces--;
           break;
@@ -535,12 +533,7 @@ export default class TexParser {
       }
     }
     // @test TokenNotFoundForCommand
-    throw new TexError(
-      'TokenNotFoundForCommand',
-      'Could not find %1 for %2',
-      token,
-      this.currentCS
-    );
+    throw new TexError('TokenNotFoundForCommand', token, this.currentCS);
   }
 
   /**
@@ -587,11 +580,7 @@ export default class TexParser {
       return c;
     }
     // @test MissingOrUnrecognizedDelim
-    throw new TexError(
-      'MissingOrUnrecognizedDelim',
-      'Missing or unrecognized delimiter for %1',
-      this.currentCS
-    );
+    throw new TexError('MissingOrUnrecognizedDelim', this.currentCS);
   }
 
   /**

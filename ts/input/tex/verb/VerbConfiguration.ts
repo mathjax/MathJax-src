@@ -30,43 +30,34 @@ import { ParseMethod } from '../Types.js';
 import TexError from '../TexError.js';
 
 // Namespace
-const VerbMethods: { [key: string]: ParseMethod } = {
-  /**
-   * Implements the verbatim notation \verb|...|.
-   *
-   * @param {TexParser} parser The current tex parser.
-   * @param {string} name The name of the calling macro.
-   */
-  Verb(parser: TexParser, name: string) {
-    const c = parser.GetNext();
-    const start = ++parser.i;
-    if (c === '') {
-      throw new TexError('MissingArgFor', 'Missing argument for %1', name);
-    }
-    while (
-      parser.i < parser.string.length &&
-      parser.string.charAt(parser.i) !== c
-    ) {
-      parser.i++;
-    }
-    if (parser.i === parser.string.length) {
-      throw new TexError(
-        'NoClosingDelim',
-        "Can't find closing delimiter for %1",
-        parser.currentCS
-      );
-    }
-    const text = parser.string.slice(start, parser.i).replace(/ /g, '\u00A0');
+const VerbMethods: {[key: string]: ParseMethod} = {
+
+
+/**
+ * Implements the verbatim notation \verb|...|.
+ * @param {TexParser} parser The current tex parser.
+ * @param {string} name The name of the calling macro.
+ */
+Verb(parser: TexParser, name: string) {
+  const c = parser.GetNext();
+  const start = ++parser.i;
+  if (c === '' ) {
+    throw new TexError('MissingArgFor', name);
+  }
+  while (parser.i < parser.string.length &&
+         parser.string.charAt(parser.i) !== c) {
     parser.i++;
-    parser.Push(
-      parser.create(
-        'token',
-        'mtext',
-        { mathvariant: TexConstant.Variant.MONOSPACE },
-        text
-      )
-    );
-  },
+  }
+  if (parser.i === parser.string.length) {
+    throw new TexError('NoClosingDelim', parser.currentCS);
+  }
+  const text = parser.string.slice(start, parser.i).replace(/ /g, '\u00A0');
+  parser.i++;
+  parser.Push(parser.create('token', 'mtext',
+                            {mathvariant: TexConstant.Variant.MONOSPACE},
+                            text));
+},
+
 };
 
 new CommandMap('verb', { verb: VerbMethods.Verb });

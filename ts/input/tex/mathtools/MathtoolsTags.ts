@@ -88,11 +88,7 @@ export function MathtoolsTagFormat(
       const forms = jax.parseOptions.options.mathtools.tagforms;
       for (const form of Object.keys(forms)) {
         if (!Array.isArray(forms[form]) || forms[form].length !== 3) {
-          throw new TexError(
-            'InvalidTagFormDef',
-            'The tag form definition for "%1" should be an array of three strings',
-            form
-          );
+          throw new TexError('InvalidTagFormDef', form);
         }
         this.mtFormats.set(form, forms[form] as [string, string, string]);
       }
