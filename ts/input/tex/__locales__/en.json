@@ -5,6 +5,7 @@
   "ErroneousNestingEq": "Erroneous nesting of equation structures",
   "ExtraCloseLooking": "Extra close brace while looking for %1",
   "ExtraCloseMissingOpen": "Extra close brace or missing open brace",
+  "ExtraLeftMissingRight": "Extra \\left or missing \\right",
   "ExtraMiddle": "Extra \\middle",
   "ExtraOpenMissingClose": "Extra open brace or missing close brace",
   "IllegalMacroParam": "Illegal macro parameter reference",
@@ -25,5 +26,6 @@
   "MissingDimOrUnits": "Missing dimension or its units for %1",
   "MissingLeftExtraRight": "Missing \\left or extra \\right",
   "MissingOrUnrecognizedDelim": "Missing or unrecognized delimiter for %1",
+  "MissingScript": "Missing superscript or subscript argument",
   "TokenNotFoundForCommand": "Could not find %1 for %2"
 }
