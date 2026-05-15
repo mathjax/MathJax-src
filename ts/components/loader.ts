@@ -45,11 +45,12 @@ import { context } from '../util/context.js';
 /**
  * Function used to determine path to a given package.
  */
-export type PathFilterFunction = (data: {
+export type PathFilterData = {
   name: string;
   original: string;
   addExtension: boolean;
-}) => boolean;
+};
+export type PathFilterFunction = (data: PathFilterData) => boolean;
 export type PathFilterList = (
   | PathFilterFunction
   | [PathFilterFunction, number]
@@ -99,11 +100,8 @@ export interface MathJaxObject extends MJObject {
  * Functions used to filter the path to a package
  */
 export const PathFilters: { [name: string]: PathFilterFunction } = {
-  /**
+  /*
    * Look up the path in the configuration's source list
-   *
-   * @param {PathFilterFunction} data The data object containing the filter functions
-   * @returns {boolean} True
    */
   source: (data) => {
     if (Object.hasOwn(CONFIG.source, data.name)) {
@@ -112,11 +110,8 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
     return true;
   },
 
-  /**
+  /*
    * Add [mathjax] before any relative path
-   *
-   * @param {PathFilterFunction} data The data object containing the filter functions
-   * @returns {boolean} True
    */
   normalize: (data) => {
     const name = data.name;
@@ -126,11 +121,8 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
     return true;
   },
 
-  /**
+  /*
    * Recursively replace path prefixes (e.g., [mathjax], [tex], etc.)
-   *
-   * @param {PathFilterFunction} data The data object containing the filter functions
-   * @returns {boolean} True
    */
   prefix: (data) => {
     let match;
@@ -141,11 +133,8 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
     return true;
   },
 
-  /**
+  /*
    * Add .js, if missing
-   *
-   * @param {PathFilterFunction} data The data object containing the filter functions
-   * @returns {boolean} True
    */
   addExtension: (data) => {
     if (data.addExtension && !data.name.match(/\.[^/]+$/)) {
@@ -411,6 +400,7 @@ if (typeof MathJax.loader === 'undefined') {
     failed: (error: PackageError) =>
       console.log(`MathJax(${error.package || '?'}): ${error.message}`),
     require: null,
+    json: null,
     pathFilters: [],
     versionWarnings: true,
   });

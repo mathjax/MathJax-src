@@ -1,0 +1,8 @@
+{
+  "test1": "Has %% percent",
+  "test2": "Has %1 one",
+  "test3": "Order %2 %1 reversed",
+  "test4": "Skip %1 %3",
+  "test5": "Named %{hello} %world",
+  "error": "Error in %1"
+}
