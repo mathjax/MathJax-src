@@ -2,7 +2,16 @@
   "build": {
     "id": "[tex]/verb",
     "component": "input/tex/extensions/verb",
-    "targets": ["input/tex/verb"]
+    "targets": [
+      "input/tex/verb"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/verb",
+    "from": "[ts]/input/tex/verb",
+    "copy": [
+      "__locales__"
+    ]
   },
   "webpack": {
     "name": "input/tex/extensions/verb",
