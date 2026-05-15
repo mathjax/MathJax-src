@@ -2,7 +2,16 @@
   "build": {
     "id": "[tex]/extpfeil",
     "component": "input/tex/extensions/extpfeil",
-    "targets": ["input/tex/extpfeil"]
+    "targets": [
+      "input/tex/extpfeil"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/extpfeil",
+    "from": "[ts]/input/tex/extpfeil",
+    "copy": [
+      "__locales__"
+    ]
   },
   "webpack": {
     "name": "input/tex/extensions/extpfeil",
