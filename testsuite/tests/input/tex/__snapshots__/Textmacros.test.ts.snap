@@ -195,11 +195,11 @@ exports[`Textmacros Macros Sizes large 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{a\\large a\\Large a\\LARGE a\\huge a\\Huge a}" display="block">
   <mrow data-latex="\\text{a\\large a\\Large a\\LARGE a\\huge a\\Huge a}">
     <mtext>a</mtext>
+    <mtext mathsize="1.095">a</mtext>
     <mtext mathsize="1.2">a</mtext>
     <mtext mathsize="1.44">a</mtext>
     <mtext mathsize="1.73">a</mtext>
     <mtext mathsize="2.07">a</mtext>
-    <mtext mathsize="2.49">a</mtext>
   </mrow>
 </math>"
 `;
@@ -207,10 +207,10 @@ exports[`Textmacros Macros Sizes large 1`] = `
 exports[`Textmacros Macros Sizes small 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{{\\tiny a\\Tiny a \\scriptsize a \\small a\\normalsize a}a}" display="block">
   <mrow data-latex="\\text{{\\tiny a\\Tiny a \\scriptsize a \\small a\\normalsize a}a}">
-    <mtext mathsize="0.5">a</mtext>
-    <mtext mathsize="0.6">a&#xA0;</mtext>
+    <mtext mathsize="0.6">a</mtext>
+    <mtext mathsize="0.5">a&#xA0;</mtext>
     <mtext mathsize="0.7">a&#xA0;</mtext>
-    <mtext mathsize="0.85">a</mtext>
+    <mtext mathsize="0.9">a</mtext>
     <mtext mathsize="1">a</mtext>
     <mtext>a</mtext>
   </mrow>
@@ -578,7 +578,7 @@ exports[`Textmacros Text macro 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{abc \\large abc}" display="block">
   <mrow data-latex="\\text{abc \\large abc}">
     <mtext>abc&#xA0;</mtext>
-    <mtext mathsize="1.2">abc</mtext>
+    <mtext mathsize="1.095">abc</mtext>
   </mrow>
 </math>"
 `;
