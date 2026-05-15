@@ -79,9 +79,7 @@ export class MultlineItem extends ArrayItem {
       // @test MultlineRowsOneCol
       throw new TexError(
         'MultlineRowsOneCol',
-        'The rows within the %1 environment must have exactly one column',
-        'multline'
-      );
+        'multline');
     }
     const row = this.create('node', 'mtr', this.row);
     this.table.push(row);
@@ -173,12 +171,7 @@ export class FlalignItem extends EqnArrayItem {
     const n = this.getProperty('xalignat') as number;
     if (!n) return;
     if (this.row.length > n) {
-      throw new TexError(
-        'XalignOverflow',
-        'Extra %1 in row of %2',
-        '&',
-        this.name
-      );
+      throw new TexError('XalignOverflow', this.name);
     }
   }
 

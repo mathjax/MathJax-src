@@ -160,21 +160,12 @@ function createRule(
 function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   const dollar = parser.GetNext();
   if (dollar !== '$') {
-    throw new TexError(
-      'IllegalUseOfCommand',
-      'Use of %1 does not match its definition.',
-      name
-    );
+    throw new TexError('IllegalUseOfCommand', name);
   }
   parser.i++;
-  const axiom = parser.GetUpTo(name, '$');
-  if (!axiom.includes('\\fCenter')) {
-    throw new TexError(
-      'MissingProofCommand',
-      'Missing %1 in %2.',
-      '\\fCenter',
-      name
-    );
+  let axiom = parser.GetUpTo(name, '$');
+  if (axiom.indexOf('\\fCenter') === -1) {
+    throw new TexError('MissingProofCommand', '\\fCenter', name);
   }
   // Check for fCenter and throw error?
   const [prem, conc] = axiom.split('\\fCenter');

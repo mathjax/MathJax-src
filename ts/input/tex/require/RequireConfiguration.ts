@@ -169,11 +169,7 @@ export function RequireLoad(parser: TexParser, name: string) {
       ? allow[name]
       : options.defaultAllow;
   if (!allowed) {
-    throw new TexError(
-      'BadRequire',
-      'Extension "%1" is not allowed to be loaded',
-      extension
-    );
+    throw new TexError('BadRequire', extension);
   }
   const data = Package.packages.get(extension);
   if (!data) {
@@ -234,11 +230,7 @@ export const RequireMethods: { [key: string]: ParseMethod } = {
   Require(parser: TexParser, name: string) {
     const required = parser.GetArgument(name);
     if (required.match(/[^_a-zA-Z0-9]/) || required === '') {
-      throw new TexError(
-        'BadPackageName',
-        'Argument for %1 is not a valid package name',
-        name
-      );
+      throw new TexError('BadPackageName', name);
     }
     RequireLoad(parser, required);
     parser.Push(parser.itemFactory.create('null'));

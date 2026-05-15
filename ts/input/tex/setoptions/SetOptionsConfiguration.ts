@@ -47,19 +47,12 @@ export const SetOptionsUtil = {
    */
   filterPackage(parser: TexParser, extension: string): boolean {
     if (extension !== 'tex' && !ConfigurationHandler.get(extension)) {
-      throw new TexError('NotAPackage', 'Not a defined package: %1', extension);
+      throw new TexError('NotAPackage', extension);
     }
     const config = parser.options.setoptions;
     const options = config.allowOptions[extension];
-    if (
-      (options === undefined && !config.allowPackageDefault) ||
-      options === false
-    ) {
-      throw new TexError(
-        'PackageNotSettable',
-        'Options can\'t be set for package "%1"',
-        extension
-      );
+    if ((options === undefined && !config.allowPackageDefault) || options === false) {
+      throw new TexError('PackageNotSettable', extension);
     }
     return true;
   },
@@ -81,36 +74,13 @@ export const SetOptionsUtil = {
         ? options[option]
         : null;
     if (allow === false || (allow === null && !config.allowOptionsDefault)) {
-      if (isTex) {
-        throw new TexError(
-          'TeXOptionNotSettable',
-          'Option "%1" is not allowed to be set',
-          option
-        );
-      } else {
-        throw new TexError(
-          'OptionNotSettable',
-          'Option "%1" is not allowed to be set for package %2',
-          option,
-          extension
-        );
-      }
+      throw new TexError('OptionNotSettable', option);
     }
-    const extOptions = isTex ? parser.options : parser.options[extension];
-    if (!extOptions || !Object.hasOwn(extOptions, option)) {
-      if (isTex) {
-        throw new TexError(
-          'InvalidTexOption',
-          'Invalid TeX option "%1"',
-          option
-        );
+    if (!(extension === 'tex' ? parser.options : parser.options[extension])?.hasOwnProperty(option)) {
+      if (extension === 'tex') {
+        throw new TexError('InvalidTexOption', option);
       } else {
-        throw new TexError(
-          'InvalidOptionKey',
-          'Invalid option "%1" for package "%2"',
-          option,
-          extension
-        );
+        throw new TexError('InvalidOptionKey', option, extension);
       }
     }
     return true;

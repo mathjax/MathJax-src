@@ -63,13 +63,9 @@ export class ProofTreeItem extends BaseItem {
     }
     if (item.isKind('stop')) {
       if (this.getProperty('implicit')) {
-        throw new TexError(
-          'MissingDisplayProof',
-          'Missing %1 to display the proof tree.',
-          '\\DisplayProof'
-        );
+        throw new TexError('MissingDisplayProof', '\\DisplayProof');
       }
-      throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());
+      throw new TexError('EnvMissingEnd', this.getName());
     }
     this.innerStack.Push(item);
     return BaseItem.fail;
