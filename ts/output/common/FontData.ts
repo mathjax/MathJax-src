@@ -1330,8 +1330,13 @@ export class FontData<
     const delim = this.delimiters[n];
     if (delim && !('dir' in delim)) {
       this.delimiters[n] = null;
-      retryAfter(this.loadDynamicFile(delim));
-      return null;
+      if (mathjax.asyncIsSynchronous) {
+        this.loadDynamicFileSync(delim);
+        return this.getDelimiter(n);
+      } else {
+        retryAfter(this.loadDynamicFile(delim));
+        return null;
+      }
     }
     return delim as DelimiterData;
   }
@@ -1378,8 +1383,13 @@ export class FontData<
       const variant = this.variant[name];
       delete variant.chars[n];
       variant.linked.forEach((link) => delete link[n]);
-      retryAfter(this.loadDynamicFile(char));
-      return null;
+      if (mathjax.asyncIsSynchronous) {
+        this.loadDynamicFileSync(char);
+        return this.getChar(name, n);
+      } else {
+        retryAfter(this.loadDynamicFile(char));
+        return null;
+      }
     }
     return char as CharDataArray<C>;
   }
