@@ -7,7 +7,8 @@
   "copy": {
     "to": "[bundle]/input/tex/extensions/bbox",
     "from": "[ts]/input/tex/bbox",
-    "copy": ["locales"]
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
   },
   "webpack": {
     "name": "input/tex/extensions/bbox",

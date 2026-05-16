@@ -70,19 +70,21 @@ const bundleDir = path.resolve(parent, bundle);
 /**
  * Copy a file or directory tree
  *
- * @param {string} from     The directory to copy from
- * @param {string} to       The directory to copy to
- * @param {string} name     The name of the file or directory to copy
- * @param {string} space    The indentation for output
+ * @param {string} from       The directory to copy from
+ * @param {string} to         The directory to copy to
+ * @param {string} name       The name of the file or directory to copy
+ * @param {string[]} eclude   The files to exclude
+ * @param {string} space      The indentation for output
  */
-function copyFile(from, to, name, space) {
+function copyFile(from, to, name, excludes, space = '') {
   !fs.existsSync(to) && fs.mkdirSync(to, {recursive: true});
   const copy = path.resolve(from, name);
   const dest = path.resolve(to, name);
+  if (excludes.includes(copy)) return;
   if (fs.lstatSync(copy).isDirectory()) {
     console.info(space + name + '/');
     for (const file of fs.readdirSync(copy)) {
-      copyFile(copy, dest, file, space + INDENT);
+      copyFile(copy, dest, file, excludes, space + INDENT);
     }
   } else {
     console.info(space + name);
@@ -112,8 +114,9 @@ function resolvePaths(name) {
 function processConfig(config) {
   const to = resolvePaths(config.to);
   const from = resolvePaths(config.from);
+  const excludes = config.excludes?.map((file) => path.resolve(from, file)) || [];
   for (const name of config.copy) {
-    copyFile(from, to, name, '');
+    copyFile(from, to, name, excludes);
   }
 }
 
