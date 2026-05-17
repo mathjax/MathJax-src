@@ -26,6 +26,7 @@ import { ParseUtil } from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 import { AbstractMmlTokenNode } from '../../../core/MmlTree/MmlNode.js';
+import { COMPONENT } from './__locales__/Component.js';
 
 export class AutoOpen extends BaseItem {
   /**
@@ -40,6 +41,11 @@ export class AutoOpen extends BaseItem {
    *   a close delimiter will close this item. (#2831)
    */
   public openCount: number = 0;
+
+  /**
+   * @override
+   */
+  protected component = COMPONENT;
 
   /**
    * @override
