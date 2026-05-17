@@ -1,6 +1,7 @@
 {
   "extends": "./cjs.json",
   "compilerOptions": {
+    "removeComments": false,
     "allowJs": true,
     "sourceMap": false,
     "declaration": false,

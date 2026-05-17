@@ -15,6 +15,19 @@
     ],
     "excludeSubdirs": true
   },
+  "copy": [
+    {
+      "to": "[bundle]/input/tex",
+      "from": "[ts]/input/tex",
+      "copy": ["__locales__"],
+      "excludes": ["__locales__/Component.ts"]
+    },{
+      "to": "[bundle]/input/tex/extensions/base",
+      "from": "[ts]/input/tex/base",
+      "copy": ["__locales__"],
+      "excludes": ["__locales__/Component.ts"]
+    }
+  ],
   "webpack": {
     "name": "input/tex",
     "libs": [

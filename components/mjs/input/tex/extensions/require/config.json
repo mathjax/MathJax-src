@@ -4,6 +4,12 @@
     "component": "input/tex/extensions/require",
     "targets": ["input/tex/require"]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/require",
+    "from": "[ts]/input/tex/require",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/require",
     "libs": [

@@ -4,6 +4,12 @@
     "component": "input/tex/extensions/physics",
     "targets": ["input/tex/physics"]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/physics",
+    "from": "[ts]/input/tex/physics",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/physics",
     "libs": [
