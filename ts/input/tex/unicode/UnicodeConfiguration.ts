@@ -32,6 +32,7 @@ import { UnitUtil } from '../UnitUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import { numeric } from '../../../util/Entities.js';
 import { Other } from '../base/BaseConfiguration.js';
+import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
 import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
@@ -105,7 +106,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
   RawUnicode(parser: TexParser, name: string) {
     const hex = parser.GetArgument(name).trim();
     if (!hex.match(/^[0-9A-F]{1,6}$/)) {
-      throw new TexError(COMPONENT, 'BadRawUnicode', parser.currentCS);
+      throw new TexError(TEX_COMPONENT, 'BadRawUnicode', parser.currentCS);
     }
     const n = parseInt(hex, 16);
     parser.string = String.fromCodePoint(n) + parser.string.substring(parser.i);

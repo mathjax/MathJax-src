@@ -44,6 +44,7 @@ import { lookup } from '../../../util/Options.js';
 import { ColumnState } from '../ColumnParser.js';
 import { replaceUnicode } from '../../../util/string.js';
 
+import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
 import { COMPONENT } from './__locales__/Component.js';
 
 const P_HEIGHT = 1.2 / 0.85; // cmex10 height plus depth over .85
@@ -1512,7 +1513,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const c = parser.GetNext();
     if (c === '') {
       // @test Matrix Error
-      throw new TexError(COMPONENT, 'MissingArgFor', parser.currentCS);
+      throw new TexError(TEX_COMPONENT, 'MissingArgFor', parser.currentCS);
     }
     if (c === '{') {
       // @test Matrix Braces, Matrix Columns, Matrix Rows.
@@ -1746,7 +1747,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const top = parser.stack.Top();
     if (!(top instanceof sitem.ArrayItem) || top.Size()) {
       // @test Misplaced hline
-      throw new TexError(COMPONENT, 'Misplaced', parser.currentCS);
+      throw new TexError(TEX_COMPONENT, 'Misplaced', parser.currentCS);
     }
     if (!top.table.length) {
       // @test Enclosed top, Enclosed top bottom

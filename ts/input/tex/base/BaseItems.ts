@@ -39,6 +39,7 @@ import { CheckType, BaseItem, StackItem, EnvList } from '../StackItem.js';
 import { TRBL } from '../../../util/Styles.js';
 import { TexConstant } from '../TexConstants.js';
 
+import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
 import { COMPONENT } from './__locales__/Component.js';
 
 /**
@@ -1083,7 +1084,7 @@ export class ArrayItem extends BaseItem {
           return [[newItem], true];
         }
         // @test MissingCloseBrace2
-        throw new TexError(COMPONENT, 'MissingCloseBrace');
+        throw new TexError(TEX_COMPONENT, 'MissingCloseBrace');
       }
       return [[newItem, item], true];
     }
