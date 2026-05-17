@@ -32,7 +32,7 @@ export class AutoOpen extends BaseItem {
    * @override
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
-    stop: ['ExtraOrMissingDelims', 'Extra open or missing close delimiter'],
+    stop: 'ExtraOrMissingDelims',
   });
 
   /**

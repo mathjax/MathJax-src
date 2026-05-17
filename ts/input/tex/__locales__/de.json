@@ -16,7 +16,7 @@
   "MaxColumns": "Zu viele Spaltenangaben (möglicherweise sich wiederholende Spaltendefinitionen?)",
   "MaxMacroSub1": "Maximale Anzahl an Makrosubstitutionen in MathJax überschritten; liegt ein rekursiver Makroaufruf vor?",
   "MaxMacroSub2": "Maximale Anzahl an Ersetzungen in MathJax überschritten; liegt eine rekursive LaTeX-Umgebung vor?",
-  "Misplaced": "%1 falsch platziert",
+  "Misplaced": "'%1' falsch platziert",
   "MissingArgFor": "Fehlendes Argument für %1",
   "MissingArgForColumn": "Fehlendes Argument für die Spaltendeklaration %1",
   "MissingBeginExtraEnd": "Fehlendes \\begin{%1} oder zusätzliches \\end{%1}",
