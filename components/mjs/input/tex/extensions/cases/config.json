@@ -13,6 +13,12 @@
       "__locales__"
     ]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/cases",
+    "from": "[ts]/input/tex/cases",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/cases",
     "libs": [

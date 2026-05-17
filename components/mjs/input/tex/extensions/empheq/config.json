@@ -13,6 +13,12 @@
       "__locales__"
     ]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/empheq",
+    "from": "[ts]/input/tex/empheq",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/empheq",
     "libs": [

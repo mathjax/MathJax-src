@@ -2,7 +2,7 @@ import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
 import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
 import '#js/input/tex/bbox/BboxConfiguration';
 
-beforeEach(async () => setupTex(['base', 'bbox']));
+beforeEach(() => setupTex(['base', 'bbox']));
 
 /**********************************************************************************/
 
