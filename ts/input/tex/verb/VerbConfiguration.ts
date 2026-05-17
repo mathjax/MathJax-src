@@ -28,6 +28,7 @@ import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
 import TexError from '../TexError.js';
+import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
 import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
@@ -43,7 +44,7 @@ const VerbMethods: { [key: string]: ParseMethod } = {
     const c = parser.GetNext();
     const start = ++parser.i;
     if (c === '') {
-      throw new TexError(COMPONENT, 'MissingArgFor', name);
+      throw new TexError(TEX_COMPONENT, 'MissingArgFor', name);
     }
     while (
       parser.i < parser.string.length &&

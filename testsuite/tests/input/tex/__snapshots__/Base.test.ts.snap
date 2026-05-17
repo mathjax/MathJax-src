@@ -3495,8 +3495,8 @@ exports[`Environments math 1`] = `
 
 exports[`Error merror node 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="&amp;" display="block">
-  <merror data-mjx-error="Misplaced &amp;">
-    <mtext>Misplaced &amp;</mtext>
+  <merror data-mjx-error="Misplaced '&amp;'">
+    <mtext>Misplaced '&amp;'</mtext>
   </merror>
 </math>"
 `;
