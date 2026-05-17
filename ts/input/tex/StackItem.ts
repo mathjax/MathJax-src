@@ -26,7 +26,7 @@ import { FactoryNodeClass } from '../../core/Tree/Factory.js';
 import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
 import { TexConstant } from './TexConstants.js';
-
+import { Locale } from '../../util/Locale.js';
 import { COMPONENT } from './__locales__/Component.js';
 
 // Union types for abbreviation.
@@ -412,8 +412,6 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    */
   protected component: string = COMPONENT;
 
-  private baseComponent: string = COMPONENT;
-
   private _env: EnvList;
 
   private _properties: PropList = {};
@@ -523,16 +521,12 @@ export abstract class BaseItem extends MmlStack implements StackItem {
         return BaseItem.fail;
       }
       // @test Ampersand-error
-      throw new TexError(this.component, 'Misplaced', item.getName());
+      this.throwError('Misplaced', item.getName());
     }
     if (item.isClose && this.getError(item.kind)) {
       // @test ExtraOpenMissingClose, ExtraCloseMissingOpen,
       //       MissingLeftExtraRight, MissingBeginExtraEnd
-      throw new TexError(
-        this.component,
-        this.getError(item.kind),
-        item.getName()
-      );
+      this.throwError(this.getError(item.kind), item.getName());
     }
     if (!item.isFinal) {
       return BaseItem.success;
@@ -583,6 +577,21 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   public getError(kind: string): string {
     const CLASS = this.constructor as typeof BaseItem;
     return CLASS.errors?.[kind] ?? BaseItem.errors[kind];
+  }
+
+  /**
+   * Throw a TexError with the given component or the default component.
+   *
+   * @param {string} id The message id for the error.
+   * @param {string[]} ...args Any arguments for the error message.
+   * @param {...any} args
+   */
+  protected throwError(id: string, ...args: string[]) {
+    throw new TexError(
+      Locale.hasMessage(this.component, id) ? this.component : COMPONENT,
+      id,
+      ...args
+    );
   }
 
   /**
