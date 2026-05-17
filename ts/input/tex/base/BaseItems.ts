@@ -220,6 +220,7 @@ export class PrimeItem extends BaseItem {
  * expression.
  */
 export class SubsupItem extends BaseItem {
+
   /**
    * @override
    */
@@ -232,6 +233,11 @@ export class SubsupItem extends BaseItem {
     sub: 'MissingOpenForSub',
   });
 
+  /**
+   * @override
+   */
+  protected component = COMPONENT;
+  
   /**
    * @override
    */

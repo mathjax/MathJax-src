@@ -2472,6 +2472,18 @@ describe('Physics Errors', () => {
   it('InvalidNumber XMatrix m+', () => {
     expectTexError('\\smqty(\\xmatrix{a}{2}{2.0})').toBe('Invalid number');
   });
+
+  it('Missing Closing Delimiter', () => {
+    expect(
+      tex2mml('\\sin(1\\over2')
+    ).toMatchSnapshot();
+  });
+
+  it('Extra Open Delimiter', () => {
+    expect(
+      tex2mml('\\sin((1\\over2)')
+    ).toMatchSnapshot();
+  });
 });
 
 /**********************************************************************************/

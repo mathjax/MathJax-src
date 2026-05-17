@@ -407,6 +407,13 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    */
   public global: EnvList = {};
 
+  /**
+   * The component for error messages.
+   */
+  protected component: string = COMPONENT;
+
+  private baseComponent: string = COMPONENT;
+
   private _env: EnvList;
 
   private _properties: PropList = {};
@@ -516,12 +523,16 @@ export abstract class BaseItem extends MmlStack implements StackItem {
         return BaseItem.fail;
       }
       // @test Ampersand-error
-      throw new TexError(COMPONENT, 'Misplaced', item.getName());
+      throw new TexError(this.component, 'Misplaced', item.getName());
     }
     if (item.isClose && this.getError(item.kind)) {
       // @test ExtraOpenMissingClose, ExtraCloseMissingOpen,
       //       MissingLeftExtraRight, MissingBeginExtraEnd
-      throw new TexError(COMPONENT, this.getError(item.kind), item.getName());
+      throw new TexError(
+        this.component,
+        this.getError(item.kind),
+        item.getName()
+      );
     }
     if (!item.isFinal) {
       return BaseItem.success;
