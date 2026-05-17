@@ -6,13 +6,6 @@
       "input/tex/braket"
     ]
   },
-  "copy": {
-    "to": "[bundle]/input/tex/extensions/braket",
-    "from": "[ts]/input/tex/braket",
-    "copy": [
-      "__locales__"
-    ]
-  },
   "webpack": {
     "name": "input/tex/extensions/braket",
     "libs": [

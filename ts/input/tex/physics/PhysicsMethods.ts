@@ -33,6 +33,7 @@ import { NodeFactory } from '../NodeFactory.js';
 import { Macro } from '../Token.js';
 import { AutoOpen } from './PhysicsItems.js';
 
+import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
 import { COMPONENT } from './__locales__/Component.js';
 
 /**
@@ -245,7 +246,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     }
     let right = pairs[next];
     if (arg && next !== '{') {
-      throw new TexError(COMPONENT, 'MissingArgFor', parser.currentCS);
+      throw new TexError(TEX_COMPONENT, 'MissingArgFor', parser.currentCS);
     }
     if (!right) {
       const empty = parser.create('node', 'mrow');
@@ -343,12 +344,12 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       big = parser.GetCS();
       if (!big.match(biggs)) {
         // Actually a commutator error arg1 error.
-        throw new TexError(COMPONENT, 'MissingArgFor', parser.currentCS);
+        throw new TexError(TEX_COMPONENT, 'MissingArgFor', parser.currentCS);
       }
       next = parser.GetNext();
     }
     if (next !== '{') {
-      throw new TexError(COMPONENT, 'MissingArgFor', parser.currentCS);
+      throw new TexError(TEX_COMPONENT, 'MissingArgFor', parser.currentCS);
     }
     const arg1 = parser.GetArgument(name);
     const arg2 = parser.GetArgument(name);
