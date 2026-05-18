@@ -4,6 +4,12 @@
     "component": "input/tex/extensions/newcommand",
     "targets": ["input/tex/newcommand"]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/newcommand",
+    "from": "[ts]/input/tex/newcommand",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/newcommand",
     "libs": [

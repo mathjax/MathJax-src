@@ -4,6 +4,12 @@
     "component": "input/tex/extensions/color",
     "targets": ["input/tex/color"]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/color",
+    "from": "[ts]/input/tex/color",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/color",
     "libs": [

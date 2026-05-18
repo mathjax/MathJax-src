@@ -27,6 +27,7 @@ import { handleRetriesFor, retryAfter } from './util/Retries.js';
 import { OptionList } from './util/Options.js';
 import { MathDocument } from './core/MathDocument.js';
 import { context } from './util/context.js';
+import { json } from '#root/json.js';
 
 /*****************************************************************/
 /**
@@ -84,5 +85,5 @@ export const mathjax = {
    * @param {string} file      The name of the JSON file to load
    * @returns {Promise<any>}   A promise resolving to the JSON data
    */
-  json: (file: string) => fetch(file).then((data) => data.json()),
+  json: json,
 };

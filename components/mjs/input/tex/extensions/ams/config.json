@@ -4,6 +4,12 @@
     "component": "input/tex/extensions/ams",
     "targets": ["input/tex/ams"]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/ams",
+    "from": "[ts]/input/tex/ams",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/ams",
     "libs": [

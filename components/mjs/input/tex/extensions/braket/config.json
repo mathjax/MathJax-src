@@ -4,6 +4,12 @@
     "component": "input/tex/extensions/braket",
     "targets": ["input/tex/braket"]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/braket",
+    "from": "[ts]/input/tex/braket",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/braket",
     "libs": [

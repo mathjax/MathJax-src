@@ -4,6 +4,12 @@
     "component": "input/tex/extensions/mathtools",
     "targets": ["input/tex/mathtools"]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/mathtools",
+    "from": "[ts]/input/tex/mathtools",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/mathtools",
     "libs": [

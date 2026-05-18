@@ -4,6 +4,12 @@
     "component": "input/tex/extensions/html",
     "targets": ["input/tex/html"]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/html",
+    "from": "[ts]/input/tex/html",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/html",
     "libs": [
