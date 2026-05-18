@@ -32,6 +32,8 @@ import BaseMethods from '../base/BaseMethods.js';
 import { AmsMethods } from '../ams/AmsMethods.js';
 import { mhchemParser } from '#mhchem/mhchemParser.js';
 import { TEXCLASS } from '../../../core/MmlTree/MmlNode.js';
+import { COMPONENT } from './__locales__/Component.js';
+export { COMPONENT };
 
 /**
  * Creates mo token elements with the proper attributes
@@ -104,8 +106,20 @@ export const MhchemMethods: { [key: string]: ParseMethod } = {
       for (const [name, pattern] of MhchemReplacements.entries()) {
         tex = tex.replace(pattern, name as string);
       }
-    } catch (err) {
-      throw new TexError(null, err[0], err[1]);
+    } catch ([id, msg]) {
+      if (id === 'MhchemErrorBond') {
+        const match = msg.match(/\((.*)\)/);
+        throw new TexError(COMPONENT, id, match[1]);
+      }
+      if (id.startsWith('MhchemBug')) {
+        const match = msg.match(/mhchem bug (.).*\((.*)\)/);
+        if (match) {
+          throw new TexError(COMPONENT, 'MhchemBug2', match[1], match[2]);
+        } else {
+          throw new TexError(COMPONENT, 'MhchemBug', id.charAt(9));
+        }
+      }
+      throw new TexError('[tex]/base', id);
     }
     parser.string = tex + parser.string.substring(parser.i);
     parser.i = 0;
