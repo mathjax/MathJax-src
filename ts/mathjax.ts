@@ -85,5 +85,5 @@ export const mathjax = {
    * @param {string} file      The name of the JSON file to load
    * @returns {Promise<any>}   A promise resolving to the JSON data
    */
-  json: json
+  json: json,
 };
