@@ -75,6 +75,29 @@ export class MmlNodeAdapter implements INodeAdapter {
   removeLastChild(): void {
     this.node.removeChild(this.node.childNodes[this.node.childNodes.length - 1]);
   }
+
+  get firstChild(): INodeAdapter | undefined {
+    if (this.node.childNodes.length === 0) {
+        return undefined;
+    } else {
+        return new MmlNodeAdapter(this.node.childNodes[0]);
+    }
+  }
+  get lastChild(): INodeAdapter | undefined {
+    if (this.node.childNodes.length === 0) {
+        return undefined;
+    } else {
+        return new MmlNodeAdapter(this.node.childNodes[this.node.childNodes.length - 1]);
+    }
+  }
+
+  hasChildNodes(): boolean {
+    return (this.node.childNodes.length > 0);
+  }
+
+  setStyle(_prop: string, _value: string): void {
+    // not used, so noop
+  }
   
   // Expose underlying node when needed
   get underlyingNode() { return this.node; }
@@ -198,6 +221,7 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
         listseparator: this.parseOptions.options.listseparator, 
         displaystyle: this.parseOptions.options.displaystyle,
         addmathvariant: true,
+        useCSS: false,
         additionalSymbols: this.parseOptions.options?.additionalSymbols || []
       }
     };
