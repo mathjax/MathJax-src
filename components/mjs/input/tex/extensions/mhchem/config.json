@@ -5,6 +5,12 @@
     "targets": ["input/tex/mhchem"],
     "excludeSubdirs": true
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/mhchem",
+    "from": "[ts]/input/tex/mhchem",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/mhchem",
     "libs": [
