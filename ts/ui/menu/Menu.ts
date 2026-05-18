@@ -307,7 +307,10 @@ export class Menu {
     // Add the input and output jax and the document type
     //
     lines.push(
-      localize('InputJax', this.document.inputJax.map((jax) => jax.name).join(', ')),
+      localize(
+        'InputJax',
+        this.document.inputJax.map((jax) => jax.name).join(', ')
+      ),
       localize('OutputJax', this.document.outputJax.name),
       localize('DocType', this.document.kind)
     );
@@ -679,21 +682,17 @@ export class Menu {
           this.command('SpeechText', () => this.copySpeechText(), {
             disabled: true,
           }),
-          this.command(
-            'BrailleCode',
-            () => this.copyBrailleText(),
-            { disabled: true }
-          ),
+          this.command('BrailleCode', () => this.copyBrailleText(), {
+            disabled: true,
+          }),
           this.command('SvgImage', () => this.copySvgImage(), {
             disabled: true,
           }),
           this.submenu('CopyAnnotation'),
           this.rule(),
-          this.command(
-            'Error',
-            () => this.copyErrorMessage(),
-            { disabled: true }
-          ),
+          this.command('Error', () => this.copyErrorMessage(), {
+            disabled: true,
+          }),
         ]),
         this.rule(),
         this.submenu('Settings', [
@@ -728,10 +727,7 @@ export class Menu {
             this.radioGroup('zoom', ['Click', 'DoubleClick', 'NoZoom']),
             this.rule(),
             this.label('TriggerRequires'),
-            this.checkbox(
-              MenuUtil.isMac ? 'Option' : 'Alt',
-              'alt'
-            ),
+            this.checkbox(MenuUtil.isMac ? 'Option' : 'Alt', 'alt'),
             this.checkbox('Command', 'cmd', {
               hidden: !MenuUtil.isMac,
             }),
@@ -754,9 +750,7 @@ export class Menu {
           this.rule(),
           this.command('ScaleAllMath', () => this.scaleAllMath()),
           this.rule(),
-          this.command('Reset', () =>
-            this.resetDefaults()
-          ),
+          this.command('Reset', () => this.resetDefaults()),
         ]),
         this.rule(),
         this.label('Accessibility'),
@@ -787,10 +781,7 @@ export class Menu {
           this.checkbox('BrailleSpeech', 'brailleSpeech', {
             hidden: true,
           }),
-          this.checkbox(
-            'BrailleCombine',
-            'brailleCombine'
-          ),
+          this.checkbox('BrailleCombine', 'brailleCombine'),
           this.rule(),
           this.label('Code'),
           this.radioGroup('brailleCode', ['nemeth', 'ueb', 'euro']),
@@ -835,7 +826,7 @@ export class Menu {
             this.rule(),
             this.radioGroup('magnify', ['200%', '300%', '400%', '500%']),
           ]),
-          this.submenu('SemanticInfo',  [
+          this.submenu('SemanticInfo', [
             this.checkbox('Type', 'infoType'),
             this.checkbox('Role', 'infoRole'),
             this.checkbox('Prefix', 'infoPrefix'),
@@ -865,10 +856,7 @@ export class Menu {
             this.radioGroup('tabSelects', ['all', 'last']),
           ]),
           this.rule(),
-          this.checkbox(
-            'AssistiveMml',
-            'assistiveMml'
-          ),
+          this.checkbox('AssistiveMml', 'assistiveMml'),
         ]),
         this.rule(),
         this.command('About', () => this.about()),
@@ -1927,11 +1915,7 @@ export class Menu {
    * @param {object} other        Other values to include in the generated JSON object
    * @returns {object}            The JSON for the command item
    */
-  public command(
-    id: string,
-    action: () => void,
-    other: object = {}
-  ): object {
+  public command(id: string, action: () => void, other: object = {}): object {
     const content = localize(id);
     return Object.assign({ type: 'command', id, content, action }, other);
   }
@@ -1944,11 +1928,7 @@ export class Menu {
    * @param {object} other        Other values to include in the generated JSON object
    * @returns {object}            The JSON for the checkbox item
    */
-  public checkbox(
-    id: string,
-    variable: string,
-    other: object = {}
-  ): object {
+  public checkbox(id: string, variable: string, other: object = {}): object {
     const content = localize(id);
     return Object.assign({ type: 'checkbox', id, content, variable }, other);
   }
@@ -1973,11 +1953,7 @@ export class Menu {
    * @param {object} other        Other values to include in the generated JSON object
    * @returns {object}            The JSON for the radio button item
    */
-  public radio(
-    id: string,
-    variable: string,
-    other: object = {}
-  ): object {
+  public radio(id: string, variable: string, other: object = {}): object {
     const content = localize(id);
     return Object.assign({ type: 'radio', id, content, variable }, other);
   }
