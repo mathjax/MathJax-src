@@ -49,6 +49,9 @@ import * as MenuUtil from './MenuUtil.js';
 
 import { Parser, Rule, CssStyles, Submenu } from './mj-context-menu.js';
 
+import { COMPONENT, localize } from './__locales__/Component.js';
+export { COMPONENT };
+
 /*==========================================================================*/
 
 /**
@@ -302,15 +305,15 @@ export class Menu {
     // Add the input and output jax and the document type
     //
     lines.push(
-      'Input Jax: ' + this.document.inputJax.map((jax) => jax.name).join(', ')
+      localize('InputJax', this.document.inputJax.map((jax) => jax.name).join(', ')),
+      localize('OutputJax', this.document.outputJax.name),
+      localize('DocType', this.document.kind)
     );
-    lines.push('Output Jax: ' + this.document.outputJax.name);
-    lines.push('Document Type: ' + this.document.kind);
     //
     // Add the loaded packages and their versions
     //
     if (MathJax && MathJax.loader) {
-      lines.push('<hr/>Modules Loaded:');
+      lines.push('<hr/>' + localize('Modules'));
       const Package = MathJax._.components.package.Package;
       const versions = (MathJax as any).loader.versions;
       for (const name of Array.from(Package.packages.keys()).sort(
@@ -391,41 +394,8 @@ export class Menu {
    */
   protected help() {
     InfoDialog.post({
-      title: 'MathJax Help',
-      message: [
-        '<p><b>MathJax</b> is a JavaScript library that allows page',
-        ' authors to include mathematics within their web pages.',
-        " As a reader, you don't need to do anything to make that happen.</p>",
-        '<p><b>Browsers</b>: MathJax works with all modern browsers including',
-        ' Edge, Firefox, Chrome, Safari, Opera, and most mobile browsers.</p>',
-        '<p><b>Math Menu</b>: MathJax adds a contextual menu to equations.',
-        ' Right-click or CTRL-click on any mathematics to access the menu.</p>',
-        '<div style="margin-left: 1em;">',
-        "<p><b>Show Math As:</b> These options allow you to view the formula's",
-        ' source markup (as MathML or in its original format).</p>',
-        "<p><b>Copy to Clipboard:</b> These options copy the formula's source markup,",
-        ' as MathML or in its original format, to the clipboard',
-        ' (in browsers that support that).</p>',
-        '<p><b>Math Settings:</b> These give you control over features of MathJax,',
-        ' such the size of the mathematics, the mechanism used to display equations,',
-        ' how to handle equations that are too wide, and the language to use for',
-        " MathJax's menus and error messages (not yet implemented in v4).",
-        '</p>',
-        '<p><b>Accessibility</b>: MathJax can work with screen',
-        ' readers to make mathematics accessible to the visually impaired.',
-        ' Turn on speech or braille generation to enable creation of speech strings',
-        ' and the ability to investigate expressions interactively.  You can control',
-        ' the style of the explorer in its menu.</p>',
-        '</div>',
-        '<p><b>Math Zoom</b>: If you are having difficulty reading an',
-        ' equation, MathJax can enlarge it to help you see it better, or',
-        ' you can scale all the math on the page to make it larger.',
-        ' Turn these features on in the <b>Math Settings</b> menu.</p>',
-        "<p><b>Preferences</b>: MathJax uses your browser's localStorage database",
-        ' to save the preferences set via this menu locally in your browser.  These',
-        ' are not used to track you, and are not transferred or used remotely by',
-        ' MathJax in any way.</p>',
-      ].join('\n'),
+      title: localize('HelpTitle'),
+      message: localize('HelpMessage'),
       adaptor: this.document.adaptor,
       extraNodes: [
         this.document.adaptor.node(
@@ -442,7 +412,7 @@ export class Menu {
    */
   protected mathMLCode() {
     CopyDialog.post({
-      title: 'MathJax MathML Expression',
+      title: localize('MmlTitle'),
       message: this.menu.mathItem ? this.toMML(this.menu.mathItem) : '',
       adaptor: this.document.adaptor,
       code: true,
@@ -454,7 +424,7 @@ export class Menu {
    */
   protected originalText() {
     CopyDialog.post({
-      title: 'MathJax Original Source',
+      title: localize('SourceTitle'),
       message: this.menu.mathItem?.math ?? '',
       adaptor: this.document.adaptor,
       code: true,
@@ -466,7 +436,7 @@ export class Menu {
    */
   protected annotationBox() {
     CopyDialog.post({
-      title: 'MathJax Annotation Text',
+      title: localize('AnnotationTitle'),
       message: AnnotationMenu.annotation,
       adaptor: this.document.adaptor,
       code: true,
@@ -478,7 +448,7 @@ export class Menu {
    */
   public async svgImage() {
     CopyDialog.post({
-      title: 'MathJax SVG Image',
+      title: localize('SvgTitle'),
       message: await this.toSVG(this.menu.mathItem),
       adaptor: this.document.adaptor,
       code: true,
@@ -490,7 +460,7 @@ export class Menu {
    */
   protected speechText() {
     CopyDialog.post({
-      title: 'MathJax Speech Text',
+      title: localize('SpeechTitle'),
       message: this.menu.mathItem?.outputData?.speech ?? '',
       adaptor: this.document.adaptor,
       code: true,
@@ -498,11 +468,11 @@ export class Menu {
   }
 
   /**
-   * The "Show As Speech Text" info box
+   * The "Show As Braille Text" info box
    */
   protected brailleText() {
     CopyDialog.post({
-      title: 'MathJax Braille Text',
+      title: localize('BrailleTitle'),
       message: this.menu.mathItem?.outputData?.braille ?? '',
       adaptor: this.document.adaptor,
       code: true,
@@ -514,7 +484,7 @@ export class Menu {
    */
   protected errorMessage() {
     CopyDialog.post({
-      title: 'MathJax Error Message',
+      title: localize('ErrorTitle'),
       message: this.menu.mathItem ? this.menu.errorMsg : '',
       adaptor: this.document.adaptor,
       code: true,
@@ -535,7 +505,7 @@ export class Menu {
       text = `<div style="font-size: ${scale}px">${zoom.outerHTML}</div>`;
     }
     InfoDialog.post({
-      title: 'MathJax Zoomed Expression',
+      title: localize('ZoomTitle'),
       message: text,
       adaptor: this.document.adaptor,
       styles: {
@@ -680,262 +650,231 @@ export class Menu {
         ),
       ],
       items: [
-        this.submenu('Show', 'Show Math As', [
-          this.command('MathMLcode', 'MathML Code', () => this.mathMLCode()),
-          this.command('Original', 'Original Form', () => this.originalText()),
+        this.submenu('Show', [
+          this.command('MathMLcode', () => this.mathMLCode()),
+          this.command('Original', () => this.originalText()),
           this.rule(),
-          this.command('Speech', 'Speech Text', () => this.speechText(), {
+          this.command('SpeechText', () => this.speechText(), {
             disabled: true,
           }),
-          this.command('Braille', 'Braille Code', () => this.brailleText(), {
+          this.command('BrailleCode', () => this.brailleText(), {
             disabled: true,
           }),
-          this.command('SVG', 'SVG Image', () => this.svgImage(), {
+          this.command('SvgImage', () => this.svgImage(), {
             disabled: true,
           }),
-          this.submenu('ShowAnnotation', 'Annotation'),
+          this.submenu('ShowAnnotation'),
           this.rule(),
-          this.command('Error', 'Error Message', () => this.errorMessage(), {
+          this.command('Error', () => this.errorMessage(), {
             disabled: true,
           }),
         ]),
-        this.submenu('Copy', 'Copy to Clipboard', [
-          this.command('MathMLcode', 'MathML Code', () => this.copyMathML()),
-          this.command('Original', 'Original Form', () => this.copyOriginal()),
+        this.submenu('Copy', [
+          this.command('MathMLcode', () => this.copyMathML()),
+          this.command('Original', () => this.copyOriginal()),
           this.rule(),
-          this.command('Speech', 'Speech Text', () => this.copySpeechText(), {
+          this.command('SpeechText', () => this.copySpeechText(), {
             disabled: true,
           }),
           this.command(
-            'Braille',
-            'Braille Code',
+            'BrailleCode',
             () => this.copyBrailleText(),
             { disabled: true }
           ),
-          this.command('SVG', 'SVG Image', () => this.copySvgImage(), {
+          this.command('SvgImage', () => this.copySvgImage(), {
             disabled: true,
           }),
-          this.submenu('CopyAnnotation', 'Annotation'),
+          this.submenu('CopyAnnotation'),
           this.rule(),
           this.command(
             'Error',
-            'Error Message',
             () => this.copyErrorMessage(),
             { disabled: true }
           ),
         ]),
         this.rule(),
-        this.submenu('Settings', 'Math Settings', [
+        this.submenu('Settings', [
           this.submenu(
             'Renderer',
-            'Math Renderer',
-            this.radioGroup('renderer', [['CHTML'], ['SVG']])
+            this.radioGroup('renderer', ['CHTML', 'SVG'])
           ),
-          this.submenu('Overflow', 'Wide Expressions', [
+          this.submenu('WideExpressions', [
             this.radioGroup('overflow', [
-              ['Overflow'],
-              ['Scroll'],
-              ['Linebreak'],
-              ['Scale'],
-              ['Truncate'],
-              ['Elide'],
+              'Overflow',
+              'Scroll',
+              'Linebreak',
+              'Scale',
+              'Truncate',
+              'Elide',
             ]),
             this.rule(),
-            this.checkbox('BreakInline', 'Allow In-line Breaks', 'breakInline'),
+            this.checkbox('BreakInline', 'breakInline'),
           ]),
           this.rule(),
-          this.submenu('MathmlIncludes', 'MathML/SVG has', [
-            this.checkbox('showSRE', 'Semantic attributes', 'showSRE'),
-            this.checkbox('showTex', 'LaTeX attributes', 'showTex'),
-            this.checkbox('texHints', 'TeX hints', 'texHints'),
-            this.checkbox('semantics', 'Original as annotation', 'semantics'),
+          this.submenu('MathmlIncludes', [
+            this.checkbox('showSRE', 'showSRE'),
+            this.checkbox('showTex', 'showTex'),
+            this.checkbox('texHints', 'texHints'),
+            this.checkbox('semantics', 'semantics'),
           ]),
-          this.submenu('Language', 'Language'),
+          this.submenu('Language'),
           this.rule(),
-          this.submenu('ZoomTrigger', 'Zoom Trigger', [
-            this.command('ZoomNow', 'Zoom Once Now', () => this.zoom(null, '')),
+          this.submenu('ZoomTrigger', [
+            this.command('ZoomNow', () => this.zoom(null, '')),
             this.rule(),
-            this.radioGroup('zoom', [
-              ['Click'],
-              ['DoubleClick', 'Double-Click'],
-              ['NoZoom', 'No Zoom'],
-            ]),
+            this.radioGroup('zoom', ['Click', 'DoubleClick', 'NoZoom']),
             this.rule(),
-            this.label('TriggerRequires', 'Trigger Requires:'),
+            this.label('TriggerRequires'),
             this.checkbox(
-              MenuUtil.isMac ? 'Option' : 'Alt',
               MenuUtil.isMac ? 'Option' : 'Alt',
               'alt'
             ),
-            this.checkbox('Command', 'Command', 'cmd', {
+            this.checkbox('Command', 'cmd', {
               hidden: !MenuUtil.isMac,
             }),
-            this.checkbox('Control', 'Control', 'ctrl', {
+            this.checkbox('Control', 'ctrl', {
               hidden: MenuUtil.isMac,
             }),
-            this.checkbox('Shift', 'Shift', 'shift'),
+            this.checkbox('Shift', 'shift'),
           ]),
           this.submenu(
             'ZoomFactor',
-            'Zoom Factor',
             this.radioGroup('zscale', [
-              ['150%'],
-              ['175%'],
-              ['200%'],
-              ['250%'],
-              ['300%'],
-              ['400%'],
+              '150%',
+              '175%',
+              '200%',
+              '250%',
+              '300%',
+              '400%',
             ])
           ),
           this.rule(),
-          this.command('Scale', 'Scale All Math...', () => this.scaleAllMath()),
+          this.command('ScaleAllMath', () => this.scaleAllMath()),
           this.rule(),
-          this.command('Reset', 'Reset to defaults', () =>
+          this.command('Reset', () =>
             this.resetDefaults()
           ),
         ]),
         this.rule(),
-        this.label('Accessibility', '\xA0\xA0 Accessibility:'),
-        this.submenu('Speech', '\xA0 \xA0 Speech', [
-          this.checkbox('Generate', 'Generate', 'speech'),
-          this.checkbox('Subtitles', 'Show Subtitles', 'subtitles'),
-          this.checkbox('Auto Voicing', 'Auto Voicing', 'voicing'),
+        this.label('Accessibility'),
+        this.submenu('Speech', [
+          this.checkbox('Generate', 'speech'),
+          this.checkbox('Subtitles', 'subtitles'),
+          this.checkbox('AutoVoicing', 'voicing'),
           this.rule(),
-          this.label('Rules', 'Rules:'),
+          this.label('Rules'),
           this.submenu(
             'Mathspeak',
-            'Mathspeak',
             this.radioGroup('speechRules', [
-              ['mathspeak-default', 'Verbose'],
-              ['mathspeak-brief', 'Brief'],
-              ['mathspeak-sbrief', 'Superbrief'],
+              'mathspeak-default',
+              'mathspeak-brief',
+              'mathspeak-sbrief',
             ])
           ),
           this.submenu(
             'Clearspeak',
-            'Clearspeak',
-            this.radioGroup('speechRules', [['clearspeak-default', 'Auto']])
+            this.radioGroup('speechRules', ['clearspeak-default'])
           ),
           this.rule(),
-          this.submenu('A11yLanguage', 'Language'),
+          this.submenu('A11yLanguage'),
         ]),
-        this.submenu('Braille', '\xA0 \xA0 Braille', [
-          this.checkbox('Generate', 'Generate', 'braille'),
-          this.checkbox('Subtitles', 'Show Subtitles', 'viewBraille'),
-          this.checkbox('BrailleSpeech', 'Replace Speech', 'brailleSpeech', {
+        this.submenu('Braille', [
+          this.checkbox('Generate', 'braille'),
+          this.checkbox('Subtitles', 'viewBraille'),
+          this.checkbox('BrailleSpeech', 'brailleSpeech', {
             hidden: true,
           }),
           this.checkbox(
             'BrailleCombine',
-            'Combine with Speech',
             'brailleCombine'
           ),
           this.rule(),
-          this.label('Code', 'Code Format:'),
-          this.radioGroup('brailleCode', [
-            ['nemeth', 'Nemeth'],
-            ['ueb', 'UEB'],
-            ['euro', 'Euro'],
-          ]),
+          this.label('Code'),
+          this.radioGroup('brailleCode', ['nemeth', 'ueb', 'euro']),
         ]),
-        this.submenu('Explorer', '\xA0 \xA0 Explorer', [
-          this.submenu('Highlight', 'Highlight', [
+        this.submenu('Explorer', [
+          this.submenu('Highlight', [
             this.submenu(
               'Background',
-              'Background',
               this.radioGroup('backgroundColor', [
-                ['Blue'],
-                ['Red'],
-                ['Green'],
-                ['Yellow'],
-                ['Cyan'],
-                ['Magenta'],
-                ['White'],
-                ['Black'],
+                'Blue',
+                'Red',
+                'Green',
+                'Yellow',
+                'Cyan',
+                'Magenta',
+                'White',
+                'Black',
               ])
             ),
             { type: 'slider', variable: 'backgroundOpacity', content: ' ' },
             this.submenu(
               'Foreground',
-              'Foreground',
               this.radioGroup('foregroundColor', [
-                ['Black'],
-                ['White'],
-                ['Magenta'],
-                ['Cyan'],
-                ['Yellow'],
-                ['Green'],
-                ['Red'],
-                ['Blue'],
+                'Black',
+                'White',
+                'Magenta',
+                'Cyan',
+                'Yellow',
+                'Green',
+                'Red',
+                'Blue',
               ])
             ),
             { type: 'slider', variable: 'foregroundOpacity', content: ' ' },
             this.rule(),
-            this.radioGroup('highlight', [['None'], ['Hover'], ['Flame']]),
+            this.radioGroup('highlight', ['None', 'Hover', 'Flame']),
             this.rule(),
-            this.checkbox('TreeColoring', 'Tree Coloring', 'treeColoring'),
+            this.checkbox('TreeColoring', 'treeColoring'),
           ]),
-          this.submenu('Magnification', 'Magnification', [
-            this.radioGroup('magnification', [
-              ['None'],
-              ['Keyboard'],
-              ['Mouse'],
-            ]),
+          this.submenu('Magnification', [
+            this.radioGroup('magnification', ['None', 'Keyboard', 'Mouse']),
             this.rule(),
-            this.radioGroup('magnify', [
-              ['200%'],
-              ['300%'],
-              ['400%'],
-              ['500%'],
-            ]),
+            this.radioGroup('magnify', ['200%', '300%', '400%', '500%']),
           ]),
-          this.submenu('Semantic Info', 'Semantic Info', [
-            this.checkbox('Type', 'Type', 'infoType'),
-            this.checkbox('Role', 'Role', 'infoRole'),
-            this.checkbox('Prefix', 'Prefix', 'infoPrefix'),
+          this.submenu('SemanticInfo',  [
+            this.checkbox('Type', 'infoType'),
+            this.checkbox('Role', 'infoRole'),
+            this.checkbox('Prefix', 'infoPrefix'),
           ]),
           this.rule(),
-          this.submenu('Role Description', 'Describe math as', [
+          this.submenu('RoleDescription', [
             this.radioGroup('roleDescription', [
-              ['MathJax expression'],
-              ['MathJax'],
-              ['math'],
-              ['clickable math'],
-              ['explorable math'],
-              ['none'],
+              'MathJax expression',
+              'MathJax',
+              'math',
+              'clickable math',
+              'explorable math',
+              'none',
             ]),
           ]),
-          this.checkbox('Math Help', 'Help message on focus', 'help'),
+          this.checkbox('MathHelp', 'help'),
         ]),
-        this.submenu('Options', '\xA0 \xA0 Options', [
-          this.checkbox('Enrich', 'Semantic Enrichment', 'enrich'),
-          this.checkbox('Collapsible', 'Collapsible Math', 'collapsible'),
-          this.checkbox('AutoCollapse', 'Auto Collapse', 'autocollapse', {
+        this.submenu('Options', [
+          this.checkbox('Enrich', 'enrich'),
+          this.checkbox('Collapsible', 'collapsible'),
+          this.checkbox('AutoCollapse', 'autocollapse', {
             disabled: true,
           }),
           this.rule(),
-          this.checkbox('InTabOrder', 'Include in Tab Order', 'inTabOrder'),
-          this.submenu('TabSelects', 'Tabbing Focuses on', [
-            this.radioGroup('tabSelects', [
-              ['all', 'Whole Expression'],
-              ['last', 'Last Explored Node'],
-            ]),
+          this.checkbox('InTabOrder', 'inTabOrder'),
+          this.submenu('TabSelects', [
+            this.radioGroup('tabSelects', ['all', 'last']),
           ]),
           this.rule(),
           this.checkbox(
             'AssistiveMml',
-            'Include Hidden MathML',
             'assistiveMml'
           ),
         ]),
         this.rule(),
-        this.command('About', 'About MathJax', () => this.about()),
-        this.command('Help', 'MathJax Help', () => this.help()),
+        this.command('About', () => this.about()),
+        this.command('Help', () => this.help()),
       ],
     }) as MJContextMenu;
     const menu = this.menu;
     menu.settings = this.settings;
-    menu.findID('Settings', 'Overflow', 'Elide').disable();
+    menu.findID('Settings', 'WideExpressions', 'Elide').disable();
     menu.findID('Braille', 'ueb').hide();
     menu.setJax(this.jax);
     this.checkLoadableItems();
@@ -1025,7 +964,7 @@ export class Menu {
       Object.assign(this.settings, settings);
       this.setA11y(settings);
     } catch (err) {
-      console.log('MathJax localStorage error: ' + err.message);
+      console.log(localize('StorageError', err.message));
     }
   }
 
@@ -1046,7 +985,7 @@ export class Menu {
         localStorage.removeItem(Menu.MENU_STORAGE);
       }
     } catch (err) {
-      console.log('MathJax localStorage error: ' + err.message);
+      console.log(localize('StorageError', err.message));
     }
   }
 
@@ -1151,7 +1090,7 @@ export class Menu {
       this.loadComponent('output/' + name, () => {
         const startup = MathJax.startup;
         if (!(name in startup.constructors)) {
-          return fail(new Error(`Component ${name} not loaded`));
+          return fail(new Error(localize('ComponentNotLoaded', name)));
         }
         startup.useOutput(name, true);
         startup.output = this.applyRendererOptions(startup.getOutputJax());
@@ -1448,10 +1387,7 @@ export class Menu {
     const scale = (parseFloat(this.settings.scale) * 100)
       .toFixed(1)
       .replace(/.0$/, '');
-    const percent = prompt(
-      'Scale all mathematics (compared to surrounding text) by',
-      scale + '%'
-    );
+    const percent = prompt(localize('ScalePrompt'), scale + '%');
     if (this.current) {
       const speech = (this.menu.mathItem as ExplorerMathItem).explorers.speech;
       speech.refocus = this.current;
@@ -1463,10 +1399,10 @@ export class Menu {
         if (scale) {
           this.menu.pool.lookup('scale').setValue(String(scale));
         } else {
-          alert('The scale should not be zero');
+          alert(localize('ScaleNonZero'));
         }
       } else {
-        alert('The scale should be a percentage (e.g., 120%)');
+        alert(localize('ScalePercent'));
       }
     }
   }
@@ -1627,7 +1563,7 @@ export class Menu {
   protected async toSVG(math: HTMLMATHITEM): Promise<string> {
     const jax = this.jax.SVG;
     if (!jax) {
-      return "SVG can't be produced.<br>Try switching to SVG output first.";
+      return localize('NoSvgProduced');
     }
     const adaptor = jax.adaptor;
     const cache = jax.options.fontCache;
@@ -1954,14 +1890,12 @@ export class Menu {
    * Create JSON for a submenu item
    *
    * @param {string} id           The id for the item
-   * @param {string} content      The content for the item
    * @param {any[]} entries       The JSON for the entries
    * @param {boolean=} disabled   True if this item is diabled initially
    * @returns {object}            The JSON for the submenu item
    */
   public submenu(
     id: string,
-    content: string,
     entries: any[] = [],
     disabled: boolean = false
   ): object {
@@ -1976,7 +1910,7 @@ export class Menu {
     return {
       type: 'submenu',
       id,
-      content,
+      content: localize(id),
       menu: { items },
       disabled: items.length === 0 || disabled,
     };
@@ -1986,17 +1920,16 @@ export class Menu {
    * Create JSON for a command item
    *
    * @param {string} id           The id for the item
-   * @param {string} content      The content for the item
    * @param {() => void} action   The action function for the command
    * @param {object} other        Other values to include in the generated JSON object
    * @returns {object}            The JSON for the command item
    */
   public command(
     id: string,
-    content: string,
     action: () => void,
     other: object = {}
   ): object {
+    const content = localize(id);
     return Object.assign({ type: 'command', id, content, action }, other);
   }
 
@@ -2004,47 +1937,45 @@ export class Menu {
    * Create JSON for a checkbox item
    *
    * @param {string} id           The id for the item
-   * @param {string} content      The content for the item
    * @param {string} variable     The (pool) variable to attach to this checkbox
    * @param {object} other        Other values to include in the generated JSON object
    * @returns {object}            The JSON for the checkbox item
    */
   public checkbox(
     id: string,
-    content: string,
     variable: string,
     other: object = {}
   ): object {
+    const content = localize(id);
     return Object.assign({ type: 'checkbox', id, content, variable }, other);
   }
 
   /**
    * Create JSON for a group of connected radio buttons
    *
-   * @param {string} variable     The (pool) variable to attach to each radio button
-   * @param {string[][]} radios   An array of [string] or [string, string], giving the id and content
-   *                                for each radio button (if only one string is given it is used for both)
-   * @returns {object[]}          An array of JSON objects for radion buttons
+   * @param {string} variable   The (pool) variable to attach to each radio button
+   * @param {string[]} radios   An array of [string] or [string, string], giving the id and content
+   *                              for each radio button (if only one string is given it is used for both)
+   * @returns {object[]}        An array of JSON objects for radion buttons
    */
-  public radioGroup(variable: string, radios: string[][]): object[] {
-    return radios.map((def) => this.radio(def[0], def[1] || def[0], variable));
+  public radioGroup(variable: string, radios: string[]): object[] {
+    return radios.map((item) => this.radio(item, variable));
   }
 
   /**
    * Create JSON for a radio button item
    *
    * @param {string} id           The id for the item
-   * @param {string} content      The content for the item
    * @param {string} variable     The (pool) variable to attach to this radio button
    * @param {object} other        Other values to include in the generated JSON object
    * @returns {object}            The JSON for the radio button item
    */
   public radio(
     id: string,
-    content: string,
     variable: string,
     other: object = {}
   ): object {
+    const content = localize(id);
     return Object.assign({ type: 'radio', id, content, variable }, other);
   }
 
@@ -2052,10 +1983,10 @@ export class Menu {
    * Create JSON for a label item
    *
    * @param {string} id           The id for the item
-   * @param {string} content      The content for the item
    * @returns {object}            The JSON for the label item
    */
-  public label(id: string, content: string): object {
+  public label(id: string): object {
+    const content = localize(id);
     return { type: 'label', id, content };
   }
 
