@@ -46,9 +46,11 @@ import { RadioCompare } from './RadioCompare.js';
 import { MmlVisitor } from './MmlVisitor.js';
 import { MenuMathDocument } from './MenuHandler.js';
 import * as MenuUtil from './MenuUtil.js';
+import { locales } from './locales.js';
 
 import { Parser, Rule, CssStyles, Submenu } from './mj-context-menu.js';
 
+import { Locale } from '../../util/Locale.js';
 import { COMPONENT, localize } from './__locales__/Component.js';
 export { COMPONENT };
 
@@ -103,6 +105,7 @@ export interface MenuSettings {
   infoType: boolean;
   inTabOrder: boolean;
   locale: string;
+  language: string;
   magnification: string;
   magnify: string;
   speech: boolean;
@@ -134,6 +137,11 @@ export class Menu {
   public static MENU_STORAGE = 'MathJax-Menu-Settings';
 
   /**
+   * The key for the localStorage for the locale settings
+   */
+  public static LOCALE_STORAGE = 'MathJax-locale';
+
+  /**
    * The options for the menu, including the default settings, the various output jax
    * and the list of annotation types and their encodings
    */
@@ -146,6 +154,7 @@ export class Menu {
       zoom: 'NoZoom',
       zscale: '200%',
       renderer: 'CHTML',
+      language: 'en',
       alt: true,
       cmd: false,
       ctrl: false,
@@ -546,6 +555,7 @@ export class Menu {
    */
   protected initSettings() {
     this.settings = this.options.settings;
+    this.settings.language = MathJax.config.locale ?? Locale.current;
     this.jax = this.options.jax;
     const jax = this.document.outputJax;
     this.jax[jax.name] = jax;
@@ -587,6 +597,7 @@ export class Menu {
         this.variable<string>('overflow', (overflow) =>
           this.setOverflow(overflow)
         ),
+        this.variable<string>('language', (locale) => this.setLanguage(locale)),
         this.variable<boolean>('breakInline', (breaks) =>
           this.setInlineBreaks(breaks)
         ),
@@ -716,7 +727,7 @@ export class Menu {
             this.checkbox('texHints', 'texHints'),
             this.checkbox('semantics', 'semantics'),
           ]),
-          this.submenu('Language'),
+          this.submenu('Language', this.languageSubmenu()),
           this.rule(),
           this.submenu('ZoomTrigger', [
             this.command('ZoomNow', () => this.zoom(null, '')),
@@ -972,6 +983,7 @@ export class Menu {
       } else {
         localStorage.removeItem(Menu.MENU_STORAGE);
       }
+      localStorage.setItem(Menu.LOCALE_STORAGE, this.settings.language);
     } catch (err) {
       console.log(localize('StorageError', err.message));
     }
@@ -1288,6 +1300,16 @@ export class Menu {
   protected setLocale(locale: string) {
     this.document.options.sre.locale = locale;
     this.rerender(STATE.COMPILED);
+  }
+
+  /**
+   * @param {string} locale  The interface language locale
+   */
+  protected setLanguage(locale: string) {
+    Locale.setLocale(locale).then(() => {
+      this.initMenu();
+      this.rerender();
+    });
   }
 
   /**
@@ -1872,6 +1894,22 @@ export class Menu {
         this.saveUserSettings();
       },
     };
+  }
+
+  /**
+   * Create the Languages submenu entries.
+   *
+   * @returns {object[]}   The submenu definitions
+   */
+  public languageSubmenu(): object[] {
+    return (locales as [string, string][]).map(([locale, name]) => {
+      return {
+        type: 'radio',
+        id: locale,
+        content: `${name} (${locale})`,
+        variable: 'language',
+      };
+    });
   }
 
   /**
