@@ -2,7 +2,16 @@
   "build": {
     "id": "[tex]/begingroup",
     "component": "input/tex/extensions/begingroup",
-    "targets": ["input/tex/begingroup"]
+    "targets": [
+      "input/tex/begingroup"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/begingroup",
+    "from": "[ts]/input/tex/begingroup",
+    "copy": [
+      "__locales__"
+    ]
   },
   "webpack": {
     "name": "input/tex/extensions/begingroup",

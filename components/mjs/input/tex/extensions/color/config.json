@@ -2,7 +2,16 @@
   "build": {
     "id": "[tex]/color",
     "component": "input/tex/extensions/color",
-    "targets": ["input/tex/color"]
+    "targets": [
+      "input/tex/color"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/color",
+    "from": "[ts]/input/tex/color",
+    "copy": [
+      "__locales__"
+    ]
   },
   "webpack": {
     "name": "input/tex/extensions/color",

@@ -2,7 +2,16 @@
   "build": {
     "id": "[tex]/texhtml",
     "component": "input/tex/extensions/texhtml",
-    "targets": ["input/tex/texhtml"]
+    "targets": [
+      "input/tex/texhtml"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/texhtml",
+    "from": "[ts]/input/tex/texhtml",
+    "copy": [
+      "__locales__"
+    ]
   },
   "webpack": {
     "name": "input/tex/extensions/texhtml",

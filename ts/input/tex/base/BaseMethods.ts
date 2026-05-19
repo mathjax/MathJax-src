@@ -65,7 +65,7 @@ const MmlTokenAllow: { [key: string]: number } = {
  * @param {number} n       The number of expected alignment characters
  * @returns {string} String with space separated alignment characters
  */
-export function splitAlignArray(align: string, n: number = Infinity) {
+export function splitAlignArray(align: string, n: number = Infinity): string {
   const list = align
     .replace(/\s+/g, '')
     .split('')

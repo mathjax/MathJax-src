@@ -2,7 +2,16 @@
   "build": {
     "id": "[tex]/setoptions",
     "component": "input/tex/extensions/setoptions",
-    "targets": ["input/tex/setoptions"]
+    "targets": [
+      "input/tex/setoptions"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/setoptions",
+    "from": "[ts]/input/tex/setoptions",
+    "copy": [
+      "__locales__"
+    ]
   },
   "webpack": {
     "name": "input/tex/extensions/setoptions",
