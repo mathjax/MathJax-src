@@ -202,67 +202,69 @@ export const Loader = {
     //
     // Create a promise for this load() call
     //
-    const promise = Promise.resolve().then(async () => {
-      //
-      // Collect the promises for all the named packages,
-      // creating the package if needed, and add checks
-      // for the version numbers used in the components.
-      //
-      const promises = [];
-      for (const name of names) {
-        let extension = Package.packages.get(name);
-        if (!extension) {
-          extension = new Package(name);
-          extension.provides(CONFIG.provides[name]);
+    const promise = Promise.resolve()
+      .then(async () => {
+        //
+        // Collect the promises for all the named packages,
+        // creating the package if needed, and add checks
+        // for the version numbers used in the components.
+        //
+        const promises = [];
+        for (const name of names) {
+          let extension = Package.packages.get(name);
+          if (!extension) {
+            extension = new Package(name);
+            extension.provides(CONFIG.provides[name]);
+          }
+          extension.checkNoLoad();
+          promises.push(
+            extension.promise.then(() => {
+              if (
+                CONFIG.versionWarnings &&
+                extension.isLoaded &&
+                !Loader.versions.has(Package.resolvePath(name))
+              ) {
+                console.warn(
+                  `No version information available for component ${name}`
+                );
+              }
+              return extension.result;
+            }) as Promise<any>
+          );
         }
-        extension.checkNoLoad();
-        promises.push(
-          extension.promise.then(() => {
-            if (
-              CONFIG.versionWarnings &&
-              extension.isLoaded &&
-              !Loader.versions.has(Package.resolvePath(name))
-            ) {
-              console.warn(
-                `No version information available for component ${name}`
-              );
-            }
-            return extension.result;
-          }) as Promise<any>
-        );
-      }
-      //
-      // Load everything that was requested and wait for
-      // them to be loaded.
-      //
-      Package.loadAll();
-      const result = await Promise.all(promises);
-      //
-      // If any other loads occurred while we were waiting,
-      // Wait for those promises, and clear the list so that
-      // if even MORE loads occur while waiting for those,
-      // we can wait for them, too.  Keep doing that until
-      // no additional loads occurred, in which case we are
-      // now done.
-      //
-      while (nested.length) {
-        const promise = Promise.all(nested);
-        nested = this.nestedLoads[this.nestedLoads.indexOf(nested)] = [];
-        await promise;
-      }
-      //
-      // Remove the (empty) list from the nested list,
-      // and return the result.
-      //
-      this.nestedLoads.splice(this.nestedLoads.indexOf(nested), 1);
-      return result;
-    }).then(async (result) => {
-      //
-      // If any of the components registered localization files, load them.
-      //
-      await Locale.setLocale();
-      return result;
-    });
+        //
+        // Load everything that was requested and wait for
+        // them to be loaded.
+        //
+        Package.loadAll();
+        const result = await Promise.all(promises);
+        //
+        // If any other loads occurred while we were waiting,
+        // Wait for those promises, and clear the list so that
+        // if even MORE loads occur while waiting for those,
+        // we can wait for them, too.  Keep doing that until
+        // no additional loads occurred, in which case we are
+        // now done.
+        //
+        while (nested.length) {
+          const promise = Promise.all(nested);
+          nested = this.nestedLoads[this.nestedLoads.indexOf(nested)] = [];
+          await promise;
+        }
+        //
+        // Remove the (empty) list from the nested list,
+        // and return the result.
+        //
+        this.nestedLoads.splice(this.nestedLoads.indexOf(nested), 1);
+        return result;
+      })
+      .then(async (result) => {
+        //
+        // If any of the components registered localization files, load them.
+        //
+        await Locale.setLocale();
+        return result;
+      });
     //
     // Add this load promise to the lists for any parent load() call that are
     // pending when this load() was performed, then return the load promise.
