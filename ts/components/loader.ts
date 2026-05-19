@@ -41,6 +41,7 @@ import {
 import { FunctionList } from '../util/FunctionList.js';
 import { mjxRoot } from '#root/root.js';
 import { context } from '../util/context.js';
+import { Locale } from '../util/Locale.js';
 
 /**
  * Function used to determine path to a given package.
@@ -254,6 +255,12 @@ export const Loader = {
       // and return the result.
       //
       this.nestedLoads.splice(this.nestedLoads.indexOf(nested), 1);
+      return result;
+    }).then(async (result) => {
+      //
+      // If any of the components registered localization files, load them.
+      //
+      await Locale.setLocale();
       return result;
     });
     //

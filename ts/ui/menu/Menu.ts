@@ -1308,7 +1308,7 @@ export class Menu {
   protected setLanguage(locale: string) {
     Locale.setLocale(locale).then(() => {
       this.initMenu();
-      this.rerender();
+      this.rerender(STATE.COMPILED);
     });
   }
 
