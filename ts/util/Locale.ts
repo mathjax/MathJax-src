@@ -141,7 +141,7 @@ export class Locale {
     if (typeof data !== 'string') {
       return '';
     }
-    return this.processMessage(message, args[0], ...args.slice(1));
+    return this.processMessage(data, ...args);
   }
 
   /**
@@ -152,14 +152,15 @@ export class Locale {
    * @param {string | namedData = {}} data The first argument or the object of
    *     names arguments
    * @param {string[]} ...args Additional arguments (if data is a string)
+   * @param {...any} args
    * @returns {string} The processed message string with arguments substituted
    */
   public static processMessage(
     message: string,
     data: string | namedData = {},
     ...args: string[]
-  ): string { 
-    if (typeof data === 'string') {
+  ): string {
+    if (typeof data !== 'object') {
       data = { 1: data };
       for (let i = 0; i < args.length; i++) {
         data[i + 2] = args[i];
