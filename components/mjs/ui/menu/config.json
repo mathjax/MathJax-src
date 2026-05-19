@@ -4,6 +4,12 @@
     "targets": ["ui/menu", "a11y/speech/SpeechMenu.ts"],
     "excludeSubdirs": true
   },
+  "copy": {
+    "to": "[bundle]/ui/menu",
+    "from": "[ts]/ui/menu",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "ui/menu",
     "libs": [

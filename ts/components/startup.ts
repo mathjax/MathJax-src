@@ -345,7 +345,7 @@ export abstract class Startup {
    * @returns {Promise<void[]>}  A promise for when the locale is loaded and ready.
    */
   public static setLocale(): Promise<void[]> {
-    return Locale.setLocale(MathJax.config.locale || 'en');
+    return Locale.setLocale(MathJax.config.locale ?? Locale.current);
   }
 
   /**

@@ -24,6 +24,7 @@
 import { MathItem } from '../../core/MathItem.js';
 import { OptionList } from '../../util/Options.js';
 import { JaxList } from './Menu.js';
+import { localize } from './__locales__/Component.js';
 import { ExplorerMathItem } from '../../a11y/explorer.js';
 
 import {
@@ -167,7 +168,9 @@ export class MJContextMenu extends ContextMenu {
     const input = this.mathItem.inputJax.name;
     const original = this.findID('Show', 'Original');
     original.content =
-      input === 'MathML' ? 'Original MathML' : input + ' Commands';
+      input === 'MathML'
+        ? localize('OriginalMathML')
+        : localize('Commands', input);
     const clipboard = this.findID('Copy', 'Original');
     clipboard.content = original.content;
   }
@@ -187,8 +190,8 @@ export class MJContextMenu extends ContextMenu {
    */
   protected getSpeechMenu() {
     const speech = this.mathItem.outputData.speech;
-    this.findID('Show', 'Speech')[speech ? 'enable' : 'disable']();
-    this.findID('Copy', 'Speech')[speech ? 'enable' : 'disable']();
+    this.findID('Show', 'SpeechText')[speech ? 'enable' : 'disable']();
+    this.findID('Copy', 'SpeechText')[speech ? 'enable' : 'disable']();
   }
 
   /**
@@ -196,8 +199,8 @@ export class MJContextMenu extends ContextMenu {
    */
   protected getBrailleMenu() {
     const braille = this.mathItem.outputData.braille;
-    this.findID('Show', 'Braille')[braille ? 'enable' : 'disable']();
-    this.findID('Copy', 'Braille')[braille ? 'enable' : 'disable']();
+    this.findID('Show', 'BrailleCode')[braille ? 'enable' : 'disable']();
+    this.findID('Copy', 'BrailleCode')[braille ? 'enable' : 'disable']();
   }
 
   /**
@@ -205,8 +208,8 @@ export class MJContextMenu extends ContextMenu {
    */
   protected getSvgMenu() {
     const svg = this.jax.SVG;
-    this.findID('Show', 'SVG')[svg ? 'enable' : 'disable']();
-    this.findID('Copy', 'SVG')[svg ? 'enable' : 'disable']();
+    this.findID('Show', 'SvgImage')[svg ? 'enable' : 'disable']();
+    this.findID('Copy', 'SvgImage')[svg ? 'enable' : 'disable']();
   }
 
   /**
