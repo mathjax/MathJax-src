@@ -24,15 +24,18 @@ describe('Locale', () => {
     const locale = Locale as any;
     Locale.registerLocaleFiles('component', '../testsuite/lib/component');
     expect(locale.locations.component).toEqual([
-      '../testsuite/lib/component/locales',
+      '../testsuite/lib/component/__locales__',
       new Set(),
     ]);
     const error = console.error;
     console.error = (message) => {
       throw message;
     };
-    await expect(Locale.setLocale('de')).rejects.toMatch(
-      "MathJax(component): Can't load 'de.json': ENOENT: no such file or directory"
+    await expect(Locale.setLocale('xy')).rejects.toContain(
+      "MathJax(component): Can't load 'xy.json': ENOENT: no such file or directory"
+    );
+    await expect(Locale.setLocale('de')).rejects.toContain(
+      "MathJax(component): 'de.json' kann nicht geladen werden: ENOENT: no such file or directory"
     );
     console.error = error;
     await Locale.setLocale('en');
@@ -62,12 +65,21 @@ describe('Locale', () => {
     ).toBe('Named HELLO WORLD');
     expect(Locale.message('component', 'Id1', 'a', 'b')).toBe('Test of a in b');
     expect(Locale.message('component', 'Id2')).toBe(
-      "No localized or default version for message with id 'Id2' from 'component'"
+      "MathJax(Locale): No localized or default version for message with id 'Id2' from 'component'"
     );
     expect(Locale.message('undefined', 'Id1')).toBe(
-      "No localized or default version for message with id 'Id1' from 'undefined'"
+      "MathJax(Locale): No localized or default version for message with id 'Id1' from 'undefined'"
     );
     expect(() => Locale.error('component', 'error', 'x')).toThrow('Error in x');
+    Locale.current = 'de';
+    expect(Locale.message('undefined', 'Id1')).toBe(
+      "MathJax(Locale): Keine lokalisierte oder Standardversion für die Meldung mit der ID 'Id1' aus 'undefined'"
+    );
+    Locale.current = 'xy';
+    Locale.default = 'xy';
+    expect(Locale.message('undefined', 'Id1')).toBe('');
+    Locale.current = 'en';
+    Locale.default = 'en';
   });
 
   /********************************************************************************/
@@ -78,6 +90,33 @@ describe('Locale', () => {
     await Locale.setLocale('test');
     expect(Locale.message('component', 'test1')).toBe('Has % percent');
     Locale.isComponent = false;
+  });
+
+  /********************************************************************************/
+
+  test('Message with empty component', () => {
+    expect(Locale.message('', 'any')).toBe('');
+    expect(Locale.message('', 'any', {})).toBe('');
+    expect(Locale.message('', 'any', 'raw text')).toBe('raw text');
+    expect(Locale.message('', 'any', '%1 + %2', 'a', 'b')).toBe('a + b');
+  });
+
+  /********************************************************************************/
+
+  test('Locale error falls back to default locale', async () => {
+    const locale = Locale as any;
+    Locale.registerLocaleFiles('fallback', '../testsuite/lib/component');
+
+    const errors: string[] = [];
+    const origError = console.error;
+    console.error = (msg: string) => errors.push(msg);
+
+    await locale.localeError('fallback', 'xy', new Error('xy.json not found'));
+
+    console.error = origError;
+
+    expect(errors[0]).toContain("MathJax(fallback): Can't load 'xy.json'");
+    expect(locale.data.fallback?.en).toEqual({ Id1: 'Test of %1 in %2' });
   });
 
   /********************************************************************************/

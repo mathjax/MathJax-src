@@ -2,7 +2,16 @@
   "build": {
     "id": "[tex]/textmacros",
     "component": "input/tex/extensions/textmacros",
-    "targets": ["input/tex/textmacros"]
+    "targets": [
+      "input/tex/textmacros"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/textmacros",
+    "from": "[ts]/input/tex/textmacros",
+    "copy": [
+      "__locales__"
+    ]
   },
   "webpack": {
     "name": "input/tex/extensions/textmacros",

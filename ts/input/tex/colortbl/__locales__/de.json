@@ -1,0 +1,5 @@
+{
+  "ColumnColorNotTop": "%1 muss in der obersten Zeile oder im Vorspann stehen",
+  "RowColorNotFirst": "%1 muss am Anfang einer Zeile stehen",
+  "UnsupportedTableColor": "%1 wird nicht unterstützt"
+}

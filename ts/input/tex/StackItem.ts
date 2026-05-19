@@ -27,7 +27,7 @@ import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
 import { TexConstant } from './TexConstants.js';
 
-const COMPONENT = '[tex]/base';
+import { COMPONENT } from './__locales__/Component.js';
 
 // Union types for abbreviation.
 export type EnvProp = string | number | boolean;
@@ -389,6 +389,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
 
   /**
    * A list of basic errors.
+   *
    * @type {{[key: string]: string}}
    */
   protected static errors: { [key: string]: string } = {

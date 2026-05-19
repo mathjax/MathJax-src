@@ -42,10 +42,7 @@ import {
 } from './MathtoolsMethods.js';
 import { MathtoolsTagFormat } from './MathtoolsTags.js';
 import { MultlinedItem } from './MathtoolsItems.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/mathtools';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/mathtools');
+export { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Add any pre-defined paired delimiters, and subclass the configured tag format.

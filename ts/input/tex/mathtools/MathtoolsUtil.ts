@@ -31,7 +31,7 @@ import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 
 import { MathtoolsMethods } from './MathtoolsMethods.js';
 
-const COMPONENT = '[tex]/mathtools';
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Utility functions for the Mathtools package.

@@ -30,7 +30,7 @@ import { Macro, Token } from '../Token.js';
 import { Args, Attributes, ParseMethod } from '../Types.js';
 import * as tm from '../TokenMap.js';
 
-const COMPONENT = '[tex]/newcommand';
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Naming constants for the extension mappings.

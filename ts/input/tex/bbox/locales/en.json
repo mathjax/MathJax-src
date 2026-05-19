@@ -1,4 +1,0 @@
-{
-  "MultipleBBoxProperty": "%1 specified twice in %2",
-  "InvalidBBoxProperty": "'%1' doesn't look like a color, a padding dimension, or a style"
-}

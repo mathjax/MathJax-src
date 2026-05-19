@@ -30,10 +30,8 @@ import TexError from '../TexError.js';
 import { BeginItem } from '../base/BaseItems.js';
 import { EmpheqUtil } from './EmpheqUtil.js';
 import ParseMethods from '../ParseMethods.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/empheq';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/empheq');
+import { COMPONENT } from './__locales__/Component.js';
+export { COMPONENT };
 
 /**
  * The methods that implement the empheq package.

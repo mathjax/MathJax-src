@@ -27,10 +27,7 @@ import { MultlineItem, FlalignItem } from './AmsItems.js';
 import { AbstractTags } from '../Tags.js';
 import './AmsMappings.js';
 import { NewcommandConfig } from '../newcommand/NewcommandConfiguration.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/ams';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/ams');
+export { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Standard AMS style tagging.

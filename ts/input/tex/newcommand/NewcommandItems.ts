@@ -24,7 +24,7 @@
 import TexError from '../TexError.js';
 import { CheckType, BaseItem, StackItem } from '../StackItem.js';
 
-const COMPONENT = '[tex]/newcommand';
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Opening Item dealing with definitions of new environments. It's pushed onto
@@ -54,7 +54,12 @@ export class BeginEnvItem extends BaseItem {
       // @test Newenvironment Empty, Newenvironment Align
       if (item.getName() !== this.getName()) {
         // @test (missing) \newenvironment{env}{aa}{bb}\begin{env}cc\end{equation}
-        throw new TexError(COMPONENT, 'EnvBadEnd', this.getName(), item.getName());
+        throw new TexError(
+          COMPONENT,
+          'EnvBadEnd',
+          this.getName(),
+          item.getName()
+        );
       }
       return [[this.factory.create('mml', this.toMml())], true];
     }

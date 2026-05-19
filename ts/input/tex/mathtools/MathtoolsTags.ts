@@ -25,7 +25,7 @@ import { ParserConfiguration } from '../Configuration.js';
 import { TeX } from '../../tex.js';
 import { AbstractTags, TagsFactory } from '../Tags.js';
 
-const COMPONENT = '[tex]/mathtools';
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * The type for the Mathtools tags (including their data).

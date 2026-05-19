@@ -31,10 +31,8 @@ import { AmsMethods } from '../ams/AmsMethods.js';
 import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 import { NewcommandConfig } from '../newcommand/NewcommandConfiguration.js';
 import TexError from '../TexError.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/extpfeil';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/extpfeil');
+import { COMPONENT } from './__locales__/Component.js';
+export { COMPONENT };
 
 // Namespace
 const ExtpfeilMethods: { [key: string]: ParseMethod } = {

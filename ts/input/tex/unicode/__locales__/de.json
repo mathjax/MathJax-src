@@ -1,0 +1,6 @@
+{
+  "BadFont": "Der Schriftartenname für %1 darf keine Semikolons enthalten",
+  "BadUnicode": "Das Argument für %1 muss eine Zahl sein",
+  "InvalidAlphanumeric": "Ungültige alphanumerische Konstante für %1",
+  "MissingNumber": "Fehlende numerische Konstante für %1"
+}

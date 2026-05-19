@@ -32,10 +32,8 @@ import { UnitUtil } from '../UnitUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import { numeric } from '../../../util/Entities.js';
 import { Other } from '../base/BaseConfiguration.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/unicode';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/unicode');
+import { COMPONENT } from './__locales__/Component.js';
+export { COMPONENT };
 
 const UnicodeCache: { [key: number]: [number, number, string, number] } = {};
 
@@ -148,7 +146,11 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
           parser.i += 2;
           const cs = [...parser.GetCS()];
           if (cs.length > 1) {
-            throw new TexError(COMPONENT, 'InvalidAlphanumeric', parser.currentCS);
+            throw new TexError(
+              COMPONENT,
+              'InvalidAlphanumeric',
+              parser.currentCS
+            );
           }
           c = cs[0];
           match = [''];

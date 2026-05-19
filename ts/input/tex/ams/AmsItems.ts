@@ -29,7 +29,7 @@ import { TexConstant } from '../TexConstants.js';
 import StackItemFactory from '../StackItemFactory.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 
-const COMPONENT = '[tex]/ams';
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Item dealing with multiline environments as a special case of arrays. Note,

@@ -27,10 +27,7 @@ import { Configuration, ParserConfiguration } from '../Configuration.js';
 import { ColorMethods } from './ColorMethods.js';
 import { ColorModel } from './ColorUtil.js';
 import { TeX } from '../../tex.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/color';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/color');
+export { COMPONENT } from './__locales__/Component.js';
 
 /**
  * The color macros

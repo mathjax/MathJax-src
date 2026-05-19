@@ -28,7 +28,7 @@ import { ParseUtil } from '../ParseUtil.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import TexError from '../TexError.js';
 
-const COMPONENT = '[tex]/html';
+import { COMPONENT } from './__locales__/Component.js';
 
 /** Regexp for matching non-characters as specified by {@link https://infra.spec.whatwg.org/#noncharacter}. */
 const nonCharacterRegexp =

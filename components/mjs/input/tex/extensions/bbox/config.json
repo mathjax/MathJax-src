@@ -1,3 +1,4 @@
+
 {
   "build": {
     "id": "[tex]/bbox",
@@ -7,7 +8,7 @@
   "copy": {
     "to": "[bundle]/input/tex/extensions/bbox",
     "from": "[ts]/input/tex/bbox",
-    "copy": ["locales"]
+    "copy": ["__locales__"]
   },
   "webpack": {
     "name": "input/tex/extensions/bbox",

@@ -27,7 +27,7 @@ import { retryAfter } from '../../../util/Retries.js';
 import { TextParser } from './TextParser.js';
 import BaseMethods from '../base/BaseMethods.js';
 
-const COMPONENT = '[tex]/textmacros';
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * The methods used to implement the text-mode macros

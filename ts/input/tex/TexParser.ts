@@ -36,7 +36,7 @@ import { Token } from './Token.js';
 import { OptionList } from '../../util/Options.js';
 import { TexConstant } from './TexConstants.js';
 
-const COMPONENT = '[tex]';
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * The main Tex Parser class.
@@ -510,7 +510,12 @@ export default class TexParser {
       }
     }
     // @test TokenNotFoundForCommand
-    throw new TexError(COMPONENT, 'TokenNotFoundForCommand', token, this.currentCS);
+    throw new TexError(
+      COMPONENT,
+      'TokenNotFoundForCommand',
+      token,
+      this.currentCS
+    );
   }
 
   /**
