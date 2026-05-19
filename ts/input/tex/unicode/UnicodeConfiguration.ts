@@ -128,23 +128,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
       // @ts-ignore
       match = text.match(/^'([0-7]{1,7}) ?/u);
       if (match) {
-        if (match[1]) {
-          c = String.fromCodePoint(parseInt(match[1], 8));
-        } else if (match[3]) {
-          c = match[3];
-        } else {
-          parser.i += 2;
-          const cs = [...parser.GetCS()];
-          if (cs.length > 1) {
-            throw new TexError(
-              COMPONENT,
-              'InvalidAlphanumeric',
-              parser.currentCS
-            );
-          }
-          c = cs[0];
-          match = [''];
-        }
+        c = String.fromCodePoint(parseInt(match[1], 8));
       }
     } else if (next === '"') {
       match = text.match(/^"([0-9A-F]{1,6}) ?/);
