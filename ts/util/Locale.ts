@@ -154,20 +154,6 @@ export class Locale {
   }
 
   /**
-   * Check if a message exists for the given component and id, either in the
-   * current locale or the default locale.
-   *
-   * @param {string} component The component for this message.
-   * @param {string} id The id of the message.
-   * @returns {boolean} True if a message exists for the given component and id,
-   *   false otherwise.
-   */
-  public static hasMessage(component: string, id: string): boolean {
-    return !!this.data[component]?.[this.current]?.[id] ||
-        !!this.data[component]?.[this.default]?.[id];
-  }
-
-  /**
    * Find a localized message string, or use the default if not available
    *
    * @param {string} component   The component for this message
