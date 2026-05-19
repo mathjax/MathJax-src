@@ -73,7 +73,7 @@ export class Locale {
    * The locale files to load for each locale (as registered by the components)
    */
   protected static locations: { [component: string]: [string, Set<string>] } =
-    {};
+    Object.create(null);
 
   /**
    * Registers a given component's locale directory
@@ -97,7 +97,7 @@ export class Locale {
    *
    * @param {string} component   The component's name (e.g., [tex]/bbox)
    * @param {string} locale      The locale for the messages
-   * @param {messageData} data   The messages indexed byu their IDs
+   * @param {messageData} data   The messages indexed by their IDs
    */
   public static registerMessages(
     component: string,
@@ -105,11 +105,11 @@ export class Locale {
     data: messageData
   ) {
     if (!this.data[component]) {
-      this.data[component] = {};
+      this.data[component] = Object.create(null);
     }
     const cdata = this.data[component];
     if (!cdata[locale]) {
-      cdata[locale] = {};
+      cdata[locale] = Object.create(null);
     }
     Object.assign(cdata[locale], data);
   }

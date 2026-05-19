@@ -24,6 +24,7 @@
 import { MathItem } from '../../core/MathItem.js';
 import { OptionList } from '../../util/Options.js';
 import { JaxList } from './Menu.js';
+import { localize } from './__locales__/Component.js';
 import { ExplorerMathItem } from '../../a11y/explorer.js';
 
 import {
@@ -167,7 +168,9 @@ export class MJContextMenu extends ContextMenu {
     const input = this.mathItem.inputJax.name;
     const original = this.findID('Show', 'Original');
     original.content =
-      input === 'MathML' ? 'Original MathML' : input + ' Commands';
+      input === 'MathML'
+        ? localize('OriginalMathML')
+        : localize('Commands', input);
     const clipboard = this.findID('Copy', 'Original');
     clipboard.content = original.content;
   }

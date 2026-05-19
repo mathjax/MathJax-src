@@ -111,6 +111,9 @@
   "texHints": "TeX hints",
   "ueb": "UEB",
 
+  "OriginalMathML": "Original MathML",
+  "Commands": "%1 Commands",
+
   "InputJax": "Input Jax: %1",
   "OutputJax": "Outut Jax: %1",
   "DocType": "Document Type: %1",
