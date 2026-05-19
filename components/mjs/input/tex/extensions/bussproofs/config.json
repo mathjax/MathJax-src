@@ -2,7 +2,16 @@
   "build": {
     "id": "[tex]/bussproofs",
     "component": "input/tex/extensions/bussproofs",
-    "targets": ["input/tex/bussproofs"]
+    "targets": [
+      "input/tex/bussproofs"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/bussproofs",
+    "from": "[ts]/input/tex/bussproofs",
+    "copy": [
+      "__locales__"
+    ]
   },
   "webpack": {
     "name": "input/tex/extensions/bussproofs",
