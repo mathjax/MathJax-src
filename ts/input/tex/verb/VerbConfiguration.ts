@@ -27,7 +27,7 @@ import { TexConstant } from '../TexConstants.js';
 import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
 import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
@@ -44,7 +44,7 @@ const VerbMethods: { [key: string]: ParseMethod } = {
     const c = parser.GetNext();
     const start = ++parser.i;
     if (c === '') {
-      throw new TexError(TEX_COMPONENT, 'MissingArgFor', name);
+      texError(TEX_COMPONENT, 'MissingArgFor', name);
     }
     while (
       parser.i < parser.string.length &&
@@ -53,7 +53,7 @@ const VerbMethods: { [key: string]: ParseMethod } = {
       parser.i++;
     }
     if (parser.i === parser.string.length) {
-      throw new TexError(COMPONENT, 'NoClosingDelim', parser.currentCS);
+      texError(COMPONENT, 'NoClosingDelim', parser.currentCS);
     }
     const text = parser.string.slice(start, parser.i).replace(/ /g, '\u00A0');
     parser.i++;

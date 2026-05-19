@@ -30,7 +30,7 @@ import {
 import { TeX } from '../../tex.js';
 import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { Macro } from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
@@ -49,7 +49,7 @@ export const SetOptionsUtil = {
    */
   filterPackage(parser: TexParser, extension: string): boolean {
     if (extension !== 'tex' && !ConfigurationHandler.get(extension)) {
-      throw new TexError(COMPONENT, 'NotAPackage', extension);
+      texError(COMPONENT, 'NotAPackage', extension);
     }
     const config = parser.options.setoptions;
     const options = config.allowOptions[extension];
@@ -57,7 +57,7 @@ export const SetOptionsUtil = {
       (options === undefined && !config.allowPackageDefault) ||
       options === false
     ) {
-      throw new TexError(COMPONENT, 'PackageNotSettable', extension);
+      texError(COMPONENT, 'PackageNotSettable', extension);
     }
     return true;
   },
@@ -80,17 +80,17 @@ export const SetOptionsUtil = {
         : null;
     if (allow === false || (allow === null && !config.allowOptionsDefault)) {
       if (isTex) {
-        throw new TexError(COMPONENT, 'TeXOptionNotSettable', option);
+        texError(COMPONENT, 'TeXOptionNotSettable', option);
       } else {
-        throw new TexError(COMPONENT, 'OptionNotSettable', option, extension);
+        texError(COMPONENT, 'OptionNotSettable', option, extension);
       }
     }
     const extOptions = isTex ? parser.options : parser.options[extension];
     if (!extOptions || !Object.hasOwn(extOptions, option)) {
       if (isTex) {
-        throw new TexError(COMPONENT, 'InvalidTexOption', option);
+        texError(COMPONENT, 'InvalidTexOption', option);
       } else {
-        throw new TexError(COMPONENT, 'InvalidOptionKey', option, extension);
+        texError(COMPONENT, 'InvalidOptionKey', option, extension);
       }
     }
     return true;

@@ -25,7 +25,7 @@ import { HandlerType } from '../HandlerTypes.js';
 import { ParseMethod, ParseResult } from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { TEXCLASS, MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { ParseUtil } from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
@@ -246,7 +246,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     }
     let right = pairs[next];
     if (arg && next !== '{') {
-      throw new TexError(TEX_COMPONENT, 'MissingArgFor', parser.currentCS);
+      texError(TEX_COMPONENT, 'MissingArgFor', parser.currentCS);
     }
     if (!right) {
       const empty = parser.create('node', 'mrow');
@@ -344,12 +344,12 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       big = parser.GetCS();
       if (!big.match(biggs)) {
         // Actually a commutator error arg1 error.
-        throw new TexError(TEX_COMPONENT, 'MissingArgFor', parser.currentCS);
+        texError(TEX_COMPONENT, 'MissingArgFor', parser.currentCS);
       }
       next = parser.GetNext();
     }
     if (next !== '{') {
-      throw new TexError(TEX_COMPONENT, 'MissingArgFor', parser.currentCS);
+      texError(TEX_COMPONENT, 'MissingArgFor', parser.currentCS);
     }
     const arg1 = parser.GetArgument(name);
     const arg2 = parser.GetArgument(name);
@@ -879,7 +879,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     const arg = parser.GetArgument(name);
     const size = parseInt(arg, 10);
     if (isNaN(size)) {
-      throw new TexError(COMPONENT, 'InvalidNumber');
+      texError(COMPONENT, 'InvalidNumber');
     }
     if (size <= 1) {
       parser.string = '1' + parser.string.slice(parser.i);
@@ -916,7 +916,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       m.toString() !== arg3 ||
       n.toString() !== arg2
     ) {
-      throw new TexError(COMPONENT, 'InvalidNumber');
+      texError(COMPONENT, 'InvalidNumber');
     }
     n = n < 1 ? 1 : n;
     m = m < 1 ? 1 : m;

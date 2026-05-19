@@ -31,7 +31,7 @@ import {
 } from '../TokenMap.js';
 import { Token } from '../Token.js';
 import { MapHandler, SubHandlers } from '../MapHandler.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 
 import { COMPONENT } from './__locales__/Component.js';
 import {
@@ -172,7 +172,7 @@ export class BegingroupStack {
    */
   public pop() {
     if (this.i === this.base) {
-      throw new TexError(COMPONENT, 'MissingBegingroup');
+      texError(COMPONENT, 'MissingBegingroup');
     }
     this.handlers.remove(BegingroupStack.handlerConfig, {});
     //

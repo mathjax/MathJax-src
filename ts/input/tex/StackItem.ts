@@ -23,7 +23,7 @@
 
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { FactoryNodeClass } from '../../core/Tree/Factory.js';
-import TexError from './TexError.js';
+import { texError } from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
 import { TexConstant } from './TexConstants.js';
 import { COMPONENT } from './__locales__/Component.js';
@@ -515,12 +515,12 @@ export abstract class BaseItem extends MmlStack implements StackItem {
         return BaseItem.fail;
       }
       // @test Ampersand-error
-      throw new TexError(COMPONENT, 'Misplaced', item.getName());
+      texError(COMPONENT, 'Misplaced', item.getName());
     }
     if (item.isClose && this.getError(item.kind)) {
       // @test ExtraOpenMissingClose, ExtraCloseMissingOpen,
       //       MissingLeftExtraRight, MissingBeginExtraEnd
-      throw new TexError(...this.getError(item.kind), item.getName());
+      texError(...this.getError(item.kind), item.getName());
     }
     if (!item.isFinal) {
       return BaseItem.success;

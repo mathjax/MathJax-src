@@ -30,7 +30,7 @@ import {
 } from '../Configuration.js';
 import { CommandMap } from '../TokenMap.js';
 import TexParser from '../TexParser.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 
 import { TeX } from '../../tex.js';
 import { COMPONENT } from './__locales__/Component.js';
@@ -132,14 +132,14 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
   //
   const top = parser.stack.Top() as ColorArrayItem;
   if (!(top instanceof ColorArrayItem)) {
-    throw new TexError(COMPONENT, 'UnsupportedTableColor', parser.currentCS);
+    texError(COMPONENT, 'UnsupportedTableColor', parser.currentCS);
   }
   //
   //  Check the position of the macro and save the color.
   //
   if (type === 'col') {
     if (top.table.length && top.color.col[top.row.length] !== color) {
-      throw new TexError(COMPONENT, 'ColumnColorNotTop', name);
+      texError(COMPONENT, 'ColumnColorNotTop', name);
     }
     top.color.col[top.row.length] = color;
     //
@@ -151,7 +151,7 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
   } else {
     top.color[type] = color;
     if (type === 'row' && (top.Size() || top.row.length)) {
-      throw new TexError(COMPONENT, 'RowColorNotFirst', name);
+      texError(COMPONENT, 'RowColorNotFirst', name);
     }
   }
 }

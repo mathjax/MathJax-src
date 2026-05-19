@@ -28,12 +28,11 @@ export default class TexError {
 
   /**
    * @param {string} id         message id
-   * @param _id
    * @param {string} message    text of English message
    * @param {string[]} args     substitution arguments
    */
   constructor(
-    public _id: string,
+    public id: string,
     message: string,
     ...args: string[]
   ) {
@@ -46,7 +45,7 @@ export default class TexError {
  * @param {string} id         message id
  * @param {string[]} args     substitution arguments
  */
-export function texError(component: string, id: string, ...args: string[]) {
+export function texError(component: string, id: string, ...args: string[]): never {
   const message = Locale.message(component, id, ...args);
   throw new TexError(id, message, ...args);
 }
