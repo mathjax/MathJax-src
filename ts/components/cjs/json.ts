@@ -16,13 +16,15 @@
  */
 
 /**
- * @file  Locale component registration for [tex]
+ * @file  ES5 shim for loading json files
  *
- * @author v.sorge@mathjax.org (Volker Sorge)
+ * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { Locale } from '../../../util/Locale.js';
+declare const require: (file: string) => any;
 
-export const COMPONENT = 'input/tex';
+import { context } from '../../util/context.js';
 
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex');
+export const json = context.window
+  ? (file: string) => fetch(file).then((data) => data.json())
+  : (file: string) => require(file);

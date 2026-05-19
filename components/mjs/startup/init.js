@@ -1,11 +1,12 @@
 import './hasown.js'; // Can be removed with ES2024 implementation of Object.hasown
 import './lib/startup.js';
+import '../core/core.js';
 
 import {combineDefaults} from '#js/components/global.js';
 import {dependencies, paths, provides, compatibility} from '../dependencies.js';
 import {Loader, CONFIG} from '#js/components/loader.js';
 
-Loader.preLoaded('loader', 'startup');
+Loader.preLoaded('loader', 'startup', 'core');
 
 combineDefaults(MathJax.config.loader, 'dependencies', dependencies);
 combineDefaults(MathJax.config.loader, 'paths', paths);

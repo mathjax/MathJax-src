@@ -13,6 +13,12 @@
       "__locales__"
     ]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/begingroup",
+    "from": "[ts]/input/tex/begingroup",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/begingroup",
     "libs": [
