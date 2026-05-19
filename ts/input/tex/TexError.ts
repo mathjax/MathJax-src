@@ -27,15 +27,25 @@ export default class TexError {
   public message: string;
 
   /**
-   * @param {string} component  locale component (e.g. '[tex]/base')
    * @param {string} id         message id
+   * @param {string} message    text of English message
    * @param {string[]} args     substitution arguments
    */
   constructor(
-    public component: string,
     public id: string,
+    message: string,
     ...args: string[]
   ) {
-    this.message = Locale.message(component, id, ...args);
+    this.message = Locale.processMessage(message, args[0], ...args.slice(1));
   }
+}
+
+/**
+ * @param {string} component  locale component (e.g. '[tex]/base')
+ * @param {string} id         message id
+ * @param {string[]} args     substitution arguments
+ */
+export function texError(component: string, id: string, ...args: string[]): never {
+  const message = Locale.message(component, id, ...args);
+  throw new TexError(id, message, ...args);
 }

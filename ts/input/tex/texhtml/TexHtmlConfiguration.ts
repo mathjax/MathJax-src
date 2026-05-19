@@ -27,13 +27,12 @@ import TexParser from '../TexParser.js';
 import { MacroMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
 import ParseOptions from '../ParseOptions.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { HTMLDocument } from '../../../handlers/html/HTMLDocument.js';
 import { HtmlNode } from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
 import { HTMLDomStrings } from '../../../handlers/html/HTMLDomStrings.js';
 import { DOMAdaptor } from '../../../core/DOMAdaptor.js';
-import { COMPONENT } from './__locales__/Component.js';
-export { COMPONENT };
+import { COMPONENT } from '../__locales__/Component.js';
 
 export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
   /**
@@ -61,7 +60,7 @@ export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
     const end = (match[1] ? `<!${match[1]}>` : '') + '</tex-html>';
     const i = parser.string.slice(parser.i).indexOf(end);
     if (i < 0) {
-      throw new TexError(
+      texError(
         COMPONENT,
         'TokenNotFoundForCommand',
         end,

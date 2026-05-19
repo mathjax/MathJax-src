@@ -26,7 +26,7 @@ import { Configuration } from '../Configuration.js';
 import { CommandMap, CharacterMap } from '../TokenMap.js';
 import { Token } from '../Token.js';
 import { ParseMethod } from '../Types.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import TexParser from '../TexParser.js';
 import BaseMethods from '../base/BaseMethods.js';
 import { AmsMethods } from '../ams/AmsMethods.js';
@@ -105,7 +105,7 @@ export const MhchemMethods: { [key: string]: ParseMethod } = {
         tex = tex.replace(pattern, name as string);
       }
     } catch (err) {
-      throw new TexError(null, err[0], err[1]);
+      texError(null, err[0], err[1]);
     }
     parser.string = tex + parser.string.substring(parser.i);
     parser.i = 0;

@@ -24,7 +24,7 @@
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { MapHandler } from '../MapHandler.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 import { CharacterMap, RegExpMap } from '../TokenMap.js';
@@ -91,7 +91,7 @@ export function Other(parser: TexParser, char: string) {
  */
 function csUndefined(_parser: TexParser, name: string) {
   // @test Undefined-CS
-  throw new TexError(COMPONENT, 'UndefinedControlSequence', '\\' + name);
+  texError(COMPONENT, 'UndefinedControlSequence', '\\' + name);
 }
 
 /**
@@ -102,7 +102,7 @@ function csUndefined(_parser: TexParser, name: string) {
  */
 function envUndefined(_parser: TexParser, env: string) {
   // @test Undefined-Env
-  throw new TexError(COMPONENT, 'UnknownEnv', env);
+  texError(COMPONENT, 'UnknownEnv', env);
 }
 
 /**

@@ -30,7 +30,7 @@ import { ParseMethod } from '../Types.js';
 import { AmsMethods } from '../ams/AmsMethods.js';
 import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 import { NewcommandConfig } from '../newcommand/NewcommandConfiguration.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
@@ -47,13 +47,13 @@ const ExtpfeilMethods: { [key: string]: ParseMethod } = {
     const space = parser.GetArgument(name);
     const chr = parser.GetArgument(name);
     if (!cs.match(/^\\([a-z]+|.)$/i)) {
-      throw new TexError(COMPONENT, 'NewextarrowArg1', name);
+      texError(COMPONENT, 'NewextarrowArg1', name);
     }
     if (!space.match(/^(\d+),(\d+)$/)) {
-      throw new TexError(COMPONENT, 'NewextarrowArg2', name);
+      texError(COMPONENT, 'NewextarrowArg2', name);
     }
     if (!chr.match(/^(\d+|0x[0-9A-F]+)$/i)) {
-      throw new TexError(COMPONENT, 'NewextarrowArg3', name);
+      texError(COMPONENT, 'NewextarrowArg3', name);
     }
     cs = cs.substring(1);
     const spaces = space.split(',');

@@ -30,7 +30,7 @@ import {
 import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { TeX } from '../../tex.js';
 
 import { MathJax } from '../../../components/startup.js';
@@ -172,7 +172,7 @@ export function RequireLoad(parser: TexParser, name: string) {
       ? allow[name]
       : options.defaultAllow;
   if (!allowed) {
-    throw new TexError(COMPONENT, 'BadRequire', extension);
+    texError(COMPONENT, 'BadRequire', extension);
   }
   const data = Package.packages.get(extension);
   if (!data) {
@@ -183,7 +183,7 @@ export function RequireLoad(parser: TexParser, name: string) {
     );
   }
   if (data.hasFailed) {
-    throw new TexError(COMPONENT, 'RequireFail', name);
+    texError(COMPONENT, 'RequireFail', name);
   }
   const require = LOADERCONFIG[extension]?.rendererExtensions;
   const menu = (MathJax.startup.document as MenuMathDocument)?.menu;
@@ -233,7 +233,7 @@ export const RequireMethods: { [key: string]: ParseMethod } = {
   Require(parser: TexParser, name: string) {
     const required = parser.GetArgument(name);
     if (required.match(/[^_a-zA-Z0-9]/) || required === '') {
-      throw new TexError(COMPONENT, 'BadPackageName', name);
+      texError(COMPONENT, 'BadPackageName', name);
     }
     RequireLoad(parser, required);
     parser.Push(parser.itemFactory.create('null'));

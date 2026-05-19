@@ -25,13 +25,14 @@ import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { EnvList } from '../StackItem.js';
 import TexParser from '../TexParser.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
 import { UnitUtil } from '../UnitUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import { numeric } from '../../../util/Entities.js';
 import { Other } from '../base/BaseConfiguration.js';
+import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
 import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
@@ -60,11 +61,11 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
       }
     }
     if (font.match(/;/)) {
-      throw new TexError(COMPONENT, 'BadFont', parser.currentCS);
+      texError(COMPONENT, 'BadFont', parser.currentCS);
     }
     const n = UnitUtil.trimSpaces(parser.GetArgument(name)).replace(/^0x/, 'x');
     if (!n.match(/^(x[0-9A-Fa-f]+|[0-9]+)$/)) {
-      throw new TexError(COMPONENT, 'BadUnicode', parser.currentCS);
+      texError(COMPONENT, 'BadUnicode', parser.currentCS);
     }
     const N = parseInt(n.match(/^x/) ? '0' + n : n);
     if (!UnicodeCache[N]) {
@@ -105,7 +106,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
   RawUnicode(parser: TexParser, name: string) {
     const hex = parser.GetArgument(name).trim();
     if (!hex.match(/^[0-9A-F]{1,6}$/)) {
-      throw new TexError(COMPONENT, 'BadRawUnicode', parser.currentCS);
+      texError(TEX_COMPONENT, 'BadRawUnicode', parser.currentCS);
     }
     const n = parseInt(hex, 16);
     parser.string = String.fromCodePoint(n) + parser.string.substring(parser.i);
@@ -146,7 +147,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
           parser.i += 2;
           const cs = [...parser.GetCS()];
           if (cs.length > 1) {
-            throw new TexError(
+            texError(
               COMPONENT,
               'InvalidAlphanumeric',
               parser.currentCS
@@ -163,7 +164,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
       }
     }
     if (!c) {
-      throw new TexError(COMPONENT, 'MissingNumber', parser.currentCS);
+      texError(COMPONENT, 'MissingNumber', parser.currentCS);
     }
     parser.i += match[0].length;
     if (c >= '0' && c <= '9') {

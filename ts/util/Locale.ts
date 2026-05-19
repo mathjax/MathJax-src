@@ -136,14 +136,31 @@ export class Locale {
     let message = '';
     if (component) {
       message = this.lookupMessage(component, id);
-    } else {
-      if (typeof data !== 'string') {
-        return '';
-      }
-      message = data;
-      data = args.shift()?.toString() ?? {};
+      return this.processMessage(message, data, ...args);
     }
-    if (typeof data === 'string') {
+    if (typeof data !== 'string') {
+      return '';
+    }
+    return this.processMessage(data, ...args);
+  }
+
+  /**
+   * Process a message string by substituting the given arguments. The arguments
+   * can be positional, or a data mapping of names to values.
+   *
+   * @param {string} message The message string to process.
+   * @param {string | namedData = {}} data The first argument or the object of
+   *     names arguments
+   * @param {string[]} ...args Additional arguments (if data is a string)
+   * @param {...any} args
+   * @returns {string} The processed message string with arguments substituted
+   */
+  public static processMessage(
+    message: string,
+    data: string | namedData = {},
+    ...args: string[]
+  ): string {
+    if (typeof data !== 'object') {
       data = { 1: data };
       for (let i = 0; i < args.length; i++) {
         data[i + 2] = args[i];

@@ -24,7 +24,7 @@
 import { ArrayItem, EqnArrayItem } from '../base/BaseItems.js';
 import { ParseUtil } from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { TexConstant } from '../TexConstants.js';
 import StackItemFactory from '../StackItemFactory.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
@@ -79,7 +79,7 @@ export class MultlineItem extends ArrayItem {
   public EndRow() {
     if (this.row.length !== 1) {
       // @test MultlineRowsOneCol
-      throw new TexError(COMPONENT, 'MultlineRowsOneCol', 'multline');
+      texError(COMPONENT, 'MultlineRowsOneCol', 'multline');
     }
     const row = this.create('node', 'mtr', this.row);
     this.table.push(row);
@@ -171,7 +171,7 @@ export class FlalignItem extends EqnArrayItem {
     const n = this.getProperty('xalignat') as number;
     if (!n) return;
     if (this.row.length > n) {
-      throw new TexError(COMPONENT, 'XalignOverflow', '&', this.name);
+      texError(COMPONENT, 'XalignOverflow', '&', this.name);
     }
   }
 
