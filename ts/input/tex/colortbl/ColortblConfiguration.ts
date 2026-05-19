@@ -33,7 +33,7 @@ import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 
 import { TeX } from '../../tex.js';
-import { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
 /**

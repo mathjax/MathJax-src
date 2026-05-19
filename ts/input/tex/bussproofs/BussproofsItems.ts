@@ -27,7 +27,7 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import Stack from '../Stack.js';
 import * as BussproofsUtil from './BussproofsUtil.js';
 
-import { COMPONENT } from './locales/Component.js';
+import { COMPONENT } from './__locales__/Component.js';
 
 export class ProofTreeItem extends BaseItem {
   /**

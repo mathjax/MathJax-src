@@ -2,7 +2,16 @@
   "build": {
     "id": "[tex]/require",
     "component": "input/tex/extensions/require",
-    "targets": ["input/tex/require"]
+    "targets": [
+      "input/tex/require"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/require",
+    "from": "[ts]/input/tex/require",
+    "copy": [
+      "__locales__"
+    ]
   },
   "webpack": {
     "name": "input/tex/extensions/require",

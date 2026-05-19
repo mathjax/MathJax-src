@@ -25,7 +25,7 @@ import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { AutoOpen } from './PhysicsItems.js';
 import './PhysicsMappings.js';
-export { COMPONENT } from './locales/Component.js';
+export { COMPONENT } from './__locales__/Component.js';
 
 export const PhysicsConfiguration = Configuration.create('physics', {
   [ConfigurationType.HANDLER]: {
