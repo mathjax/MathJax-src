@@ -70,11 +70,11 @@ const bundleDir = path.resolve(parent, bundle);
 /**
  * Copy a file or directory tree
  *
- * @param {string} from       The directory to copy from
- * @param {string} to         The directory to copy to
- * @param {string} name       The name of the file or directory to copy
- * @param {string[]} eclude   The files to exclude
- * @param {string} space      The indentation for output
+ * @param {string} from        The directory to copy from
+ * @param {string} to          The directory to copy to
+ * @param {string} name        The name of the file or directory to copy
+ * @param {string[]} excludes  The files to exclude
+ * @param {string} space       The indentation for output
  */
 function copyFile(from, to, name, excludes, space = '') {
   !fs.existsSync(to) && fs.mkdirSync(to, {recursive: true});
