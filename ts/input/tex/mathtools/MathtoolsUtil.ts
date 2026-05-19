@@ -23,7 +23,7 @@
 import { EqnArrayItem } from '../base/BaseItems.js';
 import { UnitUtil } from '../UnitUtil.js';
 import TexParser from '../TexParser.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { lookup } from '../../../util/Options.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { HandlerType } from '../HandlerTypes.js';
@@ -71,7 +71,7 @@ export const MathtoolsUtil = {
   checkAlignment(parser: TexParser, name: string): EqnArrayItem {
     const top = parser.stack.Top() as EqnArrayItem;
     if (top.kind !== EqnArrayItem.prototype.kind) {
-      throw new TexError(COMPONENT, 'NotInAlignment', name);
+      texError(COMPONENT, 'NotInAlignment', name);
     }
     return top;
   },
@@ -88,7 +88,7 @@ export const MathtoolsUtil = {
    */
   addPairedDelims(parser: TexParser, cs: string, args: string[]) {
     if (parser.configuration.handlers.get(HandlerType.MACRO).contains(cs)) {
-      throw new TexError(COMPONENT, 'CommadExists', `\\${cs}`);
+      texError(COMPONENT, 'CommadExists', `\\${cs}`);
     }
     NewcommandUtil.addMacro(
       parser,
@@ -125,7 +125,7 @@ export const MathtoolsUtil = {
   plusOrMinus(name: string, n: string): string {
     n = n.trim();
     if (!n.match(/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/)) {
-      throw new TexError(COMPONENT, 'NotANumber', name);
+      texError(COMPONENT, 'NotANumber', name);
     }
     return n.match(/^[-+]/) ? n : '+' + n;
   },

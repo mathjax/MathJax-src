@@ -26,7 +26,7 @@ import { ParseMethod } from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 
 import { COMPONENT } from './__locales__/Component.js';
 
@@ -65,7 +65,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
     for (const key in data) {
       // remove illegal attribute names
       if (!isLegalAttributeName(key)) {
-        throw new TexError(COMPONENT, 'InvalidHTMLAttr', `data-${key}`);
+        texError(COMPONENT, 'InvalidHTMLAttr', `data-${key}`);
       }
       NodeUtil.setAttribute(arg, `data-${key}`, data[key]);
     }

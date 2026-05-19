@@ -5,7 +5,7 @@ import { ParseResult, ParseMethod } from '../Types.js';
 import { ParseUtil } from '../ParseUtil.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { BeginItem, EqnArrayItem } from '../base/BaseItems.js';
 import { AmsTags } from '../ams/AmsConfiguration.js';
 import { StackItem, CheckType } from '../StackItem.js';
@@ -183,7 +183,7 @@ export const CasesMethods = {
         //
         //  Extra alignment tabs are not allowed in cases
         //
-        throw new TexError(COMPONENT, 'ExtraCasesAlignTab');
+        texError(COMPONENT, 'ExtraCasesAlignTab');
       } else if (c === '\\' && braces === 0) {
         //
         //  If the macro is \cr or \\, end the search, otherwise skip the macro

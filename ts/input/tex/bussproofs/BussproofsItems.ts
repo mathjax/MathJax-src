@@ -21,8 +21,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import TexError from '../TexError.js';
 import NodeUtil from '../NodeUtil.js';
+import { texError } from '../TexError.js';
 import { BaseItem, CheckType, StackItem } from '../StackItem.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import Stack from '../Stack.js';
@@ -65,9 +65,9 @@ export class ProofTreeItem extends BaseItem {
     }
     if (item.isKind('stop')) {
       if (this.getProperty('implicit')) {
-        throw new TexError(COMPONENT, 'MissingDisplayProof', '\\DisplayProof');
+        texError(COMPONENT, 'MissingDisplayProof', '\\DisplayProof');
       }
-      throw new TexError(COMPONENT, 'EnvMissingEnd', this.getName());
+      texError(COMPONENT, 'EnvMissingEnd', this.getName());
     }
     this.innerStack.Push(item);
     return BaseItem.fail;

@@ -24,7 +24,7 @@
 import { HandlerType } from '../HandlerTypes.js';
 import { SubHandler } from '../MapHandler.js';
 import { UnitUtil } from '../UnitUtil.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import TexParser from '../TexParser.js';
 import { Macro, Token } from '../Token.js';
 import { Args, Attributes, ParseMethod } from '../Types.js';
@@ -59,7 +59,7 @@ export const NewcommandUtil = {
     const c = parser.GetNext();
     if (c !== '\\') {
       // @test No CS
-      throw new TexError(COMPONENT, 'MissingCS', cmd);
+      texError(COMPONENT, 'MissingCS', cmd);
     }
     const cs = UnitUtil.trimSpaces(parser.GetArgument(cmd)).substring(1);
     this.checkProtectedMacros(parser, cs);
@@ -81,7 +81,7 @@ export const NewcommandUtil = {
     }
     if (!cs.match(/^(.|[a-z]+)$/i)) {
       // @test Illegal CS
-      throw new TexError(COMPONENT, 'IllegalControlSequenceName', name);
+      texError(COMPONENT, 'IllegalControlSequenceName', name);
     }
     this.checkProtectedMacros(parser, cs);
     return cs;
@@ -102,7 +102,7 @@ export const NewcommandUtil = {
       n = UnitUtil.trimSpaces(n);
       if (!n.match(/^[0-9]+$/)) {
         // @test Illegal Argument Number
-        throw new TexError(COMPONENT, 'IllegalParamNumber', name);
+        texError(COMPONENT, 'IllegalParamNumber', name);
       }
     }
     return n;
@@ -135,11 +135,11 @@ export const NewcommandUtil = {
         c = parser.string.charAt(++parser.i);
         if (!c.match(/^[1-9]$/)) {
           // @test Illegal Hash
-          throw new TexError(COMPONENT, 'CantUseHash2', cs);
+          texError(COMPONENT, 'CantUseHash2', cs);
         }
         if (parseInt(c) !== ++n) {
           // @test No Sequence
-          throw new TexError(COMPONENT, 'SequentialParam', cs);
+          texError(COMPONENT, 'SequentialParam', cs);
         }
         i = parser.i + 1;
       } else if (c === '{') {
@@ -166,7 +166,7 @@ export const NewcommandUtil = {
       parser.i++;
     }
     // @test No Replacement
-    throw new TexError(COMPONENT, 'MissingReplacementString', cmd);
+    texError(COMPONENT, 'MissingReplacementString', cmd);
   },
 
   /**
@@ -220,7 +220,7 @@ export const NewcommandUtil = {
       }
     }
     // @test Runaway Argument
-    throw new TexError(COMPONENT, 'RunawayArgument', name);
+    texError(COMPONENT, 'RunawayArgument', name);
   },
 
   /**
@@ -284,7 +284,7 @@ export const NewcommandUtil = {
    */
   checkProtectedMacros(parser: TexParser, cs: string) {
     if (parser.options.protectedMacros?.includes(cs)) {
-      throw new TexError(COMPONENT, 'ProtectedMacro', `\\${cs}`);
+      texError(COMPONENT, 'ProtectedMacro', `\\${cs}`);
     }
   },
 
