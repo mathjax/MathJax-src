@@ -280,7 +280,7 @@ export class SubsupItem extends BaseItem {
     }
     if (super.checkItem(item)[1]) {
       // @test Brace Superscript Error, MissingOpenForSup, MissingOpenForSub
-      const error = this.getErrors(['', 'sub', 'sup'][position]);
+      const error = this.getError(['', 'sub', 'sup'][position]);
       throw new TexError(COMPONENT, error);
     }
     return null;
