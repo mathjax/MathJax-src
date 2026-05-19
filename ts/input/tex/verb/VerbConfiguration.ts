@@ -37,6 +37,7 @@ Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/verb');
 const VerbMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements the verbatim notation \verb|...|.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    */

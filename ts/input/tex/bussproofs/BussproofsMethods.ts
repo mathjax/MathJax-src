@@ -141,7 +141,7 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
     throw new TexError(COMPONENT, 'IllegalUseOfCommand', name);
   }
   parser.i++;
-  let axiom = parser.GetUpTo(name, '$');
+  const axiom = parser.GetUpTo(name, '$');
   if (axiom.indexOf('\\fCenter') === -1) {
     throw new TexError(COMPONENT, 'MissingProofCommand', '\\fCenter', name);
   }

@@ -517,10 +517,10 @@ export abstract class BaseItem extends MmlStack implements StackItem {
       // @test Ampersand-error
       throw new TexError(COMPONENT, 'Misplaced', item.getName());
     }
-    if (item.isClose && this.getErrors(item.kind)) {
+    if (item.isClose && this.getError(item.kind)) {
       // @test ExtraOpenMissingClose, ExtraCloseMissingOpen,
       //       MissingLeftExtraRight, MissingBeginExtraEnd
-      throw new TexError(COMPONENT, this.getErrors(item.kind), item.getName());
+      throw new TexError(COMPONENT, this.getError(item.kind), item.getName());
     }
     if (!item.isFinal) {
       return BaseItem.success;
@@ -566,11 +566,11 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * subclasses.
    *
    * @param {string} kind The stack item type.
-   * @returns {string[]} The list of arguments for the TeXError.
+   * @returns {string} The id of the error message.
    */
-  public getErrors(kind: string): string {
+  public getError(kind: string): string {
     const CLASS = this.constructor as typeof BaseItem;
-    return (CLASS.errors || {})[kind] || BaseItem.errors[kind];
+    return CLASS.errors?.[kind] ?? BaseItem.errors[kind];
   }
 
   /**
