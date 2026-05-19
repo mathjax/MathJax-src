@@ -32,6 +32,10 @@ import { HTMLDocument } from '../../../handlers/html/HTMLDocument.js';
 import { HtmlNode } from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
 import { HTMLDomStrings } from '../../../handlers/html/HTMLDomStrings.js';
 import { DOMAdaptor } from '../../../core/DOMAdaptor.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/texhtml';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/texhtml');
 
 export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
   /**
@@ -59,12 +63,7 @@ export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
     const end = (match[1] ? `<!${match[1]}>` : '') + '</tex-html>';
     const i = parser.string.slice(parser.i).indexOf(end);
     if (i < 0) {
-      throw new TexError(
-        'TokenNotFoundForCommand',
-        'Could not find %1 for %2',
-        end,
-        '<' + match[0]
-      );
+      throw new TexError(COMPONENT, 'TokenNotFoundForCommand', end, '<' + match[0]);
     }
     const html = parser.string.substring(parser.i, parser.i + i).trim();
     parser.i += i + 11 + (match[1] ? 3 + match[1].length : 0);

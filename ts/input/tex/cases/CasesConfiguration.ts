@@ -11,6 +11,10 @@ import { AmsTags } from '../ams/AmsConfiguration.js';
 import { StackItem, CheckType } from '../StackItem.js';
 import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
 import { EmpheqUtil } from '../empheq/EmpheqUtil.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/cases';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/cases');
 
 /**
  * The StackItem for the numcases environment.
@@ -181,10 +185,7 @@ export const CasesMethods = {
         //
         //  Extra alignment tabs are not allowed in cases
         //
-        throw new TexError(
-          'ExtraCasesAlignTab',
-          'Extra alignment tab in text for numcase environment'
-        );
+        throw new TexError(COMPONENT, 'ExtraCasesAlignTab');
       } else if (c === '\\' && braces === 0) {
         //
         //  If the macro is \cr or \\, end the search, otherwise skip the macro

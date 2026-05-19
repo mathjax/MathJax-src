@@ -29,6 +29,8 @@ import { TexConstant } from '../TexConstants.js';
 import StackItemFactory from '../StackItemFactory.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 
+const COMPONENT = '[tex]/ams';
+
 /**
  * Item dealing with multiline environments as a special case of arrays. Note,
  * that all other AMS equation environments (e.g., align, split) can be handled
@@ -77,11 +79,7 @@ export class MultlineItem extends ArrayItem {
   public EndRow() {
     if (this.row.length !== 1) {
       // @test MultlineRowsOneCol
-      throw new TexError(
-        'MultlineRowsOneCol',
-        'The rows within the %1 environment must have exactly one column',
-        'multline'
-      );
+      throw new TexError(COMPONENT, 'MultlineRowsOneCol', 'multline');
     }
     const row = this.create('node', 'mtr', this.row);
     this.table.push(row);
@@ -173,12 +171,7 @@ export class FlalignItem extends EqnArrayItem {
     const n = this.getProperty('xalignat') as number;
     if (!n) return;
     if (this.row.length > n) {
-      throw new TexError(
-        'XalignOverflow',
-        'Extra %1 in row of %2',
-        '&',
-        this.name
-      );
+      throw new TexError(COMPONENT, 'XalignOverflow', '&', this.name);
     }
   }
 

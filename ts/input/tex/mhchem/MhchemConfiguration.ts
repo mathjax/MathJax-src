@@ -105,7 +105,7 @@ export const MhchemMethods: { [key: string]: ParseMethod } = {
         tex = tex.replace(pattern, name as string);
       }
     } catch (err) {
-      throw new TexError(err[0], err[1]);
+      throw new TexError(null, err[0], err[1]);
     }
     parser.string = tex + parser.string.substring(parser.i);
     parser.i = 0;

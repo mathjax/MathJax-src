@@ -1,0 +1,16 @@
+{
+  "InvalidTagFormDef": "The tag form definition for \"%1\" should be an array of three strings",
+  "ForbiddenMathtoolsSet": "%1 is disabled",
+  "UndefinedTagForm": "Undefined tag form: %1",
+  "TagsNotMT": "%1 can only be used with ams or mathtools tags",
+  "DuplicateTagForm": "Duplicate tag form: %1",
+  "InvalidTagFormID": "Tag form name can't be empty",
+  "BetweenLines": "%1 must be on a row by itself",
+  "CommandAtTheBeginingOfLine": "%1 must come at the beginning of the line",
+  "CommandInMultlined": "%1 can only appear within the multline or multlined environments",
+  "BadWidth": "Width for %1 must be a dimension",
+  "NotANumber": "Argument to %1 is not a number",
+  "NotInAlignment": "%1 can only be used in alignment environments",
+  "AlreadyDefined": "%1 is already defined",
+  "CommadExists": "Command %1 already defined"
+}

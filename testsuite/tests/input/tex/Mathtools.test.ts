@@ -918,7 +918,7 @@ describe('Mathtools More Environments', () => {
 
   test('ArrowBetweenLines error', () => {
     expectTexError('\\ArrowBetweenLines').toBe(
-      '\\ArrowBetweenLines can only be used in aligment environments'
+      '\\ArrowBetweenLines can only be used in alignment environments'
     );
   });
 
@@ -1040,7 +1040,7 @@ describe('Mathtools Boxed Equations', () => {
 
   test('Aboxed error', () => {
     expectTexError('\\Aboxed{ a & = b}').toBe(
-      '\\Aboxed can only be used in aligment environments'
+      '\\Aboxed can only be used in alignment environments'
     );
   });
 

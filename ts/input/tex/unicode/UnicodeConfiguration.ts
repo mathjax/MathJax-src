@@ -32,6 +32,10 @@ import { UnitUtil } from '../UnitUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import { numeric } from '../../../util/Entities.js';
 import { Other } from '../base/BaseConfiguration.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/unicode';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/unicode');
 
 const UnicodeCache: { [key: number]: [number, number, string, number] } = {};
 
@@ -58,19 +62,11 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
       }
     }
     if (font.match(/;/)) {
-      throw new TexError(
-        'BadFont',
-        "Font name for %1 can't contain semicolons",
-        parser.currentCS
-      );
+      throw new TexError(COMPONENT, 'BadFont', parser.currentCS);
     }
     const n = UnitUtil.trimSpaces(parser.GetArgument(name)).replace(/^0x/, 'x');
     if (!n.match(/^(x[0-9A-Fa-f]+|[0-9]+)$/)) {
-      throw new TexError(
-        'BadUnicode',
-        'Argument to %1 must be a number',
-        parser.currentCS
-      );
+      throw new TexError(COMPONENT, 'BadUnicode', parser.currentCS);
     }
     const N = parseInt(n.match(/^x/) ? '0' + n : n);
     if (!UnicodeCache[N]) {
@@ -111,11 +107,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
   RawUnicode(parser: TexParser, name: string) {
     const hex = parser.GetArgument(name).trim();
     if (!hex.match(/^[0-9A-F]{1,6}$/)) {
-      throw new TexError(
-        'BadRawUnicode',
-        'Argument to %1 must a hexadecimal number with 1 to 6 digits',
-        parser.currentCS
-      );
+      throw new TexError(COMPONENT, 'BadRawUnicode', parser.currentCS);
     }
     const n = parseInt(hex, 16);
     parser.string = String.fromCodePoint(n) + parser.string.substring(parser.i);
@@ -156,11 +148,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
           parser.i += 2;
           const cs = [...parser.GetCS()];
           if (cs.length > 1) {
-            throw new TexError(
-              'InvalidAlphanumeric',
-              'Invalid alphanumeric constant for %1',
-              parser.currentCS
-            );
+            throw new TexError(COMPONENT, 'InvalidAlphanumeric', parser.currentCS);
           }
           c = cs[0];
           match = [''];
@@ -173,11 +161,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
       }
     }
     if (!c) {
-      throw new TexError(
-        'MissingNumber',
-        'Missing numeric constant for %1',
-        parser.currentCS
-      );
+      throw new TexError(COMPONENT, 'MissingNumber', parser.currentCS);
     }
     parser.i += match[0].length;
     if (c >= '0' && c <= '9') {

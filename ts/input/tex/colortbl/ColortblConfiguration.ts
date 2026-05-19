@@ -33,6 +33,10 @@ import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 
 import { TeX } from '../../tex.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/colortbl';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/colortbl');
 
 /**
  * Information about table colors.
@@ -130,22 +134,14 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
   //
   const top = parser.stack.Top() as ColorArrayItem;
   if (!(top instanceof ColorArrayItem)) {
-    throw new TexError(
-      'UnsupportedTableColor',
-      'Unsupported use of %1',
-      parser.currentCS
-    );
+    throw new TexError(COMPONENT, 'UnsupportedTableColor', parser.currentCS);
   }
   //
   //  Check the position of the macro and save the color.
   //
   if (type === 'col') {
     if (top.table.length && top.color.col[top.row.length] !== color) {
-      throw new TexError(
-        'ColumnColorNotTop',
-        '%1 must be in the top row or preamble',
-        name
-      );
+      throw new TexError(COMPONENT, 'ColumnColorNotTop', name);
     }
     top.color.col[top.row.length] = color;
     //
@@ -157,11 +153,7 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
   } else {
     top.color[type] = color;
     if (type === 'row' && (top.Size() || top.row.length)) {
-      throw new TexError(
-        'RowColorNotFirst',
-        '%1 must be at the beginning of a row',
-        name
-      );
+      throw new TexError(COMPONENT, 'RowColorNotFirst', name);
     }
   }
 }

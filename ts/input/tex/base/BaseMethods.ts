@@ -44,6 +44,8 @@ import { lookup } from '../../../util/Options.js';
 import { ColumnState } from '../ColumnParser.js';
 import { replaceUnicode } from '../../../util/string.js';
 
+const COMPONENT = '[tex]/base';
+
 const P_HEIGHT = 1.2 / 0.85; // cmex10 height plus depth over .85
 const MmlTokenAllow: { [key: string]: number } = {
   fontfamily: 1,
@@ -70,20 +72,12 @@ export function splitAlignArray(align: string, n: number = Infinity): string {
     .map((s: string) => {
       const name = { t: 'top', b: 'bottom', m: 'middle', c: 'center' }[s];
       if (!name) {
-        throw new TexError(
-          'BadBreakAlign',
-          'Invalid alignment character: %1',
-          s
-        );
+        throw new TexError(COMPONENT, 'BadBreakAlign', s);
       }
       return name;
     });
   if (list.length > n) {
-    throw new TexError(
-      'TooManyAligns',
-      'Too many alignment characters: %1',
-      align
-    );
+    throw new TexError(COMPONENT, 'TooManyAligns', align);
   }
   return n === 1 ? list[0] : list.join(' ');
 }
@@ -224,10 +218,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
         !NodeUtil.getProperty(base, 'subsupOK'))
     ) {
       // @test Double-super-error, Double-over-error
-      throw new TexError(
-        'DoubleExponent',
-        'Double exponent: use braces to clarify'
-      );
+      throw new TexError(COMPONENT, 'DoubleExponent');
     }
     if (!NodeUtil.isType(base, 'msubsup') || NodeUtil.isType(base, 'msup')) {
       if (movesupsub) {
@@ -299,10 +290,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
         !NodeUtil.getProperty(base, 'subsupOK'))
     ) {
       // @test Double-sub-error, Double-under-error
-      throw new TexError(
-        'DoubleSubscripts',
-        'Double subscripts: use braces to clarify'
-      );
+      throw new TexError(COMPONENT, 'DoubleSubscripts');
     }
     if (!NodeUtil.isType(base, 'msubsup') || NodeUtil.isType(base, 'msup')) {
       if (movesupsub) {
@@ -356,10 +344,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
         !NodeUtil.getProperty(base, 'subsupOK'))
     ) {
       // @test Double Prime Error
-      throw new TexError(
-        'DoubleExponentPrime',
-        'Prime causes double exponent: use braces to clarify'
-      );
+      throw new TexError(COMPONENT, 'DoubleExponentPrime');
     }
     let sup = '';
     parser.i--;
@@ -397,10 +382,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    */
   Hash(_parser: TexParser, _c: string) {
     // @test Hash Error
-    throw new TexError(
-      'CantUseHash1',
-      "You can't use 'macro parameter character #' in math mode"
-    );
+    throw new TexError(COMPONENT, 'CantUseHash1');
   },
 
   /**
@@ -633,11 +615,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
         NodeUtil.getProperty(op, 'movesupsub') == null)
     ) {
       // @test Limits Error
-      throw new TexError(
-        'MisplacedLimits',
-        '%1 is allowed only on operators',
-        parser.currentCS
-      );
+      throw new TexError(COMPONENT, 'MisplacedLimits', parser.currentCS);
     }
     const top = parser.stack.Top();
     let node;
@@ -760,28 +738,16 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     // @test Tweaked Root
     if (!parser.stack.env['inRoot']) {
       // @test Misplaced Move Root
-      throw new TexError(
-        'MisplacedMoveRoot',
-        '%1 can appear only within a root',
-        parser.currentCS
-      );
+      throw new TexError(COMPONENT, 'MisplacedMoveRoot', parser.currentCS);
     }
     if (parser.stack.global[id]) {
       // @test Multiple Move Root
-      throw new TexError(
-        'MultipleMoveRoot',
-        'Multiple use of %1',
-        parser.currentCS
-      );
+      throw new TexError(COMPONENT, 'MultipleMoveRoot', parser.currentCS);
     }
     let n = parser.GetArgument(name);
     if (!n.match(/-?[0-9]+/)) {
       // @test Incorrect Move Root
-      throw new TexError(
-        'IntegerArg',
-        'The argument to %1 must be an integer',
-        parser.currentCS
-      );
+      throw new TexError(COMPONENT, 'IntegerArg', parser.currentCS);
     }
     n = parseInt(n, 10) / 15 + 'em';
     if (n.substring(0, 1) !== '-') {
@@ -1017,50 +983,30 @@ const BaseMethods: { [key: string]: ParseMethod } = {
   BreakAlign(parser: TexParser, name: string) {
     const top = parser.stack.Top() as sitem.ArrayItem;
     if (!(top instanceof sitem.ArrayItem)) {
-      throw new TexError(
-        'BreakNotInArray',
-        '%1 must be used in an alignment environment',
-        parser.currentCS
-      );
+      throw new TexError(COMPONENT, 'BreakNotInArray', parser.currentCS);
     }
     const type = parser.GetArgument(name).trim();
     switch (type) {
       case 'c':
         if (top.First) {
-          throw new TexError(
-            'BreakFirstInEntry',
-            '%1 must be at the beginning of an alignment entry',
-            parser.currentCS + '{c}'
-          );
+          throw new TexError(COMPONENT, 'BreakFirstInEntry', parser.currentCS + '{c}');
         }
         top.breakAlign.cell = splitAlignArray(parser.GetArgument(name), 1);
         break;
       case 'r':
         if (top.row.length || top.First) {
-          throw new TexError(
-            'BreakFirstInRow',
-            '%1 must be at the beginning of an alignment row',
-            parser.currentCS + '{r}'
-          );
+          throw new TexError(COMPONENT, 'BreakFirstInRow', parser.currentCS + '{r}');
         }
         top.breakAlign.row = splitAlignArray(parser.GetArgument(name));
         break;
       case 't':
         if (top.table.length || top.row.length || top.First) {
-          throw new TexError(
-            'BreakFirstInTable',
-            '%1 must be at the beginning of an alignment',
-            parser.currentCS + '{t}'
-          );
+          throw new TexError(COMPONENT, 'BreakFirstInTable', parser.currentCS + '{t}');
         }
         top.breakAlign.table = splitAlignArray(parser.GetArgument(name));
         break;
       default:
-        throw new TexError(
-          'BreakType',
-          'First argument to %1 must be one of c, r, or t',
-          parser.currentCS
-        );
+        throw new TexError(COMPONENT, 'BreakType', parser.currentCS);
     }
   },
 
@@ -1085,7 +1031,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     }
     if (!node || !node.isToken) {
       // @test Token Illegal Type, Token Wrong Type
-      throw new TexError('NotMathMLToken', '%1 is not a token element', kind);
+      throw new TexError(COMPONENT, 'NotMathMLToken', kind);
     }
     while (attr !== '') {
       const match = attr.match(
@@ -1093,20 +1039,11 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       );
       if (!match) {
         // @test Token Invalid Attribute
-        throw new TexError(
-          'InvalidMathMLAttr',
-          'Invalid MathML attribute: %1',
-          attr.split(/[\s\n=]/)[0]
-        );
+        throw new TexError(COMPONENT, 'InvalidMathMLAttr', attr.split(/[\s\n=]/)[0]);
       }
       if (!node.attributes.hasDefault(match[1]) && !MmlTokenAllow[match[1]]) {
         // @test Token Unknown Attribute, Token Wrong Attribute
-        throw new TexError(
-          'UnknownAttrForElement',
-          '%1 is not a recognized attribute for %2',
-          match[1],
-          kind
-        );
+        throw new TexError(COMPONENT, 'UnknownAttrForElement', match[1], kind);
       }
       let value: string | boolean = ParseUtil.mmlFilterAttribute(
         parser,
@@ -1559,11 +1496,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const c = parser.GetNext();
     if (c === '') {
       // @test Matrix Error
-      throw new TexError(
-        'MissingArgFor',
-        'Missing argument for %1',
-        parser.currentCS
-      );
+      throw new TexError(COMPONENT, 'MissingArgFor', parser.currentCS);
     }
     if (c === '{') {
       // @test Matrix Braces, Matrix Columns, Matrix Rows.
@@ -1673,10 +1606,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
         //  Extra alignment tabs are not allowed in cases
         //
         // @test ExtraAlignTab
-        throw new TexError(
-          'ExtraAlignTab',
-          'Extra alignment tab in \\cases text'
-        );
+        throw new TexError(COMPONENT, 'ExtraAlignTab');
       } else if (c === '\\') {
         //
         //  If the macro is \cr or \\, end the search, otherwise skip the macro
@@ -1756,11 +1686,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
         // @test Custom Linebreak
         if (dim && !value) {
           // @test Dimension Error
-          throw new TexError(
-            'BracketMustBeDimension',
-            'Bracket argument to %1 must be a dimension',
-            parser.currentCS
-          );
+          throw new TexError(COMPONENT, 'BracketMustBeDimension', name);
         }
         n = value + unit;
       }
@@ -1804,7 +1730,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const top = parser.stack.Top();
     if (!(top instanceof sitem.ArrayItem) || top.Size()) {
       // @test Misplaced hline
-      throw new TexError('Misplaced', 'Misplaced %1', parser.currentCS);
+      throw new TexError(COMPONENT, 'Misplaced', parser.currentCS);
     }
     if (!top.table.length) {
       // @test Enclosed top, Enclosed top bottom
@@ -1835,11 +1761,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       top.hfill.push(top.Size());
     } else {
       // @test UnsupportedHFill
-      throw new TexError(
-        'UnsupportedHFill',
-        'Unsupported use of %1',
-        parser.currentCS
-      );
+      throw new TexError(COMPONENT, 'UnsupportedHFill', parser.currentCS);
     }
   },
 
@@ -1854,18 +1776,10 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const n = parser.GetBrackets(name, '0');
     const macro = parser.GetArgument(name);
     if (c.length !== 1) {
-      throw new TexError(
-        'BadColumnName',
-        'Column specifier must be exactly one character: %1',
-        c
-      );
+      throw new TexError(COMPONENT, 'BadColumnName', c);
     }
     if (!n.match(/^\d+$/)) {
-      throw new TexError(
-        'PositiveIntegerArg',
-        'Argument to %1 must be a positive integer',
-        n
-      );
+      throw new TexError(COMPONENT, 'PositiveIntegerArg', n);
     }
     const cparser = parser.configuration.columnParser;
     cparser.columnHandler[c] = (state: ColumnState) =>
@@ -1888,7 +1802,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const env = parser.GetArgument(name);
     if (env.match(/\\/)) {
       // @test InvalidEnv
-      throw new TexError('InvalidEnv', "Invalid environment name '%1'", env);
+      throw new TexError(COMPONENT, 'InvalidEnv', env);
     }
     const macro = parser.configuration.handlers
       .get(HandlerType.ENVIRONMENT)
@@ -2025,21 +1939,14 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       (shift && !UnitUtil.matchDimen(shift)[0]) ||
       (last && !UnitUtil.matchDimen(last)[0])
     ) {
-      throw new TexError(
-        'BracketMustBeDimension',
-        'Bracket argument to %1 must be a dimension',
-        name
-      );
+      throw new TexError(COMPONENT, 'BracketMustBeDimension', name);
     }
     //
     // Get the indentalign values, if any
     //
     const lcr = parser.GetArgument(name);
     if (lcr && !lcr.match(/^([lcr]{1,3})?$/)) {
-      throw new TexError(
-        'BadAlignment',
-        'Alignment must be one to three copies of l, c, or r'
-      );
+      throw new TexError(COMPONENT, 'BadAlignment');
     }
     const align = [...lcr].map(
       (c) => ({ l: 'left', c: 'center', r: 'right' })[c]
@@ -2181,7 +2088,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       // @test Label, Ref, Ref Unknown
       if (parser.tags.label) {
         // @test Double Label Error
-        throw new TexError('MultipleCommand', 'Multiple %1', parser.currentCS);
+        throw new TexError(COMPONENT, 'MultipleCommand', parser.currentCS);
       }
       parser.tags.label = label;
       if (
@@ -2189,11 +2096,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
         !parser.options['ignoreDuplicateLabels']
       ) {
         // @ Duplicate Label Error
-        throw new TexError(
-          'MultipleLabel',
-          "Label '%1' multiply defined",
-          label
-        );
+        throw new TexError(COMPONENT, 'MultipleLabel', label);
       }
       // TODO: This should be set in the tags structure!
       parser.tags.labels[label] = new Label(); // will be replaced by tag value later

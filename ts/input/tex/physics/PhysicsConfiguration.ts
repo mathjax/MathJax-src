@@ -25,6 +25,10 @@ import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { AutoOpen } from './PhysicsItems.js';
 import './PhysicsMappings.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/physics';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/physics');
 
 export const PhysicsConfiguration = Configuration.create('physics', {
   [ConfigurationType.HANDLER]: {

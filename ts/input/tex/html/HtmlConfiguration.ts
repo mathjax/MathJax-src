@@ -25,6 +25,10 @@ import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { CommandMap } from '../TokenMap.js';
 import HtmlMethods from './HtmlMethods.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/html';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/html');
 
 new CommandMap('html_macros', {
   data: HtmlMethods.Data,

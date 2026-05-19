@@ -47,6 +47,8 @@ import { PrioritizedList } from '../../../util/PrioritizedList.js';
 import { MathtoolsTags } from './MathtoolsTags.js';
 import { MathtoolsUtil } from './MathtoolsUtil.js';
 
+const COMPONENT = '[tex]/mathtools';
+
 export const LEGACYCONFIG = {
   [HandlerType.MACRO]: ['mathtools-legacycolonsymbols'],
 };
@@ -135,11 +137,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
         width = arg;
       }
       if (width && !UnitUtil.matchDimen(width)[0]) {
-        throw new TexError(
-          'BadWidth',
-          'Width for %1 must be a dimension',
-          name
-        );
+        throw new TexError(COMPONENT, 'BadWidth', name);
       }
     }
     parser.Push(begin);
@@ -167,18 +165,10 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
   HandleShove(parser: TexParser, name: string, shove: string) {
     const top = parser.stack.Top();
     if (top.kind !== 'multline' && top.kind !== 'multlined') {
-      throw new TexError(
-        'CommandInMultlined',
-        '%1 can only appear within the multline or multlined environments',
-        name
-      );
+      throw new TexError(COMPONENT, 'CommandInMultlined', name);
     }
     if (top.Size()) {
-      throw new TexError(
-        'CommandAtTheBeginingOfLine',
-        '%1 must come at the beginning of the line',
-        name
-      );
+      throw new TexError(COMPONENT, 'CommandAtTheBeginingOfLine', name);
     }
     top.setProperty('shove', shove);
     const shift = parser.GetBrackets(name);
@@ -468,7 +458,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const box = NewcommandUtil.GetCSname(parser, name + '\\' + cs);
     const handlers = parser.configuration.handlers;
     if (handlers.get(HandlerType.MACRO).lookup(cs)) {
-      throw new TexError('AlreadyDefined', '%1 is already defined', '\\' + cs);
+      throw new TexError(COMPONENT, 'AlreadyDefined', '\\' + cs);
     }
     const handler = handlers.retrieve(
       NewcommandTables.NEW_COMMAND
@@ -486,7 +476,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
   ArrowBetweenLines(parser: TexParser, name: string) {
     const top = MathtoolsUtil.checkAlignment(parser, name);
     if (top.Size() || top.row.length) {
-      throw new TexError('BetweenLines', '%1 must be on a row by itself', name);
+      throw new TexError(COMPONENT, 'BetweenLines', name);
     }
     const star = parser.GetStar();
     const symbol = parser.GetBrackets(name, '\\Updownarrow');
@@ -936,21 +926,17 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
   NewTagForm(parser: TexParser, name: string, renew: boolean = false) {
     const tags = parser.tags as MathtoolsTags;
     if (!('mtFormats' in tags)) {
-      throw new TexError(
-        'TagsNotMT',
-        '%1 can only be used with ams or mathtools tags',
-        name
-      );
+      throw new TexError(COMPONENT, 'TagsNotMT', name);
     }
     const id = parser.GetArgument(name).trim();
     if (!id) {
-      throw new TexError('InvalidTagFormID', "Tag form name can't be empty");
+      throw new TexError(COMPONENT, 'InvalidTagFormID');
     }
     const format = parser.GetBrackets(name, '');
     const left = parser.GetArgument(name);
     const right = parser.GetArgument(name);
     if (!renew && tags.mtFormats.has(id)) {
-      throw new TexError('DuplicateTagForm', 'Duplicate tag form: %1', id);
+      throw new TexError(COMPONENT, 'DuplicateTagForm', id);
     }
     tags.mtFormats.set(id, [left, right, format]);
     parser.Push(parser.itemFactory.create('null'));
@@ -965,11 +951,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
   UseTagForm(parser: TexParser, name: string) {
     const tags = parser.tags as MathtoolsTags;
     if (!('mtFormats' in tags)) {
-      throw new TexError(
-        'TagsNotMT',
-        '%1 can only be used with ams or mathtools tags',
-        name
-      );
+      throw new TexError(COMPONENT, 'TagsNotMT', name);
     }
     const id = parser.GetArgument(name).trim();
     if (!id) {
@@ -978,7 +960,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
       return;
     }
     if (!tags.mtFormats.has(id)) {
-      throw new TexError('UndefinedTagForm', 'Undefined tag form: %1', id);
+      throw new TexError(COMPONENT, 'UndefinedTagForm', id);
     }
     tags.mtCurrent = tags.mtFormats.get(id);
     parser.Push(parser.itemFactory.create('null'));
@@ -993,7 +975,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
   SetOptions(parser: TexParser, name: string) {
     const options = parser.options.mathtools;
     if (!options['allow-mathtoolsset']) {
-      throw new TexError('ForbiddenMathtoolsSet', '%1 is disabled', name);
+      throw new TexError(COMPONENT, 'ForbiddenMathtoolsSet', name);
     }
     const allowed = {} as { [id: string]: number };
     Object.keys(options).forEach((id) => {

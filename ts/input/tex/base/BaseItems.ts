@@ -39,6 +39,8 @@ import { CheckType, BaseItem, StackItem, EnvList } from '../StackItem.js';
 import { TRBL } from '../../../util/Styles.js';
 import { TexConstant } from '../TexConstants.js';
 
+const COMPONENT = '[tex]/base';
+
 /**
  * Initial item on the stack. It's pushed when parsing begins.
  */
@@ -111,7 +113,7 @@ export class OpenItem extends BaseItem {
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
     // @test ExtraOpenMissingClose
-    stop: ['ExtraOpenMissingClose', 'Extra open brace or missing close brace'],
+    stop: 'ExtraOpenMissingClose',
   });
 
   /**
@@ -222,11 +224,11 @@ export class SubsupItem extends BaseItem {
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
     // @test MissingScript Sub, MissingScript Sup
-    stop: ['MissingScript', 'Missing superscript or subscript argument'],
+    stop: 'MissingScript',
     // @test MissingOpenForSup
-    sup: ['MissingOpenForSup', 'Missing open brace for superscript'],
+    sup: 'MissingOpenForSup',
     // @test MissingOpenForSub
-    sub: ['MissingOpenForSub', 'Missing open brace for subscript'],
+    sub: 'MissingOpenForSub',
   });
 
   /**
@@ -276,10 +278,12 @@ export class SubsupItem extends BaseItem {
       const result = this.factory.create('mml', top);
       return [[result], true];
     }
-    super.checkItem(item);
-    // @test Brace Superscript Error, MissingOpenForSup, MissingOpenForSub
-    const error = this.getErrors(['', 'sub', 'sup'][position]);
-    throw new TexError(error[0], error[1], ...error.splice(2));
+    if (super.checkItem(item)[1]) {
+      // @test Brace Superscript Error, MissingOpenForSup, MissingOpenForSub
+      const error = this.getError(['', 'sub', 'sup'][position]);
+      throw new TexError(COMPONENT, error);
+    }
+    return null;
   }
 }
 
@@ -315,11 +319,7 @@ export class OverItem extends BaseItem {
   public checkItem(item: StackItem): CheckType {
     if (item.isKind('over')) {
       // @test Double Over
-      throw new TexError(
-        'AmbiguousUseOf',
-        'Ambiguous use of %1',
-        item.getName()
-      );
+      throw new TexError(COMPONENT, 'AmbiguousUseOf', item.getName());
     }
     if (item.isClose) {
       // @test Over
@@ -373,7 +373,7 @@ export class LeftItem extends BaseItem {
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
     // @test ExtraLeftMissingRight
-    stop: ['ExtraLeftMissingRight', 'Extra \\left or missing \\right'],
+    stop: 'ExtraLeftMissingRight',
   });
 
   /**
@@ -586,12 +586,7 @@ export class BeginItem extends BaseItem {
     if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
         // @test EnvBadEnd
-        throw new TexError(
-          'EnvBadEnd',
-          '\\begin{%1} ended with \\end{%2}',
-          this.getName(),
-          item.getName()
-        );
+        throw new TexError(COMPONENT, 'EnvBadEnd', this.getName(), item.getName());
       }
       // @test Hfill
       const node = this.toMml();
@@ -600,7 +595,7 @@ export class BeginItem extends BaseItem {
     }
     if (item.isKind('stop')) {
       // @test EnvMissingEnd Array
-      throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());
+      throw new TexError(COMPONENT, 'EnvMissingEnd', this.getName());
     }
     return super.checkItem(item);
   }
@@ -673,7 +668,7 @@ export class PositionItem extends BaseItem {
   public checkItem(item: StackItem): CheckType {
     if (item.isClose) {
       // @test MissingBoxFor
-      throw new TexError('MissingBoxFor', 'Missing box for %1', this.getName());
+      throw new TexError(COMPONENT, 'MissingBoxFor', this.getName());
     }
     if (item.isFinal) {
       let mml = item.toMml();
@@ -1083,7 +1078,7 @@ export class ArrayItem extends BaseItem {
           return [[newItem], true];
         }
         // @test MissingCloseBrace2
-        throw new TexError('MissingCloseBrace', 'Missing close brace');
+        throw new TexError(COMPONENT, 'MissingCloseBrace');
       }
       return [[newItem, item], true];
     }
@@ -1225,11 +1220,7 @@ export class ArrayItem extends BaseItem {
           ++this.templateSubs >
           parser.configuration.options.maxTemplateSubtitutions
         ) {
-          throw new TexError(
-            'MaxTemplateSubs',
-            'Maximum template substitutions exceeded; ' +
-              'is there an invalid use of \\\\ in the template?'
-          );
+          throw new TexError(COMPONENT, 'MaxTemplateSubs');
         }
       }
     }
@@ -1648,7 +1639,7 @@ export class EquationItem extends BaseItem {
     }
     if (item.isKind('stop')) {
       // @test EnvMissingEnd Equation
-      throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());
+      throw new TexError(COMPONENT, 'EnvMissingEnd', this.getName());
     }
     return super.checkItem(item);
   }

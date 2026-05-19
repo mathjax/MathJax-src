@@ -27,6 +27,8 @@ import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
 import { TexConstant } from './TexConstants.js';
 
+const COMPONENT = '[tex]/base';
+
 // Union types for abbreviation.
 export type EnvProp = string | number | boolean;
 
@@ -387,17 +389,16 @@ export abstract class BaseItem extends MmlStack implements StackItem {
 
   /**
    * A list of basic errors.
-   *
-   * @type {{[key: string]: string[]}}
+   * @type {{[key: string]: string}}
    */
-  protected static errors: { [key: string]: string[] } = {
+  protected static errors: { [key: string]: string } = {
     // @test ExtraOpenMissingClose
-    end: ['MissingBeginExtraEnd', 'Missing \\begin{%1} or extra \\end{%1}'],
+    end: 'MissingBeginExtraEnd',
     // @test ExtraCloseMissingOpen
-    close: ['ExtraCloseMissingOpen', 'Extra close brace or missing open brace'],
+    close: 'ExtraCloseMissingOpen',
     // @test MissingLeftExtraRight
-    right: ['MissingLeftExtraRight', 'Missing \\left or extra \\right'],
-    middle: ['ExtraMiddle', 'Extra \\middle'],
+    right: 'MissingLeftExtraRight',
+    middle: 'ExtraMiddle',
   };
 
   /**
@@ -514,13 +515,12 @@ export abstract class BaseItem extends MmlStack implements StackItem {
         return BaseItem.fail;
       }
       // @test Ampersand-error
-      throw new TexError('Misplaced', 'Misplaced %1', item.getName());
+      throw new TexError(COMPONENT, 'Misplaced', item.getName());
     }
-    if (item.isClose && this.getErrors(item.kind)) {
+    if (item.isClose && this.getError(item.kind)) {
       // @test ExtraOpenMissingClose, ExtraCloseMissingOpen,
       //       MissingLeftExtraRight, MissingBeginExtraEnd
-      const [id, message] = this.getErrors(item.kind);
-      throw new TexError(id, message, item.getName());
+      throw new TexError(COMPONENT, this.getError(item.kind), item.getName());
     }
     if (!item.isFinal) {
       return BaseItem.success;
@@ -566,11 +566,11 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * subclasses.
    *
    * @param {string} kind The stack item type.
-   * @returns {string[]} The list of arguments for the TeXError.
+   * @returns {string} The id of the error message.
    */
-  public getErrors(kind: string): string[] {
+  public getError(kind: string): string {
     const CLASS = this.constructor as typeof BaseItem;
-    return CLASS.errors[kind] || BaseItem.errors[kind];
+    return CLASS.errors?.[kind] ?? BaseItem.errors[kind];
   }
 
   /**

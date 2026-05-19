@@ -33,6 +33,8 @@ import { UnitUtil } from '../UnitUtil.js';
 import { StackItem } from '../StackItem.js';
 import { NewcommandUtil } from './NewcommandUtil.js';
 
+const COMPONENT = '[tex]/newcommand';
+
 // Namespace
 const NewcommandMethods: { [key: string]: ParseMethod } = {
   /**
@@ -215,11 +217,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
       parser.GetNext();
       if (params[0] && !NewcommandUtil.MatchParam(parser, params[0])) {
         // @test Missing Arguments
-        throw new TexError(
-          'MismatchUseDef',
-          "Use of %1 doesn't match its definition",
-          name
-        );
+        throw new TexError(COMPONENT, 'MismatchUseDef', name);
       }
       if (argCount) {
         for (let i = 0; i < argCount; i++) {
