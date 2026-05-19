@@ -30,7 +30,7 @@ import { StackItem } from '../StackItem.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import * as BussproofsUtil from './BussproofsUtil.js';
 
-const COMPONENT = '[tex]/bussproofs';
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Pads content of an inference rule.
@@ -142,7 +142,7 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   }
   parser.i++;
   const axiom = parser.GetUpTo(name, '$');
-  if (axiom.indexOf('\\fCenter') === -1) {
+  if (!axiom.includes('\\fCenter')) {
     throw new TexError(COMPONENT, 'MissingProofCommand', '\\fCenter', name);
   }
   // Check for fCenter and throw error?

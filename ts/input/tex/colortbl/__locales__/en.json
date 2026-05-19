@@ -1,0 +1,5 @@
+{
+  "ColumnColorNotTop": "%1 must be in the top row or preamble",
+  "RowColorNotFirst": "%1 must be at the beginning of a row",
+  "UnsupportedTableColor": "Unsupported use of %1"
+}

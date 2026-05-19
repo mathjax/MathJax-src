@@ -1,0 +1,8 @@
+{
+  "InvalidOptionKey": "Ungültige Option \"%1\" für das Paket \"%2\"",
+  "InvalidTexOption": "Ungültige TeX-Option \"%1\"",
+  "NotAPackage": "Kein definiertes Paket: %1",
+  "OptionNotSettable": "Die Option \"%1\" darf für das Paket %2 nicht gesetzt werden",
+  "PackageNotSettable": "Für das Paket \"%1\" können keine Optionen gesetzt werden",
+  "TeXOptionNotSettable": "Die Option \"%1\" darf nicht gesetzt werden"
+}

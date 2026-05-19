@@ -39,7 +39,7 @@ import { CheckType, BaseItem, StackItem, EnvList } from '../StackItem.js';
 import { TRBL } from '../../../util/Styles.js';
 import { TexConstant } from '../TexConstants.js';
 
-const COMPONENT = '[tex]/base';
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Initial item on the stack. It's pushed when parsing begins.
@@ -586,7 +586,12 @@ export class BeginItem extends BaseItem {
     if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
         // @test EnvBadEnd
-        throw new TexError(COMPONENT, 'EnvBadEnd', this.getName(), item.getName());
+        throw new TexError(
+          COMPONENT,
+          'EnvBadEnd',
+          this.getName(),
+          item.getName()
+        );
       }
       // @test Hfill
       const node = this.toMml();

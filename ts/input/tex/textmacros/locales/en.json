@@ -1,7 +1,0 @@
-{
-  "ExtraCloseMissingOpen": "Extra close brace or missing open brace",
-  "MathNotTerminated": "Math mode is not properly terminated",
-  "MathModeOnly": "'%1' allowed only in math mode",
-  "Misplaced": "Misplaced '%1'",
-  "MathMacro": "%1 is only supported in math mode"
-}

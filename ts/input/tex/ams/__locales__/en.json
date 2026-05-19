@@ -1,0 +1,11 @@
+{
+  "BadMathStyleFor": "Bad math style for %1",
+  "CommandAtTheBeginingOfLine": "%1 must come at the beginning of the line",
+  "CommandNotAllowedInEnv": "%1 not allowed in %2 environment",
+  "CommandOnlyAllowedInEnv": "%1 only allowed in %2 environment",
+  "IllegalAlign": "Illegal alignment specified in %1",
+  "MultipleCommand": "Multiple %1",
+  "MultlineRowsOneCol": "The rows within the %1 environment must have exactly one column",
+  "PositiveIntegerArg": "Argument to %1 must be a positive integer",
+  "XalignOverflow": "Extra %1 in row of %2"
+}

@@ -33,7 +33,7 @@ import { UnitUtil } from '../UnitUtil.js';
 import { StackItem } from '../StackItem.js';
 import { NewcommandUtil } from './NewcommandUtil.js';
 
-const COMPONENT = '[tex]/newcommand';
+import { COMPONENT } from './__locales__/Component.js';
 
 // Namespace
 const NewcommandMethods: { [key: string]: ParseMethod } = {

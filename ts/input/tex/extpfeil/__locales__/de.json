@@ -1,0 +1,5 @@
+{
+  "NewextarrowArg1": "Das erste Argument für %1 muss ein Name einer Steuerungssequenz sein",
+  "NewextarrowArg2": "Das zweite Argument für %1 muss aus zwei durch ein Komma getrennten Ganzzahlen bestehen",
+  "NewextarrowArg3": "Das dritte Argument für %1 muss eine Unicode-Zeichennummer sein"
+}

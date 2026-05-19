@@ -36,10 +36,8 @@ import { Macro } from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
 import { expandable, isObject } from '../../../util/Options.js';
 import { PrioritizedList } from '../../../util/PrioritizedList.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/setoptions';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/setoptions');
+import { COMPONENT } from './__locales__/Component.js';
+export { COMPONENT };
 
 export const SetOptionsUtil = {
   /**

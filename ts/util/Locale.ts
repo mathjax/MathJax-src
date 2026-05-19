@@ -58,6 +58,13 @@ export class Locale {
     locale: {
       en: {
         LocaleJsonError: "MathJax(%1): Can't load '%2': %3",
+        LocaleMessageNotFound:
+          "MathJax(Locale): No localized or default version for message with id '%1' from '%2'",
+      },
+      de: {
+        LocaleJsonError: "MathJax(%1): '%2' kann nicht geladen werden: %3",
+        LocaleMessageNotFound:
+          "MathJax(Locale): Keine lokalisierte oder Standardversion für die Meldung mit der ID '%1' aus '%2'",
       },
     },
   };
@@ -79,7 +86,7 @@ export class Locale {
     prefix: string = component
   ) {
     this.locations[component] = [
-      `${this.isComponent ? component : prefix}/locales`,
+      `${this.isComponent ? component : prefix}/__locales__`,
       new Set(),
     ];
   }
@@ -157,7 +164,12 @@ export class Locale {
     return (
       this.data[component]?.[this.current]?.[id] ||
       this.data[component]?.[this.default]?.[id] ||
-      `No localized or default version for message with id '${id}' from '${component}'`
+      this.substituteArguments(
+        this.data.locale[this.current]?.['LocaleMessageNotFound'] ||
+          this.data.locale[this.default]?.['LocaleMessageNotFound'] ||
+          '',
+        { 1: id, 2: component }
+      )
     );
   }
 
@@ -243,17 +255,19 @@ export class Locale {
   }
 
   /**
-   * Report an error thrown when loading a component's locale file
+   * Report an error thrown when loading a component's locale file, and fall
+   * back to loading the default locale if the failed locale was not the default.
    *
    * @param {string} component   The component whose localization is being loaded
    * @param {string} locale      The locale being loaded
    * @param {Error} error        The Error object causing the issue
+   * @returns {Promise<void>|void}  A promise for loading the default locale, or void
    */
   protected static localeError(
     component: string,
     locale: string,
     error: Error
-  ) {
+  ): Promise<void> | void {
     const message = this.message(
       'locale',
       'LocaleJsonError',
@@ -262,5 +276,19 @@ export class Locale {
       error.message
     );
     console.error(message);
+    if (locale !== this.default) {
+      const location = this.locations[component];
+      if (location) {
+        const [directory, loaded] = location;
+        if (!loaded.has(this.default)) {
+          loaded.add(this.default);
+          return this.getLocaleData(
+            component,
+            this.default,
+            `${directory}/${this.default}.json`
+          );
+        }
+      }
+    }
   }
 }

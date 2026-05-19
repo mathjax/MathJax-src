@@ -24,7 +24,7 @@
 import TexError from '../TexError.js';
 import { COLORS } from './ColorConstants.js';
 
-const COMPONENT = '[tex]/color';
+import { COMPONENT } from './__locales__/Component.js';
 
 type ColorModelProcessor = (def: string) => string;
 const ColorModelProcessors: Map<string, ColorModelProcessor> = new Map<

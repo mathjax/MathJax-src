@@ -37,10 +37,8 @@ import ParseMethods from '../ParseMethods.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { TexConstant } from '../TexConstants.js';
 import { context } from '../../../util/context.js';
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = '[tex]/base';
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/base');
+import { COMPONENT } from './__locales__/Component.js';
+export { COMPONENT };
 
 const MATHVARIANT = TexConstant.Variant;
 
