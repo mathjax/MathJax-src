@@ -232,11 +232,11 @@ export class TextParser extends TexParser {
   /**
    * Throw an error
    *
-   * @param {string} id        The id for the message string
-   * @param {string} message   The English version of the message
-   * @param {string[]} args    Any substitution args for the message
+   * @param {string} component  The locale component
+   * @param {string} id         The id for the message string
+   * @param {string[]} args     Any substitution args for the message
    */
-  public Error(id: string, message: string, ...args: string[]) {
-    throw new TexError(id, message, ...args);
+  public Error(component: string, id: string, ...args: string[]) {
+    throw new TexError(component, id, ...args);
   }
 }

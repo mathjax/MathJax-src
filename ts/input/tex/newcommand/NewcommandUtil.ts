@@ -30,6 +30,8 @@ import { Macro, Token } from '../Token.js';
 import { Args, Attributes, ParseMethod } from '../Types.js';
 import * as tm from '../TokenMap.js';
 
+const COMPONENT = '[tex]/newcommand';
+
 /**
  * Naming constants for the extension mappings.
  */
@@ -57,11 +59,7 @@ export const NewcommandUtil = {
     const c = parser.GetNext();
     if (c !== '\\') {
       // @test No CS
-      throw new TexError(
-        'MissingCS',
-        '%1 must be followed by a control sequence',
-        cmd
-      );
+      throw new TexError(COMPONENT, 'MissingCS', cmd);
     }
     const cs = UnitUtil.trimSpaces(parser.GetArgument(cmd)).substring(1);
     this.checkProtectedMacros(parser, cs);
@@ -83,11 +81,7 @@ export const NewcommandUtil = {
     }
     if (!cs.match(/^(.|[a-z]+)$/i)) {
       // @test Illegal CS
-      throw new TexError(
-        'IllegalControlSequenceName',
-        'Illegal control sequence name for %1',
-        name
-      );
+      throw new TexError(COMPONENT, 'IllegalControlSequenceName', name);
     }
     this.checkProtectedMacros(parser, cs);
     return cs;
@@ -108,11 +102,7 @@ export const NewcommandUtil = {
       n = UnitUtil.trimSpaces(n);
       if (!n.match(/^[0-9]+$/)) {
         // @test Illegal Argument Number
-        throw new TexError(
-          'IllegalParamNumber',
-          'Illegal number of parameters specified in %1',
-          name
-        );
+        throw new TexError(COMPONENT, 'IllegalParamNumber', name);
       }
     }
     return n;
@@ -145,19 +135,11 @@ export const NewcommandUtil = {
         c = parser.string.charAt(++parser.i);
         if (!c.match(/^[1-9]$/)) {
           // @test Illegal Hash
-          throw new TexError(
-            'CantUseHash2',
-            'Illegal use of # in template for %1',
-            cs
-          );
+          throw new TexError(COMPONENT, 'CantUseHash2', cs);
         }
         if (parseInt(c) !== ++n) {
           // @test No Sequence
-          throw new TexError(
-            'SequentialParam',
-            'Parameters for %1 must be numbered sequentially',
-            cs
-          );
+          throw new TexError(COMPONENT, 'SequentialParam', cs);
         }
         i = parser.i + 1;
       } else if (c === '{') {
@@ -184,11 +166,7 @@ export const NewcommandUtil = {
       parser.i++;
     }
     // @test No Replacement
-    throw new TexError(
-      'MissingReplacementString',
-      'Missing replacement string for definition of %1',
-      cmd
-    );
+    throw new TexError(COMPONENT, 'MissingReplacementString', cmd);
   },
 
   /**
@@ -242,7 +220,7 @@ export const NewcommandUtil = {
       }
     }
     // @test Runaway Argument
-    throw new TexError('RunawayArgument', 'Runaway argument for %1?', name);
+    throw new TexError(COMPONENT, 'RunawayArgument', name);
   },
 
   /**
@@ -306,11 +284,7 @@ export const NewcommandUtil = {
    */
   checkProtectedMacros(parser: TexParser, cs: string) {
     if (parser.options.protectedMacros?.includes(cs)) {
-      throw new TexError(
-        'ProtectedMacro',
-        "The control sequence %1 can't be redefined",
-        `\\${cs}`
-      );
+      throw new TexError(COMPONENT, 'ProtectedMacro', `\\${cs}`);
     }
   },
 

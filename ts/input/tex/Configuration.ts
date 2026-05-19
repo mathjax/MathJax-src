@@ -31,6 +31,10 @@ import { FunctionList } from '../../util/FunctionList.js';
 import { TeX } from '../tex.js';
 import { PrioritizedList } from '../../util/PrioritizedList.js';
 import { TagsFactory } from './Tags.js';
+import { Locale } from '../../util/Locale.js';
+
+export const COMPONENT = '[tex]';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex');
 
 export type StackItemConfig = { [kind: string]: StackItemClass };
 export type TagsConfig = { [kind: string]: TagsClass };

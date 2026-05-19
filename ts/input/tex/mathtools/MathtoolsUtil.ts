@@ -31,6 +31,8 @@ import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 
 import { MathtoolsMethods } from './MathtoolsMethods.js';
 
+const COMPONENT = '[tex]/mathtools';
+
 /**
  * Utility functions for the Mathtools package.
  */
@@ -69,11 +71,7 @@ export const MathtoolsUtil = {
   checkAlignment(parser: TexParser, name: string): EqnArrayItem {
     const top = parser.stack.Top() as EqnArrayItem;
     if (top.kind !== EqnArrayItem.prototype.kind) {
-      throw new TexError(
-        'NotInAlignment',
-        '%1 can only be used in aligment environments',
-        name
-      );
+      throw new TexError(COMPONENT, 'NotInAlignment', name);
     }
     return top;
   },
@@ -90,11 +88,7 @@ export const MathtoolsUtil = {
    */
   addPairedDelims(parser: TexParser, cs: string, args: string[]) {
     if (parser.configuration.handlers.get(HandlerType.MACRO).contains(cs)) {
-      throw new TexError(
-        'CommadExists',
-        'Command %1 already defined',
-        `\\${cs}`
-      );
+      throw new TexError(COMPONENT, 'CommadExists', `\\${cs}`);
     }
     NewcommandUtil.addMacro(
       parser,
@@ -131,7 +125,7 @@ export const MathtoolsUtil = {
   plusOrMinus(name: string, n: string): string {
     n = n.trim();
     if (!n.match(/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/)) {
-      throw new TexError('NotANumber', 'Argument to %1 is not a number', name);
+      throw new TexError(COMPONENT, 'NotANumber', name);
     }
     return n.match(/^[-+]/) ? n : '+' + n;
   },

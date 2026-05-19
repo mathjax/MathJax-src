@@ -26,6 +26,10 @@ import { Configuration } from '../Configuration.js';
 import { CommandMap } from '../TokenMap.js';
 import { BegingroupStack, begingroupStack } from './BegingroupStack.js';
 import { BegingroupMethods } from './BegingroupMethods.js';
+import { Locale } from '../../../util/Locale.js';
+
+export const COMPONENT = '[tex]/begingroup';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/begingroup');
 
 /**
  * Create the begingroup command map.

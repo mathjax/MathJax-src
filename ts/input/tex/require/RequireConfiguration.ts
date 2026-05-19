@@ -41,6 +41,9 @@ import { expandable } from '../../../util/Options.js';
 import { MenuMathDocument } from '../../../ui/menu/MenuHandler.js';
 import { Locale } from '../../../util/Locale.js';
 
+export const COMPONENT = '[tex]/require';
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/require');
+
 /**
  * The MathJax configuration block (for looking up user-defined package options)
  */
@@ -169,11 +172,7 @@ export function RequireLoad(parser: TexParser, name: string) {
       ? allow[name]
       : options.defaultAllow;
   if (!allowed) {
-    throw new TexError(
-      'BadRequire',
-      'Extension "%1" is not allowed to be loaded',
-      extension
-    );
+    throw new TexError(COMPONENT, 'BadRequire', extension);
   }
   const data = Package.packages.get(extension);
   if (!data) {
@@ -184,7 +183,7 @@ export function RequireLoad(parser: TexParser, name: string) {
     );
   }
   if (data.hasFailed) {
-    throw new TexError('RequireFail', 'Extension "%1" failed to load', name);
+    throw new TexError(COMPONENT, 'RequireFail', name);
   }
   const require = LOADERCONFIG[extension]?.rendererExtensions;
   const menu = (MathJax.startup.document as MenuMathDocument)?.menu;
@@ -234,11 +233,7 @@ export const RequireMethods: { [key: string]: ParseMethod } = {
   Require(parser: TexParser, name: string) {
     const required = parser.GetArgument(name);
     if (required.match(/[^_a-zA-Z0-9]/) || required === '') {
-      throw new TexError(
-        'BadPackageName',
-        'Argument for %1 is not a valid package name',
-        name
-      );
+      throw new TexError(COMPONENT, 'BadPackageName', name);
     }
     RequireLoad(parser, required);
     parser.Push(parser.itemFactory.create('null'));

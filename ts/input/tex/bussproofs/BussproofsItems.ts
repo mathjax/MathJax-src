@@ -27,6 +27,8 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import Stack from '../Stack.js';
 import * as BussproofsUtil from './BussproofsUtil.js';
 
+const COMPONENT = '[tex]/bussproofs';
+
 export class ProofTreeItem extends BaseItem {
   /**
    * The current left label.
@@ -61,7 +63,7 @@ export class ProofTreeItem extends BaseItem {
       return [[this.factory.create('mml', node), item], true];
     }
     if (item.isKind('stop')) {
-      throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());
+      throw new TexError(COMPONENT, 'EnvMissingEnd', this.getName());
     }
     this.innerStack.Push(item);
     return BaseItem.fail;

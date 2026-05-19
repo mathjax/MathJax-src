@@ -28,6 +28,8 @@ import { ParseUtil } from '../ParseUtil.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import TexError from '../TexError.js';
 
+const COMPONENT = '[tex]/html';
+
 /** Regexp for matching non-characters as specified by {@link https://infra.spec.whatwg.org/#noncharacter}. */
 const nonCharacterRegexp =
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -63,11 +65,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
     for (const key in data) {
       // remove illegal attribute names
       if (!isLegalAttributeName(key)) {
-        throw new TexError(
-          'InvalidHTMLAttr',
-          'Invalid HTML attribute: %1',
-          `data-${key}`
-        );
+        throw new TexError(COMPONENT, 'InvalidHTMLAttr', `data-${key}`);
       }
       NodeUtil.setAttribute(arg, `data-${key}`, data[key]);
     }

@@ -24,6 +24,8 @@
 import TexError from '../TexError.js';
 import { CheckType, BaseItem, StackItem } from '../StackItem.js';
 
+const COMPONENT = '[tex]/newcommand';
+
 /**
  * Opening Item dealing with definitions of new environments. It's pushed onto
  * the stack whenever a user defined environment is encountered and remains
@@ -52,18 +54,13 @@ export class BeginEnvItem extends BaseItem {
       // @test Newenvironment Empty, Newenvironment Align
       if (item.getName() !== this.getName()) {
         // @test (missing) \newenvironment{env}{aa}{bb}\begin{env}cc\end{equation}
-        throw new TexError(
-          'EnvBadEnd',
-          '\\begin{%1} ended with \\end{%2}',
-          this.getName(),
-          item.getName()
-        );
+        throw new TexError(COMPONENT, 'EnvBadEnd', this.getName(), item.getName());
       }
       return [[this.factory.create('mml', this.toMml())], true];
     }
     if (item.isKind('stop')) {
       // @test (missing) \newenvironment{env}{aa}{bb}\begin{env}cc
-      throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());
+      throw new TexError(COMPONENT, 'EnvMissingEnd', this.getName());
     }
     // @test Newenvironment Empty, Newenvironment Align
     return super.checkItem(item);
