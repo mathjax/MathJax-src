@@ -33,7 +33,6 @@ import {Package} from '#js/components/package.js';
 
 const REQUIRE = eval('require');          // get require from node, not webpack
 const path = REQUIRE("path");
-const fs = REQUIRE("fs").promises;
 const dir = context.path(MathJax.config.__dirname);   // set up by node-main.mjs or node-main.cjs
 
 /*
@@ -67,10 +66,15 @@ if (path.basename(dir) === 'node-main') {
  * Set the asynchronous loader to handle json files
  */
 mathjax.asyncLoad = function (name) {
-  return name.match(/.json$/)
-    ? fs.readFile(Package.resolvePath(name)).then((json) => JSON.parse(json))
-    : REQUIRE(resolvePath(name, (name) => path.resolve(CONFIG.paths.mathjax, name)));
+  return REQUIRE(
+    resolvePath(
+      name,
+      (name) => path.resolve(CONFIG.paths.mathjax, name),
+      (name) => Package.resolvePath(name)
+    )
+  );
 };
+mathjax.asyncIsSynchronous = true;
 
 /*
  * The initialization function.  Use as:
