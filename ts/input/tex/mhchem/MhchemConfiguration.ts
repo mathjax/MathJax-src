@@ -119,7 +119,7 @@ export const MhchemMethods: { [key: string]: ParseMethod } = {
           texError(COMPONENT, 'MhchemBug', id.charAt(9));
         }
       }
-      texError('[tex]/base', id);
+      texError('input/tex', id);
     }
     parser.string = tex + parser.string.substring(parser.i);
     parser.i = 0;

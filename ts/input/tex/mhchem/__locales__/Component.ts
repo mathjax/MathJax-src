@@ -25,4 +25,4 @@ import { Locale } from '../../../../util/Locale.js';
 
 export const COMPONENT = '[tex]/mhchem';
 
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/mhchem);
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/mhchem');
