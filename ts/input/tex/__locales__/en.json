@@ -26,5 +26,6 @@
   "MissingLeftExtraRight": "Missing \\left or extra \\right",
   "MissingOrUnrecognizedDelim": "Missing or unrecognized delimiter for %1",
   "MissingScript": "Missing superscript or subscript argument",
-  "TokenNotFoundForCommand": "Could not find %1 for %2"
+  "TokenNotFoundForCommand": "Could not find %1 for %2",
+  "UnknownTag": "Unknown tags class"
 }
