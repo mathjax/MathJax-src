@@ -26,5 +26,6 @@
   "MissingLeftExtraRight": "Missing \\left or extra \\right",
   "MissingOrUnrecognizedDelim": "Missing or unrecognized delimiter for %1",
   "MissingScript": "Fehlendes Argument für Hoch- oder Tiefstellung",
-  "TokenNotFoundForCommand": "Could not find %1 for %2"
+  "TokenNotFoundForCommand": "Could not find %1 for %2",
+  "UnknownTag": "Unbekannte Bezeichner Klasse"
 }

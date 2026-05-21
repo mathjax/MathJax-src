@@ -35,7 +35,6 @@ import { BaseItem, StackItem, EnvList } from './StackItem.js';
 import { Token } from './Token.js';
 import { OptionList } from '../../util/Options.js';
 import { TexConstant } from './TexConstants.js';
-
 import { COMPONENT } from './__locales__/Component.js';
 
 /**
