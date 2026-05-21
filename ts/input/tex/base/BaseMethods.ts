@@ -990,31 +990,19 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     switch (type) {
       case 'c':
         if (top.First) {
-          texError(
-            COMPONENT,
-            'BreakFirstInEntry',
-            parser.currentCS + '{c}'
-          );
+          texError(COMPONENT, 'BreakFirstInEntry', parser.currentCS + '{c}');
         }
         top.breakAlign.cell = splitAlignArray(parser.GetArgument(name), 1);
         break;
       case 'r':
         if (top.row.length || top.First) {
-          texError(
-            COMPONENT,
-            'BreakFirstInRow',
-            parser.currentCS + '{r}'
-          );
+          texError(COMPONENT, 'BreakFirstInRow', parser.currentCS + '{r}');
         }
         top.breakAlign.row = splitAlignArray(parser.GetArgument(name));
         break;
       case 't':
         if (top.table.length || top.row.length || top.First) {
-          texError(
-            COMPONENT,
-            'BreakFirstInTable',
-            parser.currentCS + '{t}'
-          );
+          texError(COMPONENT, 'BreakFirstInTable', parser.currentCS + '{t}');
         }
         top.breakAlign.table = splitAlignArray(parser.GetArgument(name));
         break;
@@ -1052,11 +1040,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       );
       if (!match) {
         // @test Token Invalid Attribute
-        texError(
-          COMPONENT,
-          'InvalidMathMLAttr',
-          attr.split(/[\s\n=]/)[0]
-        );
+        texError(COMPONENT, 'InvalidMathMLAttr', attr.split(/[\s\n=]/)[0]);
       }
       if (!node.attributes.hasDefault(match[1]) && !MmlTokenAllow[match[1]]) {
         // @test Token Unknown Attribute, Token Wrong Attribute

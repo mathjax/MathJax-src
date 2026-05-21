@@ -149,11 +149,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     const n = parser.GetArgument('\\begin{' + name + '}');
     if (n.match(/[^0-9]/)) {
       // @test PositiveIntegerArg
-      texError(
-        COMPONENT,
-        'PositiveIntegerArg',
-        '\\begin{' + name + '}'
-      );
+      texError(COMPONENT, 'PositiveIntegerArg', '\\begin{' + name + '}');
     }
     let count = parseInt(n, 10);
     while (count > 0) {
@@ -630,11 +626,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     }
     if (top.Size()) {
       // @test Shove Error (Top|Middle|Bottom)
-      texError(
-        COMPONENT,
-        'CommandAtTheBeginingOfLine',
-        parser.currentCS
-      );
+      texError(COMPONENT, 'CommandAtTheBeginingOfLine', parser.currentCS);
     }
     top.setProperty('shove', shove);
   },

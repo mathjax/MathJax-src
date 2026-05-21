@@ -45,7 +45,11 @@ export default class TexError {
  * @param {string} id         message id
  * @param {string[]} args     substitution arguments
  */
-export function texError(component: string, id: string, ...args: string[]): never {
+export function texError(
+  component: string,
+  id: string,
+  ...args: string[]
+): never {
   const message = Locale.message(component, id, ...args);
   throw new TexError(id, message, ...args);
 }
