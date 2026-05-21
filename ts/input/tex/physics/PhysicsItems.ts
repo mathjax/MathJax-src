@@ -45,11 +45,6 @@ export class AutoOpen extends BaseItem {
   /**
    * @override
    */
-  protected component = COMPONENT;
-
-  /**
-   * @override
-   */
   public get kind() {
     return 'auto open';
   }

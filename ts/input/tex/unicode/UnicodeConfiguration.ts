@@ -147,11 +147,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
           parser.i += 2;
           const cs = [...parser.GetCS()];
           if (cs.length > 1) {
-            texError(
-              COMPONENT,
-              'InvalidAlphanumeric',
-              parser.currentCS
-            );
+            texError(COMPONENT, 'InvalidAlphanumeric', parser.currentCS);
           }
           c = cs[0];
           match = [''];

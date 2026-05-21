@@ -133,9 +133,8 @@ export class Locale {
     data: string | namedData = {},
     ...args: string[]
   ): string {
-    let message = '';
     if (component) {
-      message = this.lookupMessage(component, id);
+      const message = this.lookupMessage(component, id);
       return this.processMessage(message, data, ...args);
     }
     if (typeof data !== 'string') {

@@ -220,7 +220,6 @@ export class PrimeItem extends BaseItem {
  * expression.
  */
 export class SubsupItem extends BaseItem {
-
   /**
    * @override
    */
@@ -588,12 +587,7 @@ export class BeginItem extends BaseItem {
     if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
         // @test EnvBadEnd
-        texError(
-          COMPONENT,
-          'EnvBadEnd',
-          this.getName(),
-          item.getName()
-        );
+        texError(COMPONENT, 'EnvBadEnd', this.getName(), item.getName());
       }
       // @test Hfill
       const node = this.toMml();

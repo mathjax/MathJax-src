@@ -52,12 +52,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
         // @test Bbox-Padding
         if (def) {
           // @test Bbox-Padding-Error
-          texError(
-            COMPONENT,
-            'MultipleBBoxProperty',
-            'Padding',
-            name
-          );
+          texError(COMPONENT, 'MultipleBBoxProperty', 'Padding', name);
         }
         const pad = BBoxPadding(match[1] + match[3]);
         if (pad) {
@@ -73,12 +68,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
         // @test Bbox-Background
         if (background) {
           // @test Bbox-Background-Error
-          texError(
-            COMPONENT,
-            'MultipleBBoxProperty',
-            'Background',
-            name
-          );
+          texError(COMPONENT, 'MultipleBBoxProperty', 'Background', name);
         }
         background = part;
       } else if (part.match(/^[-a-z]+:/i)) {
