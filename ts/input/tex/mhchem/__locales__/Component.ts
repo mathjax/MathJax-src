@@ -16,13 +16,13 @@
  */
 
 /**
- * @file  Locale component registration for [tex]
+ * @file  Locale component registration for [tex]/mhchem
  *
- * @author v.sorge@mathjax.org (Volker Sorge)
+ * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import { Locale } from '../../../util/Locale.js';
+import { Locale } from '../../../../util/Locale.js';
 
-export const COMPONENT = 'input/tex';
+export const COMPONENT = '[tex]/mhchem';
 
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex');
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/mhchem');

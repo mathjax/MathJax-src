@@ -16,13 +16,12 @@
  */
 
 /**
- * @file  Locale component registration for [tex]
+ * @file  Lists the locales available in the Language menu.
  *
- * @author v.sorge@mathjax.org (Volker Sorge)
+ * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { Locale } from '../../../util/Locale.js';
-
-export const COMPONENT = 'input/tex';
-
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex');
+export const locales = [
+  ['en', 'English'],
+  ['de', 'Deutsch'],
+];

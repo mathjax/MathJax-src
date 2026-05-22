@@ -27,10 +27,12 @@ import {context} from '#js/util/context.js';
 import '../core/core.js';
 import '../adaptors/liteDOM/liteDOM.js';
 import {source} from '../source.js';
+import {mathjax} from '#js/mathjax.js';
+import {Locale} from '#js/util/Locale.js';
+import {Package} from '#js/components/package.js';
 
 const REQUIRE = eval('require');          // get require from node, not webpack
 const path = REQUIRE("path");
-const fs = REQUIRE("fs").promises;
 const dir = context.path(MathJax.config.__dirname);   // set up by node-main.mjs or node-main.cjs
 
 /*
@@ -63,12 +65,16 @@ if (path.basename(dir) === 'node-main') {
 /*
  * Set the asynchronous loader to handle json files
  */
-MathJax._.mathjax.mathjax.asyncLoad = function (name) {
-  const file = resolvePath(name, (name) => path.resolve(CONFIG.paths.mathjax, name));
-  return file.match(/\.json$/)
-    ? fs.readFile(REQUIRE.resolve(file)).then((json) => JSON.parse(json))
-    : REQUIRE(file);
+mathjax.asyncLoad = function (name) {
+  return REQUIRE(
+    resolvePath(
+      name,
+      (name) => path.resolve(CONFIG.paths.mathjax, name),
+      (name) => Package.resolvePath(name)
+    )
+  );
 };
+mathjax.asyncIsSynchronous = true;
 
 /*
  * The initialization function.  Use as:
@@ -86,7 +92,8 @@ MathJax._.mathjax.mathjax.asyncLoad = function (name) {
  */
 const init = MathJax.init = (config = {}) => {
   combineConfig(MathJax.config, config);
-  return Loader.load(...CONFIG.load)
+  return Locale.setLocale(MathJax.config.locale ?? Locale.current)
+    .then(() => Loader.load(...CONFIG.load))
     .then(() => CONFIG.ready())
     .then(() => MathJax.startup.promise)    // Wait for MathJax to finish starting up
     .then(() => MathJax)                    // Pass MathJax global as argument to subsequent .then() calls

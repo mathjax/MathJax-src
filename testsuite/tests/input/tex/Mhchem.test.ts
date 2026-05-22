@@ -486,8 +486,12 @@ describe('Mhchem-Ams', () => {
     ).toMatchSnapshot();
   });
 
-  it('Mhchem Error', () => {
+  it('Mhchem Bond Error', () => {
     expectTexError('\\ce{A\\bond{x}B}').toBe('mhchem bug T. Please report.');
+  });
+
+  it('Mhchem Brace Error', () => {
+    expectTexError('\\ce{{x^${x}}}').toBe('Extra close brace or missing open brace');
   });
 
   it('Mhchem stretchy <-', () => {

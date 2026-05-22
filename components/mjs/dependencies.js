@@ -72,7 +72,8 @@ export const paths = {
 };
 
 export const provides = {
-  'startup': ['loader'],
+  'startup': ['loader', 'core'],
+  'loader': ['core'],
   'input/tex': [
     'input/tex-base',
     '[tex]/ams',

@@ -13,6 +13,12 @@
       "__locales__"
     ]
   },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/textmacros",
+    "from": "[ts]/input/tex/textmacros",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "input/tex/extensions/textmacros",
     "libs": [

@@ -39,7 +39,6 @@ import { Loader, CONFIG as LOADERCONFIG } from '../../../components/loader.js';
 import { mathjax } from '../../../mathjax.js';
 import { expandable } from '../../../util/Options.js';
 import { MenuMathDocument } from '../../../ui/menu/MenuHandler.js';
-import { Locale } from '../../../util/Locale.js';
 
 import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
@@ -176,11 +175,7 @@ export function RequireLoad(parser: TexParser, name: string) {
   }
   const data = Package.packages.get(extension);
   if (!data) {
-    mathjax.retryAfter(
-      Loader.load(extension)
-        .then(() => Locale.setLocale())
-        .catch((_) => {})
-    );
+    mathjax.retryAfter(Loader.load(extension).catch((_) => {}));
   }
   if (data.hasFailed) {
     texError(COMPONENT, 'RequireFail', name);
