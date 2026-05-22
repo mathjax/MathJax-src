@@ -22,12 +22,10 @@
  */
 
 import TexParser from './TexParser.js';
-import { texError } from './TexError.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { MathItem } from '../../core/MathItem.js';
 import { EnvList } from './StackItem.js';
 import ParseOptions from './ParseOptions.js';
-import { COMPONENT } from './__locales__/Component.js';
 
 /**
  *  Simple class for label objects.
@@ -698,7 +696,7 @@ export const TagsFactory = {
   create(name: string): Tags {
     const constr = tagsMapping.get(name) || tagsMapping.get(defaultTags);
     if (!constr) {
-      texError(COMPONENT, 'UnknownTag');
+      throw Error('Unknown tags class');
     }
     return new constr();
   },

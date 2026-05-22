@@ -148,10 +148,9 @@ export class Locale {
    * can be positional, or a data mapping of names to values.
    *
    * @param {string} message The message string to process.
-   * @param {string | namedData = {}} data The first argument or the object of
+   * @param {string| namedData} data The first argument or the object of
    *     names arguments
-   * @param {string[]} ...args Additional arguments (if data is a string)
-   * @param {...any} args
+   * @param {string[]} args Additional arguments (if data is a string)
    * @returns {string} The processed message string with arguments substituted
    */
   public static processMessage(
