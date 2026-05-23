@@ -21,6 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import { mathjax } from '../mathjax.js';
 import { asyncLoad } from './AsyncLoad.js';
 
 /**
@@ -123,7 +124,7 @@ export class Locale {
    *
    * @param {string} component        The component whose message is requested
    * @param {string} id               The id of the message
-   * @param {string|namedData} data   The first argument or the object of names arguments
+   * @param {string|namedData} data   The first argument or the object of named arguments
    * @param {string[]} args           Any additional string arguments (if data is a string)
    * @returns {string}                The localized message with arguments substituted in
    */
@@ -147,11 +148,10 @@ export class Locale {
    * Process a message string by substituting the given arguments. The arguments
    * can be positional, or a data mapping of names to values.
    *
-   * @param {string} message The message string to process.
-   * @param {string| namedData} data The first argument or the object of
-   *     names arguments
-   * @param {string[]} args Additional arguments (if data is a string)
-   * @returns {string} The processed message string with arguments substituted
+   * @param {string} message          The message string to process.
+   * @param {string|namedData} data   The first argument or the object of named arguments
+   * @param {string[]} args           Additional arguments (if data is a string)
+   * @returns {string}                The processed message string with arguments substituted
    */
   public static processMessage(
     message: string,
@@ -262,6 +262,14 @@ export class Locale {
     locale: string,
     file: string
   ): Promise<void> {
+    if (mathjax.asyncIsSynchronous) {
+      try {
+        this.registerMessages(component, locale, mathjax.asyncLoad(file));
+      } catch (error) {
+        await this.localeError(component, locale, error);
+      }
+      return;
+    }
     return asyncLoad(file)
       .then((data: messageData) =>
         this.registerMessages(component, locale, data)

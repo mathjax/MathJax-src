@@ -1,4 +1,5 @@
 import { describe, test, expect } from '@jest/globals';
+import { mathjax } from '#js/mathjax.js';
 import { Locale } from '#js/util/Locale.js';
 import '#js/util/asyncLoad/esm.js';
 
@@ -117,6 +118,46 @@ describe('Locale', () => {
 
     expect(errors[0]).toContain("MathJax(fallback): Can't load 'xy.json'");
     expect(locale.data.fallback?.en).toEqual({ Id1: 'Test of %1 in %2' });
+  });
+
+  /********************************************************************************/
+
+  test('Locale sync', async () => {
+    const locale = Locale as any;
+    Locale.registerLocaleFiles('sync', '../testsuite/lib/component');
+
+    //
+    // Save environment
+    //
+    const [load, sync] = [mathjax.asyncLoad, mathjax.asyncIsSynchronous];
+    const error = console.error;
+
+    //
+    // Test synchronous loading failure
+    //
+    mathjax.asyncLoad = () => {throw Error('failed!')};
+    mathjax.asyncIsSynchronous = true;
+
+    const log: string[] = [];
+    console.error = (msg) => log.push(msg);
+
+    locale.getLocaleData('sync', 'en', 'en.json').catch(() => {});
+    expect(log).toEqual(["MathJax(sync): Can't load 'en.json': failed!"]);
+
+    //
+    // Test synchronous loading success
+    //
+    mathjax.asyncLoad = () => {return {'test': 'A test'}};
+
+    locale.getLocaleData('sync', 'en', 'en.json');
+    expect(Locale.message('sync', 'test')).toBe('A test');
+
+    //
+    // Restore environment
+    //
+    mathjax.asyncLoad = load;
+    mathjax.asyncIsSynchronous = sync;
+    console.error = error;
   });
 
   /********************************************************************************/
