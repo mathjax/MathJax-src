@@ -275,7 +275,7 @@ describe('Configuration', () => {
       () => new TeX({ packages: ['base', 'undefined'] })
     );
     expect(message).toBe(
-      "MathJax Warning: Package 'undefined' not found.  Omitted."
+      "Package 'undefined' not found.  Omitted."
     );
   });
 });
@@ -290,11 +290,11 @@ describe('MapHandler', () => {
       },
     });
     const message = trapOutput(
-      'log',
+      'warn',
       () => new TeX({ packages: ['base', 'BadHandler'] })
     );
     expect(message).toBe(
-      "TexParser Warning: Configuration 'undefindHandler' not found! Omitted."
+      "Configuration 'undefindHandler' not found.  Omitted."
     );
   });
 

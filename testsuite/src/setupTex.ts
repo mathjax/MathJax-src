@@ -17,14 +17,16 @@ import { mathjax } from '#js/mathjax.js';
 import { OptionList } from '#js/util/Options.js';
 import { tmpJsonFile } from '#src/constants.js';
 import * as fs from 'fs';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { init } from '#source/node-main/node-main.mjs';
 import { expect } from '@jest/globals';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { source } from '#source/source.js';
 import { Locale } from '#js/util/Locale.js';
+import {
+  trapErrors,
+  trapAsyncErrors,
+  throwTexErrors,
+  throwCompileErrors,
+} from './traps.js';
 
 declare const MathJax: any;
 type MATHITEM = MathItem<any, any, any>;
@@ -56,87 +58,6 @@ const visitor = new SerializedMmlVisitor();
 export const toMathML = (node: MmlNode) => visitor.visitTree(node);
 
 /*********************************************************************/
-
-/**
- * Trap output produced while running code.
- *
- * @param {string} method The console method to trap.
- * @param {Function} code The code to run.
- * @returns {string} The output sent to the given method.
- */
-export function trapOutput(method: string, code: () => void): string {
-  const saved = (console as any)[method];
-  let message = '';
-  (console as any)[method] = (...msg: any[]) => {
-    message += (message ? '\n' : '') + msg.join(' ');
-  };
-  code();
-  (console as any)[method] = saved;
-  return message;
-}
-
-/**
- * Trap errors produced while running code.
- *
- * @param {Function} code The code to run.
- * @returns {string} The error message produced.
- */
-export function trapErrors(code: () => void): string {
-  let message = '(no error)';
-  reportErrors = true;
-  try {
-    code();
-  } catch (e) {
-    message = e.message;
-  }
-  reportErrors = false;
-  return message;
-}
-
-/**
- * Trap errors produced while running code.
- *
- * @param {Function} code The code to run.
- * @returns {string} The error message produced.
- */
-export async function trapAsyncErrors(code: () => Promise<void>) {
-  let message = '(no error)';
-  reportErrors = true;
-  await code().catch((e) => {
-    message = e.message;
-  });
-  reportErrors = false;
-  return message;
-}
-
-/**
- * When true, errors will throw rather than produce merror elements.
- */
-let reportErrors = false;
-
-/**
- * Configuration that causes TeX errors to throw rather than
- * generate merror elements, so we can trap them with trapErrors().
- */
-export const throwTexErrors = {
-  formatError(jax: any, err: Error) {
-    if (reportErrors) throw err;
-    return jax.formatError(err);
-  },
-};
-
-/**
- * Configuration that causes compile errors to throw rather than
- * generate merror elements, so we can trap them with trapErrors().
- */
-export const throwCompileErrors = {
-  options: {
-    compileError(jax: any, math: any, err: Error) {
-      if (reportErrors) throw err;
-      return jax.compileError(math, err);
-    },
-  },
-};
 
 /**
  * Trap TeX processing errors and return an expect() result
@@ -182,11 +103,12 @@ export function expectTypesetError(
  *
  * @param {string[]} packages    The TeX packages to configure
  * @param {OptionList} options   The TeX options to include
+ * @returns {Promise<void[]>}    The promise for when the locale is set up
  */
 export function setupTex(
   packages: PackageList = ['base'],
   options: OptionList = {}
-) {
+): Promise<void[]> {
   const parserOptions = Object.assign(
     {},
     { packages },
@@ -206,11 +128,12 @@ export function setupTex(
  *
  * @param {string[]} packages    The TeX packages to configure
  * @param {OptionList} options   The TeX options to include
+ * @returns {Promise<void[]>}    The promise for when the locale is set up
  */
 export function setupTexRender(
   packages: PackageList = ['base'],
   options: OptionList = {}
-) {
+): Promise<void[]> {
   const parserOptions = Object.assign(
     {},
     { packages: packages, inlineMath: { '[+]': [['$', '$']] } },
@@ -295,11 +218,12 @@ import { SVG } from '#js/output/svg.js';
  *
  * @param {string[]} packages    The TeX packages to configure
  * @param {OptionList} options   The TeX options to include
+ * @returns {Promise<void[]>}    The promise for when the locale is set up
  */
 export function setupTexWithOutput(
   packages: string[] = ['base'],
   options: OptionList = {}
-) {
+): Promise<void[]> {
   const parserOptions = Object.assign({}, { packages: packages }, options);
   const tex = new TeX(parserOptions);
   const html = new HTMLDocument('', adaptor, {
