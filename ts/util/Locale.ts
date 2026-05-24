@@ -215,13 +215,30 @@ export class Locale {
    * @param {string|namedData} data   The first argument or the object of names arguments
    * @param {string[]} args           Any additional string arguments (if data is a string)
    */
-  public static error(
+  public static throw(
     component: string,
     id: string,
-    data: string | namedData,
+    data: string | namedData = {},
     ...args: string[]
   ) {
     throw Error(this.message(component, id, data, ...args));
+  }
+
+  /**
+   * Report a warning with a given string substituting the given parameters
+   *
+   * @param {string} component        The component whose message is requested
+   * @param {string} id               The id of the message
+   * @param {string|namedData} data   The first argument or the object of names arguments
+   * @param {string[]} args           Any additional string arguments (if data is a string)
+   */
+  public static warn(
+    component: string,
+    id: string,
+    data: string | namedData = {},
+    ...args: string[]
+  ) {
+    console.warn(this.message(component, id, data, ...args));
   }
 
   /**

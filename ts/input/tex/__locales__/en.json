@@ -2,6 +2,7 @@
   "BadPreamToken": "Illegal pream-token (%1)",
   "BadRawUnicode": "Argument to %1 must a hexadecimal number with 1 to 6 digits",
   "ColArgNotNum": "First argument to %1 column specifier must be a number",
+  "ConfigNotFound": "Configuration '%1' not found.  Omitted.",
   "ErroneousNestingEq": "Erroneous nesting of equation structures",
   "ExtraCloseLooking": "Extra close brace while looking for %1",
   "ExtraCloseMissingOpen": "Extra close brace or missing open brace",
@@ -26,6 +27,8 @@
   "MissingLeftExtraRight": "Missing \\left or extra \\right",
   "MissingOrUnrecognizedDelim": "Missing or unrecognized delimiter for %1",
   "MissingScript": "Missing superscript or subscript argument",
+  "PackageNotFound": "Package '%1' not found.  Omitted.",
   "TokenNotFoundForCommand": "Could not find %1 for %2",
-  "UnknownTag": "Unknown tags class"
+  "UnknownTag": "Unknown tags class",
+  "WrongParser": "Package '%1' doesn't target the proper parser"
 }

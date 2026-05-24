@@ -14,6 +14,7 @@
     "#js/*": "../mjs/*",
     "#source/*": "../components/mjs/*",
     "#src/*": "./src/*",
+    "#helpers/*": "./js/src/*",
     "#helpers": "./js/src/index.js"
   },
   "dependencies": {

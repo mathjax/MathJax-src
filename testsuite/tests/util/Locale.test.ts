@@ -1,4 +1,5 @@
 import { describe, test, expect } from '@jest/globals';
+import { trapOutput, trapAsyncOutput } from '#helpers/traps.js';
 import { Locale } from '#js/util/Locale.js';
 import '#js/util/asyncLoad/esm.js';
 
@@ -70,7 +71,7 @@ describe('Locale', () => {
     expect(Locale.message('undefined', 'Id1')).toBe(
       "MathJax(Locale): No localized or default version for message with id 'Id1' from 'undefined'"
     );
-    expect(() => Locale.error('component', 'error', 'x')).toThrow('Error in x');
+    expect(() => Locale.throw('component', 'error', 'x')).toThrow('Error in x');
     Locale.current = 'de';
     expect(Locale.message('undefined', 'Id1')).toBe(
       "MathJax(Locale): Keine lokalisierte oder Standardversion für die Meldung mit der ID 'Id1' aus 'undefined'"
@@ -106,17 +107,25 @@ describe('Locale', () => {
   test('Locale error falls back to default locale', async () => {
     const locale = Locale as any;
     Locale.registerLocaleFiles('fallback', '../testsuite/lib/component');
-
-    const errors: string[] = [];
-    const origError = console.error;
-    console.error = (msg: string) => errors.push(msg);
-
-    await locale.localeError('fallback', 'xy', new Error('xy.json not found'));
-
-    console.error = origError;
-
-    expect(errors[0]).toContain("MathJax(fallback): Can't load 'xy.json'");
+    const message = await trapAsyncOutput('error', async () => {
+      await locale.localeError(
+        'fallback',
+        'xy',
+        new Error('xy.json not found')
+      );
+    });
+    expect(message).toContain("MathJax(fallback): Can't load 'xy.json'");
     expect(locale.data.fallback?.en).toEqual({ Id1: 'Test of %1 in %2' });
+  });
+
+  /********************************************************************************/
+
+  test('Locale warn', async () => {
+    Locale.registerLocaleFiles('component', '../testsuite/lib/component');
+    const message = trapOutput('warn', () =>
+      Locale.warn('component', 'test2', 'warn')
+    );
+    expect(message).toEqual('Has warn one');
   });
 
   /********************************************************************************/
