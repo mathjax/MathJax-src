@@ -161,18 +161,19 @@ describe('TexError', () => {
 
 describe('texError', () => {
   test('Number argument', () => {
-    expect(() => texError(null, 'test', 'Number: %1', '1'))
-      .toThrow('Number: 1');
+    expect(() => texError(null, 'test', 'Number: %1', '1')).toThrow(
+      'Number: 1'
+    );
   });
 
   test('Braced insertion', () => {
-    expect(() => texError(null, 'test', 'Msg: %{1}, Number: %{2}', 'OK', '2'))
-      .toThrow('Msg: OK, Number: 2');
+    expect(() =>
+      texError(null, 'test', 'Msg: %{1}, Number: %{2}', 'OK', '2')
+    ).toThrow('Msg: OK, Number: 2');
   });
 
   test('Percent', () => {
-    expect(() => texError(null, 'test', '10%%'))
-      .toThrow('10%');
+    expect(() => texError(null, 'test', '10%%')).toThrow('10%');
   });
 });
 
@@ -274,9 +275,7 @@ describe('Configuration', () => {
       'warn',
       () => new TeX({ packages: ['base', 'undefined'] })
     );
-    expect(message).toBe(
-      "Package 'undefined' not found.  Omitted."
-    );
+    expect(message).toBe("Package 'undefined' not found.  Omitted.");
   });
 });
 

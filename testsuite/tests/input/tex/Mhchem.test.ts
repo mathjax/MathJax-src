@@ -491,7 +491,9 @@ describe('Mhchem-Ams', () => {
   });
 
   it('Mhchem Brace Error', () => {
-    expectTexError('\\ce{{x^${x}}}').toBe('Extra close brace or missing open brace');
+    expectTexError('\\ce{{x^${x}}}').toBe(
+      'Extra close brace or missing open brace'
+    );
   });
 
   it('Mhchem stretchy <-', () => {

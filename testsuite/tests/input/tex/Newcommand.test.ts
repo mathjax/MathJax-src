@@ -228,13 +228,19 @@ describe('Newcommand', () => {
   });
 
   it('Def significant spaces 1', () => {
-    expectTexError('\\def\\x#1 #2{[#1,#2]} \\x{a}{b}').toBe('Runaway argument for \\x?');
+    expectTexError('\\def\\x#1 #2{[#1,#2]} \\x{a}{b}').toBe(
+      'Runaway argument for \\x?'
+    );
     expect(tex2mml('\\def\\x#1 #2{[#1,#2]} \\x{a} {b}')).toMatchSnapshot();
   });
 
   it('Def significant spaces 2', () => {
-    expectTexError('\\def\\x#1 #2 {[#1,#2]} \\x{a}{b}').toBe('Runaway argument for \\x?');
-    expectTexError('\\def\\x#1 #2 {[#1,#2]} \\x{a} {b}').toBe('Runaway argument for \\x?');
+    expectTexError('\\def\\x#1 #2 {[#1,#2]} \\x{a}{b}').toBe(
+      'Runaway argument for \\x?'
+    );
+    expectTexError('\\def\\x#1 #2 {[#1,#2]} \\x{a} {b}').toBe(
+      'Runaway argument for \\x?'
+    );
     expect(tex2mml('\\def\\x#1 #2{[#1,#2]} \\x{a} {b} ')).toMatchSnapshot();
   });
 });
