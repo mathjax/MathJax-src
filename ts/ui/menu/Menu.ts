@@ -315,17 +315,17 @@ export class Menu {
     //
     lines.push(
       localize(
-        'InputJax',
+        '.About/InputJax',
         this.document.inputJax.map((jax) => jax.name).join(', ')
       ),
-      localize('OutputJax', this.document.outputJax.name),
-      localize('DocType', this.document.kind)
+      localize('.About/OutputJax', this.document.outputJax.name),
+      localize('.About/DocType', this.document.kind)
     );
     //
     // Add the loaded packages and their versions
     //
     if (MathJax && MathJax.loader) {
-      lines.push('<hr/>' + localize('Modules'));
+      lines.push('<hr/>' + localize('.About/Modules'));
       const Package = MathJax._.components.package.Package;
       const versions = (MathJax as any).loader.versions;
       for (const name of Array.from(Package.packages.keys()).sort(
@@ -406,8 +406,8 @@ export class Menu {
    */
   protected help() {
     InfoDialog.post({
-      title: localize('HelpTitle'),
-      message: localize('HelpMessage'),
+      title: localize('.Help/Title'),
+      message: localize('.Help/Message'),
       adaptor: this.document.adaptor,
       extraNodes: [
         this.document.adaptor.node(
@@ -424,7 +424,7 @@ export class Menu {
    */
   protected mathMLCode() {
     CopyDialog.post({
-      title: localize('MmlTitle'),
+      title: localize('.Mml/Title'),
       message: this.menu.mathItem ? this.toMML(this.menu.mathItem) : '',
       adaptor: this.document.adaptor,
       code: true,
@@ -436,7 +436,7 @@ export class Menu {
    */
   protected originalText() {
     CopyDialog.post({
-      title: localize('SourceTitle'),
+      title: localize('.Source/Title'),
       message: this.menu.mathItem?.math ?? '',
       adaptor: this.document.adaptor,
       code: true,
@@ -448,7 +448,7 @@ export class Menu {
    */
   protected annotationBox() {
     CopyDialog.post({
-      title: localize('AnnotationTitle'),
+      title: localize('.Annotation/Title'),
       message: AnnotationMenu.annotation,
       adaptor: this.document.adaptor,
       code: true,
@@ -460,7 +460,7 @@ export class Menu {
    */
   public async svgImage() {
     CopyDialog.post({
-      title: localize('SvgTitle'),
+      title: localize('.Svg/Title'),
       message: await this.toSVG(this.menu.mathItem),
       adaptor: this.document.adaptor,
       code: true,
@@ -472,7 +472,7 @@ export class Menu {
    */
   protected speechText() {
     CopyDialog.post({
-      title: localize('SpeechTitle'),
+      title: localize('.Speech/Title'),
       message: this.menu.mathItem?.outputData?.speech ?? '',
       adaptor: this.document.adaptor,
       code: true,
@@ -484,7 +484,7 @@ export class Menu {
    */
   protected brailleText() {
     CopyDialog.post({
-      title: localize('BrailleTitle'),
+      title: localize('.Braille/Title'),
       message: this.menu.mathItem?.outputData?.braille ?? '',
       adaptor: this.document.adaptor,
       code: true,
@@ -496,7 +496,7 @@ export class Menu {
    */
   protected errorMessage() {
     CopyDialog.post({
-      title: localize('ErrorTitle'),
+      title: localize('.Error/Title'),
       message: this.menu.mathItem ? this.menu.errorMsg : '',
       adaptor: this.document.adaptor,
       code: true,
@@ -517,7 +517,7 @@ export class Menu {
       text = `<div style="font-size: ${scale}px">${zoom.outerHTML}</div>`;
     }
     InfoDialog.post({
-      title: localize('ZoomTitle'),
+      title: localize('.Zoom/Title'),
       message: text,
       adaptor: this.document.adaptor,
       styles: {
@@ -963,7 +963,7 @@ export class Menu {
       Object.assign(this.settings, settings);
       this.setA11y(settings);
     } catch (err) {
-      Locale.warn(COMPONENT, 'StorageError', err.message);
+      Locale.warn(COMPONENT, '.Warn/StorageError', err.message);
     }
   }
 
@@ -985,7 +985,7 @@ export class Menu {
       }
       localStorage.setItem(Menu.LOCALE_STORAGE, this.settings.language);
     } catch (err) {
-      Locale.warn(COMPONENT, 'StorageError', err.message);
+      Locale.warn(COMPONENT, '.Warn/StorageError', err.message);
     }
   }
 
@@ -1090,7 +1090,7 @@ export class Menu {
       this.loadComponent('output/' + name, () => {
         const startup = MathJax.startup;
         if (!(name in startup.constructors)) {
-          return fail(new Error(localize('ComponentNotLoaded', name)));
+          return fail(new Error(localize('.Warn/ComponentNotLoaded', name)));
         }
         startup.useOutput(name, true);
         startup.output = this.applyRendererOptions(startup.getOutputJax());
@@ -1397,7 +1397,7 @@ export class Menu {
     const scale = (parseFloat(this.settings.scale) * 100)
       .toFixed(1)
       .replace(/.0$/, '');
-    const percent = prompt(localize('ScalePrompt'), scale + '%');
+    const percent = prompt(localize('.Scale/Prompt'), scale + '%');
     if (this.current) {
       const speech = (this.menu.mathItem as ExplorerMathItem).explorers.speech;
       speech.refocus = this.current;
@@ -1409,10 +1409,10 @@ export class Menu {
         if (scale) {
           this.menu.pool.lookup('scale').setValue(String(scale));
         } else {
-          alert(localize('ScaleNonZero'));
+          alert(localize('.Scale/NonZero'));
         }
       } else {
-        alert(localize('ScalePercent'));
+        alert(localize('.Scale/Percent', '120%'));
       }
     }
   }
@@ -1573,7 +1573,7 @@ export class Menu {
   protected async toSVG(math: HTMLMATHITEM): Promise<string> {
     const jax = this.jax.SVG;
     if (!jax) {
-      return localize('NoSvgProduced');
+      return localize('.Svg/NotProduced');
     }
     const adaptor = jax.adaptor;
     const cache = jax.options.fontCache;
@@ -1989,7 +1989,7 @@ export class Menu {
    * @returns {object}            The JSON for the radio button item
    */
   public radio(id: string, variable: string, other: object = {}): object {
-    const content = localize(id);
+    const content = id.match(/^\d+%$/) ? id : localize(id);
     return Object.assign({ type: 'radio', id, content, variable }, other);
   }
 
