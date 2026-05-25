@@ -1,9 +1,9 @@
 {
-  "NoVersionFor": "Für die Komponente '%1' liegen keine Versionsinformationen vor",
-  "WrongVersion": "Die Komponente %1 verwendet Version %2 von MathJax; die verwendete Version ist %3",
-  "CantLoad": "'%1' kann nicht geladen werden%2",
-  "InputJaxNotDefined": "Input Jax '%1' ist nicht definiert (wurde es geladen?)",
-  "OutputJaxNotDefined": "Output Jax '%1' ist nicht definiert (wurde es geladen?)",
   "AdaptorNotDefined": "DOMAdaptor '%1' ist nicht definiert (wurde es geladen?)",
+  "CantLoad": "'%1' kann nicht geladen werden%2",
   "HandlerNotDefined": "Handler '%1' ist nicht definiert (wurde es geladen?)"
+  "InputJaxNotDefined": "Input Jax '%1' ist nicht definiert (wurde es geladen?)",
+  "NoVersionFor": "Für die Komponente '%1' liegen keine Versionsinformationen vor",
+  "OutputJaxNotDefined": "Output Jax '%1' ist nicht definiert (wurde es geladen?)",
+  "WrongVersion": "Die Komponente %1 verwendet Version %2 von MathJax; die verwendete Version ist %3",
 }
