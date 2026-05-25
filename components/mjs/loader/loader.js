@@ -1,3 +1,4 @@
+import '../core/locale.js';
 import './lib/loader.js';
 import '../core/core.js';
 

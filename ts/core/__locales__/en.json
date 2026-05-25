@@ -1,0 +1,9 @@
+{
+  "NoVersionFor": "No version information available for component '%1'",
+  "WrongVersion": "Component %1 uses version %2 of MathJax; version in use is %3",
+  "CantLoad": "Can't load '%1'%2",
+  "InputJaxNotDefined": "Input Jax '%1' is not defined (has it been loaded?)",
+  "OutputJaxNotDefined": "Output Jax '%1' is not defined (has it been loaded?)",
+  "AdaptorNotDefined": "DOMAdaptor '%1' is not defined (has it been loaded?)",
+  "HandlerNotDefined": "Handler '%1' is not defined (has it been loaded?)"
+}

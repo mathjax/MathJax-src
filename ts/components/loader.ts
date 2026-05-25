@@ -43,6 +43,8 @@ import { mjxRoot } from '#root/root.js';
 import { context } from '../util/context.js';
 import { Locale } from '../util/Locale.js';
 
+import { COMPONENT } from '../core/__locales__/Component.js';
+
 /**
  * Function used to determine path to a given package.
  */
@@ -187,7 +189,7 @@ export const Loader = {
   /**
    * Load the named packages and return a promise that is resolved when they are all loaded
    *
-   * @param {string[]} names  The packages to load
+   * @param {string[]} names    The packages to load
    * @returns {Promise<any[]>}  A promise that resolves when all the named packages are ready
    */
   load(...names: string[]): Promise<any[]> {
@@ -224,9 +226,7 @@ export const Loader = {
                 extension.isLoaded &&
                 !Loader.versions.has(Package.resolvePath(name))
               ) {
-                console.warn(
-                  `No version information available for component ${name}`
-                );
+                Locale.warn(COMPONENT, 'NoVersionFor', name);
               }
               return extension.result;
             }) as Promise<any>
@@ -346,15 +346,13 @@ export const Loader = {
    *
    * @param {string} name       The name of the extension being checked
    * @param {string} version    The version of the extension to check
-   * @param {string} _type       The type of extension (future code may use this to check ranges of versions)
-   * @returns {boolean}          True if there was a mismatch, false otherwise
+   * @param {string} _type      The type of extension (future code may use this to check ranges of versions)
+   * @returns {boolean}         True if there was a mismatch, false otherwise
    */
   checkVersion(name: string, version: string, _type?: string): boolean {
     this.saveVersion(name);
     if (CONFIG.versionWarnings && version !== VERSION) {
-      console.warn(
-        `Component ${name} uses ${version} of MathJax; version in use is ${VERSION}`
-      );
+      Locale.warn(COMPONENT, 'WrongVersion', name, version, VERSION);
       return true;
     }
     return false;
@@ -363,7 +361,7 @@ export const Loader = {
   /**
    * Set the version of an extension (used for combined components so they can be loaded)
    *
-   * @param {string} name       The name of the extension being checked
+   * @param {string} name   The name of the extension being checked
    */
   saveVersion(name: string) {
     Loader.versions.set(Package.resolvePath(name), VERSION);
@@ -407,7 +405,7 @@ if (typeof MathJax.loader === 'undefined') {
     load: [],
     ready: Loader.defaultReady.bind(Loader),
     failed: (error: PackageError) =>
-      console.log(`MathJax(${error.package || '?'}): ${error.message}`),
+      console.warn(`MathJax(${error.package || '?'}): ${error.message}`),
     require: null,
     json: null,
     pathFilters: [],
