@@ -4,5 +4,5 @@
   "IllegalProofCommand": "Proof commands only allowed in prooftree environment.",
   "IllegalUseOfCommand": "Use of %1 does not match its definition.",
   "MissingProofCommand": "Missing %1 in %2.",
-  "RequiresOutputJax": "The bussproofs extension requires an output jax with a getBBox() method";
+  "RequiresOutputJax": "The bussproofs extension requires an output jax with a getBBox() method"
 }
