@@ -24,8 +24,7 @@
 
 import { CONFIG, Loader } from './loader.js';
 import { context } from '../util/context.js';
-import { Locale } from '../util/Locale.js';
-import { COMPONENT } from '../core/__locales__/Component.js';
+import { localize } from '../core/__locales__/Component.js';
 
 /**
  * A map of package names to Package instances
@@ -325,14 +324,7 @@ export class Package {
           .then((result) => (this.result = result))
           .then(() => this.checkLoad())
           .catch((err) =>
-            this.failed(
-              Locale.message(
-                COMPONENT,
-                'CantLoad',
-                url,
-                ':\n' + err.message.trim()
-              )
-            )
+            this.failed(localize('CantLoad', url, ':\n' + err.message.trim()))
           );
       } else {
         this.result = result;
@@ -353,8 +345,7 @@ export class Package {
     script.src = url;
     script.charset = 'UTF-8';
     script.onload = (_event) => this.checkLoad();
-    script.onerror = (_event) =>
-      this.failed(Locale.message(COMPONENT, 'CantLoad', url, ''));
+    script.onerror = (_event) => this.failed(localize('CantLoad', url, ''));
     // FIXME: Should there be a timeout failure as well?
     context.document.head.appendChild(script);
   }
