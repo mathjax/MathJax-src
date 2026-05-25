@@ -36,6 +36,10 @@ export type namedData = { [name: string | number]: string };
  */
 export class Locale {
   /**
+   * Whether setLocale() has been called or not.
+   */
+  public static initialized = false;
+  /**
    * The current locale
    */
   public static current: string = 'en';
@@ -251,6 +255,7 @@ export class Locale {
   public static async setLocale(
     locale: string = this.current
   ): Promise<void[]> {
+    this.initialized = true;
     this.current = locale;
     const promises = [];
     for (const [component, [directory, loaded]] of Object.entries(
