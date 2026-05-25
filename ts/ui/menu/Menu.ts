@@ -966,7 +966,7 @@ export class Menu {
       Object.assign(this.settings, settings);
       this.setA11y(settings);
     } catch (err) {
-      console.log(localize('StorageError', err.message));
+      Locale.warn(COMPONENT, 'StorageError', err.message);
     }
   }
 
@@ -988,7 +988,7 @@ export class Menu {
       }
       localStorage.setItem(Menu.LOCALE_STORAGE, this.settings.language);
     } catch (err) {
-      console.log(localize('StorageError', err.message));
+      Locale.warn(COMPONENT, 'StorageError', err.message);
     }
   }
 
@@ -1486,7 +1486,7 @@ export class Menu {
           Menu._loadingPromise = null;
           Menu._loadingFailed(err);
         } else {
-          console.log(err);
+          console.warn(err);
         }
       });
     Menu.loadingPromises.set(name, promise);
