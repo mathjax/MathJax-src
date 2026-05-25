@@ -31,7 +31,7 @@ import { FunctionList } from '../../util/FunctionList.js';
 import { TeX } from '../tex.js';
 import { PrioritizedList } from '../../util/PrioritizedList.js';
 import { TagsFactory } from './Tags.js';
-import { Locale} from '../../util/Locale.js';
+import { Locale } from '../../util/Locale.js';
 import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
