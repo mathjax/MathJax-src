@@ -34,6 +34,10 @@ export type namedData = { [name: string | number]: string };
  */
 export class Locale {
   /**
+   * Whether setLocale() has been called or not.
+   */
+  public static initialized = false;
+  /**
    * The current locale
    */
   public static current: string = 'en';
