@@ -26,7 +26,7 @@ import { Configuration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
@@ -52,12 +52,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
         // @test Bbox-Padding
         if (def) {
           // @test Bbox-Padding-Error
-          throw new TexError(
-            COMPONENT,
-            'MultipleBBoxProperty',
-            'Padding',
-            name
-          );
+          texError(COMPONENT, 'MultipleBBoxProperty', 'Padding', name);
         }
         const pad = BBoxPadding(match[1] + match[3]);
         if (pad) {
@@ -73,24 +68,19 @@ const BboxMethods: { [key: string]: ParseMethod } = {
         // @test Bbox-Background
         if (background) {
           // @test Bbox-Background-Error
-          throw new TexError(
-            COMPONENT,
-            'MultipleBBoxProperty',
-            'Background',
-            name
-          );
+          texError(COMPONENT, 'MultipleBBoxProperty', 'Background', name);
         }
         background = part;
       } else if (part.match(/^[-a-z]+:/i)) {
         // @test Bbox-Frame
         if (style) {
           // @test Bbox-Frame-Error
-          throw new TexError(COMPONENT, 'MultipleBBoxProperty', 'Style', name);
+          texError(COMPONENT, 'MultipleBBoxProperty', 'Style', name);
         }
         style = BBoxStyle(part);
       } else if (part !== '') {
         // @test Bbox-General-Error
-        throw new TexError(COMPONENT, 'InvalidBBoxProperty', part);
+        texError(COMPONENT, 'InvalidBBoxProperty', part);
       }
     }
     if (def) {

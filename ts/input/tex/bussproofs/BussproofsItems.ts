@@ -21,7 +21,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { BaseItem, CheckType, StackItem } from '../StackItem.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import Stack from '../Stack.js';
@@ -63,7 +63,7 @@ export class ProofTreeItem extends BaseItem {
       return [[this.factory.create('mml', node), item], true];
     }
     if (item.isKind('stop')) {
-      throw new TexError(COMPONENT, 'EnvMissingEnd', this.getName());
+      texError(COMPONENT, 'EnvMissingEnd', this.getName());
     }
     this.innerStack.Push(item);
     return BaseItem.fail;

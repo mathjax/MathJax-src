@@ -26,7 +26,7 @@ import { Configuration } from '../Configuration.js';
 import { CommandMap, CharacterMap } from '../TokenMap.js';
 import { Token } from '../Token.js';
 import { ParseMethod } from '../Types.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import TexParser from '../TexParser.js';
 import BaseMethods from '../base/BaseMethods.js';
 import { AmsMethods } from '../ams/AmsMethods.js';
@@ -109,17 +109,17 @@ export const MhchemMethods: { [key: string]: ParseMethod } = {
     } catch ([id, msg]) {
       if (id === 'MhchemErrorBond') {
         const match = msg.match(/\((.*)\)/);
-        throw new TexError(COMPONENT, id, match[1]);
+        texError(COMPONENT, id, match[1]);
       }
       if (id.startsWith('MhchemBug')) {
         const match = msg.match(/mhchem bug (.).*\((.*)\)/);
         if (match) {
-          throw new TexError(COMPONENT, 'MhchemBug2', match[1], match[2]);
+          texError(COMPONENT, 'MhchemBug2', match[1], match[2]);
         } else {
-          throw new TexError(COMPONENT, 'MhchemBug', id.charAt(9));
+          texError(COMPONENT, 'MhchemBug', id.charAt(9));
         }
       }
-      throw new TexError('input/tex', id);
+      texError('input/tex', id);
     }
     parser.string = tex + parser.string.substring(parser.i);
     parser.i = 0;

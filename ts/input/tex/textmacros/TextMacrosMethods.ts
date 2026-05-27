@@ -27,6 +27,7 @@ import { retryAfter } from '../../../util/Retries.js';
 import { TextParser } from './TextParser.js';
 import BaseMethods from '../base/BaseMethods.js';
 
+import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
 import { COMPONENT } from './__locales__/Component.js';
 
 /**
@@ -91,13 +92,13 @@ export const TextMacrosMethods = {
 
         case '}':
           if (braces === 0) {
-            parser.Error(COMPONENT, 'ExtraCloseMissingOpen');
+            parser.Error(TEX_COMPONENT, 'ExtraCloseMissingOpen');
           }
           braces--;
           break;
       }
     }
-    parser.Error(COMPONENT, 'MathNotTerminated');
+    parser.Error(TEX_COMPONENT, 'MathNotTerminated');
   },
 
   /**
@@ -113,7 +114,7 @@ export const TextMacrosMethods = {
    * @param {string} c            The character that called this function
    */
   Misplaced(parser: TextParser, c: string) {
-    parser.Error(COMPONENT, 'Misplaced', c);
+    parser.Error(TEX_COMPONENT, 'Misplaced', c);
   },
 
   /**
@@ -142,7 +143,7 @@ export const TextMacrosMethods = {
       parser.saveText();
       parser.stack.env = parser.envStack.pop();
     } else {
-      parser.Error(COMPONENT, 'ExtraCloseMissingOpen');
+      parser.Error(TEX_COMPONENT, 'ExtraCloseMissingOpen');
     }
   },
 

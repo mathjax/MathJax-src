@@ -23,7 +23,7 @@
 
 import { HandlerType } from '../HandlerTypes.js';
 import { ParseResult, ParseMethod } from '../Types.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import TexParser from '../TexParser.js';
 import * as sm from '../TokenMap.js';
 import { Token } from '../Token.js';
@@ -217,7 +217,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
       parser.GetNext();
       if (params[0] && !NewcommandUtil.MatchParam(parser, params[0])) {
         // @test Missing Arguments
-        throw new TexError(COMPONENT, 'MismatchUseDef', name);
+        texError(COMPONENT, 'MismatchUseDef', name);
       }
       if (argCount) {
         for (let i = 0; i < argCount; i++) {

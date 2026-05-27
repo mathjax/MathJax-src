@@ -255,7 +255,7 @@ describe('Error', () => {
   });
 
   it('Ampersand-error', () => {
-    expectTexError('&').toBe('Misplaced &');
+    expectTexError('&').toBe("Misplaced '&'");
   });
 
   it('Argument-error', () => {
@@ -389,7 +389,7 @@ describe('Error', () => {
   });
 
   it('Misplaced Cr', () => {
-    expectTexError('a\\cr b').toBe('Misplaced \\cr');
+    expectTexError('a\\cr b').toBe("Misplaced '\\cr'");
   });
 
   it('Dimension Error', () => {
@@ -461,7 +461,7 @@ describe('Error', () => {
   });
 
   it('Misplaced hline', () => {
-    expectTexError('\\hline').toBe('Misplaced \\hline');
+    expectTexError('\\hline').toBe("Misplaced '\\hline'");
   });
 
   it('UnsupportedHFill', () => {

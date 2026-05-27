@@ -27,7 +27,7 @@ import { ArrayItem } from './base/BaseItems.js';
 import ParseOptions from './ParseOptions.js';
 import NodeUtil from './NodeUtil.js';
 import TexParser from './TexParser.js';
-import TexError from './TexError.js';
+import { texError } from './TexError.js';
 import { entities } from '../../util/Entities.js';
 import { MmlMunderover } from '../../core/MmlTree/MmlNodes/munderover.js';
 import { UnitUtil } from './UnitUtil.js';
@@ -188,7 +188,7 @@ function readValue(
       case '}':
         if (!braces) {
           // Closing braces.
-          throw new TexError(COMPONENT, 'ExtraCloseMissingOpen');
+          texError(COMPONENT, 'ExtraCloseMissingOpen');
         }
         braces--;
         countBraces = false; // Stop counting start left braces.
@@ -211,7 +211,7 @@ function readValue(
     value += c;
   }
   if (braces) {
-    throw new TexError(COMPONENT, 'ExtraOpenMissingClose');
+    texError(COMPONENT, 'ExtraOpenMissingClose');
   }
   return dropBrace && start
     ? ['', '', removeBraces(value, 1)]
@@ -543,7 +543,7 @@ export const ParseUtil = {
                 .substring(i)
                 .match(/^\s*(?:([0-9A-F])|\{\s*([0-9A-F]+)\s*\})/);
               if (!arg) {
-                throw new TexError(COMPONENT, 'BadRawUnicode', '\\U');
+                texError(COMPONENT, 'BadRawUnicode', '\\U');
               }
               //  Replace \U{...} with specified character
               const c = String.fromCodePoint(parseInt(arg[1] || arg[2], 16));
@@ -558,7 +558,7 @@ export const ParseUtil = {
       }
       if (match !== '') {
         // @test Internal Math Error
-        throw new TexError(COMPONENT, 'MathNotTerminated');
+        texError(COMPONENT, 'MathNotTerminated');
       }
     }
     if (k < text.length) {
@@ -723,7 +723,7 @@ export const ParseUtil = {
           text += c;
         } else {
           if (!c.match(/[1-9]/) || parseInt(c, 10) > args.length) {
-            throw new TexError(COMPONENT, 'IllegalMacroParam');
+            texError(COMPONENT, 'IllegalMacroParam');
           }
           newstring = ParseUtil.addArgs(
             parser,
@@ -754,7 +754,7 @@ export const ParseUtil = {
       s1 += ' ';
     }
     if (s1.length + s2.length > parser.configuration.options['maxBuffer']) {
-      throw new TexError(COMPONENT, 'MaxBufferSize');
+      texError(COMPONENT, 'MaxBufferSize');
     }
     return s1 + s2;
   },
@@ -770,9 +770,9 @@ export const ParseUtil = {
       return;
     }
     if (isMacro) {
-      throw new TexError(COMPONENT, 'MaxMacroSub1');
+      texError(COMPONENT, 'MaxMacroSub1');
     } else {
-      throw new TexError(COMPONENT, 'MaxMacroSub2');
+      texError(COMPONENT, 'MaxMacroSub2');
     }
   },
 
@@ -795,7 +795,7 @@ export const ParseUtil = {
       return;
     }
     if (!top.isKind('start') || first) {
-      throw new TexError(COMPONENT, 'ErroneousNestingEq');
+      texError(COMPONENT, 'ErroneousNestingEq');
     }
   },
 
@@ -874,13 +874,13 @@ export const ParseUtil = {
             const type = allowed[key] as KeyValueDef<any>;
             const value = String(def[key]);
             if (!type.verify(value)) {
-              throw new TexError(COMPONENT, 'InvalidValue', key);
+              texError(COMPONENT, 'InvalidValue', key);
             }
             def[key] = type.convert(value);
           }
         } else {
           if (error) {
-            throw new TexError(COMPONENT, 'InvalidOption', key);
+            texError(COMPONENT, 'InvalidOption', key);
           }
           delete def[key];
         }

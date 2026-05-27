@@ -27,7 +27,7 @@ import { UnitUtil } from './UnitUtil.js';
 import Stack from './Stack.js';
 import StackItemFactory from './StackItemFactory.js';
 import { Tags } from './Tags.js';
-import TexError from './TexError.js';
+import { texError } from './TexError.js';
 import { MmlNode, AbstractMmlNode } from '../../core/MmlTree/MmlNode.js';
 import { ParseInput, ParseResult } from './Types.js';
 import ParseOptions from './ParseOptions.js';
@@ -35,7 +35,6 @@ import { BaseItem, StackItem, EnvList } from './StackItem.js';
 import { Token } from './Token.js';
 import { OptionList } from '../../util/Options.js';
 import { TexConstant } from './TexConstants.js';
-
 import { COMPONENT } from './__locales__/Component.js';
 
 /**
@@ -332,13 +331,13 @@ export default class TexParser {
       case '':
         if (!noneOK) {
           // @test MissingArgFor
-          throw new TexError(COMPONENT, 'MissingArgFor', this.currentCS);
+          texError(COMPONENT, 'MissingArgFor', this.currentCS);
         }
         return null;
       case '}':
         if (!noneOK) {
           // @test ExtraCloseMissingOpen
-          throw new TexError(COMPONENT, 'ExtraCloseMissingOpen');
+          texError(COMPONENT, 'ExtraCloseMissingOpen');
         }
         return null;
       case '\\':
@@ -363,7 +362,7 @@ export default class TexParser {
           }
         }
         // @test MissingCloseBrace
-        throw new TexError(COMPONENT, 'MissingCloseBrace');
+        texError(COMPONENT, 'MissingCloseBrace');
       }
     }
     const c = this.getCodePoint();
@@ -401,7 +400,7 @@ export default class TexParser {
         case '}':
           if (braces-- <= 0) {
             // @test ExtraCloseLooking1
-            throw new TexError(COMPONENT, 'ExtraCloseLooking', "']'");
+            texError(COMPONENT, 'ExtraCloseLooking', "']'");
           }
           break;
         case '[':
@@ -418,7 +417,7 @@ export default class TexParser {
       }
     }
     // @test MissingCloseBracket
-    throw new TexError(COMPONENT, 'MissingCloseBracket', this.currentCS);
+    texError(COMPONENT, 'MissingCloseBracket', this.currentCS);
   }
 
   /**
@@ -443,7 +442,7 @@ export default class TexParser {
       }
     }
     // @test MissingOrUnrecognizedDelim1, MissingOrUnrecognizedDelim2
-    throw new TexError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
+    texError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
   }
 
   /**
@@ -470,7 +469,7 @@ export default class TexParser {
       }
     }
     // @test MissingDimOrUnits
-    throw new TexError(COMPONENT, 'MissingDimOrUnits', this.currentCS);
+    texError(COMPONENT, 'MissingDimOrUnits', this.currentCS);
   }
 
   /**
@@ -500,7 +499,7 @@ export default class TexParser {
         case '}':
           if (braces === 0) {
             // @test ExtraCloseLooking2
-            throw new TexError(COMPONENT, 'ExtraCloseLooking', token);
+            texError(COMPONENT, 'ExtraCloseLooking', token);
           }
           braces--;
           break;
@@ -510,12 +509,7 @@ export default class TexParser {
       }
     }
     // @test TokenNotFoundForCommand
-    throw new TexError(
-      COMPONENT,
-      'TokenNotFoundForCommand',
-      token,
-      this.currentCS
-    );
+    texError(COMPONENT, 'TokenNotFoundForCommand', token, this.currentCS);
   }
 
   /**
@@ -562,7 +556,7 @@ export default class TexParser {
       return c;
     }
     // @test MissingOrUnrecognizedDelim
-    throw new TexError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
+    texError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
   }
 
   /**

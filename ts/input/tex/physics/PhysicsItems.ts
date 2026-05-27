@@ -26,13 +26,14 @@ import { ParseUtil } from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 import { AbstractMmlTokenNode } from '../../../core/MmlTree/MmlNode.js';
+import { COMPONENT } from './__locales__/Component.js';
 
 export class AutoOpen extends BaseItem {
   /**
    * @override
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
-    stop: ['ExtraOrMissingDelims', 'Extra open or missing close delimiter'],
+    stop: [COMPONENT, 'ExtraOrMissingDelims'],
   });
 
   /**

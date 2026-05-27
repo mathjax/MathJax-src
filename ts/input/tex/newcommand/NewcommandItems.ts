@@ -21,7 +21,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { CheckType, BaseItem, StackItem } from '../StackItem.js';
 
 import { COMPONENT } from './__locales__/Component.js';
@@ -54,18 +54,13 @@ export class BeginEnvItem extends BaseItem {
       // @test Newenvironment Empty, Newenvironment Align
       if (item.getName() !== this.getName()) {
         // @test (missing) \newenvironment{env}{aa}{bb}\begin{env}cc\end{equation}
-        throw new TexError(
-          COMPONENT,
-          'EnvBadEnd',
-          this.getName(),
-          item.getName()
-        );
+        texError(COMPONENT, 'EnvBadEnd', this.getName(), item.getName());
       }
       return [[this.factory.create('mml', this.toMml())], true];
     }
     if (item.isKind('stop')) {
       // @test (missing) \newenvironment{env}{aa}{bb}\begin{env}cc
-      throw new TexError(COMPONENT, 'EnvMissingEnd', this.getName());
+      texError(COMPONENT, 'EnvMissingEnd', this.getName());
     }
     // @test Newenvironment Empty, Newenvironment Align
     return super.checkItem(item);

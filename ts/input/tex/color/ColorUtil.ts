@@ -21,7 +21,7 @@
  * @author i@omardo.com (Omar Al-Ithawi)
  */
 
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { COLORS } from './ColorConstants.js';
 
 import { COMPONENT } from './__locales__/Component.js';
@@ -51,7 +51,7 @@ export class ColorModel {
   private normalizeColor(model: string, def: string): string {
     if (!model || model === 'named') {
       if (def.match(/;/)) {
-        throw new TexError(COMPONENT, 'BadColorValue');
+        texError(COMPONENT, 'BadColorValue');
       }
       // Allow to define colors directly by using the CSS format e.g. `#888`
       return def;
@@ -61,7 +61,7 @@ export class ColorModel {
       return modelProcessor(def);
     }
 
-    throw new TexError(COMPONENT, 'UndefinedColorModel', model);
+    texError(COMPONENT, 'UndefinedColorModel', model);
   }
 
   /**
@@ -99,7 +99,7 @@ export class ColorModel {
       return COLORS.get(name);
     }
     if (name.match(/;/)) {
-      throw new TexError(COMPONENT, 'BadColorValue', 'Invalid color value');
+      texError(COMPONENT, 'BadColorValue', 'Invalid color value');
     }
     // Pass the color name as-is to CSS
     return name;
@@ -131,17 +131,17 @@ ColorModelProcessors.set('rgb', function (rgb: string): string {
   let RGB: string = '#';
 
   if (rgbParts.length !== 3) {
-    throw new TexError(COMPONENT, 'ModelArg1', 'rgb');
+    texError(COMPONENT, 'ModelArg1', 'rgb');
   }
 
   for (const rgbPart of rgbParts) {
     if (!rgbPart.match(/^(\d+(\.\d*)?|\.\d+)$/)) {
-      throw new TexError(COMPONENT, 'InvalidDecimalNumber');
+      texError(COMPONENT, 'InvalidDecimalNumber');
     }
 
     const n = parseFloat(rgbPart);
     if (n < 0 || n > 1) {
-      throw new TexError(COMPONENT, 'ModelArg2', 'rgb', '0', '1');
+      texError(COMPONENT, 'ModelArg2', 'rgb', '0', '1');
     }
 
     let pn = Math.floor(n * 255).toString(16);
@@ -166,17 +166,17 @@ ColorModelProcessors.set('RGB', function (rgb: string): string {
   let RGB = '#';
 
   if (rgbParts.length !== 3) {
-    throw new TexError(COMPONENT, 'ModelArg1', 'RGB');
+    texError(COMPONENT, 'ModelArg1', 'RGB');
   }
 
   for (const rgbPart of rgbParts) {
     if (!rgbPart.match(/^\d+$/)) {
-      throw new TexError(COMPONENT, 'InvalidNumber');
+      texError(COMPONENT, 'InvalidNumber');
     }
 
     const n = parseInt(rgbPart);
     if (n > 255) {
-      throw new TexError(COMPONENT, 'ModelArg2', 'RGB', '0', '255');
+      texError(COMPONENT, 'ModelArg2', 'RGB', '0', '255');
     }
 
     let pn = n.toString(16);
@@ -196,12 +196,12 @@ ColorModelProcessors.set('RGB', function (rgb: string): string {
  */
 ColorModelProcessors.set('gray', function (gray: string): string {
   if (!gray.match(/^\s*(\d+(\.\d*)?|\.\d+)\s*$/)) {
-    throw new TexError(COMPONENT, 'InvalidDecimalNumber');
+    texError(COMPONENT, 'InvalidDecimalNumber');
   }
 
   const n: number = parseFloat(gray);
   if (n < 0 || n > 1) {
-    throw new TexError(COMPONENT, 'ModelArg2', 'gray', '0', '1');
+    texError(COMPONENT, 'ModelArg2', 'gray', '0', '1');
   }
   let pn = Math.floor(n * 255).toString(16);
   if (pn.length < 2) {

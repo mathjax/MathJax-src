@@ -24,6 +24,7 @@ import { HandlerType, ConfigurationType } from '#js/input/tex/HandlerTypes.js';
 import { CommandMap } from '#js/input/tex/TokenMap.js';
 import { Token } from '#js/input/tex/Token.js';
 import { TagsFactory } from '#js/input/tex/Tags.js';
+import { texError } from '#js/input/tex/TexError.js';
 import TexError from '#js/input/tex/TexError.js';
 import {
   ParseUtil,
@@ -138,23 +139,40 @@ describe('Tags', () => {
 
 describe('TexError', () => {
   test('Number argument', () => {
-    const err = new TexError(null, 'test', 'Number: %1', 1 as any);
+    const err = new TexError('test', 'Number: %1', 1 as any);
     expect(err.message).toBe('Number: 1');
   });
 
   test('Braced insertion', () => {
-    const err = new TexError(null, 'test', 'Msg: %{1}, Number: %{2}', 'OK', 2 as any);
+    const err = new TexError('test', 'Msg: %{1}, Number: %{2}', 'OK', 2 as any);
     expect(err.message).toBe('Msg: OK, Number: 2');
   });
 
   test.skip('Plural', () => {
-    const err = new TexError(null, 'test', '%{plural:%1|abc}', 'apple');
+    const err = new TexError('test', '%{plural:%1|abc}', 'apple');
     expect(err.message).toBe('%{plural:%1|abc}');
   });
 
   test('Percent', () => {
-    const err = new TexError(null, 'test', '10%%');
+    const err = new TexError('test', '10%%');
     expect(err.message).toBe('10%');
+  });
+});
+
+describe('texError', () => {
+  test('Number argument', () => {
+    expect(() => texError(null, 'test', 'Number: %1', '1'))
+      .toThrow('Number: 1');
+  });
+
+  test('Braced insertion', () => {
+    expect(() => texError(null, 'test', 'Msg: %{1}, Number: %{2}', 'OK', '2'))
+      .toThrow('Msg: OK, Number: 2');
+  });
+
+  test('Percent', () => {
+    expect(() => texError(null, 'test', '10%%'))
+      .toThrow('10%');
   });
 });
 
