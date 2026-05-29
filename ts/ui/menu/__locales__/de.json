@@ -21,6 +21,7 @@
   ".Speech/Title": "MathJax-Sprechtext",
   ".Svg/NotProduced": "SVG kann nicht erzeugt werden. <br>Versuchen Sie zunächst, zur SVG-Ausgabe zu wechseln.",
   ".Svg/Title": "MathJax-SVG-Bild",
+  ".Warn/CantCopy": "Kann nicht in die Zwischenablage kopiert werden: %1",
   ".Warn/ComponentNotLoaded": "Komponente %1 nicht geladen",
   ".Warn/StorageError": "MathJax-localStorage-Fehler: %1",
   ".Zoom/Title": "MathJax-vergrößerter Ausdruck",
