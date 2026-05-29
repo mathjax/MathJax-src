@@ -21,6 +21,7 @@
   ".Speech/Title": "MathJax Speech Text",
   ".Svg/NotProduced": "SVG can't be produced.<br>Try switching to SVG output first.",
   ".Svg/Title": "MathJax SVG Image",
+  ".Warn/CantCopy": "Can't copy to clipboard: %1",
   ".Warn/ComponentNotLoaded": "Component %1 not loaded",
   ".Warn/StorageError": "MathJax localStorage error: %1",
   ".Zoom/Title": "MathJax Zoomed Expression",
