@@ -1,0 +1,8 @@
+{
+  "ProsodyError": "Beim Prosody-Abgleich ist ein Fehler aufgetreten",
+  "SpeechError": "Fehler bei der Sprachgenerierung:",
+  "Worker/Cancelled": "Aufgabe %1 abgebrochen",
+  "Worker/NotStarted": "Worker wurde nicht gestartet",
+  "Worker/Started": "Worker bereits gestartet",
+  "Worker/Terminate": "%1 durch Beendigung des WorkerHandlers abgebrochen"
+}
