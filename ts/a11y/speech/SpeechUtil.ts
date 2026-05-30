@@ -22,6 +22,8 @@
  */
 
 import * as Sre from '../sre.js';
+import { Locale } from '../../util/Locale.js';
+import { COMPONENT } from './__locales__/Component.js';
 
 const ProsodyKeys = ['pitch', 'rate', 'volume'];
 
@@ -162,7 +164,7 @@ const prosodyRegexp = /([+-]?)([0-9]+)%/;
 function extractProsody(attr: string): [string, string] {
   const match = attr.match(prosodyRegexp);
   if (!match) {
-    console.warn('Something went wrong with the prosody matching.');
+    Locale.warn(COMPONENT, 'ProsodyError');
     return ['', '100'];
   }
   return [match[1], match[2]];
