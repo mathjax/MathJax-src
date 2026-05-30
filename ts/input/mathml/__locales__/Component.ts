@@ -16,13 +16,24 @@
  */
 
 /**
- * @file  Locale component registration for input/tex
+ * @file  Locale component registration for input/mml
  *
- * @author v.sorge@mathjax.org (Volker Sorge)
+ * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import { Locale } from '../../../util/Locale.js';
+import { Locale, namedData } from '../../../util/Locale.js';
 
-export const COMPONENT = 'input/tex';
+export const COMPONENT = 'input/mml';
 
-Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex');
+Locale.registerLocaleFiles(COMPONENT, '../ts/input/mathml');
+
+/**
+ * Get a localized message for this component
+ *
+ * @param {string} id                   The id of the message
+ * @param {(string|namedData)[]} args   The replacement arguments for the message, if any
+ * @returns {string}                    The localized message
+ */
+export function localize(id: string, ...args: (string | namedData)[]): string {
+  return Locale.message(COMPONENT, id, ...args);
+}

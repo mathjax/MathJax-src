@@ -24,6 +24,8 @@
 
 import { MathDocument } from '../../../core/MathDocument.js';
 import { mjxRoot } from '#root/root.js';
+import { Locale } from '../../../util/Locale.js';
+import { COMPONENT } from '../__locales__/Component.js';
 
 /**
  * Create the transform function that uses Saxon-js to perform the
@@ -45,8 +47,11 @@ export function createTransform<N, T, D>(): (
     // check if saxon-js is installed.
     nodeRequire.resolve('saxon-js');
   } catch (_err) {
-    throw Error(
-      'Saxon-js not found.  Run the command:\n    npm install saxon-js\nand try again.'
+    Locale.throw(
+      COMPONENT,
+      'SaxonNotFound',
+      'Saxon-js',
+      '   pnpm install saxons-js'
     );
   }
   // dynamically load Saxon-JS.

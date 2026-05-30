@@ -1,0 +1,8 @@
+{
+  "BadNode": "Unknown node type '%1'",
+  "BadText": "Unexpected text node '%1'",
+  "MathNode": "MathML must be formed by a %1 element, not %2",
+  "MmlError": "Error processing MathML",
+  "SaxonNotFound": "#1 not found.  Run the command:\n %2\nand try again.",
+  "SingleNode": "MathML must consist of a single element"
+}
