@@ -34,6 +34,8 @@ import { HtmlNode } from '../../core/MmlTree/MmlNodes/HtmlNode.js';
 import { userOptions, defaultOptions, OptionList } from '../../util/Options.js';
 import * as Entities from '../../util/Entities.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+import { Locale } from '../../util/Locale.js';
+import { COMPONENT } from './__locales__/Component.js';
 
 /********************************************************************/
 /**
@@ -186,7 +188,7 @@ export class MathMLCompile<N, T, D> {
         this.adaptor
       );
     }
-    this.error('Unknown node type "' + type + '"');
+    this.error('BadNode', type);
     return null;
   }
 
@@ -262,7 +264,7 @@ export class MathMLCompile<N, T, D> {
    * @param {string[]} list   The list of class names to filter
    * @returns {string[]}      The list of filtered class names
    */
-  protected filterClassList(list: string[]) {
+  protected filterClassList(list: string[]): string[] {
     return list;
   }
 
@@ -328,7 +330,7 @@ export class MathMLCompile<N, T, D> {
       }
       mml.appendChild((this.factory.create('text') as TextNode).setText(text));
     } else if (text.match(/\S/)) {
-      this.error('Unexpected text node "' + text + '"');
+      this.error('BadText', text);
     }
   }
 
@@ -422,8 +424,9 @@ export class MathMLCompile<N, T, D> {
   }
   /**
    * @param {string} message  The error message to produce
+   * @param {string[]} args   The substitution arguments
    */
-  protected error(message: string) {
-    throw new Error(message);
+  protected error(message: string, ...args: string[]) {
+    Locale.throw(COMPONENT, message, ...args);
   }
 }
