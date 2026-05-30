@@ -3,6 +3,12 @@
     "component": "adaptors/linkedom",
     "targets": ["adaptors/linkedomAdaptor.ts"]
   },
+  "copy": {
+    "to": "[bundle]/adaptors/linkedom",
+    "from": "[ts]/adaptors/linkedom",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "adaptors/linkedom",
     "libs": ["components/src/core/lib"]
