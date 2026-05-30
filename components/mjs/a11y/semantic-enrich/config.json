@@ -5,6 +5,12 @@
       "a11y/semantic-enrich.ts"
     ]
   },
+  "copy": {
+    "to": "[bundle]/a11y/semantic-enrich",
+    "from": "[ts]/a11y/semantic-enrich",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "a11y/semantic-enrich",
     "libs": [

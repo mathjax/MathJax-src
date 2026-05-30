@@ -39,6 +39,8 @@ import { MathML } from '../input/mathml.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { OptionList, expandable } from '../util/Options.js';
 import * as Sre from './sre.js';
+import { Locale } from '../util/Locale.js';
+import { COMPONENT } from './semantic-enrich/__locales__/Component.js';
 
 /*==========================================================================*/
 
@@ -399,7 +401,7 @@ export function EnrichedMathDocumentMixin<
       _math: EnrichedMathItem<N, T, D>,
       err: Error
     ) {
-      console.warn('Enrichment error:', err);
+      console.warn(Locale.message(COMPONENT, 'EnrichError'), err);
     }
 
     /**
