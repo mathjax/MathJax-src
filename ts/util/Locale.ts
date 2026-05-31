@@ -21,8 +21,6 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { asyncLoad } from './AsyncLoad.js';
-
 /**
  * The various object map types
  */
@@ -49,6 +47,13 @@ export class Locale {
    * True when the core component has been loaded (and so the Package path resolution is available)
    */
   public static isComponent: boolean = false;
+
+  /**
+   * util/AsyncLoad.js must be loaded via import() to avoid cyclical imports
+   * that would cause a ReferenceError for Locale.
+   */
+  public static asyncLoad: (file: string) => Promise<any>;
+  public static syncLoad: (file: string) => any;
 
   /**
    * The localized message strings, per component and locale,
@@ -220,7 +225,7 @@ export class Locale {
     id: string,
     data: string | namedData = {},
     ...args: string[]
-  ) {
+  ): never {
     throw Error(this.message(component, id, data, ...args));
   }
 
@@ -251,6 +256,15 @@ export class Locale {
   public static async setLocale(
     locale: string = this.current
   ): Promise<void[]> {
+    this.initialized = true;
+    if (!this.syncLoad && !this.asyncLoad) {
+      const { mathjax } = await import('../mathjax.js');
+      if (mathjax.asyncIsSynchronous) {
+        this.syncLoad = mathjax.asyncLoad;
+      } else if (!this.asyncLoad) {
+        this.asyncLoad = (await import('./AsyncLoad.js')).asyncLoad;
+      }
+    }
     this.current = locale;
     const promises = [];
     for (const [component, [directory, loaded]] of Object.entries(
@@ -279,7 +293,19 @@ export class Locale {
     locale: string,
     file: string
   ): Promise<void> {
-    return asyncLoad(file)
+    if (this.syncLoad) {
+      try {
+        this.registerMessages(
+          component,
+          locale,
+          this.syncLoad(file) as any as messageData
+        );
+      } catch (error) {
+        await this.localeError(component, locale, error);
+      }
+      return;
+    }
+    return this.asyncLoad(file)
       .then((data: messageData) =>
         this.registerMessages(component, locale, data)
       )

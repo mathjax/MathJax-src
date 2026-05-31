@@ -1,4 +1,5 @@
 import { describe, test, expect } from '@jest/globals';
+import '#helpers/locale.js';
 import * as Options from '#js/util/Options.js';
 
 const SYMB = Symbol('symbol');
@@ -348,7 +349,7 @@ describe('Options utility', () => {
     try {
       copy = Options.userOptions({}, { a: 1 });
     } catch (err) {
-      expect(err.message).toBe('Invalid option "a" (no default value).');
+      expect(err.message).toBe(`Invalid option 'a' (no default value).`);
     }
     expect(copy).toEqual(undefined);
 

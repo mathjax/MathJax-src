@@ -25,6 +25,8 @@ import { MathDocument } from './MathDocument.js';
 import { InputJax } from './InputJax.js';
 import { OptionList } from '../util/Options.js';
 import { MmlNode } from './MmlTree/MmlNode.js';
+import { Locale } from '../util/Locale.js';
+import { COMPONENT } from './__locales__/Component.js';
 
 /*****************************************************************/
 /**
@@ -492,7 +494,7 @@ export const STATE: { [state: string]: number } = {
  */
 export function newState(name: string, state: number) {
   if (name in STATE) {
-    throw Error('State ' + name + ' already exists');
+    Locale.throw(COMPONENT, 'StateExists', name);
   }
   STATE[name] = state;
 }

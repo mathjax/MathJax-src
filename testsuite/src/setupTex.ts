@@ -21,6 +21,7 @@ import { init } from '#source/node-main/node-main.mjs';
 import { expect } from '@jest/globals';
 import { source } from '#source/source.js';
 import { Locale } from '#js/util/Locale.js';
+import { asyncLoad } from '#js/util/AsyncLoad.js';
 import {
   trapErrors,
   trapAsyncErrors,
@@ -31,6 +32,9 @@ import {
 declare const MathJax: any;
 type MATHITEM = MathItem<any, any, any>;
 type PackageList = (string | [string, number])[];
+
+Locale.asyncLoad = asyncLoad;
+Locale.syncLoad = mathjax.asyncLoad;
 
 /**
  * The various conversion functions (set up in setupTex... function below).
@@ -103,12 +107,11 @@ export function expectTypesetError(
  *
  * @param {string[]} packages    The TeX packages to configure
  * @param {OptionList} options   The TeX options to include
- * @returns {Promise<void[]>}    The promise for when the locale is set up
  */
 export function setupTex(
   packages: PackageList = ['base'],
   options: OptionList = {}
-): Promise<void[]> {
+) {
   const parserOptions = Object.assign(
     {},
     { packages },
@@ -116,10 +119,10 @@ export function setupTex(
     options
   );
   const tex = new TeX(parserOptions);
+  Locale.setLocale();
   const html = new HTMLDocument('', adaptor, { InputJax: tex });
   convert = (expr: string, display: boolean) =>
     toMathML(html.convert(expr, { display: display, end: STATE.CONVERT }));
-  return Locale.setLocale();
 }
 
 /**
@@ -128,12 +131,11 @@ export function setupTex(
  *
  * @param {string[]} packages    The TeX packages to configure
  * @param {OptionList} options   The TeX options to include
- * @returns {Promise<void[]>}    The promise for when the locale is set up
  */
 export function setupTexRender(
   packages: PackageList = ['base'],
   options: OptionList = {}
-): Promise<void[]> {
+) {
   const parserOptions = Object.assign(
     {},
     { packages: packages, inlineMath: { '[+]': [['$', '$']] } },
@@ -148,7 +150,7 @@ export function setupTexRender(
     html.findMath().compile();
     return toMathML((Array.from(html.math)[0] as MATHITEM).root);
   };
-  return Locale.setLocale();
+  Locale.setLocale();
 }
 
 /**
@@ -218,12 +220,12 @@ import { SVG } from '#js/output/svg.js';
  *
  * @param {string[]} packages    The TeX packages to configure
  * @param {OptionList} options   The TeX options to include
- * @returns {Promise<void[]>}    The promise for when the locale is set up
  */
 export function setupTexWithOutput(
   packages: string[] = ['base'],
   options: OptionList = {}
-): Promise<void[]> {
+) {
+  Locale.setLocale();
   const parserOptions = Object.assign({}, { packages: packages }, options);
   const tex = new TeX(parserOptions);
   const html = new HTMLDocument('', adaptor, {
@@ -234,7 +236,6 @@ export function setupTexWithOutput(
   const toMathML = (node: MmlNode) => visitor.visitTree(node);
   convert = (expr: string, display: boolean) =>
     toMathML(html.convert(expr, { display: display, end: STATE.CONVERT }));
-  return Locale.setLocale();
 }
 
 /*********************************************************************/

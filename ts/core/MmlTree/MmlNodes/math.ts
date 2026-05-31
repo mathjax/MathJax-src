@@ -126,7 +126,7 @@ export class MmlMath extends AbstractMmlLayoutNode {
   public verifyTree(options: PropertyList = null) {
     super.verifyTree(options);
     if (this.parent) {
-      this.mError('Improper nesting of math tags', options, true);
+      this.mError('MML/BadNesting', [], options, true);
     }
   }
 }
