@@ -50,6 +50,7 @@
     "./*": "./*"
   },
   "imports": {
+    "#ts/*": "@mathjax/src/ts/*",
     "#js/*": "@mathjax/src/mjs/*",
     "#source/*": "@mathjax/src/components/mjs/*",
     "#root/*": "@mathjax/src/mjs/components/mjs/*",
@@ -140,7 +141,7 @@
     "build-mjs": "pnpm -s mjs:build",
     "make-cjs-components": "pnpm -s cjs:components:make && pnpm -s cjs:bundle:finalize",
     "make-mjs-components": "pnpm -s mjs:components:make",
-    "make-one": "make() { node components/bin/makeAll --no-subdirs $3 $4 --${2:-mjs} components/${2-:mjs}/$1; }; make",
+    "make-one": "make() { node components/bin/makeAll --no-subdirs $3 $4 --${2:-mjs} components/${2:-mjs}/$1; }; make",
     "make-components": "pnpm -s make-mjs-components",
     "compile": "pnpm -s compile-mjs",
     "build": "pnpm -s build-mjs",

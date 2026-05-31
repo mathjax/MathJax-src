@@ -1,4 +1,5 @@
 import './lib/linkedom.js';
+import './en.js';
 
 import {linkedomAdaptor} from '#js/adaptors/linkedomAdaptor.js';
 

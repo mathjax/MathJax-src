@@ -117,6 +117,7 @@ export class Locale {
       cdata[locale] = Object.create(null);
     }
     Object.assign(cdata[locale], data);
+    this.locations[component][1].add(locale);
   }
 
   /**

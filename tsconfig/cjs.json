@@ -5,6 +5,7 @@
     "outDir": "../cjs",
     "module": "CommonJS",
     "paths": {
+      "#ts/*": ["./*"],
       "#js/*": ["../cjs/*"],
       "#source/*": ["../components/cjs/*"],
       "#root/*": ["../ts/components/cjs/*"],
