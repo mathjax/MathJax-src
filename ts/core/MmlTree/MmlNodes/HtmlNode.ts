@@ -95,7 +95,7 @@ export class HtmlNode<N> extends XMLNode {
    */
   public verifyTree(options: PropertyList) {
     if (this.parent && !this.parent.isToken) {
-      this.mError('HTML can only be a child of a token element', options, true);
+      this.mError('MML/TokenChild', ['HTML'], options, true);
       return;
     }
   }

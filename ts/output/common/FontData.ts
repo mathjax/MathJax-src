@@ -27,6 +27,8 @@ import { OptionList, defaultOptions, userOptions } from '../../util/Options.js';
 import { StyleJson } from '../../util/StyleJson.js';
 import { asyncLoad } from '../../util/AsyncLoad.js';
 import { retryAfter } from '../../util/Retries.js';
+import { Locale } from '../../util/Locale.js';
+import { COMPONENT, localize } from '../../core/__locales__/Component.js';
 import { DIRECTION } from './Direction.js';
 export { DIRECTION } from './Direction.js';
 
@@ -750,8 +752,10 @@ export class FontData<
   ): CharOptions {
     const char = font[n];
     if (!Array.isArray(char)) {
-      throw Error(
-        `Character data hasn't been loaded for 0x${n.toString(16).toUpperCase()}`
+      Locale.throw(
+        COMPONENT,
+        'FontData/NoData',
+        `0x${n.toString(16).toUpperCase()}`
       );
     }
     if (char.length === 3) {
@@ -1241,10 +1245,11 @@ export class FontData<
    * @returns {Promise<void>}        The promise that is resolved when the file is loaded
    */
   public async loadDynamicFile(dynamic: DynamicFile): Promise<void> {
-    if (dynamic.failed)
+    if (dynamic.failed) {
       return Promise.reject(
-        new Error(`dynamic file '${dynamic.file}' failed to load`)
+        new Error(localize('FontData/CantLoad', dynamic.file))
       );
+    }
     if (!dynamic.promise) {
       dynamic.promise = asyncLoad(this.dynamicFileName(dynamic)).catch(
         (err) => {
@@ -1282,9 +1287,13 @@ export class FontData<
    */
   public loadDynamicFilesSync() {
     if (!mathjax.asyncIsSynchronous) {
-      throw Error(
-        'MathJax(loadDynamicFilesSync): mathjax.asyncLoad must be specified and synchronous\n' +
-          '    Try importing #js/../components/require.mjs and #js/util/asyncLoad/node.js'
+      Locale.throw(
+        COMPONENT,
+        'FontData/BadAsync',
+        'loadDynamicFileSync',
+        'mathjax.asyncLoad',
+        '@mathjax/src/components/require.mjs',
+        '@mathjax/src/js/util/asyncLoad/node.js'
       );
     }
     const dynamicFiles = this.CLASS.dynamicFiles;

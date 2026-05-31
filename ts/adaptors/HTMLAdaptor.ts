@@ -28,6 +28,8 @@ import {
   DOMAdaptor,
   PageBBox,
 } from '../core/DOMAdaptor.js';
+import { Locale } from '../util/Locale.js';
+import { COMPONENT } from '../core/__locales__/Component.js';
 
 /*****************************************************************/
 /**
@@ -572,7 +574,7 @@ export class HTMLAdaptor<
       try {
         node.sheet.insertRule(rule, node.sheet.cssRules.length);
       } catch (e) {
-        console.warn(`MathJax: can't insert css rule '${rule}': ${e.message}`);
+        Locale.warn(COMPONENT, 'CantInsertCSS', rule, e.message);
       }
     }
   }

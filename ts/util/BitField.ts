@@ -21,6 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import { Locale } from './Locale.js';
+import { COMPONENT } from '../core/__locales__/Component.js';
+
 export class BitField {
   /**
    * The largest bit available
@@ -48,10 +51,10 @@ export class BitField {
   public static allocate(...names: string[]) {
     for (const name of names) {
       if (this.has(name)) {
-        throw new Error('Bit already allocated for ' + name);
+        Locale.throw(COMPONENT, 'Bit/Exists', name);
       }
       if (this.next === BitField.MAXBIT) {
-        throw new Error('Maximum number of bits already allocated');
+        Locale.throw(COMPONENT, 'Bit/Max');
       }
       this.names.set(name, this.next);
       this.next <<= 1;
@@ -102,7 +105,7 @@ export class BitField {
   protected getBit(name: string): number {
     const bit = (this.constructor as typeof BitField).names.get(name);
     if (!bit) {
-      throw new Error('Unknown bit-field name: ' + name);
+      Locale.throw(COMPONENT, 'Bit/Unknown', name);
     }
     return bit;
   }

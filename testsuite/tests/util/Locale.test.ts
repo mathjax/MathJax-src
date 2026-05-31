@@ -1,5 +1,7 @@
 import { describe, test, expect } from '@jest/globals';
 import { trapOutput, trapAsyncOutput } from '#helpers/traps.js';
+import { mathjax } from '#js/mathjax.js';
+import { asyncLoad } from '#js/util/AsyncLoad.js';
 import { Locale } from '#js/util/Locale.js';
 import '#js/util/asyncLoad/esm.js';
 
@@ -33,10 +35,10 @@ describe('Locale', () => {
       throw message;
     };
     await expect(Locale.setLocale('xy')).rejects.toContain(
-      "MathJax(component): Can't load 'xy.json': ENOENT: no such file or directory"
+      "Can't load 'xy.json': ENOENT: no such file or directory"
     );
     await expect(Locale.setLocale('de')).rejects.toContain(
-      "MathJax(component): 'de.json' kann nicht geladen werden: ENOENT: no such file or directory"
+      "'de.json' kann nicht geladen werden: ENOENT: no such file or directory"
     );
     console.error = error;
     await Locale.setLocale('en');
@@ -51,7 +53,9 @@ describe('Locale', () => {
   test('Messages', async () => {
     Locale.registerLocaleFiles('component', '../testsuite/lib/component');
     await Locale.setLocale('en'); // load English backups
-    await Locale.setLocale('test');
+    await trapAsyncOutput('error', async () => {
+      await Locale.setLocale('test');
+    });
     expect(Locale.message('component', 'test1')).toBe('Has % percent');
     expect(Locale.message('component', 'test2', 'x')).toBe('Has x one');
     expect(Locale.message('component', 'test3', 'a', 'b')).toBe(
@@ -126,6 +130,94 @@ describe('Locale', () => {
       Locale.warn('component', 'test2', 'warn')
     );
     expect(message).toEqual('Has warn one');
+  });
+
+  /********************************************************************************/
+
+  test('Locale sync', () => {
+    const locale = Locale as any;
+    Locale.registerLocaleFiles('sync', '../testsuite/lib/component');
+
+    //
+    // Save environment
+    //
+    const sync = Locale.syncLoad;
+    const error = console.error;
+
+    //
+    // Test synchronous loading failure
+    //
+    Locale.syncLoad = () => {
+      throw Error('failed!');
+    };
+
+    const log: string[] = [];
+    console.error = (msg) => log.push(msg);
+
+    locale.getLocaleData('sync', 'en', 'en.json').catch(() => {});
+    expect(log).toEqual(["MathJax(sync): Can't load 'en.json': failed!"]);
+
+    //
+    // Test synchronous loading success
+    //
+    Locale.syncLoad = () => {
+      return { test: 'A test' };
+    };
+
+    locale.getLocaleData('sync', 'en', 'en.json');
+    expect(Locale.message('sync', 'test')).toBe('A test');
+
+    //
+    // Restore environment
+    //
+    Locale.syncLoad = sync;
+    console.error = error;
+  });
+
+  /********************************************************************************/
+
+  test('Locale setup', async () => {
+    Locale.registerLocaleFiles('sync', '../testsuite/lib/component');
+
+    //
+    // Save environment
+    //
+    const [sync, async] = [Locale.syncLoad, Locale.asyncLoad];
+    const [load, isSync] = [mathjax.asyncLoad, mathjax.asyncIsSynchronous];
+
+    //
+    // Test synchronous setup
+    //
+    mathjax.asyncLoad = (_file) => {
+      return {};
+    };
+    mathjax.asyncIsSynchronous = true;
+    Locale.asyncLoad = Locale.syncLoad = null;
+
+    await Locale.setLocale();
+    expect(Locale.asyncLoad).toBe(null);
+    expect(Locale.syncLoad).toEqual(mathjax.asyncLoad);
+
+    //
+    // Test asynchronous setup
+    //
+    mathjax.asyncLoad = (_file) => {
+      return {};
+    };
+    mathjax.asyncIsSynchronous = false;
+    Locale.asyncLoad = Locale.syncLoad = null;
+
+    await Locale.setLocale();
+    expect(Locale.asyncLoad).toEqual(asyncLoad);
+    expect(Locale.syncLoad).toBe(null);
+
+    //
+    // Restore environment
+    //
+    Locale.asyncLoad = async;
+    Locale.syncLoad = sync;
+    mathjax.asyncLoad = load;
+    mathjax.asyncIsSynchronous = isSync;
   });
 
   /********************************************************************************/

@@ -299,7 +299,8 @@ export class MathMLCompile<N, T, D> {
             this.addChildren(mml, child);
           } else {
             childMml.mError(
-              'There should not be children for ' + childMml.kind + ' nodes',
+              'MML/NoChildren',
+              [childMml.kind],
               this.options['verify'],
               true
             );
