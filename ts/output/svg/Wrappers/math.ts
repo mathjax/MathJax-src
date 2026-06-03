@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -51,7 +51,8 @@ import { ZeroFontDataUrl } from './zero.js';
  * @template D  The Document class
  */
 export interface SvgMathNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMath<
       N,
       T,
@@ -75,7 +76,8 @@ export interface SvgMathNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMathClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMathClass<
       N,
       T,

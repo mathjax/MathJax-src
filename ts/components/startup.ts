@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -620,6 +620,7 @@ if (typeof MathJax._.startup === 'undefined') {
     typeset: true,
     ready: Startup.defaultReady.bind(Startup),
     pageReady: Startup.defaultPageReady.bind(Startup),
+    polyfillHasOwn: true, // Can be removed with ES2024 implementation of Object.hasown
   });
   combineWithMathJax({
     startup: Startup,

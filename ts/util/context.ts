@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2024-2025 The MathJax Consortium
+ *  Copyright (c) 2024-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
+
+declare const process: { platform: string };
 
 /**
  * True if there is a window object
@@ -49,7 +51,30 @@ export const context = {
       if (window.navigator.userAgent.includes('Android')) {
         return 'Unix';
       }
+    } else if (typeof process !== 'undefined') {
+      return (
+        {
+          linux: 'Unix',
+          android: 'Unix',
+          aix: 'Unix',
+          freebsd: 'Unix',
+          netbsd: 'Unix',
+          openbsd: 'Unix',
+          sunos: 'Unix',
+          darwin: 'MacOS',
+          win32: 'Windows',
+          cygwin: 'Windows',
+        }[process.platform] || process.platform
+      );
     }
     return 'unknown';
   })(),
+  path: (file: string) => file,
 };
+
+if (context.os === 'Windows') {
+  context.path = (file: string) =>
+    file.match(/^[/\\]?[a-zA-Z]:[/\\]/)
+      ? 'file://' + file.replace(/\\/g, '/').replace(/^\//, '')
+      : file.replace(/^\//, 'file:///');
+}

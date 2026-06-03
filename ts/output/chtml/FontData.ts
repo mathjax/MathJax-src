@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import {
   StyleJsonSheet,
 } from '../../util/StyleJson.js';
 import { em } from '../../util/lengths.js';
+import { VFUZZ, HFUZZ } from '../common/FontData.js';
 
 export * from '../common/FontData.js';
 
@@ -119,7 +120,7 @@ export class ChtmlFontData extends FontData<
   protected static defaultStyles = {};
 
   /**
-   * The default @font-face declarations with %%URL%% where the font path should go
+   * The default `@font-face` declarations with `%%URL%%` where the font path should go
    */
   protected static defaultFonts = {};
 
@@ -149,7 +150,7 @@ export class ChtmlFontData extends FontData<
   public fontUsage: StyleJson = {};
 
   /**
-   * Number of new @font-face entries that have been processed
+   * Number of new `@font-face` entries that have been processed
    */
   protected newFonts: number = 0;
 
@@ -479,6 +480,7 @@ export class ChtmlFontData extends FontData<
     HDW: ChtmlCharData
   ): number {
     if (!n) return 0;
+    let fuzz = 0;
     const [h, d, w] = this.getChar(v, n);
     const css: StyleJsonData = { width: this.em0(w) };
     if (part !== 'ext') {
@@ -494,18 +496,25 @@ export class ChtmlFontData extends FontData<
       css.margin = `${this.em(y)} ${dw} ${this.em(-y)}`;
     } else {
       //
+      // Adjust the height and depth for a little overlap.
       // Set the line-height to have the extenders touch,
-      // (plus a little extra for Safari, whose line-height is
-      // not accurate), and shift the extender stack to overlap
-      // the ends.
+      // and shift the extender stack to overlap the ends.
       //
-      css['line-height'] = this.em0(h + d + 0.005);
-      styles[`mjx-stretchy-v${c} > mjx-${part} > mjx-spacer`] = {
-        'margin-top': this.em(-d),
-      };
+      fuzz = VFUZZ;
+      const lh = Math.max(VFUZZ, h + d - VFUZZ);
+      css['line-height'] = this.em0(lh);
+      //
+      // Adjust the top margin to make sure we have overlap with the top part
+      //
+      const D = h - lh / 2 - VFUZZ;
+      if (D) {
+        styles[`mjx-stretchy-v${c} > mjx-ext > mjx-spacer`] = {
+          'margin-top': this.em(D),
+        };
+      }
     }
     styles[`mjx-stretchy-v${c} > mjx-${part}`] = css;
-    return h + d;
+    return Math.max(0, h + d - fuzz);
   }
 
   /*******************************************************/
@@ -556,7 +565,7 @@ export class ChtmlFontData extends FontData<
     }
     if (data.ext) {
       styles[`mjx-stretchy-h${c} > mjx-ext > mjx-spacer`]['letter-spacing'] =
-        this.em(-data.ext);
+        this.em(-data.ext - HFUZZ);
     }
   }
 
@@ -583,6 +592,9 @@ export class ChtmlFontData extends FontData<
       padding: this.padding(HDW as ChtmlCharData, w - HDW[2]),
     };
     if (part === 'ext') {
+      const padding = (css.padding as string).split(/ /);
+      padding[1] = padding[3] = '0';
+      css.padding = padding.join(' ');
       if (!w && options.dx) {
         w = 2 * options.dx - 0.06;
       }
@@ -627,13 +639,19 @@ export class ChtmlFontData extends FontData<
       options.ff || (letter ? `${this.cssFontPrefix}-${letter}` : '');
     const selector = 'mjx-c' + this.charSelector(n) + (font ? '.' + font : '');
     const padding = options.oc || options.ic || 0;
-    styles[selector] = {
+    const css = {
       padding: this.padding(data, padding),
     } as StyleJsonData;
     if (options.oc) {
       styles[selector + '[noic]'] = { 'padding-right': this.em(data[2]) };
     }
-    this.checkCombiningChar(options, styles[selector]);
+    this.checkCombiningChar(options, css);
+    styles[
+      selector +
+        (css['margin-left'] && !font
+          ? `:not([class*="${this.cssFontPrefix}-"])`
+          : '')
+    ] = css;
   }
 
   /**
@@ -653,6 +671,10 @@ export class ChtmlFontData extends FontData<
       pad.pop();
     }
     css.padding = pad.join(' ');
+    if (css.width === '0' && options.dx) {
+      css.width = this.em(2 * options.dx);
+      css['margin-left'] = '-' + css.width;
+    }
   }
 
   /***********************************************************************/

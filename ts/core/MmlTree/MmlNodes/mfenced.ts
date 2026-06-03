@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -96,7 +96,9 @@ export class MmlMfenced extends AbstractMmlNode {
     if (this.close) {
       prev = this.close.setTeXclass(prev);
     }
-    this.updateTeXclass(this.open);
+    if (!this.open || !this.close) {
+      this.updateTeXclass(this.open || this.childNodes[0] || this.close);
+    }
     return prev;
   }
 

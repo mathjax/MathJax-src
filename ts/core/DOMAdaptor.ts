@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -430,9 +430,11 @@ export interface DOMAdaptor<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export abstract class AbstractDOMAdaptor<N, T, D>
-  implements DOMAdaptor<N, T, D>
-{
+export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<
+  N,
+  T,
+  D
+> {
   /**
    * The document in which the HTML nodes will be created
    */

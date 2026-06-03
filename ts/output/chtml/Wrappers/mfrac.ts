@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -51,7 +51,8 @@ import { OptionList } from '../../../util/Options.js';
  * @template D  The Document class
  */
 export interface ChtmlMfracNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMfrac<
       N,
       T,
@@ -75,7 +76,8 @@ export interface ChtmlMfracNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMfracClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMfracClass<
       N,
       T,
@@ -154,7 +156,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
         display: 'inline-table',
         width: '100%'
       },
-      'mjx-dtable > *': {
+      'mjx-dtable > mjx-line, mjx-dtable > mjx-row': {
         'font-size': '2000%'
       },
       'mjx-dbox': {
@@ -386,12 +388,12 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
       //
       //  Place the parts
       //
-      const { u, v, delta, nbox, dbox } = this.getBevelData(display);
+      const { u, v, delta } = this.getBevelData(display);
       if (u) {
-        adaptor.setStyle(num, 'verticalAlign', this.em(u / nbox.scale));
+        adaptor.setStyle(num, 'verticalAlign', this.em(u));
       }
       if (v) {
-        adaptor.setStyle(den, 'verticalAlign', this.em(v / dbox.scale));
+        adaptor.setStyle(den, 'verticalAlign', this.em(v));
       }
       const dx = this.em(-delta / 2);
       adaptor.setStyle(this.bevel.dom[0], 'marginLeft', dx);

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -120,7 +120,7 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
    */
   normalize: (data) => {
     const name = data.name;
-    if (!name.match(/^(?:[a-z]+:\/)?\/|[a-z]:\\|\[/i)) {
+    if (!name.match(/^(?:[a-z]+:\/)?\/|[a-z]:[/\\]|\[/i)) {
       data.name = '[mathjax]/' + name.replace(/^\.\//, '');
     }
     return true;
@@ -399,6 +399,9 @@ if (typeof MathJax.loader === 'undefined') {
   combineDefaults(MathJax.config, 'loader', {
     paths: {
       mathjax: Loader.getRoot(),
+      fonts: context.window
+        ? 'https://cdn.jsdelivr.net/npm/@mathjax'
+        : '@mathjax',
     },
     source: {},
     dependencies: {},

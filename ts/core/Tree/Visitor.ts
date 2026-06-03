@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -109,9 +109,9 @@ export interface Visitor<N extends VisitorNode<N>> {
  * @template N   The node type being traversed
  * @template C   The node class for N (the constructor rather than instance of the class)
  */
-export abstract class AbstractVisitor<N extends VisitorNode<N>>
-  implements Visitor<N>
-{
+export abstract class AbstractVisitor<
+  N extends VisitorNode<N>,
+> implements Visitor<N> {
   /**
    * Holds the mapping from node kinds to visitor funcitons
    */

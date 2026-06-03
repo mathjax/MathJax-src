@@ -3,8 +3,8 @@
     "name": "sre/speech-worker"
   },
   "copy": {
-    "to": "../../../../../bundle/sre",
-    "from": "../../../../../ts/a11y/sre",
+    "to": "[bundle]/sre",
+    "from": "[ts]/a11y/sre",
     "copy": [
       "require.mjs",
       "require.d.mts"

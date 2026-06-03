@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -75,7 +75,8 @@ export function AlignX(align: string): AlignFunction {
  * @template D  The Document class
  */
 export interface SvgMmultiscriptsNTD<N, T, D>
-  extends SvgMsubsupNTD<N, T, D>,
+  extends
+    SvgMsubsupNTD<N, T, D>,
     CommonMmultiscripts<
       N,
       T,
@@ -99,7 +100,8 @@ export interface SvgMmultiscriptsNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMmultiscriptsClass<N, T, D>
-  extends SvgMsubsupClass<N, T, D>,
+  extends
+    SvgMsubsupClass<N, T, D>,
     CommonMmultiscriptsClass<
       N,
       T,

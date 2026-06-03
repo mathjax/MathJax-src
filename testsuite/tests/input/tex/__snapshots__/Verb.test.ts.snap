@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Verb Verb Minus 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\verb -{a}-" display="block">
+  <mtext mathvariant="monospace" data-latex="\\verb -{a}-">{a}</mtext>
+</math>"
+`;
+
+exports[`Verb Verb Minus Double 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\verb -{a--" display="block">
+  <mtext mathvariant="monospace" data-latex="\\verb -{a-">{a</mtext>
+  <mo data-latex="-">&#x2212;</mo>
+</math>"
+`;
+
+exports[`Verb Verb Plus  1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\verb+{a}+" display="block">
+  <mtext mathvariant="monospace" data-latex="\\verb+{a}+">{a}</mtext>
+</math>"
+`;
+
+exports[`Verb Verb Plus Empty 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\verb ++" display="block">
+  <mtext mathvariant="monospace" data-latex="\\verb ++"></mtext>
+</math>"
+`;
+
+exports[`Verb Verb Plus Space 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\verb + +" display="block">
+  <mtext mathvariant="monospace" data-latex="\\verb + +">&#xA0;</mtext>
+</math>"
+`;

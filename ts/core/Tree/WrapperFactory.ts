@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -60,11 +60,11 @@ export interface WrapperFactory<
  * @template WC  The Wrapper class (for static values)
  */
 export abstract class AbstractWrapperFactory<
-    N extends Node<N, C>,
-    C extends NodeClass<N, C>,
-    WW extends Wrapper<N, C, WW>,
-    WC extends WrapperClass<N, C, WW>,
-  >
+  N extends Node<N, C>,
+  C extends NodeClass<N, C>,
+  WW extends Wrapper<N, C, WW>,
+  WC extends WrapperClass<N, C, WW>,
+>
   extends AbstractFactory<WW, WC>
   implements WrapperFactory<N, C, WW, WC>
 {

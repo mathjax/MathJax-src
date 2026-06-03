@@ -9,7 +9,7 @@ on:
       - develop
 
 jobs:
-  setup:
+  testing:
     runs-on: ubuntu-latest
     name: Compile and test MathJax
     steps:
@@ -21,6 +21,12 @@ jobs:
         with:
           version: 10
           run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
 
       - name: Install packages
         run: |

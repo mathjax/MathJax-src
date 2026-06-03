@@ -18,61 +18,31 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-interface NamedColor {
+import { LiveRegion } from './Region.js';
+
+export interface NamedColor {
   color: string;
   alpha?: number;
-}
-
-interface ChannelColor {
-  red: number;
-  green: number;
-  blue: number;
-  alpha?: number;
-}
-
-const namedColors: { [key: string]: ChannelColor } = {
-  red: { red: 255, green: 0, blue: 0 },
-  green: { red: 0, green: 255, blue: 0 },
-  blue: { red: 0, green: 0, blue: 255 },
-  yellow: { red: 255, green: 255, blue: 0 },
-  cyan: { red: 0, green: 255, blue: 255 },
-  magenta: { red: 255, green: 0, blue: 255 },
-  white: { red: 255, green: 255, blue: 255 },
-  black: { red: 0, green: 0, blue: 0 },
-};
-
-/**
- * Turns a named color into a channel color.
- *
- * @param {NamedColor} color The definition.
- * @param {NamedColor} deflt The default color name if the named color does not exist.
- * @returns {string} The channel color.
- */
-function getColorString(color: NamedColor, deflt: NamedColor): string {
-  const channel = namedColors[color.color] || namedColors[deflt.color];
-  channel.alpha = color.alpha ?? deflt.alpha;
-  return rgba(channel);
-}
-
-/**
- * RGBa string version of the channel color.
- *
- * @param {ChannelColor} color The channel color.
- * @returns {string} The color in RGBa format.
- */
-function rgba(color: ChannelColor): string {
-  return `rgba(${color.red},${color.green},${color.blue},${color.alpha ?? 1})`;
 }
 
 /**
  * The default background color if a none existing color is provided.
  */
-const DEFAULT_BACKGROUND: NamedColor = { color: 'blue', alpha: 1 };
+const DEFAULT_BACKGROUND: NamedColor = { color: 'blue', alpha: 0.2 };
 
 /**
  * The default color if a none existing color is provided.
  */
 const DEFAULT_FOREGROUND: NamedColor = { color: 'black', alpha: 1 };
+
+/**
+ * The attributes for various markers
+ */
+export const ATTR = {
+  ENCLOSED: 'data-sre-enclosed',
+  BBOX: 'data-sre-highlighter-bbox',
+  ADDED: 'data-sre-highlighter-added',
+};
 
 export interface Highlighter {
   /**
@@ -100,6 +70,15 @@ export interface Highlighter {
   unhighlightAll(): void;
 
   /**
+   * Encloses multiple nodes if they in the same line
+   *
+   * @param {HTMLElement[]} parts   The elements to be selected
+   * @param {HTMLElement} node      The root node of the expression
+   * @returns {HTMLElement[]}       The elements that shoudl be highlighted
+   */
+  encloseNodes(parts: HTMLElement[], node: HTMLElement): HTMLElement[];
+
+  /**
    * Predicate to check if a node is an maction node.
    *
    * @param {Element} node A DOM node.
@@ -108,14 +87,12 @@ export interface Highlighter {
   isMactionNode(node: Element): boolean;
 
   /**
-   * @returns {string} The foreground color as rgba string.
+   * Returns the maction sub nodes of a given node.
+   *
+   * @param {HTMLElement} node The root node.
+   * @returns {HTMLElement[]} The list of maction sub nodes.
    */
-  get foreground(): string;
-
-  /**
-   * @returns {string} The background color as rgba string.
-   */
-  get background(): string;
+  getMactionNodes(node: HTMLElement): HTMLElement[];
 
   /**
    * Sets of the color the highlighter is using.
@@ -126,76 +103,63 @@ export interface Highlighter {
   setColor(background: NamedColor, foreground: NamedColor): void;
 }
 
-/**
- * Highlight information consisting of node, fore and background color.
- */
-interface Highlight {
-  node: HTMLElement;
-  background?: string;
-  foreground?: string;
-}
-
-let counter = 0;
-
 abstract class AbstractHighlighter implements Highlighter {
-  /**
-   * This counter creates a unique highlighter name. This is important in case
-   * we have more than a single highlighter on a node, e.g., during auto voicing
-   * with synchronised highlighting.
-   */
-  public counter = counter++;
-
   /**
    * The Attribute for marking highlighted nodes.
    */
-  protected ATTR = 'sre-highlight-' + this.counter.toString();
+  protected ATTR: string;
 
   /**
-   * The foreground color.
+   * The CSS selector to use to find the line-box container.
    */
-  private _foreground: string;
+  protected static lineSelector: string;
 
   /**
-   * The background color.
+   * The attribute name for the line number.
    */
-  private _background: string;
+  protected static lineAttr: string;
 
   /**
-   * The maction name/class for a highlighter.
+   * Primary highlighter = 1, secondary highlighter = 2
    */
-  protected mactionName = '';
+  protected priority: number;
 
   /**
    * List of currently highlighted nodes and their original background color.
    */
-  private currentHighlights: Highlight[][] = [];
+  private currentHighlights: HTMLElement[][] = [];
+
+  /**
+   * @param {number} priority   1 = primary, 2 = secondary
+   */
+  constructor(priority: number) {
+    this.priority = priority;
+    this.ATTR = 'data-sre-highlight-' + priority;
+  }
 
   /**
    * Highlights a single node.
    *
-   * @param node The node to be highlighted.
-   * @returns The old node information.
+   * @param {HTMLElement} node The node to be highlighted.
    */
-  protected abstract highlightNode(node: HTMLElement): Highlight;
+  protected abstract highlightNode(node: HTMLElement): void;
 
   /**
    * Unhighlights a single node.
    *
-   * @param highlight The highlight info for the node to be unhighlighted.
+   * @param {HTMLElement} node  The highlight info for the node to be unhighlighted.
    */
-  protected abstract unhighlightNode(highlight: Highlight): void;
+  protected abstract unhighlightNode(node: HTMLElement): void;
 
   /**
    * @override
    */
   public highlight(nodes: HTMLElement[]) {
-    this.currentHighlights.push(
-      nodes.map((node) => {
-        const info = this.highlightNode(node);
-        this.setHighlighted(node);
-        return info;
-      })
-    );
+    this.currentHighlights.push(nodes);
+    for (const node of nodes) {
+      this.highlightNode(node);
+      this.setHighlighted(node);
+    }
   }
 
   /**
@@ -203,7 +167,7 @@ abstract class AbstractHighlighter implements Highlighter {
    */
   public highlightAll(node: HTMLElement) {
     const mactions = this.getMactionNodes(node);
-    for (let i = 0, maction; (maction = mactions[i]); i++) {
+    for (const maction of mactions) {
       this.highlight([maction]);
     }
   }
@@ -216,10 +180,10 @@ abstract class AbstractHighlighter implements Highlighter {
     if (!nodes) {
       return;
     }
-    nodes.forEach((highlight: Highlight) => {
-      if (this.isHighlighted(highlight.node)) {
-        this.unhighlightNode(highlight);
-        this.unsetHighlighted(highlight.node);
+    nodes.forEach((node: HTMLElement) => {
+      if (this.isHighlighted(node)) {
+        this.unhighlightNode(node);
+        this.unsetHighlighted(node);
       }
     });
   }
@@ -234,25 +198,87 @@ abstract class AbstractHighlighter implements Highlighter {
   }
 
   /**
+   * Create a container of a given size and position.
+   *
+   * @param {number} x           The x-coordinate for the container
+   * @param {number} y           The y-coordinate for the container
+   * @param {number} w           The width for the container
+   * @param {number} h           The height for the container
+   * @param {HTMLElement} node   The mjx-container element
+   * @param {HTMLElement} part   The first node in the line to be enclosed
+   * @returns {HTMLElement}      The element of the given size
+   */
+  protected abstract createEnclosure(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    node: HTMLElement,
+    part: HTMLElement
+  ): HTMLElement;
+
+  /**
+   * @override
+   */
+  public encloseNodes(parts: HTMLElement[], node: HTMLElement): HTMLElement[] {
+    if (parts.length === 1) {
+      return parts;
+    }
+    const CLASS = this.constructor as typeof AbstractHighlighter;
+    const selector = CLASS.lineSelector;
+    const lineno = CLASS.lineAttr;
+    const lines: Map<string, HTMLElement[]> = new Map();
+    for (const part of parts) {
+      const line = part.closest(selector);
+      const n = line ? line.getAttribute(lineno) : '';
+      if (!lines.has(n)) {
+        lines.set(n, []);
+      }
+      lines.get(n).push(part);
+    }
+    for (const list of lines.values()) {
+      if (list.length > 1) {
+        let [L, T, R, B] = [Infinity, Infinity, -Infinity, -Infinity];
+        for (const part of list) {
+          part.setAttribute(ATTR.ENCLOSED, 'true');
+          const { left, top, right, bottom } = part.getBoundingClientRect();
+          if (top === bottom && left === right) continue;
+          if (left < L) L = left;
+          if (top < T) T = top;
+          if (bottom > B) B = bottom;
+          if (right > R) R = right;
+        }
+        const enclosure = this.createEnclosure(
+          L,
+          B,
+          R - L,
+          B - T,
+          node,
+          list[0]
+        );
+        parts.push(enclosure);
+      }
+    }
+    return parts;
+  }
+
+  /**
+   * @param {string} type        fg or bg
+   * @param {NamedColor} color   The color to set
+   * @param {NamedColor} def     The defaults to use for missing parts of the color
+   */
+  protected setColorCSS(type: string, color: NamedColor, def: NamedColor) {
+    const name = color.color ?? def.color;
+    const alpha = color.alpha ?? def.alpha;
+    LiveRegion.setColor(type, this.priority, name, alpha);
+  }
+
+  /**
    * @override
    */
   public setColor(background: NamedColor, foreground: NamedColor) {
-    this._foreground = getColorString(foreground, DEFAULT_FOREGROUND);
-    this._background = getColorString(background, DEFAULT_BACKGROUND);
-  }
-
-  /**
-   * @override
-   */
-  public get foreground(): string {
-    return this._foreground;
-  }
-
-  /**
-   * @override
-   */
-  public get background(): string {
-    return this._background;
+    this.setColorCSS('fg', foreground, DEFAULT_FOREGROUND);
+    this.setColorCSS('bg', background, DEFAULT_BACKGROUND);
   }
 
   /**
@@ -261,19 +287,12 @@ abstract class AbstractHighlighter implements Highlighter {
    * @param {HTMLElement} node The root node.
    * @returns {HTMLElement[]} The list of maction sub nodes.
    */
-  public getMactionNodes(node: HTMLElement): HTMLElement[] {
-    return Array.from(
-      node.getElementsByClassName(this.mactionName)
-    ) as HTMLElement[];
-  }
+  public abstract getMactionNodes(node: HTMLElement): HTMLElement[];
 
   /**
    * @override
    */
-  public isMactionNode(node: Element): boolean {
-    const className = node.className || node.getAttribute('class');
-    return className ? !!className.match(new RegExp(this.mactionName)) : false;
-  }
+  public abstract isMactionNode(node: Element): boolean;
 
   /**
    * Check if a node is already highlighted.
@@ -301,159 +320,192 @@ abstract class AbstractHighlighter implements Highlighter {
    */
   public unsetHighlighted(node: HTMLElement) {
     node.removeAttribute(this.ATTR);
+    node.removeAttribute(ATTR.ENCLOSED);
   }
 }
 
 class SvgHighlighter extends AbstractHighlighter {
-  /**
-   * @override
-   */
-  constructor() {
-    super();
-    this.mactionName = 'maction';
-  }
+  protected static lineSelector = '[data-mjx-linebox]';
+  protected static lineAttr = 'data-mjx-lineno';
 
   /**
    * @override
    */
   public highlightNode(node: HTMLElement) {
-    let info: Highlight;
-    if (this.isHighlighted(node)) {
-      info = {
-        node: node,
-        background: this.background,
-        foreground: this.foreground,
-      };
-      return info;
+    if (
+      this.isHighlighted(node) ||
+      node.tagName === 'svg' ||
+      node.tagName === 'MJX-CONTAINER' ||
+      node.hasAttribute(ATTR.BBOX) ||
+      node.hasAttribute(ATTR.ENCLOSED)
+    ) {
+      return;
     }
-    if (node.tagName === 'svg' || node.tagName === 'MJX-CONTAINER') {
-      info = {
-        node: node,
-        background: node.style.backgroundColor,
-        foreground: node.style.color,
-      };
-      node.style.backgroundColor = this.background;
-      node.style.color = this.foreground;
-      return info;
-    }
-    // This is a hack for v4.
-    // TODO: v4 Change
-    // const rect = (document ?? DomUtil).createElementNS(
-    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    rect.setAttribute(
-      'sre-highlighter-added', // Mark highlighting rect.
-      'true'
+    const { x, y, width, height } = (
+      node as any as SVGGraphicsElement
+    ).getBBox();
+    const rect = this.createRect(
+      x,
+      y,
+      width,
+      height,
+      node.getAttribute('transform')
     );
+    this.setHighlighted(rect);
+    node.parentNode.insertBefore(rect, node);
+  }
+
+  /**
+   * @override
+   */
+  public unhighlightNode(node: HTMLElement) {
+    if (node.hasAttribute(ATTR.BBOX)) {
+      node.remove();
+      return;
+    }
+    const previous = node.previousSibling as HTMLElement;
+    if (previous?.hasAttribute(ATTR.ADDED)) {
+      previous.remove();
+    }
+  }
+
+  /**
+   * @override
+   */
+  protected createEnclosure(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    _node: HTMLElement,
+    part: HTMLElement
+  ): HTMLElement {
+    const [x1, y1] = this.screen2svg(x, y, part);
+    const [x2, y2] = this.screen2svg(x + w, y - h, part);
+    const rect = this.createRect(
+      x1,
+      y1,
+      x2 - x1,
+      y2 - y1,
+      part.getAttribute('transform')
+    );
+    rect.setAttribute(ATTR.BBOX, 'true');
+    part.parentNode.insertBefore(rect, part);
+    return rect;
+  }
+
+  /**
+   * Convert screen coordinates in px to local SVG coordinates.
+   *
+   * @param {number} x           The screen x coordinate
+   * @param {number} y           The screen y coordinate
+   * @param {HTMLElement} part   The element whose coordinate system is to be used
+   * @returns {number[]}         The x,y coordinates in the coordinates of part
+   */
+  protected screen2svg(x: number, y: number, part: HTMLElement): number[] {
+    const node = part as any as SVGGraphicsElement;
+    const P = DOMPoint.fromPoint({ x, y }).matrixTransform(
+      node.getScreenCTM().inverse()
+    );
+    return [P.x, P.y];
+  }
+
+  /**
+   * Create a rectangle of the given size and position.
+   *
+   * @param {number} x           The x position of the rectangle
+   * @param {number} y           The y position of the rectangle
+   * @param {number} w           The width of the rectangle
+   * @param {number} h           The height of the rectangle
+   * @param {string} transform   The transform to apply, if any
+   * @returns {HTMLElement}      The generated rectangle element
+   */
+  protected createRect(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    transform: string
+  ): HTMLElement {
     const padding = 40;
-    const bbox: SVGRect = (node as any as SVGGraphicsElement).getBBox();
-    rect.setAttribute('x', (bbox.x - padding).toString());
-    rect.setAttribute('y', (bbox.y - padding).toString());
-    rect.setAttribute('width', (bbox.width + 2 * padding).toString());
-    rect.setAttribute('height', (bbox.height + 2 * padding).toString());
-    const transform = node.getAttribute('transform');
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute(ATTR.ADDED, 'true'); // Mark highlighting rect.
+    rect.setAttribute('x', String(x - padding));
+    rect.setAttribute('y', String(y - padding));
+    rect.setAttribute('width', String(w + 2 * padding));
+    rect.setAttribute('height', String(h + 2 * padding));
     if (transform) {
       rect.setAttribute('transform', transform);
     }
-    rect.setAttribute('fill', this.background);
-    node.setAttribute(this.ATTR, 'true');
-    node.parentNode.insertBefore(rect, node);
-    info = { node: node, foreground: node.getAttribute('fill') };
-    if (node.nodeName !== 'rect') {
-      // We currently do not change foreground of collapsed nodes.
-      node.setAttribute('fill', this.foreground);
-    }
-    return info;
-  }
-
-  /**
-   * @override
-   */
-  public setHighlighted(node: HTMLElement) {
-    if (node.tagName === 'svg') {
-      super.setHighlighted(node);
-    }
-  }
-
-  /**
-   * @override
-   */
-  public unhighlightNode(info: Highlight) {
-    const previous = info.node.previousSibling as HTMLElement;
-    if (previous && previous.hasAttribute('sre-highlighter-added')) {
-      info.foreground
-        ? info.node.setAttribute('fill', info.foreground)
-        : info.node.removeAttribute('fill');
-      info.node.parentNode.removeChild(previous);
-      return;
-    }
-    info.node.style.backgroundColor = info.background;
-    info.node.style.color = info.foreground;
+    return rect as any as HTMLElement;
   }
 
   /**
    * @override
    */
   public isMactionNode(node: HTMLElement) {
-    return node.getAttribute('data-mml-node') === this.mactionName;
+    return node.getAttribute('data-mml-node') === 'maction';
   }
 
   /**
    * @override
    */
-  public getMactionNodes(node: HTMLElement) {
-    return Array.from(
-      node.querySelectorAll(`[data-mml-node="${this.mactionName}"]`)
-    ) as HTMLElement[];
+  public getMactionNodes(node: HTMLElement): HTMLElement[] {
+    return Array.from(node.querySelectorAll('[data-mml-node="maction"]'));
   }
 }
 
 class ChtmlHighlighter extends AbstractHighlighter {
-  /**
-   * @override
-   */
-  constructor() {
-    super();
-    this.mactionName = 'mjx-maction';
-  }
+  protected static lineSelector = 'mjx-linebox';
+  protected static lineAttr = 'lineno';
 
   /**
    * @override
    */
-  public highlightNode(node: HTMLElement) {
-    const info = {
-      node: node,
-      background: node.style.backgroundColor,
-      foreground: node.style.color,
-    };
-    if (!this.isHighlighted(node)) {
-      node.style.backgroundColor = this.background;
-      node.style.color = this.foreground;
+  public highlightNode(_node: HTMLElement) {}
+
+  /**
+   * @override
+   */
+  public unhighlightNode(node: HTMLElement) {
+    if (node.tagName.toLowerCase() === 'mjx-bbox') {
+      node.remove();
     }
-    return info;
   }
 
   /**
    * @override
    */
-  public unhighlightNode(info: Highlight) {
-    info.node.style.backgroundColor = info.background;
-    info.node.style.color = info.foreground;
+  protected createEnclosure(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    node: HTMLElement
+  ): HTMLElement {
+    const base = node.getBoundingClientRect();
+    const enclosure = document.createElement('mjx-bbox');
+    enclosure.style.width = w + 'px';
+    enclosure.style.height = h + 'px';
+    enclosure.style.left = x - base.left + 'px';
+    enclosure.style.top = y - h - base.top + 'px';
+    enclosure.style.position = 'absolute';
+    node.prepend(enclosure);
+    return enclosure;
   }
 
   /**
    * @override
    */
   public isMactionNode(node: HTMLElement) {
-    return node.tagName?.toUpperCase() === this.mactionName.toUpperCase();
+    return node.tagName?.toLowerCase() === 'mjx-maction';
   }
 
   /**
    * @override
    */
-  public getMactionNodes(node: HTMLElement) {
-    return Array.from(
-      node.getElementsByTagName(this.mactionName)
-    ) as HTMLElement[];
+  public getMactionNodes(node: HTMLElement): HTMLElement[] {
+    return Array.from(node.querySelectorAll('mjx-maction'));
   }
 }
 
@@ -461,17 +513,19 @@ class ChtmlHighlighter extends AbstractHighlighter {
  * Highlighter factory that returns the highlighter that goes with the current
  * Mathjax renderer.
  *
+ * @param {number} priority 1 = primary, 2 = secondary highlighter.
  * @param {NamedColor} back A background color specification.
  * @param {NamedColor} fore A foreground color specification.
  * @param {string} renderer The renderer name.
  * @returns {Highlighter} A new highlighter.
  */
 export function getHighlighter(
+  priority: number,
   back: NamedColor,
   fore: NamedColor,
   renderer: string
 ): Highlighter {
-  const highlighter = new highlighterMapping[renderer]();
+  const highlighter = new highlighterMapping[renderer](priority);
   highlighter.setColor(back, fore);
   return highlighter;
 }
@@ -479,7 +533,9 @@ export function getHighlighter(
 /**
  * Mapping renderer names to highlighter constructor.
  */
-const highlighterMapping: { [key: string]: new () => Highlighter } = {
+const highlighterMapping: {
+  [key: string]: new (priority: number) => Highlighter;
+} = {
   SVG: SvgHighlighter,
   CHTML: ChtmlHighlighter,
   generic: ChtmlHighlighter,

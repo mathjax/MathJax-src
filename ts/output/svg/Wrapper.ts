@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -74,21 +74,20 @@ export type SvgConstructor<N, T, D> = CommonWrapperConstructor<
 /**
  *  The type of the SvgWrapper class (used when creating the wrapper factory for this class)
  */
-export interface SvgWrapperClass<N, T, D>
-  extends CommonWrapperClass<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass
-  > {}
+export interface SvgWrapperClass<N, T, D> extends CommonWrapperClass<
+  N,
+  T,
+  D,
+  SVG<N, T, D>,
+  SvgWrapper<N, T, D>,
+  SvgWrapperFactory<N, T, D>,
+  SvgWrapperClass<N, T, D>,
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData,
+  SvgFontData,
+  SvgFontDataClass
+> {}
 
 /*****************************************************************/
 /**
@@ -156,7 +155,13 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @returns {boolean}     True when embellished output is produced, false if not
    */
   public toEmbellishedSVG(parents: N[]): boolean {
-    if (parents.length <= 1 || !this.node.isEmbellished) return false;
+    if (
+      parents.length <= 1 ||
+      !this.node.isEmbellished ||
+      this.node.parent.isEmbellished
+    ) {
+      return false;
+    }
     const style = this.coreMO().embellishedBreakStyle;
     //
     // At the end of the first line or beginning of the second,
@@ -234,7 +239,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {N[]} parents   The HTML nodes in which the output is to be placed
    * @returns {N[]}          The roots of the HTML tree for the node's output
    */
-  protected handleHref(parents: N[]) {
+  protected handleHref(parents: N[]): N[] {
     const href = this.node.attributes.get('href');
     if (!href) return parents;
     let i = 0;
@@ -273,9 +278,16 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       );
     }
     const padding = (this.styleData?.padding || [0, 0, 0, 0])[3];
+    const margin = (this.styleData?.margin || [0, 0, 0, 0])[3];
     const border = (this.styleData?.border?.width || [0, 0, 0, 0])[3];
     if (padding || border) {
       this.dx = padding + border;
+    }
+    if (margin) {
+      const transform = `translate(${this.fixed(margin)},0)`;
+      this.dom.forEach((node) =>
+        this.adaptor.setAttribute(node, 'transform', transform)
+      );
     }
   }
 
@@ -341,6 +353,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   protected handleBorder() {
     const border = this.styleData?.border;
     if (!border) return;
+    const margin = this.styleData?.margin ?? [0, 0, 0, 0];
     const f = SvgWrapper.borderFuzz;
     const adaptor = this.adaptor;
     let k = 0;
@@ -350,7 +363,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       const L = !n || !k ? 1 : 0;
       const R = !n || k === n ? 1 : 0;
       const bbox = isEmbellished ? this.getOuterBBox() : this.getLineBBox(k++);
-      const [h, d, w] = [bbox.h + f, bbox.d + f, bbox.w + f];
+      const h = bbox.h - margin[0] + f;
+      const d = bbox.d - margin[2] + f;
+      const w = bbox.w - margin[1] - margin[3] + f;
       const outerRT = [w, h];
       const outerLT = [-f, h];
       const outerRB = [w, -d];

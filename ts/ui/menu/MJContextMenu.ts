@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2025 The MathJax Consortium
+ *  Copyright (c) 2019-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,6 +34,14 @@ import {
   Item,
 } from './mj-context-menu.js';
 
+export type SubmenuCallback = (sub: SubMenu) => void;
+
+export type DynamicSubmenu = (
+  menu: MJContextMenu,
+  sub: Submenu,
+  callback: SubmenuCallback
+) => void;
+
 /*==========================================================================*/
 
 /**
@@ -44,19 +52,10 @@ export class MJContextMenu extends ContextMenu {
   /**
    * Static map to hold methods for re-computing dynamic submenus.
    *
-   * @type {Map<string, (menu: MJContextMenu, sub: Submenu) => Submenu>}
+   * @type {Map<string, [DynamicSubmenu, string]>}
    */
-  public static DynamicSubmenus: Map<
-    string,
-    [
-      (
-        menu: MJContextMenu,
-        sub: Submenu,
-        callback: (sub: SubMenu) => void
-      ) => void,
-      string,
-    ]
-  > = new Map();
+  public static DynamicSubmenus: Map<string, [DynamicSubmenu, string]> =
+    new Map();
 
   /**
    * The MathItem that has posted the menu
@@ -116,7 +115,9 @@ export class MJContextMenu extends ContextMenu {
    * @override
    */
   public unpost() {
-    super.unpost();
+    if ((this as any).posted) {
+      super.unpost();
+    }
     if (this.mathItem) {
       this.mathItem.outputData.nofocus = this.nofocus;
     }

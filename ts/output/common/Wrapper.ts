@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -104,6 +104,7 @@ export const SPACE: StringMap = {
  * Padding and border data from the style attribute
  */
 export type StyleData = {
+  margin: [number, number, number, number];
   padding: [number, number, number, number];
   border: {
     width: [number, number, number, number];
@@ -457,7 +458,7 @@ export class CommonWrapper<
    * @returns {number} The container width
    */
   get containerWidth(): number {
-    return this.jax.containerWidth;
+    return this.parent ? this.parent.containerWidth : this.jax.containerWidth;
   }
 
   /**
@@ -596,9 +597,10 @@ export class CommonWrapper<
     if (!this.styleData) return bbox;
     const padding = this.styleData.padding;
     const border = this.styleData.border?.width || [0, 0, 0, 0];
+    const margin = this.styleData.margin || [0, 0, 0, 0];
     const obox = bbox.copy();
     for (const [, i, side] of BBox.boxSides) {
-      (obox as any)[side] += padding[i] + border[i];
+      (obox as any)[side] += padding[i] + border[i] + margin[i];
     }
     return obox;
   }
@@ -709,9 +711,10 @@ export class CommonWrapper<
     if (this.node.isEmbellished) {
       return [this, this.coreMO()] as any as [WW, WW];
     }
-    const childNodes = this.childNodes[0]?.node?.isInferred
-      ? this.childNodes[0].childNodes
-      : this.childNodes;
+    const childNodes =
+      this.childNodes[0]?.node?.isInferred || this.node.isKind('semantics')
+        ? this.childNodes[0].childNodes
+        : this.childNodes;
     if (this.node.isToken || !childNodes[i]) {
       return [this, null] as any as [WW, WW];
     }
@@ -741,13 +744,22 @@ export class CommonWrapper<
   }
 
   /**
+   * @param {number} n   The side number (0 to 3) whose size is needed
+   * @returns {number}   The side's size in ems
+   */
+  protected sideStyleSize(n: number): number {
+    const border = this.styleData.border;
+    const padding = this.styleData.padding;
+    const margin = this.styleData.margin;
+    return (border?.width?.[n] || 0) + (padding?.[n] || 0) + (margin?.[n] || 0);
+  }
+
+  /**
    * @param {BBox} bbox   The bounding box where left borders are to be added
    */
   protected addLeftBorders(bbox: BBox) {
     if (!this.styleData) return;
-    const border = this.styleData.border;
-    const padding = this.styleData.padding;
-    bbox.w += (border?.width?.[3] || 0) + (padding?.[3] || 0);
+    bbox.w += this.sideStyleSize(3);
   }
 
   /**
@@ -755,10 +767,8 @@ export class CommonWrapper<
    */
   protected addMiddleBorders(bbox: BBox) {
     if (!this.styleData) return;
-    const border = this.styleData.border;
-    const padding = this.styleData.padding;
-    bbox.h += (border?.width?.[0] || 0) + (padding?.[0] || 0);
-    bbox.d += (border?.width?.[2] || 0) + (padding?.[2] || 0);
+    bbox.h += this.sideStyleSize(0);
+    bbox.d += this.sideStyleSize(2);
   }
 
   /**
@@ -766,9 +776,7 @@ export class CommonWrapper<
    */
   protected addRightBorders(bbox: BBox) {
     if (!this.styleData) return;
-    const border = this.styleData.border;
-    const padding = this.styleData.padding;
-    bbox.w += (border?.width?.[1] || 0) + (padding?.[1] || 0);
+    bbox.w += this.sideStyleSize(1);
   }
 
   /**
@@ -874,11 +882,13 @@ export class CommonWrapper<
   protected getStyleData() {
     if (!this.styles) return;
     const padding = Array(4).fill(0);
+    const margin = Array(4).fill(0);
     const width = Array(4).fill(0);
     const style = Array(4);
     const color = Array(4);
     let hasPadding = false;
     let hasBorder = false;
+    let hasMargin = false;
     for (const [name, i] of BBox.boxSides) {
       const key = 'border' + name;
       const w = this.styles.get(key + 'Width');
@@ -893,11 +903,17 @@ export class CommonWrapper<
         hasPadding = true;
         padding[i] = Math.max(0, this.length2em(p, 1));
       }
+      const m = this.styles.get('margin' + name);
+      if (m) {
+        hasMargin = true;
+        margin[i] = this.length2em(m, 1);
+      }
     }
     this.styleData =
-      hasPadding || hasBorder
+      hasPadding || hasBorder || hasMargin
         ? ({
             padding,
+            margin,
             border: hasBorder ? { width, style, color } : null,
           } as StyleData)
         : null;

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import {
   AbstractMmlTokenNode,
   TextNode,
 } from '../../core/MmlTree/MmlNode.js';
+import { PropertyList } from '../../core/Tree/Node.js';
 import { ComplexityVisitor } from './visitor.js';
 
 /*==========================================================================*/
@@ -584,9 +585,10 @@ export class Collapse {
     const factory = this.complexity.factory;
     const marker = node.getProperty('collapse-marker') as string;
     const parent = node.parent;
-    const variant = node.getProperty('collapse-variant')
-      ? { mathvariant: '-tex-variant' }
-      : {};
+    const variant = { 'data-mjx-collapsed': true } as PropertyList;
+    if (node.getProperty('collapse-variant')) {
+      variant.mathvariant = '-tex-variant';
+    }
     const maction = factory.create(
       'maction',
       {
@@ -599,7 +601,7 @@ export class Collapse {
         ),
       },
       [
-        factory.create('mtext', { mathcolor: 'blue', ...variant }, [
+        factory.create('mtext', variant, [
           (factory.create('text') as TextNode).setText(marker),
         ]),
       ]

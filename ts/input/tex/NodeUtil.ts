@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2025 The MathJax Consortium
+ *  Copyright (c) 2009-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -228,7 +228,9 @@ const NodeUtil = {
    */
   copyAttributes(oldNode: MmlNode, newNode: MmlNode) {
     newNode.attributes = oldNode.attributes;
-    this.setProperties(newNode, oldNode.getAllProperties());
+    for (const [prop, value] of Object.entries(oldNode.getAllProperties())) {
+      newNode.setProperty(prop, value);
+    }
   },
 
   /**

@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Require Options DefaultAllow with allow 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{bbox} \\bbox[red]{x}" display="block">
+  <mstyle mathbackground="red" data-latex="\\require{bbox} \\bbox[red]{x}">
+    <mi data-latex="x">x</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Require Options Prefixed options 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{bbox} \\bbox[red]{x}" display="block">
+  <mstyle mathbackground="red" data-latex="\\require{bbox} \\bbox[red]{x}">
+    <mi data-latex="x">x</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Require Options RequireLoad with prefix 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\requireLoad \\bbox[red]{x}" display="block">
+  <mstyle mathbackground="red" data-latex="\\requireLoad \\bbox[red]{x}">
+    <mi data-latex="x">x</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Require Require package 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{bbox} \\bbox[red]{x}" display="block">
+  <mstyle mathbackground="red" data-latex="\\require{bbox} \\bbox[red]{x}">
+    <mi data-latex="x">x</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Require Require with dependencies 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{cancel} \\cancel{x+1}" display="block">
+  <menclose notation="updiagonalstrike" data-latex="\\require{cancel} \\cancel{x+1}">
+    <mi data-latex="x">x</mi>
+    <mo data-latex="+">+</mo>
+    <mn data-latex="1">1</mn>
+  </menclose>
+</math>"
+`;
+
+exports[`Require Require with menu extensions 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{bbm} \\mathbbm{A}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\require{bbm} \\mathbbm{A}">
+    <mi data-mjx-variant="-bbm-normal" data-latex="A">A</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Require Require with preprocessors 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{textcomp} \\text{a \\bf b}" display="block">
+  <mrow data-latex="\\require{textcomp} \\text{a \\bf b}">
+    <mtext>a&#xA0;</mtext>
+    <mtext mathvariant="bold">b</mtext>
+  </mrow>
+</math>"
+`;
+
+exports[`Require Require with stack items 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{braket} \\bra{a}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="{\\langle {a} \\vert}">
+    <mo fence="false" stretchy="false" data-latex="\\langle">&#x27E8;</mo>
+    <mrow data-mjx-texclass="ORD" data-latex="{a}">
+      <mi data-latex="a">a</mi>
+    </mrow>
+    <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\vert">|</mo>
+  </mrow>
+</math>"
+`;

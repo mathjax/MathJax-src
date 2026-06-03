@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2025 The MathJax Consortium
+ *  Copyright (c) 2019-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,7 +48,8 @@ import { MmlMtext } from '../../../core/MmlTree/MmlNodes/mtext.js';
  * @template D  The Document class
  */
 export interface ChtmlMtextNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMtext<
       N,
       T,
@@ -72,7 +73,8 @@ export interface ChtmlMtextNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMtextClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMtextClass<
       N,
       T,

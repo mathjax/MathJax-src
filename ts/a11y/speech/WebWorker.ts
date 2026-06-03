@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -328,16 +328,17 @@ export class WorkerHandler<N, T, D> {
         continue;
       }
       node = adaptor.childNodes(node)[0] as N;
+      if (adaptor.kind(node) === 'rect') {
+        node = adaptor.next(node) as N;
+      }
       adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
       this.setSpecialAttributes(node, sid, '');
     }
-    this.setSpeechAttributes(
-      adaptor.childNodes(container)[0],
-      '',
-      data,
-      speech,
-      braille
-    );
+    for (const child of adaptor.childNodes(container)) {
+      if (adaptor.kind(child) === 'mjx-math' || adaptor.kind(child) === 'svg') {
+        this.setSpeechAttributes(child, '', data, speech, braille);
+      }
+    }
     if (speech) {
       if (data.label) {
         adaptor.setAttribute(container, SemAttr.SPEECH, data.label);

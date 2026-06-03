@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -83,7 +83,9 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
           if (this.start.n) {
             node = this.adaptor.split(this.start.node as T, this.start.n);
           }
-          this.adaptor.replace(this.typesetRoot, node);
+          if (this.adaptor.parent(node)) {
+            this.adaptor.replace(this.typesetRoot, node);
+          }
         } else {
           if (this.start.n) {
             node = this.adaptor.split(node, this.start.n);

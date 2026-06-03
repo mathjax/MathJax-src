@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -52,7 +52,8 @@ import { OptionList } from '../../../util/Options.js';
  * @template D  The Document class
  */
 export interface ChtmlMtableNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMtable<
       N,
       T,
@@ -87,7 +88,8 @@ export interface ChtmlMtableNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMtableClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMtableClass<
       N,
       T,

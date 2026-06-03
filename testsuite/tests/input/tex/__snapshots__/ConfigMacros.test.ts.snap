@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Config Macros Active Macros Simple 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A~a" display="block">
+  <mi data-latex="A">A</mi>
+  <mtext data-latex="~">&#xA0;</mtext>
+  <mi data-latex="a">a</mi>
+</math>"
+`;
+
+exports[`Config Macros Active Macros Simple 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A@a" display="block">
+  <mi data-latex="A">A</mi>
+  <mtext data-latex="~">&#xA0;</mtext>
+  <mi data-latex="a">a</mi>
+</math>"
+`;
+
+exports[`Config Macros Commands Commands Argument 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="{\\bf bold}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="{\\bf bold}">
+    <mi mathvariant="bold" data-latex="b">b</mi>
+    <mi mathvariant="bold" data-latex="o">o</mi>
+    <mi mathvariant="bold" data-latex="l">l</mi>
+    <mi mathvariant="bold" data-latex="d">d</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Config Macros Commands Commands Argument 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bold{bold}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="{\\bf bold}">
+    <mi mathvariant="bold" data-latex="b">b</mi>
+    <mi mathvariant="bold" data-latex="o">o</mi>
+    <mi mathvariant="bold" data-latex="l">l</mi>
+    <mi mathvariant="bold" data-latex="d">d</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Config Macros Commands Commands Aux Argument 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mbox{first } hi \\mbox{ second } there" display="block">
+  <mstyle displaystyle="false" data-latex="\\mbox{first }">
+    <mtext>first&#xA0;</mtext>
+  </mstyle>
+  <mi data-latex="h">h</mi>
+  <mi data-latex="i">i</mi>
+  <mstyle displaystyle="false" data-latex="\\mbox{ second }">
+    <mtext>&#xA0;second&#xA0;</mtext>
+  </mstyle>
+  <mi data-latex="t">t</mi>
+  <mi data-latex="h">h</mi>
+  <mi data-latex="e">e</mi>
+  <mi data-latex="r">r</mi>
+  <mi data-latex="e">e</mi>
+</math>"
+`;
+
+exports[`Config Macros Commands Commands Aux Argument 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\foo[hi]{there}" display="block">
+  <mstyle displaystyle="false" data-latex="\\mbox{first }">
+    <mtext>first&#xA0;</mtext>
+  </mstyle>
+  <mi data-latex="h">h</mi>
+  <mi data-latex="i">i</mi>
+  <mstyle displaystyle="false" data-latex="\\mbox{ second }">
+    <mtext>&#xA0;second&#xA0;</mtext>
+  </mstyle>
+  <mi data-latex="t">t</mi>
+  <mi data-latex="h">h</mi>
+  <mi data-latex="e">e</mi>
+  <mi data-latex="r">r</mi>
+  <mi data-latex="e">e</mi>
+</math>"
+`;
+
+exports[`Config Macros Commands Commands Simple 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="{\\bf R}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="{\\bf R}">
+    <mi mathvariant="bold" data-latex="R">R</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Config Macros Commands Commands Simple 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\RR" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="{\\bf R}">
+    <mi mathvariant="bold" data-latex="R">R</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Config Macros Environment Environment Simple 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{myHeartEnv}a\\end{myHeartEnv}" display="block">
+  <mi mathvariant="normal" data-latex="\\heartsuit">&#x2661;</mi>
+  <mi data-latex="a">a</mi>
+  <mi mathvariant="normal" data-latex="\\spadesuit">&#x2660;</mi>
+</math>"
+`;
+
+exports[`Config Macros Environment Environment Simple 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{myHeartEnv}a\\end{myHeartEnv}" display="block">
+  <mi mathvariant="normal" data-latex="\\heartsuit">&#x2661;</mi>
+  <mi data-latex="a">a</mi>
+  <mi mathvariant="normal" data-latex="\\spadesuit">&#x2660;</mi>
+</math>"
+`;

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -53,7 +53,8 @@ import { StyleJsonData } from '../../../util/StyleJson.js';
  * @template D  The Document class
  */
 export interface ChtmlScriptbaseNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonScriptbase<
       N,
       T,
@@ -101,7 +102,8 @@ export interface ChtmlScriptbaseNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlScriptbaseClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonScriptbaseClass<
       N,
       T,

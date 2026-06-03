@@ -1,11 +1,11 @@
 {
   "copy": {
-    "to": "../../../bundle",
+    "to": "[bundle]",
     "from": ".",
     "copy": [
       "node-main.mjs",
       "node-main.cjs",
-      "node-main-setup.mjs"
+      "node-main-setup.cjs"
     ]
   },
   "webpack": {

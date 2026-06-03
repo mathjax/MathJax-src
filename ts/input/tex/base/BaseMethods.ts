@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -152,14 +152,14 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * @param {string} c The parsed character.
    */
   Bar(parser: TexParser, c: string) {
-    parser.Push(
-      parser.create(
-        'token',
-        'mo',
-        { stretchy: false, texClass: TEXCLASS.ORD },
-        c
-      )
+    const mo = parser.create(
+      'token',
+      'mo',
+      { stretchy: false, texClass: TEXCLASS.ORD },
+      c
     );
+    mo.setProperty('keep-attrs', 'stretchy');
+    parser.Push(mo);
   },
 
   /**
@@ -1089,14 +1089,14 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     }
     while (attr !== '') {
       const match = attr.match(
-        /^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i
+        /^([a-z]+)\s*=\s*('[^'\n]*'|"[^"\n]*"|[^ ,\n]*)[\s\n]*,?[\s\n]*/i
       );
       if (!match) {
         // @test Token Invalid Attribute
         throw new TexError(
           'InvalidMathMLAttr',
           'Invalid MathML attribute: %1',
-          attr
+          attr.split(/[\s\n=]/)[0]
         );
       }
       if (!node.attributes.hasDefault(match[1]) && !MmlTokenAllow[match[1]]) {
@@ -1125,7 +1125,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       attr = attr.substring(match[0].length);
     }
     if (keep.length) {
-      def['mjx-keep-attrs'] = keep.join(' ');
+      node.setProperty('keep-attrs', keep.join(' '));
     }
     const textNode = parser.create('text', replaceUnicode(text));
     node.appendChild(textNode);
@@ -2218,7 +2218,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       }
       ref = new Label();
     }
-    let tag = ref.tag;
+    let tag: string | string[] = ref.tag;
     if (eqref) {
       // @test Eqref
       tag = parser.tags.formatRef(tag);
@@ -2226,7 +2226,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const node = parser.create(
       'node',
       'mrow',
-      ParseUtil.internalMath(parser, tag),
+      ParseUtil.internalMath(parser, Array.isArray(tag) ? tag.join('') : tag),
       {
         href: parser.tags.formatUrl(ref.id, parser.options.baseURL),
         class: 'MathJax_ref',

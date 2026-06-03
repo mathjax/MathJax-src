@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -50,7 +50,8 @@ import { BBox } from '../../../util/BBox.js';
  * @template D  The Document class
  */
 export interface SvgMsqrtNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMsqrt<
       N,
       T,
@@ -79,7 +80,8 @@ export interface SvgMsqrtNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMsqrtClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMsqrtClass<
       N,
       T,

@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Enclose Enclose 1 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\enclose{updiagonalstrike}{x}" display="block">
+  <menclose notation="updiagonalstrike" data-latex="\\enclose{updiagonalstrike}{x}">
+    <mi data-latex="x">x</mi>
+  </menclose>
+</math>"
+`;
+
+exports[`Enclose Enclose 2 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\enclose{circle}{x}" display="block">
+  <menclose notation="circle" data-latex="\\enclose{circle}{x}">
+    <mi data-latex="x">x</mi>
+  </menclose>
+</math>"
+`;
+
+exports[`Enclose Enclose 3 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\enclose{horizontalstrike}{x}" display="block">
+  <menclose notation="horizontalstrike" data-latex="\\enclose{horizontalstrike}{x}">
+    <mi data-latex="x">x</mi>
+  </menclose>
+</math>"
+`;
+
+exports[`Enclose Enclose Attr 1 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\enclose{horizontalstrike}[data-thickness=5]{x}" display="block">
+  <menclose data-thickness="5" notation="horizontalstrike" data-latex="\\enclose{horizontalstrike}[data-thickness=5]{x}">
+    <mi data-latex="x">x</mi>
+  </menclose>
+</math>"
+`;
+
+exports[`Enclose Enclose Attr 2 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\enclose{updiagonalarrow}[mathbackground=red]{x}" display="block">
+  <menclose mathbackground="red" notation="updiagonalarrow" data-latex="\\enclose{updiagonalarrow}[mathbackground=red]{x}">
+    <mi data-latex="x">x</mi>
+  </menclose>
+</math>"
+`;
+
+exports[`Enclose Enclose Attrs 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\enclose{circle}[data-thickness=10,data-padding=5]{x}" display="block">
+  <menclose data-thickness="10" data-padding="5" notation="circle" data-latex="\\enclose{circle}[data-thickness=10,data-padding=5]{x}">
+    <mi data-latex="x">x</mi>
+  </menclose>
+</math>"
+`;

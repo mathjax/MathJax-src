@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -80,12 +80,12 @@ const ParseMethods = {
   digit(parser: TexParser, _c: string): ParseResult {
     const pattern = parser.configuration.options['numberPattern'];
     const n = parser.string.slice(parser.i - 1).match(pattern);
-    // @test Integer Font
-    const def = ParseUtil.getFontDef(parser);
     if (!n) {
       // @test Decimal Point, Decimal Point European
       return false;
     }
+    // @test Integer Font
+    const def = ParseUtil.getFontDef(parser);
     // @test Integer, Number, Decimal (European)
     const mml = parser.create('token', 'mn', def, n[0].replace(/[{}]/g, ''));
     parser.i += n[0].length - 1;
@@ -195,6 +195,9 @@ const ParseMethods = {
     // @test Fenced2, Delimiter (AMS)
     def = Object.assign({ fence: false, stretchy: false }, def);
     const node = parser.create('token', 'mo', def, delim.char);
+    if (delim.char === '|') {
+      node.setProperty('keep-attrs', 'stretchy');
+    }
     parser.Push(node);
   },
 

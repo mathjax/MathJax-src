@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -49,7 +49,8 @@ import { ChtmlInferredMrowNTD } from './mrow.js';
  * @template D  The Document class
  */
 export interface ChtmlMfencedNTD<N, T, D>
-  extends ChtmlWrapper<N, T, D>,
+  extends
+    ChtmlWrapper<N, T, D>,
     CommonMfenced<
       N,
       T,
@@ -73,7 +74,8 @@ export interface ChtmlMfencedNTD<N, T, D>
  * @template D  The Document class
  */
 export interface ChtmlMfencedClass<N, T, D>
-  extends ChtmlWrapperClass<N, T, D>,
+  extends
+    ChtmlWrapperClass<N, T, D>,
     CommonMfencedClass<
       N,
       T,

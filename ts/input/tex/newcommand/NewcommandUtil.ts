@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2025 The MathJax Consortium
+ *  Copyright (c) 2009-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -166,6 +166,12 @@ export const NewcommandUtil = {
           // @test Optional Brace Error
           // parser.i >= i!
           params[n] = parser.string.substring(i, parser.i);
+          if (
+            params[n].replace(/^ +/, '') === '' &&
+            params.slice(0, n).join('') === ''
+          ) {
+            return n;
+          }
         }
         if (params.length > 0) {
           // @test Def Let, Def Optional Brace

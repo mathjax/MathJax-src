@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2025 The MathJax Consortium
+ *  Copyright (c) 2019-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -136,11 +136,9 @@ export function AssistiveMmlMathItemMixin<
         // Hide the typeset math from assistive technology and append the MathML that is visually
         //   hidden from other users
         //
-        adaptor.setAttribute(
-          adaptor.firstChild(this.typesetRoot) as N,
-          'aria-hidden',
-          'true'
-        );
+        for (const child of adaptor.childNodes(this.typesetRoot) as N[]) {
+          adaptor.setAttribute(child, 'aria-hidden', 'true');
+        }
         adaptor.setStyle(this.typesetRoot, 'position', 'relative');
         adaptor.append(this.typesetRoot, node);
       }
@@ -158,8 +156,11 @@ export function AssistiveMmlMathItemMixin<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface AssistiveMmlMathDocument<N, T, D>
-  extends AbstractMathDocument<N, T, D> {
+export interface AssistiveMmlMathDocument<N, T, D> extends AbstractMathDocument<
+  N,
+  T,
+  D
+> {
   /**
    * @param {MmlNode} node   The node to be serializes
    * @returns {string}        The serialization of the node

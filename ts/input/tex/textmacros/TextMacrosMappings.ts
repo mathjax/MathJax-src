@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2025 The MathJax Consortium
+ *  Copyright (c) 2020-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -91,16 +91,20 @@ new CommandMap('text-macros', {
   frak: [TextMacrosMethods.TextFont, VARIANT.FRAKTUR],
   Bbb: [TextMacrosMethods.TextFont, VARIANT.DOUBLESTRUCK],
 
-  tiny: [TextMacrosMethods.SetSize, 0.5],
-  Tiny: [TextMacrosMethods.SetSize, 0.6], // non-standard
+  Tiny: [TextMacrosMethods.SetSize, 0.5],
+  tiny: [TextMacrosMethods.SetSize, 0.6],
   scriptsize: [TextMacrosMethods.SetSize, 0.7],
-  small: [TextMacrosMethods.SetSize, 0.85],
+  SMALL: [TextMacrosMethods.SetSize, 0.7],
+  Small: [TextMacrosMethods.SetSize, 0.8],
+  footnotesize: [TextMacrosMethods.SetSize, 0.8],
+  small: [TextMacrosMethods.SetSize, 0.9],
   normalsize: [TextMacrosMethods.SetSize, 1.0],
-  large: [TextMacrosMethods.SetSize, 1.2],
-  Large: [TextMacrosMethods.SetSize, 1.44],
-  LARGE: [TextMacrosMethods.SetSize, 1.73],
-  huge: [TextMacrosMethods.SetSize, 2.07],
-  Huge: [TextMacrosMethods.SetSize, 2.49],
+  large: [TextMacrosMethods.SetSize, 1.095],
+  Large: [TextMacrosMethods.SetSize, 1.2],
+  LARGE: [TextMacrosMethods.SetSize, 1.44],
+  huge: [TextMacrosMethods.SetSize, 1.73],
+  Huge: [TextMacrosMethods.SetSize, 2.07],
+  HUGE: [TextMacrosMethods.SetSize, 2.49],
 
   textnormal: [TextMacrosMethods.Macro, '{\\rm #1}', 1],
   textup: [TextMacrosMethods.Macro, '{\\rm #1}', 1],

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -159,8 +159,7 @@ export interface NodeClass<N extends Node<N, C>, C extends NodeClass<N, C>> {
 export abstract class AbstractNode<
   N extends Node<N, C>,
   C extends NodeClass<N, C>,
-> implements Node<N, C>
-{
+> implements Node<N, C> {
   /**
    * The parent node for this one
    */

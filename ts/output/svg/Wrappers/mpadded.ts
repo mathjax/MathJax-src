@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,7 +48,8 @@ import { MmlMpadded } from '../../../core/MmlTree/MmlNodes/mpadded.js';
  * @template D  The Document class
  */
 export interface SvgMpaddedNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMpadded<
       N,
       T,
@@ -72,7 +73,8 @@ export interface SvgMpaddedNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMpaddedClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMpaddedClass<
       N,
       T,

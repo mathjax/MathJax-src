@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ import {
   SvgDelimiterData,
   SvgFontData,
   SvgFontDataClass,
+  VFUZZ,
+  HFUZZ,
 } from '../FontData.js';
 import {
   CommonMo,
@@ -42,11 +44,6 @@ import { BBox } from '../../../util/BBox.js';
 import { DIRECTION, SvgCharData } from '../FontData.js';
 
 /*****************************************************************/
-
-const VFUZZ = 0.1; // overlap for vertical stretchy glyphs
-const HFUZZ = 0.1; // overlap for horizontal stretchy glyphs
-
-/*****************************************************************/
 /**
  * The SvgMo interface for the SVG Mo wrapper
  *
@@ -55,7 +52,8 @@ const HFUZZ = 0.1; // overlap for horizontal stretchy glyphs
  * @template D  The Document class
  */
 export interface SvgMoNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonMo<
       N,
       T,
@@ -79,7 +77,8 @@ export interface SvgMoNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgMoClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonMoClass<
       N,
       T,
@@ -267,7 +266,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
     /**
      * @param {number} n         The number of the character to look up
      * @param {string} variant   The variant for the character to look up
-     * @returns {SvgCharData}     The full CharData object, with CharOptions guaranteed to be defined
+     * @returns {SvgCharData}    The full CharData object, with CharOptions guaranteed to be defined
      */
     protected getChar(n: number, variant: string): SvgCharData {
       const char = this.font.getChar(variant, n) || [0, 0, 0, null];
@@ -285,7 +284,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {number} x         The x position of the glyph
      * @param {number} y         The y position of the glyph
      * @param {N} parent         The container for the glyph
-     * @returns {number}          The width of the character placed
+     * @returns {number}         The width of the character placed
      */
     protected addGlyph(
       n: number,
@@ -313,7 +312,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {string} v    The variant for the top glyph
      * @param {number} H    The height of the stretched delimiter
      * @param {number} W    The width of the stretched delimiter
-     * @returns {number}     The total height of the top glyph
+     * @returns {number}    The total height of the top glyph
      */
     protected addTop(n: number, v: string, H: number, W: number): number {
       if (!n) return 0;
@@ -331,27 +330,40 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {number} B    The height of the bottom glyph in the delimiter
      * @param {number} W    The width of the stretched delimiter
      */
-    /* prettier-ignore */
-    protected addExtV(n: number, v: string, H: number, D: number, T: number, B: number, W: number) {
+    protected addExtV(
+      n: number,
+      v: string,
+      H: number,
+      D: number,
+      T: number,
+      B: number,
+      W: number
+    ) {
       if (!n) return;
-      T = Math.max(0, T - VFUZZ);              // A little overlap on top
-      B = Math.max(0, B - VFUZZ);              // A little overlap on bottom
+      T = Math.max(0, T - VFUZZ); //           A little overlap on top
+      B = Math.max(0, B - VFUZZ); //           A little overlap on bottom
       const adaptor = this.adaptor;
       const [h, d, w] = this.getChar(n, v);
-      const Y = H + D - T - B;                 // The height of the extender
-      const s = 1.5 * Y / (h + d);             // Scale height by 1.5 to avoid bad ends
-                                               //   (glyphs with rounded or anti-aliased ends don't stretch well,
-                                               //    so this makes for sharper ends)
-      const y = (s * (h - d) - Y) / 2;         // The bottom point to clip the extender
+      const Y = H + D - T - B; //              The height of the extender
+      const s = (1.5 * Y) / (h + d); //        Scale height by 1.5 to avoid bad ends
+      //                                         (glyphs with rounded or anti-aliased ends don't stretch well,
+      //                                          so this makes for sharper ends)
+      const y = (s * (h - d) - Y) / 2; //      The bottom point to clip the extender
       if (Y <= 0) return;
       const svg = this.svg('svg', {
-        width: this.fixed(w), height: this.fixed(Y),
-        y: this.fixed(B - D), x: this.fixed((W - w) / 2),
-        viewBox: [0, y, w, Y].map(x => this.fixed(x)).join(' ')
+        width: this.fixed(w),
+        height: this.fixed(Y),
+        y: this.fixed(B - D),
+        x: this.fixed((W - w) / 2),
+        viewBox: [0, y, w, Y].map((x) => this.fixed(x)).join(' '),
       });
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
-      adaptor.setAttribute(glyph as N, 'transform', `scale(1,${this.jax.fixed(s)})`);
+      adaptor.setAttribute(
+        glyph as N,
+        'transform',
+        `scale(1,${this.jax.fixed(s)})`
+      );
       if (this.dom[0]) {
         adaptor.append(this.dom[0], svg);
       }
@@ -365,7 +377,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {string} v    The variant for the bottom glyph
      * @param {number} D    The depth of the stretched delimiter
      * @param {number} W    The width of the stretched delimiter
-     * @returns {number}     The total height of the bottom glyph
+     * @returns {number}    The total height of the bottom glyph
      */
     protected addBot(n: number, v: string, D: number, W: number): number {
       if (!n) return 0;
@@ -393,7 +405,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
     /**
      * @param {number} n   The character number for the left glyph of the stretchy character
      * @param {string} v   The variant for the left glyph
-     * @returns {number}    The width of the left glyph
+     * @returns {number}   The width of the left glyph
      */
     protected addLeft(n: number, v: string): number {
       return n ? this.addGlyph(n, v, 0, 0) : 0;
@@ -416,14 +428,14 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       x: number = 0
     ) {
       if (!n) return;
-      R = Math.max(0, R - HFUZZ); // A little less than the width of the right glyph
-      L = Math.max(0, L - HFUZZ); // A little less than the width of the left glyph
+      R = Math.max(0, R - HFUZZ); //           A little less than the width of the right glyph
+      L = Math.max(0, L - HFUZZ); //           A little less than the width of the left glyph
       const adaptor = this.adaptor;
       const [h, d, w] = this.getChar(n, v);
-      const X = W - L - R; // The width of the extender
-      const Y = h + d + 2 * VFUZZ; // The height (plus some fuzz) of the extender
-      const s = 1.5 * (X / w); // Scale the width so that left- and right-bearing won't hurt us
-      const D = -(d + VFUZZ); // The bottom position of the glyph
+      const X = W - L - R; //                 The width of the extender
+      const Y = h + d + 2 * VFUZZ; //         The height (plus some fuzz) of the extender
+      const s = 1.5 * (X / w); //             Scale the width so that left- and right-bearing won't hurt us
+      const D = -(d + VFUZZ); //              The bottom position of the glyph
       if (X <= 0) return;
       const svg = this.svg('svg', {
         width: this.fixed(X),
@@ -451,7 +463,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {number} n   The character number for the right glyph of the stretchy character
      * @param {string} v   The variant for the right glyph
      * @param {number} W   The width of the stretched character
-     * @returns {number}    The width of the right glyph
+     * @returns {number}   The width of the right glyph
      */
     protected addRight(n: number, v: string, W: number): number {
       if (!n) return 0;

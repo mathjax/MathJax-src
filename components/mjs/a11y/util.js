@@ -9,5 +9,6 @@ Loader.preLoaded(
   'a11y/sre',
   'a11y/semantic-enrich',
   'a11y/speech',
-  'a11y/explorer'
+  'a11y/explorer',
+  'input/mml',
 );

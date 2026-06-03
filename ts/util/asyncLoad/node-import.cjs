@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2023-2025 The MathJax Consortium
+ *  Copyright (c) 2023-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@
 
 const { mathjax } = require('../../mathjax.js');
 const path = require('path');
-const { src } = require('#source/source.cjs');
+const { dirname } = require('#source/source.cjs');
 
-let root = path.resolve(src, '..', '..', 'cjs');
+let root = path.resolve(dirname, '..', '..', 'cjs');
 
 if (!mathjax.asyncLoad) {
   mathjax.asyncLoad = async (name) => {

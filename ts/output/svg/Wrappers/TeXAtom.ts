@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,7 +48,8 @@ import { MmlNode, TEXCLASSNAMES } from '../../../core/MmlTree/MmlNode.js';
  * @template D  The Document class
  */
 export interface SvgTeXAtomNTD<N, T, D>
-  extends SvgWrapper<N, T, D>,
+  extends
+    SvgWrapper<N, T, D>,
     CommonTeXAtom<
       N,
       T,
@@ -72,7 +73,8 @@ export interface SvgTeXAtomNTD<N, T, D>
  * @template D  The Document class
  */
 export interface SvgTeXAtomClass<N, T, D>
-  extends SvgWrapperClass<N, T, D>,
+  extends
+    SvgWrapperClass<N, T, D>,
     CommonTeXAtomClass<
       N,
       T,

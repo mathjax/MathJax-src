@@ -1,5 +1,5 @@
 /*************************************************************
- *  Copyright (c) 2021-2025 MathJax Consortium
+ *  Copyright (c) 2021-2026 MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -158,7 +158,7 @@ export const MathtoolsUtil = {
       parser.stack.env,
       parser.configuration
     ).mml();
-    return mml.isKind('TeXAtom') && mml.childNodes[0].childNodes.length === 0
+    return mml.isKind('TeXAtom') && mml.isEmpty
       ? parser.create('node', 'none')
       : mml;
   },

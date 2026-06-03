@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -655,9 +655,11 @@ class DefaultMathItem<N, T, D> extends AbstractMathItem<N, T, D> {}
  * @template T  The Text node class
  * @template D  The Document class
  */
-export abstract class AbstractMathDocument<N, T, D>
-  implements MathDocument<N, T, D>
-{
+export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
+  N,
+  T,
+  D
+> {
   /**
    * The type of MathDocument
    */
