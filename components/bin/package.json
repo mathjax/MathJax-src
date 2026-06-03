@@ -1,6 +1,7 @@
 {
   "type": "commonjs",
   "imports": {
+    "#ts/*": "@mathjax/src/ts/*",
     "#js/*": "@mathjax/src/cjs/*",
     "#source/*": "@mathjax/src/components/cjs/*",
     "#root/*": "@mathjax/src/cjs/components/cjs/*",

@@ -5,6 +5,8 @@ import {HTMLHandler} from '#js/handlers/html/HTMLHandler.js';
 import {browserAdaptor} from '#js/adaptors/browserAdaptor.js';
 import {Package} from '#js/components/package.js';
 
+import './en.js';
+
 if (MathJax.startup) {
   MathJax.startup.registerConstructor('HTMLHandler', HTMLHandler);
   MathJax.startup.registerConstructor('browserAdaptor', browserAdaptor);

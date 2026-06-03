@@ -43,6 +43,8 @@ import { DOMAdaptor } from '../core/DOMAdaptor.js';
 import { PrioritizedList } from '../util/PrioritizedList.js';
 import { OptionList, OPTIONS } from '../util/Options.js';
 import { context } from '../util/context.js';
+import { Locale } from '../util/Locale.js';
+import { COMPONENT } from '../core/__locales__/Component.js';
 
 import { TeX } from '../input/tex.js';
 
@@ -527,9 +529,7 @@ export abstract class Startup {
         jax[name] = new inputClass(MathJax.config[name]);
         jax.push(jax[name]);
       } else {
-        throw Error(
-          'Input Jax "' + name + '" is not defined (has it been loaded?)'
-        );
+        Locale.throw(COMPONENT, 'InputJaxNotDefined', name);
       }
     }
     return jax;
@@ -543,9 +543,7 @@ export abstract class Startup {
     if (!name) return null;
     const outputClass = Startup.constructors[name];
     if (!outputClass) {
-      throw Error(
-        'Output Jax "' + name + '" is not defined (has it been loaded?)'
-      );
+      Locale.throw(COMPONENT, 'OutputJaxNotDefined', name);
     }
     return new outputClass(MathJax.config[name]);
   }
@@ -559,9 +557,7 @@ export abstract class Startup {
     if (!name || name === 'none') return null;
     const adaptor = Startup.constructors[name];
     if (!adaptor) {
-      throw Error(
-        'DOMAdaptor "' + name + '" is not defined (has it been loaded?)'
-      );
+      Locale.throw(COMPONENT, 'AdaptorNotDefined', name);
     }
     return adaptor(MathJax.config[name]);
   }
@@ -574,9 +570,7 @@ export abstract class Startup {
     if (!name || name === 'none' || !Startup.adaptor) return null;
     const handlerClass = Startup.constructors[name];
     if (!handlerClass) {
-      throw Error(
-        'Handler "' + name + '" is not defined (has it been loaded?)'
-      );
+      Locale.throw(COMPONENT, 'HandlerNotDefined', name);
     }
     let handler = new handlerClass(Startup.adaptor, 5);
     for (const extend of Startup.extensions) {

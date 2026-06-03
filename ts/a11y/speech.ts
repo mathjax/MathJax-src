@@ -34,6 +34,7 @@ import { OptionList, expandable } from '../util/Options.js';
 import { GeneratorPool } from './speech/GeneratorPool.js';
 import { WorkerHandler } from './speech/WebWorker.js';
 import { sreRoot } from '#root/sre-root.js';
+import { localize } from './speech/__locales__/Component.js';
 
 /*==========================================================================*/
 
@@ -317,7 +318,7 @@ export function SpeechMathDocumentMixin<
       _math: SpeechMathItem<N, T, D>,
       err: Error
     ) {
-      console.warn('Speech generation error:', err);
+      console.warn(localize('SpeechError'), err);
     }
 
     /**

@@ -16,7 +16,7 @@
  */
 
 /**
- * @file  Locale component registration for [tex]
+ * @file  Locale component registration for input/tex
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

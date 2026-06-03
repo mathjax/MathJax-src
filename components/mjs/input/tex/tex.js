@@ -1,4 +1,5 @@
 import './lib/tex.js';
+import './en.js';
 
 import {registerTeX} from './register.js';
 import {Loader} from '#js/components/loader.js';

@@ -21,7 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import { Locale } from './Locale.js';
+import { COMPONENT } from '../core/__locales__/Component.js';
+
 /*****************************************************************/
+
 const OBJECT = {}.constructor;
 
 /**
@@ -85,9 +89,9 @@ export const OPTIONS = {
    */
   optionError: (message: string, _key: string) => {
     if (OPTIONS.invalidOption === 'fatal') {
-      throw new Error(message);
+      throw Error(message);
     }
-    console.warn('MathJax: ' + message);
+    console.warn(message);
   },
 };
 
@@ -192,7 +196,8 @@ export function insert(
       if (typeof key === 'symbol') {
         key = (key as symbol).toString();
       }
-      OPTIONS.optionError(`Invalid option "${key}" (no default value).`, key);
+      const message = Locale.message(COMPONENT, 'Option/Invalid', key);
+      OPTIONS.optionError(message, key);
       continue;
     }
     //

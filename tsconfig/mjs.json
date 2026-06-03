@@ -6,6 +6,7 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "paths": {
+      "#ts/*": ["./*"],
       "#js/*": ["../mjs/*"],
       "#source/*": ["../components/mjs/*"],
       "#root/*": ["../ts/components/mjs/*"],

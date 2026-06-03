@@ -99,7 +99,7 @@ export class ColorModel {
       return COLORS.get(name);
     }
     if (name.match(/;/)) {
-      texError(COMPONENT, 'BadColorValue', 'Invalid color value');
+      texError(COMPONENT, 'BadColorValue');
     }
     // Pass the color name as-is to CSS
     return name;

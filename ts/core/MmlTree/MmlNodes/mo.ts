@@ -186,7 +186,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    *
    * @returns {number} The TeX class.
    */
-  public get texClass() {
+  public get texClass(): number {
     if (this._texClass === null) {
       return this.getOperatorDef(this.getText())[2];
     }

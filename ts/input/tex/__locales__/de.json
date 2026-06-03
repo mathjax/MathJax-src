@@ -1,5 +1,5 @@
 {
-  "BadPreamToken": "Ungültiges Pream-Token (%1)",
+  "BadPreamToken": "Ungültiges Preamble Token: %1",
   "BadRawUnicode": "Das Argument für %1 muss eine hexadezimale Zahl mit 1 bis 6 Ziffern sein",
   "ColArgNotNum": "Das erste Argument für den Spaltenbezeichner %1 muss eine Zahl sein",
   "ConfigNotFound": "Konfiguration '%1' nicht gefunden.  Wird übersprungen.",

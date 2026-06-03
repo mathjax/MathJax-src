@@ -116,27 +116,17 @@ export class MmlMmultiscripts extends MmlMsubsup {
       const child = this.childNodes[i];
       if (child.isKind('mprescripts')) {
         if (prescripts) {
-          child.mError(
-            child.kind + ' can only appear once in ' + this.kind,
-            options,
-            true
-          );
+          child.mError('MML/OnlyOnce', [child.kind, this.kind], options, true);
         } else {
           prescripts = true;
           if (i % 2 === 0 && !fix) {
-            this.mError(
-              'There must be an equal number of prescripts of each type',
-              options
-            );
+            this.mError('MML/EqualPrescripts', [], options);
           }
         }
       }
     }
     if (this.childNodes.length % 2 === (prescripts ? 1 : 0) && !fix) {
-      this.mError(
-        'There must be an equal number of scripts of each type',
-        options
-      );
+      this.mError('MML/EqualScripts', [], options);
     }
     super.verifyChildren(options);
   }
@@ -177,11 +167,7 @@ export class MmlMprescripts extends AbstractMmlNode {
   public verifyTree(options: PropertyList) {
     super.verifyTree(options);
     if (this.parent && !this.parent.isKind('mmultiscripts')) {
-      this.mError(
-        this.kind + ' must be a child of mmultiscripts',
-        options,
-        true
-      );
+      this.mError('MML/mmultiscriptsChild', [this.kind], options, true);
     }
   }
 }
@@ -221,11 +207,7 @@ export class MmlNone extends AbstractMmlNode {
   public verifyTree(options: PropertyList) {
     super.verifyTree(options);
     if (this.parent && !this.parent.isKind('mmultiscripts')) {
-      this.mError(
-        this.kind + ' must be a child of mmultiscripts',
-        options,
-        true
-      );
+      this.mError('MML/mmultiscriptsChild', [this.kind], options, true);
     }
   }
 }

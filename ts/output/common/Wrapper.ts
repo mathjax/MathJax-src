@@ -55,6 +55,8 @@ import {
   DIRECTION,
   NOSTRETCH,
 } from './FontData.js';
+import { Locale } from '../../util/Locale.js';
+import { COMPONENT } from '../../core/__locales__/Component.js';
 
 /*****************************************************************/
 
@@ -928,7 +930,7 @@ export class CommonWrapper<
     let variant = attributes.get('mathvariant') as string;
     if (attributes.hasExplicit('mathvariant')) {
       if (!this.font.getVariant(variant)) {
-        console.warn(`Invalid variant: ${variant}`);
+        Locale.warn(COMPONENT, 'MML/BadVariant', variant);
         variant = 'normal';
       }
     } else {

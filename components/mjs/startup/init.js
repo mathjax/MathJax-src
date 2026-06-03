@@ -1,4 +1,5 @@
 import './hasown.js'; // Can be removed with ES2024 implementation of Object.hasown
+import '../core/locale.js';
 import './lib/startup.js';
 import '../core/core.js';
 
