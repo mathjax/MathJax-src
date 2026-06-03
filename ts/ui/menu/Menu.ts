@@ -667,41 +667,41 @@ export class Menu {
         ),
       ],
       items: [
-        this.submenu('Show', [
-          this.command('MathMLcode', () => this.mathMLCode()),
-          this.command('Original', () => this.originalText()),
+        this.submenu('.Show', [
+          this.command('.Show/MathMLcode', () => this.mathMLCode()),
+          this.command('.Show/Original', () => this.originalText()),
           this.rule(),
-          this.command('SpeechText', () => this.speechText(), {
+          this.command('.Show/SpeechText', () => this.speechText(), {
             disabled: true,
           }),
-          this.command('BrailleCode', () => this.brailleText(), {
+          this.command('.Show/BrailleCode', () => this.brailleText(), {
             disabled: true,
           }),
-          this.command('SvgImage', () => this.svgImage(), {
+          this.command('.Show/SvgImage', () => this.svgImage(), {
             disabled: true,
           }),
-          this.submenu('ShowAnnotation'),
+          this.submenu('.Show/Annotation'),
           this.rule(),
-          this.command('Error', () => this.errorMessage(), {
+          this.command('.Show/Error', () => this.errorMessage(), {
             disabled: true,
           }),
         ]),
-        this.submenu('Copy', [
-          this.command('MathMLcode', () => this.copyMathML()),
-          this.command('Original', () => this.copyOriginal()),
+        this.submenu('.Copy', [
+          this.command('.Show/MathMLcode', () => this.copyMathML()),
+          this.command('.Show/Original', () => this.copyOriginal()),
           this.rule(),
-          this.command('SpeechText', () => this.copySpeechText(), {
+          this.command('.Show/SpeechText', () => this.copySpeechText(), {
             disabled: true,
           }),
-          this.command('BrailleCode', () => this.copyBrailleText(), {
+          this.command('.Show/BrailleCode', () => this.copyBrailleText(), {
             disabled: true,
           }),
-          this.command('SvgImage', () => this.copySvgImage(), {
+          this.command('.Show/SvgImage', () => this.copySvgImage(), {
             disabled: true,
           }),
-          this.submenu('CopyAnnotation'),
+          this.submenu('.Copy/Annotation'),
           this.rule(),
-          this.command('Error', () => this.copyErrorMessage(), {
+          this.command('.Show/Error', () => this.copyErrorMessage(), {
             disabled: true,
           }),
         ]),
@@ -711,17 +711,17 @@ export class Menu {
             'Renderer',
             this.radioGroup('renderer', ['CHTML', 'SVG'])
           ),
-          this.submenu('WideExpressions', [
+          this.submenu('.Wide/WideExpressions', [
             this.radioGroup('overflow', [
-              'Overflow',
-              'Scroll',
-              'Linebreak',
-              'Scale',
-              'Truncate',
-              'Elide',
+              '.Wide/Overflow',
+              '.Wide/Scroll',
+              '.Wide/Linebreak',
+              '.Wide/Scale',
+              '.Wide/Truncate',
+              '.Wide/Elide',
             ]),
             this.rule(),
-            this.checkbox('BreakInline', 'breakInline'),
+            this.checkbox('.Wide/BreakInline', 'breakInline'),
           ]),
           this.rule(),
           this.submenu('MathmlIncludes', [
@@ -732,23 +732,23 @@ export class Menu {
           ]),
           this.submenu('Language', this.languageSubmenu()),
           this.rule(),
-          this.submenu('ZoomTrigger', [
-            this.command('ZoomNow', () => this.zoom(null, '')),
+          this.submenu('.Zoom/ZoomTrigger', [
+            this.command('.Zoom/ZoomNow', () => this.zoom(null, '')),
             this.rule(),
-            this.radioGroup('zoom', ['Click', 'DoubleClick', 'NoZoom']),
+            this.radioGroup('zoom', ['.Zoom/Click', '.Zoom/DoubleClick', '.Zoom/NoZoom']),
             this.rule(),
-            this.label('TriggerRequires'),
-            this.checkbox(MenuUtil.isMac ? 'Option' : 'Alt', 'alt'),
-            this.checkbox('Command', 'cmd', {
+            this.label('.Zoom/TriggerRequires'),
+            this.checkbox(MenuUtil.isMac ? 'Option' : '.Zoom/Alt', 'alt'),
+            this.checkbox('.ZoomC/ommand', 'cmd', {
               hidden: !MenuUtil.isMac,
             }),
-            this.checkbox('Control', 'ctrl', {
+            this.checkbox('.Zoom/Control', 'ctrl', {
               hidden: MenuUtil.isMac,
             }),
-            this.checkbox('Shift', 'shift'),
+            this.checkbox('.Zoom/Shift', 'shift'),
           ]),
           this.submenu(
-            'ZoomFactor',
+            '.Zoom/ZoomFactor',
             this.radioGroup('zscale', [
               '150%',
               '175%',
@@ -798,49 +798,49 @@ export class Menu {
           this.radioGroup('brailleCode', ['nemeth', 'ueb', 'euro']),
         ]),
         this.submenu('Explorer', [
-          this.submenu('Highlight', [
+          this.submenu('.Highlight', [
             this.submenu(
-              'Background',
+              '.Highlight/Background',
               this.radioGroup('backgroundColor', [
-                'Blue',
-                'Red',
-                'Green',
-                'Yellow',
-                'Cyan',
-                'Magenta',
-                'White',
-                'Black',
+                '.Highlight/Blue',
+                '.Highlight/Red',
+                '.Highlight/Green',
+                '.Highlight/Yellow',
+                '.Highlight/Cyan',
+                '.Highlight/Magenta',
+                '.Highlight/White',
+                '.Highlight/Black',
               ])
             ),
             { type: 'slider', variable: 'backgroundOpacity', content: ' ' },
             this.submenu(
-              'Foreground',
+              '.Highlight/Foreground',
               this.radioGroup('foregroundColor', [
-                'Black',
-                'White',
-                'Magenta',
-                'Cyan',
-                'Yellow',
-                'Green',
-                'Red',
-                'Blue',
+                '.Highlight/Black',
+                '.Highlight/White',
+                '.Highlight/Magenta',
+                '.Highlight/Cyan',
+                '.Highlight/Yellow',
+                '.Highlight/Green',
+                '.Highlight/Red',
+                '.Highlight/Blue',
               ])
             ),
             { type: 'slider', variable: 'foregroundOpacity', content: ' ' },
             this.rule(),
-            this.radioGroup('highlight', ['None', 'Hover', 'Flame']),
+            this.radioGroup('highlight', ['.Highlight/None', '.Highlight/Hover', '.Highlight/Flame']),
             this.rule(),
-            this.checkbox('TreeColoring', 'treeColoring'),
+            this.checkbox('.Highlight/TreeColoring', 'treeColoring'),
           ]),
-          this.submenu('Magnification', [
-            this.radioGroup('magnification', ['None', 'Keyboard', 'Mouse']),
+          this.submenu('.Magnification', [
+            this.radioGroup('magnification', ['.Magnification/None', '.Magnification/Keyboard', '.Magnification/Mouse']),
             this.rule(),
             this.radioGroup('magnify', ['200%', '300%', '400%', '500%']),
           ]),
-          this.submenu('SemanticInfo', [
-            this.checkbox('Type', 'infoType'),
-            this.checkbox('Role', 'infoRole'),
-            this.checkbox('Prefix', 'infoPrefix'),
+          this.submenu('.Semantic/Info', [
+            this.checkbox('.Semantic/Type', 'infoType'),
+            this.checkbox('.Semantic/Role', 'infoRole'),
+            this.checkbox('.Semantic/Prefix', 'infoPrefix'),
           ]),
           this.rule(),
           this.submenu('RoleDescription', [
@@ -876,12 +876,12 @@ export class Menu {
     }) as MJContextMenu;
     const menu = this.menu;
     menu.settings = this.settings;
-    menu.findID('Settings', 'WideExpressions', 'Elide').disable();
+    menu.findID('Settings', '.Wide/WideExpressions', '.Wide/Elide').disable();
     menu.findID('Braille', 'ueb').hide();
     menu.setJax(this.jax);
     this.checkLoadableItems();
     const cache: [string, string][] = [];
-    MJContextMenu.DynamicSubmenus.set('ShowAnnotation', [
+    MJContextMenu.DynamicSubmenus.set('.Show/Annotation', [
       AnnotationMenu.showAnnotations(
         () => this.annotationBox(),
         this.options.annotationTypes,
@@ -889,7 +889,7 @@ export class Menu {
       ),
       '',
     ]);
-    MJContextMenu.DynamicSubmenus.set('CopyAnnotation', [
+    MJContextMenu.DynamicSubmenus.set('.Copy/Annotation', [
       AnnotationMenu.copyAnnotations(cache),
       '',
     ]);

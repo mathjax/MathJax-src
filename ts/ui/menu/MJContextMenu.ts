@@ -166,12 +166,12 @@ export class MJContextMenu extends ContextMenu {
    */
   protected getOriginalMenu() {
     const input = this.mathItem.inputJax.name;
-    const original = this.findID('Show', 'Original');
+    const original = this.findID('.Show', '.Show/Original');
     original.content =
       input === 'MathML'
-        ? localize('OriginalMathML')
-        : localize('Commands', input);
-    const clipboard = this.findID('Copy', 'Original');
+        ? localize('.Show/OriginalMathML')
+        : localize('.Show/Commands', input);
+    const clipboard = this.findID('.Copy', '.Show/Original');
     clipboard.content = original.content;
   }
 
@@ -190,8 +190,8 @@ export class MJContextMenu extends ContextMenu {
    */
   protected getSpeechMenu() {
     const speech = this.mathItem.outputData.speech;
-    this.findID('Show', 'SpeechText')[speech ? 'enable' : 'disable']();
-    this.findID('Copy', 'SpeechText')[speech ? 'enable' : 'disable']();
+    this.findID('.Show', '.Show/SpeechText')[speech ? 'enable' : 'disable']();
+    this.findID('.Copy', '.Show/SpeechText')[speech ? 'enable' : 'disable']();
   }
 
   /**
@@ -199,8 +199,8 @@ export class MJContextMenu extends ContextMenu {
    */
   protected getBrailleMenu() {
     const braille = this.mathItem.outputData.braille;
-    this.findID('Show', 'BrailleCode')[braille ? 'enable' : 'disable']();
-    this.findID('Copy', 'BrailleCode')[braille ? 'enable' : 'disable']();
+    this.findID('.Show', '.Show/BrailleCode')[braille ? 'enable' : 'disable']();
+    this.findID('.Copy', '.Show/BrailleCode')[braille ? 'enable' : 'disable']();
   }
 
   /**
@@ -208,8 +208,8 @@ export class MJContextMenu extends ContextMenu {
    */
   protected getSvgMenu() {
     const svg = this.jax.SVG;
-    this.findID('Show', 'SvgImage')[svg ? 'enable' : 'disable']();
-    this.findID('Copy', 'SvgImage')[svg ? 'enable' : 'disable']();
+    this.findID('.Show', '.Show/SvgImage')[svg ? 'enable' : 'disable']();
+    this.findID('.Copy', '.Show/SvgImage')[svg ? 'enable' : 'disable']();
   }
 
   /**
@@ -226,8 +226,8 @@ export class MJContextMenu extends ContextMenu {
         '') as string;
       disable = !this.errorMsg;
     }
-    this.findID('Show', 'Error')[disable ? 'disable' : 'enable']();
-    this.findID('Copy', 'Error')[disable ? 'disable' : 'enable']();
+    this.findID('.Show', '.Show/Error')[disable ? 'disable' : 'enable']();
+    this.findID('.Copy', '.Show/Error')[disable ? 'disable' : 'enable']();
   }
 
   /*======================================================================*/
