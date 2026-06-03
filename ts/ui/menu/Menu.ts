@@ -735,7 +735,11 @@ export class Menu {
           this.submenu('.Zoom/ZoomTrigger', [
             this.command('.Zoom/ZoomNow', () => this.zoom(null, '')),
             this.rule(),
-            this.radioGroup('zoom', ['.Zoom/Click', '.Zoom/DoubleClick', '.Zoom/NoZoom']),
+            this.radioGroup('zoom', [
+              '.Zoom/Click',
+              '.Zoom/DoubleClick',
+              '.Zoom/NoZoom',
+            ]),
             this.rule(),
             this.label('.Zoom/TriggerRequires'),
             this.checkbox(MenuUtil.isMac ? 'Option' : '.Zoom/Alt', 'alt'),
@@ -828,12 +832,20 @@ export class Menu {
             ),
             { type: 'slider', variable: 'foregroundOpacity', content: ' ' },
             this.rule(),
-            this.radioGroup('highlight', ['.Highlight/None', '.Highlight/Hover', '.Highlight/Flame']),
+            this.radioGroup('highlight', [
+              '.Highlight/None',
+              '.Highlight/Hover',
+              '.Highlight/Flame',
+            ]),
             this.rule(),
             this.checkbox('.Highlight/TreeColoring', 'treeColoring'),
           ]),
           this.submenu('.Magnification', [
-            this.radioGroup('magnification', ['.Magnification/None', '.Magnification/Keyboard', '.Magnification/Mouse']),
+            this.radioGroup('magnification', [
+              '.Magnification/None',
+              '.Magnification/Keyboard',
+              '.Magnification/Mouse',
+            ]),
             this.rule(),
             this.radioGroup('magnify', ['200%', '300%', '400%', '500%']),
           ]),
@@ -843,17 +855,17 @@ export class Menu {
             this.checkbox('.Semantic/Prefix', 'infoPrefix'),
           ]),
           this.rule(),
-          this.submenu('RoleDescription', [
+          this.submenu('.RoleDescription', [
             this.radioGroup('roleDescription', [
-              'MathJax expression',
-              'MathJax',
-              'math',
-              'clickable math',
-              'explorable math',
-              'none',
+              '.RoleDescription/MathJax expression',
+              '.RoleDescription/MathJax',
+              '.RoleDescription/math',
+              '.RoleDescription/clickable math',
+              '.RoleDescription/explorable math',
+              '.RoleDescription/none',
             ]),
           ]),
-          this.checkbox('MathHelp', 'help'),
+          this.checkbox('.Tabbing/MathHelp', 'help'),
         ]),
         this.submenu('Options', [
           this.checkbox('Enrich', 'enrich'),
@@ -862,9 +874,9 @@ export class Menu {
             disabled: true,
           }),
           this.rule(),
-          this.checkbox('InTabOrder', 'inTabOrder'),
-          this.submenu('TabSelects', [
-            this.radioGroup('tabSelects', ['all', 'last']),
+          this.checkbox('.Tabbing/InTabOrder', 'inTabOrder'),
+          this.submenu('.Tabbing/TabSelects', [
+            this.radioGroup('tabSelects', ['.Tabbing/all', '.Tabbing/last']),
           ]),
           this.rule(),
           this.checkbox('AssistiveMml', 'assistiveMml'),
@@ -1173,7 +1185,7 @@ export class Menu {
    * @param {boolean} tab   True for including math in the tab order, false for not
    */
   protected setTabOrder(tab: boolean) {
-    const menu = this.menu.findID('Options', 'TabSelects');
+    const menu = this.menu.findID('Options', '.Tabbing/TabSelects');
     tab ? menu.enable() : menu.disable();
     this.menu.store.inTaborder(tab);
   }
