@@ -128,7 +128,7 @@ function csSelectionBox(menu: MJContextMenu, locale: string): object {
     });
   }
   const sb = new SelectionDialog(
-    localize('.Clearspeak/Title'),
+    localize('.Title/Clearspeak'),
     '',
     items,
     SelectionOrder.ALPHABETICAL,

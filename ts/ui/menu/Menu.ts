@@ -406,7 +406,7 @@ export class Menu {
    */
   protected help() {
     InfoDialog.post({
-      title: localize('.Help/Title'),
+      title: localize('.Title/Help'),
       message: localize('.Help/Message'),
       adaptor: this.document.adaptor,
       extraNodes: [
@@ -424,7 +424,7 @@ export class Menu {
    */
   protected mathMLCode() {
     CopyDialog.post({
-      title: localize('.Mml/Title'),
+      title: localize('.Title/Mml'),
       message: this.menu.mathItem ? this.toMML(this.menu.mathItem) : '',
       adaptor: this.document.adaptor,
       code: true,
@@ -436,7 +436,7 @@ export class Menu {
    */
   protected originalText() {
     CopyDialog.post({
-      title: localize('.Source/Title'),
+      title: localize('.Title/Source'),
       message: this.menu.mathItem?.math ?? '',
       adaptor: this.document.adaptor,
       code: true,
@@ -448,7 +448,7 @@ export class Menu {
    */
   protected annotationBox() {
     CopyDialog.post({
-      title: localize('.Annotation/Title'),
+      title: localize('.Title/Annotation'),
       message: AnnotationMenu.annotation,
       adaptor: this.document.adaptor,
       code: true,
@@ -460,7 +460,7 @@ export class Menu {
    */
   public async svgImage() {
     CopyDialog.post({
-      title: localize('.Svg/Title'),
+      title: localize('.Title/Svg'),
       message: await this.toSVG(this.menu.mathItem),
       adaptor: this.document.adaptor,
       code: true,
@@ -472,7 +472,7 @@ export class Menu {
    */
   protected speechText() {
     CopyDialog.post({
-      title: localize('.Speech/Title'),
+      title: localize('.Title/Speech'),
       message: this.menu.mathItem?.outputData?.speech ?? '',
       adaptor: this.document.adaptor,
       code: true,
@@ -484,7 +484,7 @@ export class Menu {
    */
   protected brailleText() {
     CopyDialog.post({
-      title: localize('.Braille/Title'),
+      title: localize('.Title/Braille'),
       message: this.menu.mathItem?.outputData?.braille ?? '',
       adaptor: this.document.adaptor,
       code: true,
@@ -496,7 +496,7 @@ export class Menu {
    */
   protected errorMessage() {
     CopyDialog.post({
-      title: localize('.Error/Title'),
+      title: localize('.Title/Error'),
       message: this.menu.mathItem ? this.menu.errorMsg : '',
       adaptor: this.document.adaptor,
       code: true,
@@ -517,7 +517,7 @@ export class Menu {
       text = `<div style="font-size: ${scale}px">${zoom.outerHTML}</div>`;
     }
     InfoDialog.post({
-      title: localize('.Zoom/Title'),
+      title: localize('.Title/Zoom'),
       message: text,
       adaptor: this.document.adaptor,
       styles: {
