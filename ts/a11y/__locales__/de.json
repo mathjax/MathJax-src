@@ -1,8 +1,8 @@
 {
-  "RoleDescription/MathJax expression": "MathJax Ausdruck",
-  "RoleDescription/MathJax": "MathJax",
-  "RoleDescription/clickable math": "anklickbare Mathematik",
-  "RoleDescription/explorable math": "erkundbare Mathematik",
-  "RoleDescription/math": "Mathematik",
-  "RoleDescription/none": "none",
+  "Aria/RoleDescription/MathJax expression": "MathJax Ausdruck",
+  "Aria/RoleDescription/MathJax": "MathJax",
+  "Aria/RoleDescription/clickable math": "anklickbare Mathematik",
+  "Aria/RoleDescription/explorable math": "erkundbare Mathematik",
+  "Aria/RoleDescription/math": "Mathematik",
+  "Aria/RoleDescription/none": "ohne Beschreibung"
 }

@@ -13,10 +13,5 @@
   "Unknown/Title": "ein Bildschirmleseprogramm",
   "Win/Braille": "NVDA-Benutzer müssen diese Option auswählen, während JAWS-Benutzer die Braille-Ausgabe erhalten sollten, ohne diese Einstellung zu ändern.",
   "Win/Select": "Der Screenreader sollte automatisch in den Fokus- oder Formularmodus wechseln, sobald der Ausdruck den Browserfokus erhält. Ist dies nicht der Fall, können Sie den Fokusmodus in NVDA mit NVDA+Leertaste umschalten; bei JAWS sollte die Eingabetaste den Formularmodus aktivieren, während die Plus-Taste des Ziffernblocks ihn beendet.  Beachten Sie außerdem, dass Sie die NVDA- oder JAWS-Taste zusammen mit den Pfeiltasten verwenden können, um den Ausdruck auch im Browse-Modus zu erkunden, und dass Sie mit NVDA+Umschalt+Pfeiltasten aus einem Ausdruck herausnavigieren können, der in NVDA den Fokus hat.",
-  "Win/Title": "Windows mit NVDA oder JAWS",
-  ".RoleDescription/MathJax expression": "MathJax Ausdruck",
-  ".RoleDescription/MathJax": "MathJax",
-  ".RoleDescription/clickable math": "anklickbare Mathematik",
-  ".RoleDescription/explorable math": "Erkundbare Mathematik",
-  ".RoleDescription/math": "Mathematik"
+  "Win/Title": "Windows mit NVDA oder JAWS"
 }

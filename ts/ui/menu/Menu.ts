@@ -50,6 +50,7 @@ import { locales } from './locales.js';
 
 import { Parser, Rule, CssStyles, Submenu } from './mj-context-menu.js';
 
+import { AriaRoleDescription, localizeAria } from '../../a11y/aria.js';
 import { Locale } from '../../util/Locale.js';
 import { COMPONENT, localize } from './__locales__/Component.js';
 export { COMPONENT };
@@ -172,7 +173,7 @@ export class Menu {
       brailleSpeech: false,
       brailleCombine: false,
       speechRules: 'clearspeak-default',
-      roleDescription: 'math',
+      roleDescription: AriaRoleDescription.MATH,
       inTabOrder: true,
       tabSelects: 'all',
       help: true,
@@ -852,14 +853,14 @@ export class Menu {
             this.checkbox('.Semantic/Prefix', 'infoPrefix'),
           ]),
           this.rule(),
-          this.submenu('.RoleDescription', [
+          this.submenu('RoleDescription', [
             this.radioGroup('roleDescription', [
-              '.RoleDescription/MathJax expression',
-              '.RoleDescription/MathJax',
-              '.RoleDescription/math',
-              '.RoleDescription/clickable math',
-              '.RoleDescription/explorable math',
-              '.RoleDescription/none',
+              AriaRoleDescription.EXPRESSION,
+              AriaRoleDescription.MATHJAX,
+              AriaRoleDescription.MATH,
+              AriaRoleDescription.CLICKABLE,
+              AriaRoleDescription.EXPLORABLE,
+              AriaRoleDescription.NONE,
             ]),
           ]),
           this.checkbox('.Tabbing/MathHelp', 'help'),
@@ -2001,7 +2002,7 @@ export class Menu {
    * @returns {object}            The JSON for the radio button item
    */
   public radio(id: string, variable: string, other: object = {}): object {
-    const content = id.match(/^\d+%$/) ? id : localize(id);
+    const content = id.match(/^\d+%$/) ? id : (localizeAria(id) ?? localize(id));
     return Object.assign({ type: 'radio', id, content, variable }, other);
   }
 

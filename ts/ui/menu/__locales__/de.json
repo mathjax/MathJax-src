@@ -29,8 +29,7 @@
   ".Magnification/Keyboard": "Tastatur",
   ".Magnification/Mouse": "Maus",
   ".Magnification/None": "Keine",
-  ".RoleDescription": "Mathematik beschreiben als",
-  ".RoleDescription/none": "ohne Beschreibung",
+  "RoleDescription": "Mathematik beschreiben als",
   ".Scale/NonZero": "Der Skalierungsfaktor darf nicht Null sein",
   ".Scale/Percent": "Der Skalierungsfaktor muss ein Prozentsatz sein (z. B. %1)",
   ".Scale/Prompt": "Skalierungsfaktor für alle Formeln (im Vergleich zum umgebenden Text) setzen auf",
@@ -126,10 +125,5 @@
   "showSRE": "Semantische Attribute",
   "showTex": "LaTeX Attribute",
   "texHints": "TeX Hinweise",
-  "ueb": "UEB",
-  ".RoleDescription/MathJax expression": "MathJax Ausdruck",
-  ".RoleDescription/MathJax": "MathJax",
-  ".RoleDescription/clickable math": "anklickbare Mathematik",
-  ".RoleDescription/explorable math": "Erkundbare Mathematik",
-  ".RoleDescription/math": "Mathematik"
+  "ueb": "UEB"
 }

@@ -13,10 +13,5 @@
   "Unknown/Title": "a Screen Reader",
   "Win/Braille": "NVDA users need to select this option, while JAWS users should be able to get Braille output without changing this setting.",
   "Win/Select": "The screen reader should enter focus or forms mode automatically when the expression gets the browser focus, but if not, you can toggle focus mode using NVDA+space in NVDA; for JAWS, Enter should start forms mode while Numpad Plus leaves it.  Also note that you can use the NVDA or JAWS key plus the arrow keys to explore the expression even in browse mode, and you can use NVDA+shift+arrow keys to navigate out of an expression that has the focus in NVDA",
-  "Win/Title": "Windows using NVDA or JAWS",
-  ".RoleDescription/MathJax expression": "MathJax expression",
-  ".RoleDescription/MathJax": "MathJax",
-  ".RoleDescription/clickable math": "clickable math",
-  ".RoleDescription/explorable math": "explorable math",
-  ".RoleDescription/math": "math"
+  "Win/Title": "Windows using NVDA or JAWS"
 }
