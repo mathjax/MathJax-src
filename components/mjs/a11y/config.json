@@ -1,7 +1,7 @@
 {
   "build": {
     "component": "a11y",
-    "targets": ["a11y"],
+    "targets": ["a11y/aria.ts"],
     "excludeSubdirs": true
   },
   "copy": {
@@ -9,5 +9,11 @@
     "from": "[ts]/a11y",
     "copy": ["__locales__"],
     "excludes": ["__locales__/Component.ts"]
+  },
+  "webpack": {
+    "name": "a11y",
+    "libs": [
+      "components/src/a11y/lib"
+    ]
   }
 }

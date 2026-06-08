@@ -29,8 +29,7 @@
   ".Magnification/Keyboard": "Keyboard",
   ".Magnification/Mouse": "Mouse",
   ".Magnification/None": "None",
-  ".RoleDescription": "Describe math as",
-  ".RoleDescription/none": "none",
+  "RoleDescription": "Describe math as",
   ".Scale/NonZero": "The scale should not be zero",
   ".Scale/Percent": "The scale should be a percentage (e.g., %1)",
   ".Scale/Prompt": "Scale all mathematics (compared to surrounding text) by",
@@ -126,10 +125,5 @@
   "showSRE": "Semantic attributes",
   "showTex": "LaTeX attributes",
   "texHints": "TeX hints",
-  "ueb": "UEB",
-  ".RoleDescription/MathJax expression": "MathJax expression",
-  ".RoleDescription/MathJax": "MathJax",
-  ".RoleDescription/clickable math": "clickable math",
-  ".RoleDescription/explorable math": "explorable math",
-  ".RoleDescription/math": "math"
+  "ueb": "UEB"
 }
