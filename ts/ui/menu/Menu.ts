@@ -318,17 +318,17 @@ export class Menu {
     //
     lines.push(
       localize(
-        '.About/InputJax',
+        'About/InputJax',
         this.document.inputJax.map((jax) => jax.name).join(', ')
       ),
-      localize('.About/OutputJax', this.document.outputJax.name),
-      localize('.About/DocType', this.document.kind)
+      localize('About/OutputJax', this.document.outputJax.name),
+      localize('About/DocType', this.document.kind)
     );
     //
     // Add the loaded packages and their versions
     //
     if (MathJax && MathJax.loader) {
-      lines.push('<hr/>' + localize('.About/Modules'));
+      lines.push('<hr/>' + localize('About/Modules'));
       const Package = MathJax._.components.package.Package;
       const versions = (MathJax as any).loader.versions;
       for (const name of Array.from(Package.packages.keys()).sort(
@@ -409,8 +409,8 @@ export class Menu {
    */
   protected help() {
     InfoDialog.post({
-      title: localize('.Title/Help'),
-      message: localize('.Help/Message'),
+      title: localize('Help/Title'),
+      message: localize('Help/Message'),
       adaptor: this.document.adaptor,
       extraNodes: [
         this.document.adaptor.node(
@@ -427,7 +427,7 @@ export class Menu {
    */
   protected mathMLCode() {
     CopyDialog.post({
-      title: localize('.Title/Mml'),
+      title: localize('Title/Mml'),
       message: this.menu.mathItem ? this.toMML(this.menu.mathItem) : '',
       adaptor: this.document.adaptor,
       code: true,
@@ -439,7 +439,7 @@ export class Menu {
    */
   protected originalText() {
     CopyDialog.post({
-      title: localize('.Title/Source'),
+      title: localize('Title/Source'),
       message: this.menu.mathItem?.math ?? '',
       adaptor: this.document.adaptor,
       code: true,
@@ -451,7 +451,7 @@ export class Menu {
    */
   protected annotationBox() {
     CopyDialog.post({
-      title: localize('.Title/Annotation'),
+      title: localize('Title/Annotation'),
       message: AnnotationMenu.annotation,
       adaptor: this.document.adaptor,
       code: true,
@@ -463,7 +463,7 @@ export class Menu {
    */
   public async svgImage() {
     CopyDialog.post({
-      title: localize('.Title/Svg'),
+      title: localize('Title/Svg'),
       message: await this.toSVG(this.menu.mathItem),
       adaptor: this.document.adaptor,
       code: true,
@@ -475,7 +475,7 @@ export class Menu {
    */
   protected speechText() {
     CopyDialog.post({
-      title: localize('.Title/Speech'),
+      title: localize('Title/Speech'),
       message: this.menu.mathItem?.outputData?.speech ?? '',
       adaptor: this.document.adaptor,
       code: true,
@@ -487,7 +487,7 @@ export class Menu {
    */
   protected brailleText() {
     CopyDialog.post({
-      title: localize('.Title/Braille'),
+      title: localize('Title/Braille'),
       message: this.menu.mathItem?.outputData?.braille ?? '',
       adaptor: this.document.adaptor,
       code: true,
@@ -499,7 +499,7 @@ export class Menu {
    */
   protected errorMessage() {
     CopyDialog.post({
-      title: localize('.Title/Error'),
+      title: localize('Title/Error'),
       message: this.menu.mathItem ? this.menu.errorMsg : '',
       adaptor: this.document.adaptor,
       code: true,
@@ -520,7 +520,7 @@ export class Menu {
       text = `<div style="font-size: ${scale}px">${zoom.outerHTML}</div>`;
     }
     InfoDialog.post({
-      title: localize('.Title/Zoom'),
+      title: localize('Title/Zoom'),
       message: text,
       adaptor: this.document.adaptor,
       styles: {
@@ -668,41 +668,41 @@ export class Menu {
         ),
       ],
       items: [
-        this.submenu('.Show', [
-          this.command('.Show/MathMLcode', () => this.mathMLCode()),
-          this.command('.Show/Original', () => this.originalText()),
+        this.submenu('Show', [
+          this.command('Show/MathMLcode', () => this.mathMLCode()),
+          this.command('Show/Original', () => this.originalText()),
           this.rule(),
-          this.command('.Show/SpeechText', () => this.speechText(), {
+          this.command('Show/SpeechText', () => this.speechText(), {
             disabled: true,
           }),
-          this.command('.Show/BrailleCode', () => this.brailleText(), {
+          this.command('Show/BrailleCode', () => this.brailleText(), {
             disabled: true,
           }),
-          this.command('.Show/SvgImage', () => this.svgImage(), {
+          this.command('Show/SvgImage', () => this.svgImage(), {
             disabled: true,
           }),
-          this.submenu('.Show/Annotation'),
+          this.submenu('Show/Annotation'),
           this.rule(),
-          this.command('.Show/Error', () => this.errorMessage(), {
+          this.command('Show/Error', () => this.errorMessage(), {
             disabled: true,
           }),
         ]),
-        this.submenu('.Copy', [
-          this.command('.Show/MathMLcode', () => this.copyMathML()),
-          this.command('.Show/Original', () => this.copyOriginal()),
+        this.submenu('Copy', [
+          this.command('Show/MathMLcode', () => this.copyMathML()),
+          this.command('Show/Original', () => this.copyOriginal()),
           this.rule(),
-          this.command('.Show/SpeechText', () => this.copySpeechText(), {
+          this.command('Show/SpeechText', () => this.copySpeechText(), {
             disabled: true,
           }),
-          this.command('.Show/BrailleCode', () => this.copyBrailleText(), {
+          this.command('Show/BrailleCode', () => this.copyBrailleText(), {
             disabled: true,
           }),
-          this.command('.Show/SvgImage', () => this.copySvgImage(), {
+          this.command('Show/SvgImage', () => this.copySvgImage(), {
             disabled: true,
           }),
-          this.submenu('.Copy/Annotation'),
+          this.submenu('Copy/Annotation'),
           this.rule(),
-          this.command('.Show/Error', () => this.copyErrorMessage(), {
+          this.command('Show/Error', () => this.copyErrorMessage(), {
             disabled: true,
           }),
         ]),
@@ -712,17 +712,17 @@ export class Menu {
             'Renderer',
             this.radioGroup('renderer', ['CHTML', 'SVG'])
           ),
-          this.submenu('.Wide/WideExpressions', [
+          this.submenu('Wide/WideExpressions', [
             this.radioGroup('overflow', [
-              '.Wide/Overflow',
-              '.Wide/Scroll',
-              '.Wide/Linebreak',
-              '.Wide/Scale',
-              '.Wide/Truncate',
-              '.Wide/Elide',
+              'Wide/Overflow',
+              'Wide/Scroll',
+              'Wide/Linebreak',
+              'Wide/Scale',
+              'Wide/Truncate',
+              'Wide/Elide',
             ]),
             this.rule(),
-            this.checkbox('.Wide/BreakInline', 'breakInline'),
+            this.checkbox('Wide/BreakInline', 'breakInline'),
           ]),
           this.rule(),
           this.submenu('MathmlIncludes', [
@@ -733,27 +733,27 @@ export class Menu {
           ]),
           this.submenu('Language', this.languageSubmenu()),
           this.rule(),
-          this.submenu('.Zoom/ZoomTrigger', [
-            this.command('.Zoom/ZoomNow', () => this.zoom(null, '')),
+          this.submenu('Zoom/ZoomTrigger', [
+            this.command('Zoom/ZoomNow', () => this.zoom(null, '')),
             this.rule(),
             this.radioGroup('zoom', [
-              '.Zoom/Click',
-              '.Zoom/DoubleClick',
-              '.Zoom/NoZoom',
+              'Zoom/Click',
+              'Zoom/DoubleClick',
+              'Zoom/NoZoom',
             ]),
             this.rule(),
-            this.label('.Zoom/TriggerRequires'),
-            this.checkbox(MenuUtil.isMac ? 'Option' : '.Zoom/Alt', 'alt'),
-            this.checkbox('.ZoomC/ommand', 'cmd', {
+            this.label('Zoom/TriggerRequires'),
+            this.checkbox(MenuUtil.isMac ? 'Option' : 'Zoom/Alt', 'alt'),
+            this.checkbox('Zoom/Command', 'cmd', {
               hidden: !MenuUtil.isMac,
             }),
-            this.checkbox('.Zoom/Control', 'ctrl', {
+            this.checkbox('Zoom/Control', 'ctrl', {
               hidden: MenuUtil.isMac,
             }),
-            this.checkbox('.Zoom/Shift', 'shift'),
+            this.checkbox('Zoom/Shift', 'shift'),
           ]),
           this.submenu(
-            '.Zoom/ZoomFactor',
+            'Zoom/ZoomFactor',
             this.radioGroup('zscale', [
               '150%',
               '175%',
@@ -803,57 +803,57 @@ export class Menu {
           this.radioGroup('brailleCode', ['nemeth', 'ueb', 'euro']),
         ]),
         this.submenu('Explorer', [
-          this.submenu('.Highlight', [
+          this.submenu('Highlight', [
             this.submenu(
-              '.Highlight/Background',
+              'Highlight/Background',
               this.radioGroup('backgroundColor', [
-                '.Highlight/Blue',
-                '.Highlight/Red',
-                '.Highlight/Green',
-                '.Highlight/Yellow',
-                '.Highlight/Cyan',
-                '.Highlight/Magenta',
-                '.Highlight/White',
-                '.Highlight/Black',
+                'Highlight/Blue',
+                'Highlight/Red',
+                'Highlight/Green',
+                'Highlight/Yellow',
+                'Highlight/Cyan',
+                'Highlight/Magenta',
+                'Highlight/White',
+                'Highlight/Black',
               ])
             ),
             { type: 'slider', variable: 'backgroundOpacity', content: ' ' },
             this.submenu(
-              '.Highlight/Foreground',
+              'Highlight/Foreground',
               this.radioGroup('foregroundColor', [
-                '.Highlight/Black',
-                '.Highlight/White',
-                '.Highlight/Magenta',
-                '.Highlight/Cyan',
-                '.Highlight/Yellow',
-                '.Highlight/Green',
-                '.Highlight/Red',
-                '.Highlight/Blue',
+                'Highlight/Black',
+                'Highlight/White',
+                'Highlight/Magenta',
+                'Highlight/Cyan',
+                'Highlight/Yellow',
+                'Highlight/Green',
+                'Highlight/Red',
+                'Highlight/Blue',
               ])
             ),
             { type: 'slider', variable: 'foregroundOpacity', content: ' ' },
             this.rule(),
             this.radioGroup('highlight', [
-              '.Highlight/None',
-              '.Highlight/Hover',
-              '.Highlight/Flame',
+              'Highlight/None',
+              'Highlight/Hover',
+              'Highlight/Flame',
             ]),
             this.rule(),
-            this.checkbox('.Highlight/TreeColoring', 'treeColoring'),
+            this.checkbox('Highlight/TreeColoring', 'treeColoring'),
           ]),
-          this.submenu('.Magnification', [
+          this.submenu('Magnification', [
             this.radioGroup('magnification', [
-              '.Magnification/None',
-              '.Magnification/Keyboard',
-              '.Magnification/Mouse',
+              'Magnification/None',
+              'Magnification/Keyboard',
+              'Magnification/Mouse',
             ]),
             this.rule(),
             this.radioGroup('magnify', ['200%', '300%', '400%', '500%']),
           ]),
-          this.submenu('.Semantic/Info', [
-            this.checkbox('.Semantic/Type', 'infoType'),
-            this.checkbox('.Semantic/Role', 'infoRole'),
-            this.checkbox('.Semantic/Prefix', 'infoPrefix'),
+          this.submenu('Semantic/Info', [
+            this.checkbox('Semantic/Type', 'infoType'),
+            this.checkbox('Semantic/Role', 'infoRole'),
+            this.checkbox('Semantic/Prefix', 'infoPrefix'),
           ]),
           this.rule(),
           this.submenu('RoleDescription', [
@@ -866,7 +866,7 @@ export class Menu {
               AriaRoleDescription.NONE,
             ]),
           ]),
-          this.checkbox('.Tabbing/MathHelp', 'help'),
+          this.checkbox('Tabbing/MathHelp', 'help'),
         ]),
         this.submenu('Options', [
           this.checkbox('Enrich', 'enrich'),
@@ -875,9 +875,9 @@ export class Menu {
             disabled: true,
           }),
           this.rule(),
-          this.checkbox('.Tabbing/InTabOrder', 'inTabOrder'),
-          this.submenu('.Tabbing/TabSelects', [
-            this.radioGroup('tabSelects', ['.Tabbing/all', '.Tabbing/last']),
+          this.checkbox('Tabbing/InTabOrder', 'inTabOrder'),
+          this.submenu('Tabbing/TabSelects', [
+            this.radioGroup('tabSelects', ['Tabbing/all', 'Tabbing/last']),
           ]),
           this.rule(),
           this.checkbox('AssistiveMml', 'assistiveMml'),
@@ -889,12 +889,12 @@ export class Menu {
     }) as MJContextMenu;
     const menu = this.menu;
     menu.settings = this.settings;
-    menu.findID('Settings', '.Wide/WideExpressions', '.Wide/Elide').disable();
+    menu.findID('Settings', 'Wide/WideExpressions', 'Wide/Elide').disable();
     menu.findID('Braille', 'ueb').hide();
     menu.setJax(this.jax);
     this.checkLoadableItems();
     const cache: [string, string][] = [];
-    MJContextMenu.DynamicSubmenus.set('.Show/Annotation', [
+    MJContextMenu.DynamicSubmenus.set('Show/Annotation', [
       AnnotationMenu.showAnnotations(
         () => this.annotationBox(),
         this.options.annotationTypes,
@@ -902,7 +902,7 @@ export class Menu {
       ),
       '',
     ]);
-    MJContextMenu.DynamicSubmenus.set('.Copy/Annotation', [
+    MJContextMenu.DynamicSubmenus.set('Copy/Annotation', [
       AnnotationMenu.copyAnnotations(cache),
       '',
     ]);
@@ -979,7 +979,7 @@ export class Menu {
       Object.assign(this.settings, settings);
       this.setA11y(settings);
     } catch (err) {
-      Locale.warn(COMPONENT, '.Warn/StorageError', err.message);
+      Locale.warn(COMPONENT, 'Warn/StorageError', err.message);
     }
   }
 
@@ -1001,7 +1001,7 @@ export class Menu {
       }
       localStorage.setItem(Menu.LOCALE_STORAGE, this.settings.language);
     } catch (err) {
-      Locale.warn(COMPONENT, '.Warn/StorageError', err.message);
+      Locale.warn(COMPONENT, 'Warn/StorageError', err.message);
     }
   }
 
@@ -1106,7 +1106,7 @@ export class Menu {
       this.loadComponent('output/' + name, () => {
         const startup = MathJax.startup;
         if (!(name in startup.constructors)) {
-          return fail(new Error(localize('.Warn/ComponentNotLoaded', name)));
+          return fail(new Error(localize('Warn/ComponentNotLoaded', name)));
         }
         startup.useOutput(name, true);
         startup.output = this.applyRendererOptions(startup.getOutputJax());
@@ -1186,7 +1186,7 @@ export class Menu {
    * @param {boolean} tab   True for including math in the tab order, false for not
    */
   protected setTabOrder(tab: boolean) {
-    const menu = this.menu.findID('Options', '.Tabbing/TabSelects');
+    const menu = this.menu.findID('Options', 'Tabbing/TabSelects');
     tab ? menu.enable() : menu.disable();
     this.menu.store.inTaborder(tab);
   }
@@ -1413,7 +1413,7 @@ export class Menu {
     const scale = (parseFloat(this.settings.scale) * 100)
       .toFixed(1)
       .replace(/.0$/, '');
-    const percent = prompt(localize('.Scale/Prompt'), scale + '%');
+    const percent = prompt(localize('Scale/Prompt'), scale + '%');
     if (this.current) {
       const speech = (this.menu.mathItem as ExplorerMathItem).explorers.speech;
       speech.refocus = this.current;
@@ -1425,10 +1425,10 @@ export class Menu {
         if (scale) {
           this.menu.pool.lookup('scale').setValue(String(scale));
         } else {
-          alert(localize('.Scale/NonZero'));
+          alert(localize('Scale/NonZero'));
         }
       } else {
-        alert(localize('.Scale/Percent', '120%'));
+        alert(localize('Scale/Percent', '120%'));
       }
     }
   }
@@ -1589,7 +1589,7 @@ export class Menu {
   protected async toSVG(math: HTMLMATHITEM): Promise<string> {
     const jax = this.jax.SVG;
     if (!jax) {
-      return localize('.Svg/NotProduced');
+      return localize('Svg/NotProduced');
     }
     const adaptor = jax.adaptor;
     const cache = jax.options.fontCache;
