@@ -33,6 +33,7 @@ export type namedData = { [name: string | number]: string };
  * The Locale class for handling localized messages
  */
 export class Locale {
+  public static initialized: boolean = false;
   /**
    * Whether setLocale() has been called or not.
    */
