@@ -30,11 +30,6 @@
   ".Magnification/Mouse": "Mouse",
   ".Magnification/None": "None",
   ".RoleDescription": "Describe math as",
-  ".RoleDescription/MathJax expression": "MathJax expression",
-  ".RoleDescription/MathJax": "MathJax",
-  ".RoleDescription/clickable math": "clickable math",
-  ".RoleDescription/explorable math": "explorable math",
-  ".RoleDescription/math": "math",
   ".RoleDescription/none": "none",
   ".Scale/NonZero": "The scale should not be zero",
   ".Scale/Percent": "The scale should be a percentage (e.g., %1)",
@@ -131,5 +126,10 @@
   "showSRE": "Semantic attributes",
   "showTex": "LaTeX attributes",
   "texHints": "TeX hints",
-  "ueb": "UEB"
+  "ueb": "UEB",
+  ".RoleDescription/MathJax expression": "MathJax expression",
+  ".RoleDescription/MathJax": "MathJax",
+  ".RoleDescription/clickable math": "clickable math",
+  ".RoleDescription/explorable math": "explorable math",
+  ".RoleDescription/math": "math"
 }

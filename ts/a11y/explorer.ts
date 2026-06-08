@@ -34,6 +34,7 @@ import { StyleJson } from '../util/StyleJson.js';
 import { context } from '../util/context.js';
 
 import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
+import { localize } from './explorer/__locales__/Component.js';
 
 import * as Sre from './sre.js';
 
@@ -135,7 +136,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     /**
      * The aria-roleDescription to use for the math
      */
-    protected static roleDescription: string = 'math';
+    protected static roleDescription: string = '.RoleDescription/math';
 
     /**
      * Decription to use when set to none
@@ -154,9 +155,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
 
     public get roleDescription() {
       const CLASS = this.constructor as typeof BaseClass;
-      return CLASS.roleDescription === 'none'
+      return CLASS.roleDescription === '.RoleDescription/none'
         ? CLASS.none
-        : CLASS.roleDescription;
+        : localize(CLASS.roleDescription);
     }
 
     public get none() {
