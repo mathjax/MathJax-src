@@ -1,0 +1,13 @@
+{
+  "build": {
+    "component": "a11y",
+    "targets": ["a11y"],
+    "excludeSubdirs": true
+  },
+  "copy": {
+    "to": "[bundle]/a11y",
+    "from": "[ts]/a11y",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  }
+}
