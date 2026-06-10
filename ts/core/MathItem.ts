@@ -388,7 +388,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
    * @override
    */
   public convert(document: MathDocument<N, T, D>, end: number = STATE.LAST) {
-    document.renderActions.renderConvert(this, document, end);
+    return document.renderActions.renderConvert(this, document, end);
   }
 
   /**

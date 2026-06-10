@@ -59,6 +59,10 @@ export class ListItem<DataClass> {
    */
   public prev: ListItem<DataClass> = null;
 
+  public get isEnd() {
+    return this.data === END;
+  }
+
   /**
    * @param {any} data  The data to be stored in the list item
    * @class
@@ -106,6 +110,10 @@ export class LinkedList<DataClass> {
    */
   public isBefore(a: DataClass, b: DataClass): boolean {
     return a < b;
+  }
+
+  public first(): ListItem<DataClass> {
+    return this.list.next;
   }
 
   /**
@@ -216,7 +224,6 @@ export class LinkedList<DataClass> {
    */
   public *[Symbol.iterator](): IterableIterator<DataClass> {
     let current = this.list.next;
-
     while (current.data !== END) {
       yield current.data as DataClass;
       current = current.next;
@@ -230,7 +237,6 @@ export class LinkedList<DataClass> {
    */
   public *reversed(): IterableIterator<DataClass> {
     let current = this.list.prev;
-
     while (current.data !== END) {
       yield current.data as DataClass;
       current = current.prev;
