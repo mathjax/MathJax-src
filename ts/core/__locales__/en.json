@@ -21,7 +21,7 @@
   "MML/OnlyOnce": "%1 can only appear once in %2",
   "MML/TokenChild": "%1 can only be a child of a token element",
   "MML/mglyphAttr": "mglyph must have either src or fontfamily and index attributes",
-  "MML/mmultscriptsChild": "%1 must be a child of mmultiscripts",
+  "MML/mmultiscriptsChild": "%1 must be a child of mmultiscripts",
   "MML/mtableChild": "%1 can only be a child of an mtable",
   "MML/mtableChildren": "Children of '%1' must be mtr or mlabeledtr",
   "MML/mtrChild": "%1 can only be a child of an mtr or mlabeledtr",
