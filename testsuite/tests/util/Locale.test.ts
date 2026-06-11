@@ -1,4 +1,4 @@
-import { describe, test, expect } from '@jest/globals';
+import { describe, test, expect, jest } from '@jest/globals';
 import { trapOutput, trapAsyncOutput } from '#helpers/traps.js';
 import { mathjax } from '#js/mathjax.js';
 import { asyncLoad } from '#js/util/AsyncLoad.js';
@@ -30,17 +30,14 @@ describe('Locale', () => {
       '../testsuite/lib/component/__locales__',
       new Set(),
     ]);
-    const error = console.error;
-    console.error = (message) => {
-      throw message;
-    };
+    const spy = jest.spyOn(console, 'error').mockImplementation((msg) => {throw msg});
     await expect(Locale.setLocale('xy')).rejects.toContain(
       "Can't load 'xy.json': ENOENT: no such file or directory"
     );
     await expect(Locale.setLocale('de')).rejects.toContain(
       "'de.json' kann nicht geladen werden: ENOENT: no such file or directory"
     );
-    console.error = error;
+    spy.mockRestore();
     await Locale.setLocale('en');
     expect(locale.data.component).toEqual({ en: { Id1: 'Test of %1 in %2' } });
     expect(Locale.message('component', 'Id1', 'message', 'Locale')).toBe(

@@ -1,3 +1,7 @@
+import {jest} from '@jest/globals';
+
+type consoleMethod = 'log' | 'warn' | 'error';
+
 /**
  * Trap output produced while running code.
  *
@@ -6,14 +10,15 @@
  * @returns {string} The output sent to the given method.
  */
 export function trapOutput(method: string, code: () => void): string {
-  const saved = (console as any)[method];
-  let message = '';
-  (console as any)[method] = (...msg: any[]) => {
-    message += (message ? '\n' : '') + msg.join(' ');
-  };
-  code();
-  (console as any)[method] = saved;
-  return message;
+  const messages: string[] = [];
+  const spy = jest.spyOn(console, method as consoleMethod)
+    .mockImplementation((...msg) => messages.push(msg.join(' ')));
+  try {
+    code();
+  } finally {
+    spy.mockRestore();
+  }
+  return messages.join('\n');
 }
 
 /**
@@ -45,14 +50,15 @@ export async function trapAsyncOutput(
   method: string,
   code: () => Promise<void>
 ): Promise<string> {
-  const saved = (console as any)[method];
-  let message = '';
-  (console as any)[method] = (...msg: any[]) => {
-    message += (message ? '\n' : '') + msg.join(' ');
-  };
-  await code();
-  (console as any)[method] = saved;
-  return message;
+  const messages: string[] = [];
+  const spy = jest.spyOn(console, method as consoleMethod)
+    .mockImplementation((...msg) => messages.push(msg.join(' ')));
+  try {
+    await code();
+  } finally {
+    spy.mockRestore();
+  }
+  return messages.join('\n');
 }
 
 /**
