@@ -120,7 +120,7 @@ export class MmlMtr extends AbstractMmlNode {
         const mtd = this.replaceChild(this.factory.create('mtd'), child);
         mtd.appendChild(child);
         if (!options['fixMtables']) {
-          child.mError('MML/mtrChildren', [], options);
+          child.mError('MML/mtrChildren', [this.kind], options);
         }
       }
     }
