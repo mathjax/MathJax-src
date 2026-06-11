@@ -17,7 +17,7 @@
   "MML/BadVariant": "Invalid mathvariant: %1",
   "MML/EqualPrescripts": "There must be an equal number of prescripts of each type",
   "MML/EqualScripts": "There must be an equal number of scripts of each type",
-  "MML/NoVariant": "There should not be children for '%1' nodes",
+  "MML/NoChildren": "There should not be children for '%1' nodes",
   "MML/OnlyOnce": "%1 can only appear once in %2",
   "MML/TokenChild": "%1 can only be a child of a token element",
   "MML/mglyphAttr": "mglyph must have either src or fontfamily and index attributes",
