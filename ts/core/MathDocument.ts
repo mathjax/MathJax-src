@@ -38,6 +38,7 @@ import { BitField, BitFieldClass } from '../util/BitField.js';
 import { PrioritizedList } from '../util/PrioritizedList.js';
 import { handleRetriesFor } from '../util/Retries.js';
 import { localize } from './__locales__/Component.js';
+import { Locale } from '../util/Locale.js';
 
 /*****************************************************************/
 
@@ -772,6 +773,12 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    * @class
    */
   constructor(document: D, adaptor: DOMAdaptor<N, T, D>, options: OptionList) {
+    if (!Locale.initialized) {
+      // FIXME: add URL when we have one.
+      console.error(
+        'MathJax locales not loaded.  You may receive cryptic error messages.'
+      );
+    }
     const CLASS = this.constructor as typeof AbstractMathDocument;
     this.document = document;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);

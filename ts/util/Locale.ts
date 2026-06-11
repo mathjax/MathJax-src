@@ -34,6 +34,10 @@ export type namedData = { [name: string | number]: string };
  */
 export class Locale {
   /**
+   * Whether setLocale() has been called or not.
+   */
+  public static initialized = false;
+  /**
    * The current locale
    */
   public static current: string = 'en';
@@ -234,7 +238,7 @@ export class Locale {
    *
    * @param {string} component        The component whose message is requested
    * @param {string} id               The id of the message
-   * @param {string|namedData} data   The first argument or the object of names arguments
+   * @param {string|namedData} data   The first argument or the object of named arguments
    * @param {string[]} args           Any additional string arguments (if data is a string)
    */
   public static warn(
