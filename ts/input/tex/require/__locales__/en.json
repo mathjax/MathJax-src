@@ -1,5 +1,6 @@
 {
   "BadPackageName": "Argument for %1 is not a valid package name",
   "BadRequire": "Extension \"%1\" is not allowed to be loaded",
+  "IllegalChar": "Illegal characters used in \\require prefix",
   "RequireFail": "Extension \"%1\" failed to load"
 }

@@ -2,6 +2,7 @@
   "BadPreamToken": "Ungültiges Pream-Token (%1)",
   "BadRawUnicode": "Das Argument für %1 muss eine hexadezimale Zahl mit 1 bis 6 Ziffern sein",
   "ColArgNotNum": "Das erste Argument für den Spaltenbezeichner %1 muss eine Zahl sein",
+  "ConfigNotFound": "Konfiguration '%1' nicht gefunden.  Wird übersprungen.",
   "ErroneousNestingEq": "Fehlerhafte Verschachtelung von Gleichungsstrukturen",
   "ExtraCloseLooking": "Überflüssige schließende Klammer bei der Suche nach %1",
   "ExtraCloseMissingOpen": "Überflüssige schließende Klammer oder fehlende öffnende Klammer",
@@ -21,11 +22,13 @@
   "MissingBeginExtraEnd": "Fehlendes \\begin{%1} oder zusätzliches \\end{%1}",
   "MissingCloseBrace": "Fehlende schließende Klammer",
   "MissingCloseBracket": "Schließendes ']' für Argument zu %1 nicht gefunden",
-  "MissingColumnDimOrUnits": "Missing dimension or its units for %1 column declaration",
-  "MissingDimOrUnits": "Missing dimension or its units for %1",
-  "MissingLeftExtraRight": "Missing \\left or extra \\right",
-  "MissingOrUnrecognizedDelim": "Missing or unrecognized delimiter for %1",
+  "MissingColumnDimOrUnits": "Bei der Spaltendeklaration von %1 fehlt die Dimension oder deren Einheiten",
+  "MissingDimOrUnits": "Für %1 fehlt die Dimension oder deren Einheiten",
+  "MissingLeftExtraRight": "Fehlendes \\left oder überflüssiges \\right",
+  "MissingOrUnrecognizedDelim": "Fehlendes oder nicht erkanntes Trennzeichen für %1",
   "MissingScript": "Fehlendes Argument für Hoch- oder Tiefstellung",
-  "TokenNotFoundForCommand": "Could not find %1 for %2",
-  "UnknownTag": "Unbekannte Bezeichner Klasse"
+  "PackageNotFound": "Paket '%1' nicht gefunden.  Wird übersprungen.",
+  "TokenNotFoundForCommand": "%1 für %2 konnte nicht gefunden werden",
+  "UnknownTag": "Unbekannte Bezeichner Klasse",
+  "WrongParser": "Das Paket '%1' ist nicht auf den richtigen Parser ausgerichtet"
 }

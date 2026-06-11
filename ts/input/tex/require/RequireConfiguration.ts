@@ -40,6 +40,7 @@ import { mathjax } from '../../../mathjax.js';
 import { expandable } from '../../../util/Options.js';
 import { MenuMathDocument } from '../../../ui/menu/MenuHandler.js';
 
+import { Locale } from '../../../util/Locale.js';
 import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
@@ -207,7 +208,7 @@ function config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
   const options = jax.parseOptions.options.require;
   const prefix = options.prefix;
   if (prefix.match(/[^_a-zA-Z0-9]/)) {
-    throw Error('Illegal characters used in \\require prefix');
+    Locale.throw(COMPONENT, 'IllegalChar');
   }
   if (!LOADERCONFIG.paths[prefix]) {
     LOADERCONFIG.paths[prefix] = '[mathjax]/input/tex/extensions';
