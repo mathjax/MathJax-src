@@ -4,6 +4,12 @@
     "targets": ["a11y/speech.ts", "a11y/speech"],
     "exclude": ["a11y/speech/SpeechMenu.ts"]
   },
+  "copy": {
+    "to": "[bundle]/a11y/speech",
+    "from": "[ts]/a11y/speech",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts"]
+  },
   "webpack": {
     "name": "a11y/speech",
     "libs": [
