@@ -645,14 +645,14 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       // @test Limits UnderOver
       node = parser.create('node', 'msubsup');
       NodeUtil.copyChildren(op, node);
-      op = top.Last = node;
+      op = top.First = node;
     } else if (NodeUtil.isType(op, 'msubsup') && limits) {
       // @test Limits SubSup
       // node = parser.create('node', 'munderover', NodeUtil.getChildren(op), {});
       // Needs to be copied, otherwise we get an error in MmlNode.appendChild!
       node = parser.create('node', 'munderover');
       NodeUtil.copyChildren(op, node);
-      op = top.Last = node;
+      op = top.First = node;
     }
     NodeUtil.setProperty(op, 'movesupsub', limits ? true : false);
     NodeUtil.setProperties(NodeUtil.getCoreMO(op), { movablelimits: false });
