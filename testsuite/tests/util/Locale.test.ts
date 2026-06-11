@@ -30,7 +30,9 @@ describe('Locale', () => {
       '../testsuite/lib/component/__locales__',
       new Set(),
     ]);
-    const spy = jest.spyOn(console, 'error').mockImplementation((msg) => {throw msg});
+    const spy = jest.spyOn(console, 'error').mockImplementation((msg) => {
+      throw msg;
+    });
     await expect(Locale.setLocale('xy')).rejects.toContain(
       "Can't load 'xy.json': ENOENT: no such file or directory"
     );

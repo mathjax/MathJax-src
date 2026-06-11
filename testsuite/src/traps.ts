@@ -1,4 +1,4 @@
-import {jest} from '@jest/globals';
+import { jest } from '@jest/globals';
 
 type consoleMethod = 'log' | 'warn' | 'error';
 
@@ -10,15 +10,17 @@ type consoleMethod = 'log' | 'warn' | 'error';
  * @returns {string} The output sent to the given method.
  */
 export function trapOutput(method: string, code: () => void): string {
-  const messages: string[] = [];
-  const spy = jest.spyOn(console, method as consoleMethod)
-    .mockImplementation((...msg) => messages.push(msg.join(' ')));
+  const spy = jest
+    .spyOn(console, method as consoleMethod)
+    .mockImplementation(() => {});
+  let message = '(no message)';
   try {
     code();
+    message = spy.mock.calls.map((msg: string[]) => msg.join(' ')).join('\n');
   } finally {
     spy.mockRestore();
   }
-  return messages.join('\n');
+  return message;
 }
 
 /**
@@ -50,15 +52,17 @@ export async function trapAsyncOutput(
   method: string,
   code: () => Promise<void>
 ): Promise<string> {
-  const messages: string[] = [];
-  const spy = jest.spyOn(console, method as consoleMethod)
-    .mockImplementation((...msg) => messages.push(msg.join(' ')));
+  const spy = jest
+    .spyOn(console, method as consoleMethod)
+    .mockImplementation(() => {});
+  let message = '(no message)';
   try {
     await code();
+    message = spy.mock.calls.map((msg: string[]) => msg.join(' ')).join('\n');
   } finally {
     spy.mockRestore();
   }
-  return messages.join('\n');
+  return message;
 }
 
 /**
