@@ -21,7 +21,7 @@
   "MML/OnlyOnce": "%1 darf in %2 nur einmal vorkommen",
   "MML/TokenChild": "%1 darf nur ein untergeordnetes Element eines Token-Elements sein",
   "MML/mglyphAttr": "mglyph muss entweder die Attribute src oder fontfamily sowie das Attribut index aufweisen",
-  "MML/mmultscriptsChild": "%1 muss ein untergeordnetes Element von mmultiscripts sein",
+  "MML/mmultiscriptsChild": "%1 muss ein untergeordnetes Element von mmultiscripts sein",
   "MML/mtableChild": "%1 kann nur ein Kind von mtable sein",
   "MML/mtableChildren": "Kinder von '%1' müssen mtr oder mlabeledtr sein",
   "MML/mtrChild": "%1 kann nur ein Kind von mtr oder mlabeledtr sein",
