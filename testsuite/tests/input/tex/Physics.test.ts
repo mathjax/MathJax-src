@@ -2474,15 +2474,11 @@ describe('Physics Errors', () => {
   });
 
   it('Missing Closing Delimiter', () => {
-    expect(
-      tex2mml('\\sin(1\\over2')
-    ).toMatchSnapshot();
+    expect(tex2mml('\\sin(1\\over2')).toMatchSnapshot();
   });
 
   it('Extra Open Delimiter', () => {
-    expect(
-      tex2mml('\\sin((1\\over2)')
-    ).toMatchSnapshot();
+    expect(tex2mml('\\sin((1\\over2)')).toMatchSnapshot();
   });
 });
 
