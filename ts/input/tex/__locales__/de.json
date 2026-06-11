@@ -1,19 +1,19 @@
 {
   "BadPreamToken": "Ungültiges Preamble Token: %1",
   "BadRawUnicode": "Das Argument für %1 muss eine hexadezimale Zahl mit 1 bis 6 Ziffern sein",
-  "ColArgNotNum": "Das erste Argument für den Spaltenbezeichner %1 muss eine Zahl sein",
+  "ColArgNotNum": "Das erste Argument für %1 im column Befehl muss eine Zahl sein",
   "ConfigNotFound": "Konfiguration '%1' nicht gefunden.  Wird übersprungen.",
-  "ErroneousNestingEq": "Fehlerhafte Verschachtelung von Gleichungsstrukturen",
+  "ErroneousNestingEq": "Fehlerhafte Verschachtelung von equation Befehlen",
   "ExtraCloseLooking": "Überflüssige schließende Klammer bei der Suche nach %1",
   "ExtraCloseMissingOpen": "Überflüssige schließende Klammer oder fehlende öffnende Klammer",
   "ExtraMiddle": "Zusätzliches \\middle",
   "ExtraOpenMissingClose": "Zusätzliche öffnende Klammer oder fehlende schließende Klammer",
   "IllegalMacroParam": "Ungültiger Makroparameterverweis",
   "InvalidOption": "Ungültige Option: %1",
-  "InvalidValue": "Der Wert für den Schlüssel '%1' hat nicht den erwarteten Typ",
+  "InvalidValue": "Der Schlüsselwert '%1' hat nicht den erwarteten Typ",
   "MathNotTerminated": "Der Mathematikmodus wurde nicht ordnungsgemäß beendet",
   "MaxBufferSize": "Die interne Puffergröße von MathJax wurde überschritten; liegt ein rekursiver Makroaufruf vor?",
-  "MaxColumns": "Zu viele Spaltenangaben (möglicherweise sich wiederholende Spaltendefinitionen?)",
+  "MaxColumns": "Zu viele column Befehle (möglicherweise sich wiederholende column Definitionen?)",
   "MaxMacroSub1": "Maximale Anzahl an Makrosubstitutionen in MathJax überschritten; liegt ein rekursiver Makroaufruf vor?",
   "MaxMacroSub2": "Maximale Anzahl an Ersetzungen in MathJax überschritten; liegt eine rekursive LaTeX-Umgebung vor?",
   "Misplaced": "'%1' falsch platziert",
@@ -30,5 +30,5 @@
   "PackageNotFound": "Paket '%1' nicht gefunden.  Wird übersprungen.",
   "TokenNotFoundForCommand": "%1 für %2 konnte nicht gefunden werden",
   "UnknownTag": "Unbekannte Bezeichner Klasse",
-  "WrongParser": "Das Paket '%1' ist nicht auf den richtigen Parser ausgerichtet"
+  "WrongParser": "Das Paket '%1' benutzt einen Parser für den es nicht definiert ist"
 }
