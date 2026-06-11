@@ -22,6 +22,7 @@
  */
 
 import { context } from '../../util/context.js';
+import { localize } from './__locales__/Component.js';
 
 /**
  * True when platform is a Mac (so we can enable CMD menu item for zoom trigger)
@@ -43,7 +44,7 @@ export function copyToClipboard(text: string) {
   try {
     document.execCommand('copy');
   } catch (error) {
-    alert(`Can't copy to clipboard: ${error.message}`);
+    alert(localize('.Warn/CantCopy', error.message));
   }
   document.body.removeChild(input);
 }
