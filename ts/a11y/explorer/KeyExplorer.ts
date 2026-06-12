@@ -1305,7 +1305,7 @@ export class SpeechExplorer
     const description = item.roleDescription;
     const speech =
       (container.getAttribute(SemAttr.SPEECH) || '') +
-      (description ? ', ' + description : '');
+      (description && description !== this.none ? ', ' + description : '');
     this.img?.remove();
     this.img = this.document.adaptor.node('mjx-speech', {
       'aria-label': speech,

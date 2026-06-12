@@ -50,7 +50,7 @@ import { locales } from './locales.js';
 
 import { Parser, Rule, CssStyles, Submenu } from './mj-context-menu.js';
 
-import { AriaPrefix, localizeAria } from '../../a11y/aria.js';
+import * as Aria from '../../a11y/aria/__locales__/Component.js';
 import { Locale } from '../../util/Locale.js';
 import { COMPONENT, localize } from './__locales__/Component.js';
 export { COMPONENT };
@@ -857,7 +857,7 @@ export class Menu {
           ]),
           this.rule(),
           this.submenu('RoleDescription', [
-            this.radioGroup('roleDescription', AriaPrefix, [
+            this.radioGroup('roleDescription', Aria.roleDescPrefix, [
               'MathJax expression',
               'MathJax',
               'math',
@@ -2008,7 +2008,7 @@ export class Menu {
    */
   public radio(prefix: string, id: string, variable: string, other: object = {}): object {
     const key = prefix ? `${prefix}/${id}` : id;
-    const content = prefix === '.' ? id : prefix === AriaPrefix ? localizeAria(id) : localize(key);
+    const content = prefix === '.' ? id : prefix === Aria.roleDescPrefix ? Aria.localize(key) : localize(key);
     return Object.assign({ type: 'radio', id, content, variable }, other);
   }
 
