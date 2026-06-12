@@ -672,13 +672,13 @@ export class Menu {
           this.command('Show/MathMLcode', () => this.mathMLCode()),
           this.command('Show/Original', () => this.originalText()),
           this.rule(),
-          this.command('Show/SpeechText', () => this.speechText(), {
+          this.command('Show/Speech', () => this.speechText(), {
             disabled: true,
           }),
-          this.command('Show/BrailleCode', () => this.brailleText(), {
+          this.command('Show/Braille', () => this.brailleText(), {
             disabled: true,
           }),
-          this.command('Show/SvgImage', () => this.svgImage(), {
+          this.command('Show/SVG', () => this.svgImage(), {
             disabled: true,
           }),
           this.submenu('Show/Annotation'),
@@ -691,13 +691,13 @@ export class Menu {
           this.command('Show/MathMLcode', () => this.copyMathML()),
           this.command('Show/Original', () => this.copyOriginal()),
           this.rule(),
-          this.command('Show/SpeechText', () => this.copySpeechText(), {
+          this.command('Show/Speech', () => this.copySpeechText(), {
             disabled: true,
           }),
-          this.command('Show/BrailleCode', () => this.copyBrailleText(), {
+          this.command('Show/Braille', () => this.copyBrailleText(), {
             disabled: true,
           }),
-          this.command('Show/SvgImage', () => this.copySvgImage(), {
+          this.command('Show/SVG', () => this.copySvgImage(), {
             disabled: true,
           }),
           this.submenu('Copy/Annotation'),
@@ -709,10 +709,10 @@ export class Menu {
         this.rule(),
         this.submenu('Settings', [
           this.submenu(
-            'Renderer',
+            'Settings/Renderer',
             this.radioGroup('renderer', '.', ['CHTML', 'SVG'])
           ),
-          this.submenu('Wide/WideExpressions', [
+          this.submenu('Wide/Expressions', [
             this.radioGroup('overflow', 'Wide', [
               'Overflow',
               'Scroll',
@@ -725,13 +725,13 @@ export class Menu {
             this.checkbox('Wide/BreakInline', 'breakInline'),
           ]),
           this.rule(),
-          this.submenu('MathmlIncludes', [
-            this.checkbox('showSRE', 'showSRE'),
-            this.checkbox('showTex', 'showTex'),
-            this.checkbox('texHints', 'texHints'),
-            this.checkbox('semantics', 'semantics'),
+          this.submenu('Settings/MathmlIncludes', [
+            this.checkbox('MML/showSRE', 'showSRE'),
+            this.checkbox('MML/showTex', 'showTex'),
+            this.checkbox('MML/texHints', 'texHints'),
+            this.checkbox('MML/semantics', 'semantics'),
           ]),
-          this.submenu('Language', this.languageSubmenu()),
+          this.submenu('Settings/Language', this.languageSubmenu()),
           this.rule(),
           this.submenu('Zoom/ZoomTrigger', [
             this.command('Zoom/ZoomNow', () => this.zoom(null, '')),
@@ -764,18 +764,18 @@ export class Menu {
             ])
           ),
           this.rule(),
-          this.command('ScaleAllMath', () => this.scaleAllMath()),
+          this.command('Settings/Scale', () => this.scaleAllMath()),
           this.rule(),
-          this.command('Reset', () => this.resetDefaults()),
+          this.command('Settings/Reset', () => this.resetDefaults()),
         ]),
         this.rule(),
-        this.label('Accessibility'),
+        this.label('Label/Accessibility'),
         this.submenu('Speech', [
           this.checkbox('Generate', 'speech'),
           this.checkbox('Subtitles', 'subtitles'),
           this.checkbox('AutoVoicing', 'voicing'),
           this.rule(),
-          this.label('Rules'),
+          this.label('Label/Rules'),
           this.submenu(
             'Mathspeak',
             this.radioGroup('speechRules', '', [
@@ -794,13 +794,13 @@ export class Menu {
         this.submenu('Braille', [
           this.checkbox('Generate', 'braille'),
           this.checkbox('Subtitles', 'viewBraille'),
-          this.checkbox('BrailleSpeech', 'brailleSpeech', {
+          this.checkbox('Braille/Speech', 'brailleSpeech', {
             hidden: true,
           }),
-          this.checkbox('BrailleCombine', 'brailleCombine'),
+          this.checkbox('Braille/Combine', 'brailleCombine'),
           this.rule(),
-          this.label('Code'),
-          this.radioGroup('brailleCode', '', ['nemeth', 'ueb', 'euro']),
+          this.label('Label/Code'),
+          this.radioGroup('brailleCode', 'Braille', ['nemeth', 'ueb', 'euro']),
         ]),
         this.submenu('Explorer', [
           this.submenu('Highlight', [
@@ -869,9 +869,9 @@ export class Menu {
           this.checkbox('Tabbing/MathHelp', 'help'),
         ]),
         this.submenu('Options', [
-          this.checkbox('Enrich', 'enrich'),
-          this.checkbox('Collapsible', 'collapsible'),
-          this.checkbox('AutoCollapse', 'autocollapse', {
+          this.checkbox('Options/Enrich', 'enrich'),
+          this.checkbox('Options/Collapsible', 'collapsible'),
+          this.checkbox('Options/AutoCollapse', 'autocollapse', {
             disabled: true,
           }),
           this.rule(),
@@ -880,7 +880,7 @@ export class Menu {
             this.radioGroup('tabSelects', 'Tabbing', ['all', 'last']),
           ]),
           this.rule(),
-          this.checkbox('AssistiveMml', 'assistiveMml'),
+          this.checkbox('Options/AssistiveMml', 'assistiveMml'),
         ]),
         this.rule(),
         this.command('About', () => this.about()),
@@ -889,7 +889,7 @@ export class Menu {
     }) as MJContextMenu;
     const menu = this.menu;
     menu.settings = this.settings;
-    menu.findID('Settings', 'WideExpressions', 'Elide').disable();
+    menu.findID('Settings', 'Wide/Expressions', 'Elide').disable();
     menu.findID('Braille', 'ueb').hide();
     menu.setJax(this.jax);
     this.checkLoadableItems();
