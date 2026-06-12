@@ -24,37 +24,16 @@
 import { localize } from './__locales__/Component.js';
 
 /**
- * Localization keys for ARIA role descriptions used by MathJax. Values are the
- * strings expected in the locale files.
+ * Prefix to use for roleDescription localization
  */
-export const AriaRoleDescription: Record<string, string> = {
-  EXPRESSION: 'Aria/RoleDescription/MathJax expression',
-  MATHJAX: 'Aria/RoleDescription/MathJax',
-  MATH: 'Aria/RoleDescription/math',
-  CLICKABLE: 'Aria/RoleDescription/clickable math',
-  EXPLORABLE: 'Aria/RoleDescription/explorable math',
-  NONE: 'Aria/RoleDescription/none',
-};
+export const AriaPrefix = 'Aria/RoleDescription';
 
 /**
  * Returns the localized string for a known ARIA role description ID.
  *
  * @param {string} id - The aria localization key to resolve.
- * @returns {string | null} Localized string or null if id has no Aria prefix.
+ * @returns {string} Localized string;
  */
 export function localizeAria(id: string): string {
-  if (!hasAriaPrefix(id)) {
-    return null;
-  }
-  return localize(id);
-}
-
-/**
- * Checks whether the given ID starts with the `Aria/` prefix.
- *
- * @param {string} id - The string to test.
- * @returns {boolean} True if `id` begins with `Aria/`.
- */
-function hasAriaPrefix(id: string): boolean {
-  return id.startsWith('Aria/');
+  return localize(`${AriaPrefix}/${id}`);
 }

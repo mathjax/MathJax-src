@@ -44,7 +44,7 @@ export function copyToClipboard(text: string) {
   try {
     document.execCommand('copy');
   } catch (error) {
-    alert(localize('.Warn/CantCopy', error.message));
+    alert(localize('Warn/CantCopy', error.message));
   }
   document.body.removeChild(input);
 }
