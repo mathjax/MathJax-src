@@ -166,10 +166,7 @@ export class MJContextMenu extends ContextMenu {
       // (can be removed in a later version)
       //
       const remap = map?.[fullname];
-      let name = typeof remap === 'string' ? remap : fullname;
-      if (!name.match('/')) {
-        name = name.replace(/.*\//, '');
-      }
+      const name = typeof remap === 'string' ? remap : fullname;
       map = typeof remap === 'object' ? remap : null;
       //
       // Look for the id in the menu list
