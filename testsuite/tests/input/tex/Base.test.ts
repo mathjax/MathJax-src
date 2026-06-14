@@ -4002,6 +4002,10 @@ describe('Complete Array', () => {
     expect(tex2mml('\\begin{array}{> {x} c} X \\end{array}')).toMatchSnapshot();
   });
 
+  it('column { }', () => {
+    expect(tex2mml('\\begin{array}{{c}} X \\end{array}')).toMatchSnapshot();
+  });
+
   it('BadPreamToken', () => {
     expectTexError('\\begin{array}a').toBe('Illegal pream-token (a)');
   });

@@ -94,6 +94,8 @@ export class ColumnParser {
     // Ignored
     //
     ' ': (_state) => {},
+    '{': (_state) => {},
+    '}': (_state) => {},
   };
 
   /**
