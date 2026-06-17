@@ -736,11 +736,7 @@ export class Menu {
           this.submenu('Zoom/ZoomTrigger', [
             this.command('Zoom/ZoomNow', () => this.zoom(null, '')),
             this.rule(),
-            this.radioGroup('zoom', 'Zoom', [
-              'Click',
-              'DoubleClick',
-              'NoZoom',
-            ]),
+            this.radioGroup('zoom', 'Zoom', ['Click', 'DoubleClick', 'NoZoom']),
             this.rule(),
             this.label('Zoom/TriggerRequires'),
             this.checkbox(MenuUtil.isMac ? 'Zoom/Option' : 'Zoom/Alt', 'alt'),
@@ -1993,7 +1989,11 @@ export class Menu {
    *                              for each radio button (if only one string is given it is used for both)
    * @returns {object[]}        An array of JSON objects for radion buttons
    */
-  public radioGroup(variable: string, prefix: string, radios: string[]): object[] {
+  public radioGroup(
+    variable: string,
+    prefix: string,
+    radios: string[]
+  ): object[] {
     return radios.map((item) => this.radio(prefix, item, variable));
   }
 
@@ -2006,9 +2006,19 @@ export class Menu {
    * @param {object} other      Other values to include in the generated JSON object
    * @returns {object}          The JSON for the radio button item
    */
-  public radio(prefix: string, id: string, variable: string, other: object = {}): object {
+  public radio(
+    prefix: string,
+    id: string,
+    variable: string,
+    other: object = {}
+  ): object {
     const key = prefix ? `${prefix}/${id}` : id;
-    const content = prefix === '.' ? id : prefix === Aria.roleDescPrefix ? Aria.localize(key) : localize(key);
+    const content =
+      prefix === '.'
+        ? id
+        : prefix === Aria.roleDescPrefix
+          ? Aria.localize(key)
+          : localize(key);
     return Object.assign({ type: 'radio', id, content, variable }, other);
   }
 

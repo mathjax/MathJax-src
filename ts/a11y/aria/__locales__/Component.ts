@@ -22,7 +22,7 @@
  */
 
 import { Locale, namedData } from '../../../util/Locale.js';
-import data from '#ts/a11y/aria/__locales__/en.json' with {type: 'json'};
+import data from '#ts/a11y/aria/__locales__/en.json' with { type: 'json' };
 
 export const COMPONENT = 'a11y/aria';
 

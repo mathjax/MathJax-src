@@ -46,7 +46,7 @@ export type DynamicSubmenu = (
 /**
  * Remap old menu ids to their new localization keys
  */
-const RemapIds: {[key: string]: any} = {
+const RemapIds: { [key: string]: any } = {
   Settings: {
     Overflow: 'Wide/Expressions',
   },
@@ -61,7 +61,7 @@ const RemapIds: {[key: string]: any} = {
     'Semantic Info': 'SemanticInfo',
     'Role Description': 'RoleDescription',
     'Math Help': 'MathHelp',
-  }
+  },
 };
 
 /*==========================================================================*/
