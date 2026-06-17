@@ -92,7 +92,7 @@ describe('Locale', () => {
 
   /********************************************************************************/
 
-  test('Register essages for unknown component', async () => {
+  test('Register messages for unknown component', async () => {
     expect(trapOutput('warn', () =>
       Locale.registerMessages('unknown', 'en', {})
     )).toBe(`MathJax(Locale): Component 'unknown' doesn't exist`);
