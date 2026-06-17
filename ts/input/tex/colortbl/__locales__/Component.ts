@@ -22,7 +22,9 @@
  */
 
 import { Locale } from '../../../../util/Locale.js';
+import data from './en.json' with {type: 'json'};
 
 export const COMPONENT = '[tex]/colortbl';
 
 Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/colortbl');
+Locale.registerMessages(COMPONENT, 'en', data);

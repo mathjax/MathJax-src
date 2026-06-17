@@ -22,10 +22,12 @@
  */
 
 import { Locale, namedData } from '../../../util/Locale.js';
+import data from './en.json' with {type: 'json'};
 
 export const COMPONENT = 'a11y/explorer';
 
 Locale.registerLocaleFiles(COMPONENT, '../ts/a11y/explorer');
+Locale.registerMessages(COMPONENT, 'en', data);
 
 /**
  * Get a localized message for this component

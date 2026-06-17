@@ -22,7 +22,9 @@
  */
 
 import { Locale } from '../../../../util/Locale.js';
+import data from './en.json' with {type: 'json'};
 
 export const COMPONENT = '[tex]/verb';
 
 Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/verb');
+Locale.registerMessages(COMPONENT, 'en', data);

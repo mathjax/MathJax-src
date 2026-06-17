@@ -1,5 +1,4 @@
 import './lib/explorer.js';
-import './en.js';
 
 import {ExplorerHandler} from '#js/a11y/explorer.js';
 import {hasWindow} from '#js/util/context.js';

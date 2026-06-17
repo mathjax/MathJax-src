@@ -1,5 +1,4 @@
 import './lib/semantic-enrich.js';
-import './en.js';
 
 import {combineDefaults} from '#js/components/global.js';
 import {EnrichHandler} from '#js/a11y/semantic-enrich.js';

@@ -1,5 +1,4 @@
 import './lib/mml.js';
-import './en.js';
 
 import {MathML} from '#js/input/mathml.js';
 export {MathML};

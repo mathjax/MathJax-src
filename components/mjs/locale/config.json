@@ -1,0 +1,7 @@
+{
+  "copy": {
+    "to": "[bundle]/locale",
+    "from": "[ts]/util/Locale",
+    "copy": ["__locales__"]
+  }
+}

@@ -22,7 +22,9 @@
  */
 
 import { Locale } from '../../../util/Locale.js';
+import data from './en.json' with {type: 'json'};
 
 export const COMPONENT = 'a11y/semantic-enrich';
 
 Locale.registerLocaleFiles(COMPONENT, '../ts/a11y/semantic-enrich');
+Locale.registerMessages(COMPONENT, 'en', data);

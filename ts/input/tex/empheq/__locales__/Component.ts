@@ -22,7 +22,9 @@
  */
 
 import { Locale } from '../../../../util/Locale.js';
+import data from './en.json' with {type: 'json'};
 
 export const COMPONENT = '[tex]/empheq';
 
 Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/empheq');
+Locale.registerMessages(COMPONENT, 'en', data);

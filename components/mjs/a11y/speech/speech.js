@@ -1,5 +1,4 @@
 import './lib/speech.js';
-import './en.js';
 
 import {combineDefaults} from '#js/components/global.js';
 import {Package} from '#js/components/package.js';

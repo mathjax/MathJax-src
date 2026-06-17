@@ -21,6 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import en from './Locale/__locales__/en.json' with {type: 'json'};
+
 /**
  * The various object map types
  */
@@ -28,6 +30,11 @@ export type messageData = { [id: string]: string };
 export type localeData = { [locale: string]: messageData };
 export type componentData = { [component: string]: localeData };
 export type namedData = { [name: string | number]: string };
+
+/**
+ * The Locale utility component
+ */
+export const COMPONENT = 'locale';
 
 /**
  * The Locale class for handling localized messages
@@ -59,20 +66,7 @@ export class Locale {
    * The localized message strings, per component and locale,
    * with the default message for localeError() below.
    */
-  protected static data: componentData = {
-    locale: {
-      en: {
-        LocaleJsonError: "MathJax(%1): Can't load '%2': %3",
-        LocaleMessageNotFound:
-          "MathJax(Locale): No localized or default version for message with id '%1' from '%2'",
-      },
-      de: {
-        LocaleJsonError: "MathJax(%1): '%2' kann nicht geladen werden: %3",
-        LocaleMessageNotFound:
-          "MathJax(Locale): Keine lokalisierte oder Standardversion für die Meldung mit der ID '%1' aus '%2'",
-      },
-    },
-  };
+  protected static data: componentData = {};
 
   /**
    * The locale files to load for each locale (as registered by the components)
@@ -90,10 +84,12 @@ export class Locale {
     component: string,
     prefix: string = component
   ) {
-    this.locations[component] = [
-      `${this.isComponent ? component : prefix}/__locales__`,
-      new Set(),
-    ];
+    if (!this.locations[component]) {
+      this.locations[component] = [
+        `${this.isComponent ? component : prefix}/__locales__`,
+        new Set(),
+      ];
+    }
   }
 
   /**
@@ -109,6 +105,10 @@ export class Locale {
     locale: string,
     data: messageData
   ) {
+    if (!this.locations[component]) {
+      this.warn(COMPONENT, 'NoComponent', component);
+      return;
+    }
     if (!this.data[component]) {
       this.data[component] = Object.create(null);
     }
@@ -186,8 +186,8 @@ export class Locale {
       this.data[component]?.[this.current]?.[id] ||
       this.data[component]?.[this.default]?.[id] ||
       this.substituteArguments(
-        this.data.locale[this.current]?.['LocaleMessageNotFound'] ||
-          this.data.locale[this.default]?.['LocaleMessageNotFound'] ||
+        this.data[COMPONENT][this.current]?.['MessageNotFound'] ||
+          this.data[COMPONENT][this.default]?.['MessageNotFound'] ||
           '',
         { 1: id, 2: component }
       )
@@ -257,7 +257,6 @@ export class Locale {
   public static async setLocale(
     locale: string = this.current
   ): Promise<void[]> {
-    this.initialized = true;
     if (!this.syncLoad && !this.asyncLoad) {
       const { mathjax } = await import('../mathjax.js');
       if (mathjax.asyncIsSynchronous) {
@@ -328,8 +327,8 @@ export class Locale {
     error: Error
   ): Promise<void> | void {
     const message = this.message(
-      'locale',
-      'LocaleJsonError',
+      COMPONENT,
+      'JsonError',
       component,
       `${locale}.json`,
       error.message
@@ -351,3 +350,6 @@ export class Locale {
     }
   }
 }
+
+Locale.registerLocaleFiles(COMPONENT, '../ts/util/Locale');
+Locale.registerMessages(COMPONENT, 'en', en);
