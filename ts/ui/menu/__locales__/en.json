@@ -43,6 +43,7 @@
   "Label/Accessibility": "\u00A0\u00A0 Accessibility:",
   "Label/Code": "Code Format:",
   "Label/Rules": "Rules:",
+  "Label/SpeechOnly": "• = speech only",
   "MML/semantics": "Original as annotation",
   "MML/showSRE": "Semantic attributes",
   "MML/showTex": "LaTeX attributes",

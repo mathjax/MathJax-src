@@ -22,6 +22,18 @@
  */
 
 export const locales = [
-  ['en', 'English'],
+  ['af', 'Africaans', true],
+  ['nb', 'Bokm\u{00e5}l', true],
+  ['ca', 'Catal\u00e0', true],
+  ['da', 'Dansk', true],
   ['de', 'Deutsch'],
+  ['en', 'English'],
+  ['es', 'Espa\u{00f1}ol', true],
+  ['fr', 'Fran\u{00e7}ais', true],
+  ['hi', '\u0939\u093f\u0902\u0926\u0940', true],
+  ['it', 'Italiano', true],
+  ['ko', '\ud55c\uad6d\uc5b4', true],
+  ['nn', 'Nynorsk', true],
+  ['sv', 'Svenska', true],
 ];
+
