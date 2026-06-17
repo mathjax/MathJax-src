@@ -36,4 +36,3 @@ export const locales = [
   ['nn', 'Nynorsk', true],
   ['sv', 'Svenska', true],
 ];
-

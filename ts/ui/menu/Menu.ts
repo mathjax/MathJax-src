@@ -1903,14 +1903,20 @@ export class Menu {
    * @returns {object[]}   The submenu definitions
    */
   public languageSubmenu(): object[] {
-    return [...(locales as [string, string, boolean][]).map(([locale, name, speechOnly]) => {
-      return {
-        type: 'radio',
-        id: locale,
-        content: `${speechOnly ? '\u2022 ' : ''}${name} (${locale})`,
-        variable: 'locale',
-      };
-    }), this.rule(), this.label('Label/SpeechOnly')];
+    return [
+      ...(locales as [string, string, boolean][]).map(
+        ([locale, name, speechOnly]) => {
+          return {
+            type: 'radio',
+            id: locale,
+            content: `${speechOnly ? '\u2022 ' : ''}${name} (${locale})`,
+            variable: 'locale',
+          };
+        }
+      ),
+      this.rule(),
+      this.label('Label/SpeechOnly'),
+    ];
   }
 
   /**
