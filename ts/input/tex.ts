@@ -187,6 +187,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @override
    */
   public reset(tag: number = 0) {
+    this.parseOptions.clear();
     this.parseOptions.tags.reset(tag);
   }
 

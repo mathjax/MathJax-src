@@ -248,11 +248,11 @@ export default class TexParser {
    * @returns {MmlNode} The internal Mathml structure.
    */
   public mml(): MmlNode {
+    this.configuration.popParser();
     if (!this.stack.Top().isKind('mml')) {
       return null;
     }
     const node = this.stack.Top().First;
-    this.configuration.popParser();
     const latex = this.trimTex(this.string);
     if (latex) {
       node.attributes.set(TexConstant.Attr.LATEX, latex);

@@ -160,6 +160,7 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
       //
       const config = data.data.packageData.get('textmacros');
       config.parseOptions.nodeFactory.setMmlFactory(config.jax.mmlFactory);
+      config.parseOptions.clear();
     },
   ],
   [ConfigurationType.OPTIONS]: {

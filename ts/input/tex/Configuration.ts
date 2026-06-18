@@ -159,7 +159,7 @@ export class Configuration {
   }
 
   /**
-   * Creates an unnamed, ephemeral package configuration. It will not added to
+   * Creates an unnamed, ephemeral package configuration. It is not added to
    * the configuration handler.
    *
    * @param {object} config See `create` method.
