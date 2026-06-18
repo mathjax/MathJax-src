@@ -1872,12 +1872,38 @@ exports[`Complete Array column @ p m 1`] = `
 </math>"
 `;
 
-exports[`Complete Array column { } 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{{c}} X \\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{{c}} X \\end{array}">
-    <mtr data-latex="{{c}}">
+exports[`Complete Array column {{c}} 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{{{c}}} X \\end{array}" display="block">
+  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{{{c}}} X \\end{array}">
+    <mtr data-latex="{{{c}}}">
       <mtd>
         <mi data-latex="X">X</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Complete Array column {c} 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c{c}} X Y \\end{array}" display="block">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c{c}} X Y \\end{array}">
+    <mtr data-latex="{c{c}}">
+      <mtd>
+        <mi data-latex="X">X</mi>
+        <mi data-latex="Y">Y</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Complete Array column {cc} 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{{cc}} X Y \\end{array}" display="block">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{{cc}} X Y \\end{array}">
+    <mtr data-latex="{{cc}}">
+      <mtd>
+        <mi data-latex="X">X</mi>
+        <mi data-latex="Y">Y</mi>
       </mtd>
     </mtr>
   </mtable>

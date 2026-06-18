@@ -84,6 +84,7 @@ export class ColumnParser {
     '@': (state) => this.addAt(state, this.getBraces(state)),
     '!': (state) => this.addBang(state, this.getBraces(state)),
     '*': (state) => this.repeat(state),
+    '{': (state) => this.brace(state),
     //
     // Non-standard for math-mode versions
     //
@@ -94,8 +95,7 @@ export class ColumnParser {
     // Ignored
     //
     ' ': (_state) => {},
-    '{': (_state) => {},
-    '}': (_state) => {},
+    '\n': (_state_) => {},
   };
 
   /**
@@ -111,6 +111,12 @@ export class ColumnParser {
    * @param {ArrayItem} array    The ArrayItem for the template
    */
   public process(parser: TexParser, template: string, array: ArrayItem) {
+    //
+    // Remove one pair of braces, if there are any
+    //
+    if (template.charAt(0) === '{' && template.slice(-1) === '}') {
+      template = template.slice(1, -1);
+    }
     //
     // Initialize the state
     //
@@ -143,10 +149,7 @@ export class ColumnParser {
       const code = state.template.codePointAt(state.i);
       const c = (state.c = String.fromCodePoint(code));
       state.i += c.length;
-      if (!Object.hasOwn(this.columnHandler, c)) {
-        throw new TexError('BadPreamToken', 'Illegal pream-token (%1)', c);
-      }
-      this.columnHandler[c](state);
+      this.processColumn(state, c);
     }
     //
     // Set array definition values
@@ -156,6 +159,19 @@ export class ColumnParser {
     this.setColumnSpacing(state, array);
     this.setColumnLines(state, array);
     this.setPadding(state, array);
+  }
+
+  /**
+   * Process a column specifier, or throw an error if not defined.
+   *
+   * @param {ColumnState} state   The current state of the parser
+   * @param {string} c            The column type to process
+   */
+  protected processColumn(state: ColumnState, c: string) {
+    if (!Object.hasOwn(this.columnHandler, c)) {
+      throw new TexError('BadPreamToken', 'Illegal pream-token (%1)', c);
+    }
+    this.columnHandler[c](state);
   }
 
   /**
@@ -421,5 +437,15 @@ export class ColumnParser {
     state.template =
       new Array(n).fill(cols).join('') + state.template.substring(state.i);
     state.i = 0;
+  }
+
+  /**
+   * Process a braced column type
+   *
+   * @param {ColumnState} state   The current state of the parser
+   */
+  public brace(state: ColumnState) {
+    state.i--;
+    this.processColumn(state, this.getBraces(state));
   }
 }
