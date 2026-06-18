@@ -250,6 +250,8 @@ export class Menu {
    */
   protected document: MenuMathDocument;
 
+  protected initialized: boolean = false;
+
   /**
    * Instances of the various output jax that we can switch to
    */
@@ -566,6 +568,7 @@ export class Menu {
     this.mergeUserSettings();
     this.initMenu();
     this.applySettings();
+    this.initialized = true;
   }
 
   /**
@@ -1108,7 +1111,7 @@ export class Menu {
    */
   protected setOverflow(overflow: string) {
     this.document.outputJax.options.displayOverflow = overflow.toLowerCase();
-    if (!Menu.loading) {
+    if (!Menu.loading && this.initialized) {
       this.document.rerenderPromise();
     }
   }
@@ -1118,7 +1121,7 @@ export class Menu {
    */
   protected setInlineBreaks(breaks: boolean) {
     this.document.outputJax.options.linebreaks.inline = breaks;
-    if (!Menu.loading) {
+    if (!Menu.loading && this.initialized) {
       this.document.rerenderPromise();
     }
   }
@@ -1128,7 +1131,7 @@ export class Menu {
    */
   protected setScale(scale: string) {
     this.document.outputJax.options.scale = parseFloat(scale);
-    if (!Menu.loading) {
+    if (!Menu.loading && this.initialized) {
       this.document.rerenderPromise();
     }
   }
