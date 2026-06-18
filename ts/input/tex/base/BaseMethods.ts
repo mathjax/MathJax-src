@@ -2177,13 +2177,13 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       // @test Label Empty
       return;
     }
+    // @test Label, Ref, Ref Unknown
+    if (parser.tags.label) {
+      // @test Double Label Error
+      throw new TexError('MultipleCommand', 'Multiple %1', parser.currentCS);
+    }
+    parser.tags.label = label;
     if (!parser.tags.refUpdate) {
-      // @test Label, Ref, Ref Unknown
-      if (parser.tags.label) {
-        // @test Double Label Error
-        throw new TexError('MultipleCommand', 'Multiple %1', parser.currentCS);
-      }
-      parser.tags.label = label;
       if (
         (parser.tags.allLabels[label] || parser.tags.labels[label]) &&
         !parser.options['ignoreDuplicateLabels']
