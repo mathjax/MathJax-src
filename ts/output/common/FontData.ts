@@ -1333,10 +1333,9 @@ export class FontData<
       if (mathjax.asyncIsSynchronous) {
         this.loadDynamicFileSync(delim);
         return this.getDelimiter(n);
-      } else {
-        retryAfter(this.loadDynamicFile(delim));
-        return null;
       }
+      retryAfter(this.loadDynamicFile(delim));
+      return null;
     }
     return delim as DelimiterData;
   }
@@ -1386,10 +1385,9 @@ export class FontData<
       if (mathjax.asyncIsSynchronous) {
         this.loadDynamicFileSync(char);
         return this.getChar(name, n);
-      } else {
-        retryAfter(this.loadDynamicFile(char));
-        return null;
       }
+      retryAfter(this.loadDynamicFile(char));
+      return null;
     }
     return char as CharDataArray<C>;
   }
