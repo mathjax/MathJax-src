@@ -432,7 +432,7 @@ export class LeftItem extends BaseItem {
       //
       //  Add the middle delimiter, with empty open and close elements around it for spacing
       //
-      const def = { stretchy: true } as any;
+      const def = { stretchy: true, symmetric: true } as any;
       if (item.getProperty('color')) {
         def.mathcolor = item.getProperty('color');
       }

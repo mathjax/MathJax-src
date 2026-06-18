@@ -3552,7 +3552,7 @@ exports[`Fenced Fenced Arrows 3 1`] = `
       <mi data-latex="b">b</mi>
     </mfrac>
     <mrow data-mjx-texclass="CLOSE"></mrow>
-    <mo data-latex="\\middle\\downarrow ">&#x2193;</mo>
+    <mo symmetric="true" data-latex="\\middle\\downarrow ">&#x2193;</mo>
     <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\downarrow"></mrow>
     <mi data-latex="c">c</mi>
     <mo data-mjx-texclass="CLOSE" fence="true" symmetric="true" data-latex="\\right\\uparrow">&#x2191;</mo>
@@ -3660,7 +3660,7 @@ exports[`Fenced Middle 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mi data-latex="a">a</mi>
     <mrow data-mjx-texclass="CLOSE"></mrow>
-    <mo stretchy="true" data-latex="\\middle|">|</mo>
+    <mo stretchy="true" symmetric="true" data-latex="\\middle|">|</mo>
     <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
     <mi data-latex="b">b</mi>
     <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
@@ -7931,7 +7931,7 @@ exports[`Spacing Nonscript scriptlevel 1`] = `
         <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
         <mi data-latex="a">a</mi>
         <mrow data-mjx-texclass="CLOSE"></mrow>
-        <mo stretchy="true" data-latex="\\middle|">|</mo>
+        <mo stretchy="true" symmetric="true" data-latex="\\middle|">|</mo>
         <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
         <mi data-latex="b">b</mi>
         <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
@@ -7948,7 +7948,7 @@ exports[`Spacing Nonscript toplevel 1`] = `
     <mi data-latex="a">a</mi>
     <mspace width="0.278em"></mspace>
     <mrow data-mjx-texclass="CLOSE"></mrow>
-    <mo stretchy="true" data-latex="\\middle|">|</mo>
+    <mo stretchy="true" symmetric="true" data-latex="\\middle|">|</mo>
     <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
     <mspace width="0.278em"></mspace>
     <mi data-latex="b">b</mi>
@@ -9156,7 +9156,7 @@ exports[`User Defined Macros Middle Color 1`] = `
     <mi data-latex="A">A</mi>
     <mstyle mathcolor="red"></mstyle>
     <mrow data-mjx-texclass="CLOSE"></mrow>
-    <mo stretchy="true" mathcolor="red" data-latex="\\middle|">|</mo>
+    <mo stretchy="true" symmetric="true" mathcolor="red" data-latex="\\middle|">|</mo>
     <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
     <mi data-latex="B">B</mi>
     <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
@@ -9170,7 +9170,7 @@ exports[`User Defined Macros Right Color 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mi data-latex="A">A</mi>
     <mrow data-mjx-texclass="CLOSE"></mrow>
-    <mo stretchy="true" data-latex="\\middle|">|</mo>
+    <mo stretchy="true" symmetric="true" data-latex="\\middle|">|</mo>
     <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
     <mi data-latex="B">B</mi>
     <mstyle mathcolor="red"></mstyle>
