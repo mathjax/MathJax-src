@@ -1926,6 +1926,24 @@ exports[`Complete Array column {cc} 1`] = `
 </math>"
 `;
 
+exports[`Complete Array column {r}c{l} 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{{r}c{l}} X &amp; Y &amp; Z \\end{array}" display="block">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="right center left" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{{r}c{l}} X &amp; Y &amp; Z \\end{array}">
+    <mtr data-latex="{{r}c{l}}">
+      <mtd>
+        <mi data-latex="X">X</mi>
+      </mtd>
+      <mtd>
+        <mi data-latex="Y">Y</mi>
+      </mtd>
+      <mtd>
+        <mi data-latex="Z">Z</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
 exports[`Complete Array column b  1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{b{1cm}b{1cm}b{1cm}}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="left left left" columnwidth="1cm 1cm 1cm" data-frame-styles="" framespacing=".5em .125em" data-latex="\\text{f}\\end{array}">

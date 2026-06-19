@@ -112,12 +112,6 @@ export class ColumnParser {
    */
   public process(parser: TexParser, template: string, array: ArrayItem) {
     //
-    // Remove one pair of braces, if there are any
-    //
-    if (template.charAt(0) === '{' && template.slice(-1) === '}') {
-      template = template.slice(1, -1);
-    }
-    //
     // Initialize the state
     //
     const state: ColumnState = {
@@ -135,6 +129,16 @@ export class ColumnParser {
       ralign: array.ralign,
       cextra: array.cextra,
     };
+    //
+    // Remove one pair of braces, if there are any
+    //
+    if (template.charAt(0) === '{' && template.slice(-1) === '}') {
+      const braced = this.getBraces(state);
+      if (braced.length === template.length - 2) {
+        state.template = braced;
+      }
+      state.i = 0;
+    }
     //
     // Loop through the template to process the column specifiers
     //

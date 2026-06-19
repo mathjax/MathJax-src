@@ -4014,6 +4014,10 @@ describe('Complete Array', () => {
     expect(tex2mml('\\begin{array}{{{c}}} X \\end{array}')).toMatchSnapshot();
   });
 
+  it('column {r}c{l}', () => {
+    expect(tex2mml('\\begin{array}{{r}c{l}} X & Y & Z \\end{array}')).toMatchSnapshot();
+  });
+
   it('column newline', () => {
     expect(tex2mml('\\begin{array}{c\nc} X & Y\\end{array}')).toMatchSnapshot();
   });
