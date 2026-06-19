@@ -4014,6 +4014,14 @@ describe('Complete Array', () => {
     expect(tex2mml('\\begin{array}{{{c}}} X \\end{array}')).toMatchSnapshot();
   });
 
+  it('column newline', () => {
+    expect(tex2mml('\\begin{array}{c\nc} X & Y\\end{array}')).toMatchSnapshot();
+  });
+
+  it('column > > c < <', () => {
+    expect(tex2mml('\\begin{array}{>{a}>{b}c<{x}<{y}} X \\end{array}')).toMatchSnapshot();
+  });
+
   it('column brace errors', () => {
     expectTexError(tex2mml('\\begin{array}{c{xx}} X Y \\end{array}')).toBe('Illegal pream-token (xx)');
     expectTexError(tex2mml('\\begin{array}{c{{c}}} X Y \\end{array}')).toBe('Illegal pream-token ({c})');

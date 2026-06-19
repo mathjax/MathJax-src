@@ -77,10 +77,10 @@ export class ColumnParser {
     ':': (state) => this.addRule(state, 'dashed'),
     '>': (state) =>
       (state.cstart[state.j] =
-        (state.cstart[state.j] || '') + this.getBraces(state)),
+        this.getBraces(state) + (state.cstart[state.j] || '')),
     '<': (state) =>
       (state.cend[state.j - 1] =
-        (state.cend[state.j - 1] || '') + this.getBraces(state)),
+        this.getBraces(state) + (state.cend[state.j - 1] || '')),
     '@': (state) => this.addAt(state, this.getBraces(state)),
     '!': (state) => this.addBang(state, this.getBraces(state)),
     '*': (state) => this.repeat(state),
