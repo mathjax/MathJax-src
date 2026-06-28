@@ -79,7 +79,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
    * @param {string} name The macro name.
    */
   Href(parser: TexParser, name: string) {
-    const url = parser.GetArgument(name);
+    const url = GetArgumentWithPercent(parser, name);
     const arg = GetArgumentMML(parser, name);
     NodeUtil.setAttribute(arg, 'href', url);
     parser.Push(arg);
@@ -92,7 +92,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
    * @param {string} name The macro name.
    */
   Class(parser: TexParser, name: string) {
-    let CLASS = parser.GetArgument(name);
+    let CLASS = GetArgumentWithPercent(parser, name);
     const arg = GetArgumentMML(parser, name);
     const oldClass = NodeUtil.getAttribute(arg, 'class');
     if (oldClass) {
@@ -109,7 +109,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
    * @param {string} name The macro name.
    */
   Style(parser: TexParser, name: string) {
-    let style = parser.GetArgument(name);
+    let style = GetArgumentWithPercent(parser, name);
     const arg = GetArgumentMML(parser, name);
     // check that it looks like a style string
     let oldStyle = NodeUtil.getAttribute(arg, 'style') as string;
@@ -130,7 +130,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
    * @param {string} name The macro name.
    */
   Id(parser: TexParser, name: string) {
-    const ID = parser.GetArgument(name);
+    const ID = parser.GetArgument(name, false, false);
     const arg = GetArgumentMML(parser, name);
     NodeUtil.setAttribute(arg, 'id', ID);
     parser.Push(arg);
@@ -155,6 +155,25 @@ const GetArgumentMML = function (parser: TexParser, name: string): MmlNode {
   NodeUtil.copyChildren(arg, mrow);
   NodeUtil.copyAttributes(arg, mrow);
   return mrow;
+};
+
+/**
+ * Gets a literal argument allowing percent signs (i.e., they are not
+ * treated as comments), and allows quoted percents to become
+ * percents, so if these commands are used inside the argument to
+ * another macro, or in a macro definition, you ca still use percent
+ * sign in them by quoting the percent with a backslash.  Backslashes
+ * should also be doubled.
+ *
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The calling macro name.
+ * @returns {string} The argument
+ */
+const GetArgumentWithPercent = function (
+  parser: TexParser,
+  name: string
+): string {
+  return parser.unescapePercents(parser.GetArgument(name, false, false));
 };
 
 export default HtmlMethods;

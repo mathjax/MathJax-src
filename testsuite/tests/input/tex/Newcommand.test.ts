@@ -238,10 +238,76 @@ describe('Newcommand', () => {
     expectTexError('\\def\\x#1 #2 {[#1,#2]} \\x{a}{b}').toBe(
       'Runaway argument for \\x?'
     );
-    expectTexError('\\def\\x#1 #2 {[#1,#2]} \\x{a} {b}').toBe(
-      'Runaway argument for \\x?'
-    );
-    expect(tex2mml('\\def\\x#1 #2{[#1,#2]} \\x{a} {b} ')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x#1 #2 {[#1,#2]} \\x{a} {b}')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x#1 #2 {[#1,#2]} \\x{a} {b} ')).toMatchSnapshot();
+  });
+
+  it('Def braces', () => {
+    expect(tex2mml('\\def\\x #1\\a{x^#1}\\x {23}\\a')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1\\a{x^#1}\\x {23} \\a')).toMatchSnapshot();
+  });
+
+  it('Def newlines, spaces, tabs', () => {
+    expect(tex2mml('\\def\\x #1\n#2{\\text{[#1][#2]}}\\x a\nb')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1\n#2{\\text{[#1][#2]}}\\x a b')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1\n#2{\\text{[#1][#2]}}\\x a\tb')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1\n#2{\\text{[#1][#2]}}\\x a\t \nb')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1 #2{\\text{[#1][#2]}}\\x a\nb')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1 #2{\\text{[#1][#2]}}\\x a  b')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1 #2{\\text{[#1][#2]}}\\x a\tb')).toMatchSnapshot();
+  });
+
+  it('Def multiple spaces', () => {
+    expect(tex2mml('\\def\\x #1  #2{\\text{[#1][#2]}}\\x a  b')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1  #2{\\text{[#1][#2]}}\\x a b')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1\\a\\b#2\\c{\\text{[#1][#2]}}\\x a\\a\\b b\\c')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1\\a\\b#2\\c{\\text{[#1][#2]}}\\x a\\a \\b b \\c')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1\\a\\b#2\\c{\\text{[#1][#2]}}\\x a\\a  \\b b  \\c')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1\\a b{\\text{[#1]}}\\x a\\a  b')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1\\a b{\\text{[#1]}}\\x a\\a\n  b')).toMatchSnapshot();
+  });
+
+  it('Def multiple arg template', () => {
+    expect(tex2mml('\\def\\x #1#2\\x{\\text{[#1][#2]}}\\x abc\\x')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1#2\\x{\\text{[#1][#2]}}\\x {abc}\\x')).toMatchSnapshot();
+  });
+
+  it('Def partial template match', () => {
+    expect(tex2mml('\\def\\x #1ab{\\text{[#1]}}\\x axab')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1ab{\\text{[#1]}}\\x ax a b cab')).toMatchSnapshot();
+  });
+
+  it('Def empty template arg', () => {
+    expect(tex2mml('\\def\\x #1ab{\\text{[#1]}}\\x ab')).toMatchSnapshot();
+  });
+
+  it('Def comments', () => {
+    expect(tex2mml('\\def\\x #1{\\text{[#1]}}\\x%{}\n{ab}')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1\\a{\\text{[#1]}}\\x ab%{}\ncd\\a')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1%{\n#2{\\text{[#1][#2]}}\\x ab')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1\\a#2\\b{\\text{[#1][#2]}}\\x %\\a\n a\\a %\\b\n b\\b')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x #1{%x}\n\\text{[#1]}}\\x a')).toMatchSnapshot();
+    expectTexError('\\def\\x{\\text{%}}\\x').toBe('Missing close brace');
+    expectTexError('\\def\\x #1X{\\text{[#1]}}\\x%aX').toBe('Runaway argument for \\x?');
+  });
+});
+
+/**********************************************************************************/
+
+describe('Newcommand legacy', () => {
+  beforeEach(() => setupTex(['base', 'newcommand'], {legacyComments: true, legacyMacroTemplates: true}));
+
+  it('Def legacy comments', () => {
+    expect(tex2mml('\\def\\x #1%X{\\text{[#1]}}\\x a%X')).toMatchSnapshot();
+    expect(tex2mml('\\def\\x{\\text{%}}\\x')).toMatchSnapshot();
+  });
+
+  it('Def legacy macro templates', () => {
+    expectTexError('\\def\\x #1X  Y{\\text{[#1]}}\\x aX Y').toBe('Runaway argument for \\x?');
+    expect(tex2mml('\\def\\x #1X  Y{\\text{[#1]}}\\x aX  Y')).toMatchSnapshot();
+    expectTexError('\\def\\x #1X\nY{\\text{[#1]}}\\x aX Y').toBe('Runaway argument for \\x?');
+    expectTexError('\\def\\x #1X\nY{\\text{[#1]}}\\x aX \nY').toBe('Runaway argument for \\x?');
+    expect(tex2mml('\\def\\x #1X\nY{\\text{[#1]}}\\x aX\nY')).toMatchSnapshot();
   });
 });
 

@@ -87,19 +87,19 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     const cs = NewcommandUtil.GetCSname(parser, name);
     const params = NewcommandUtil.GetTemplate(parser, name, '\\' + cs);
     const def = parser.GetArgument(name);
-    !(params instanceof Array)
-      ? // @test Def DoubleLet, DefReDef
-        NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [
-          def,
-          params,
-        ])
-      : // @test Def Let
-        NewcommandUtil.addMacro(
-          parser,
-          cs,
-          NewcommandMethods.MacroWithTemplate,
-          [def].concat(params)
-        );
+    if (params instanceof Array) {
+      // @test Def Let
+      NewcommandUtil.addMacro(parser, cs, NewcommandMethods.MacroWithTemplate, [
+        def,
+        ...params,
+      ]);
+    } else {
+      // @test Def DoubleLet, DefReDef
+      NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [
+        def,
+        params,
+      ]);
+    }
     parser.Push(parser.itemFactory.create('null'));
   },
 
@@ -200,14 +200,14 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
    * @param {string} name The name of the calling command.
    * @param {string} text The text template of the macro.
    * @param {string} n The number of parameters.
-   * @param {string[]} params The parameter values.
+   * @param {string[][]} params The parameter token arrays.
    */
   MacroWithTemplate(
     parser: TexParser,
     name: string,
     text: string,
     n: string,
-    ...params: string[]
+    ...params: string[][]
   ) {
     const argCount = parseInt(n, 10);
     // @test Def Let
@@ -215,7 +215,10 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
       // @test Def Let
       const args = [];
       parser.GetNext();
-      if (params[0] && !NewcommandUtil.MatchParam(parser, params[0])) {
+      if (
+        params[0] &&
+        NewcommandUtil.GetParameter(parser, name, params[0], true) !== ''
+      ) {
         // @test Missing Arguments
         texError(COMPONENT, 'MismatchUseDef', name);
       }

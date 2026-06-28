@@ -1020,7 +1020,9 @@ const BaseMethods: { [key: string]: ParseMethod } = {
   MmlToken(parser: TexParser, name: string) {
     // @test Modulo
     const kind = parser.GetArgument(name);
-    let attr = parser.GetBrackets(name, '').replace(/^\s+/, '');
+    let attr = parser.unescapePercents(
+      parser.GetBrackets(name, '', false, false).replace(/^\s+/, '')
+    );
     const text = parser.GetArgument(name);
     const def: EnvList = {};
     const keep: string[] = [];
@@ -1564,25 +1566,23 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     //  Make second column be in \text{...} (unless it is already
     //  in a \text{...}, for backward compatibility).
     //
-    const str = parser.string;
     let braces = 0;
     let close = -1;
-    let i = parser.i;
-    let m = str.length;
     const end = env
       ? new RegExp(`^\\\\end\\s*\\{${env.replace(/\*/, '\\*')}\\}`)
       : null;
     //
     //  Look through the string character by character...
     //
-    while (i < m) {
-      const c = str.charAt(i);
+    const i = parser.i;
+    let c;
+    while ((c = parser.GetNext())) {
+      parser.i += c.length;
       if (c === '{') {
         //
         //  Increase the nested brace count and go on
         //
         braces++;
-        i++;
       } else if (c === '}') {
         //
         //  If there are too many close braces, just end (we will get an
@@ -1594,13 +1594,12 @@ const BaseMethods: { [key: string]: ParseMethod } = {
         //    go on to the next character.
         //
         if (braces === 0) {
-          m = 0;
-        } else {
-          braces--;
-          if (braces === 0 && close < 0) {
-            close = i - parser.i;
-          }
-          i++;
+          parser.i--;
+          break;
+        }
+        braces--;
+        if (braces === 0 && close < 0) {
+          close = parser.i - i;
         }
       } else if (c === '&' && braces === 0) {
         //
@@ -1614,17 +1613,11 @@ const BaseMethods: { [key: string]: ParseMethod } = {
         //  (multi-letter names don't matter, as we will skip the rest of the
         //   characters in the main loop)
         //
-        const rest = str.substring(i);
+        const rest = parser.string.substring(parser.i - 1);
         if (rest.match(/^((\\cr)[^a-zA-Z]|\\\\)/) || (end && rest.match(end))) {
-          m = 0;
-        } else {
-          i += 2;
+          parser.i--;
+          break;
         }
-      } else {
-        //
-        //  Go on to the next character
-        //
-        i++;
       }
     }
     //
@@ -1632,12 +1625,12 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     //  If not, process the second column as text and continue parsing from there,
     //    (otherwise process the second column as normal, since it is in \text{}
     //
-    // i >= parser.i
+    // parser.i >= i
     //
-    const text = str.substring(parser.i, i);
+    const text = parser.string.substring(i, parser.i);
     if (
       !text.match(/^\s*\\text[^a-zA-Z]/) ||
-      close !== text.replace(/\s+$/, '').length - 1
+      close !== text.replace(/\s+$/, '').length
     ) {
       const internal = ParseUtil.internalMath(
         parser,
@@ -1645,6 +1638,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
         0
       );
       parser.PushAll(internal);
+    } else {
       parser.i = i;
     }
   },

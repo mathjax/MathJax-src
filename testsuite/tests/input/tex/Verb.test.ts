@@ -7,7 +7,7 @@ beforeEach(async () => setupTex(['base', 'verb']));
 /**********************************************************************************/
 
 describe('Verb', () => {
-  it('Verb Plus ', () => {
+  it('Verb Plus', () => {
     expect(tex2mml('\\verb+{a}+')).toMatchSnapshot();
   });
 

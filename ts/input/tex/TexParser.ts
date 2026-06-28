@@ -294,13 +294,48 @@ export default class TexParser {
   }
 
   /**
+   * @param {boolean} noComments  True if comments are to be skipped
    * @returns {string} Get the next non-space character.
    */
-  public GetNext(): string {
-    while (this.nextIsSpace()) {
-      this.i++;
+  public GetNext(noComments: boolean = true): string {
+    noComments &&= !this.configuration.options.legacyComments;
+    while (this.i < this.string.length) {
+      const c = this.getCodePoint();
+      if (c === '%' && noComments) {
+        this.clipComment();
+        continue;
+      }
+      if (c.match(/\s/)) {
+        this.i++;
+        continue;
+      }
+      return c;
     }
-    return this.getCodePoint();
+    return '';
+  }
+
+  /**
+   * Remove a comment from the current string, if requested
+   *
+   * @param {boolean} noComments  True if comments are to be skipped
+   * @param {number} di           Offset from this.i for where the comment starts
+   */
+  public clipComment(noComments: boolean = true, di: number = 0) {
+    if (!noComments || this.configuration.options.legacyComments) return;
+    this.i += di;
+    this.string =
+      this.string.slice(0, this.i) +
+      this.string.slice(this.i).replace(/^%.*?(?:\n\s*|$)/, '');
+  }
+
+  /**
+   * @param {string} text   The string to unescape
+   * @returns {string}      The string with \\ => \ and \% => %
+   */
+  public unescapePercents(text: string): string {
+    return this.configuration.options.legacyComments
+      ? text
+      : text.replace(/\\([%\\])/g, '$1');
   }
 
   /**
@@ -325,10 +360,15 @@ export default class TexParser {
    *
    * @param {string} _name Name of the current control sequence.
    * @param {boolean} noneOK True if no argument is OK.
+   * @param {boolean} noComments True if comments are to be removed.
    * @returns {string} The next argument.
    */
-  public GetArgument(_name: string, noneOK: boolean = false): string {
-    switch (this.GetNext()) {
+  public GetArgument(
+    _name: string,
+    noneOK: boolean = false,
+    noComments: boolean = true
+  ): string {
+    switch (this.GetNext(noComments)) {
       case '':
         if (!noneOK) {
           // @test MissingArgFor
@@ -360,6 +400,9 @@ export default class TexParser {
                 return this.string.slice(j, this.i - 1);
               }
               break;
+            case '%':
+              this.clipComment(noComments, -1);
+              break;
           }
         }
         // @test MissingCloseBrace
@@ -376,15 +419,17 @@ export default class TexParser {
    *
    * @param {string} _name Name of the current control sequence.
    * @param {string?} def The default value for the optional argument.
-   * @param {boolean=} matchBrackets True if indernal brackets must match.
+   * @param {boolean=} matchBrackets True if internal brackets must match.
+   * @param {boolean} noComments True if comments are to be removed.
    * @returns {string} The optional argument.
    */
   public GetBrackets(
     _name: string,
     def?: string,
-    matchBrackets: boolean = false
+    matchBrackets: boolean = false,
+    noComments: boolean = true
   ): string {
-    if (this.GetNext() !== '[') {
+    if (this.GetNext(noComments) !== '[') {
       return def;
     }
     const j = ++this.i;
@@ -415,10 +460,13 @@ export default class TexParser {
             brackets--;
           }
           break;
+        case '%':
+          this.clipComment(noComments, -1);
+          break;
       }
     }
     // @test MissingCloseBracket
-    texError(COMPONENT, 'MissingCloseBracket', this.currentCS);
+    return texError(COMPONENT, 'MissingCloseBracket', this.currentCS);
   }
 
   /**
@@ -443,7 +491,7 @@ export default class TexParser {
       }
     }
     // @test MissingOrUnrecognizedDelim1, MissingOrUnrecognizedDelim2
-    texError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
+    return texError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
   }
 
   /**
@@ -470,7 +518,7 @@ export default class TexParser {
       }
     }
     // @test MissingDimOrUnits
-    texError(COMPONENT, 'MissingDimOrUnits', this.currentCS);
+    return texError(COMPONENT, 'MissingDimOrUnits', this.currentCS);
   }
 
   /**
@@ -504,13 +552,21 @@ export default class TexParser {
           }
           braces--;
           break;
+        case '%':
+          this.clipComment(true, -1);
+          break;
       }
       if (braces === 0 && c === token) {
         return this.string.slice(j, k);
       }
     }
     // @test TokenNotFoundForCommand
-    texError(COMPONENT, 'TokenNotFoundForCommand', token, this.currentCS);
+    return texError(
+      COMPONENT,
+      'TokenNotFoundForCommand',
+      token,
+      this.currentCS
+    );
   }
 
   /**
@@ -557,7 +613,7 @@ export default class TexParser {
       return c;
     }
     // @test MissingOrUnrecognizedDelim
-    texError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
+    return texError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
   }
 
   /**

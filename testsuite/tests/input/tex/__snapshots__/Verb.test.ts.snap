@@ -13,7 +13,7 @@ exports[`Verb Verb Minus Double 1`] = `
 </math>"
 `;
 
-exports[`Verb Verb Plus  1`] = `
+exports[`Verb Verb Plus 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\verb+{a}+" display="block">
   <mtext mathvariant="monospace" data-latex="\\verb+{a}+">{a}</mtext>
 </math>"

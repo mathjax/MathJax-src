@@ -1246,7 +1246,8 @@ export class ArrayItem extends BaseItem {
    */
   protected getEntry(): [string, string, string, boolean] {
     const parser = this.parser;
-    const pattern = /^([^]*?)([&{}]|\\\\|\\(?:begin|end)\s*\{array\}|\\cr|\\)/;
+    const pattern =
+      /^([^]*?)([&{}]|\\\\|\\(?:begin|end)\s*\{array\}|\\cr|\\|%.*?(?:\n\s*|$))/;
     let braces = 0;
     let envs = 0;
     let i = parser.i;
@@ -1277,9 +1278,12 @@ export class ArrayItem extends BaseItem {
           }
         // fall through if not closing a nested array environment
         default: {
-          if (braces || envs) continue;
+          if (braces || envs || match[2].charAt(0) === '%') continue;
           i -= match[2].length;
-          let entry = parser.string.slice(parser.i, i).trim();
+          let entry = parser.string
+            .slice(parser.i, i)
+            .replace(/\\.|%.*?(?:\n|$)/g, (c) => (c.charAt(0) === '%' ? '' : c))
+            .trim();
           const prefix = entry.match(
             /^(?:\s*\\(?:h(?:dash)?line|hfil{1,3}|rowcolor\s*\{.*?\}))+/
           );

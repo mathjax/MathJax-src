@@ -4,13 +4,11 @@ import '#js/input/tex/configmacros/ConfigMacrosConfiguration';
 
 beforeEach(() => {});
 
-function runMacroTests(
+function runMacroTest(
   macros: { [key: string]: any },
-  control: string,
   macro: string
 ) {
   setupTex(['base', 'configmacros'], macros);
-  expect(tex2mml(control)).toMatchSnapshot();
   expect(tex2mml(macro)).toMatchSnapshot();
 }
 
@@ -18,7 +16,7 @@ function runMacroTests(
 
 describe('Config Macros Active', () => {
   it('Macros Simple', () => {
-    runMacroTests({ active: { '@': '~' } }, 'A~a', 'A@a');
+    runMacroTest({ active: { '@': '~' } }, 'A@a');
   });
 });
 
@@ -26,26 +24,32 @@ describe('Config Macros Active', () => {
 
 describe('Config Macros Commands', () => {
   it('Commands Simple', () => {
-    runMacroTests({ macros: { RR: '{\\bf R}' } }, '{\\bf R}', '\\RR');
+    runMacroTest({ macros: { RR: '{\\bf R}' } }, '\\RR');
   });
 
   it('Commands Argument', () => {
-    runMacroTests(
-      { macros: { bold: ['{\\bf #1}', 1] } },
-      '{\\bf bold}',
-      '\\bold{bold}'
-    );
+    runMacroTest({ macros: { bold: ['{\\bf #1}', 1] } }, '\\bold{bold}');
   });
 
   it('Commands Aux Argument', () => {
-    runMacroTests(
+    runMacroTest(
       {
         macros: {
           foo: ['\\mbox{first } #1 \\mbox{ second } #2', 2, ['[', ']']],
         },
       },
-      '\\mbox{first } hi \\mbox{ second } there',
       '\\foo[hi]{there}'
+    );
+  });
+
+  it('Commands Template', () => {
+    runMacroTest(
+      {
+        macros: {
+          foo: ['\\text{[#1]}', 1, [undefined , '+ \\oof']]
+        }
+      },
+      '\\foo A + \\oof'
     );
   });
 });
@@ -54,9 +58,8 @@ describe('Config Macros Commands', () => {
 
 describe('Config Macros Environment', () => {
   it('Environment Simple', () => {
-    runMacroTests(
+    runMacroTest(
       { environments: { myHeartEnv: ['\\heartsuit', '\\spadesuit'] } },
-      '\\begin{myHeartEnv}a\\end{myHeartEnv}',
       '\\begin{myHeartEnv}a\\end{myHeartEnv}'
     );
   });

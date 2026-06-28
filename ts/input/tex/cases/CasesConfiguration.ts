@@ -150,21 +150,19 @@ export const CasesMethods = {
     //
     //  Make second column be in \text{...}
     //
-    const tex = parser.string;
     let braces = 0;
-    let i = parser.i;
-    const m = tex.length;
     //
     //  Look through the string character by character...
     //
-    while (i < m) {
-      const c = tex.charAt(i);
+    const i = parser.i;
+    let c;
+    while ((c = parser.GetNext())) {
+      parser.i += c.length;
       if (c === '{') {
         //
         //  Increase the nested brace count and go on
         //
         braces++;
-        i++;
       } else if (c === '}') {
         //
         //  If there are too many close braces, just end (we will get an
@@ -174,11 +172,10 @@ export const CasesMethods = {
         //    go on to the next character.
         //
         if (braces === 0) {
+          parser.i--;
           break;
-        } else {
-          braces--;
-          i++;
         }
+        braces--;
       } else if (c === '&' && braces === 0) {
         //
         //  Extra alignment tabs are not allowed in cases
@@ -190,7 +187,7 @@ export const CasesMethods = {
         //  (multi-letter names don't matter, as we will skip the rest of the
         //   characters in the main loop)
         //
-        const cs = (tex.slice(i + 1).match(/^[a-z]+|./i) || [])[0];
+        const cs = (parser.string.slice(parser.i).match(/^[a-z]+|./i) || [])[0];
         if (
           cs === '\\' ||
           cs === 'cr' ||
@@ -198,24 +195,19 @@ export const CasesMethods = {
           cs === 'label' ||
           cs === undefined
         ) {
+          parser.i--;
           break;
         } else {
-          i += cs.length;
+          parser.i += cs.length;
         }
-      } else {
-        //
-        //  Go on to the next character
-        //
-        i++;
       }
     }
     //
     //  Process the second column as text and continue parsing from there,
     //
-    // i >= parser.i
-    const text = tex.substring(parser.i, i).replace(/^\s*/, '');
+    // parser.i >= i
+    const text = parser.string.substring(i, parser.i).replace(/^\s*/, '');
     parser.PushAll(ParseUtil.internalMath(parser, text, 0));
-    parser.i = i;
     return null;
   },
 

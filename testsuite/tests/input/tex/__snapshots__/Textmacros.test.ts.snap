@@ -479,8 +479,7 @@ exports[`Textmacros Specials Dollar 1`] = `
 exports[`Textmacros Specials Percent 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{a%comment
 b}" display="block">
-  <mtext data-latex="\\text{a%comment
-b}">ab</mtext>
+  <mtext data-latex="\\text{ab}">ab</mtext>
 </math>"
 `;
 

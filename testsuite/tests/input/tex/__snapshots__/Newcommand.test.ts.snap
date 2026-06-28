@@ -327,11 +327,190 @@ exports[`Newcommand Def Template Matching 1`] = `
 </math>"
 `;
 
+exports[`Newcommand Def braces 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1\\a{x^#1}\\x {23}\\a" display="block">
+  <msup data-latex="x^2">
+    <mi data-latex="x">x</mi>
+    <mn data-latex="2">2</mn>
+  </msup>
+  <mn data-latex="3">3</mn>
+</math>"
+`;
+
+exports[`Newcommand Def braces 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1\\a{x^#1}\\x {23} \\a" display="block">
+  <msup data-latex="x^{23}">
+    <mi data-latex="x">x</mi>
+    <mrow data-mjx-texclass="ORD" data-latex="{23}">
+      <mn data-latex="23">23</mn>
+    </mrow>
+  </msup>
+</math>"
+`;
+
+exports[`Newcommand Def comments 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1{\\text{[#1]}}\\x%{}
+{ab}" display="block">
+  <mtext data-latex="\\text{[ab]}">[ab]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def comments 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1\\a{\\text{[#1]}}\\x ab%{}
+cd\\a" display="block">
+  <mtext data-latex="\\text{[abcd]}">[abcd]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def comments 3`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1%{
+#2{\\text{[#1][#2]}}\\x ab" display="block">
+  <mtext data-latex="\\text{[a][b]}">[a][b]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def comments 4`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1\\a#2\\b{\\text{[#1][#2]}}\\x %\\a
+ a\\a %\\b
+ b\\b" display="block">
+  <mtext data-latex="\\text{[a][b]}">[a][b]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def comments 5`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1{%x}
+\\text{[#1]}}\\x a" display="block">
+  <mtext data-latex="\\text{[a]}">[a]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def empty template arg 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1ab{\\text{[#1]}}\\x ab" display="block">
+  <mtext data-latex="\\text{[]}">[]</mtext>
+</math>"
+`;
+
 exports[`Newcommand Def insignificant spaces 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x  #1  {[#1]} \\x{x}" display="block">
   <mo data-latex="[" stretchy="false">[</mo>
   <mi data-latex="x">x</mi>
   <mo data-latex="]" stretchy="false">]</mo>
+</math>"
+`;
+
+exports[`Newcommand Def multiple arg template 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1#2\\x{\\text{[#1][#2]}}\\x abc\\x" display="block">
+  <mtext data-latex="\\text{[a][bc]}">[a][bc]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def multiple arg template 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1#2\\x{\\text{[#1][#2]}}\\x {abc}\\x" display="block">
+  <mtext data-latex="\\text{[abc][]}">[abc][]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def multiple spaces 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1  #2{\\text{[#1][#2]}}\\x a  b" display="block">
+  <mtext data-latex="\\text{[a][b]}">[a][b]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def multiple spaces 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1  #2{\\text{[#1][#2]}}\\x a b" display="block">
+  <mtext data-latex="\\text{[a][b]}">[a][b]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def multiple spaces 3`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1\\a\\b#2\\c{\\text{[#1][#2]}}\\x a\\a\\b b\\c" display="block">
+  <mtext data-latex="\\text{[a][b]}">[a][b]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def multiple spaces 4`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1\\a\\b#2\\c{\\text{[#1][#2]}}\\x a\\a \\b b \\c" display="block">
+  <mtext data-latex="\\text{[a][b ]}">[a][b ]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def multiple spaces 5`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1\\a\\b#2\\c{\\text{[#1][#2]}}\\x a\\a  \\b b  \\c" display="block">
+  <mtext data-latex="\\text{[a][b  ]}">[a][b ]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def multiple spaces 6`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1\\a b{\\text{[#1]}}\\x a\\a  b" display="block">
+  <mtext data-latex="\\text{[a]}">[a]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def multiple spaces 7`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1\\a b{\\text{[#1]}}\\x a\\a
+  b" display="block">
+  <mtext data-latex="\\text{[a]}">[a]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def newlines, spaces, tabs 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1
+#2{\\text{[#1][#2]}}\\x a
+b" display="block">
+  <mtext data-latex="\\text{[a][b]}">[a][b]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def newlines, spaces, tabs 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1
+#2{\\text{[#1][#2]}}\\x a b" display="block">
+  <mtext data-latex="\\text{[a][b]}">[a][b]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def newlines, spaces, tabs 3`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1
+#2{\\text{[#1][#2]}}\\x a	b" display="block">
+  <mtext data-latex="\\text{[a][b]}">[a][b]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def newlines, spaces, tabs 4`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1
+#2{\\text{[#1][#2]}}\\x a	 
+b" display="block">
+  <mtext data-latex="\\text{[a][b]}">[a][b]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def newlines, spaces, tabs 5`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1 #2{\\text{[#1][#2]}}\\x a
+b" display="block">
+  <mtext data-latex="\\text{[a][b]}">[a][b]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def newlines, spaces, tabs 6`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1 #2{\\text{[#1][#2]}}\\x a  b" display="block">
+  <mtext data-latex="\\text{[a][b]}">[a][b]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def newlines, spaces, tabs 7`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1 #2{\\text{[#1][#2]}}\\x a	b" display="block">
+  <mtext data-latex="\\text{[a][b]}">[a][b]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def partial template match 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1ab{\\text{[#1]}}\\x axab" display="block">
+  <mtext data-latex="\\text{[ax]}">[ax]</mtext>
+</math>"
+`;
+
+exports[`Newcommand Def partial template match 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1ab{\\text{[#1]}}\\x ax a b cab" display="block">
+  <mtext data-latex="\\text{[ax a b c]}">[ax a b c]</mtext>
 </math>"
 `;
 
@@ -346,7 +525,17 @@ exports[`Newcommand Def significant spaces 1 1`] = `
 `;
 
 exports[`Newcommand Def significant spaces 2 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x#1 #2{[#1,#2]} \\x{a} {b} " display="block">
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x#1 #2 {[#1,#2]} \\x{a} {b}" display="block">
+  <mo data-latex="[" stretchy="false">[</mo>
+  <mi data-latex="a">a</mi>
+  <mo data-latex=",">,</mo>
+  <mi data-latex="b">b</mi>
+  <mo data-latex="]" stretchy="false">]</mo>
+</math>"
+`;
+
+exports[`Newcommand Def significant spaces 2 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x#1 #2 {[#1,#2]} \\x{a} {b} " display="block">
   <mo data-latex="[" stretchy="false">[</mo>
   <mi data-latex="a">a</mi>
   <mo data-latex=",">,</mo>
@@ -715,5 +904,31 @@ exports[`Newcommand Overrides Let overrides existing macro as delimiter 1`] = `
     <mi data-latex="X">X</mi>
     <mo data-mjx-texclass="CLOSE" data-latex="\\right\\sqrt">&#x2016;</mo>
   </mrow>
+</math>"
+`;
+
+exports[`Newcommand legacy Def legacy comments 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1%X{\\text{[#1]}}\\x a%X" display="block">
+  <mtext data-latex="\\text{[a]}">[a]</mtext>
+</math>"
+`;
+
+exports[`Newcommand legacy Def legacy comments 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x{\\text{%}}\\x" display="block">
+  <mtext data-latex="\\text{%}">%</mtext>
+</math>"
+`;
+
+exports[`Newcommand legacy Def legacy macro templates 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1X  Y{\\text{[#1]}}\\x aX  Y" display="block">
+  <mtext data-latex="\\text{[a]}">[a]</mtext>
+</math>"
+`;
+
+exports[`Newcommand legacy Def legacy macro templates 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1X
+Y{\\text{[#1]}}\\x aX
+Y" display="block">
+  <mtext data-latex="\\text{[a]}">[a]</mtext>
 </math>"
 `;
