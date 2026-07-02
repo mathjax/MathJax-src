@@ -10,7 +10,10 @@ on:
 
 jobs:
   testing:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     name: Compile and test MathJax
     steps:
       - name: Checkout
