@@ -82,7 +82,7 @@ export class Safe<N, T, D> {
     //
     // Pattern for allowed ids
     //
-    idPattern: /^mjx-[-a-zA-Z0-9_.]+$/,
+    idPattern: /^mjx-(?:eqn:.+|[-a-zA-Z0-9_.]+)$/,
     //
     // Pattern for data attributes
     //
