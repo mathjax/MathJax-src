@@ -210,6 +210,9 @@ export class DraggableDialog {
       position: 'fixed',
       top: '-4%',
     },
+    '.mjx-dialog *': {
+      'box-sizing': 'content-box',
+    },
     '.mjx-dialog.mjx-moving': {
       cursor: 'grabbing',
     },

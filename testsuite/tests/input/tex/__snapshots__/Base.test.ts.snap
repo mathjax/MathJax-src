@@ -1820,6 +1820,22 @@ exports[`Complete Array column ! | @ 1`] = `
 </math>"
 `;
 
+exports[`Complete Array column > > c < < 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{&gt;{a}&gt;{b}c&lt;{x}&lt;{y}} X \\end{array}" display="block">
+  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="baXyx\\end{array}">
+    <mtr>
+      <mtd>
+        <mi data-latex="b">b</mi>
+        <mi data-latex="a">a</mi>
+        <mi data-latex="X">X</mi>
+        <mi data-latex="y">y</mi>
+        <mi data-latex="x">x</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
 exports[`Complete Array column > space 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{&gt; {x} c} X \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="xX\\end{array}">
@@ -1866,6 +1882,62 @@ exports[`Complete Array column @ p m 1`] = `
         <mpadded data-mjx-vbox="middle" width="1em" data-overflow="auto" data-align="left" data-vertical-align="middle">
           <mtext data-latex="\\text{Y}">Y</mtext>
         </mpadded>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Complete Array column {{c}} 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{{{c}}} X \\end{array}" display="block">
+  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{{{c}}} X \\end{array}">
+    <mtr data-latex="{{{c}}}">
+      <mtd>
+        <mi data-latex="X">X</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Complete Array column {c} 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c{c}} X Y \\end{array}" display="block">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c{c}} X Y \\end{array}">
+    <mtr data-latex="{c{c}}">
+      <mtd>
+        <mi data-latex="X">X</mi>
+        <mi data-latex="Y">Y</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Complete Array column {cc} 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{{cc}} X Y \\end{array}" display="block">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{{cc}} X Y \\end{array}">
+    <mtr data-latex="{{cc}}">
+      <mtd>
+        <mi data-latex="X">X</mi>
+        <mi data-latex="Y">Y</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Complete Array column {r}c{l} 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{{r}c{l}} X &amp; Y &amp; Z \\end{array}" display="block">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="right center left" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{{r}c{l}} X &amp; Y &amp; Z \\end{array}">
+    <mtr data-latex="{{r}c{l}}">
+      <mtd>
+        <mi data-latex="X">X</mi>
+      </mtd>
+      <mtd>
+        <mi data-latex="Y">Y</mi>
+      </mtd>
+      <mtd>
+        <mi data-latex="Z">Z</mi>
       </mtd>
     </mtr>
   </mtable>
@@ -2173,6 +2245,24 @@ exports[`Complete Array column m  1`] = `
         <mpadded data-mjx-vbox="middle" width="1cm" data-overflow="auto" data-align="left" data-vertical-align="middle">
           <mtext data-latex="\\text{f}">f</mtext>
         </mpadded>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Complete Array column newline 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c
+c} X &amp; Y\\end{array}" display="block">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c
+c} X &amp; Y\\end{array}">
+    <mtr data-latex="{c
+c}">
+      <mtd>
+        <mi data-latex="X">X</mi>
+      </mtd>
+      <mtd>
+        <mi data-latex="Y">Y</mi>
       </mtd>
     </mtr>
   </mtable>
@@ -3552,7 +3642,7 @@ exports[`Fenced Fenced Arrows 3 1`] = `
       <mi data-latex="b">b</mi>
     </mfrac>
     <mrow data-mjx-texclass="CLOSE"></mrow>
-    <mo data-latex="\\middle\\downarrow ">&#x2193;</mo>
+    <mo symmetric="true" data-latex="\\middle\\downarrow ">&#x2193;</mo>
     <mrow data-mjx-texclass="OPEN" data-latex="\\middle\\downarrow"></mrow>
     <mi data-latex="c">c</mi>
     <mo data-mjx-texclass="CLOSE" fence="true" symmetric="true" data-latex="\\right\\uparrow">&#x2191;</mo>
@@ -3660,7 +3750,7 @@ exports[`Fenced Middle 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mi data-latex="a">a</mi>
     <mrow data-mjx-texclass="CLOSE"></mrow>
-    <mo stretchy="true" data-latex="\\middle|">|</mo>
+    <mo stretchy="true" symmetric="true" data-latex="\\middle|">|</mo>
     <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
     <mi data-latex="b">b</mi>
     <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
@@ -7931,7 +8021,7 @@ exports[`Spacing Nonscript scriptlevel 1`] = `
         <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex="\\left."></mo>
         <mi data-latex="a">a</mi>
         <mrow data-mjx-texclass="CLOSE"></mrow>
-        <mo stretchy="true" data-latex="\\middle|">|</mo>
+        <mo stretchy="true" symmetric="true" data-latex="\\middle|">|</mo>
         <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
         <mi data-latex="b">b</mi>
         <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true" data-latex="\\right."></mo>
@@ -7948,7 +8038,7 @@ exports[`Spacing Nonscript toplevel 1`] = `
     <mi data-latex="a">a</mi>
     <mspace width="0.278em"></mspace>
     <mrow data-mjx-texclass="CLOSE"></mrow>
-    <mo stretchy="true" data-latex="\\middle|">|</mo>
+    <mo stretchy="true" symmetric="true" data-latex="\\middle|">|</mo>
     <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
     <mspace width="0.278em"></mspace>
     <mi data-latex="b">b</mi>
@@ -9156,7 +9246,7 @@ exports[`User Defined Macros Middle Color 1`] = `
     <mi data-latex="A">A</mi>
     <mstyle mathcolor="red"></mstyle>
     <mrow data-mjx-texclass="CLOSE"></mrow>
-    <mo stretchy="true" mathcolor="red" data-latex="\\middle|">|</mo>
+    <mo stretchy="true" symmetric="true" mathcolor="red" data-latex="\\middle|">|</mo>
     <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
     <mi data-latex="B">B</mi>
     <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
@@ -9170,7 +9260,7 @@ exports[`User Defined Macros Right Color 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mi data-latex="A">A</mi>
     <mrow data-mjx-texclass="CLOSE"></mrow>
-    <mo stretchy="true" data-latex="\\middle|">|</mo>
+    <mo stretchy="true" symmetric="true" data-latex="\\middle|">|</mo>
     <mrow data-mjx-texclass="OPEN" data-latex="\\middle|"></mrow>
     <mi data-latex="B">B</mi>
     <mstyle mathcolor="red"></mstyle>

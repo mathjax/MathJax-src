@@ -233,8 +233,9 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
     public addChildren(parents: N[]) {
       let x = 0;
       let i = 0;
+      const isEmbellished = this.node.isEmbellished;
       for (const child of this.childNodes) {
-        const n = child.breakCount;
+        const n = isEmbellished ? 0 : child.breakCount;
         child.toSVG(parents.slice(i, i + n + 1));
         if (child.dom) {
           let k = 0;

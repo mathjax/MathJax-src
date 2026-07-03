@@ -4002,6 +4002,36 @@ describe('Complete Array', () => {
     expect(tex2mml('\\begin{array}{> {x} c} X \\end{array}')).toMatchSnapshot();
   });
 
+  it('column {cc}', () => {
+    expect(tex2mml('\\begin{array}{{cc}} X Y \\end{array}')).toMatchSnapshot();
+  });
+
+  it('column {c}', () => {
+    expect(tex2mml('\\begin{array}{c{c}} X Y \\end{array}')).toMatchSnapshot();
+  });
+
+  it('column {{c}}', () => {
+    expect(tex2mml('\\begin{array}{{{c}}} X \\end{array}')).toMatchSnapshot();
+  });
+
+  it('column {r}c{l}', () => {
+    expect(tex2mml('\\begin{array}{{r}c{l}} X & Y & Z \\end{array}')).toMatchSnapshot();
+  });
+
+  it('column newline', () => {
+    expect(tex2mml('\\begin{array}{c\nc} X & Y\\end{array}')).toMatchSnapshot();
+  });
+
+  it('column > > c < <', () => {
+    expect(tex2mml('\\begin{array}{>{a}>{b}c<{x}<{y}} X \\end{array}')).toMatchSnapshot();
+  });
+
+  it('column brace errors', () => {
+    expectTexError(tex2mml('\\begin{array}{c{xx}} X Y \\end{array}')).toBe('Illegal pream-token (xx)');
+    expectTexError(tex2mml('\\begin{array}{c{{c}}} X Y \\end{array}')).toBe('Illegal pream-token ({c})');
+    expectTexError(tex2mml('\\begin{array}{c{c{c}}} X Y \\end{array}')).toBe('Illegal pream-token (c{c})');
+  });
+
   it('BadPreamToken', () => {
     expectTexError('\\begin{array}a').toBe('Illegal pream-token (a)');
   });
