@@ -151,7 +151,8 @@ export default class TexParser {
     //
     // Back up one to pick up the parsed character (this.i is past it at this point).
     //
-    this.saveI = this.i - (kind === 'character' && input[1] !== '&' ? input[1].length : 0);
+    this.saveI =
+      this.i - (kind === 'character' && input[1] !== '&' ? input[1].length : 0);
     const result = this.configuration.handlers.get(kind).parse(input);
     //
     // The macro gets processed by the \\ character later
