@@ -10,7 +10,14 @@ on:
 
 jobs:
   testing:
-    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     name: Compile and test MathJax
     steps:
       - name: Checkout
@@ -27,6 +34,10 @@ jobs:
         with:
           node-version: 24
           cache: 'pnpm'
+
+      - name: Configure pnpm script shell on Windows
+        if: runner.os == 'Windows'
+        run: pnpm config set scriptShell "$(cygpath -w "$(command -v bash)")"
 
       - name: Install packages
         run: |
@@ -49,6 +60,7 @@ jobs:
         run: pnpm -s test:gh
 
       - name: Upload coverage reports to Codecov
+        if: runner.os == 'Linux'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
