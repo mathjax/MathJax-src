@@ -33,8 +33,8 @@ import { LiteAdaptor } from '../liteAdaptor.js';
  * Patterns used in parsing serialized HTML
  */
 
-const SPACE = '[ \\n]+';
-const OPTIONALSPACE = '[ \\n]*';
+const SPACE = '[ \\t\\n\\f\\r]+';
+const OPTIONALSPACE = '[ \\t\\n\\f\\r]*';
 const TAGNAME = `[A-Za-z][^\u0000-\u001F "'>/=\u007F-\u009F]*`;
 const ATTNAME = `[^\u0000-\u001F "'>/=\u007F-\u009F]+`;
 const VALUE = `(?:'[^']*'|"[^"]*"|${SPACE})`;
