@@ -328,7 +328,8 @@ const adjustSequents = function (config: ParseOptions) {
     }
     const collect = [];
     let inf = getParentInf(seq);
-    if (getProperty(inf, 'inference') !== 1) {
+    // An axiom-only proof has no parent inference rule.
+    if (!inf || getProperty(inf, 'inference') !== 1) {
       continue;
     }
     collect.push(seq);
