@@ -445,7 +445,10 @@ export abstract class CommonOutputJax<
     if (linebreak) {
       this.getLinebreakWidth();
     }
-    const makeBreaks = this.options.linebreaks.inline && !math.display;
+    const makeBreaks =
+      this.options.linebreaks.inline &&
+      !math.display &&
+      !math.root.isEmbellished;
     let inlineMarked = !!math.root.getProperty('inlineMarked');
     if (
       inlineMarked &&
