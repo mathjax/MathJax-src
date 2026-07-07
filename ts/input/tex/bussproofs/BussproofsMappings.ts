@@ -65,16 +65,16 @@ new CommandMap('Bussproofs-macros', {
   solidLine: [BussproofsMethods.SetLine, 'solid', false],
   dashedLine: [BussproofsMethods.SetLine, 'dashed', false],
   dottedLine: [BussproofsMethods.SetLine, 'dotted', false],
-  // Double lines are not yet implemented in the output jax!
-  // doubleLine:       [BussproofsMethods.SetLine, 'double', false],
+  // Double lines are not yet implemented in the SVG output jax!
+  doubleLine: [BussproofsMethods.SetLine, 'double', false],
 
   alwaysNoLine: [BussproofsMethods.SetLine, 'none', true],
   alwaysSingleLine: [BussproofsMethods.SetLine, 'solid', true],
   alwaysSolidLine: [BussproofsMethods.SetLine, 'solid', true],
   alwaysDashedLine: [BussproofsMethods.SetLine, 'dashed', true],
   alwaysDottedLine: [BussproofsMethods.SetLine, 'dotted', true],
-  // Double lines are not yet implemented in the output jax!
-  // alwaysDoubleLine:       [BussproofsMethods.SetLine, 'double', true],
+  // Double lines are not yet implemented in the SVG output jax!
+  alwaysDoubleLine: [BussproofsMethods.SetLine, 'double', true],
 
   rootAtTop: [BussproofsMethods.RootAtTop, true],
   alwaysRootAtTop: [BussproofsMethods.RootAtTop, true],
