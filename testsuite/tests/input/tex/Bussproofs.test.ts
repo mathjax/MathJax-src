@@ -2,6 +2,7 @@ import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
 import { getTokens, setupTexWithOutput, tex2mml } from '#helpers';
 import '#js/input/tex/bussproofs/BussproofsConfiguration';
 import '#js/input/tex/ams/AmsConfiguration';
+import '#js/input/tex/newcommand/NewcommandConfiguration';
 
 beforeEach(() => setupTexWithOutput(['base', 'ams', 'bussproofs']));
 
@@ -207,6 +208,186 @@ describe('BussproofsRegProofs', () => {
       tex2mml(
         '\\begin{prooftree}\\LL{HHHHH}\\RL{11111111111111111}\\AxiomC{D}\\AxiomC{A1}\\AxiomC{A2}\\TrinaryInfC{Q}\\RightLabel{AAAA}\\AxiomC{A}\\AxiomC{B}\\AxiomC{R}\\LL{qqqq}\\BinaryInfC{$C \\rightarrow D \\rightarrow Q$}\\LeftLabel{BBBB}\\RightLabel{MMM}\\BinaryInfC{E}\\RightLabel{CCCCC}\\LL{WWW}\\BinaryInfC{F}\\RightLabel{QERE}\\AxiomC{M}\\LL{BBB}\\BinaryInfC{$N \\rightarrow R$}\\RightLabel{Nowhere}\\end{prooftree}'
       )
+    ).toMatchSnapshot();
+  });
+});
+
+/**********************************************************************************/
+
+describe('BussproofsSequents', () => {
+  beforeEach(() =>
+    setupTexWithOutput(['base', 'ams', 'newcommand', 'bussproofs'])
+  );
+
+  it('Sequent Axiom Only', () => {
+    expect(
+      tex2mml(
+        '\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A \\fCenter B$\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Sequent Axiom Display Proof No Space', () => {
+    expect(tex2mml('\\Axiom$A\\fCenterA$\\DisplayProof')).toMatchSnapshot();
+  });
+
+  it('Sequent Unary', () => {
+    expect(
+      tex2mml(
+        '\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A,B \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Sequent Unary Chain', () => {
+    expect(
+      tex2mml(
+        '\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A,B,Q,R \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\UnaryInf$\\fCenter A,B,C,D,E$\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Sequent Unary Chain Labelled', () => {
+    expect(
+      tex2mml(
+        '\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A,B,Q,R \\fCenter C$\\RightLabel{X}\\UnaryInf$A \\fCenter B,C$\\RightLabel{Y}\\UnaryInf$\\fCenter A,B,C$\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Sequent Unary Chain Plain Line', () => {
+    expect(
+      tex2mml(
+        '\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A,B \\fCenter C$\\UnaryInfC{intermediate}\\UnaryInf$A \\fCenter B,C,D,E$\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Sequent Unary Chain Binary Top', () => {
+    expect(
+      tex2mml(
+        '\\def\\fCenter{\\vdash}\\begin{prooftree}\\AxiomC{$P$}\\AxiomC{$Q$}\\BinaryInf$A,B,Q,R \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\UnaryInf$\\fCenter A,B,C$\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Sequent Binary', () => {
+    expect(
+      tex2mml(
+        '\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$\\fCenter A$\\Axiom$B \\fCenter C,D$\\UnaryInf$B,X,Y,Z \\fCenter C$\\BinaryInf$A,B \\fCenter C$\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Sequent Root At Top', () => {
+    expect(
+      tex2mml(
+        '\\def\\fCenter{\\vdash}\\begin{prooftree}\\rootAtTop\\Axiom$A,B,Q,R \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\UnaryInf$\\fCenter A,B,C$\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Sequent Widest At Bottom', () => {
+    expect(
+      tex2mml(
+        '\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A \\fCenter B$\\UnaryInf$A,B \\fCenter C$\\UnaryInf$A,B,C,D \\fCenter E$\\UnaryInf$A,B,C,D,E,F \\fCenter G$\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Sequent Display Proof Chain', () => {
+    expect(
+      tex2mml(
+        '\\def\\fCenter{\\vdash}\\Axiom$A,B,Q \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\UnaryInf$\\fCenter A,B,C$\\DP'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Sequent Abbreviations', () => {
+    expect(
+      tex2mml(
+        '\\def\\fCenter{\\vdash}\\AX$A \\fCenter B$\\AX$C \\fCenter D$\\BI$E \\fCenter F$\\DP'
+      )
+    ).toMatchSnapshot();
+  });
+});
+
+/**********************************************************************************/
+
+describe('BussproofsCommands', () => {
+  it('Display Proof', () => {
+    expect(tex2mml('\\AxiomC{A}\\UnaryInfC{B}\\DisplayProof')).toMatchSnapshot();
+  });
+
+  it('Display Proof Inline', () => {
+    expect(tex2mml('X = \\AxiomC{A}\\UnaryInfC{B}\\DP')).toMatchSnapshot();
+  });
+
+  it('Enable Abbreviations', () => {
+    expect(
+      tex2mml('\\EnableBpAbbreviations\\AXC{A}\\AXC{B}\\AXC{C}\\TIC{D}\\DP')
+    ).toMatchSnapshot();
+  });
+
+  it('Quaternary Abbreviation', () => {
+    expect(
+      tex2mml('\\AXC{A}\\AXC{B}\\AXC{C}\\AXC{D}\\QIC{E}\\DP')
+    ).toMatchSnapshot();
+  });
+
+  it('Quinary Abbreviation', () => {
+    expect(
+      tex2mml('\\AXC{A}\\AXC{B}\\AXC{C}\\AXC{D}\\AXC{E}\\QuIC{F}\\DP')
+    ).toMatchSnapshot();
+  });
+
+  it('Kern Hyps', () => {
+    expect(
+      tex2mml(
+        '\\begin{prooftree}\\AxiomC{A}\\AxiomC{B}\\kernHyps{1em}\\BinaryInfC{C}\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Insert Between Hyps', () => {
+    expect(
+      tex2mml(
+        '\\begin{prooftree}\\AxiomC{A}\\AxiomC{B}\\insertBetweenHyps{\\hskip 2em}\\BinaryInfC{C}\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Dotted Line', () => {
+    expect(
+      tex2mml(
+        '\\begin{prooftree}\\AxiomC{A}\\dottedLine\\UnaryInfC{B}\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Double Line', () => {
+    expect(
+      tex2mml(
+        '\\begin{prooftree}\\AxiomC{A}\\doubleLine\\UnaryInfC{B}\\end{prooftree}'
+      )
+    ).toMatchSnapshot();
+  });
+
+  it('Bottom Align Proof', () => {
+    expect(
+      tex2mml('\\bottomAlignProof\\AxiomC{A}\\UnaryInfC{B}\\DP')
+    ).toMatchSnapshot();
+  });
+
+  it('Center Align Proof', () => {
+    expect(
+      tex2mml('\\centerAlignProof\\AxiomC{A}\\UnaryInfC{B}\\DP')
+    ).toMatchSnapshot();
+  });
+
+  it('Normal Align Proof', () => {
+    expect(
+      tex2mml('\\normalAlignProof\\AxiomC{A}\\UnaryInfC{B}\\DP')
     ).toMatchSnapshot();
   });
 });
