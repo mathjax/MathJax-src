@@ -338,14 +338,17 @@ const adjustSequents = function (config: ParseOptions) {
       const premise = firstPremise(
         getPremises(inf, getProperty(inf, 'inferenceRule') as string)
       );
-      const sequent = getProperty(premise, 'inferenceRule')
-        ? // If the first premise is an inference rule, check the conclusions for a sequent.
-          getConclusion(
-            premise,
-            getProperty(premise, 'inferenceRule') as string
-          )
-        : // Otherwise it is a hyp and we have to check the formula itself.
-          premise;
+      // If the premise is an inference rule (possibly with labels), we have
+      // to check its conclusion for a sequent. Otherwise it is a hyp and we
+      // have to check the formula itself.
+      const rule = getProperty(premise, 'inferenceRule')
+        ? premise
+        : getProperty(premise, 'labelledRule')
+          ? getRule(premise)
+          : null;
+      const sequent = rule
+        ? getConclusion(rule, getProperty(rule, 'inferenceRule') as string)
+        : premise;
       if (getProperty(sequent, 'sequent')) {
         seq = sequent.childNodes[0];
         collect.push(seq);
@@ -353,7 +356,9 @@ const adjustSequents = function (config: ParseOptions) {
       }
       inf = premise;
     }
-    adjustSequentPairwise(config, collect);
+    if (collect.length > 1) {
+      alignSequents(config, collect);
+    }
   }
 };
 
@@ -387,71 +392,36 @@ const addSequentSpace = function (
 };
 
 /**
- * Adjusts the sequent positioning for a list of inference rules by pairwise
- * adjusting the width of formulas in sequents. I.e.,
+ * Aligns the fCenter elements of a chain of sequents by padding the
+ * antecedent and succedent of each sequent to the maximal width occurring in
+ * the chain. As all sequent lines are centered within the proof tree, equal
+ * widths on both sides align the fCenter positions vertically. I.e.,
  *    A,B |- C
  * ------------
  *    A |- B,C
  *
  * will be adjusted to
  *
- *    A, B |- C
+ *    A,B |- C__
  * ----------------
- *       A |- B,C
+ *    __A |- B,C
  *
  * @param {ParseOptions} config Parser configuration options.
  * @param {MmlNode[]} sequents The list of sequents.
  */
-const adjustSequentPairwise = function (
-  config: ParseOptions,
-  sequents: MmlNode[]
-) {
-  let top = sequents.pop();
-  while (sequents.length) {
-    const bottom = sequents.pop();
-    const [left, right] = compareSequents(top, bottom);
-    if (getProperty(top.parent, 'axiom')) {
-      addSequentSpace(
-        config,
-        left < 0 ? top : bottom,
-        0,
-        'left',
-        Math.abs(left)
-      );
-      addSequentSpace(
-        config,
-        right < 0 ? top : bottom,
-        2,
-        'right',
-        Math.abs(right)
-      );
+const alignSequents = function (config: ParseOptions, sequents: MmlNode[]) {
+  const lefts = sequents.map((seq) => getBBox(seq.childNodes[0] as MmlNode));
+  const rights = sequents.map((seq) => getBBox(seq.childNodes[2] as MmlNode));
+  const maxLeft = Math.max(...lefts);
+  const maxRight = Math.max(...rights);
+  for (let i = 0; i < sequents.length; i++) {
+    if (lefts[i] < maxLeft) {
+      addSequentSpace(config, sequents[i], 0, 'left', maxLeft - lefts[i]);
     }
-    top = bottom;
+    if (rights[i] < maxRight) {
+      addSequentSpace(config, sequents[i], 2, 'right', maxRight - rights[i]);
+    }
   }
-};
-
-/**
- * Compares the top and bottom sequent of a inference rule
- * Top:     A |- B
- *        ----------
- * Bottom:  C |- D
- *
- * @param {MmlNode} top Top sequent.
- * @param {MmlNode} bottom Bottom sequent.
- * @returns {[number, number]} The delta for left and right side of the sequents.
- */
-const compareSequents = function (
-  top: MmlNode,
-  bottom: MmlNode
-): [number, number] {
-  const tr = getBBox(top.childNodes[2]);
-  const br = getBBox(bottom.childNodes[2]);
-  const tl = getBBox(top.childNodes[0]);
-  const bl = getBBox(bottom.childNodes[0]);
-  // Deltas
-  const dl = tl - bl;
-  const dr = tr - br;
-  return [dl, dr];
 };
 
 // For every inference rule we adjust the width of ruler by subtracting and
