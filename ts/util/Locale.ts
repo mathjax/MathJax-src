@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {locale, data} from './Locale/__locales__/preload.cjs';
+import { locale, data } from './Locale/__locales__/preload.cjs';
 
 /**
  * The various object map types
@@ -40,11 +40,10 @@ export const COMPONENT = 'locale';
  * The Locale class for handling localized messages
  */
 export class Locale {
-  public static initialized: boolean = false;
   /**
    * Whether setLocale() has been called or not.
    */
-  public static initialized = false;
+  public static initialized: boolean = false;
   /**
    * The current locale
    */
