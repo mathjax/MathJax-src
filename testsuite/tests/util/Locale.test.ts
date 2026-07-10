@@ -45,6 +45,7 @@ describe('Locale', () => {
     expect(Locale.message('component', 'Id1', 'message', 'Locale')).toBe(
       'Test of message in Locale'
     );
+    delete locale.locations.component;
   });
 
   /********************************************************************************/
@@ -84,6 +85,16 @@ describe('Locale', () => {
     expect(Locale.message('undefined', 'Id1')).toBe('');
     Locale.current = 'en';
     Locale.default = 'en';
+    delete (Locale as any).locations.component;
+  });
+
+
+  /********************************************************************************/
+
+  test('Register messages for unknown component', async () => {
+    expect(trapOutput('warn', () =>
+      Locale.registerMessages('unknown', 'en', {})
+    )).toBe(`MathJax(Locale): Component 'unknown' doesn't exist`);
   });
 
   /********************************************************************************/
@@ -94,6 +105,7 @@ describe('Locale', () => {
     await Locale.setLocale('test');
     expect(Locale.message('component', 'test1')).toBe('Has % percent');
     Locale.isComponent = false;
+    delete (Locale as any).locations.component;
   });
 
   /********************************************************************************/
@@ -119,6 +131,8 @@ describe('Locale', () => {
     });
     expect(message).toContain("MathJax(fallback): Can't load 'xy.json'");
     expect(locale.data.fallback?.en).toEqual({ Id1: 'Test of %1 in %2' });
+    delete locale.locations.fallback;
+    delete locale.data.fallback;
   });
 
   /********************************************************************************/
@@ -129,6 +143,7 @@ describe('Locale', () => {
       Locale.warn('component', 'test2', 'warn')
     );
     expect(message).toEqual('Has warn one');
+    delete (Locale as any).locations.component;
   });
 
   /********************************************************************************/
@@ -171,6 +186,8 @@ describe('Locale', () => {
     //
     Locale.syncLoad = sync;
     console.error = error;
+    delete locale.locations.sync;
+    delete locale.data.sync;
   });
 
   /********************************************************************************/
@@ -215,6 +232,8 @@ describe('Locale', () => {
     //
     Locale.asyncLoad = async;
     Locale.syncLoad = sync;
+    delete (Locale as any).locations.sync;
+    delete (Locale as any).data.sync;
     mathjax.asyncLoad = load;
     mathjax.asyncIsSynchronous = isSync;
   });

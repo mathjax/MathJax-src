@@ -22,10 +22,12 @@
  */
 
 import { Locale, namedData } from '../../../util/Locale.js';
+import { locale, data } from './preload.cjs';
 
 export const COMPONENT = 'a11y/speech';
 
 Locale.registerLocaleFiles(COMPONENT, '../ts/a11y/speech');
+Locale.registerMessages(COMPONENT, locale, data);
 
 /**
  * Get a localized message for this component

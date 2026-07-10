@@ -8,7 +8,7 @@
       "to": "[bundle]/a11y/explorer",
       "from": "[ts]/a11y/explorer",
       "copy": ["__locales__"],
-      "excludes": ["__locales__/Component.ts"]
+      "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
     },
     {
       "to": "[bundle]/a11y/aria",

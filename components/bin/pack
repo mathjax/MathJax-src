@@ -38,6 +38,11 @@ const target = (process.argv[2] || 'mjs')
 const bundle = (process.argv[3] || 'bundle');
 
 /**
+ * The locale to bundle
+ */
+const locale = (process.argv[4] || 'en');
+
+/**
  * @param {string} name    The file name to turn into a Regular expression
  * @return {RegExp}        The regular expression for the name,
  */
@@ -79,6 +84,7 @@ async function readJSON(dir) {
         require.resolve(path.join('webpack', 'bin', 'webpack.js')),
         '--env', `dir=${path.relative(packDir, path.resolve(dir))}`,
         '--env', `bundle=${bundle}`,
+        '--env', `locale=${locale}`,
         '--json',
         '-c', path.relative(packDir, path.join(compPath, 'webpack.config.' + target))
       ],
@@ -166,4 +172,4 @@ async function webpackLib(dir) {
   }
 }
 
-webpackLib(process.argv[4] || '.');
+webpackLib(process.argv[5] || '.');

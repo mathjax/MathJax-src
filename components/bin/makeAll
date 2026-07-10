@@ -39,7 +39,8 @@ const options = {
   recursive: true,
   verbose: true,
   target: 'mjs',
-  bundle: ''
+  bundle: '',
+  locale: ''
 };
 
 /**
@@ -82,7 +83,10 @@ const optionActions = new Map([
     if (options.copy === true) {
       options.copy = false;
     }
-  }]
+  }],
+  ['locale', () => {
+    options.locale = dirs.shift();
+  }],
 ]);
 
 /**
@@ -114,7 +118,7 @@ if (dirs.length === 0) {
  */
 const build = `node '${path.join(__dirname, 'build')}' '${options.target}'`;
 const copy = `node '${path.join(__dirname, 'copy')}' '${options.target}' '${options.bundle}'`;
-const pack = `node '${path.join(__dirname, 'pack')}' '${options.target}' '${options.bundle}'`;
+const pack = `node '${path.join(__dirname, 'pack')}' '${options.target}' '${options.bundle}' '${options.locale}'`;
 
 /**
  * @param {string} name    The file name to turn into a Regular expression

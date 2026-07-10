@@ -9,7 +9,7 @@
     "to": "[bundle]/a11y/semantic-enrich",
     "from": "[ts]/a11y/semantic-enrich",
     "copy": ["__locales__"],
-    "excludes": ["__locales__/Component.ts"]
+    "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
   },
   "webpack": {
     "name": "a11y/semantic-enrich",

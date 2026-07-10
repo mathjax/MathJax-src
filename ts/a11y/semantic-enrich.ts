@@ -340,7 +340,7 @@ export function EnrichedMathDocumentMixin<
       /* prettier-ignore */
       sre: expandable({
         speech: 'none',                    // by default no speech is included
-        locale: 'en',                      // switch the locale
+        locale: Locale.default,            // switch the locale
         domain: 'clearspeak',              // speech rules domain
         style: 'default',                  // speech rules style
         braille: 'nemeth',                 // TODO: Dummy switch for braille

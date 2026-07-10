@@ -20,7 +20,7 @@
       "to": "[bundle]/input/tex",
       "from": "[ts]/input/tex",
       "copy": ["__locales__"],
-      "excludes": ["__locales__/Component.ts"]
+      "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
     },{
       "to": "[bundle]/input/tex/extensions/base",
       "from": "[ts]/input/tex/base",

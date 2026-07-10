@@ -4033,7 +4033,7 @@ describe('Complete Array', () => {
   });
 
   it('BadPreamToken', () => {
-    expectTexError('\\begin{array}a').toBe('Illegal preamble token: a');
+    expectTexError('\\begin{array}a').toBe('Illegal pream-token (a)');
   });
 
   it('Template Without End', () => {

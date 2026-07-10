@@ -22,7 +22,9 @@
  */
 
 import { Locale } from '../../../../util/Locale.js';
+import { locale, data } from './preload.cjs';
 
 export const COMPONENT = '[tex]/bbox';
 
 Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/bbox');
+Locale.registerMessages(COMPONENT, locale, data);
