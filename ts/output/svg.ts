@@ -98,7 +98,6 @@ export class SVG<N, T, D> extends CommonOutputJax<
   public static commonStyles: StyleJson = {
     ...CommonOutputJax.commonStyles,
     'mjx-container[jax="SVG"]': {
-      direction: 'ltr',
       'white-space': 'nowrap',
     },
     'mjx-container[jax="SVG"] > svg': {
