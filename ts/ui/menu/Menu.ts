@@ -559,6 +559,7 @@ export class Menu {
   protected initSettings() {
     this.settings = this.options.settings;
     this.settings.locale = MathJax.config.locale ?? Locale.current;
+    this.document.options.sre.locale = this.settings.locale;
     this.jax = this.options.jax;
     const jax = this.document.outputJax;
     this.jax[jax.name] = jax;
@@ -729,7 +730,6 @@ export class Menu {
             this.checkbox('MML/texHints', 'texHints'),
             this.checkbox('MML/semantics', 'semantics'),
           ]),
-          this.submenu('Settings/Language', this.languageSubmenu()),
           this.rule(),
           this.submenu('Zoom/ZoomTrigger', [
             this.command('Zoom/ZoomNow', () => this.zoom(null, '')),
@@ -762,6 +762,7 @@ export class Menu {
           this.rule(),
           this.command('Settings/Reset', () => this.resetDefaults()),
         ]),
+        this.submenu('Language', this.languageSubmenu()),
         this.rule(),
         this.label('Label/Accessibility'),
         this.submenu('Speech', [
