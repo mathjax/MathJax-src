@@ -16,7 +16,7 @@
  */
 
 /**
- * @file  English locale data for core component
+ * @file  English locale data for input/mml component
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */

@@ -16,7 +16,7 @@
  */
 
 /**
- * @file  English locale data for core component
+ * @file  English locale data for a11y/aria component
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
