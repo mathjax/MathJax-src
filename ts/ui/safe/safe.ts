@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2025 The MathJax Consortium
+ *  Copyright (c) 2020-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ export class Safe<N, T, D> {
     //
     // Pattern for allowed ids
     //
-    idPattern: /^mjx-[-a-zA-Z0-9_.]+$/,
+    idPattern: /^mjx-(?:eqn:.+|[-a-zA-Z0-9_.]+)$/,
     //
     // Pattern for data attributes
     //

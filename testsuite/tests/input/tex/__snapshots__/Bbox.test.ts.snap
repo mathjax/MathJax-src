@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Bbox Bbox-Background 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bbox[yellow]{a}" display="block">
+  <mstyle mathbackground="yellow" data-latex="\\bbox[yellow]{a}">
+    <mi data-latex="a">a</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Bbox Bbox-Background-Padding 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bbox[yellow,5px]{a}" display="block">
+  <mstyle mathbackground="yellow" data-latex="\\bbox[yellow,5px]{a}">
+    <mpadded height="+5px" depth="+5px" lspace="5px" width="+10px">
+      <mi data-latex="a">a</mi>
+    </mpadded>
+  </mstyle>
+</math>"
+`;
+
+exports[`Bbox Bbox-Background-Padding-Frame 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bbox[yellow,5px,border:2px solid red]{a}" display="block">
+  <mstyle mathbackground="yellow" style="border:2px solid red" data-latex="\\bbox[yellow,5px,border:2px solid red]{a}">
+    <mpadded height="+5px" depth="+5px" lspace="5px" width="+10px">
+      <mi data-latex="a">a</mi>
+    </mpadded>
+  </mstyle>
+</math>"
+`;
+
+exports[`Bbox Bbox-Frame 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bbox[border:5px solid red]{a}" display="block">
+  <mstyle style="border:5px solid red" data-latex="\\bbox[border:5px solid red]{a}">
+    <mi data-latex="a">a</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Bbox Bbox-Padding 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bbox[5px]{a}" display="block">
+  <mpadded height="+5px" depth="+5px" lspace="5px" width="+10px" data-latex="\\bbox[5px]{a}">
+    <mi data-latex="a">a</mi>
+  </mpadded>
+</math>"
+`;
+
+exports[`Bbox Bbox-Padding-Frame 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bbox[5px,border:2px solid red]{a}" display="block">
+  <mstyle style="border:2px solid red" data-latex="\\bbox[5px,border:2px solid red]{a}">
+    <mpadded height="+5px" depth="+5px" lspace="5px" width="+10px">
+      <mi data-latex="a">a</mi>
+    </mpadded>
+  </mstyle>
+</math>"
+`;

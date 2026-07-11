@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ import {
   ChtmlDelimiterData,
   ChtmlFontData,
   ChtmlFontDataClass,
+  VFUZZ,
+  HFUZZ,
 } from '../FontData.js';
 import { CharDataArray } from '../../common/FontData.js';
 import {
@@ -273,7 +275,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         //  The ext parameter should be 0, but line-height in Safari
         //  is not accurate, so this produces extra extenders to compensate
         //
-        this.createAssembly(parts, stretch, stretchv, dom, h + d, 0.05, '\n');
+        this.createAssembly(parts, stretch, stretchv, dom, h + d, VFUZZ, '\n');
         //
         //  Vertical needs an extra (empty) element to get vertical position right
         //  in some browsers (e.g., Safari)
@@ -282,7 +284,8 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         styles.height = this.em(h + d);
         styles.verticalAlign = this.em(-d);
       } else {
-        this.createAssembly(parts, stretch, stretchv, dom, w, delim.ext || 0);
+        const ext = (delim.ext || 0) + HFUZZ;
+        this.createAssembly(parts, stretch, stretchv, dom, w, ext);
         styles.width = this.em(w);
       }
       //
@@ -340,10 +343,12 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       //  Set up the beginning, extension, and end pieces
       //
       this.createPart('mjx-beg', parts[0], sn[0], sv[0], dom);
-      this.createPart('mjx-ext', parts[1], sn[1], sv[1], dom, WH1, WHx, nl);
+      /* prettier-ignore */
+      this.createPart('mjx-ext', parts[1], sn[1], sv[1], dom, WH1, WHx, nl, WHb, WHm / 2 || WHe);
       if (parts[3]) {
         this.createPart('mjx-mid', parts[3], sn[3], sv[3], dom);
-        this.createPart('mjx-ext', parts[1], sn[1], sv[1], dom, WH2, WHx, nl);
+        /* prettier-ignore */
+        this.createPart('mjx-ext', parts[1], sn[1], sv[1], dom, WH2, WHx, nl, WHm / 2, WHe);
       }
       this.createPart('mjx-end', parts[2], sn[2], sv[2], dom);
     }
@@ -359,6 +364,8 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
      * @param {number} W       The extension width
      * @param {number} Wx      The width of the extender character
      * @param {string} nl      Character to use between extenders
+     * @param {number} Wb      The beginning width
+     * @param {number} We      The ending width
      */
     protected createPart(
       part: string,
@@ -368,7 +375,9 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       dom: N[],
       W: number = 0,
       Wx: number = 0,
-      nl: string = ''
+      nl: string = '',
+      Wb: number = 0,
+      We: number = 0
     ) {
       if (n) {
         const options = data[3];
@@ -380,12 +389,27 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         let nodes = [] as (N | T)[];
         if (part === 'mjx-ext' && (Wx || options.dx)) {
           //
+          // If the top and bottom must overlap, adjust the border sizes and remove the clipping
+          //
+          if (W < 0 && nl) {
+            dom.push(
+              this.html(part, {
+                ...(font ? { class: font } : {}),
+                style: {
+                  'border-width': `${this.em(Wb + W / 2)} 0 ${this.em(We + W / 2)}`,
+                  'clip-path': 'none',
+                },
+              })
+            );
+            return;
+          }
+          //
           // Some combining characters are listed as width 0,
           //   so get "real" width from dx and take off some
           //   for the right bearing.
           //
           if (!Wx) {
-            Wx = Math.max(0.06, 2 * options.dx - 0.06);
+            Wx = Math.max(HFUZZ, 2 * options.dx - HFUZZ);
           }
           const n = Math.min(Math.ceil(W / Wx) + 1, 500);
           if (options.cmb) {

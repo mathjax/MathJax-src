@@ -2,7 +2,7 @@
 
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -74,9 +74,9 @@ async function readJSON(dir) {
   return new Promise((ok, fail) => {
     const buffer = [];
     const child = spawn(
-      'npx',
+      'node',
       [
-        'webpack',
+        require.resolve(path.join('webpack', 'bin', 'webpack.js')),
         '--env', `dir=${path.relative(packDir, path.resolve(dir))}`,
         '--env', `bundle=${bundle}`,
         '--json',
@@ -84,7 +84,7 @@ async function readJSON(dir) {
       ],
       {
         cwd: packDir,
-        shell: true,
+        shell: process.platform === 'Win32',
       }
     );
     child.stdout.on('data', (data) => buffer.push(String(data)));

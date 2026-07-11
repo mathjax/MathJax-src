@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -141,7 +141,11 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * @override
    */
   get forceInlineBreaks() {
-    return true; // We need to break up the output into several separate SVGs
+    //
+    // When inlinebreaks are enabled, we need to break up the output
+    // into several separate SVGs.
+    //
+    return this.options.linebreaks.inline;
   }
 
   /**

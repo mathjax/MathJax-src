@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
             height: '+' + pad,
             depth: '+' + pad,
             lspace: pad,
-            width: '+' + 2 * parseInt(match[1], 10) + match[3],
+            width: '+' + 2 * parseFloat(match[1]) + match[3],
           };
         }
       } else if (part.match(/^([a-z0-9]+|#[0-9a-f]{6}|#[0-9a-f]{3})$/i)) {

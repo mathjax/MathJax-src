@@ -1,0 +1,709 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Textcomp textacutedbl 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textacutedbl" display="block">
+  <mtext data-latex="\\textacutedbl">&#x2DD;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textasciiacute 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textasciiacute" display="block">
+  <mtext data-latex="\\textasciiacute">&#xB4;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textasciibreve 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textasciibreve" display="block">
+  <mtext data-latex="\\textasciibreve">&#x2D8;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textasciicaron 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textasciicaron" display="block">
+  <mtext data-latex="\\textasciicaron">&#x2C7;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textasciicircum 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textasciicircum" display="block">
+  <mtext data-latex="\\textasciicircum">^</mtext>
+</math>"
+`;
+
+exports[`Textcomp textasciidieresis 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textasciidieresis" display="block">
+  <mtext data-latex="\\textasciidieresis">&#xA8;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textasciimacron 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textasciimacron" display="block">
+  <mtext data-latex="\\textasciimacron">&#xAF;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textasciitilde 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textasciitilde" display="block">
+  <mtext data-latex="\\textasciitilde">~</mtext>
+</math>"
+`;
+
+exports[`Textcomp textasteriskcentered 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textasteriskcentered" display="block">
+  <mtext data-latex="\\textasteriskcentered">*</mtext>
+</math>"
+`;
+
+exports[`Textcomp textbackslash 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textbackslash" display="block">
+  <mtext data-latex="\\textbackslash">\\</mtext>
+</math>"
+`;
+
+exports[`Textcomp textbaht 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textbaht" display="block">
+  <mtext data-latex="\\textbaht">&#xE3F;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textbar 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textbar" display="block">
+  <mtext data-latex="\\textbar">|</mtext>
+</math>"
+`;
+
+exports[`Textcomp textbardbl 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textbardbl" display="block">
+  <mtext data-latex="\\textbardbl">&#x2016;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textbigcircle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textbigcircle" display="block">
+  <mtext data-latex="\\textbigcircle">&#x25EF;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textblank 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textblank" display="block">
+  <mtext data-latex="\\textblank">&#x2422;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textborn 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textborn" display="block">
+  <mtext data-latex="\\textborn">*</mtext>
+</math>"
+`;
+
+exports[`Textcomp textbraceleft 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textbraceleft" display="block">
+  <mtext data-latex="\\textbraceleft">{</mtext>
+</math>"
+`;
+
+exports[`Textcomp textbraceright 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textbraceright" display="block">
+  <mtext data-latex="\\textbraceright">}</mtext>
+</math>"
+`;
+
+exports[`Textcomp textbrokenbar 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textbrokenbar" display="block">
+  <mtext data-latex="\\textbrokenbar">&#xA6;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textbullet 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textbullet" display="block">
+  <mtext data-latex="\\textbullet">&#x2022;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textcelsius 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcelsius" display="block">
+  <mtext data-latex="\\textcelsius">&#x2103;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textcent 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcent" display="block">
+  <mtext data-latex="\\textcent">&#xA2;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textcircledP 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcircledP" display="block">
+  <mtext data-latex="\\textcircledP">&#x2117;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textcolonmonetary 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcolonmonetary" display="block">
+  <mtext data-latex="\\textcolonmonetary">&#x20A1;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textcompwordmark 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcompwordmark" display="block">
+  <mtext data-latex="\\textcompwordmark">&#x200C;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textcopyleft 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcopyleft" display="block">
+  <mtext data-latex="\\textcopyleft">&#x1F12F;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textcopyright 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcopyright" display="block">
+  <mtext data-latex="\\textcopyright">&#xA9;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textcurrency 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcurrency" display="block">
+  <mtext data-latex="\\textcurrency">&#xA4;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textdagger 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textdagger" display="block">
+  <mtext data-latex="\\textdagger">&#x2020;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textdaggerdbl 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textdaggerdbl" display="block">
+  <mtext data-latex="\\textdaggerdbl">&#x2021;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textdegree 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textdegree" display="block">
+  <mtext data-latex="\\textdegree">&#xB0;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textdied 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textdied" display="block">
+  <mtext data-latex="\\textdied">&#x2020;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textdiscount 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textdiscount" display="block">
+  <mtext data-latex="\\textdiscount">&#x2052;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textdiv 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textdiv" display="block">
+  <mtext data-latex="\\textdiv">&#xF7;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textdivorced 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textdivorced" display="block">
+  <mtext data-latex="\\textdivorced">&#x26AE;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textdollar 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textdollar" display="block">
+  <mtext data-latex="\\textdollar">$</mtext>
+</math>"
+`;
+
+exports[`Textcomp textdong 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textdong" display="block">
+  <mtext data-latex="\\textdong">&#x20AB;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textdownarrow 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textdownarrow" display="block">
+  <mtext data-latex="\\textdownarrow">&#x2193;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textellipsis 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textellipsis" display="block">
+  <mtext data-latex="\\textellipsis">&#x2026;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textemdash 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textemdash" display="block">
+  <mtext data-latex="\\textemdash">&#x2014;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textendash 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textendash" display="block">
+  <mtext data-latex="\\textendash">&#x2013;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textestimated 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textestimated" display="block">
+  <mtext data-latex="\\textestimated">&#x212E;</mtext>
+</math>"
+`;
+
+exports[`Textcomp texteuro 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\texteuro" display="block">
+  <mtext data-latex="\\texteuro">&#x20AC;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textexclamdown 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textexclamdown" display="block">
+  <mtext data-latex="\\textexclamdown">&#xA1;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textflorin 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textflorin" display="block">
+  <mtext data-latex="\\textflorin">&#x192;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textfractionsolidus 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textfractionsolidus" display="block">
+  <mtext data-latex="\\textfractionsolidus">&#x2044;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textgravedbl 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textgravedbl" display="block">
+  <mtext data-latex="\\textgravedbl">&#x2F5;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textgreater 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textgreater" display="block">
+  <mtext data-latex="\\textgreater">&gt;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textguarani 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textguarani" display="block">
+  <mtext data-latex="\\textguarani">&#x20B2;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textinterrobang 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textinterrobang" display="block">
+  <mtext data-latex="\\textinterrobang">&#x203D;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textinterrobangdown 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textinterrobangdown" display="block">
+  <mtext data-latex="\\textinterrobangdown">&#x2E18;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textlangle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textlangle" display="block">
+  <mtext data-latex="\\textlangle">&#x2329;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textlbrackdbl 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textlbrackdbl" display="block">
+  <mtext data-latex="\\textlbrackdbl">&#x27E6;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textleftarrow 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textleftarrow" display="block">
+  <mtext data-latex="\\textleftarrow">&#x2190;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textless 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textless" display="block">
+  <mtext data-latex="\\textless">&lt;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textlira 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textlira" display="block">
+  <mtext data-latex="\\textlira">&#x20A4;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textlnot 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textlnot" display="block">
+  <mtext data-latex="\\textlnot">&#xAC;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textlquill 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textlquill" display="block">
+  <mtext data-latex="\\textlquill">&#x2045;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textmarried 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textmarried" display="block">
+  <mtext data-latex="\\textmarried">&#x26AD;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textmho 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textmho" display="block">
+  <mtext data-latex="\\textmho">&#x2127;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textminus 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textminus" display="block">
+  <mtext data-latex="\\textminus">&#x2212;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textmu 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textmu" display="block">
+  <mtext data-latex="\\textmu">&#xB5;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textmusicalnote 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textmusicalnote" display="block">
+  <mtext data-latex="\\textmusicalnote">&#x266A;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textnaira 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textnaira" display="block">
+  <mtext data-latex="\\textnaira">&#x20A6;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textnumero 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textnumero" display="block">
+  <mtext data-latex="\\textnumero">&#x2116;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textohm 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textohm" display="block">
+  <mtext data-latex="\\textohm">&#x2126;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textonehalf 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textonehalf" display="block">
+  <mtext data-latex="\\textonehalf">&#xBD;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textonequarter 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textonequarter" display="block">
+  <mtext data-latex="\\textonequarter">&#xBC;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textonesuperior 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textonesuperior" display="block">
+  <mtext data-latex="\\textonesuperior">&#xB9;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textopenbullet 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textopenbullet" display="block">
+  <mtext data-latex="\\textopenbullet">&#x25E6;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textordfeminine 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textordfeminine" display="block">
+  <mtext data-latex="\\textordfeminine">&#xAA;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textordmasculine 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textordmasculine" display="block">
+  <mtext data-latex="\\textordmasculine">&#xBA;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textparagraph 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textparagraph" display="block">
+  <mtext data-latex="\\textparagraph">&#xB6;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textperiodcentered 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textperiodcentered" display="block">
+  <mtext data-latex="\\textperiodcentered">&#xB7;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textpertenthousand 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textpertenthousand" display="block">
+  <mtext data-latex="\\textpertenthousand">&#x2031;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textperthousand 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textperthousand" display="block">
+  <mtext data-latex="\\textperthousand">&#x2030;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textpeso 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textpeso" display="block">
+  <mtext data-latex="\\textpeso">&#x20B1;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textpm 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textpm" display="block">
+  <mtext data-latex="\\textpm">&#xB1;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textquestiondown 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textquestiondown" display="block">
+  <mtext data-latex="\\textquestiondown">&#xBF;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textquotedblleft 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textquotedblleft" display="block">
+  <mtext data-latex="\\textquotedblleft">&#x201C;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textquotedblright 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textquotedblright" display="block">
+  <mtext data-latex="\\textquotedblright">&#x201D;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textquoteleft 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textquoteleft" display="block">
+  <mtext data-latex="\\textquoteleft">&#x2018;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textquoteright 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textquoteright" display="block">
+  <mtext data-latex="\\textquoteright">&#x2019;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textrangle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textrangle" display="block">
+  <mtext data-latex="\\textrangle">&#x232A;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textrbrackdbl 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textrbrackdbl" display="block">
+  <mtext data-latex="\\textrbrackdbl">&#x27E7;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textrecipe 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textrecipe" display="block">
+  <mtext data-latex="\\textrecipe">&#x211E;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textreferencemark 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textreferencemark" display="block">
+  <mtext data-latex="\\textreferencemark">&#x203B;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textregistered 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textregistered" display="block">
+  <mtext data-latex="\\textregistered">&#xAE;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textrightarrow 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textrightarrow" display="block">
+  <mtext data-latex="\\textrightarrow">&#x2192;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textrquill 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textrquill" display="block">
+  <mtext data-latex="\\textrquill">&#x2046;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textsection 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textsection" display="block">
+  <mtext data-latex="\\textsection">&#xA7;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textservicemark 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textservicemark" display="block">
+  <mtext data-latex="\\textservicemark">&#x2120;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textsterling 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textsterling" display="block">
+  <mtext data-latex="\\textsterling">&#xA3;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textsurd 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textsurd" display="block">
+  <mtext data-latex="\\textsurd">&#x221A;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textthreequarters 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textthreequarters" display="block">
+  <mtext data-latex="\\textthreequarters">&#xBE;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textthreesuperior 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textthreesuperior" display="block">
+  <mtext data-latex="\\textthreesuperior">&#xB3;</mtext>
+</math>"
+`;
+
+exports[`Textcomp texttildelow 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\texttildelow" display="block">
+  <mtext data-latex="\\texttildelow">&#x2F7;</mtext>
+</math>"
+`;
+
+exports[`Textcomp texttimes 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\texttimes" display="block">
+  <mtext data-latex="\\texttimes">&#xD7;</mtext>
+</math>"
+`;
+
+exports[`Textcomp texttrademark 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\texttrademark" display="block">
+  <mtext data-latex="\\texttrademark">&#x2122;</mtext>
+</math>"
+`;
+
+exports[`Textcomp texttwosuperior 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\texttwosuperior" display="block">
+  <mtext data-latex="\\texttwosuperior">&#xB2;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textunderscore 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textunderscore" display="block">
+  <mtext data-latex="\\textunderscore">_</mtext>
+</math>"
+`;
+
+exports[`Textcomp textuparrow 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textuparrow" display="block">
+  <mtext data-latex="\\textuparrow">&#x2191;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textvisiblespace 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textvisiblespace" display="block">
+  <mtext data-latex="\\textvisiblespace">&#x2423;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textwon 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textwon" display="block">
+  <mtext data-latex="\\textwon">&#x20A9;</mtext>
+</math>"
+`;
+
+exports[`Textcomp textyen 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textyen" display="block">
+  <mtext data-latex="\\textyen">&#xA5;</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros textasciicircum 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\textasciicircum}" display="block">
+  <mtext data-latex="\\text{\\textasciicircum}">^</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros textcentoldstyle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\textcentoldstyle}" display="block">
+  <mtext data-mjx-variant="-tex-oldstyle" mathvariant="normal" data-latex="\\text{\\textcentoldstyle}">&#xA2;</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros textdollaroldstyle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\textdollaroldstyle}" display="block">
+  <mtext data-mjx-variant="-tex-oldstyle" mathvariant="normal" data-latex="\\text{\\textdollaroldstyle}">$</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros texteightoldstyle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\texteightoldstyle}" display="block">
+  <mtext data-mjx-variant="-tex-oldstyle" mathvariant="normal" data-latex="\\text{\\texteightoldstyle}">8</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros textfiveoldstyle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\textfiveoldstyle}" display="block">
+  <mtext data-mjx-variant="-tex-oldstyle" mathvariant="normal" data-latex="\\text{\\textfiveoldstyle}">5</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros textfouroldstyle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\textfouroldstyle}" display="block">
+  <mtext data-mjx-variant="-tex-oldstyle" mathvariant="normal" data-latex="\\text{\\textfouroldstyle}">4</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros textnineoldstyle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\textnineoldstyle}" display="block">
+  <mtext data-mjx-variant="-tex-oldstyle" mathvariant="normal" data-latex="\\text{\\textnineoldstyle}">9</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros textoneoldstyle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\textoneoldstyle}" display="block">
+  <mtext data-mjx-variant="-tex-oldstyle" mathvariant="normal" data-latex="\\text{\\textoneoldstyle}">1</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros textsevenoldstyle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\textsevenoldstyle}" display="block">
+  <mtext data-mjx-variant="-tex-oldstyle" mathvariant="normal" data-latex="\\text{\\textsevenoldstyle}">7</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros textsixoldstyle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\textsixoldstyle}" display="block">
+  <mtext data-mjx-variant="-tex-oldstyle" mathvariant="normal" data-latex="\\text{\\textsixoldstyle}">6</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros textthreeoldstyle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\textthreeoldstyle}" display="block">
+  <mtext data-mjx-variant="-tex-oldstyle" mathvariant="normal" data-latex="\\text{\\textthreeoldstyle}">3</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros texttwooldstyle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\texttwooldstyle}" display="block">
+  <mtext data-mjx-variant="-tex-oldstyle" mathvariant="normal" data-latex="\\text{\\texttwooldstyle}">2</mtext>
+</math>"
+`;
+
+exports[`Textcompwith Textmacros textzerooldstyle 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\textzerooldstyle}" display="block">
+  <mtext data-mjx-variant="-tex-oldstyle" mathvariant="normal" data-latex="\\text{\\textzerooldstyle}">0</mtext>
+</math>"
+`;

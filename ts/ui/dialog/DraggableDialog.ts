@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2025 The MathJax Consortium
+ *  Copyright (c) 2025-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -207,8 +207,11 @@ export class DraggableDialog {
       display: 'flex',
       'flex-direction': 'column',
       'align-items': 'center',
-      position: 'relative',
+      position: 'fixed',
       top: '-4%',
+    },
+    '.mjx-dialog *': {
+      'box-sizing': 'content-box',
     },
     '.mjx-dialog.mjx-moving': {
       cursor: 'grabbing',
@@ -420,10 +423,10 @@ export class DraggableDialog {
         border: '2px inset #7C7C7C',
         'background-color': '#222025',
       },
-      'a[href]': {
+      '.mjx-dialog a[href]': {
         color: '#86A7F5',
       },
-      'a[href]:visited': {
+      '.mjx-dialog a[href]:visited': {
         color: '#DD98E2',
       },
       'mjx-dialog kbd': {

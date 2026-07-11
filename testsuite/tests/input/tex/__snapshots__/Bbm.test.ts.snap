@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Bbm mathbbm 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbbm{Aa}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathbbm{Aa}">
+    <mi data-mjx-variant="-bbm-normal" data-latex="Aa">Aa</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Bbm mathbbm 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbbm{Aa}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathbbm{Aa}">
+    <mi data-mjx-variant="-bbm-bold" data-latex="Aa">Aa</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Bbm mathbbm mathversion 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathversion{bold}\\mathbbm{Aa}\\mathversion{normal}\\mathbbm{Aa}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathversion{normal}">
+    <mi data-mjx-variant="-bbm-bold" data-latex="Aa">Aa</mi>
+  </mrow>
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathbbm{Aa}">
+    <mi data-mjx-variant="-bbm-normal" data-latex="Aa">Aa</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Bbm mathbbmss 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbbmss{Aa}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathbbmss{Aa}">
+    <mi data-mjx-variant="-bbm-sans-serif" data-latex="Aa">Aa</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Bbm mathbbmss 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbbmss{Aa}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathbbmss{Aa}">
+    <mi data-mjx-variant="-bbm-sans-serif-bold" data-latex="Aa">Aa</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Bbm mathbbmss mathversion 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathversion{bold}\\mathbbmss{Aa}\\mathversion{normal}\\mathbbmss{Aa}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathversion{normal}">
+    <mi data-mjx-variant="-bbm-sans-serif-bold" data-latex="Aa">Aa</mi>
+  </mrow>
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathbbmss{Aa}">
+    <mi data-mjx-variant="-bbm-sans-serif" data-latex="Aa">Aa</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Bbm mathbbmtt 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbbmtt{Aa}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathbbmtt{Aa}">
+    <mi data-mjx-variant="-bbm-monospace" data-latex="Aa">Aa</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Bbm mathbbmtt 2`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbbmtt{Aa}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathbbmtt{Aa}">
+    <mi data-mjx-variant="-bbm-monospace" data-latex="Aa">Aa</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Bbm mathbbmtt mathversion 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathversion{bold}\\mathbbmtt{Aa}\\mathversion{normal}\\mathbbmtt{Aa}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathversion{normal}">
+    <mi data-mjx-variant="-bbm-monospace" data-latex="Aa">Aa</mi>
+  </mrow>
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathbbmtt{Aa}">
+    <mi data-mjx-variant="-bbm-monospace" data-latex="Aa">Aa</mi>
+  </mrow>
+</math>"
+`;

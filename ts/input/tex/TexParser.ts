@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -151,7 +151,8 @@ export default class TexParser {
     //
     // Back up one to pick up the parsed character (this.i is past it at this point).
     //
-    this.saveI = this.i - (kind === 'character' && input[1] !== '&' ? 1 : 0);
+    this.saveI =
+      this.i - (kind === 'character' && input[1] !== '&' ? input[1].length : 0);
     const result = this.configuration.handlers.get(kind).parse(input);
     //
     // The macro gets processed by the \\ character later
@@ -248,11 +249,11 @@ export default class TexParser {
    * @returns {MmlNode} The internal Mathml structure.
    */
   public mml(): MmlNode {
+    this.configuration.popParser();
     if (!this.stack.Top().isKind('mml')) {
       return null;
     }
     const node = this.stack.Top().First;
-    this.configuration.popParser();
     const latex = this.trimTex(this.string);
     if (latex) {
       node.attributes.set(TexConstant.Attr.LATEX, latex);

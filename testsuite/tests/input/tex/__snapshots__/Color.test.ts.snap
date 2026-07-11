@@ -1,0 +1,283 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Color RGB Color extent 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\color[RGB]{255,0,0} x+y" display="block">
+  <mstyle mathcolor="#ff0000" data-latex="\\color[RGB]{255,0,0} x+y">
+    <mi data-latex="x">x</mi>
+    <mo data-latex="+">+</mo>
+    <mi data-latex="y">y</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Color RGB Color limited 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="{\\color[RGB]{255,0,0} x}+y" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="{}">
+    <mstyle mathcolor="#ff0000">
+      <mi data-latex="x">x</mi>
+    </mstyle>
+  </mrow>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="y">y</mi>
+</math>"
+`;
+
+exports[`Color RGB Colorbox 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\colorbox[RGB]{255,0,0}{a b}" display="block">
+  <mpadded mathbackground="#ff0000" width="+10px" height="+5px" depth="+5px" lspace="5px" data-latex="\\colorbox[RGB]{255,0,0}{a b}">
+    <mtext>a b</mtext>
+  </mpadded>
+</math>"
+`;
+
+exports[`Color RGB Definecolor 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\definecolor{test}{RGB}{8,128,200}\\color{test} a" display="block">
+  <mstyle mathcolor="#0880c8" data-latex="\\definecolor{test}{RGB}{8,128,200}\\color{test} a">
+    <mi data-latex="a">a</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Color RGB Fcolorbox 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fcolorbox[RGB]{255,0,0}[RGB]{255,255,0}{a b}" display="block">
+  <mpadded mathbackground="#ffff00" style="border: 2px solid #ff0000" width="+10px" height="+5px" depth="+5px" lspace="5px" data-latex="\\fcolorbox[RGB]{255,0,0}[RGB]{255,255,0}{a b}">
+    <mtext>a b</mtext>
+  </mpadded>
+</math>"
+`;
+
+exports[`Color RGB Textcolor 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcolor[RGB]{255,0,0}{a b} + c" display="block">
+  <mstyle mathcolor="#ff0000" data-latex="\\textcolor[RGB]{255,0,0}{a b}">
+    <mi data-latex="a">a</mi>
+    <mi data-latex="b">b</mi>
+  </mstyle>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="c">c</mi>
+</math>"
+`;
+
+exports[`Color RGB Textcolor nested 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcolor[RGB]{255,0,0}{\\textcolor[RGB]{0,0,255}{a} b}" display="block">
+  <mstyle mathcolor="#ff0000" data-latex="\\textcolor[RGB]{255,0,0}{\\textcolor[RGB]{0,0,255}{a} b}">
+    <mstyle mathcolor="#0000ff" data-latex="\\textcolor[RGB]{0,0,255}{a}">
+      <mi data-latex="a">a</mi>
+    </mstyle>
+    <mi data-latex="b">b</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Color gray Color extent 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\color[gray]{.5} x+y" display="block">
+  <mstyle mathcolor="#7f7f7f" data-latex="\\color[gray]{.5} x+y">
+    <mi data-latex="x">x</mi>
+    <mo data-latex="+">+</mo>
+    <mi data-latex="y">y</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Color gray Color limited 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="{\\color[gray]{.5} x}+y" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="{}">
+    <mstyle mathcolor="#7f7f7f">
+      <mi data-latex="x">x</mi>
+    </mstyle>
+  </mrow>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="y">y</mi>
+</math>"
+`;
+
+exports[`Color gray Colorbox 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\colorbox[gray]{.5}{a b}" display="block">
+  <mpadded mathbackground="#7f7f7f" width="+10px" height="+5px" depth="+5px" lspace="5px" data-latex="\\colorbox[gray]{.5}{a b}">
+    <mtext>a b</mtext>
+  </mpadded>
+</math>"
+`;
+
+exports[`Color gray Definecolor 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\definecolor{test}{gray}{.02}\\color{test} a" display="block">
+  <mstyle mathcolor="#050505" data-latex="\\definecolor{test}{gray}{.02}\\color{test} a">
+    <mi data-latex="a">a</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Color gray Fcolorbox 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fcolorbox[gray]{.5}[gray]{.25}{a b}" display="block">
+  <mpadded mathbackground="#3f3f3f" style="border: 2px solid #7f7f7f" width="+10px" height="+5px" depth="+5px" lspace="5px" data-latex="\\fcolorbox[gray]{.5}[gray]{.25}{a b}">
+    <mtext>a b</mtext>
+  </mpadded>
+</math>"
+`;
+
+exports[`Color gray Textcolor 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcolor[gray]{.5}{a b} + c" display="block">
+  <mstyle mathcolor="#7f7f7f" data-latex="\\textcolor[gray]{.5}{a b}">
+    <mi data-latex="a">a</mi>
+    <mi data-latex="b">b</mi>
+  </mstyle>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="c">c</mi>
+</math>"
+`;
+
+exports[`Color gray Textcolor nested 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcolor[gray]{.5}{\\textcolor[gray]{.75}{a} b}" display="block">
+  <mstyle mathcolor="#7f7f7f" data-latex="\\textcolor[gray]{.5}{\\textcolor[gray]{.75}{a} b}">
+    <mstyle mathcolor="#bfbfbf" data-latex="\\textcolor[gray]{.75}{a}">
+      <mi data-latex="a">a</mi>
+    </mstyle>
+    <mi data-latex="b">b</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Color named Color extent 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\color{red} x+y" display="block">
+  <mstyle mathcolor="red" data-latex="\\color{red} x+y">
+    <mi data-latex="x">x</mi>
+    <mo data-latex="+">+</mo>
+    <mi data-latex="y">y</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Color named Color known 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="{\\color{Peach} x}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="{\\color{Peach} x}">
+    <mstyle mathcolor="#F7965A">
+      <mi data-latex="x">x</mi>
+    </mstyle>
+  </mrow>
+</math>"
+`;
+
+exports[`Color named Color limited 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="{\\color{red} x}+y" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="{}">
+    <mstyle mathcolor="red">
+      <mi data-latex="x">x</mi>
+    </mstyle>
+  </mrow>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="y">y</mi>
+</math>"
+`;
+
+exports[`Color named Colorbox 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\colorbox{red}{a b}" display="block">
+  <mpadded mathbackground="red" width="+10px" height="+5px" depth="+5px" lspace="5px" data-latex="\\colorbox{red}{a b}">
+    <mtext>a b</mtext>
+  </mpadded>
+</math>"
+`;
+
+exports[`Color named Definecolor 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\definecolor{test}{named}{#48C}\\color{test} a" display="block">
+  <mstyle mathcolor="#48C" data-latex="\\definecolor{test}{named}{#48C}\\color{test} a">
+    <mi data-latex="a">a</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Color named Fcolorbox 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fcolorbox{red}{yellow}{a b}" display="block">
+  <mpadded mathbackground="yellow" style="border: 2px solid red" width="+10px" height="+5px" depth="+5px" lspace="5px" data-latex="\\fcolorbox{red}{yellow}{a b}">
+    <mtext>a b</mtext>
+  </mpadded>
+</math>"
+`;
+
+exports[`Color named Textcolor 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcolor{red}{a b} + c" display="block">
+  <mstyle mathcolor="red" data-latex="\\textcolor{red}{a b}">
+    <mi data-latex="a">a</mi>
+    <mi data-latex="b">b</mi>
+  </mstyle>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="c">c</mi>
+</math>"
+`;
+
+exports[`Color named Textcolor nested 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcolor{red}{\\textcolor{blue}{a} b}" display="block">
+  <mstyle mathcolor="red" data-latex="\\textcolor{red}{\\textcolor{blue}{a} b}">
+    <mstyle mathcolor="blue" data-latex="\\textcolor{blue}{a}">
+      <mi data-latex="a">a</mi>
+    </mstyle>
+    <mi data-latex="b">b</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Color rgb Color extent 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\color[rgb]{1,0,0} x+y" display="block">
+  <mstyle mathcolor="#ff0000" data-latex="\\color[rgb]{1,0,0} x+y">
+    <mi data-latex="x">x</mi>
+    <mo data-latex="+">+</mo>
+    <mi data-latex="y">y</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Color rgb Color limited 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="{\\color[rgb]{1,0,0} x}+y" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="{}">
+    <mstyle mathcolor="#ff0000">
+      <mi data-latex="x">x</mi>
+    </mstyle>
+  </mrow>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="y">y</mi>
+</math>"
+`;
+
+exports[`Color rgb Colorbox 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\colorbox[rgb]{1,0,0}{a b}" display="block">
+  <mpadded mathbackground="#ff0000" width="+10px" height="+5px" depth="+5px" lspace="5px" data-latex="\\colorbox[rgb]{1,0,0}{a b}">
+    <mtext>a b</mtext>
+  </mpadded>
+</math>"
+`;
+
+exports[`Color rgb Definecolor 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\definecolor{test}{rgb}{.25,.5,.75}\\color{test} a" display="block">
+  <mstyle mathcolor="#3f7fbf" data-latex="\\definecolor{test}{rgb}{.25,.5,.75}\\color{test} a">
+    <mi data-latex="a">a</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Color rgb Fcolorbox 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fcolorbox[rgb]{1,0,0}[rgb]{1,1,0}{a b}" display="block">
+  <mpadded mathbackground="#ffff00" style="border: 2px solid #ff0000" width="+10px" height="+5px" depth="+5px" lspace="5px" data-latex="\\fcolorbox[rgb]{1,0,0}[rgb]{1,1,0}{a b}">
+    <mtext>a b</mtext>
+  </mpadded>
+</math>"
+`;
+
+exports[`Color rgb Textcolor 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcolor[rgb]{1,0,0}{a b} + c" display="block">
+  <mstyle mathcolor="#ff0000" data-latex="\\textcolor[rgb]{1,0,0}{a b}">
+    <mi data-latex="a">a</mi>
+    <mi data-latex="b">b</mi>
+  </mstyle>
+  <mo data-latex="+">+</mo>
+  <mi data-latex="c">c</mi>
+</math>"
+`;
+
+exports[`Color rgb Textcolor nested 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textcolor[rgb]{1,0,0}{\\textcolor[rgb]{0,0,1}{a} b}" display="block">
+  <mstyle mathcolor="#ff0000" data-latex="\\textcolor[rgb]{1,0,0}{\\textcolor[rgb]{0,0,1}{a} b}">
+    <mstyle mathcolor="#0000ff" data-latex="\\textcolor[rgb]{0,0,1}{a}">
+      <mi data-latex="a">a</mi>
+    </mstyle>
+    <mi data-latex="b">b</mi>
+  </mstyle>
+</math>"
+`;

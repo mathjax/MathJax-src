@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -645,6 +645,7 @@ export abstract class CommonOutputJax<
     if (!node) return;
     node.removeProperty('forcebreak');
     node.removeProperty('breakable');
+    node.coreMO().removeProperty('forcebreak');
     if (node.getProperty('process-breaks')) {
       node.removeProperty('process-breaks');
       for (const child of node.childNodes) {

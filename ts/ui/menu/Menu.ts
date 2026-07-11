@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2025 The MathJax Consortium
+ *  Copyright (c) 2019-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -84,7 +84,6 @@ export interface MenuSettings {
   autocollapse: boolean;
   collapsible: boolean;
   enrich: boolean;
-  inTabOrder: boolean;
   assistiveMml: boolean;
   // A11y settings
   backgroundColor: string;
@@ -99,6 +98,7 @@ export interface MenuSettings {
   infoPrefix: boolean;
   infoRole: boolean;
   infoType: boolean;
+  inTabOrder: boolean;
   locale: string;
   magnification: string;
   magnify: string;
@@ -153,7 +153,6 @@ export class Menu {
       autocollapse: false,
       collapsible: false,
       enrich: true,
-      inTabOrder: true,
       assistiveMml: false,
       speech: true,
       braille: true,
@@ -162,6 +161,7 @@ export class Menu {
       brailleCombine: false,
       speechRules: 'clearspeak-default',
       roleDescription: 'math',
+      inTabOrder: true,
       tabSelects: 'all',
       help: true,
     },
@@ -249,6 +249,8 @@ export class Menu {
    * The MathDocument in which we are working
    */
   protected document: MenuMathDocument;
+
+  protected initialized: boolean = false;
 
   /**
    * Instances of the various output jax that we can switch to
@@ -348,7 +350,11 @@ export class Menu {
       extraNodes: [
         this.document.adaptor.node(
           'a',
-          { href: 'https://www.mathjax.org', 'data-drag': 'false' },
+          {
+            href: 'https://www.mathjax.org',
+            'data-drag': 'false',
+            target: '_blank',
+          },
           [this.document.adaptor.text('https://www.mathjax.org')]
         ),
       ],
@@ -562,6 +568,7 @@ export class Menu {
     this.mergeUserSettings();
     this.initMenu();
     this.applySettings();
+    this.initialized = true;
   }
 
   /**
@@ -669,7 +676,7 @@ export class Menu {
         this.variable<boolean>('enrich', (enrich) =>
           this.setEnrichment(enrich)
         ),
-        this.variable<boolean>('inTabOrder', (tab) => this.setTabOrder(tab)),
+        this.a11yVar<boolean>('inTabOrder', (tab) => this.setTabOrder(tab)),
         this.a11yVar<string>('tabSelects'),
         this.variable<boolean>('assistiveMml', (mml) =>
           this.setAssistiveMml(mml)
@@ -1015,10 +1022,11 @@ export class Menu {
    */
   protected mergeUserSettings() {
     try {
-      const settings = localStorage.getItem(Menu.MENU_STORAGE);
-      if (!settings) return;
-      Object.assign(this.settings, JSON.parse(settings));
-      this.setA11y(this.settings);
+      const json = localStorage.getItem(Menu.MENU_STORAGE);
+      if (!json) return;
+      const settings = JSON.parse(json);
+      Object.assign(this.settings, settings);
+      this.setA11y(settings);
     } catch (err) {
       console.log('MathJax localStorage error: ' + err.message);
     }
@@ -1087,12 +1095,7 @@ export class Menu {
       this.settings.renderer.replace(/[^a-zA-Z0-9]/g, '') || 'CHTML';
     (Menu._loadingPromise || Promise.resolve()).then(() => {
       const settings = this.settings;
-      const options = this.document.outputJax.options;
-      options.scale = parseFloat(settings.scale);
-      options.displayOverflow = settings.overflow.toLowerCase();
-      if (options.linebreaks) {
-        options.linebreaks.inline = settings.breakInline;
-      }
+      this.applyRendererOptions(this.document.outputJax);
       if (!settings.speechRules) {
         const sre = this.document.options.sre;
         settings.speechRules = `${sre.domain || 'clearspeak'}-${sre.style || 'default'}`;
@@ -1108,7 +1111,7 @@ export class Menu {
    */
   protected setOverflow(overflow: string) {
     this.document.outputJax.options.displayOverflow = overflow.toLowerCase();
-    if (!Menu.loading) {
+    if (!Menu.loading && this.initialized) {
       this.document.rerenderPromise();
     }
   }
@@ -1118,7 +1121,7 @@ export class Menu {
    */
   protected setInlineBreaks(breaks: boolean) {
     this.document.outputJax.options.linebreaks.inline = breaks;
-    if (!Menu.loading) {
+    if (!Menu.loading && this.initialized) {
       this.document.rerenderPromise();
     }
   }
@@ -1128,7 +1131,7 @@ export class Menu {
    */
   protected setScale(scale: string) {
     this.document.outputJax.options.scale = parseFloat(scale);
-    if (!Menu.loading) {
+    if (!Menu.loading && this.initialized) {
       this.document.rerenderPromise();
     }
   }
@@ -1143,6 +1146,7 @@ export class Menu {
    */
   protected setRenderer(jax: string, rerender: boolean = true): Promise<void> {
     if (Object.hasOwn(this.jax, jax) && this.jax[jax]) {
+      this.applyRendererOptions(this.jax[jax]);
       return this.setOutputJax(jax, rerender);
     }
     const name = jax.toLowerCase();
@@ -1153,7 +1157,7 @@ export class Menu {
           return fail(new Error(`Component ${name} not loaded`));
         }
         startup.useOutput(name, true);
-        startup.output = startup.getOutputJax();
+        startup.output = this.applyRendererOptions(startup.getOutputJax());
         startup.output.setAdaptor(this.document.adaptor);
         startup.output.initialize();
         this.jax[jax] = startup.output;
@@ -1162,6 +1166,23 @@ export class Menu {
           .catch((err) => fail(err));
       });
     });
+  }
+
+  /**
+   * @param {OutputJax<HTMLElement, Text, Document>} output   The output jax to adjust.
+   * @returns {OutputJax<HTMLElement, Text, Document>}        The adjusted output jax.
+   */
+  protected applyRendererOptions(
+    output: OutputJax<HTMLElement, Text, Document>
+  ): OutputJax<HTMLElement, Text, Document> {
+    const settings = this.settings;
+    const options = output.options;
+    options.scale = parseFloat(settings.scale);
+    options.displayOverflow = settings.overflow.toLowerCase();
+    if (options.linebreaks) {
+      options.linebreaks.inline = settings.breakInline;
+    }
+    return output;
   }
 
   /**
