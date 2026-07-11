@@ -238,8 +238,10 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
       node = this.options.formatError(this, err);
     }
 
-    // parser returns mstyle node at base. We don't need it, just the children.
-    node = this.parseOptions.create('math', node.childNodes);
+    // parser returns mstyle node at base. MJ didn't previously seem to need it
+    // but now it seems to want it, so use it, and still set setInheritedAttributes
+    // just in case.
+    node = this.parseOptions.create('math', [node]);
     node.attributes.set('data-asciimath', this.asciimath);
     node.setInheritedAttributes({}, this.parseOptions.options.displaystyle, 0, false);
 
