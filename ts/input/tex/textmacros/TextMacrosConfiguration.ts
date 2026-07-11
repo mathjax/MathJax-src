@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2025 The MathJax Consortium
+ *  Copyright (c) 2020-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -160,6 +160,7 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
       //
       const config = data.data.packageData.get('textmacros');
       config.parseOptions.nodeFactory.setMmlFactory(config.jax.mmlFactory);
+      config.parseOptions.clear();
     },
   ],
   [ConfigurationType.OPTIONS]: {

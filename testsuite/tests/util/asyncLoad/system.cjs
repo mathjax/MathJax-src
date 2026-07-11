@@ -6,6 +6,5 @@ const path = require('path');
 System = {
   import(name, root) {
     return import(new URL(name, root).href);
-  }
-}
-
+  },
+};

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2025 The MathJax Consortium
+ *  Copyright (c) 2009-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -432,7 +432,7 @@ export class LeftItem extends BaseItem {
       //
       //  Add the middle delimiter, with empty open and close elements around it for spacing
       //
-      const def = { stretchy: true } as any;
+      const def = { stretchy: true, symmetric: true } as any;
       if (item.getProperty('color')) {
         def.mathcolor = item.getProperty('color');
       }

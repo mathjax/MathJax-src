@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2025 The MathJax Consortium
+ *  Copyright (c) 2018-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -159,7 +159,7 @@ export class Configuration {
   }
 
   /**
-   * Creates an unnamed, ephemeral package configuration. It will not added to
+   * Creates an unnamed, ephemeral package configuration. It is not added to
    * the configuration handler.
    *
    * @param {object} config See `create` method.

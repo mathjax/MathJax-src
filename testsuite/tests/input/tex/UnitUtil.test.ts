@@ -1,8 +1,6 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
 import { UnitUtil } from '#js/input/tex/UnitUtil.js';
 
-/**********************************************************************************/
-
 // These methods will be rewritten into non-ParseUtil ones.
 function convertLength(unit: string, num: number) {
   return UnitUtil.UNIT_CASES.get(unit) * num;
@@ -21,7 +19,6 @@ function convertEm(num: number) {
 }
 
 /**********************************************************************************/
-/**********************************************************************************/
 
 describe('Length conversion', () => {
   it('em', () => expect(convertLength('em', 9)).toBe(9));
@@ -39,7 +36,6 @@ describe('Length conversion', () => {
 });
 
 /**********************************************************************************/
-/**********************************************************************************/
 
 describe('Em conversion', () => {
   it('9', () => expect(convertEm(9)).toBe('9em'));
@@ -54,7 +50,6 @@ describe('Em conversion', () => {
   it('25.51181102', () => expect(convertEm(25.51181102)).toBe('25.512em'));
 });
 
-/**********************************************************************************/
 /**********************************************************************************/
 
 describe('Dimension matching', () => {
@@ -82,10 +77,10 @@ describe('Dimension matching', () => {
   it('10mm', () => expect(matchDimension('10mm')).toEqual(['10', 'mm', 4]));
   it('9mu', () => expect(matchDimension('9mu')).toEqual(['0.5', 'em', 3]));
   it('10mu', () => expect(matchDimension('10mu')).toEqual(['0.556', 'em', 4]));
-  it('rest', () => expect(UnitUtil.matchDimen('9em rest', true)).toEqual(['9', 'em', 4]));
+  it('rest', () =>
+    expect(UnitUtil.matchDimen('9em rest', true)).toEqual(['9', 'em', 4]));
 });
 
-/**********************************************************************************/
 /**********************************************************************************/
 
 describe('Dimension conversion', () => {
@@ -105,7 +100,6 @@ describe('Dimension conversion', () => {
 });
 
 /**********************************************************************************/
-/**********************************************************************************/
 
 // Useful for the IEEE case.
 describe('Adds pi unit', () => {
@@ -116,7 +110,6 @@ describe('Adds pi unit', () => {
   it('9pi', () => expect(convertDimension('9pi')).toBe(0.9));
 });
 
-/**********************************************************************************/
 /**********************************************************************************/
 
 describe('Remove Unit', () => {
@@ -130,13 +123,13 @@ describe('Remove Unit', () => {
 });
 
 /**********************************************************************************/
-/**********************************************************************************/
 
 describe('Trim spaces', () => {
-  it('removes spaces and tabs', () => expect(UnitUtil.trimSpaces(' \t abc \t ')).toBe('abc'));
+  it('removes spaces and tabs', () =>
+    expect(UnitUtil.trimSpaces(' \t abc \t ')).toBe('abc'));
   it('non-text argument', () => expect(UnitUtil.trimSpaces(null)).toBe(null));
-  it('space macro at end', () => expect(UnitUtil.trimSpaces('\\ ')).toBe('\\ '));
+  it('space macro at end', () =>
+    expect(UnitUtil.trimSpaces('\\ ')).toBe('\\ '));
 });
 
-/**********************************************************************************/
 /**********************************************************************************/

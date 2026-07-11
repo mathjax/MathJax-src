@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2025 The MathJax Consortium
+ *  Copyright (c) 2017-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,6 +29,11 @@ import { asyncLoad } from '../../util/AsyncLoad.js';
 import { retryAfter } from '../../util/Retries.js';
 import { DIRECTION } from './Direction.js';
 export { DIRECTION } from './Direction.js';
+
+/*****************************************************************/
+
+export const VFUZZ = 0.07; // overlap for vertical stretchy glyphs
+export const HFUZZ = 0.07; // overlap for horizontal stretchy glyphs
 
 /****************************************************************************/
 
@@ -1325,6 +1330,10 @@ export class FontData<
     const delim = this.delimiters[n];
     if (delim && !('dir' in delim)) {
       this.delimiters[n] = null;
+      if (mathjax.asyncIsSynchronous) {
+        this.loadDynamicFileSync(delim);
+        return this.getDelimiter(n);
+      }
       retryAfter(this.loadDynamicFile(delim));
       return null;
     }
@@ -1373,6 +1382,10 @@ export class FontData<
       const variant = this.variant[name];
       delete variant.chars[n];
       variant.linked.forEach((link) => delete link[n]);
+      if (mathjax.asyncIsSynchronous) {
+        this.loadDynamicFileSync(char);
+        return this.getChar(name, n);
+      }
       retryAfter(this.loadDynamicFile(char));
       return null;
     }

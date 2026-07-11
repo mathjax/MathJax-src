@@ -1,0 +1,4 @@
+packages:
+  - 'testsuite'
+minimumReleaseAgeExclude:
+  - speech-rule-engine@5.0.0-rc.3

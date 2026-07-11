@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Cancel BCancel 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bcancel{x}" display="block">
+  <menclose notation="downdiagonalstrike" data-latex="\\bcancel{x}">
+    <mi data-latex="x">x</mi>
+  </menclose>
+</math>"
+`;
+
+exports[`Cancel Cancel 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\cancel{x}" display="block">
+  <menclose notation="updiagonalstrike" data-latex="\\cancel{x}">
+    <mi data-latex="x">x</mi>
+  </menclose>
+</math>"
+`;
+
+exports[`Cancel Cancel Attr 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\cancel[color=red]{x}" display="block">
+  <menclose color="red" notation="updiagonalstrike" data-latex="\\cancel[color=red]{x}">
+    <mi data-latex="x">x</mi>
+  </menclose>
+</math>"
+`;
+
+exports[`Cancel Cancel Attr Not Allowed 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\cancel[nothing=green]{x}" display="block">
+  <menclose notation="updiagonalstrike" data-latex="\\cancel[nothing=green]{x}">
+    <mi data-latex="x">x</mi>
+  </menclose>
+</math>"
+`;
+
+exports[`Cancel Cancel Attrs 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\cancel[mathcolor=green,mathbackground=yellow]{x}" display="block">
+  <menclose mathcolor="green" mathbackground="yellow" notation="updiagonalstrike" data-latex="\\cancel[mathcolor=green,mathbackground=yellow]{x}">
+    <mi data-latex="x">x</mi>
+  </menclose>
+</math>"
+`;
+
+exports[`Cancel CancelTo 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\cancelto{x}{y}" display="block">
+  <msup data-latex="\\cancelto{x}{y}">
+    <menclose notation="updiagonalstrike updiagonalarrow northeastarrow">
+      <mi data-latex="y">y</mi>
+    </menclose>
+    <mpadded depth="-.1em" height="+.1em" voffset=".1em">
+      <mi data-latex="x">x</mi>
+    </mpadded>
+  </msup>
+</math>"
+`;
+
+exports[`Cancel CancelTo Attrs 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\cancelto[data-padding=5,data-arrowhead=15]{x}{y}" display="block">
+  <msup data-latex="\\cancelto[data-padding=5,data-arrowhead=15]{x}{y}">
+    <menclose data-padding="5" data-arrowhead="15" notation="updiagonalstrike updiagonalarrow northeastarrow">
+      <mi data-latex="y">y</mi>
+    </menclose>
+    <mpadded depth="-.1em" height="+.1em" voffset=".1em">
+      <mi data-latex="x">x</mi>
+    </mpadded>
+  </msup>
+</math>"
+`;
+
+exports[`Cancel XCancel 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xcancel{x}" display="block">
+  <menclose notation="updiagonalstrike downdiagonalstrike" data-latex="\\xcancel{x}">
+    <mi data-latex="x">x</mi>
+  </menclose>
+</math>"
+`;

@@ -1,0 +1,135 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Setoptions Require Require 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require{bbox} \\bbox[red]{x}" display="block">
+  <mstyle mathbackground="red" data-latex="\\Require{bbox}\\setOptions[bbox]{} \\bbox[red]{x}">
+    <mi data-latex="x">x</mi>
+  </mstyle>
+</math>"
+`;
+
+exports[`Setoptions Require Require with option 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\require[ugly=true]{units} \\nicefrac{a}{b}" display="block">
+  <mfrac data-latex="\\Require{units}\\setOptions[units]{ugly=true} \\nicefrac{a}{b}">
+    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{a}">
+      <mi mathvariant="normal" data-latex="a">a</mi>
+    </mrow>
+    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{b}">
+      <mi mathvariant="normal" data-latex="b">b</mi>
+    </mrow>
+  </mfrac>
+</math>"
+`;
+
+exports[`Setoptions Set TeX option 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions{tagSide=left} a=b\\tag{1}" display="block">
+  <mtable side="left" displaystyle="true" data-latex="\\setOptions{tagSide=left} a=b\\tag{1}">
+    <mlabeledtr>
+      <mtd id="mjx-eqn:1">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mi data-latex="a">a</mi>
+        <mo data-latex="=">=</mo>
+        <mi data-latex="\\tag{1}">b</mi>
+      </mtd>
+    </mlabeledtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Setoptions Set pacjage regexp option 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/} \\operatorname{ab1}" display="block">
+  <mi data-latex="\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/} \\operatorname{ab1}">ab1</mi>
+</math>"
+`;
+
+exports[`Setoptions Set package boolean option 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[units]{loose=true} \\units[1]{kg}" display="block">
+  <mn data-latex="1">1</mn>
+  <mtext data-latex="~">&#xA0;</mtext>
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{kg}">
+    <mi data-mjx-auto-op="false" data-latex="kg">kg</mi>
+  </mrow>
+</math>"
+`;
+
+exports[`Setoptions Set package string option 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="50%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
+    <mtr>
+      <mtd columnalign="left">
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Setoptions Set regexp option with flags 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/i} \\operatorname{ab1}" display="block">
+  <mi data-latex="\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/i} \\operatorname{ab1}">ab1</mi>
+</math>"
+`;
+
+exports[`Setoptions options allowOptionsDefault false ams multlineWidth true 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="50%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
+    <mtr>
+      <mtd columnalign="left">
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Setoptions options allowPackageDefault false ams true 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="50%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
+    <mtr>
+      <mtd columnalign="left">
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Setoptions options filterOption 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
+    <mtr>
+      <mtd columnalign="left">
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Setoptions options filterPackage 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
+    <mtr>
+      <mtd columnalign="left">
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Setoptions options filterValue 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}" display="block">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="25%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\setOptions[ams]{multlineWidth=50%} \\begin{multline} a \\end{multline}">
+    <mtr>
+      <mtd columnalign="left">
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;

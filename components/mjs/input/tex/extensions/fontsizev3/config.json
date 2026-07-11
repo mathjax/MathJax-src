@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/fontsizev3",
+    "component": "input/tex/extensions/fontsizev3",
+    "targets": ["input/tex/fontsizev3"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/fontsizev3",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

@@ -1,5 +1,5 @@
 import { describe, test, expect } from '@jest/globals';
-import {BitField, BitFieldClass} from '#js/util/BitField.js';
+import { BitField, BitFieldClass } from '#js/util/BitField.js';
 
 const MAXBIT = (BitField as any).MAXBIT;
 
@@ -7,7 +7,6 @@ const bitClass = BitFieldClass('a', 'b');
 bitClass.allocate('c');
 
 describe('BitField object', () => {
-
   test('Allocating bits', () => {
     expect(bitClass.has('a')).toBe(true);
     expect(bitClass.has('b')).toBe(true);
@@ -16,7 +15,9 @@ describe('BitField object', () => {
     for (let i = 1 << 3; i !== MAXBIT; i = i << 1) {
       bitClass.allocate('x' + i);
     }
-    expect(() => bitClass.allocate('y')).toThrow('Maximum number of bits already allocated');
+    expect(() => bitClass.allocate('y')).toThrow(
+      'Maximum number of bits already allocated'
+    );
   });
 
   test('set/clear/isSet/reset', () => {
@@ -35,7 +36,7 @@ describe('BitField object', () => {
     //
     //  Check that setting again is still set
     //
-    bits.set('a')
+    bits.set('a');
     expect(bits.isSet('a')).toBe(true);
     //
     //  Check that it clears
@@ -62,5 +63,4 @@ describe('BitField object', () => {
     //
     expect(() => bits.isSet('A')).toThrow('Unknown bit-field name: A');
   });
-
 });

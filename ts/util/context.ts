@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2024-2025 The MathJax Consortium
+ *  Copyright (c) 2024-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,11 +22,17 @@
  */
 
 declare const process: { platform: string };
+declare const exports: object;
 
 /**
  * True if there is a window object
  */
 export const hasWindow = typeof window !== 'undefined';
+
+/**
+ * True if used from the cjs directory, false for mjs directory
+ */
+export const isCJS = typeof exports !== 'undefined';
 
 /**
  * The browsers window and document objects, if any
@@ -75,6 +81,6 @@ export const context = {
 if (context.os === 'Windows') {
   context.path = (file: string) =>
     file.match(/^[/\\]?[a-zA-Z]:[/\\]/)
-      ? 'file://' + file.replace(/\\/g, '/').replace(/^\//, '')
+      ? (isCJS ? '' : 'file://') + file.replace(/\\/g, '/').replace(/^\//, '')
       : file.replace(/^\//, 'file:///');
 }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2021-2025 The MathJax Consortium
+ *  Copyright (c) 2021-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import { HTMLHandler } from '../../handlers/html/HTMLHandler.js';
 import { SpeechMathItem } from '../../a11y/speech.js';
 import { handleRetriesFor } from '../../util/Retries.js';
 import { OptionList } from '../../util/Options.js';
+import { StyleJson } from '../../util/StyleJson.js';
 
 /**
  * Add the needed function to the window object.
@@ -389,6 +390,19 @@ export function LazyMathDocumentMixin<
     protected lazySet: LazySet = new Set();
 
     /**
+     * Extra styles for lazy nodes.
+     */
+    public static lazyStyles: StyleJson = {
+      'mjx-lazy': {
+        //
+        // Needed for Safari 26 when the math appears inside an othewise empty
+        // node with overflow: auto.  See issue #3579.
+        //
+        display: 'inline-block',
+      },
+    };
+
+    /**
      * Augment the MathItem class used for this MathDocument,
      *   then create the intersection observer and lazy list,
      *   and bind the lazyProcessSet function to this instance
@@ -400,6 +414,7 @@ export function LazyMathDocumentMixin<
      */
     constructor(...args: any[]) {
       super(...args);
+      this.addStyles((this.constructor as typeof BaseClass).lazyStyles);
       //
       //  Use the LazyMathItem for math items
       //

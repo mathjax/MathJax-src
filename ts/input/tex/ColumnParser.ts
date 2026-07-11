@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2022-2025 The MathJax Consortium
+ *  Copyright (c) 2022-2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -77,13 +77,14 @@ export class ColumnParser {
     ':': (state) => this.addRule(state, 'dashed'),
     '>': (state) =>
       (state.cstart[state.j] =
-        (state.cstart[state.j] || '') + this.getBraces(state)),
+        this.getBraces(state) + (state.cstart[state.j] || '')),
     '<': (state) =>
       (state.cend[state.j - 1] =
-        (state.cend[state.j - 1] || '') + this.getBraces(state)),
+        this.getBraces(state) + (state.cend[state.j - 1] || '')),
     '@': (state) => this.addAt(state, this.getBraces(state)),
     '!': (state) => this.addBang(state, this.getBraces(state)),
     '*': (state) => this.repeat(state),
+    '{': (state) => this.brace(state),
     //
     // Non-standard for math-mode versions
     //
@@ -94,6 +95,7 @@ export class ColumnParser {
     // Ignored
     //
     ' ': (_state) => {},
+    '\n': (_state_) => {},
   };
 
   /**
@@ -128,6 +130,16 @@ export class ColumnParser {
       cextra: array.cextra,
     };
     //
+    // Remove one pair of braces, if there are any
+    //
+    if (template.charAt(0) === '{' && template.slice(-1) === '}') {
+      const braced = this.getBraces(state);
+      if (braced.length === template.length - 2) {
+        state.template = braced;
+      }
+      state.i = 0;
+    }
+    //
     // Loop through the template to process the column specifiers
     //
     let n = 0;
@@ -141,10 +153,7 @@ export class ColumnParser {
       const code = state.template.codePointAt(state.i);
       const c = (state.c = String.fromCodePoint(code));
       state.i += c.length;
-      if (!Object.hasOwn(this.columnHandler, c)) {
-        throw new TexError('BadPreamToken', 'Illegal pream-token (%1)', c);
-      }
-      this.columnHandler[c](state);
+      this.processColumn(state, c);
     }
     //
     // Set array definition values
@@ -154,6 +163,19 @@ export class ColumnParser {
     this.setColumnSpacing(state, array);
     this.setColumnLines(state, array);
     this.setPadding(state, array);
+  }
+
+  /**
+   * Process a column specifier, or throw an error if not defined.
+   *
+   * @param {ColumnState} state   The current state of the parser
+   * @param {string} c            The column type to process
+   */
+  protected processColumn(state: ColumnState, c: string) {
+    if (!Object.hasOwn(this.columnHandler, c)) {
+      throw new TexError('BadPreamToken', 'Illegal pream-token (%1)', c);
+    }
+    this.columnHandler[c](state);
   }
 
   /**
@@ -419,5 +441,15 @@ export class ColumnParser {
     state.template =
       new Array(n).fill(cols).join('') + state.template.substring(state.i);
     state.i = 0;
+  }
+
+  /**
+   * Process a braced column type
+   *
+   * @param {ColumnState} state   The current state of the parser
+   */
+  public brace(state: ColumnState) {
+    state.i--;
+    this.processColumn(state, this.getBraces(state));
   }
 }
