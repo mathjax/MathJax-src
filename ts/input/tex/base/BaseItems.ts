@@ -966,6 +966,14 @@ export class ArrayItem extends BaseItem {
   public row: MmlNode[] = [];
 
   /**
+   * The LaTeX source for the content cells of the current row, used to
+   * reconstruct the `data-latex` attribute of the row (mtr/mlabeledtr) node.
+   *
+   * @type {string[]}
+   */
+  public rowLatex: string[] = [];
+
+  /**
    * Frame specification as a list of pairs of strings [side, style].
    *
    * @type {[string, string][]}
@@ -1346,6 +1354,7 @@ export class ArrayItem extends BaseItem {
     this.breakAlign.cell = '';
     //
     this.row.push(mtd);
+    this.rowLatex.push(this.cellLatex(mtd));
     this.Clear();
     this.hfill = [];
   }
@@ -1370,10 +1379,47 @@ export class ArrayItem extends BaseItem {
       NodeUtil.setAttribute(node, 'data-break-align', this.breakAlign.row);
       this.breakAlign.row = '';
     }
-    this.addLatexItem(node);
+    this.setRowLatex(node);
     this.table.push(node);
     this.row = [];
+    this.rowLatex = [];
     this.atEnd = false;
+  }
+
+  /**
+   * Reconstructs the LaTeX source of a single table cell from the `data-latex`
+   * attributes of its content nodes.
+   *
+   * @param {MmlNode} mtd The mtd node whose content is reconstructed.
+   * @returns {string} The LaTeX source of the cell content.
+   */
+  public cellLatex(mtd: MmlNode): string {
+    const children = mtd.childNodes[0]?.childNodes || [];
+    let expr = '';
+    for (const child of children) {
+      const att = (child?.attributes?.get(TexConstant.Attr.LATEX) ||
+        '') as string;
+      if (!att) continue;
+      expr +=
+        expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)
+          ? ' ' + att
+          : att;
+    }
+    return expr;
+  }
+
+  /**
+   * Sets the `data-latex` attribute of a row node by joining the LaTeX source
+   * of its content cells with `&`.
+   *
+   * @param {MmlNode} node The mtr/mlabeledtr node.
+   */
+  public setRowLatex(node: MmlNode) {
+    const tex = this.rowLatex.join('&');
+    if (tex) {
+      node.attributes.set(TexConstant.Attr.LATEXITEM, tex);
+      node.attributes.set(TexConstant.Attr.LATEX, tex);
+    }
   }
 
   /**
