@@ -902,11 +902,11 @@ exports[`Matrix Macros Rest antidiagonalmatrix 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\antidiagonalmatrix{0,1\\\\2&amp;3})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 0\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 0\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="0">
               <mtd>
                 <mn data-latex="0">0</mn>
               </mtd>
@@ -914,15 +914,15 @@ exports[`Matrix Macros Rest antidiagonalmatrix 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 1\\\\2&amp;3\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\\\2&amp;3\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -944,10 +944,10 @@ exports[`Matrix Macros Rest diagonalmatrix 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\diagonalmatrix{0,1\\\\2&amp;3})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 0\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 0\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="0">
               <mtd>
                 <mn data-latex="0">0</mn>
               </mtd>
@@ -955,16 +955,16 @@ exports[`Matrix Macros Rest diagonalmatrix 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 1\\\\2&amp;3\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\\\2&amp;3\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -986,7 +986,7 @@ exports[`Matrix Macros Rest paulimatrix 0 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\paulimatrix{0})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1&amp;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -994,7 +994,7 @@ exports[`Matrix Macros Rest paulimatrix 0 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;1">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -1013,7 +1013,7 @@ exports[`Matrix Macros Rest paulimatrix 1 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\paulimatrix{1})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;1">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -1021,7 +1021,7 @@ exports[`Matrix Macros Rest paulimatrix 1 1`] = `
           <mn data-latex="1">1</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="1&amp;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -1040,7 +1040,7 @@ exports[`Matrix Macros Rest paulimatrix 2 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\paulimatrix{2})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;-i">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -1049,7 +1049,7 @@ exports[`Matrix Macros Rest paulimatrix 2 1`] = `
           <mi data-latex="i">i</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="i&amp;0">
         <mtd>
           <mi data-latex="i">i</mi>
         </mtd>
@@ -1068,7 +1068,7 @@ exports[`Matrix Macros Rest paulimatrix 3 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\paulimatrix{3})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1&amp;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -1076,7 +1076,7 @@ exports[`Matrix Macros Rest paulimatrix 3 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;-1">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -1106,7 +1106,7 @@ exports[`Matrix Macros Rest zeromatrix 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\zeromatrix{2}{3})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;0&amp;0">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -1117,7 +1117,7 @@ exports[`Matrix Macros Rest zeromatrix 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;0&amp;0">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -7979,7 +7979,7 @@ exports[`Physics6_4 BraKet_MatrixEl_7 1`] = `
 exports[`Physics7_0 Matrices_Quantity_0 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixquantity{Q}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\matrixquantity{Q}">
-    <mtr data-latex="{}">
+    <mtr data-latex="Q">
       <mtd>
         <mi data-latex="Q">Q</mi>
       </mtd>
@@ -7991,7 +7991,7 @@ exports[`Physics7_0 Matrices_Quantity_0 1`] = `
 exports[`Physics7_0 Matrices_Quantity_1 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrixquantity*{a &amp; b \\\\ c &amp; d}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\matrixquantity*{a &amp; b \\\\ c &amp; d}">
-    <mtr data-latex="{}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -7999,7 +7999,7 @@ exports[`Physics7_0 Matrices_Quantity_1 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="c&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -8016,7 +8016,7 @@ exports[`Physics7_0 Matrices_Quantity_2 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\matrixquantity*(a &amp; b \\\\ c &amp; d)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8024,7 +8024,7 @@ exports[`Physics7_0 Matrices_Quantity_2 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8043,7 +8043,7 @@ exports[`Physics7_0 Matrices_Quantity_3 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\matrixquantity(a &amp; b \\\\ c &amp; d)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8051,7 +8051,7 @@ exports[`Physics7_0 Matrices_Quantity_3 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8070,7 +8070,7 @@ exports[`Physics7_0 Matrices_Quantity_4 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\matrixquantity[a &amp; b \\\\ c &amp; d]">
     <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8078,7 +8078,7 @@ exports[`Physics7_0 Matrices_Quantity_4 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8097,7 +8097,7 @@ exports[`Physics7_0 Matrices_Quantity_5 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\matrixquantity|a &amp; b \\\\ c &amp; d|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8105,7 +8105,7 @@ exports[`Physics7_0 Matrices_Quantity_5 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8122,7 +8122,7 @@ exports[`Physics7_0 Matrices_Quantity_5 1`] = `
 exports[`Physics7_0 Matrices_Quantity_6 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{a &amp; b \\\\ c &amp; d}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{a &amp; b \\\\ c &amp; d}">
-    <mtr data-latex="{}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -8130,7 +8130,7 @@ exports[`Physics7_0 Matrices_Quantity_6 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="c&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -8147,7 +8147,7 @@ exports[`Physics7_0 Matrices_Quantity_7 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(a &amp; b \\\\ c &amp; d)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8155,7 +8155,7 @@ exports[`Physics7_0 Matrices_Quantity_7 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8174,7 +8174,7 @@ exports[`Physics7_0 Matrices_Quantity_8 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty*(a &amp; b \\\\ c &amp; d)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8182,7 +8182,7 @@ exports[`Physics7_0 Matrices_Quantity_8 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8201,7 +8201,7 @@ exports[`Physics7_0 Matrices_Quantity_9 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty[a &amp; b \\\\ c &amp; d]">
     <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8209,7 +8209,7 @@ exports[`Physics7_0 Matrices_Quantity_9 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8228,7 +8228,7 @@ exports[`Physics7_0 Matrices_Quantity_10 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8236,7 +8236,7 @@ exports[`Physics7_0 Matrices_Quantity_10 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8255,7 +8255,7 @@ exports[`Physics7_0 Matrices_Quantity_11 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty*|a &amp; b\\\\ c&amp; d|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8263,7 +8263,7 @@ exports[`Physics7_0 Matrices_Quantity_11 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8282,7 +8282,7 @@ exports[`Physics7_1 Matrices_Fenced_0 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\left(\\begin{array}{} Q\\end{array}\\right)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="Q">
         <mtd>
           <mi data-latex="Q">Q</mi>
         </mtd>
@@ -8293,7 +8293,7 @@ exports[`Physics7_1 Matrices_Fenced_0 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\left(\\begin{array}{} R\\end{array}\\right)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="R">
         <mtd>
           <mi data-latex="R">R</mi>
         </mtd>
@@ -8309,7 +8309,7 @@ exports[`Physics7_1 Matrices_Fenced_1 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\left\\lgroup\\begin{array}{} Q\\end{array}\\right\\rgroup">
     <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="Q">
         <mtd>
           <mi data-latex="Q">Q</mi>
         </mtd>
@@ -8320,7 +8320,7 @@ exports[`Physics7_1 Matrices_Fenced_1 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\left\\lgroup\\begin{array}{} R\\end{array}\\right\\rgroup">
     <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="R">
         <mtd>
           <mi data-latex="R">R</mi>
         </mtd>
@@ -8336,7 +8336,7 @@ exports[`Physics7_1 Matrices_Fenced_2 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\left[\\begin{array}{} Q\\end{array}\\right]">
     <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="Q">
         <mtd>
           <mi data-latex="Q">Q</mi>
         </mtd>
@@ -8347,7 +8347,7 @@ exports[`Physics7_1 Matrices_Fenced_2 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\left[\\begin{array}{} R\\end{array}\\right]">
     <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="R">
         <mtd>
           <mi data-latex="R">R</mi>
         </mtd>
@@ -8363,7 +8363,7 @@ exports[`Physics7_1 Matrices_Fenced_3 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\left|\\begin{array}{} Q\\end{array}\\right|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="Q">
         <mtd>
           <mi data-latex="Q">Q</mi>
         </mtd>
@@ -8374,7 +8374,7 @@ exports[`Physics7_1 Matrices_Fenced_3 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\left|\\begin{array}{} R\\end{array}\\right|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="R">
         <mtd>
           <mi data-latex="R">R</mi>
         </mtd>
@@ -8390,7 +8390,7 @@ exports[`Physics7_1 Matrices_Fenced_4 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(a &amp; b \\\\ c &amp; d)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8398,7 +8398,7 @@ exports[`Physics7_1 Matrices_Fenced_4 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8417,7 +8417,7 @@ exports[`Physics7_1 Matrices_Fenced_5 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty*(a &amp; b \\\\ c &amp; d)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8425,7 +8425,7 @@ exports[`Physics7_1 Matrices_Fenced_5 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8444,7 +8444,7 @@ exports[`Physics7_1 Matrices_Fenced_6 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty[a &amp; b \\\\ c &amp; d]">
     <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8452,7 +8452,7 @@ exports[`Physics7_1 Matrices_Fenced_6 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8471,7 +8471,7 @@ exports[`Physics7_1 Matrices_Fenced_7 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -8479,7 +8479,7 @@ exports[`Physics7_1 Matrices_Fenced_7 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8497,7 +8497,7 @@ exports[`Physics7_2 Matrices_Small_0 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smallmatrixquantity{Q}" display="block">
   <mstyle scriptlevel="1" data-latex="\\smallmatrixquantity{Q}">
     <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-      <mtr>
+      <mtr data-latex="{}Q">
         <mtd>
           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
           <mi data-latex="Q">Q</mi>
@@ -8512,7 +8512,7 @@ exports[`Physics7_2 Matrices_Small_1 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smallmatrixquantity*{a &amp; b \\\\ c &amp; d}" display="block">
   <mstyle scriptlevel="1" data-latex="\\smallmatrixquantity*{a &amp; b \\\\ c &amp; d}">
     <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-      <mtr>
+      <mtr data-latex="{}a&amp;b">
         <mtd>
           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
           <mi data-latex="a">a</mi>
@@ -8521,7 +8521,7 @@ exports[`Physics7_2 Matrices_Small_1 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8540,7 +8540,7 @@ exports[`Physics7_2 Matrices_Small_2 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;b">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -8549,7 +8549,7 @@ exports[`Physics7_2 Matrices_Small_2 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -8570,7 +8570,7 @@ exports[`Physics7_2 Matrices_Small_3 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;b">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -8579,7 +8579,7 @@ exports[`Physics7_2 Matrices_Small_3 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -8600,7 +8600,7 @@ exports[`Physics7_2 Matrices_Small_5 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;b">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -8609,7 +8609,7 @@ exports[`Physics7_2 Matrices_Small_5 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -8628,7 +8628,7 @@ exports[`Physics7_2 Matrices_Small_6 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty{a &amp; b \\\\ c &amp; d}" display="block">
   <mstyle scriptlevel="1" data-latex="\\smqty{a &amp; b \\\\ c &amp; d}">
     <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-      <mtr>
+      <mtr data-latex="{}a&amp;b">
         <mtd>
           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
           <mi data-latex="a">a</mi>
@@ -8637,7 +8637,7 @@ exports[`Physics7_2 Matrices_Small_6 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -8656,7 +8656,7 @@ exports[`Physics7_2 Matrices_Small_7 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;b">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -8665,7 +8665,7 @@ exports[`Physics7_2 Matrices_Small_7 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -8686,7 +8686,7 @@ exports[`Physics7_2 Matrices_Small_8 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;b">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -8695,7 +8695,7 @@ exports[`Physics7_2 Matrices_Small_8 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -8716,7 +8716,7 @@ exports[`Physics7_2 Matrices_Small_9 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;b">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -8725,7 +8725,7 @@ exports[`Physics7_2 Matrices_Small_9 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -8746,7 +8746,7 @@ exports[`Physics7_2 Matrices_Small_10 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;b">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -8755,7 +8755,7 @@ exports[`Physics7_2 Matrices_Small_10 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -8776,7 +8776,7 @@ exports[`Physics7_3 Matrices_SmallFenced_0 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}Q">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="Q">Q</mi>
@@ -8790,7 +8790,7 @@ exports[`Physics7_3 Matrices_SmallFenced_0 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}R">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="R">R</mi>
@@ -8809,7 +8809,7 @@ exports[`Physics7_3 Matrices_SmallFenced_1 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}Q">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="Q">Q</mi>
@@ -8823,7 +8823,7 @@ exports[`Physics7_3 Matrices_SmallFenced_1 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}R">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="R">R</mi>
@@ -8842,7 +8842,7 @@ exports[`Physics7_3 Matrices_SmallFenced_2 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}Q">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="Q">Q</mi>
@@ -8856,7 +8856,7 @@ exports[`Physics7_3 Matrices_SmallFenced_2 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}R">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="R">R</mi>
@@ -8875,7 +8875,7 @@ exports[`Physics7_3 Matrices_SmallFenced_3 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}Q">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="Q">Q</mi>
@@ -8889,7 +8889,7 @@ exports[`Physics7_3 Matrices_SmallFenced_3 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}R">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="R">R</mi>
@@ -8908,7 +8908,7 @@ exports[`Physics7_3 Matrices_SmallFenced_4 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;b">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -8917,7 +8917,7 @@ exports[`Physics7_3 Matrices_SmallFenced_4 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -8938,7 +8938,7 @@ exports[`Physics7_3 Matrices_SmallFenced_5 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;b">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -8947,7 +8947,7 @@ exports[`Physics7_3 Matrices_SmallFenced_5 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -8968,7 +8968,7 @@ exports[`Physics7_3 Matrices_SmallFenced_6 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left[">[</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;b">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -8977,7 +8977,7 @@ exports[`Physics7_3 Matrices_SmallFenced_6 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -8998,7 +8998,7 @@ exports[`Physics7_3 Matrices_SmallFenced_7 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;b">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -9007,7 +9007,7 @@ exports[`Physics7_3 Matrices_SmallFenced_7 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -9027,7 +9027,7 @@ exports[`Physics7_4 Matrices_Det_0 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -9035,7 +9035,7 @@ exports[`Physics7_4 Matrices_Det_0 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -9054,7 +9054,7 @@ exports[`Physics7_4 Matrices_Det_1 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty|a &amp; b \\\\ c &amp; d|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -9062,7 +9062,7 @@ exports[`Physics7_4 Matrices_Det_1 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -9082,7 +9082,7 @@ exports[`Physics7_4 Matrices_Det_2 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;b">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -9091,7 +9091,7 @@ exports[`Physics7_4 Matrices_Det_2 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -9111,7 +9111,7 @@ exports[`Physics7_4 Matrices_Det_3 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\left|\\begin{array}{} a\\end{array}\\right|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -9128,7 +9128,7 @@ exports[`Physics7_4 Matrices_Det_4 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\left|\\begin{array}{} a\\end{array}\\right|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -9146,7 +9146,7 @@ exports[`Physics7_4 Matrices_Det_5 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -9163,7 +9163,7 @@ exports[`Physics7_4 Matrices_Det_5 1`] = `
 exports[`Physics7_5 Matrices_Identity_0 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\imat{3}}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\imat{3}}">
-    <mtr data-latex="{}">
+    <mtr data-latex="1&amp;0&amp;0">
       <mtd>
         <mn data-latex="1">1</mn>
       </mtd>
@@ -9174,7 +9174,7 @@ exports[`Physics7_5 Matrices_Identity_0 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;1&amp;0">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -9185,7 +9185,7 @@ exports[`Physics7_5 Matrices_Identity_0 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;0&amp;1">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -9205,7 +9205,7 @@ exports[`Physics7_5 Matrices_Identity_1 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty|\\imat{5}|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1&amp;0&amp;0&amp;0&amp;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -9222,7 +9222,7 @@ exports[`Physics7_5 Matrices_Identity_1 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;1&amp;0&amp;0&amp;0">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -9239,7 +9239,7 @@ exports[`Physics7_5 Matrices_Identity_1 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;0&amp;1&amp;0&amp;0">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -9256,7 +9256,7 @@ exports[`Physics7_5 Matrices_Identity_1 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;0&amp;0&amp;1&amp;0">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -9273,7 +9273,7 @@ exports[`Physics7_5 Matrices_Identity_1 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;0&amp;0&amp;0&amp;1">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -9301,7 +9301,7 @@ exports[`Physics7_5 Matrices_Identity_2 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty|\\imat{0}|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -9317,7 +9317,7 @@ exports[`Physics7_5 Matrices_Identity_3 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty|\\imat{1}|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -9333,7 +9333,7 @@ exports[`Physics7_5 Matrices_Identity_4 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty|\\imat{-1}|">
     <mo data-mjx-texclass="OPEN" data-latex="\\left|">|</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -9349,7 +9349,7 @@ exports[`Physics7_5 Matrices_Identity_5 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\imat{3}\\pmat{0})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1&amp;0&amp;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -9360,7 +9360,7 @@ exports[`Physics7_5 Matrices_Identity_5 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;1&amp;0">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -9371,7 +9371,7 @@ exports[`Physics7_5 Matrices_Identity_5 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;0&amp;11&amp;0">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -9386,7 +9386,7 @@ exports[`Physics7_5 Matrices_Identity_5 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;1">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -9406,7 +9406,7 @@ exports[`Physics7_6 Matrices_XMatrix_0 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}1&amp;1&amp;1">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mn data-latex="1">1</mn>
@@ -9418,7 +9418,7 @@ exports[`Physics7_6 Matrices_XMatrix_0 1`] = `
             <mn data-latex="1">1</mn>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="1&amp;1&amp;1">
           <mtd>
             <mn data-latex="1">1</mn>
           </mtd>
@@ -9442,7 +9442,7 @@ exports[`Physics7_6 Matrices_XMatrix_1 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;a&amp;a">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -9454,7 +9454,7 @@ exports[`Physics7_6 Matrices_XMatrix_1 1`] = `
             <mi data-latex="a">a</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="a&amp;a&amp;a">
           <mtd>
             <mi data-latex="a">a</mi>
           </mtd>
@@ -9465,7 +9465,7 @@ exports[`Physics7_6 Matrices_XMatrix_1 1`] = `
             <mi data-latex="a">a</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="a&amp;a&amp;a">
           <mtd>
             <mi data-latex="a">a</mi>
           </mtd>
@@ -9489,18 +9489,18 @@ exports[`Physics7_6 Matrices_XMatrix_2 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="a">
           <mtd>
             <mi data-latex="a">a</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="a">
           <mtd>
             <mi data-latex="a">a</mi>
           </mtd>
@@ -9518,7 +9518,7 @@ exports[`Physics7_6 Matrices_XMatrix_3 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a&amp;a&amp;a">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -9543,7 +9543,7 @@ exports[`Physics7_6 Matrices_XMatrix_4 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}1_{{1}{1}}&amp;1_{{1}{2}}&amp;1_{{1}{3}}">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <msub data-latex="1_{{1}{1}}">
@@ -9585,7 +9585,7 @@ exports[`Physics7_6 Matrices_XMatrix_4 1`] = `
             </msub>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="1_{{2}{1}}&amp;1_{{2}{2}}&amp;1_{{2}{3}}">
           <mtd>
             <msub data-latex="1_{{2}{1}}">
               <mn data-latex="1">1</mn>
@@ -9639,7 +9639,7 @@ exports[`Physics7_6 Matrices_XMatrix_5 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a_{{1}{1}}&amp;a_{{1}{2}}&amp;a_{{1}{3}}">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <msub data-latex="a_{{1}{1}}">
@@ -9681,7 +9681,7 @@ exports[`Physics7_6 Matrices_XMatrix_5 1`] = `
             </msub>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="a_{{2}{1}}&amp;a_{{2}{2}}&amp;a_{{2}{3}}">
           <mtd>
             <msub data-latex="a_{{2}{1}}">
               <mi data-latex="a">a</mi>
@@ -9722,7 +9722,7 @@ exports[`Physics7_6 Matrices_XMatrix_5 1`] = `
             </msub>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="a_{{3}{1}}&amp;a_{{3}{2}}&amp;a_{{3}{3}}">
           <mtd>
             <msub data-latex="a_{{3}{1}}">
               <mi data-latex="a">a</mi>
@@ -9776,7 +9776,7 @@ exports[`Physics7_6 Matrices_XMatrix_6 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a_{1}">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <msub data-latex="a_{1}">
@@ -9787,7 +9787,7 @@ exports[`Physics7_6 Matrices_XMatrix_6 1`] = `
             </msub>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="a_{2}">
           <mtd>
             <msub data-latex="a_{2}">
               <mi data-latex="a">a</mi>
@@ -9797,7 +9797,7 @@ exports[`Physics7_6 Matrices_XMatrix_6 1`] = `
             </msub>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="a_{3}">
           <mtd>
             <msub data-latex="a_{3}">
               <mi data-latex="a">a</mi>
@@ -9820,7 +9820,7 @@ exports[`Physics7_6 Matrices_XMatrix_7 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a_{1}&amp;a_{2}&amp;a_{3}">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <msub data-latex="a_{1}">
@@ -9860,7 +9860,7 @@ exports[`Physics7_6 Matrices_XMatrix_8 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -9879,7 +9879,7 @@ exports[`Physics7_6 Matrices_XMatrix_9 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}a">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mi data-latex="a">a</mi>
@@ -9898,7 +9898,7 @@ exports[`Physics7_6 Matrices_XMatrix_10 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}0&amp;0&amp;0">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mn data-latex="0">0</mn>
@@ -9923,7 +9923,7 @@ exports[`Physics7_6 Matrices_XMatrix_11 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}0&amp;0&amp;0">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mn data-latex="0">0</mn>
@@ -9935,7 +9935,7 @@ exports[`Physics7_6 Matrices_XMatrix_11 1`] = `
             <mn data-latex="0">0</mn>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="0&amp;0&amp;0">
           <mtd>
             <mn data-latex="0">0</mn>
           </mtd>
@@ -9959,18 +9959,18 @@ exports[`Physics7_6 Matrices_XMatrix_12 1`] = `
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex="{smallmatrix}">
       <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+        <mtr data-latex="{}0">
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
             <mn data-latex="0">0</mn>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="0">
           <mtd>
             <mn data-latex="0">0</mn>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="0">
           <mtd>
             <mn data-latex="0">0</mn>
           </mtd>
@@ -9985,7 +9985,7 @@ exports[`Physics7_6 Matrices_XMatrix_12 1`] = `
 exports[`Physics7_7 Matrices_Pauli_0 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{0}}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{0}}">
-    <mtr data-latex="{}">
+    <mtr data-latex="1&amp;0">
       <mtd>
         <mn data-latex="1">1</mn>
       </mtd>
@@ -9993,7 +9993,7 @@ exports[`Physics7_7 Matrices_Pauli_0 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;1">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -10010,7 +10010,7 @@ exports[`Physics7_7 Matrices_Pauli_1 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{0})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1&amp;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -10018,7 +10018,7 @@ exports[`Physics7_7 Matrices_Pauli_1 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;1">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -10035,7 +10035,7 @@ exports[`Physics7_7 Matrices_Pauli_1 1`] = `
 exports[`Physics7_7 Matrices_Pauli_2 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{1}}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{1}}">
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;1">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -10043,7 +10043,7 @@ exports[`Physics7_7 Matrices_Pauli_2 1`] = `
         <mn data-latex="1">1</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="1&amp;0">
       <mtd>
         <mn data-latex="1">1</mn>
       </mtd>
@@ -10058,7 +10058,7 @@ exports[`Physics7_7 Matrices_Pauli_2 1`] = `
 exports[`Physics7_7 Matrices_Pauli_3 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{2}}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{2}}">
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;-i">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -10067,7 +10067,7 @@ exports[`Physics7_7 Matrices_Pauli_3 1`] = `
         <mi data-latex="i">i</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="i&amp;0">
       <mtd>
         <mi data-latex="i">i</mi>
       </mtd>
@@ -10082,7 +10082,7 @@ exports[`Physics7_7 Matrices_Pauli_3 1`] = `
 exports[`Physics7_7 Matrices_Pauli_4 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{3}}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{3}}">
-    <mtr data-latex="{}">
+    <mtr data-latex="1&amp;0">
       <mtd>
         <mn data-latex="1">1</mn>
       </mtd>
@@ -10090,7 +10090,7 @@ exports[`Physics7_7 Matrices_Pauli_4 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;-1">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -10112,7 +10112,7 @@ exports[`Physics7_7 Matrices_Pauli_5 1`] = `
 exports[`Physics7_7 Matrices_Pauli_6 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{x}}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{x}}">
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;1">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -10120,7 +10120,7 @@ exports[`Physics7_7 Matrices_Pauli_6 1`] = `
         <mn data-latex="1">1</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="1&amp;0">
       <mtd>
         <mn data-latex="1">1</mn>
       </mtd>
@@ -10135,7 +10135,7 @@ exports[`Physics7_7 Matrices_Pauli_6 1`] = `
 exports[`Physics7_7 Matrices_Pauli_7 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{y}}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{y}}">
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;-i">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -10144,7 +10144,7 @@ exports[`Physics7_7 Matrices_Pauli_7 1`] = `
         <mi data-latex="i">i</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="i&amp;0">
       <mtd>
         <mi data-latex="i">i</mi>
       </mtd>
@@ -10159,7 +10159,7 @@ exports[`Physics7_7 Matrices_Pauli_7 1`] = `
 exports[`Physics7_7 Matrices_Pauli_8 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{z}}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{z}}">
-    <mtr data-latex="{}">
+    <mtr data-latex="1&amp;0">
       <mtd>
         <mn data-latex="1">1</mn>
       </mtd>
@@ -10167,7 +10167,7 @@ exports[`Physics7_7 Matrices_Pauli_8 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;-1">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -10199,7 +10199,7 @@ exports[`Physics7_7 Matrices_Pauli_10 1`] = `
 exports[`Physics7_7 Matrices_Pauli_11 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\pmat{aa}}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\pmat{aa}}">
-    <mtr data-latex="{}">
+    <mtr data-latex="a">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -10213,7 +10213,7 @@ exports[`Physics7_7 Matrices_Pauli_12 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{0.a})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex=".a1&amp;0">
         <mtd>
           <mo data-latex=".">.</mo>
           <mi data-latex="a">a</mi>
@@ -10223,7 +10223,7 @@ exports[`Physics7_7 Matrices_Pauli_12 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;1">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -10242,7 +10242,7 @@ exports[`Physics7_8 Matrices_PauliFenced_0 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{1})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;1">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -10250,7 +10250,7 @@ exports[`Physics7_8 Matrices_PauliFenced_0 1`] = `
           <mn data-latex="1">1</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="1&amp;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -10269,7 +10269,7 @@ exports[`Physics7_8 Matrices_PauliFenced_1 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{2})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;-i">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -10278,7 +10278,7 @@ exports[`Physics7_8 Matrices_PauliFenced_1 1`] = `
           <mi data-latex="i">i</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="i&amp;0">
         <mtd>
           <mi data-latex="i">i</mi>
         </mtd>
@@ -10297,7 +10297,7 @@ exports[`Physics7_8 Matrices_PauliFenced_2 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{3})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1&amp;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -10305,7 +10305,7 @@ exports[`Physics7_8 Matrices_PauliFenced_2 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;-1">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -10335,7 +10335,7 @@ exports[`Physics7_8 Matrices_PauliFenced_4 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{x})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;1">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -10343,7 +10343,7 @@ exports[`Physics7_8 Matrices_PauliFenced_4 1`] = `
           <mn data-latex="1">1</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="1&amp;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -10362,7 +10362,7 @@ exports[`Physics7_8 Matrices_PauliFenced_5 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{y})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;-i">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -10371,7 +10371,7 @@ exports[`Physics7_8 Matrices_PauliFenced_5 1`] = `
           <mi data-latex="i">i</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="i&amp;0">
         <mtd>
           <mi data-latex="i">i</mi>
         </mtd>
@@ -10390,7 +10390,7 @@ exports[`Physics7_8 Matrices_PauliFenced_6 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{z})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1&amp;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -10398,7 +10398,7 @@ exports[`Physics7_8 Matrices_PauliFenced_6 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="0&amp;-1">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -10418,7 +10418,7 @@ exports[`Physics7_8 Matrices_PauliFenced_7 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\pmat{aa})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -10434,10 +10434,10 @@ exports[`Physics7_9 Matrices_Diag_0 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 1\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -10445,11 +10445,11 @@ exports[`Physics7_9 Matrices_Diag_0 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -10457,7 +10457,7 @@ exports[`Physics7_9 Matrices_Diag_0 1`] = `
                 <mn data-latex="3">3</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;5">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -10479,7 +10479,7 @@ exports[`Physics7_9 Matrices_Diag_1 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat 1)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -10495,7 +10495,7 @@ exports[`Physics7_9 Matrices_Diag_2 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat 1,2)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1,2">
         <mtd>
           <mn data-latex="1">1</mn>
           <mo data-latex=",">,</mo>
@@ -10513,10 +10513,10 @@ exports[`Physics7_9 Matrices_Diag_3 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5&amp;6,7,8})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 1\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -10524,11 +10524,11 @@ exports[`Physics7_9 Matrices_Diag_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -10536,7 +10536,7 @@ exports[`Physics7_9 Matrices_Diag_3 1`] = `
                 <mn data-latex="3">3</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;5&amp;6">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -10550,12 +10550,12 @@ exports[`Physics7_9 Matrices_Diag_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;\\begin{array}{} 7\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="7">
               <mtd>
                 <mn data-latex="7">7</mn>
               </mtd>
@@ -10563,13 +10563,13 @@ exports[`Physics7_9 Matrices_Diag_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;\\begin{array}{} 8\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="8">
               <mtd>
                 <mn data-latex="8">8</mn>
               </mtd>
@@ -10588,10 +10588,10 @@ exports[`Physics7_9 Matrices_Diag_4 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5,6,7,8})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 1\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -10599,11 +10599,11 @@ exports[`Physics7_9 Matrices_Diag_4 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -10611,7 +10611,7 @@ exports[`Physics7_9 Matrices_Diag_4 1`] = `
                 <mn data-latex="3">3</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;5">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -10622,12 +10622,12 @@ exports[`Physics7_9 Matrices_Diag_4 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;\\begin{array}{} 6\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 6\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="6">
               <mtd>
                 <mn data-latex="6">6</mn>
               </mtd>
@@ -10635,13 +10635,13 @@ exports[`Physics7_9 Matrices_Diag_4 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;\\begin{array}{} 7\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="7">
               <mtd>
                 <mn data-latex="7">7</mn>
               </mtd>
@@ -10649,14 +10649,14 @@ exports[`Physics7_9 Matrices_Diag_4 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;&amp;\\begin{array}{} 8\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="8">
               <mtd>
                 <mn data-latex="8">8</mn>
               </mtd>
@@ -10675,10 +10675,10 @@ exports[`Physics7_9 Matrices_Diag_5 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2\\\\3\\\\4\\\\5\\\\6,7,8})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 1\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -10686,31 +10686,31 @@ exports[`Physics7_9 Matrices_Diag_5 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 2\\\\3\\\\4\\\\5\\\\6\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2\\\\3\\\\4\\\\5\\\\6\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="3">
               <mtd>
                 <mn data-latex="3">3</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="5">
               <mtd>
                 <mn data-latex="5">5</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="6">
               <mtd>
                 <mn data-latex="6">6</mn>
               </mtd>
@@ -10718,12 +10718,12 @@ exports[`Physics7_9 Matrices_Diag_5 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;\\begin{array}{} 7\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="7">
               <mtd>
                 <mn data-latex="7">7</mn>
               </mtd>
@@ -10731,13 +10731,13 @@ exports[`Physics7_9 Matrices_Diag_5 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;\\begin{array}{} 8\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="8">
               <mtd>
                 <mn data-latex="8">8</mn>
               </mtd>
@@ -10756,10 +10756,10 @@ exports[`Physics7_9 Matrices_Diag_6 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5&amp;6,7,8,\\dmat{9,10}})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 1\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -10767,11 +10767,11 @@ exports[`Physics7_9 Matrices_Diag_6 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -10779,7 +10779,7 @@ exports[`Physics7_9 Matrices_Diag_6 1`] = `
                 <mn data-latex="3">3</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;5&amp;6">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -10793,12 +10793,12 @@ exports[`Physics7_9 Matrices_Diag_6 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;\\begin{array}{} 7\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="7">
               <mtd>
                 <mn data-latex="7">7</mn>
               </mtd>
@@ -10806,13 +10806,13 @@ exports[`Physics7_9 Matrices_Diag_6 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;\\begin{array}{} 8\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="8">
               <mtd>
                 <mn data-latex="8">8</mn>
               </mtd>
@@ -10820,17 +10820,17 @@ exports[`Physics7_9 Matrices_Diag_6 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;&amp;\\mqty{9}\\\\ &amp;\\mqty{10}\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{9}\\\\ &amp;\\mqty{10}\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="\\begin{array}{} 9\\end{array}">
               <mtd>
                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 9\\end{array}">
-                  <mtr data-latex="{}">
+                  <mtr data-latex="9">
                     <mtd>
                       <mn data-latex="9">9</mn>
                     </mtd>
@@ -10838,11 +10838,11 @@ exports[`Physics7_9 Matrices_Diag_6 1`] = `
                 </mtable>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="&amp;\\begin{array}{} 10\\end{array}">
               <mtd></mtd>
               <mtd>
                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 10\\end{array}">
-                  <mtr data-latex="{}">
+                  <mtr data-latex="10">
                     <mtd>
                       <mn data-latex="10">10</mn>
                     </mtd>
@@ -10864,11 +10864,11 @@ exports[`Physics7_10 Matrices_Adiag_0 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 1\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -10876,10 +10876,10 @@ exports[`Physics7_10 Matrices_Adiag_0 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -10887,7 +10887,7 @@ exports[`Physics7_10 Matrices_Adiag_0 1`] = `
                 <mn data-latex="3">3</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;5">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -10909,7 +10909,7 @@ exports[`Physics7_10 Matrices_Adiag_1 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\admat 1)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -10925,7 +10925,7 @@ exports[`Physics7_10 Matrices_Adiag_2 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\admat 1,2)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="1,2">
         <mtd>
           <mn data-latex="1">1</mn>
           <mo data-latex=",">,</mo>
@@ -10943,13 +10943,13 @@ exports[`Physics7_10 Matrices_Adiag_3 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5&amp;6,7,8})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;\\begin{array}{} 1\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -10957,12 +10957,12 @@ exports[`Physics7_10 Matrices_Adiag_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -10970,7 +10970,7 @@ exports[`Physics7_10 Matrices_Adiag_3 1`] = `
                 <mn data-latex="3">3</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;5&amp;6">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -10984,11 +10984,11 @@ exports[`Physics7_10 Matrices_Adiag_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 7\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="7">
               <mtd>
                 <mn data-latex="7">7</mn>
               </mtd>
@@ -10996,10 +10996,10 @@ exports[`Physics7_10 Matrices_Adiag_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 8\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="8">
               <mtd>
                 <mn data-latex="8">8</mn>
               </mtd>
@@ -11018,14 +11018,14 @@ exports[`Physics7_10 Matrices_Adiag_4 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5,6,7,8})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;&amp;\\begin{array}{} 1\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -11033,13 +11033,13 @@ exports[`Physics7_10 Matrices_Adiag_4 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -11047,7 +11047,7 @@ exports[`Physics7_10 Matrices_Adiag_4 1`] = `
                 <mn data-latex="3">3</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;5">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -11058,12 +11058,12 @@ exports[`Physics7_10 Matrices_Adiag_4 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;\\begin{array}{} 6\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 6\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="6">
               <mtd>
                 <mn data-latex="6">6</mn>
               </mtd>
@@ -11071,11 +11071,11 @@ exports[`Physics7_10 Matrices_Adiag_4 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 7\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="7">
               <mtd>
                 <mn data-latex="7">7</mn>
               </mtd>
@@ -11083,10 +11083,10 @@ exports[`Physics7_10 Matrices_Adiag_4 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 8\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="8">
               <mtd>
                 <mn data-latex="8">8</mn>
               </mtd>
@@ -11105,14 +11105,14 @@ exports[`Physics7_10 Matrices_Adiag_5 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\admat{1,2&amp;3\\\\4&amp;5&amp;6,7,8,\\dmat{9,10}})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;&amp;\\begin{array}{} 1\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -11120,13 +11120,13 @@ exports[`Physics7_10 Matrices_Adiag_5 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -11134,7 +11134,7 @@ exports[`Physics7_10 Matrices_Adiag_5 1`] = `
                 <mn data-latex="3">3</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;5&amp;6">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -11148,12 +11148,12 @@ exports[`Physics7_10 Matrices_Adiag_5 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;\\begin{array}{} 7\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="7">
               <mtd>
                 <mn data-latex="7">7</mn>
               </mtd>
@@ -11161,11 +11161,11 @@ exports[`Physics7_10 Matrices_Adiag_5 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 8\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="8">
               <mtd>
                 <mn data-latex="8">8</mn>
               </mtd>
@@ -11173,13 +11173,13 @@ exports[`Physics7_10 Matrices_Adiag_5 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="\\mqty{9}\\\\ &amp;\\mqty{10}\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{9}\\\\ &amp;\\mqty{10}\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="\\begin{array}{} 9\\end{array}">
               <mtd>
                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 9\\end{array}">
-                  <mtr data-latex="{}">
+                  <mtr data-latex="9">
                     <mtd>
                       <mn data-latex="9">9</mn>
                     </mtd>
@@ -11187,11 +11187,11 @@ exports[`Physics7_10 Matrices_Adiag_5 1`] = `
                 </mtable>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="&amp;\\begin{array}{} 10\\end{array}">
               <mtd></mtd>
               <mtd>
                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 10\\end{array}">
-                  <mtr data-latex="{}">
+                  <mtr data-latex="10">
                     <mtd>
                       <mn data-latex="10">10</mn>
                     </mtd>
@@ -11235,7 +11235,7 @@ exports[`Physics7_11 Matrices_Other_2 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\left(\\begin{array}{} *\\end{array}\\right)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="*">
         <mtd>
           <mo data-latex="*">&#x2217;</mo>
         </mtd>
@@ -11252,10 +11252,10 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3,4&amp;4&amp;5\\\\4&amp;5,33,4,5,7,8\\\\0\\\\10&amp;20\\\\3,200})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 1\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -11263,11 +11263,11 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 2&amp;3\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -11278,12 +11278,12 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;\\begin{array}{} 4&amp;4&amp;5\\\\4&amp;5\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 4&amp;4&amp;5\\\\4&amp;5\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;4&amp;5">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -11294,7 +11294,7 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
                 <mn data-latex="5">5</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;5">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -11305,13 +11305,13 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;\\begin{array}{} 33\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 33\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="33">
               <mtd>
                 <mn data-latex="33">33</mn>
               </mtd>
@@ -11319,14 +11319,14 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;&amp;\\begin{array}{} 4\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 4\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="4">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -11334,7 +11334,7 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;&amp;&amp;\\begin{array}{} 5\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
@@ -11342,7 +11342,7 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 5\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="5">
               <mtd>
                 <mn data-latex="5">5</mn>
               </mtd>
@@ -11350,7 +11350,7 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;&amp;&amp;&amp;\\begin{array}{} 7\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
@@ -11359,7 +11359,7 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="7">
               <mtd>
                 <mn data-latex="7">7</mn>
               </mtd>
@@ -11367,7 +11367,7 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;&amp;&amp;&amp;&amp;\\begin{array}{} 8\\\\0\\\\10&amp;20\\\\3\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
@@ -11377,17 +11377,17 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\\\0\\\\10&amp;20\\\\3\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="8">
               <mtd>
                 <mn data-latex="8">8</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="0">
               <mtd>
                 <mn data-latex="0">0</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="10&amp;20">
               <mtd>
                 <mn data-latex="10">10</mn>
               </mtd>
@@ -11395,7 +11395,7 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
                 <mn data-latex="20">20</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="3">
               <mtd>
                 <mn data-latex="3">3</mn>
               </mtd>
@@ -11403,7 +11403,7 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;\\begin{array}{} 200\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
@@ -11414,7 +11414,7 @@ exports[`Physics7_11 Matrices_Other_3 1`] = `
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 200\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="200">
               <mtd>
                 <mn data-latex="200">200</mn>
               </mtd>
@@ -11433,10 +11433,10 @@ exports[`Physics7_11 Matrices_Other_4 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 1\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -11444,11 +11444,11 @@ exports[`Physics7_11 Matrices_Other_4 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -11456,7 +11456,7 @@ exports[`Physics7_11 Matrices_Other_4 1`] = `
                 <mn data-latex="3">3</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;5">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -11478,10 +11478,10 @@ exports[`Physics7_11 Matrices_Other_5 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\dmat{1,2&amp;3\\\\4&amp;5&amp;6,\\imat{3},7,8,\\dmat{9,10}})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 1\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -11489,11 +11489,11 @@ exports[`Physics7_11 Matrices_Other_5 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2&amp;3\\\\4&amp;5&amp;6\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -11501,7 +11501,7 @@ exports[`Physics7_11 Matrices_Other_5 1`] = `
                 <mn data-latex="3">3</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;5&amp;6">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -11515,12 +11515,12 @@ exports[`Physics7_11 Matrices_Other_5 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;1 &amp; 0 &amp; 0\\\\ 0 &amp; 1 &amp; 0\\\\ 0 &amp; 0 &amp; 1\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="1 &amp; 0 &amp; 0\\\\ 0 &amp; 1 &amp; 0\\\\ 0 &amp; 0 &amp; 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1&amp;0&amp;0">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -11531,7 +11531,7 @@ exports[`Physics7_11 Matrices_Other_5 1`] = `
                 <mn data-latex="0">0</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="0&amp;1&amp;0">
               <mtd>
                 <mn data-latex="0">0</mn>
               </mtd>
@@ -11542,7 +11542,7 @@ exports[`Physics7_11 Matrices_Other_5 1`] = `
                 <mn data-latex="0">0</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="0&amp;0&amp;1">
               <mtd>
                 <mn data-latex="0">0</mn>
               </mtd>
@@ -11556,13 +11556,13 @@ exports[`Physics7_11 Matrices_Other_5 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;\\begin{array}{} 7\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="7">
               <mtd>
                 <mn data-latex="7">7</mn>
               </mtd>
@@ -11570,14 +11570,14 @@ exports[`Physics7_11 Matrices_Other_5 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;&amp;\\begin{array}{} 8\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 8\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="8">
               <mtd>
                 <mn data-latex="8">8</mn>
               </mtd>
@@ -11585,7 +11585,7 @@ exports[`Physics7_11 Matrices_Other_5 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;&amp;&amp;\\mqty{9}\\\\ &amp;\\mqty{10}\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
@@ -11593,10 +11593,10 @@ exports[`Physics7_11 Matrices_Other_5 1`] = `
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{9}\\\\ &amp;\\mqty{10}\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="\\begin{array}{} 9\\end{array}">
               <mtd>
                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 9\\end{array}">
-                  <mtr data-latex="{}">
+                  <mtr data-latex="9">
                     <mtd>
                       <mn data-latex="9">9</mn>
                     </mtd>
@@ -11604,11 +11604,11 @@ exports[`Physics7_11 Matrices_Other_5 1`] = `
                 </mtable>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="&amp;\\begin{array}{} 10\\end{array}">
               <mtd></mtd>
               <mtd>
                 <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 10\\end{array}">
-                  <mtr data-latex="{}">
+                  <mtr data-latex="10">
                     <mtd>
                       <mn data-latex="10">10</mn>
                     </mtd>
@@ -11630,10 +11630,10 @@ exports[`Physics7_11 Matrices_Other_6 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mqty(\\mqty{1}\\\\ &amp; \\mqty{2 &amp; 3\\\\ 4 &amp; 5 &amp; 6}\\\\ &amp; &amp; \\mqty{\\imat{3}} \\\\ &amp; &amp; &amp; \\mqty{7})">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
     <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
-      <mtr data-latex="{}">
+      <mtr data-latex="\\begin{array}{} 1\\end{array}">
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -11641,11 +11641,11 @@ exports[`Physics7_11 Matrices_Other_6 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;\\begin{array}{} 2 &amp; 3\\\\ 4 &amp; 5 &amp; 6\\end{array}">
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 2 &amp; 3\\\\ 4 &amp; 5 &amp; 6\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="2&amp;3">
               <mtd>
                 <mn data-latex="2">2</mn>
               </mtd>
@@ -11653,7 +11653,7 @@ exports[`Physics7_11 Matrices_Other_6 1`] = `
                 <mn data-latex="3">3</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="4&amp;5&amp;6">
               <mtd>
                 <mn data-latex="4">4</mn>
               </mtd>
@@ -11667,12 +11667,12 @@ exports[`Physics7_11 Matrices_Other_6 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;1 &amp; 0 &amp; 0\\\\ 0 &amp; 1 &amp; 0\\\\ 0 &amp; 0 &amp; 1\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="1 &amp; 0 &amp; 0\\\\ 0 &amp; 1 &amp; 0\\\\ 0 &amp; 0 &amp; 1\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="1&amp;0&amp;0">
               <mtd>
                 <mn data-latex="1">1</mn>
               </mtd>
@@ -11683,7 +11683,7 @@ exports[`Physics7_11 Matrices_Other_6 1`] = `
                 <mn data-latex="0">0</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="0&amp;1&amp;0">
               <mtd>
                 <mn data-latex="0">0</mn>
               </mtd>
@@ -11694,7 +11694,7 @@ exports[`Physics7_11 Matrices_Other_6 1`] = `
                 <mn data-latex="0">0</mn>
               </mtd>
             </mtr>
-            <mtr data-latex="{}">
+            <mtr data-latex="0&amp;0&amp;1">
               <mtd>
                 <mn data-latex="0">0</mn>
               </mtd>
@@ -11708,13 +11708,13 @@ exports[`Physics7_11 Matrices_Other_6 1`] = `
           </mtable>
         </mtd>
       </mtr>
-      <mtr data-latex="{}">
+      <mtr data-latex="&amp;&amp;&amp;\\begin{array}{} 7\\end{array}">
         <mtd></mtd>
         <mtd></mtd>
         <mtd></mtd>
         <mtd>
           <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{} 7\\end{array}">
-            <mtr data-latex="{}">
+            <mtr data-latex="7">
               <mtd>
                 <mn data-latex="7">7</mn>
               </mtd>
@@ -11745,7 +11745,7 @@ exports[`Physics7_11 Matrices_Other_8 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}">
     <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-      <mtr>
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -11753,7 +11753,7 @@ exports[`Physics7_11 Matrices_Other_8 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -11770,7 +11770,7 @@ exports[`Physics7_11 Matrices_Other_9 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty{\\imat{3}}" display="block">
   <mstyle scriptlevel="1" data-latex="\\smqty{\\imat{3}}">
     <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-      <mtr>
+      <mtr data-latex="{}1&amp;0&amp;0">
         <mtd>
           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
           <mn data-latex="1">1</mn>
@@ -11782,7 +11782,7 @@ exports[`Physics7_11 Matrices_Other_9 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="0&amp;1&amp;0">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -11793,7 +11793,7 @@ exports[`Physics7_11 Matrices_Other_9 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="0&amp;0&amp;1">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -11812,7 +11812,7 @@ exports[`Physics7_11 Matrices_Other_9 1`] = `
 exports[`Physics7_11 Matrices_Other_10 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mqty{\\imat{10}}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="" data-frame-styles="" framespacing=".5em .125em" data-latex="\\mqty{\\imat{10}}">
-    <mtr data-latex="{}">
+    <mtr data-latex="1&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0">
       <mtd>
         <mn data-latex="1">1</mn>
       </mtd>
@@ -11844,7 +11844,7 @@ exports[`Physics7_11 Matrices_Other_10 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;1&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -11876,7 +11876,7 @@ exports[`Physics7_11 Matrices_Other_10 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;0&amp;1&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -11908,7 +11908,7 @@ exports[`Physics7_11 Matrices_Other_10 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;0&amp;0&amp;1&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -11940,7 +11940,7 @@ exports[`Physics7_11 Matrices_Other_10 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;0&amp;0&amp;0&amp;1&amp;0&amp;0&amp;0&amp;0&amp;0">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -11972,7 +11972,7 @@ exports[`Physics7_11 Matrices_Other_10 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;0&amp;0&amp;0&amp;0&amp;1&amp;0&amp;0&amp;0&amp;0">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -12004,7 +12004,7 @@ exports[`Physics7_11 Matrices_Other_10 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;1&amp;0&amp;0&amp;0">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -12036,7 +12036,7 @@ exports[`Physics7_11 Matrices_Other_10 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;1&amp;0&amp;0">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -12068,7 +12068,7 @@ exports[`Physics7_11 Matrices_Other_10 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;1&amp;0">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>
@@ -12100,7 +12100,7 @@ exports[`Physics7_11 Matrices_Other_10 1`] = `
         <mn data-latex="0">0</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="{}">
+    <mtr data-latex="0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;0&amp;1">
       <mtd>
         <mn data-latex="0">0</mn>
       </mtd>

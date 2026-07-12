@@ -3,7 +3,7 @@
 exports[`Colortbl cellcolor 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; \\cellcolor{red} b \\\\ \\cellcolor{yellow} c &amp; d \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; \\cellcolor{red} b \\\\ \\cellcolor{yellow} c &amp; d \\end{array}">
-    <mtr data-latex="{cc}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -11,7 +11,7 @@ exports[`Colortbl cellcolor 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{cc}">
+    <mtr data-latex="c&amp;d">
       <mtd mathbackground="yellow">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -28,7 +28,7 @@ exports[`Colortbl cellcolor in pmatrix 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\pmatrix{ \\cellcolor{red} a }">
     <mo data-mjx-texclass="OPEN">(</mo>
     <mtable rowspacing="4pt" columnspacing="1em" data-frame-styles="" framespacing=".2em .125em">
-      <mtr data-latex="{">
+      <mtr data-latex="a">
         <mtd mathbackground="red">
           <mi data-latex="a">a</mi>
         </mtd>
@@ -42,7 +42,7 @@ exports[`Colortbl cellcolor in pmatrix 1`] = `
 exports[`Colortbl cellcolor in preamble 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c&gt;{\\cellcolor{yellow}}c} a &amp; b \\\\ c &amp; d \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\cellcolor{yellow}d\\end{array}">
-    <mtr data-latex="{c&gt;{\\cellcolor{yellow}}c}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -50,7 +50,7 @@ exports[`Colortbl cellcolor in preamble 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{c&gt;{\\cellcolor{yellow}}c}">
+    <mtr data-latex="c&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -65,7 +65,7 @@ exports[`Colortbl cellcolor in preamble 1`] = `
 exports[`Colortbl cellcolor late 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; b \\cellcolor{red} \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; b \\cellcolor{red} \\end{array}">
-    <mtr data-latex="{cc}">
+    <mtr data-latex="a&amp;\\cellcolor{red}">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -80,7 +80,7 @@ exports[`Colortbl cellcolor late 1`] = `
 exports[`Colortbl cellcolor with color model 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrix{ \\cellcolor[rgb]{1,0,0} a }" display="block">
   <mtable rowspacing="4pt" columnspacing="1em" data-frame-styles="" framespacing=".2em .125em" data-latex="\\matrix{ \\cellcolor[rgb]{1,0,0} a }">
-    <mtr data-latex="{">
+    <mtr data-latex="a">
       <mtd mathbackground="#ff0000">
         <mi data-latex="a">a</mi>
       </mtd>
@@ -92,7 +92,7 @@ exports[`Colortbl cellcolor with color model 1`] = `
 exports[`Colortbl cellcolor with columncolor 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ c &amp; \\cellcolor{yellow} d \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ c &amp; \\cellcolor{yellow} d \\end{array}">
-    <mtr data-latex="{cc}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -100,7 +100,7 @@ exports[`Colortbl cellcolor with columncolor 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{cc}">
+    <mtr data-latex="c&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -115,7 +115,7 @@ exports[`Colortbl cellcolor with columncolor 1`] = `
 exports[`Colortbl cellcolor with columncolor and rowcolor 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ \\rowcolor{yellow} c &amp; \\cellcolor{green} d \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ \\rowcolor{yellow} c &amp; \\cellcolor{green} d \\end{array}">
-    <mtr data-latex="{cc}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -123,7 +123,7 @@ exports[`Colortbl cellcolor with columncolor and rowcolor 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{cc}">
+    <mtr data-latex="c&amp;d">
       <mtd mathbackground="yellow">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -139,7 +139,7 @@ exports[`Colortbl cellcolor with frame 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{|c|} \\cellcolor{red} a \\end{array}" display="block">
   <menclose notation="left right" data-padding="0" data-latex="\\begin{array}{|c|} \\cellcolor{red} a \\end{array}">
     <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em">
-      <mtr data-latex="{|c|}">
+      <mtr data-latex="a">
         <mtd mathbackground="red">
           <mi data-latex="a">a</mi>
         </mtd>
@@ -152,7 +152,7 @@ exports[`Colortbl cellcolor with frame 1`] = `
 exports[`Colortbl cellcolor with rowcolor 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; b \\\\ \\rowcolor{red} c &amp; \\cellcolor{yellow} d \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; b \\\\ \\rowcolor{red} c &amp; \\cellcolor{yellow} d \\end{array}">
-    <mtr data-latex="{cc}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -160,7 +160,7 @@ exports[`Colortbl cellcolor with rowcolor 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{cc}">
+    <mtr data-latex="c&amp;d">
       <mtd mathbackground="red">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -175,7 +175,7 @@ exports[`Colortbl cellcolor with rowcolor 1`] = `
 exports[`Colortbl color with no frame 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\matrix{ \\cellcolor[rgb]{1,0,0} a }" display="block">
   <mtable rowspacing="4pt" columnspacing="1em" data-frame-styles="" data-latex="\\matrix{ \\cellcolor[rgb]{1,0,0} a }">
-    <mtr data-latex="{">
+    <mtr data-latex="a">
       <mtd mathbackground="#ff0000">
         <mi data-latex="a">a</mi>
       </mtd>
@@ -187,7 +187,7 @@ exports[`Colortbl color with no frame 1`] = `
 exports[`Colortbl columncolor 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; \\columncolor{yellow} b \\\\ c &amp; d \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; \\columncolor{yellow} b \\\\ c &amp; d \\end{array}">
-    <mtr data-latex="{cc}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -195,7 +195,7 @@ exports[`Colortbl columncolor 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{cc}">
+    <mtr data-latex="c&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -210,7 +210,7 @@ exports[`Colortbl columncolor 1`] = `
 exports[`Colortbl columncolor and rowcolor 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ \\rowcolor{yellow} c &amp; d \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red} b \\\\ \\rowcolor{yellow} c &amp; d \\end{array}">
-    <mtr data-latex="{cc}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -218,7 +218,7 @@ exports[`Colortbl columncolor and rowcolor 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{cc}">
+    <mtr data-latex="c&amp;d">
       <mtd mathbackground="yellow">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -233,7 +233,7 @@ exports[`Colortbl columncolor and rowcolor 1`] = `
 exports[`Colortbl columncolor ignore overlap 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red}[ignore][ignore] b \\\\ c &amp; d \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; \\columncolor{red}[ignore][ignore] b \\\\ c &amp; d \\end{array}">
-    <mtr data-latex="{cc}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -241,7 +241,7 @@ exports[`Colortbl columncolor ignore overlap 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{cc}">
+    <mtr data-latex="c&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -256,7 +256,7 @@ exports[`Colortbl columncolor ignore overlap 1`] = `
 exports[`Colortbl columncolor in preamble 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c&gt;{\\columncolor{yellow}}c} a &amp; b \\\\ c &amp; d \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\columncolor{yellow}d\\end{array}">
-    <mtr data-latex="{c&gt;{\\columncolor{yellow}}c}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -264,7 +264,7 @@ exports[`Colortbl columncolor in preamble 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{c&gt;{\\columncolor{yellow}}c}">
+    <mtr data-latex="c&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -279,7 +279,7 @@ exports[`Colortbl columncolor in preamble 1`] = `
 exports[`Colortbl rowcolor 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} a &amp; b \\\\ \\rowcolor{yellow} c &amp; d \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} a &amp; b \\\\ \\rowcolor{yellow} c &amp; d \\end{array}">
-    <mtr data-latex="{cc}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -287,7 +287,7 @@ exports[`Colortbl rowcolor 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{cc}">
+    <mtr data-latex="c&amp;d">
       <mtd mathbackground="yellow">
         <mi data-latex="c">c</mi>
       </mtd>

@@ -72,7 +72,7 @@ exports[`Page References LabelIds 1`] = `
 exports[`TagAll Align 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -89,7 +89,7 @@ exports[`TagAll Align 1`] = `
 exports[`TagAll Align Two labels 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a=b\\label{A}\\\\ c&amp;=d \\label{B}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align}a=b\\label{A}\\\\ c&amp;=d \\label{B}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="a=\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -101,7 +101,7 @@ exports[`TagAll Align Two labels 1`] = `
         <mi data-latex="\\label{A}">b</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="c&amp;=\\label{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -125,7 +125,7 @@ exports[`TagAll Align Two labels 1`] = `
 exports[`TagAll Eqref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\eqref{A}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -145,7 +145,7 @@ exports[`TagAll Eqref 1`] = `
 exports[`TagAll Label 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\label{A}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -162,7 +162,7 @@ exports[`TagAll Label 1`] = `
 exports[`TagAll Label Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\label{A}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -179,7 +179,7 @@ exports[`TagAll Label Default 1`] = `
 exports[`TagAll Label Empty 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\label{}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{}">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -196,7 +196,7 @@ exports[`TagAll Label Empty 1`] = `
 exports[`TagAll Label Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -213,7 +213,7 @@ exports[`TagAll Label Named 1`] = `
 exports[`TagAll Label Named Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -223,7 +223,7 @@ exports[`TagAll Label Named Default 1`] = `
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -240,7 +240,7 @@ exports[`TagAll Label Named Default 1`] = `
 exports[`TagAll Label Named Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -250,7 +250,7 @@ exports[`TagAll Label Named Named 1`] = `
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{B}">B</mtext>
@@ -294,7 +294,7 @@ exports[`TagAll MultLine 1`] = `
 exports[`TagAll Notag Align 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\notag\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\notag\\end{align}">
-    <mtr>
+    <mtr data-latex="\\notag">
       <mtd>
         <mi data-latex="\\notag">a</mi>
       </mtd>
@@ -328,7 +328,7 @@ exports[`TagAll Notag Multline 1`] = `
 exports[`TagAll Notag Tag 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}">
-    <mtr>
+    <mtr data-latex="\\notag">
       <mtd>
         <mi data-latex="\\notag">a</mi>
       </mtd>
@@ -340,7 +340,7 @@ exports[`TagAll Notag Tag 1`] = `
 exports[`TagAll Ref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{A}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -360,7 +360,7 @@ exports[`TagAll Ref 1`] = `
 exports[`TagAll Ref Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{A}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -380,7 +380,7 @@ exports[`TagAll Ref Default 1`] = `
 exports[`TagAll Ref Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -400,7 +400,7 @@ exports[`TagAll Ref Named 1`] = `
 exports[`TagAll Ref Named Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}\\ref{A}\\ref{B}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -410,7 +410,7 @@ exports[`TagAll Ref Named Default 1`] = `
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -433,7 +433,7 @@ exports[`TagAll Ref Named Default 1`] = `
 exports[`TagAll Ref Named Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}\\ref{A}\\ref{B}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -443,7 +443,7 @@ exports[`TagAll Ref Named Named 1`] = `
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{B}">B</mtext>
@@ -466,7 +466,7 @@ exports[`TagAll Ref Named Named 1`] = `
 exports[`TagAll Ref Unknown 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{B}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -503,7 +503,7 @@ exports[`TagAll Single Expression 1`] = `
 exports[`TagAll Tag Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -520,7 +520,7 @@ exports[`TagAll Tag Default 1`] = `
 exports[`TagAll Tag Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\tag{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -537,7 +537,7 @@ exports[`TagAll Tag Named 1`] = `
 exports[`TagAll Tag Named Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\tag{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -547,7 +547,7 @@ exports[`TagAll Tag Named Default 1`] = `
         <mi data-latex="\\tag{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -564,7 +564,7 @@ exports[`TagAll Tag Named Default 1`] = `
 exports[`TagAll Tag Named Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\tag{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -574,7 +574,7 @@ exports[`TagAll Tag Named Named 1`] = `
         <mi data-latex="\\tag{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\tag{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{B}">B</mtext>
@@ -591,7 +591,7 @@ exports[`TagAll Tag Named Named 1`] = `
 exports[`TagAms Align 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -608,7 +608,7 @@ exports[`TagAms Align 1`] = `
 exports[`TagAms Align Two labels 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a=b\\label{A}\\\\ c&amp;=d \\label{B}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align}a=b\\label{A}\\\\ c&amp;=d \\label{B}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="a=\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -620,7 +620,7 @@ exports[`TagAms Align Two labels 1`] = `
         <mi data-latex="\\label{A}">b</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="c&amp;=\\label{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -644,7 +644,7 @@ exports[`TagAms Align Two labels 1`] = `
 exports[`TagAms Eqref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\eqref{A}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -664,7 +664,7 @@ exports[`TagAms Eqref 1`] = `
 exports[`TagAms Label 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\label{A}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -681,7 +681,7 @@ exports[`TagAms Label 1`] = `
 exports[`TagAms Label Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\label{A}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -698,7 +698,7 @@ exports[`TagAms Label Default 1`] = `
 exports[`TagAms Label Empty 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\label{}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{}">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -715,7 +715,7 @@ exports[`TagAms Label Empty 1`] = `
 exports[`TagAms Label Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -732,7 +732,7 @@ exports[`TagAms Label Named 1`] = `
 exports[`TagAms Label Named Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -742,7 +742,7 @@ exports[`TagAms Label Named Default 1`] = `
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -759,7 +759,7 @@ exports[`TagAms Label Named Default 1`] = `
 exports[`TagAms Label Named Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -769,7 +769,7 @@ exports[`TagAms Label Named Named 1`] = `
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{B}">B</mtext>
@@ -813,7 +813,7 @@ exports[`TagAms MultLine 1`] = `
 exports[`TagAms Notag Align 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\notag\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\notag\\end{align}">
-    <mtr>
+    <mtr data-latex="\\notag">
       <mtd>
         <mi data-latex="\\notag">a</mi>
       </mtd>
@@ -847,7 +847,7 @@ exports[`TagAms Notag Multline 1`] = `
 exports[`TagAms Notag Tag 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}">
-    <mtr>
+    <mtr data-latex="\\notag">
       <mtd>
         <mi data-latex="\\notag">a</mi>
       </mtd>
@@ -859,7 +859,7 @@ exports[`TagAms Notag Tag 1`] = `
 exports[`TagAms Ref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{A}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -879,7 +879,7 @@ exports[`TagAms Ref 1`] = `
 exports[`TagAms Ref Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{A}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -899,7 +899,7 @@ exports[`TagAms Ref Default 1`] = `
 exports[`TagAms Ref Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -919,7 +919,7 @@ exports[`TagAms Ref Named 1`] = `
 exports[`TagAms Ref Named Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}\\ref{A}\\ref{B}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -929,7 +929,7 @@ exports[`TagAms Ref Named Default 1`] = `
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -952,7 +952,7 @@ exports[`TagAms Ref Named Default 1`] = `
 exports[`TagAms Ref Named Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}\\ref{A}\\ref{B}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -962,7 +962,7 @@ exports[`TagAms Ref Named Named 1`] = `
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{B}">B</mtext>
@@ -985,7 +985,7 @@ exports[`TagAms Ref Named Named 1`] = `
 exports[`TagAms Ref Unknown 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{B}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -1011,7 +1011,7 @@ exports[`TagAms Single Expression 1`] = `
 exports[`TagAms Split 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{split}a\\end{split}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="0em" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{split}a\\end{split}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1023,7 +1023,7 @@ exports[`TagAms Split 1`] = `
 exports[`TagAms Tag Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -1040,7 +1040,7 @@ exports[`TagAms Tag Default 1`] = `
 exports[`TagAms Tag Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\tag{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -1057,7 +1057,7 @@ exports[`TagAms Tag Named 1`] = `
 exports[`TagAms Tag Named Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\tag{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -1067,7 +1067,7 @@ exports[`TagAms Tag Named Default 1`] = `
         <mi data-latex="\\tag{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -1084,7 +1084,7 @@ exports[`TagAms Tag Named Default 1`] = `
 exports[`TagAms Tag Named Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\tag{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -1094,7 +1094,7 @@ exports[`TagAms Tag Named Named 1`] = `
         <mi data-latex="\\tag{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\tag{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{B}">B</mtext>
@@ -1111,7 +1111,7 @@ exports[`TagAms Tag Named Named 1`] = `
 exports[`TagNone Align 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\end{align}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1123,7 +1123,7 @@ exports[`TagNone Align 1`] = `
 exports[`TagNone Eqref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\eqref{A}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mtr>
+    <mtr data-latex="\\label{A}">
       <mtd>
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
@@ -1138,7 +1138,7 @@ exports[`TagNone Eqref 1`] = `
 exports[`TagNone Label 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\label{A}\\end{align}">
-    <mtr>
+    <mtr data-latex="\\label{A}">
       <mtd>
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
@@ -1150,7 +1150,7 @@ exports[`TagNone Label 1`] = `
 exports[`TagNone Label Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\label{A}\\end{align}">
-    <mtr>
+    <mtr data-latex="\\label{A}">
       <mtd>
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
@@ -1162,7 +1162,7 @@ exports[`TagNone Label Default 1`] = `
 exports[`TagNone Label Empty 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\label{}\\end{align}">
-    <mtr>
+    <mtr data-latex="\\label{}">
       <mtd>
         <mi data-latex="\\label{}">a</mi>
       </mtd>
@@ -1174,7 +1174,7 @@ exports[`TagNone Label Empty 1`] = `
 exports[`TagNone Label Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -1191,7 +1191,7 @@ exports[`TagNone Label Named 1`] = `
 exports[`TagNone Label Named Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -1201,7 +1201,7 @@ exports[`TagNone Label Named Default 1`] = `
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mtr>
+    <mtr data-latex="\\label{B}">
       <mtd>
         <mi data-latex="\\label{B}">b</mi>
       </mtd>
@@ -1213,7 +1213,7 @@ exports[`TagNone Label Named Default 1`] = `
 exports[`TagNone Label Named Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -1223,7 +1223,7 @@ exports[`TagNone Label Named Named 1`] = `
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{B}">B</mtext>
@@ -1262,7 +1262,7 @@ exports[`TagNone MultLine 1`] = `
 exports[`TagNone Notag Align 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\notag\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\notag\\end{align}">
-    <mtr>
+    <mtr data-latex="\\notag">
       <mtd>
         <mi data-latex="\\notag">a</mi>
       </mtd>
@@ -1296,7 +1296,7 @@ exports[`TagNone Notag Multline 1`] = `
 exports[`TagNone Notag Tag 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}">
-    <mtr>
+    <mtr data-latex="\\notag">
       <mtd>
         <mi data-latex="\\notag">a</mi>
       </mtd>
@@ -1308,7 +1308,7 @@ exports[`TagNone Notag Tag 1`] = `
 exports[`TagNone Ref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{A}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mtr>
+    <mtr data-latex="\\label{A}">
       <mtd>
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
@@ -1323,7 +1323,7 @@ exports[`TagNone Ref 1`] = `
 exports[`TagNone Ref Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{A}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mtr>
+    <mtr data-latex="\\label{A}">
       <mtd>
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
@@ -1338,7 +1338,7 @@ exports[`TagNone Ref Default 1`] = `
 exports[`TagNone Ref Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -1358,7 +1358,7 @@ exports[`TagNone Ref Named 1`] = `
 exports[`TagNone Ref Named Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}\\ref{A}\\ref{B}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -1368,7 +1368,7 @@ exports[`TagNone Ref Named Default 1`] = `
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mtr>
+    <mtr data-latex="\\label{B}">
       <mtd>
         <mi data-latex="\\label{B}">b</mi>
       </mtd>
@@ -1386,7 +1386,7 @@ exports[`TagNone Ref Named Default 1`] = `
 exports[`TagNone Ref Named Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}\\ref{A}\\ref{B}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -1396,7 +1396,7 @@ exports[`TagNone Ref Named Named 1`] = `
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\label{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{B}">B</mtext>
@@ -1419,7 +1419,7 @@ exports[`TagNone Ref Named Named 1`] = `
 exports[`TagNone Ref Unknown 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{B}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="{align}">
-    <mtr>
+    <mtr data-latex="\\label{A}">
       <mtd>
         <mi data-latex="\\label{A}">a</mi>
       </mtd>
@@ -1457,7 +1457,7 @@ exports[`TagNone Single Expression 1`] = `
 exports[`TagNone Split 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{split}a\\end{split}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="0em" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{split}a\\end{split}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1469,7 +1469,7 @@ exports[`TagNone Split 1`] = `
 exports[`TagNone Tag Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\end{align}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1481,7 +1481,7 @@ exports[`TagNone Tag Default 1`] = `
 exports[`TagNone Tag Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\tag{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -1498,7 +1498,7 @@ exports[`TagNone Tag Named 1`] = `
 exports[`TagNone Tag Named Default 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\tag{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -1508,7 +1508,7 @@ exports[`TagNone Tag Named Default 1`] = `
         <mi data-latex="\\tag{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
@@ -1520,7 +1520,7 @@ exports[`TagNone Tag Named Default 1`] = `
 exports[`TagNone Tag Named Named 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\tag{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -1530,7 +1530,7 @@ exports[`TagNone Tag Named Named 1`] = `
         <mi data-latex="\\tag{A}">a</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\tag{B}">
       <mtd id="mjx-eqn:B">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{B}">B</mtext>

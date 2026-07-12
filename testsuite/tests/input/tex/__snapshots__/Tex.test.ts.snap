@@ -94,7 +94,7 @@ exports[`TexParser GetBrackets nested [ 1`] = `
 exports[`TexParser Removed delimiter 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\vert=x \\begin{vmatrix} a \\end{vmatrix}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\let\\vert=x \\begin{vmatrix} a \\end{vmatrix}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>

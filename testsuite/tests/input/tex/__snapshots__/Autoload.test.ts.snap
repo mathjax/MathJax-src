@@ -3,7 +3,7 @@
 exports[`Autoload Autoload environment 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD} a @&gt;&gt;&gt; b\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD} a @&gt;&gt;&gt; b\\end{CD}">
-    <mtr>
+    <mtr data-latex="a&amp;&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
