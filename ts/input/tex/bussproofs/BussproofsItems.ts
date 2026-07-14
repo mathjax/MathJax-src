@@ -96,7 +96,7 @@ export class ProofTreeItem extends BaseItem {
    *
    * @param {MmlNode} tree The proof tree.
    */
-  private alignProof(tree: MmlNode) {
+  protected alignProof(tree: MmlNode) {
     const align = this.getProperty('proofAlign') as string;
     if (!align || align === 'normal') {
       return;
