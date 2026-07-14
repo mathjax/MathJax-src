@@ -24,7 +24,7 @@ exports[`Setoptions Require Require with option 1`] = `
 exports[`Setoptions Set TeX option 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions{tagSide=left} a=b\\tag{1}" display="block">
   <mtable side="left" displaystyle="true" data-latex="\\setOptions{tagSide=left} a=b\\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a=b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -33,7 +33,7 @@ exports[`Setoptions Set TeX option 1`] = `
       <mtd>
         <mi data-latex="a">a</mi>
         <mo data-latex="=">=</mo>
-        <mi data-latex="\\tag{1}">b</mi>
+        <mi data-latex="b">b</mi>
       </mtd>
     </mlabeledtr>
   </mtable>

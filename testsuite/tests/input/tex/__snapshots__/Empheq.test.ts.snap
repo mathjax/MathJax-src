@@ -225,7 +225,7 @@ exports[`Empheq Characters empheqrvert 1`] = `
 exports[`Empheq Empheq Left 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{empheq}[left=L\\Rightarrow]{align} a&amp;=b\\\\ c&amp;=d \\end{empheq}" display="block">
   <mtable displaystyle="true" columnalign="right right left" columnspacing="0em 0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a&amp;=b\\\\ c&amp;=d \\end{empheq}">
-    <mlabeledtr data-latex="a&amp;=b">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -239,7 +239,7 @@ exports[`Empheq Empheq Left 1`] = `
             <mphantom>
               <mpadded width="0">
                 <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top">
-                  <mlabeledtr data-latex="a&amp;=b">
+                  <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{1}">1</mtext>
@@ -256,7 +256,7 @@ exports[`Empheq Empheq Left 1`] = `
                       </mstyle>
                     </mtd>
                   </mlabeledtr>
-                  <mlabeledtr data-latex="c&amp;=d">
+                  <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c&amp;=d">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{2}">2</mtext>
@@ -280,7 +280,7 @@ exports[`Empheq Empheq Left 1`] = `
           <mphantom>
             <mpadded width="0">
               <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" align="baseline 1">
-                <mlabeledtr data-latex="a&amp;=b">
+                <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
                   <mtd>
                     <mtext data-latex="\\text{(}">(</mtext>
                     <mtext data-latex="\\text{1}">1</mtext>
@@ -313,7 +313,7 @@ exports[`Empheq Empheq Left 1`] = `
         </mstyle>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="c&amp;=d">
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c&amp;=d">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -338,7 +338,7 @@ exports[`Empheq Empheq Left 1`] = `
 exports[`Empheq Empheq Right 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{empheq}[right=\\Leftarrow R]{align} a&amp;=b\\\\ c&amp;=d \\end{empheq}" display="block">
   <mtable displaystyle="true" columnalign="right left left" columnspacing="0em 0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a&amp;=b\\\\ c&amp;=d \\end{empheq}">
-    <mlabeledtr data-latex="a&amp;=b">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -362,7 +362,7 @@ exports[`Empheq Empheq Right 1`] = `
             <mphantom>
               <mpadded width="0">
                 <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top">
-                  <mlabeledtr data-latex="a&amp;=b">
+                  <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{1}">1</mtext>
@@ -379,7 +379,7 @@ exports[`Empheq Empheq Right 1`] = `
                       </mstyle>
                     </mtd>
                   </mlabeledtr>
-                  <mlabeledtr data-latex="c&amp;=d">
+                  <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c&amp;=d">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{2}">2</mtext>
@@ -403,7 +403,7 @@ exports[`Empheq Empheq Right 1`] = `
           <mphantom>
             <mpadded width="0">
               <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" align="baseline 1">
-                <mlabeledtr data-latex="a&amp;=b">
+                <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
                   <mtd>
                     <mtext data-latex="\\text{(}">(</mtext>
                     <mtext data-latex="\\text{1}">1</mtext>
@@ -426,7 +426,7 @@ exports[`Empheq Empheq Right 1`] = `
         </mpadded>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="c&amp;=d">
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c&amp;=d">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -450,7 +450,7 @@ exports[`Empheq Empheq Right 1`] = `
 exports[`Empheq Numcases  1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{empheq}[right=x]{align} a \\\\ b&amp;=c \\end{empheq}" display="block">
   <mtable displaystyle="true" columnalign="right left left" columnspacing="0em 0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a \\\\ b&amp;=c \\end{empheq}">
-    <mlabeledtr data-latex="a">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -467,7 +467,7 @@ exports[`Empheq Numcases  1`] = `
             <mphantom>
               <mpadded width="0">
                 <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top">
-                  <mlabeledtr data-latex="a">
+                  <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{1}">1</mtext>
@@ -477,7 +477,7 @@ exports[`Empheq Numcases  1`] = `
                       <mi data-latex="a">a</mi>
                     </mtd>
                   </mlabeledtr>
-                  <mlabeledtr data-latex="b&amp;=c">
+                  <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;b&amp;=c">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{2}">2</mtext>
@@ -501,7 +501,7 @@ exports[`Empheq Numcases  1`] = `
           <mphantom>
             <mpadded width="0">
               <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" align="baseline 1">
-                <mlabeledtr data-latex="a">
+                <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
                   <mtd>
                     <mtext data-latex="\\text{(}">(</mtext>
                     <mtext data-latex="\\text{1}">1</mtext>
@@ -517,7 +517,7 @@ exports[`Empheq Numcases  1`] = `
         </mpadded>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="b&amp;=c">
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;b&amp;=c">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -541,7 +541,7 @@ exports[`Empheq Numcases  1`] = `
 exports[`Empheq Numcases alignedat 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{empheq}{alignat=2} a &amp; b &amp; c &amp; d \\end{empheq}" display="block">
   <mtable displaystyle="true" columnalign="right left right left" columnspacing="0em 0em 0em" rowspacing="3pt" data-break-align="bottom top bottom top" data-latex="\\begin{alignat}{2} a &amp; b &amp; c &amp; d \\end{empheq}">
-    <mlabeledtr data-latex="a&amp;b&amp;c&amp;d">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;b&amp;c&amp;d">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -623,7 +623,7 @@ exports[`Empheq Numcases empty right 1`] = `
 exports[`Empheq Numcases with label 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{numcases}{A=\\label{test}} a&amp;=b \\end{numcases}" display="block">
   <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{A=\\label{test}} a&amp;=b \\end{numcases}">
-    <mlabeledtr data-latex="a&amp;&amp;">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;&amp;">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -633,13 +633,13 @@ exports[`Empheq Numcases with label 1`] = `
         <mpadded height="0" depth="0" voffset="height">
           <mpadded height="0" depth="0" voffset="-1height">
             <mi data-latex="A">A</mi>
-            <mo data-latex="\\label{test}">=</mo>
+            <mo data-latex="=">=</mo>
             <mo data-latex="\\mmlToken{mo}{\\U{7B}}">{</mo>
             <mspace width="0.167em" data-latex="\\,"></mspace>
             <mphantom>
               <mpadded width="0">
                 <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
-                  <mlabeledtr data-latex="a&amp;&amp;">
+                  <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;&amp;">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{1}">1</mtext>
@@ -664,7 +664,7 @@ exports[`Empheq Numcases with label 1`] = `
           <mphantom>
             <mpadded width="0">
               <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
-                <mlabeledtr data-latex="a&amp;&amp;">
+                <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;&amp;">
                   <mtd>
                     <mtext data-latex="\\text{(}">(</mtext>
                     <mtext data-latex="\\text{1}">1</mtext>

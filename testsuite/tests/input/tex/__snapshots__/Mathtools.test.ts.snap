@@ -3915,14 +3915,14 @@ exports[`Mathtools Symbols Other 1`] = `
 exports[`Mathtools Tagging Tags add 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newtagform{bars}||\\usetagform{bars} x\\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="\\newtagform{bars}||\\usetagform{bars} x\\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{|}\\text{1}\\text{|}&amp;x">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{|}">|</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{|}">|</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{1}">x</mi>
+        <mi data-latex="x">x</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -3932,7 +3932,7 @@ exports[`Mathtools Tagging Tags add 1`] = `
 exports[`Mathtools Tagging newtagform 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newtagform{brackets}{[}{]}\\usetagform{brackets} E=mc^2\\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="\\newtagform{brackets}{[}{]}\\usetagform{brackets} E=mc^2 \\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{[}\\text{1}\\text{]}&amp;E=m c^2">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{[}">[</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -3955,7 +3955,7 @@ exports[`Mathtools Tagging newtagform 1`] = `
 exports[`Mathtools Tagging newtagform styled 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newtagform{bfbrackets}[\\textbf]{[}{]}\\usetagform{bfbrackets} E=mc^2\\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="\\newtagform{bfbrackets}[\\textbf]{[}{]}\\usetagform{bfbrackets} E=mc^2 \\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{[}\\text{\\textbf{1}}\\text{]}&amp;E=m c^2">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{[}">[</mtext>
         <mtext data-latex="\\text{\\textbf{1}}">\\textbf{1}</mtext>
@@ -3978,7 +3978,7 @@ exports[`Mathtools Tagging newtagform styled 1`] = `
 exports[`Mathtools Tagging refeq 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}E=mc^2\\label{test}\\tag*{\\textsf{A}}\\\\ \\refeq{test}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}E=mc^2 \\label{test}\\tag*{\\textsf{A}}\\\\ \\refeq{test}\\end{align}">
-    <mlabeledtr data-latex="E=m c^2">
+    <mlabeledtr data-latex="\\text{\\textsf{A}}&amp;E=m c^2">
       <mtd id="mjx-eqn:test">
         <mtext data-latex="\\text{\\textsf{A}}">\\textsf{A}</mtext>
       </mtd>
@@ -4006,7 +4006,7 @@ exports[`Mathtools Tagging refeq 1`] = `
 exports[`Mathtools Tagging renewtagform 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newtagform{a}{(}{)}\\renewtagform{a}{((}{))}\\usetagform{a} E=mc^2\\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="\\newtagform{a}{(}{)}\\renewtagform{a}{((}{))}\\usetagform{a} E=mc^2 \\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{((}\\text{1}\\text{))}&amp;E=m c^2">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{((}">((</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -4247,7 +4247,7 @@ exports[`Mathtools options pairedDelimiters 3`] = `
 exports[`Mathtools options tagforms 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\usetagform{bold} a=b\\tag{x}" display="block">
   <mtable displaystyle="true" data-latex="\\usetagform{bold} a=b\\tag{x}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{[[}\\text{\\mathbf{x}}\\text{]]}&amp;a=b">
       <mtd id="mjx-eqn:x">
         <mtext data-latex="\\text{[[}">[[</mtext>
         <mtext data-latex="\\text{\\mathbf{x}}">\\mathbf{x}</mtext>
@@ -4256,7 +4256,7 @@ exports[`Mathtools options tagforms 1`] = `
       <mtd>
         <mi data-latex="a">a</mi>
         <mo data-latex="=">=</mo>
-        <mi data-latex="\\tag{x}">b</mi>
+        <mi data-latex="b">b</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -4266,14 +4266,14 @@ exports[`Mathtools options tagforms 1`] = `
 exports[`Mathtools options tagforms reset 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\usetagform{bold} \\usetagform{} a\\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="\\usetagform{bold} \\usetagform{} a\\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{)}">)</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{1}">a</mi>
+        <mi data-latex="a">a</mi>
       </mtd>
     </mlabeledtr>
   </mtable>

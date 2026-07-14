@@ -7573,14 +7573,14 @@ exports[`Primes Triple Prime 1`] = `
 exports[`Referencing Label 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}" display="block">
   <mtable displaystyle="true" data-latex="a\\label{A}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{)}">)</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\label{A}">a</mi>
+        <mi data-latex="a">a</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -7590,51 +7590,7 @@ exports[`Referencing Label 1`] = `
 exports[`Referencing Label Empty 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{}" display="block">
   <mtable displaystyle="true" data-latex="a\\label{}">
-    <mlabeledtr>
-      <mtd id="mjx-eqn:1">
-        <mtext data-latex="\\text{(}">(</mtext>
-        <mtext data-latex="\\text{1}">1</mtext>
-        <mtext data-latex="\\text{)}">)</mtext>
-      </mtd>
-      <mtd>
-        <mi data-latex="\\label{}">a</mi>
-      </mtd>
-    </mlabeledtr>
-  </mtable>
-</math>"
-`;
-
-exports[`Referencing Label Multiple 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}" display="block">
-  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}">
-    <mlabeledtr data-latex="\\label{A}">
-      <mtd id="mjx-eqn:A">
-        <mtext data-latex="\\text{(}">(</mtext>
-        <mtext data-latex="\\text{1}">1</mtext>
-        <mtext data-latex="\\text{)}">)</mtext>
-      </mtd>
-      <mtd>
-        <mi data-latex="\\label{A}">a</mi>
-      </mtd>
-    </mlabeledtr>
-    <mlabeledtr data-latex="\\label{B}">
-      <mtd id="mjx-eqn:B">
-        <mtext data-latex="\\text{(}">(</mtext>
-        <mtext data-latex="\\text{2}">2</mtext>
-        <mtext data-latex="\\text{)}">)</mtext>
-      </mtd>
-      <mtd>
-        <mi data-latex="\\label{B}">c</mi>
-      </mtd>
-    </mlabeledtr>
-  </mtable>
-</math>"
-`;
-
-exports[`Referencing Nonumber 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}" display="block">
-  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}">
-    <mlabeledtr data-latex="a">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -7644,9 +7600,53 @@ exports[`Referencing Nonumber 1`] = `
         <mi data-latex="a">a</mi>
       </mtd>
     </mlabeledtr>
-    <mtr data-latex="\\nonumber">
+  </mtable>
+</math>"
+`;
+
+exports[`Referencing Label Multiple 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}" display="block">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
+      <mtd id="mjx-eqn:A">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
       <mtd>
-        <mi data-latex="\\nonumber">c</mi>
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c">
+      <mtd id="mjx-eqn:B">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{2}">2</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mi data-latex="c">c</mi>
+      </mtd>
+    </mlabeledtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Referencing Nonumber 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}" display="block">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
+      <mtd id="mjx-eqn:1">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mlabeledtr>
+    <mtr data-latex="c">
+      <mtd>
+        <mi data-latex="c">c</mi>
       </mtd>
     </mtr>
   </mtable>
@@ -7656,14 +7656,14 @@ exports[`Referencing Nonumber 1`] = `
 exports[`Referencing Ref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}\\ref{A}" display="block">
   <mtable displaystyle="true" data-latex="a\\label{A}\\ref{A}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a\\ref{A}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{)}">)</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\label{A}">a</mi>
+        <mi data-latex="a">a</mi>
         <mrow href="#" class="MathJax_ref" data-latex="\\ref{A}">
           <mtext>???</mtext>
         </mrow>
@@ -7676,14 +7676,14 @@ exports[`Referencing Ref 1`] = `
 exports[`Referencing Ref Unknown 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}\\ref{B}" display="block">
   <mtable displaystyle="true" data-latex="a\\label{A}\\ref{B}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a\\ref{B}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{)}">)</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\label{A}">a</mi>
+        <mi data-latex="a">a</mi>
         <mrow href="#" class="MathJax_ref" data-latex="\\ref{B}">
           <mtext>???</mtext>
         </mrow>
@@ -9026,7 +9026,7 @@ exports[`Sub and Superscripts SubSup 1`] = `
 exports[`Tagged Environments EqnTest 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqntest} a &amp; b \\end{eqntest}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="1em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{eqntest} a &amp; b \\end{eqntest}">
-    <mlabeledtr data-latex="a&amp;b">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -9048,7 +9048,7 @@ exports[`Tagged Environments EqnTest 1`] = `
 exports[`Tagged Environments Equation 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{equation} x \\end{equation}" display="block">
   <mtable displaystyle="true" data-latex="\\begin{equation} x \\end{equation}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;x">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -9205,7 +9205,7 @@ exports[`User Defined Environments smallmatrix 1`] = `
 
 exports[`User Defined Macros EqRef 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}\\eqref{A}" display="block">
-  <mi data-latex="\\label{A}">a</mi>
+  <mi data-latex="a">a</mi>
   <mrow href="#" class="MathJax_ref" data-latex="\\eqref{A}">
     <mtext>(???)</mtext>
   </mrow>

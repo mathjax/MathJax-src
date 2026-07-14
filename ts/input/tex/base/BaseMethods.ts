@@ -2162,6 +2162,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    */
   HandleNoTag(parser: TexParser, _name: string) {
     parser.tags.notag();
+    parser.skipLatex();
   },
 
   /**
@@ -2175,6 +2176,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const label = parser.GetArgument(name);
     if (label === '') {
       // @test Label Empty
+      parser.skipLatex();
       return;
     }
     // @test Label, Ref, Ref Unknown
@@ -2198,6 +2200,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       // TODO: This should be set in the tags structure!
       parser.tags.labels[label] = new Label(); // will be replaced by tag value later
     }
+    parser.skipLatex();
   },
 
   /**

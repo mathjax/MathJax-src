@@ -1394,18 +1394,7 @@ export class ArrayItem extends BaseItem {
    * @returns {string} The LaTeX source of the cell content.
    */
   public cellLatex(mtd: MmlNode): string {
-    const children = mtd.childNodes[0]?.childNodes || [];
-    let expr = '';
-    for (const child of children) {
-      const att = (child?.attributes?.get(TexConstant.Attr.LATEX) ||
-        '') as string;
-      if (!att) continue;
-      expr +=
-        expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)
-          ? ' ' + att
-          : att;
-    }
-    return expr;
+    return NodeUtil.getChildrenLatex(mtd);
   }
 
   /**
@@ -1536,6 +1525,7 @@ export class EqnArrayItem extends ArrayItem {
     const tag = this.factory.configuration.tags.getTag();
     if (tag) {
       this.row = [tag].concat(this.row);
+      this.rowLatex = [this.cellLatex(tag)].concat(this.rowLatex);
       this.setProperty('isLabeled', true);
     }
     this.factory.configuration.tags.clearTag();

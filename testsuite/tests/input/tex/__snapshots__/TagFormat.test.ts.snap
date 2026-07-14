@@ -3,14 +3,14 @@
 exports[`Tagformat Array tag 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x \\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="x \\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{|}\\text{1}\\text{|}&amp;x">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{|}">|</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{|}">|</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{1}">x</mi>
+        <mi data-latex="x">x</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -20,13 +20,13 @@ exports[`Tagformat Array tag 1`] = `
 exports[`Tagformat Array tag with empty entry 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x \\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="x \\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{1}\\text{.}&amp;x">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{.}">.</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{1}">x</mi>
+        <mi data-latex="x">x</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -36,13 +36,13 @@ exports[`Tagformat Array tag with empty entry 1`] = `
 exports[`Tagformat Array tag with null entry 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x \\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="x \\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{1}\\text{.}&amp;x">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{.}">.</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{1}">x</mi>
+        <mi data-latex="x">x</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -52,14 +52,14 @@ exports[`Tagformat Array tag with null entry 1`] = `
 exports[`Tagformat Basic tag 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x \\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="x \\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{[}\\text{1}\\text{]}&amp;x">
       <mtd id="my-tag:1">
         <mtext data-latex="\\text{[}">[</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{]}">]</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{1}">x</mi>
+        <mi data-latex="x">x</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -69,17 +69,17 @@ exports[`Tagformat Basic tag 1`] = `
 exports[`Tagformat Custom ref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}">
-    <mlabeledtr data-latex="\\tag{x}">
+    <mlabeledtr data-latex="\\text{(}\\text{x}\\text{)}&amp;x">
       <mtd id="mjx-eqn:test">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{x}">x</mtext>
         <mtext data-latex="\\text{)}">)</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{x}">x</mi>
+        <mi data-latex="x">x</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="\\eqref{test}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;\\eqref{test}">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -98,17 +98,17 @@ exports[`Tagformat Custom ref 1`] = `
 exports[`Tagformat Eqref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\eqref{test} \\end{align}">
-    <mlabeledtr data-latex="\\tag{x}">
+    <mlabeledtr data-latex="\\text{[}\\text{x}\\text{]}&amp;x">
       <mtd id="my-tag:test">
         <mtext data-latex="\\text{[}">[</mtext>
         <mtext data-latex="\\text{x}">x</mtext>
         <mtext data-latex="\\text{]}">]</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{x}">x</mi>
+        <mi data-latex="x">x</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="\\eqref{test}">
+    <mlabeledtr data-latex="\\text{[}\\text{A1}\\text{]}&amp;\\eqref{test}">
       <mtd id="my-tag:A1">
         <mtext data-latex="\\text{[}">[</mtext>
         <mtext data-latex="\\text{A1}">A1</mtext>
@@ -127,17 +127,17 @@ exports[`Tagformat Eqref 1`] = `
 exports[`Tagformat Ref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\ref{test} \\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}x \\label{test}\\tag{x}\\\\ \\ref{test} \\end{align}">
-    <mlabeledtr data-latex="\\tag{x}">
+    <mlabeledtr data-latex="\\text{[}\\text{x}\\text{]}&amp;x">
       <mtd id="my-tag:test">
         <mtext data-latex="\\text{[}">[</mtext>
         <mtext data-latex="\\text{x}">x</mtext>
         <mtext data-latex="\\text{]}">]</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{x}">x</mi>
+        <mi data-latex="x">x</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="\\ref{test}">
+    <mlabeledtr data-latex="\\text{[}\\text{A1}\\text{]}&amp;\\ref{test}">
       <mtd id="my-tag:A1">
         <mtext data-latex="\\text{[}">[</mtext>
         <mtext data-latex="\\text{A1}">A1</mtext>
@@ -156,14 +156,14 @@ exports[`Tagformat Ref 1`] = `
 exports[`Tagformat Text tag 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x \\tag{x}" display="block">
   <mtable displaystyle="true" data-latex="x \\tag{x}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{[}\\text{x}\\text{]}&amp;x">
       <mtd id="my-tag:x">
         <mtext data-latex="\\text{[}">[</mtext>
         <mtext data-latex="\\text{x}">x</mtext>
         <mtext data-latex="\\text{]}">]</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{x}">x</mi>
+        <mi data-latex="x">x</mi>
       </mtd>
     </mlabeledtr>
   </mtable>

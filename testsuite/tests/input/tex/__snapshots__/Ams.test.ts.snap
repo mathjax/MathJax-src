@@ -1515,7 +1515,7 @@ exports[`Ams Environments pmatrix 1`] = `
 exports[`Ams Environments xalign tagged 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{xalignat}{2} a &amp; b \\tag{1}\\end{xalignat}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="center right left center right left center" columnspacing="0em" columnwidth="fit auto auto fit auto auto fit" rowspacing="3pt" data-break-align="middle bottom top middle bottom top middle" minlabelspacing="0" data-width-includes-label="true" data-latex="\\begin{xalignat}{2} a &amp; b \\tag{1}\\end{xalignat}">
-    <mlabeledtr data-latex="a&amp;\\tag{1}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;b">
       <mtd id="mjx-eqn:1">
         <mpadded width="0" lspace="-1width">
           <mtext data-latex="\\text{(}">(</mtext>
@@ -1529,7 +1529,7 @@ exports[`Ams Environments xalign tagged 1`] = `
       </mtd>
       <mtd>
         <mstyle indentshift="2em">
-          <mi data-latex="\\tag{1}">b</mi>
+          <mi data-latex="b">b</mi>
         </mstyle>
       </mtd>
       <mtd></mtd>
@@ -2006,7 +2006,7 @@ exports[`Ams Symbol 1`] = `
 exports[`Ams Tagged Environments Align 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align} a&amp;=b \\\\ c&amp;=d \\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a&amp;=b \\\\ c&amp;=d \\end{align}">
-    <mlabeledtr data-latex="a&amp;=b">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2023,7 +2023,7 @@ exports[`Ams Tagged Environments Align 1`] = `
         </mstyle>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="c&amp;=d">
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c&amp;=d">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -2047,7 +2047,7 @@ exports[`Ams Tagged Environments Align 1`] = `
 exports[`Ams Tagged Environments Align Notag 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align} a&amp;=b \\\\ &amp;=c \\notag \\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a&amp;=b \\\\ &amp;=c \\notag \\end{align}">
-    <mlabeledtr data-latex="a&amp;=b">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2064,13 +2064,13 @@ exports[`Ams Tagged Environments Align Notag 1`] = `
         </mstyle>
       </mtd>
     </mlabeledtr>
-    <mtr data-latex="&amp;=\\notag">
+    <mtr data-latex="&amp;=c">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em">
           <mi></mi>
           <mo data-latex="=">=</mo>
-          <mi data-latex="\\notag">c</mi>
+          <mi data-latex="c">c</mi>
         </mstyle>
       </mtd>
     </mtr>
@@ -2112,7 +2112,7 @@ exports[`Ams Tagged Environments Align Star 1`] = `
 exports[`Ams Tagged Environments Alignat 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{alignat}{2} a&amp;=b \\\\ c&amp;=d \\end{alignat}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{alignat}{2} a&amp;=b \\\\ c&amp;=d \\end{alignat}">
-    <mlabeledtr data-latex="a&amp;=b">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2129,7 +2129,7 @@ exports[`Ams Tagged Environments Alignat 1`] = `
         </mstyle>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="c&amp;=d">
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c&amp;=d">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -2294,7 +2294,7 @@ exports[`Ams Tagged Environments Alignedat 1`] = `
 exports[`Ams Tagged Environments Eqnarray 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{eqnarray}" display="block">
   <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex="\\begin{eqnarray} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{eqnarray}">
-    <mlabeledtr data-latex="a&amp;=&amp;b">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=&amp;b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2313,7 +2313,7 @@ exports[`Ams Tagged Environments Eqnarray 1`] = `
         </mstyle>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="c&amp;=&amp;d">
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c&amp;=&amp;d">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -2374,7 +2374,7 @@ exports[`Ams Tagged Environments Eqnarray Star 1`] = `
 exports[`Ams Tagged Environments Equation 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{equation} a \\end{equation}" display="block">
   <mtable displaystyle="true" data-latex="\\begin{equation} a \\end{equation}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2397,7 +2397,7 @@ exports[`Ams Tagged Environments Equation Star 1`] = `
 exports[`Ams Tagged Environments Gather 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{gather} a=b \\\\ c=d \\end{gather}" display="block">
   <mtable displaystyle="true" columnspacing="1em" rowspacing="3pt" data-break-align="middle" data-latex="\\begin{gather} a=b \\\\ c=d \\end{gather}">
-    <mlabeledtr data-latex="a=b">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a=b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2409,7 +2409,7 @@ exports[`Ams Tagged Environments Gather 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="c=d">
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c=d">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -2495,7 +2495,7 @@ exports[`Ams Tagged Environments Gathered 1`] = `
 exports[`Ams Tagged Environments Left Gather Align 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{gather}\\begin{align} a &amp;= b \\end{align}\\end{gather}" display="block">
   <mtable displaystyle="true" columnspacing="1em" rowspacing="3pt" data-break-align="middle" side="left" data-latex="\\begin{gather}\\begin{align} a &amp;= b \\end{align}\\end{gather}">
-    <mlabeledtr data-latex="{align}">
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;{align}">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -2503,7 +2503,7 @@ exports[`Ams Tagged Environments Left Gather Align 1`] = `
       </mtd>
       <mtd>
         <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" side="left" data-latex="{align}">
-          <mlabeledtr data-latex="a&amp;=b">
+          <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
             <mtd id="mjx-eqn:1">
               <mtext data-latex="\\text{(}">(</mtext>
               <mtext data-latex="\\text{1}">1</mtext>
@@ -2537,7 +2537,7 @@ exports[`Ams Tagged Environments Left multline tagged left 1`] = `
         <mtext data-latex="\\text{)}">)</mtext>
       </mtd>
       <mtd columnalign="left">
-        <mi data-latex="\\tag{1}">a</mi>
+        <mi data-latex="a">a</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -2547,7 +2547,7 @@ exports[`Ams Tagged Environments Left multline tagged left 1`] = `
 exports[`Ams Tagged Environments Left xalign tagged left 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{xalignat}{2} a &amp; b \\tag{1}\\end{xalignat}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="center right left center right left center" columnspacing="0em" columnwidth="fit auto auto fit auto auto fit" rowspacing="3pt" data-break-align="middle bottom top middle bottom top middle" side="left" minlabelspacing="0" data-width-includes-label="true" data-latex="\\begin{xalignat}{2} a &amp; b \\tag{1}\\end{xalignat}">
-    <mlabeledtr data-latex="a&amp;\\tag{1}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;b">
       <mtd id="mjx-eqn:1">
         <mpadded width="0">
           <mtext data-latex="\\text{(}">(</mtext>
@@ -2561,7 +2561,7 @@ exports[`Ams Tagged Environments Left xalign tagged left 1`] = `
       </mtd>
       <mtd>
         <mstyle indentshift="2em">
-          <mi data-latex="\\tag{1}">b</mi>
+          <mi data-latex="b">b</mi>
         </mstyle>
       </mtd>
       <mtd></mtd>
@@ -2747,7 +2747,7 @@ exports[`Ams Tagged Environments aligned [x] 1`] = `
 exports[`Ams Tagged Environments flalign 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{flalign} a&amp;b &amp; \\end{flalign}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="right left center right" columnspacing="0em" columnwidth="auto auto fit auto" rowspacing="3pt" data-break-align="bottom top middle bottom" data-width-includes-label="true" data-latex="\\begin{flalign} a&amp;b &amp; \\end{flalign}">
-    <mlabeledtr data-latex="a&amp;b&amp;">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;b&amp;">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2771,7 +2771,7 @@ exports[`Ams Tagged Environments flalign 1`] = `
 exports[`Ams Tagged Environments xalignet 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{xalignat}{1} a&amp;b \\end{xalignat}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="center right left center" columnspacing="0em" columnwidth="fit auto auto fit" rowspacing="3pt" data-break-align="middle bottom top middle" minlabelspacing="0" data-width-includes-label="true" data-latex="\\begin{xalignat}{1} a&amp;b \\end{xalignat}">
-    <mlabeledtr data-latex="a&amp;b">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;b">
       <mtd id="mjx-eqn:1">
         <mpadded width="0" lspace="-1width">
           <mtext data-latex="\\text{(}">(</mtext>
