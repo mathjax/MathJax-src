@@ -1191,17 +1191,17 @@ exports[`Ams Environments Gathered 1`] = `
 exports[`Ams Environments Multline 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\ b \\\\ c \\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\ b \\\\ c \\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -1213,17 +1213,17 @@ exports[`Ams Environments Multline 1`] = `
 exports[`Ams Environments Multline Star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline*} a\\\\ b \\\\ c \\end{multline*}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline*} a\\\\ b \\\\ c \\end{multline*}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -2530,7 +2530,7 @@ exports[`Ams Tagged Environments Left Gather Align 1`] = `
 exports[`Ams Tagged Environments Left multline tagged left 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\tag{1} \\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" side="left" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\tag{1} \\end{multline}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2578,17 +2578,17 @@ exports[`Ams Tagged Environments Left xalign tagged left 1`] = `
 exports[`Ams Tagged Environments Multline 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\ b \\\\ c \\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\ b \\\\ c \\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;c">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2605,17 +2605,17 @@ exports[`Ams Tagged Environments Multline 1`] = `
 exports[`Ams Tagged Environments Multline Star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline*} a\\\\ b \\\\ c \\end{multline*}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline*} a\\\\ b \\\\ c \\end{multline*}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3330,17 +3330,17 @@ exports[`Multirel Preset Rspace Lspace 1`] = `
 exports[`MultlineShove Shove Left Bottom 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\ b\\\\\\shoveleft c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\ b\\\\\\shoveleft c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="left">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3352,17 +3352,17 @@ exports[`MultlineShove Shove Left Bottom 1`] = `
 exports[`MultlineShove Shove Left Middle 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\\\shoveleft b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\\\shoveleft b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="left">
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3374,17 +3374,17 @@ exports[`MultlineShove Shove Left Middle 1`] = `
 exports[`MultlineShove Shove Left Right 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\\\shoveleft\\shoveright b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\\\shoveleft\\shoveright b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="right">
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3396,17 +3396,17 @@ exports[`MultlineShove Shove Left Right 1`] = `
 exports[`MultlineShove Shove Left Top 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}\\shoveleft a\\\\ b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline}\\shoveleft a\\\\ b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3418,17 +3418,17 @@ exports[`MultlineShove Shove Left Top 1`] = `
 exports[`MultlineShove Shove None 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\ b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\ b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3440,17 +3440,17 @@ exports[`MultlineShove Shove None 1`] = `
 exports[`MultlineShove Shove Right Bottom 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\ b\\\\\\shoveright c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\ b\\\\\\shoveright c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3462,17 +3462,17 @@ exports[`MultlineShove Shove Right Bottom 1`] = `
 exports[`MultlineShove Shove Right Left 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\\\shoveright\\shoveleft b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\\\shoveright\\shoveleft b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="left">
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3484,17 +3484,17 @@ exports[`MultlineShove Shove Right Left 1`] = `
 exports[`MultlineShove Shove Right Middle 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\\\shoveright b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\\\shoveright b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="right">
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3506,17 +3506,17 @@ exports[`MultlineShove Shove Right Middle 1`] = `
 exports[`MultlineShove Shove Right Top 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}\\shoveright a\\\\ b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline}\\shoveright a\\\\ b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="right">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>

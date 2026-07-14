@@ -267,17 +267,17 @@ exports[`TagAll Label Named Named 1`] = `
 exports[`TagAll MultLine 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;c">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -306,17 +306,17 @@ exports[`TagAll Notag Align 1`] = `
 exports[`TagAll Notag Multline 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -786,17 +786,17 @@ exports[`TagAms Label Named Named 1`] = `
 exports[`TagAms MultLine 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;c">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -825,17 +825,17 @@ exports[`TagAms Notag Align 1`] = `
 exports[`TagAms Notag Multline 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -1240,17 +1240,17 @@ exports[`TagNone Label Named Named 1`] = `
 exports[`TagNone MultLine 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -1274,17 +1274,17 @@ exports[`TagNone Notag Align 1`] = `
 exports[`TagNone Notag Multline 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>

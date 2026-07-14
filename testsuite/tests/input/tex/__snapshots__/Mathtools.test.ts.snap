@@ -1650,7 +1650,7 @@ exports[`Mathtools More Environments lgathered 1`] = `
 exports[`Mathtools More Environments multlined [b] width 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined}[b][7cm]\\framebox[4cm]{first}\\\\\\framebox[4cm]{last}\\end{multlined} = B" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="7cm" columnwidth="100%" align="baseline -1" data-latex="{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1662,7 +1662,7 @@ exports[`Mathtools More Environments multlined [b] width 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1683,7 +1683,7 @@ exports[`Mathtools More Environments multlined [b] width 1`] = `
 exports[`Mathtools More Environments multlined [c] width 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined}[c][7cm]\\framebox[4cm]{first}\\\\\\framebox[4cm]{last}\\end{multlined} = B" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="7cm" columnwidth="100%" data-latex="{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1695,7 +1695,7 @@ exports[`Mathtools More Environments multlined [c] width 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1716,7 +1716,7 @@ exports[`Mathtools More Environments multlined [c] width 1`] = `
 exports[`Mathtools More Environments multlined [t] width 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined}[t][7cm]\\framebox[4cm]{first}\\\\\\framebox[4cm]{last}\\end{multlined} = B" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="7cm" columnwidth="100%" align="baseline 1" data-latex="{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1728,7 +1728,7 @@ exports[`Mathtools More Environments multlined [t] width 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1751,7 +1751,7 @@ exports[`Mathtools More Environments multlined 1`] = `
   <mi data-latex="A">A</mi>
   <mo data-latex="=">=</mo>
   <mtable displaystyle="true" rowspacing=".5em" columnwidth="100%" align="baseline 1" data-latex="{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1763,7 +1763,7 @@ exports[`Mathtools More Environments multlined 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1783,7 +1783,7 @@ exports[`Mathtools More Environments multlined 1`] = `
 exports[`Mathtools More Environments multlined empty row 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined} a \\\\ \\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnwidth="100%" data-latex="\\begin{multlined} a \\\\ \\end{multlined}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1795,7 +1795,7 @@ exports[`Mathtools More Environments multlined empty row 1`] = `
 exports[`Mathtools More Environments multlined shoved 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined}[c][7cm]\\framebox[4cm]{first} \\\\\\shoveright{\\framebox[4cm]{second}} \\\\\\shoveleft{\\framebox[4cm]{third}} \\\\\\framebox[4cm]{last}\\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="7cm" columnwidth="100%" data-latex="\\begin{multlined}[c][7cm]\\framebox[4cm]{first} \\\\\\shoveright{\\framebox[4cm]{second}} \\\\\\shoveleft{\\framebox[4cm]{third}} \\\\\\framebox[4cm]{last}\\end{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1807,7 +1807,7 @@ exports[`Mathtools More Environments multlined shoved 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\shoveright{\\framebox[4cm]{second}}">
       <mtd columnalign="right">
         <mrow data-mjx-texclass="ORD" data-latex="\\shoveright{\\framebox[4cm]{second}}">
           <menclose notation="box">
@@ -1818,7 +1818,7 @@ exports[`Mathtools More Environments multlined shoved 1`] = `
         </mrow>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\shoveleft{\\framebox[4cm]{third}}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\shoveleft{\\framebox[4cm]{third}}">
           <menclose notation="box">
@@ -1829,7 +1829,7 @@ exports[`Mathtools More Environments multlined shoved 1`] = `
         </mrow>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1848,7 +1848,7 @@ exports[`Mathtools More Environments multlined shoved 1`] = `
 exports[`Mathtools More Environments multlined shoved distance 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined}[c][7cm]\\framebox[4cm]{first} \\\\\\shoveright[1cm]{\\framebox[4cm]{second}} \\\\\\shoveleft[1cm]{\\framebox[4cm]{third}} \\\\\\framebox[4cm]{last}\\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="7cm" columnwidth="100%" data-latex="\\begin{multlined}[c][7cm]\\framebox[4cm]{first} \\\\\\shoveright[1cm]{\\framebox[4cm]{second}} \\\\\\shoveleft[1cm]{\\framebox[4cm]{third}} \\\\\\framebox[4cm]{last}\\end{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1860,7 +1860,7 @@ exports[`Mathtools More Environments multlined shoved distance 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\shoveright[1cm]{\\framebox[4cm]{second}}">
       <mtd columnalign="right">
         <mrow data-latex="\\shoveright[1cm]{\\framebox[4cm]{second}}">
           <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{second}">
@@ -1874,7 +1874,7 @@ exports[`Mathtools More Environments multlined shoved distance 1`] = `
         </mrow>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\shoveleft[1cm]{\\framebox[4cm]{third}}">
       <mtd columnalign="left">
         <mrow data-latex="\\shoveleft[1cm]{\\framebox[4cm]{third}}">
           <mspace width="1cm"></mspace>
@@ -1888,7 +1888,7 @@ exports[`Mathtools More Environments multlined shoved distance 1`] = `
         </mrow>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1907,7 +1907,7 @@ exports[`Mathtools More Environments multlined shoved distance 1`] = `
 exports[`Mathtools More Environments multlined width 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined}[7cm]\\framebox[4cm]{first}\\\\\\framebox[4cm]{last}\\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="7cm" columnwidth="100%" data-latex="\\begin{multlined}[7cm]\\framebox[4cm]{first}\\\\\\framebox[4cm]{last}\\end{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1919,7 +1919,7 @@ exports[`Mathtools More Environments multlined width 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -4107,7 +4107,7 @@ exports[`Mathtools options legacycolonsymbols option 2`] = `
 exports[`Mathtools options mathtoolsset 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathtoolsset{multlined-pos={}}\\begin{multlined} a \\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnwidth="100%" data-latex="\\mathtoolsset{multlined-pos={}}\\begin{multlined} a \\end{multlined}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
@@ -4307,13 +4307,13 @@ exports[`Mathtools setoptions multlined gap and pos 1`] = `
   <mi data-latex="a">a</mi>
   <mo data-latex="+">+</mo>
   <mtable displaystyle="true" rowspacing=".5em" columnwidth="100%" align="baseline -1" data-latex="{multlined}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
         <mspace width="2em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="right">
         <mspace width="2em"></mspace>
         <mi data-latex="b">b</mi>
@@ -4328,13 +4328,13 @@ exports[`Mathtools setoptions multlined gap and pos 1`] = `
 exports[`Mathtools setoptions multlined skips 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathtoolsset{multlined-gap=2em,firstline-afterskip=3em,lastline-preskip=1em}\\begin{multlined}[b] a \\\\ b \\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnwidth="100%" align="baseline -1" data-latex="\\mathtoolsset{multlined-gap=2em,firstline-afterskip=3em,lastline-preskip=1em}\\begin{multlined}[b] a \\\\ b \\end{multlined}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
         <mspace width="3em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mi data-latex="b">b</mi>
@@ -4347,13 +4347,13 @@ exports[`Mathtools setoptions multlined skips 1`] = `
 exports[`Mathtools setoptions multlined width 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathtoolsset{multlined-width=5em}\\begin{multlined} a \\\\ b \\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="5em" columnwidth="100%" data-latex="\\mathtoolsset{multlined-width=5em}\\begin{multlined} a \\\\ b \\end{multlined}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mi data-latex="b">b</mi>
@@ -4368,13 +4368,13 @@ exports[`Mathtools setoptions multlined-pos override 1`] = `
   <mi data-latex="a">a</mi>
   <mo data-latex="+">+</mo>
   <mtable displaystyle="true" rowspacing=".5em" columnwidth="100%" align="baseline -1" data-latex="{multlined}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
         <mspace width="2em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="right">
         <mspace width="2em"></mspace>
         <mi data-latex="b">b</mi>
