@@ -37,29 +37,44 @@ new CommandMap('Bussproofs-macros', {
   QuinaryInfC: [BussproofsMethods.Inference, 5],
   RightLabel: [BussproofsMethods.Label, 'right'],
   LeftLabel: [BussproofsMethods.Label, 'left'],
-  // Abbreviations are automatically enabled
+  DisplayProof: BussproofsMethods.DisplayProof,
+
+  // Abbreviations are automatically enabled, so this is a no-op.
+  EnableBpAbbreviations: BussproofsMethods.EnableAbbreviations,
+  AX: BussproofsMethods.AxiomF,
   AXC: BussproofsMethods.Axiom,
+  UI: [BussproofsMethods.InferenceF, 1],
   UIC: [BussproofsMethods.Inference, 1],
+  BI: [BussproofsMethods.InferenceF, 2],
   BIC: [BussproofsMethods.Inference, 2],
+  TI: [BussproofsMethods.InferenceF, 3],
   TIC: [BussproofsMethods.Inference, 3],
+  QI: [BussproofsMethods.InferenceF, 4],
+  QIC: [BussproofsMethods.Inference, 4],
+  QuI: [BussproofsMethods.InferenceF, 5],
+  QuIC: [BussproofsMethods.Inference, 5],
   RL: [BussproofsMethods.Label, 'right'],
   LL: [BussproofsMethods.Label, 'left'],
+  DP: BussproofsMethods.DisplayProof,
+
+  kernHyps: BussproofsMethods.KernHyps,
+  insertBetweenHyps: BussproofsMethods.BetweenHyps,
 
   noLine: [BussproofsMethods.SetLine, 'none', false],
   singleLine: [BussproofsMethods.SetLine, 'solid', false],
   solidLine: [BussproofsMethods.SetLine, 'solid', false],
   dashedLine: [BussproofsMethods.SetLine, 'dashed', false],
-  // Not yet implemented in CSS!
-  // doubleLine:       [BussproofsMethods.SetLine, 'double', false],
-  // dottedLine:       [BussproofsMethods.SetLine, 'dotted', false],
+  dottedLine: [BussproofsMethods.SetLine, 'dotted', false],
+  // Double lines are not yet implemented in the SVG output jax!
+  doubleLine: [BussproofsMethods.SetLine, 'double', false],
 
   alwaysNoLine: [BussproofsMethods.SetLine, 'none', true],
   alwaysSingleLine: [BussproofsMethods.SetLine, 'solid', true],
   alwaysSolidLine: [BussproofsMethods.SetLine, 'solid', true],
   alwaysDashedLine: [BussproofsMethods.SetLine, 'dashed', true],
-  // Not yet implemented in CSS!
-  // alwaysDoubleLine:       [BussproofsMethods.SetLine, 'double', true],
-  // alwaysDottedLine:       [BussproofsMethods.SetLine, 'dotted', true],
+  alwaysDottedLine: [BussproofsMethods.SetLine, 'dotted', true],
+  // Double lines are not yet implemented in the SVG output jax!
+  alwaysDoubleLine: [BussproofsMethods.SetLine, 'double', true],
 
   rootAtTop: [BussproofsMethods.RootAtTop, true],
   alwaysRootAtTop: [BussproofsMethods.RootAtTop, true],
@@ -67,6 +82,10 @@ new CommandMap('Bussproofs-macros', {
   rootAtBottom: [BussproofsMethods.RootAtTop, false],
   alwaysRootAtBottom: [BussproofsMethods.RootAtTop, false],
   // TODO: always commands should be persistent.
+
+  bottomAlignProof: [BussproofsMethods.AlignProof, 'bottom'],
+  centerAlignProof: [BussproofsMethods.AlignProof, 'center'],
+  normalAlignProof: [BussproofsMethods.AlignProof, 'normal'],
 
   fCenter: BussproofsMethods.FCenter,
   Axiom: BussproofsMethods.AxiomF,
