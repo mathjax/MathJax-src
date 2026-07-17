@@ -243,7 +243,9 @@ export interface ChtmlXmlNodeNTD<N, T, D>
       ChtmlDelimiterData,
       ChtmlFontData,
       ChtmlFontDataClass
-    > {}
+    > {
+  getFontStyles(): {'font-family': string, 'font-size': string};
+}
 
 /**
  * The ChtmlXmlNodeClass interface for the CHTML XmlNode wrapper
@@ -311,6 +313,12 @@ export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
     public toCHTML(parents: N[]) {
       this.markUsed();
       this.dom = [this.adaptor.append(parents[0], this.getHTML()) as N];
+    }
+
+    public getFontStyles(): { 'font-family': string; 'font-size': string } {
+      const style = super.getFontStyles();
+      style['font-size'] = '1em';
+      return style;
     }
 
     /**
