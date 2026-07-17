@@ -234,8 +234,8 @@ export class SpeechExplorer
       <p>Support for tactile Braille devices varies across screen readers,
       browsers, and operative systems.  If you are using a Braille output
       device, you may need to select the "Combine with Speech" option in the
-      contextual menu's Braille submenu in order to obtain Nemeth or Euro
-      Braille output rather than the speech text on your Braille
+      contextual menu's Braille submenu in order to obtain Nemeth, UEB, or
+      Euro Braille output rather than the speech text on your Braille
       device. ${braille}</p>
 
       <p>The contextual menu also provides options for viewing or copying a
@@ -385,6 +385,42 @@ export class SpeechExplorer
    */
   protected get brailleNone(): string {
     return this.item.brailleNone;
+  }
+
+  /**
+   * Sets an ARIA role description if it is a real description.
+   *
+   * @param {HTMLElement} node       The element to modify
+   * @param {string} description     The role description
+   */
+  protected setRoleDescription(node: HTMLElement, description: string) {
+    if (
+      description &&
+      description !== this.item.none &&
+      description !== this.item.brailleNone
+    ) {
+      node.setAttribute('aria-roledescription', description);
+    } else {
+      node.removeAttribute('aria-roledescription');
+    }
+  }
+
+  /**
+   * Sets an ARIA braille role description if it is a real description.
+   *
+   * @param {HTMLElement} node       The element to modify
+   * @param {string} description     The braille role description
+   */
+  protected setBrailleRoleDescription(node: HTMLElement, description: string) {
+    if (
+      description &&
+      description !== this.item.none &&
+      description !== this.item.brailleNone
+    ) {
+      node.setAttribute('aria-brailleroledescription', description);
+    } else {
+      node.removeAttribute('aria-brailleroledescription');
+    }
   }
 
   /**
@@ -1373,7 +1409,7 @@ export class SpeechExplorer
     const speechNode = (this.speech = document.createElement('mjx-speech'));
     speechNode.setAttribute('role', this.role);
     speechNode.setAttribute('aria-label', speech || this.none);
-    speechNode.setAttribute('aria-roledescription', description || this.none);
+    this.setRoleDescription(speechNode, description);
     speechNode.setAttribute(SemAttr.SPEECH, speech);
     if (ssml) {
       speechNode.setAttribute(SemAttr.PREFIX_SSML, ssml[0] || '');
@@ -1383,10 +1419,10 @@ export class SpeechExplorer
     if (braille) {
       if (this.document.options.a11y.brailleSpeech) {
         speechNode.setAttribute('aria-label', braille);
-        speechNode.setAttribute('aria-roledescription', this.brailleNone);
+        this.setRoleDescription(speechNode, this.brailleNone);
       }
       speechNode.setAttribute('aria-braillelabel', braille);
-      speechNode.setAttribute('aria-brailleroledescription', this.brailleNone);
+      this.setBrailleRoleDescription(speechNode, this.brailleNone);
       if (this.document.options.a11y.brailleCombine) {
         speechNode.setAttribute(
           'aria-label',
@@ -1398,8 +1434,8 @@ export class SpeechExplorer
     if (isWindows) {
       const container = document.createElement('mjx-speech-container');
       container.setAttribute('role', 'application');
-      container.setAttribute('aria-roledescription', this.none);
-      container.setAttribute('aria-brailleroledescription', this.brailleNone);
+      this.setRoleDescription(container, this.none);
+      this.setBrailleRoleDescription(container, this.brailleNone);
       container.append(speechNode);
       this.node.append(container);
       speechNode.setAttribute('role', 'img');
@@ -1442,16 +1478,15 @@ export class SpeechExplorer
     this.img = this.document.adaptor.node('mjx-speech', {
       'aria-label': speech,
       role: 'img',
-      'aria-roledescription': item.none,
     });
     const braille = container.getAttribute(SemAttr.BRAILLE);
     if (braille) {
       if (this.document.options.a11y.brailleSpeech) {
         this.img.setAttribute('aria-label', braille);
-        this.img.setAttribute('aria-roledescription', this.brailleNone);
+        this.setRoleDescription(this.img, this.brailleNone);
       }
       this.img.setAttribute('aria-braillelabel', braille);
-      this.img.setAttribute('aria-brailleroledescription', this.brailleNone);
+      this.setBrailleRoleDescription(this.img, this.brailleNone);
       if (this.document.options.a11y.brailleCombine) {
         this.img.setAttribute('aria-label', braille + BRAILLE_PADDING + speech);
       }

@@ -587,6 +587,8 @@ export class Menu {
         jax.options.displayOverflow.substring(1).toLowerCase();
     }
     this.settings.breakInline = jax.options.linebreaks?.inline;
+    this.settings.brailleCode =
+      this.document.options.sre?.braille || this.settings.brailleCode;
     this.defaultSettings = Object.assign(
       {},
       this.document.options.a11y,
@@ -939,7 +941,6 @@ export class Menu {
     const menu = this.menu;
     menu.settings = this.settings;
     menu.findID('Settings', 'Overflow', 'Elide').disable();
-    menu.findID('Braille', 'ueb').hide();
     menu.setJax(this.jax);
     this.checkLoadableItems();
     const cache: [string, string][] = [];
@@ -1087,6 +1088,8 @@ export class Menu {
   protected applySettings() {
     this.setTabOrder(this.settings.inTabOrder);
     const options = this.document.options;
+    options.sre ||= {};
+    options.sre.braille = this.settings.brailleCode;
     options.enableAssistiveMml = this.settings.assistiveMml;
     this.enableAccessibilityItems('Speech', this.settings.speech);
     this.enableAccessibilityItems('Braille', this.settings.braille);
@@ -1325,7 +1328,7 @@ export class Menu {
   }
 
   /**
-   * @param {string} code  The Braille code format (nemeth or euro)
+   * @param {string} code  The Braille code format (nemeth, ueb, or euro)
    */
   protected setBrailleCode(code: string) {
     this.document.options.sre.braille = code;
