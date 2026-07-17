@@ -544,7 +544,6 @@ export function ExplorerMathDocumentMixin<
         },
         role: mathItem.ariaRole,
         'aria-label': mathItem.none,
-        'aria-roledescription': mathItem.none,
       });
     }
 

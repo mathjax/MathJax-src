@@ -113,14 +113,15 @@ export abstract class AbstractRegion<T> implements Region<T> {
    * @returns {string}   The stylesheet ID
    */
   public static get sheetId(): string {
-    return 'MJX-' + this.name + '-styles';
+    const id = this.className ? this.className.replace(/^MJX_/, '') : this.name;
+    return 'MJX-' + id + '-styles';
   }
 
   /**
    * @returns {HTMLStyleElement}   The stylesheet for this region
    */
   public static get styleSheet(): HTMLStyleElement {
-    return document.head.querySelector('#' + this.sheetId) as HTMLStyleElement;
+    return document.getElementById(this.sheetId) as HTMLStyleElement;
   }
 
   /**
@@ -130,7 +131,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
     const id = this.CLASS.sheetId;
     if (
       !this.CLASS.style ||
-      this.document.adaptor.head().querySelector('#' + id)
+      this.document.adaptor.document.getElementById(id)
     ) {
       return;
     }
