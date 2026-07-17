@@ -380,7 +380,7 @@ export abstract class CommonOutputJax<
    */
   protected createNode(): N {
     const jax = (this.constructor as typeof CommonOutputJax).NAME;
-    return this.html('mjx-container', { class: 'MathJax', jax: jax });
+    return this.html('mjx-container', { class: 'MathJax', jax: jax, dir: 'ltr' });
   }
 
   /**
