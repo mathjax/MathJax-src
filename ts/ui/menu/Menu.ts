@@ -43,6 +43,7 @@ import { SVG } from '../../output/svg.js';
 import * as AnnotationMenu from './AnnotationMenu.js';
 import { MJContextMenu } from './MJContextMenu.js';
 import { RadioCompare } from './RadioCompare.js';
+import { mjSlider } from './Slider.js';
 import { MmlVisitor } from './MmlVisitor.js';
 import { MenuMathDocument } from './MenuHandler.js';
 import * as MenuUtil from './MenuUtil.js';
@@ -602,6 +603,7 @@ export class Menu {
     const parser = new Parser([
       ['contextMenu', MJContextMenu.fromJson.bind(MJContextMenu)],
       ['radioCompare', RadioCompare.fromJson.bind(RadioCompare)],
+      ['slider', mjSlider.fromJson.bind(mjSlider)],
     ]);
     this.menu = parser.parse({
       type: 'contextMenu',
@@ -857,7 +859,7 @@ export class Menu {
                 ['Black'],
               ])
             ),
-            { type: 'slider', variable: 'backgroundOpacity', content: ' ' },
+            this.slider('backgroundOpacity'),
             this.submenu(
               'Foreground',
               'Foreground',
@@ -872,7 +874,7 @@ export class Menu {
                 ['Blue'],
               ])
             ),
-            { type: 'slider', variable: 'foregroundOpacity', content: ' ' },
+            this.slider('foregroundOpacity'),
             this.rule(),
             this.radioGroup('highlight', [['None'], ['Hover'], ['Flame']]),
             this.rule(),
@@ -2069,6 +2071,16 @@ export class Menu {
    */
   public rule(): object {
     return { type: 'rule' };
+  }
+
+  /**
+   * Create JSON for a slider
+   *
+   * @param {string} variable     The (pool) variable to attach to this slider
+   * @returns {object}            The JSON for the slider item
+   */
+  public slider(variable: string): object {
+    return {type: 'slider', variable, content: ' '};
   }
 
   /*======================================================================*/
