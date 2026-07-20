@@ -775,7 +775,9 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   constructor(document: D, adaptor: DOMAdaptor<N, T, D>, options: OptionList) {
     if (!Locale.initialized) {
       // FIXME: add URL when we have one.
-      console.error('MathJax locales not loaded.  You may receive cryptic error messages.');
+      console.error(
+        'MathJax locales not loaded.  You may receive cryptic error messages.'
+      );
     }
     const CLASS = this.constructor as typeof AbstractMathDocument;
     this.document = document;
