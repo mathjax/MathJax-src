@@ -138,7 +138,7 @@ exports[`Colortbl cellcolor with columncolor and rowcolor 1`] = `
 exports[`Colortbl cellcolor with frame 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{|c|} \\cellcolor{red} a \\end{array}" display="block">
   <menclose notation="left right" data-padding="0" data-latex="\\begin{array}{|c|} \\cellcolor{red} a \\end{array}">
-    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em">
+    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{|c|} \\cellcolor{red} a \\end{array}">
       <mtr data-latex="\\cellcolor{red}a">
         <mtd mathbackground="red">
           <mi data-latex="a">a</mi>

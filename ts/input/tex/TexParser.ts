@@ -269,13 +269,9 @@ export default class TexParser {
       return null;
     }
     const node = this.stack.Top().First;
-    // Only overwrite the LaTeX source if it hasn't been set already (e.g., an
-    // mtable produced by an array-like environment)
-    if (node.getProperty('fixedLatex') === undefined) {
-      const latex = this.trimTex(this.string);
-      if (latex) {
-        node.attributes.set(TexConstant.Attr.LATEX, latex);
-      }
+    const latex = this.trimTex(this.string);
+    if (latex) {
+      node.attributes.set(TexConstant.Attr.LATEX, latex);
     }
     return node;
   }

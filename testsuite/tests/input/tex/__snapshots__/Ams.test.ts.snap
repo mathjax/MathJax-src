@@ -184,7 +184,7 @@ exports[`Ams Complex A Cross Product Formula 1`] = `
   <mo data-latex="=">=</mo>
   <mrow data-mjx-texclass="INNER" data-latex="{vmatrix}">
     <mo data-mjx-texclass="OPEN">|</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{vmatrix} \\mathbf{i} &amp; \\mathbf{j} &amp; \\mathbf{k} \\\\    \\frac{\\partial X}{\\partial u} &amp; \\frac{\\partial Y}{\\partial u} &amp; 0 \\\\    \\frac{\\partial X}{\\partial v} &amp; \\frac{\\partial Y}{\\partial v} &amp; 0 \\\\   \\end{vmatrix}">
       <mtr data-latex="\\mathbf{i}&amp;\\mathbf{j}&amp;\\mathbf{k}">
         <mtd>
           <mrow data-mjx-texclass="ORD" data-latex="\\mathbf{i}">
@@ -995,7 +995,7 @@ exports[`Ams Environments Bmatrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Bmatrix} a &amp; b \\\\ c &amp; d \\end{Bmatrix}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Bmatrix} a &amp; b \\\\ c &amp; d \\end{Bmatrix}">
     <mo data-mjx-texclass="OPEN">{</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{Bmatrix} a &amp; b \\\\ c &amp; d \\end{Bmatrix}">
       <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -1235,7 +1235,7 @@ exports[`Ams Environments Multline Star 1`] = `
 exports[`Ams Environments Small Matrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix}a\\end{smallmatrix}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix}a\\end{smallmatrix}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{smallmatrix}a\\end{smallmatrix}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -1304,7 +1304,7 @@ exports[`Ams Environments Split 1`] = `
 exports[`Ams Environments Subarray 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{subarray}{c}a\\end{subarray}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{subarray}{c}a\\end{subarray}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em" data-latex="\\begin{subarray}{c}a\\end{subarray}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -1319,7 +1319,7 @@ exports[`Ams Environments Vmatrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vmatrix} a &amp; b \\\\ c &amp; d \\end{Vmatrix}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Vmatrix} a &amp; b \\\\ c &amp; d \\end{Vmatrix}">
     <mo data-mjx-texclass="OPEN">&#x2016;</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{Vmatrix} a &amp; b \\\\ c &amp; d \\end{Vmatrix}">
       <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -1346,7 +1346,7 @@ exports[`Ams Environments bmatrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{bmatrix} a &amp; b \\\\ c &amp; d \\end{bmatrix}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{bmatrix} a &amp; b \\\\ c &amp; d \\end{bmatrix}">
     <mo data-mjx-texclass="OPEN">[</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{bmatrix} a &amp; b \\\\ c &amp; d \\end{bmatrix}">
       <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -1378,7 +1378,7 @@ exports[`Ams Environments cases 1`] = `
   <mo data-latex="=">=</mo>
   <mrow data-mjx-texclass="INNER" data-latex="{cases}">
     <mo data-mjx-texclass="OPEN">{</mo>
-    <mtable columnspacing="1em" rowspacing=".2em" columnalign="left left">
+    <mtable columnspacing="1em" rowspacing=".2em" columnalign="left left" data-latex="\\begin{cases} 1 &amp; \\text{if $x &gt; 1$} \\\\ 0 &amp; \\text{otherwise} \\end{cases}">
       <mtr data-latex="1&amp;\\text{if $x &gt; 1$}">
         <mtd>
           <mn data-latex="1">1</mn>
@@ -1489,7 +1489,7 @@ exports[`Ams Environments pmatrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}">
     <mo data-mjx-texclass="OPEN">(</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}">
       <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -1648,6 +1648,29 @@ exports[`Ams Genfrac no delimiters 1`] = `
       <mi data-latex="b">b</mi>
     </mfrac>
   </mstyle>
+</math>"
+`;
+
+exports[`Ams Issues Array with Tag 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c}a \\end{array}\\tag{1}" display="block">
+  <mtable displaystyle="true" data-latex="\\begin{array}{c}a \\end{array}\\tag{1}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;{array}">
+      <mtd id="mjx-eqn:1">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c}a \\end{array}">
+          <mtr data-latex="a">
+            <mtd>
+              <mi data-latex="a">a</mi>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mlabeledtr>
+  </mtable>
 </math>"
 `;
 
@@ -2627,7 +2650,7 @@ exports[`Ams Tagged Environments Multline Star 1`] = `
 exports[`Ams Tagged Environments Small Matrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix}a\\end{smallmatrix}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix}a\\end{smallmatrix}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{smallmatrix}a\\end{smallmatrix}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -2696,7 +2719,7 @@ exports[`Ams Tagged Environments Split 1`] = `
 exports[`Ams Tagged Environments Subarray 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{subarray}{c}a\\end{subarray}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{subarray}{c}a\\end{subarray}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em" data-latex="\\begin{subarray}{c}a\\end{subarray}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -3230,7 +3253,7 @@ exports[`Ams symbols math0mo 19 1`] = `
 exports[`Ams symbols substack 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\substack{a\\\\b}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{subarray}{c}a\\\\b\\end{subarray}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em" data-latex="\\begin{subarray}{c}a\\\\b\\end{subarray}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>

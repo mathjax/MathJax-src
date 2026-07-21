@@ -341,6 +341,62 @@ const FilterUtil = {
     }
     options.removeFromList('mstyle', remove);
   },
+
+  /**
+   * Fixes the `data-latex` attribute of mtable nodes produced by array-like
+   * environments, in the cases where the parser's string was rewritten during
+   * parsing:
+   *
+   * - Column templates rewrite the parser's string entry by entry, so we end up
+   *   using a leftover fragment instead of the actual source.
+   *
+   * - When the table is nested inside another environment (e.g., inside a
+   *   tagged equation, or another array), `addLatexItem` sets `data-latex` from
+   *   the `\end{name}` argument alone (e.g., `{array}`), which is wrong.
+   *
+   * This filter only replace a `data-latex` value that looks missing or
+   * broken, so that already-correct values (e.g., the literal source of a bare
+   * top-level array, or the macro call for macros that build their own
+   * array-like content) are left alone.
+   *
+   * @param {object} arg The argument object.
+   * @param {ParseOptions} arg.data The parse options.
+   */
+  fixArrayLatex(arg: { data: ParseOptions }) {
+    const LATEX = TexConstant.Attr.LATEX;
+    for (const mml of arg.data.getList('mtable')) {
+      const tex = mml.getProperty('rawLatex') as string;
+      if (!tex) continue;
+      const name = mml.getProperty('rawLatexName') as string;
+      const current = mml.attributes.getExplicit(LATEX) as string;
+      if (!current || FilterUtil.isBrokenArrayLatex(current, name)) {
+        mml.attributes.set(TexConstant.Attr.LATEXITEM, tex);
+        mml.attributes.set(LATEX, tex);
+      }
+    }
+  },
+
+  /**
+   * Checks whether a `data-latex` value looks like one of the broken fragments,
+   * rather than a genuine, complete piece of LaTeX source.
+   *
+   * This could be fragile or incomplete!
+   *
+   * @param {string} current The current `data-latex` value.
+   * @param {string} name The environment name (e.g., `array`, `matrix`).
+   * @returns {boolean} True if the value looks broken.
+   */
+  isBrokenArrayLatex(current: string, name: string): boolean {
+    if (current === `{${name}}`) {
+      // @test Ams Issues Array with Tag
+      return true;
+    }
+    // @test Complete Array column r c l >
+    return (
+      current.includes(`\\end{${name}}`) &&
+      !current.includes(`\\begin{${name}}`)
+    );
+  },
 };
 
 export default FilterUtil;

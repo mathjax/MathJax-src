@@ -1107,6 +1107,7 @@ export class ArrayItem extends BaseItem {
     const scriptlevel = this.arraydef['scriptlevel'];
     delete this.arraydef['scriptlevel'];
     let mml = this.create('node', 'mtable', this.table, this.arraydef);
+    this.setTableLatex(mml);
     if (scriptlevel) {
       mml.setProperty('smallmatrix', true);
     }
@@ -1134,7 +1135,6 @@ export class ArrayItem extends BaseItem {
         this.getProperty('close') as string
       );
     }
-    this.setTableLatex(mml);
     return mml;
   }
 
@@ -1415,29 +1415,21 @@ export class ArrayItem extends BaseItem {
     // by macro expansion \newenvironment.
     if (end < 0) return;
     this.setProperty('rawLatex', `\\begin{${name}}${source.slice(0, end)}`);
+    this.setProperty('rawLatexName', name);
   }
 
   /**
-   * Sets `data-latex` attribute of the mtable node from captured source. This
-   * is only needed when column templates are in play.
+   * Stashes the original source when a table is opened as a fall-back value for
+   * `data-latex` if the the postprocessing filter decides the attribute is
+   * incorrect.
    *
    * @param {MmlNode} mml The mtable node.
    */
   public setTableLatex(mml: MmlNode) {
-    const hasTemplate = (list: (string | boolean)[]) =>
-      list && list.some((x) => x);
-    if (
-      !hasTemplate(this.cstart) &&
-      !hasTemplate(this.cend) &&
-      !hasTemplate(this.cextra)
-    ) {
-      return;
-    }
     const tex = this.getProperty('rawLatex') as string;
     if (!tex) return;
-    mml.attributes.set(TexConstant.Attr.LATEXITEM, tex);
-    mml.attributes.set(TexConstant.Attr.LATEX, tex);
-    mml.setProperty('fixedLatex', true);
+    mml.setProperty('rawLatex', tex);
+    mml.setProperty('rawLatexName', this.getProperty('rawLatexName') as string);
   }
 
   /**

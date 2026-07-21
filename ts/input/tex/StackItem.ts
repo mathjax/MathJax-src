@@ -580,11 +580,6 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * @param {string=} prefix A prefix for the LaTeX command.
    */
   public addLatexItem(node: MmlNode, prefix: string = '') {
-    // If the node already has a LaTeX source (e.g., an mtable reconstructed
-    // data-latex ), don't overwrite it with a new one.
-    if (node.getProperty('fixedLatex') !== undefined) {
-      return;
-    }
     const str = this.startStr.slice(this.startI, this.stopI);
     if (str) {
       const tex = prefix ? prefix + str : str;
