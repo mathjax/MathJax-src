@@ -1134,6 +1134,7 @@ export class ArrayItem extends BaseItem {
         this.getProperty('close') as string
       );
     }
+    this.setTableLatex(mml);
     return mml;
   }
 
@@ -1395,6 +1396,99 @@ export class ArrayItem extends BaseItem {
    */
   public cellLatex(mtd: MmlNode): string {
     return NodeUtil.getChildrenLatex(mtd);
+  }
+
+  /**
+   * Captures the LaTeX source of this array/table environment (e.g., `>{...}`,
+   * `<{...}`, `@{...}`, or `!{...}`) before any entry-template substitutions
+   * are made.
+   *
+   * @param {TexParser} parser The current parser, positioned right after
+   *     `\begin{name}`, before the column-alignment argument (if any) has
+   *     been read.
+   * @param {string} name The environment name (e.g., `array`, `matrix`).
+   */
+  public captureLatex(parser: TexParser, name: string) {
+    const source = parser.string.slice(parser.i);
+    const end = ArrayItem.findEnvEnd(source, name);
+    // If no matching \end{name} could be found (e.g., an environment produced
+    // by macro expansion \newenvironment.
+    if (end < 0) return;
+    this.setProperty('rawLatex', `\\begin{${name}}${source.slice(0, end)}`);
+  }
+
+  /**
+   * Sets `data-latex` attribute of the mtable node from captured source. This
+   * is only needed when column templates are in play.
+   *
+   * @param {MmlNode} mml The mtable node.
+   */
+  public setTableLatex(mml: MmlNode) {
+    const hasTemplate = (list: (string | boolean)[]) =>
+      list && list.some((x) => x);
+    if (
+      !hasTemplate(this.cstart) &&
+      !hasTemplate(this.cend) &&
+      !hasTemplate(this.cextra)
+    ) {
+      return;
+    }
+    const tex = this.getProperty('rawLatex') as string;
+    if (!tex) return;
+    mml.attributes.set(TexConstant.Attr.LATEXITEM, tex);
+    mml.attributes.set(TexConstant.Attr.LATEX, tex);
+    mml.setProperty('fixedLatex', true);
+  }
+
+  /**
+   * Find the position of the corresponding `\end{name}` in the string starting
+   * right after the corresponding `\begin{name}` (skipping nested environments
+   * of that name).
+   *
+   * @param {string} str The string to search.
+   * @param {string} name The environment name to look for.
+   * @returns {number} The index right after the matching `\end{name}`, or
+   *     -1 if no matching end was found.
+   */
+  private static findEnvEnd(str: string, name: string): number {
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const begin = new RegExp(`^\\\\begin\\s*\\{${escaped}\\}`);
+    const end = new RegExp(`^\\\\end\\s*\\{${escaped}\\}`);
+    let depth = 0;
+    let nested = 0;
+    let i = 0;
+    while (i < str.length) {
+      const c = str.charAt(i);
+      if (c === '\\') {
+        const rest = str.slice(i);
+        const mBegin = rest.match(begin);
+        if (mBegin) {
+          if (depth === 0) nested++;
+          i += mBegin[0].length;
+          continue;
+        }
+        const mEnd = rest.match(end);
+        if (mEnd) {
+          if (depth === 0) {
+            if (!nested) {
+              return i + mEnd[0].length;
+            }
+            nested--;
+          }
+          i += mEnd[0].length;
+          continue;
+        }
+        i += 2;
+        continue;
+      }
+      if (c === '{') {
+        depth++;
+      } else if (c === '}' && depth > 0) {
+        depth--;
+      }
+      i++;
+    }
+    return -1;
   }
 
   /**

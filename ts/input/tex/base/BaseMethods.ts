@@ -1934,11 +1934,12 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     style: string,
     raggedHeight: boolean
   ): ParseResult {
+    const array = parser.itemFactory.create('array') as sitem.ArrayItem;
+    array.captureLatex(parser, begin.getName());
     if (!align) {
       // @test Array Single
       align = parser.GetArgument('\\begin{' + begin.getName() + '}');
     }
-    const array = parser.itemFactory.create('array') as sitem.ArrayItem;
     if (begin.getName() === 'array') {
       array.setProperty('arrayPadding', '.5em .125em');
     }

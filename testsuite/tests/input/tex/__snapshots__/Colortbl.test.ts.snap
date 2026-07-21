@@ -41,7 +41,7 @@ exports[`Colortbl cellcolor in pmatrix 1`] = `
 
 exports[`Colortbl cellcolor in preamble 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c&gt;{\\cellcolor{yellow}}c} a &amp; b \\\\ c &amp; d \\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\cellcolor{yellow}d\\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c&gt;{\\cellcolor{yellow}}c} a &amp; b \\\\ c &amp; d \\end{array}">
     <mtr data-latex="a&amp;\\cellcolor{yellow}b">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -255,7 +255,7 @@ exports[`Colortbl columncolor ignore overlap 1`] = `
 
 exports[`Colortbl columncolor in preamble 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c&gt;{\\columncolor{yellow}}c} a &amp; b \\\\ c &amp; d \\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\columncolor{yellow}d\\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c&gt;{\\columncolor{yellow}}c} a &amp; b \\\\ c &amp; d \\end{array}">
     <mtr data-latex="a&amp;\\columncolor{yellow}b">
       <mtd>
         <mi data-latex="a">a</mi>
