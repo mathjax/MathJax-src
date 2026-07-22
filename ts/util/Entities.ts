@@ -21,8 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { retryAfter } from './Retries.js';
-import { asyncLoad } from './AsyncLoad.js';
+import { mathjax } from '../mathjax.js';
 import { OptionList } from './Options.js';
 
 /**
@@ -493,7 +492,7 @@ export function translate(text: string): string {
  *
  * @param {string} match   The complete entity being replaced
  * @param {string} entity  The name of the entity to be replaced
- * @returns {string}        The unicode character for the entity, or the entity name (if none found)
+ * @returns {string}       The unicode character for the entity, or the entity name (if none found)
  */
 function replace(match: string, entity: string): string {
   if (entity.charAt(0) === '#') {
@@ -503,12 +502,16 @@ function replace(match: string, entity: string): string {
     return entities[entity];
   }
   if (options['loadMissingEntities']) {
-    const file = entity.match(/^[a-zA-Z](fr|scr|opf)$/)
-      ? RegExp.$1
-      : entity.charAt(0).toLowerCase();
+    const file =
+      entity.match(/^[a-zA-Z](fr|scr|opf)$/)?.[1] ??
+      entity.charAt(0).toLowerCase();
     if (!loaded[file]) {
       loaded[file] = true;
-      retryAfter(asyncLoad('./util/entities/' + file + '.js'));
+      const promise = mathjax.asyncLoad(`./util/entities/${file}.js`);
+      if (mathjax.asyncIsSynchronous) {
+        return replace(match, entity);
+      }
+      mathjax.retryAfter(promise);
     }
   }
   return match;
