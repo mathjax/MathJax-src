@@ -62,6 +62,9 @@ export function resolvePath(
   relative: (name: string) => string,
   absolute: (name: string) => string = (name) => name
 ): string {
+  if (name.substring(0, 5) === 'node:') {
+    return name.substring(5);
+  }
   const Package =
     typeof MathJax === 'undefined'
       ? null

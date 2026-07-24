@@ -334,7 +334,7 @@ export class SpeechExplorer
   /**
    * The anchors in this expression
    */
-  protected anchors: HTMLElement[];
+  protected anchors: HTMLElement[] = [];
 
   /**
    * The elements that are focusable for tab navigation
@@ -1183,6 +1183,7 @@ export class SpeechExplorer
         description += ', ' + localize('ForHelp');
       }
       speech += description;
+      speech = speech.replace(/^, /, '');
     }
     this.speak(
       speech,
@@ -1221,7 +1222,7 @@ export class SpeechExplorer
   }
 
   /**
-   * Create a new speech node and sets its needed attributes,
+   * Create a new speech node and set its needed attributes,
    *   then add it to the container and focus it.  If there is
    *   and old speech node, remove it after a delay (the delay
    *   is needed for Orca on Linux).
@@ -1237,6 +1238,12 @@ export class SpeechExplorer
     ssml: string[] = null,
     description: string = this.none
   ) {
+    if (!this.node.getAttribute('data-speech-attached') && speech) {
+      speech = localize('Word/Math');
+    }
+    if (!this.node.getAttribute('data-braille-attached') && braille) {
+      braille = localize('Word/Math');
+    }
     const oldspeech = this.speech;
     const speechNode = (this.speech = document.createElement('mjx-speech'));
     speechNode.setAttribute('role', this.role);
@@ -1303,9 +1310,10 @@ export class SpeechExplorer
       container.setAttribute('has-speech', 'true');
     }
     const description = item.roleDescription;
-    const speech =
+    const speech = (
       (container.getAttribute(SemAttr.SPEECH) || '') +
-      (description && description !== this.none ? ', ' + description : '');
+      (description && description !== this.none ? ', ' + description : '')
+    ).replace(/^, /, '');
     this.img?.remove();
     this.img = this.document.adaptor.node('mjx-speech', {
       'aria-label': speech,

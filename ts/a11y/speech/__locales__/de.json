@@ -1,8 +1,13 @@
 {
+  "NoBraille": "Braille nicht verfügbar",
+  "NoSpeech": "Sprache nicht verfügbar",
   "ProsodyError": "Beim Prosody-Abgleich ist ein Fehler aufgetreten",
   "SpeechError": "Fehler bei der Sprachgenerierung:",
   "Worker/Cancelled": "Task %1 abgebrochen",
+  "Worker/Failed": "MathJax Webworker konnte nicht geladen werden: %1",
+  "Worker/FailedFrom": "MathJax Webworker konnte nicht von %2 geladen werden: %1",
+  "Worker/Maps": "MathJax Webworker konnte die mathematische Zuordnung nicht laden: %1",
+  "Worker/MapsFrom": "MathJax Webworker konnte die mathematische Zuordnung nicht von %2 laden: %1",
   "Worker/NotStarted": "Worker wurde nicht gestartet",
-  "Worker/Started": "Worker bereits gestartet",
   "Worker/Terminate": "%1 durch Beendigung des WorkerHandlers abgebrochen"
 }
