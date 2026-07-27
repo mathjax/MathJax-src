@@ -7656,7 +7656,7 @@ exports[`Referencing Nonumber 1`] = `
 exports[`Referencing Ref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}\\ref{A}" display="block">
   <mtable displaystyle="true" data-latex="a\\label{A}\\ref{A}">
-    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a\\ref{A}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a\\text{???}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -7664,7 +7664,7 @@ exports[`Referencing Ref 1`] = `
       </mtd>
       <mtd>
         <mi data-latex="a">a</mi>
-        <mrow href="#" class="MathJax_ref" data-latex="\\ref{A}">
+        <mrow href="#" class="MathJax_ref" data-latex="\\text{???}">
           <mtext data-latex="\\text{???}">???</mtext>
         </mrow>
       </mtd>
@@ -7676,7 +7676,7 @@ exports[`Referencing Ref 1`] = `
 exports[`Referencing Ref Unknown 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}\\ref{B}" display="block">
   <mtable displaystyle="true" data-latex="a\\label{A}\\ref{B}">
-    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a\\ref{B}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a\\text{???}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -7684,7 +7684,7 @@ exports[`Referencing Ref Unknown 1`] = `
       </mtd>
       <mtd>
         <mi data-latex="a">a</mi>
-        <mrow href="#" class="MathJax_ref" data-latex="\\ref{B}">
+        <mrow href="#" class="MathJax_ref" data-latex="\\text{???}">
           <mtext data-latex="\\text{???}">???</mtext>
         </mrow>
       </mtd>
@@ -9206,7 +9206,7 @@ exports[`User Defined Environments smallmatrix 1`] = `
 exports[`User Defined Macros EqRef 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}\\eqref{A}" display="block">
   <mi data-latex="a">a</mi>
-  <mrow href="#" class="MathJax_ref" data-latex="\\eqref{A}">
+  <mrow href="#" class="MathJax_ref" data-latex="\\text{(???)}">
     <mtext data-latex="\\text{(???)}">(???)</mtext>
   </mrow>
 </math>"

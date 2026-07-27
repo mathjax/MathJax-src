@@ -3992,9 +3992,9 @@ exports[`Mathtools Tagging refeq 1`] = `
         </msup>
       </mtd>
     </mlabeledtr>
-    <mtr data-latex="\\refeq{test}">
+    <mtr data-latex="\\text{\\textsf{A}}">
       <mtd>
-        <mrow href="#mjx-eqn%3Atest" class="MathJax_ref" data-latex="\\refeq{test}">
+        <mrow href="#mjx-eqn%3Atest" class="MathJax_ref" data-latex="\\text{\\textsf{A}}">
           <mtext data-latex="\\text{\\textsf{A}}">\\textsf{A}</mtext>
         </mrow>
       </mtd>

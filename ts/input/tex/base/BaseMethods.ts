@@ -2237,6 +2237,15 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       href: parser.tags.formatUrl(ref.id, parser.options.baseURL),
       class: 'MathJax_ref',
     });
+    const latex = (mml.attributes.get(TexConstant.Attr.LATEX) || '') as string;
+    if (latex) {
+      // Protects the latex from being overwritten by the generic
+      // source-tracking in TexParser.updateResult, which would otherwise
+      // record the raw `\ref{...}`/`\eqref{...}` call instead of the
+      // latex that was actually used to build the reference's content.
+      node.attributes.set(TexConstant.Attr.LATEXITEM, latex);
+      node.attributes.set(TexConstant.Attr.LATEX, latex);
+    }
     parser.Push(node);
   },
 

@@ -181,10 +181,10 @@ exports[`Textmacros Macros Quoted Specials 1`] = `
 exports[`Textmacros Macros Ref and Eqref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\text{\\ref{a}\\eqref{b}}" display="block">
   <mrow data-latex="\\text{\\ref{a}\\eqref{b}}">
-    <mrow href="#" class="MathJax_ref">
+    <mrow href="#" class="MathJax_ref" data-latex="\\text{???}">
       <mtext data-latex="\\text{???}">???</mtext>
     </mrow>
-    <mrow href="#" class="MathJax_ref">
+    <mrow href="#" class="MathJax_ref" data-latex="\\text{(???)}">
       <mtext data-latex="\\text{(???)}">(???)</mtext>
     </mrow>
   </mrow>
@@ -593,7 +593,7 @@ exports[`Textmacros Text ref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\textbf{a \\ref{a}}" display="block">
   <mrow data-latex="\\textbf{a \\ref{a}}">
     <mtext mathvariant="bold">a&#xA0;</mtext>
-    <mrow href="#" class="MathJax_ref">
+    <mrow href="#" class="MathJax_ref" data-latex="\\text{???}">
       <mtext data-latex="\\text{???}">???</mtext>
     </mrow>
   </mrow>
