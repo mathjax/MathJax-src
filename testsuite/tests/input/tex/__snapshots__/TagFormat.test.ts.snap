@@ -87,7 +87,7 @@ exports[`Tagformat Custom ref 1`] = `
       </mtd>
       <mtd>
         <mrow href="#mjx-eqn%3Atest" class="MathJax_ref" data-latex="\\eqref{test}">
-          <mtext>**x**</mtext>
+          <mtext data-latex="\\text{**x**}">**x**</mtext>
         </mrow>
       </mtd>
     </mlabeledtr>
@@ -116,7 +116,7 @@ exports[`Tagformat Eqref 1`] = `
       </mtd>
       <mtd>
         <mrow href="[[#my-tag%3Atest]]" class="MathJax_ref" data-latex="\\eqref{test}">
-          <mtext>[x]</mtext>
+          <mtext data-latex="\\text{[x]}">[x]</mtext>
         </mrow>
       </mtd>
     </mlabeledtr>
@@ -145,7 +145,7 @@ exports[`Tagformat Ref 1`] = `
       </mtd>
       <mtd>
         <mrow href="[[#my-tag%3Atest]]" class="MathJax_ref" data-latex="\\ref{test}">
-          <mtext>x</mtext>
+          <mtext data-latex="\\text{x}">x</mtext>
         </mrow>
       </mtd>
     </mlabeledtr>

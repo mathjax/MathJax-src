@@ -7665,7 +7665,7 @@ exports[`Referencing Ref 1`] = `
       <mtd>
         <mi data-latex="a">a</mi>
         <mrow href="#" class="MathJax_ref" data-latex="\\ref{A}">
-          <mtext>???</mtext>
+          <mtext data-latex="\\text{???}">???</mtext>
         </mrow>
       </mtd>
     </mlabeledtr>
@@ -7685,7 +7685,7 @@ exports[`Referencing Ref Unknown 1`] = `
       <mtd>
         <mi data-latex="a">a</mi>
         <mrow href="#" class="MathJax_ref" data-latex="\\ref{B}">
-          <mtext>???</mtext>
+          <mtext data-latex="\\text{???}">???</mtext>
         </mrow>
       </mtd>
     </mlabeledtr>
@@ -9207,7 +9207,7 @@ exports[`User Defined Macros EqRef 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}\\eqref{A}" display="block">
   <mi data-latex="a">a</mi>
   <mrow href="#" class="MathJax_ref" data-latex="\\eqref{A}">
-    <mtext>(???)</mtext>
+    <mtext data-latex="\\text{(???)}">(???)</mtext>
   </mrow>
 </math>"
 `;

@@ -20,7 +20,7 @@ exports[`Page References Forward Reference 1`] = `
 </math>",
   "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eqref{eq1}">
   <mrow href="#mjx-eqn%3Aeq1" class="MathJax_ref" data-latex="\\eqref{eq1}">
-    <mtext>(1)</mtext>
+    <mtext data-latex="\\text{(1)}">(1)</mtext>
   </mrow>
 </math>",
 ]
@@ -30,7 +30,7 @@ exports[`Page References Forward Reference 2`] = `
 [
   "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eqref{eq1}">
   <mrow href="#mjx-eqn%3Aeq1" class="MathJax_ref" data-latex="\\eqref{eq1}">
-    <mtext>(1)</mtext>
+    <mtext data-latex="\\text{(1)}">(1)</mtext>
   </mrow>
 </math>",
   "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a=b\\label{eq1}\\tag{1}" display="block">
@@ -137,7 +137,7 @@ exports[`TagAll Eqref 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\eqref{A}">
-    <mtext>(1)</mtext>
+    <mtext data-latex="\\text{(1)}">(1)</mtext>
   </mrow>
 </math>"
 `;
@@ -352,7 +352,7 @@ exports[`TagAll Ref 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>1</mtext>
+    <mtext data-latex="\\text{1}">1</mtext>
   </mrow>
 </math>"
 `;
@@ -372,7 +372,7 @@ exports[`TagAll Ref Default 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>1</mtext>
+    <mtext data-latex="\\text{1}">1</mtext>
   </mrow>
 </math>"
 `;
@@ -392,7 +392,7 @@ exports[`TagAll Ref Named 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>A</mtext>
+    <mtext data-latex="\\text{A}">A</mtext>
   </mrow>
 </math>"
 `;
@@ -422,10 +422,10 @@ exports[`TagAll Ref Named Default 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>A</mtext>
+    <mtext data-latex="\\text{A}">A</mtext>
   </mrow>
   <mrow href="#mjx-eqn%3AB" class="MathJax_ref" data-latex="\\ref{B}">
-    <mtext>1</mtext>
+    <mtext data-latex="\\text{1}">1</mtext>
   </mrow>
 </math>"
 `;
@@ -455,10 +455,10 @@ exports[`TagAll Ref Named Named 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>A</mtext>
+    <mtext data-latex="\\text{A}">A</mtext>
   </mrow>
   <mrow href="#mjx-eqn%3AB" class="MathJax_ref" data-latex="\\ref{B}">
-    <mtext>B</mtext>
+    <mtext data-latex="\\text{B}">B</mtext>
   </mrow>
 </math>"
 `;
@@ -478,7 +478,7 @@ exports[`TagAll Ref Unknown 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#" class="MathJax_ref" data-latex="\\ref{B}">
-    <mtext>???</mtext>
+    <mtext data-latex="\\text{???}">???</mtext>
   </mrow>
 </math>"
 `;
@@ -656,7 +656,7 @@ exports[`TagAms Eqref 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\eqref{A}">
-    <mtext>(1)</mtext>
+    <mtext data-latex="\\text{(1)}">(1)</mtext>
   </mrow>
 </math>"
 `;
@@ -871,7 +871,7 @@ exports[`TagAms Ref 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>1</mtext>
+    <mtext data-latex="\\text{1}">1</mtext>
   </mrow>
 </math>"
 `;
@@ -891,7 +891,7 @@ exports[`TagAms Ref Default 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>1</mtext>
+    <mtext data-latex="\\text{1}">1</mtext>
   </mrow>
 </math>"
 `;
@@ -911,7 +911,7 @@ exports[`TagAms Ref Named 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>A</mtext>
+    <mtext data-latex="\\text{A}">A</mtext>
   </mrow>
 </math>"
 `;
@@ -941,10 +941,10 @@ exports[`TagAms Ref Named Default 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>A</mtext>
+    <mtext data-latex="\\text{A}">A</mtext>
   </mrow>
   <mrow href="#mjx-eqn%3AB" class="MathJax_ref" data-latex="\\ref{B}">
-    <mtext>1</mtext>
+    <mtext data-latex="\\text{1}">1</mtext>
   </mrow>
 </math>"
 `;
@@ -974,10 +974,10 @@ exports[`TagAms Ref Named Named 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>A</mtext>
+    <mtext data-latex="\\text{A}">A</mtext>
   </mrow>
   <mrow href="#mjx-eqn%3AB" class="MathJax_ref" data-latex="\\ref{B}">
-    <mtext>B</mtext>
+    <mtext data-latex="\\text{B}">B</mtext>
   </mrow>
 </math>"
 `;
@@ -997,7 +997,7 @@ exports[`TagAms Ref Unknown 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#" class="MathJax_ref" data-latex="\\ref{B}">
-    <mtext>???</mtext>
+    <mtext data-latex="\\text{???}">???</mtext>
   </mrow>
 </math>"
 `;
@@ -1130,7 +1130,7 @@ exports[`TagNone Eqref 1`] = `
     </mtr>
   </mtable>
   <mrow href="#" class="MathJax_ref" data-latex="\\eqref{A}">
-    <mtext>(???)</mtext>
+    <mtext data-latex="\\text{(???)}">(???)</mtext>
   </mrow>
 </math>"
 `;
@@ -1315,7 +1315,7 @@ exports[`TagNone Ref 1`] = `
     </mtr>
   </mtable>
   <mrow href="#" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>???</mtext>
+    <mtext data-latex="\\text{???}">???</mtext>
   </mrow>
 </math>"
 `;
@@ -1330,7 +1330,7 @@ exports[`TagNone Ref Default 1`] = `
     </mtr>
   </mtable>
   <mrow href="#" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>???</mtext>
+    <mtext data-latex="\\text{???}">???</mtext>
   </mrow>
 </math>"
 `;
@@ -1350,7 +1350,7 @@ exports[`TagNone Ref Named 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>A</mtext>
+    <mtext data-latex="\\text{A}">A</mtext>
   </mrow>
 </math>"
 `;
@@ -1375,10 +1375,10 @@ exports[`TagNone Ref Named Default 1`] = `
     </mtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>A</mtext>
+    <mtext data-latex="\\text{A}">A</mtext>
   </mrow>
   <mrow href="#" class="MathJax_ref" data-latex="\\ref{B}">
-    <mtext>???</mtext>
+    <mtext data-latex="\\text{???}">???</mtext>
   </mrow>
 </math>"
 `;
@@ -1408,10 +1408,10 @@ exports[`TagNone Ref Named Named 1`] = `
     </mlabeledtr>
   </mtable>
   <mrow href="#mjx-eqn%3AA" class="MathJax_ref" data-latex="\\ref{A}">
-    <mtext>A</mtext>
+    <mtext data-latex="\\text{A}">A</mtext>
   </mrow>
   <mrow href="#mjx-eqn%3AB" class="MathJax_ref" data-latex="\\ref{B}">
-    <mtext>B</mtext>
+    <mtext data-latex="\\text{B}">B</mtext>
   </mrow>
 </math>"
 `;
@@ -1426,7 +1426,7 @@ exports[`TagNone Ref Unknown 1`] = `
     </mtr>
   </mtable>
   <mrow href="#" class="MathJax_ref" data-latex="\\ref{B}">
-    <mtext>???</mtext>
+    <mtext data-latex="\\text{???}">???</mtext>
   </mrow>
 </math>"
 `;

@@ -2227,15 +2227,16 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       // @test Eqref
       tag = parser.tags.formatRef(tag);
     }
-    const node = parser.create(
-      'node',
-      'mrow',
-      ParseUtil.internalMath(parser, Array.isArray(tag) ? tag.join('') : tag),
-      {
-        href: parser.tags.formatUrl(ref.id, parser.options.baseURL),
-        class: 'MathJax_ref',
-      }
-    );
+    const tagStr = Array.isArray(tag) ? tag.join('') : tag;
+    const mml = new TexParser(
+      `\\text{${tagStr}}`,
+      {},
+      parser.tags.configuration
+    ).mml();
+    const node = parser.create('node', 'mrow', [mml], {
+      href: parser.tags.formatUrl(ref.id, parser.options.baseURL),
+      class: 'MathJax_ref',
+    });
     parser.Push(node);
   },
 

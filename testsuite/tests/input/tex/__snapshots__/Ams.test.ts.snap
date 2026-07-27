@@ -3276,7 +3276,7 @@ exports[`InternalMath Mbox Eqref 1`] = `
     <mtext>&#xA0;</mtext>
     <mrow data-mjx-texclass="ORD">
       <mrow href="#" class="MathJax_ref" data-latex="\\eqref{1}">
-        <mtext>(???)</mtext>
+        <mtext data-latex="\\text{(???)}">(???)</mtext>
       </mrow>
     </mrow>
     <mtext>&#xA0;</mtext>
