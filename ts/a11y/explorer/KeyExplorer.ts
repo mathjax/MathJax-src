@@ -29,6 +29,7 @@ import { ExplorerPool } from './ExplorerPool.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, SemAttr } from '../speech/SpeechUtil.js';
 import { GeneratorPool } from '../speech/GeneratorPool.js';
+import { StructureUtil, StructureMap } from '../speech/StructureUtil.js';
 import { context } from '../../util/context.js';
 import { InfoDialog } from '../../ui/dialog/InfoDialog.js';
 import { localize } from './__locales__/Component.js';
@@ -366,7 +367,7 @@ export class SpeechExplorer
   /**
    * Semantic id to subtree map.
    */
-  private subtrees: Map<string, Set<string>> = null;
+  private subtrees: StructureMap = null;
 
   /**
    * @override
@@ -1141,7 +1142,7 @@ export class SpeechExplorer
         Array.from(node.querySelectorAll(`[data-semantic-id]`)) as HTMLElement[]
       ).forEach((x) => children.add(this.nodeId(x)));
     }
-    const rest = setdifference(sub, children);
+    const rest = StructureUtil.setdifference(sub, children);
     return [...rest]
       .map((child) => this.getNode(child))
       .filter((node) => node !== null);
@@ -1774,8 +1775,7 @@ export class SpeechExplorer
    */
   public async Start() {
     if (!this.subtrees) {
-      this.subtrees = new Map();
-      this.getSubtrees();
+      this.subtrees = this.getSubtrees();
     }
     //
     // If we aren't attached or already active, return
@@ -2023,94 +2023,13 @@ export class SpeechExplorer
 
   /**
    * Populates the subtrees map from the data-semantic-structure attribute.
+   *
+   * @returns {StructureMap}  The structure of the expression.
    */
-  private getSubtrees() {
+  protected getSubtrees(): StructureMap {
     const node = this.node.querySelector('[data-semantic-structure]');
-    if (!node) return;
+    if (!node) return new Map();
     const sexp = node.getAttribute('data-semantic-structure');
-    const tokens = tokenize(sexp);
-    const tree = parse(tokens);
-    buildMap(tree, this.subtrees);
+    return StructureUtil.getStructure(sexp);
   }
-}
-
-/**********************************************************************/
-/*
- * Some Aux functions for parsing the semantic structure sexpression
- */
-type SexpTree = string | SexpTree[];
-
-/**
- * Helper to tokenize input
- *
- * @param {string} str The semantic structure.
- * @returns {string[]} The tokenized list.
- */
-function tokenize(str: string): string[] {
-  return str.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').trim().split(/\s+/);
-}
-
-/**
- * Recursive parser to convert tokens into a tree
- *
- * @param {string} tokens The tokens from the semantic structure.
- * @returns {SexpTree} Array list for the semantic structure sexpression.
- */
-function parse(tokens: string[]): SexpTree {
-  const stack: SexpTree[][] = [[]];
-  for (const token of tokens) {
-    if (token === '(') {
-      const newNode: SexpTree = [];
-      stack[stack.length - 1].push(newNode);
-      stack.push(newNode);
-    } else if (token === ')') {
-      stack.pop();
-    } else {
-      stack[stack.length - 1].push(token);
-    }
-  }
-  return stack[0][0];
-}
-
-/**
- * Flattens the tree and builds the map.
- *
- * @param {SexpTree} tree The sexpression tree.
- * @param {Map<string, Set<string>>} map The map to populate.
- * @returns {Set<string>} The descendant map.
- */
-function buildMap(tree: SexpTree, map: Map<string, Set<string>>): Set<string> {
-  if (typeof tree === 'string') {
-    if (!map.has(tree)) map.set(tree, new Set());
-    return new Set();
-  }
-  const [root, ...children] = tree;
-  const rootId = root as string;
-  const descendants: Set<string> = new Set();
-  for (const child of children) {
-    const childRoot = typeof child === 'string' ? child : child[0];
-    const childDescendants = buildMap(child, map);
-    descendants.add(childRoot as string);
-    childDescendants.forEach((d: string) => descendants.add(d));
-  }
-  map.set(rootId, descendants);
-  return descendants;
-}
-
-// Can be replaced with ES2024 implementation of Set.prototyp.difference
-/**
- * Set difference between two sets A and B: A\B.
- *
- * @param {Set<string>} a Initial set.
- * @param {Set<string>} b Set to remove from A.
- * @returns {Set<string>} The difference A\B.
- */
-function setdifference(a: Set<string>, b: Set<string>): Set<string> {
-  if (!a) {
-    return new Set();
-  }
-  if (!b) {
-    return a;
-  }
-  return new Set([...a].filter((x) => !b.has(x)));
 }
