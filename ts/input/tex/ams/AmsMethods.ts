@@ -779,6 +779,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     const tagId = UnitUtil.trimSpaces(parser.GetArgument(name));
     parser.tags.tag(tagId, star);
     parser.Push(parser.itemFactory.create('null'));
+    parser.skipLatex();
   },
 
   HandleNoTag: BaseMethods.HandleNoTag,

@@ -26,6 +26,8 @@ import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { MathItem } from '../../core/MathItem.js';
 import { EnvList } from './StackItem.js';
 import ParseOptions from './ParseOptions.js';
+import NodeUtil from './NodeUtil.js';
+import { TexConstant } from './TexConstants.js';
 
 /**
  *  Simple class for label objects.
@@ -535,6 +537,14 @@ export class AbstractTags implements Tags {
     const nf = this.configuration.nodeFactory;
     const cell = nf.create('node', 'mtd', [node]);
     const row = nf.create('node', 'mlabeledtr', [tag, cell]);
+    const latex = [
+      NodeUtil.getChildrenLatex(tag),
+      NodeUtil.getChildrenLatex(cell),
+    ].join('&');
+    if (latex) {
+      row.attributes.set(TexConstant.Attr.LATEXITEM, latex);
+      row.attributes.set(TexConstant.Attr.LATEX, latex);
+    }
     const table = nf.create('node', 'mtable', [row], {
       side: this.configuration.options['tagSide'],
       minlabelspacing: this.configuration.options['tagIndent'],

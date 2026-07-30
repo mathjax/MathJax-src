@@ -68,6 +68,7 @@ export class MultlineItem extends ArrayItem {
     );
     this.setProperty('shove', null);
     this.row.push(mtd);
+    this.rowLatex.push(this.cellLatex(mtd));
     this.Clear();
   }
 
@@ -84,8 +85,10 @@ export class MultlineItem extends ArrayItem {
       );
     }
     const row = this.create('node', 'mtr', this.row);
+    this.setRowLatex(row);
     this.table.push(row);
     this.row = [];
+    this.rowLatex = [];
   }
 
   /**
@@ -133,6 +136,16 @@ export class MultlineItem extends ArrayItem {
           [tag].concat(NodeUtil.getChildren(mtr))
         );
         NodeUtil.copyAttributes(mtr, mlabel);
+        const latex = [
+          this.cellLatex(tag),
+          mtr.attributes.get(TexConstant.Attr.LATEX),
+        ]
+          .filter((x) => x)
+          .join('&');
+        if (latex) {
+          mlabel.attributes.set(TexConstant.Attr.LATEXITEM, latex);
+          mlabel.attributes.set(TexConstant.Attr.LATEX, latex);
+        }
         this.table[label] = mlabel;
       }
     }

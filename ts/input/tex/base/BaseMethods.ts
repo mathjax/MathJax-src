@@ -1934,11 +1934,12 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     style: string,
     raggedHeight: boolean
   ): ParseResult {
+    const array = parser.itemFactory.create('array') as sitem.ArrayItem;
+    array.captureLatex(parser, begin.getName());
     if (!align) {
       // @test Array Single
       align = parser.GetArgument('\\begin{' + begin.getName() + '}');
     }
-    const array = parser.itemFactory.create('array') as sitem.ArrayItem;
     if (begin.getName() === 'array') {
       array.setProperty('arrayPadding', '.5em .125em');
     }
@@ -2162,6 +2163,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    */
   HandleNoTag(parser: TexParser, _name: string) {
     parser.tags.notag();
+    parser.skipLatex();
   },
 
   /**
@@ -2175,6 +2177,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const label = parser.GetArgument(name);
     if (label === '') {
       // @test Label Empty
+      parser.skipLatex();
       return;
     }
     // @test Label, Ref, Ref Unknown
@@ -2198,6 +2201,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       // TODO: This should be set in the tags structure!
       parser.tags.labels[label] = new Label(); // will be replaced by tag value later
     }
+    parser.skipLatex();
   },
 
   /**
@@ -2223,15 +2227,25 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       // @test Eqref
       tag = parser.tags.formatRef(tag);
     }
-    const node = parser.create(
-      'node',
-      'mrow',
-      ParseUtil.internalMath(parser, Array.isArray(tag) ? tag.join('') : tag),
-      {
-        href: parser.tags.formatUrl(ref.id, parser.options.baseURL),
-        class: 'MathJax_ref',
-      }
-    );
+    const tagStr = Array.isArray(tag) ? tag.join('') : tag;
+    const mml = new TexParser(
+      `\\text{${tagStr}}`,
+      {},
+      parser.tags.configuration
+    ).mml();
+    const node = parser.create('node', 'mrow', [mml], {
+      href: parser.tags.formatUrl(ref.id, parser.options.baseURL),
+      class: 'MathJax_ref',
+    });
+    const latex = (mml.attributes.get(TexConstant.Attr.LATEX) || '') as string;
+    if (latex) {
+      // Protects the latex from being overwritten by the generic
+      // source-tracking in TexParser.updateResult, which would otherwise
+      // record the raw `\ref{...}`/`\eqref{...}` call instead of the
+      // latex that was actually used to build the reference's content.
+      node.attributes.set(TexConstant.Attr.LATEXITEM, latex);
+      node.attributes.set(TexConstant.Attr.LATEX, latex);
+    }
     parser.Push(node);
   },
 

@@ -441,14 +441,14 @@ exports[`Array Columnlines Solid None 1`] = `
 
 exports[`Array Empty Array with Template 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{&gt;{x}c} \\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\end{array}"></mtable>
+  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{&gt;{x}c} \\end{array}"></mtable>
 </math>"
 `;
 
 exports[`Array Enclosed bottom 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c} a\\\\\\hline\\end{array}" display="block">
   <menclose notation="bottom" data-padding="0" data-latex="\\begin{array}{c} a\\\\\\hline\\end{array}">
-    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em">
+    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c} a\\\\\\hline\\end{array}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -462,7 +462,7 @@ exports[`Array Enclosed bottom 1`] = `
 exports[`Array Enclosed dashed column 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{|c:c|}a&amp;c\\\\b&amp;d\\end{array}" display="block">
   <menclose notation="left right" data-padding="0" data-latex="\\begin{array}{|c:c|}a&amp;c\\\\b&amp;d\\end{array}">
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="dashed" data-frame-styles="" framespacing=".5em .125em">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="dashed" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{|c:c|}a&amp;c\\\\b&amp;d\\end{array}">
       <mtr data-latex="a&amp;c">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -487,7 +487,7 @@ exports[`Array Enclosed dashed column 1`] = `
 exports[`Array Enclosed dashed row 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{|c|}a\\\\\\hdashline b\\end{array}" display="block">
   <menclose notation="left right" data-padding="0" data-latex="\\begin{array}{|c|}a\\\\\\hdashline b\\end{array}">
-    <mtable columnspacing="1em" rowspacing="4pt" rowlines="dashed" data-frame-styles="" framespacing=".5em .125em">
+    <mtable columnspacing="1em" rowspacing="4pt" rowlines="dashed" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{|c|}a\\\\\\hdashline b\\end{array}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -530,7 +530,7 @@ exports[`Array Enclosed frame solid 1`] = `
 exports[`Array Enclosed left 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{|c}a\\end{array}" display="block">
   <menclose notation="left" data-padding="0" data-latex="\\begin{array}{|c}a\\end{array}">
-    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em">
+    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{|c}a\\end{array}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -544,7 +544,7 @@ exports[`Array Enclosed left 1`] = `
 exports[`Array Enclosed left right 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{|c|}a\\end{array}" display="block">
   <menclose notation="left right" data-padding="0" data-latex="\\begin{array}{|c|}a\\end{array}">
-    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em">
+    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{|c|}a\\end{array}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -558,7 +558,7 @@ exports[`Array Enclosed left right 1`] = `
 exports[`Array Enclosed right 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c|}a\\end{array}" display="block">
   <menclose notation="right" data-padding="0" data-latex="\\begin{array}{c|}a\\end{array}">
-    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em">
+    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c|}a\\end{array}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -572,7 +572,7 @@ exports[`Array Enclosed right 1`] = `
 exports[`Array Enclosed solid column 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{|c|c|}a&amp;c\\\\b&amp;d\\end{array}" display="block">
   <menclose notation="left right" data-padding="0" data-latex="\\begin{array}{|c|c|}a&amp;c\\\\b&amp;d\\end{array}">
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" data-frame-styles="" framespacing=".5em .125em">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{|c|c|}a&amp;c\\\\b&amp;d\\end{array}">
       <mtr data-latex="a&amp;c">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -609,7 +609,7 @@ exports[`Array Enclosed solid dashed 1`] = `
 exports[`Array Enclosed solid row 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{|c|}a\\\\\\hline b\\end{array}" display="block">
   <menclose notation="left right" data-padding="0" data-latex="\\begin{array}{|c|}a\\\\\\hline b\\end{array}">
-    <mtable columnspacing="1em" rowspacing="4pt" rowlines="solid" data-frame-styles="" framespacing=".5em .125em">
+    <mtable columnspacing="1em" rowspacing="4pt" rowlines="solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{|c|}a\\\\\\hline b\\end{array}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -628,7 +628,7 @@ exports[`Array Enclosed solid row 1`] = `
 exports[`Array Enclosed top 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c}\\hline a\\end{array}" display="block">
   <menclose notation="top" data-padding="0" data-latex="\\begin{array}{c}\\hline a\\end{array}">
-    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em">
+    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c}\\hline a\\end{array}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -642,7 +642,7 @@ exports[`Array Enclosed top 1`] = `
 exports[`Array Enclosed top bottom 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c}\\hline a\\\\\\hline\\end{array}" display="block">
   <menclose notation="top bottom" data-padding="0" data-latex="\\begin{array}{c}\\hline a\\\\\\hline\\end{array}">
-    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em">
+    <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c}\\hline a\\\\\\hline\\end{array}">
       <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -677,7 +677,7 @@ exports[`Array Matrix Test 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\left( \\begin{array}{ccc}a &amp; b &amp; c \\\\d &amp; e &amp; f \\\\g &amp; h &amp; i \\end{array} \\right)" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\left( \\begin{array}{ccc}a &amp; b &amp; c \\\\d &amp; e &amp; f \\\\g &amp; h &amp; i \\end{array} \\right)">
     <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center center" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{ccc}a &amp; b &amp; c \\\\d &amp; e &amp; f \\\\g &amp; h &amp; i \\end{array}">
       <mtr data-latex="a&amp;b&amp;c">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -742,7 +742,7 @@ exports[`Array Newcolumntype 1`] = `
 
 exports[`Array Newcolumntype Option 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newcolumntype{a}[1]{m{#1}}\\begin{array}{a{1em}|a{2em}}a&amp;b\\\\c&amp;d\\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" columnalign="left left" columnwidth="1em 2em" columnlines="solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\text{d}\\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="left left" columnwidth="1em 2em" columnlines="solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{a{1em}|a{2em}}a&amp;b\\\\c&amp;d\\end{array}">
     <mtr data-latex="&amp;">
       <mtd>
         <mpadded data-mjx-vbox="middle" width="1em" data-overflow="auto" data-align="left" data-vertical-align="middle">
@@ -1803,7 +1803,7 @@ exports[`Character Class Changes mathpunct 1`] = `
 
 exports[`Complete Array column ! | @ 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{!{a}|@{b}c} X\\end{array}" display="block">
-  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="center center center" columnlines="solid none" data-array-padding=".5em .5em" data-frame-styles="" framespacing=".5em .125em" data-latex="b&amp;X\\end{array}">
+  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="center center center" columnlines="solid none" data-array-padding=".5em .5em" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{!{a}|@{b}c} X\\end{array}">
     <mtr data-latex="a\\hspace{.25em}&amp;b&amp;X">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -1822,7 +1822,7 @@ exports[`Complete Array column ! | @ 1`] = `
 
 exports[`Complete Array column > > c < < 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{&gt;{a}&gt;{b}c&lt;{x}&lt;{y}} X \\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="baXyx\\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{&gt;{a}&gt;{b}c&lt;{x}&lt;{y}} X \\end{array}">
     <mtr data-latex="b a X y x">
       <mtd>
         <mi data-latex="b">b</mi>
@@ -1838,7 +1838,7 @@ exports[`Complete Array column > > c < < 1`] = `
 
 exports[`Complete Array column > space 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{&gt; {x} c} X \\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="xX\\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{&gt; {x} c} X \\end{array}">
     <mtr data-latex="x X">
       <mtd>
         <mi data-latex="x">x</mi>
@@ -1851,7 +1851,7 @@ exports[`Complete Array column > space 1`] = `
 
 exports[`Complete Array column @ | ! c 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{@{}|!{x}c} X \\end{array}" display="block">
-  <mtable columnspacing="0 .5em" rowspacing="4pt" columnalign="center center center" columnlines="solid none" data-array-padding="0 .5em" data-frame-styles="" framespacing=".5em .125em" data-latex="\\hspace{.25em}x&amp;X\\end{array}">
+  <mtable columnspacing="0 .5em" rowspacing="4pt" columnalign="center center center" columnlines="solid none" data-array-padding="0 .5em" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{@{}|!{x}c} X \\end{array}">
     <mtr data-latex="&amp;\\hspace{.25em}x&amp;X">
       <mtd></mtd>
       <mtd>
@@ -1868,7 +1868,7 @@ exports[`Complete Array column @ | ! c 1`] = `
 
 exports[`Complete Array column @ p m 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{@{x}p{1em}m{1em}} X &amp; Y \\end{array}" display="block">
-  <mtable columnspacing="0 1em" rowspacing="4pt" columnalign="center left left" columnwidth="auto 1em 1em" data-array-padding="0 .5em" data-frame-styles="" framespacing=".5em .125em" data-latex="\\text{Y}\\end{array}">
+  <mtable columnspacing="0 1em" rowspacing="4pt" columnalign="center left left" columnwidth="auto 1em 1em" data-array-padding="0 .5em" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{@{x}p{1em}m{1em}} X &amp; Y \\end{array}">
     <mtr data-latex="x&amp;&amp;">
       <mtd>
         <mi data-latex="x">x</mi>
@@ -1946,7 +1946,7 @@ exports[`Complete Array column {r}c{l} 1`] = `
 
 exports[`Complete Array column b  1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{b{1cm}b{1cm}b{1cm}}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" columnalign="left left left" columnwidth="1cm 1cm 1cm" data-frame-styles="" framespacing=".5em .125em" data-latex="\\text{f}\\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="left left left" columnwidth="1cm 1cm 1cm" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{b{1cm}b{1cm}b{1cm}}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}">
     <mtr data-latex="&amp;&amp;">
       <mtd>
         <mpadded data-mjx-vbox="bottom" width="1cm" data-overflow="auto" data-align="left" data-vertical-align="bottom">
@@ -1987,7 +1987,7 @@ exports[`Complete Array column b  1`] = `
 
 exports[`Complete Array column c < 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c&lt;{A}}a\\\\ d \\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="dA\\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c&lt;{A}}a\\\\ d \\end{array}">
     <mtr data-latex="a A">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -2006,7 +2006,7 @@ exports[`Complete Array column c < 1`] = `
 
 exports[`Complete Array column c > 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{&gt;{A}c}a \\\\ d\\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="Ad\\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{&gt;{A}c}a \\\\ d\\end{array}">
     <mtr data-latex="A a">
       <mtd>
         <mi data-latex="A">A</mi>
@@ -2025,7 +2025,7 @@ exports[`Complete Array column c > 1`] = `
 
 exports[`Complete Array column c @ end 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c@{h}}a\\\\ d \\end{array}" display="block">
-  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="center center" data-array-padding=".5em 0" data-frame-styles="" framespacing=".5em .125em" data-latex="h\\end{array}">
+  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="center center" data-array-padding=".5em 0" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c@{h}}a\\\\ d \\end{array}">
     <mtr data-latex="a&amp;h">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -2048,7 +2048,7 @@ exports[`Complete Array column c @ end 1`] = `
 
 exports[`Complete Array column c @& 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c@{\\alpha}c}a&amp;\\hfill&amp;b\\\\ d&amp;\\hfill&amp;e \\end{array}" display="block">
-  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="center center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\hfill\\alpha&amp;&amp;e \\end{array}">
+  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="center center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c@{\\alpha}c}a&amp;\\hfill&amp;b\\\\ d&amp;\\hfill&amp;e \\end{array}">
     <mtr data-latex="a&amp;\\alpha&amp;&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -2079,7 +2079,7 @@ exports[`Complete Array column c @& 1`] = `
 
 exports[`Complete Array column c @& hfil 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c@{\\alpha}c}a&amp;&amp;b\\\\ d&amp;&amp;e\\hfil \\end{array}" display="block">
-  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="center center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\alpha&amp;&amp;e\\hfil \\end{array}">
+  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="center center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c@{\\alpha}c}a&amp;&amp;b\\\\ d&amp;&amp;e\\hfil \\end{array}">
     <mtr data-latex="a&amp;\\alpha&amp;&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -2110,7 +2110,7 @@ exports[`Complete Array column c @& hfil 1`] = `
 
 exports[`Complete Array column c W 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cW{c}{1cm}c}a&amp;b&amp;c\\\\ d&amp;e&amp;f \\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center center" columnwidth="auto 1cm auto" data-frame-styles="" framespacing=".5em .125em" data-latex="\\text{e}&amp;f \\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center center" columnwidth="auto 1cm auto" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cW{c}{1cm}c}a&amp;b&amp;c\\\\ d&amp;e&amp;f \\end{array}">
     <mtr data-latex="a&amp;&amp;c">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -2143,7 +2143,7 @@ exports[`Complete Array column c W 1`] = `
 
 exports[`Complete Array column c c @ 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc@{x}} X &amp; Y \\end{array}" display="block">
-  <mtable columnspacing="1em 0 0" rowspacing="4pt" columnalign="center center center" data-array-padding=".5em 0" data-frame-styles="" framespacing=".5em .125em" data-latex="x\\end{array}">
+  <mtable columnspacing="1em 0 0" rowspacing="4pt" columnalign="center center center" data-array-padding=".5em 0" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc@{x}} X &amp; Y \\end{array}">
     <mtr data-latex="X&amp;Y&amp;x">
       <mtd>
         <mi data-latex="X">X</mi>
@@ -2179,7 +2179,7 @@ exports[`Complete Array column c c | c 1`] = `
 
 exports[`Complete Array column c w 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cw{c}{1cm}c}a&amp;b&amp;c\\\\ d&amp;e&amp;f \\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center center" columnwidth="auto 1cm auto" data-frame-styles="" framespacing=".5em .125em" data-latex="\\text{e}&amp;f \\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center center" columnwidth="auto 1cm auto" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cw{c}{1cm}c}a&amp;b&amp;c\\\\ d&amp;e&amp;f \\end{array}">
     <mtr data-latex="a&amp;&amp;c">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -2212,7 +2212,7 @@ exports[`Complete Array column c w 1`] = `
 
 exports[`Complete Array column m  1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{m{1cm}m{1cm}m{1cm}}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" columnalign="left left left" columnwidth="1cm 1cm 1cm" data-frame-styles="" framespacing=".5em .125em" data-latex="\\text{f}\\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="left left left" columnwidth="1cm 1cm 1cm" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{m{1cm}m{1cm}m{1cm}}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}">
     <mtr data-latex="&amp;&amp;">
       <mtd>
         <mpadded data-mjx-vbox="middle" width="1cm" data-overflow="auto" data-align="left" data-vertical-align="middle">
@@ -2270,7 +2270,7 @@ c} X &amp; Y\\end{array}">
 
 exports[`Complete Array column p  1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{p{1cm}p{1cm}p{1cm}}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" columnalign="left left left" columnwidth="1cm 1cm 1cm" data-frame-styles="" framespacing=".5em .125em" data-latex="\\text{f}\\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="left left left" columnwidth="1cm 1cm 1cm" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{p{1cm}p{1cm}p{1cm}}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}">
     <mtr data-latex="&amp;&amp;">
       <mtd>
         <mpadded data-mjx-vbox="top" width="1cm" data-overflow="auto" data-align="left" data-vertical-align="top">
@@ -2311,7 +2311,7 @@ exports[`Complete Array column p  1`] = `
 
 exports[`Complete Array column r c l !  1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{r!{h}c!{h}l}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}" display="block">
-  <mtable columnspacing=".5em .5em .5em .5em" rowspacing="4pt" columnalign="right center center center left" data-frame-styles="" framespacing=".5em .125em" data-latex="h&amp;f\\end{array}">
+  <mtable columnspacing=".5em .5em .5em .5em" rowspacing="4pt" columnalign="right center center center left" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{r!{h}c!{h}l}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}">
     <mtr data-latex="a&amp;h&amp;b&amp;h&amp;c">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -2381,7 +2381,7 @@ exports[`Complete Array column r c l :  1`] = `
 
 exports[`Complete Array column r c l < 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{r&lt;{A}cl}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" columnalign="right center left" data-frame-styles="" framespacing=".5em .125em" data-latex="dA&amp; e &amp; f\\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="right center left" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{r&lt;{A}cl}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}">
     <mtr data-latex="a A&amp;b&amp;c">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -2412,7 +2412,7 @@ exports[`Complete Array column r c l < 1`] = `
 
 exports[`Complete Array column r c l > 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{&gt;{A}rcl}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" columnalign="right center left" data-frame-styles="" framespacing=".5em .125em" data-latex="Ad&amp; e &amp; f\\end{array}">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="right center left" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{&gt;{A}rcl}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}">
     <mtr data-latex="A a&amp;b&amp;c">
       <mtd>
         <mi data-latex="A">A</mi>
@@ -2443,7 +2443,7 @@ exports[`Complete Array column r c l > 1`] = `
 
 exports[`Complete Array column r c l @  1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{r@{h}c@{h}l}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}" display="block">
-  <mtable columnspacing="0 0 0 0" rowspacing="4pt" columnalign="right center center center left" data-frame-styles="" framespacing=".5em .125em" data-latex="h&amp;f\\end{array}">
+  <mtable columnspacing="0 0 0 0" rowspacing="4pt" columnalign="right center center center left" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{r@{h}c@{h}l}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}">
     <mtr data-latex="a&amp;h&amp;b&amp;h&amp;c">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -2542,7 +2542,7 @@ exports[`Complete Array column r c l 1`] = `
 
 exports[`Complete Array column r c repeat |  1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{r*{2}|c}a&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}" display="block">
-  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="right center center" columnlines="solid solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\hspace{.5em}e&amp; f\\end{array}">
+  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="right center center" columnlines="solid solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{r*{2}|c}a&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}">
     <mtr data-latex="a\\hspace{.5em}&amp;\\,&amp;\\hspace{.5em}b&amp;c">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -2581,7 +2581,7 @@ exports[`Complete Array column r c repeat |  1`] = `
 
 exports[`Complete Array column r c repeat | {} 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{r*{2}|c}a {\\hbox{(3)}}&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}" display="block">
-  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="right center center" columnlines="solid solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\hspace{.5em}e&amp; f\\end{array}">
+  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="right center center" columnlines="solid solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{r*{2}|c}a {\\hbox{(3)}}&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}">
     <mtr data-latex="a{\\hbox{(3)}}\\hspace{.5em}&amp;\\,&amp;\\hspace{.5em}b&amp;c">
       <mtd>
         <mi data-latex="a">a</mi>
@@ -2623,12 +2623,12 @@ exports[`Complete Array column r c repeat | {} 1`] = `
 
 exports[`Complete Array column r c repeat | {} 2`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{r*{2}|c}a {\\begin{array}{c}Q\\end{array}}&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}" display="block">
-  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="right center center" columnlines="solid solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\hspace{.5em}e&amp; f\\end{array}">
+  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="right center center" columnlines="solid solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{r*{2}|c}a {\\begin{array}{c}Q\\end{array}}&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}">
     <mtr data-latex="a{{array}}\\hspace{.5em}&amp;\\,&amp;\\hspace{.5em}b&amp;c">
       <mtd>
         <mi data-latex="a">a</mi>
         <mrow data-mjx-texclass="ORD" data-latex="{{array}}">
-          <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+          <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c}Q\\end{array}">
             <mtr data-latex="Q">
               <mtd>
                 <mi data-latex="Q">Q</mi>
@@ -2671,11 +2671,11 @@ exports[`Complete Array column r c repeat | {} 2`] = `
 
 exports[`Complete Array column r c repeat | {} 3`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{r*{2}|c}a \\begin{array}{c}Q\\end{array}&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}" display="block">
-  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="right center center" columnlines="solid solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\hspace{.5em}e&amp; f\\end{array}">
-    <mtr data-latex="a{array}\\hspace{.5em}&amp;\\,&amp;\\hspace{.5em}b&amp;c">
+  <mtable columnspacing="0 0" rowspacing="4pt" columnalign="right center center" columnlines="solid solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{r*{2}|c}a \\begin{array}{c}Q\\end{array}&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}">
+    <mtr data-latex="a\\begin{array}{c}Q\\end{array}\\hspace{.5em}&amp;\\,&amp;\\hspace{.5em}b&amp;c">
       <mtd>
         <mi data-latex="a">a</mi>
-        <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+        <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c}Q\\end{array}">
           <mtr data-latex="Q">
             <mtd>
               <mi data-latex="Q">Q</mi>
@@ -3543,7 +3543,7 @@ exports[`Environments IndentAlign Single 1`] = `
 exports[`Environments Nested array 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{rcl}a&amp;{}{b}&amp;c\\begin{array}{cc}f&amp;h\\\\g\\end{array}\\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="right center left" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{rcl}a&amp;{}{b}&amp;c\\begin{array}{cc}f&amp;h\\\\g\\end{array}\\end{array}">
-    <mtr data-latex="a&amp;{}{b}&amp;c{array}">
+    <mtr data-latex="a&amp;{}{b}&amp;c\\begin{array}{cc}f&amp;h\\\\g\\end{array}">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -3555,7 +3555,7 @@ exports[`Environments Nested array 1`] = `
       </mtd>
       <mtd>
         <mi data-latex="c">c</mi>
-        <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="{array}">
+        <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc}f&amp;h\\\\g\\end{array}">
           <mtr data-latex="f&amp;h">
             <mtd>
               <mi data-latex="f">f</mi>
@@ -7573,14 +7573,14 @@ exports[`Primes Triple Prime 1`] = `
 exports[`Referencing Label 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}" display="block">
   <mtable displaystyle="true" data-latex="a\\label{A}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{)}">)</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\label{A}">a</mi>
+        <mi data-latex="a">a</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -7590,51 +7590,7 @@ exports[`Referencing Label 1`] = `
 exports[`Referencing Label Empty 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{}" display="block">
   <mtable displaystyle="true" data-latex="a\\label{}">
-    <mlabeledtr>
-      <mtd id="mjx-eqn:1">
-        <mtext data-latex="\\text{(}">(</mtext>
-        <mtext data-latex="\\text{1}">1</mtext>
-        <mtext data-latex="\\text{)}">)</mtext>
-      </mtd>
-      <mtd>
-        <mi data-latex="\\label{}">a</mi>
-      </mtd>
-    </mlabeledtr>
-  </mtable>
-</math>"
-`;
-
-exports[`Referencing Label Multiple 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}" display="block">
-  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}">
-    <mlabeledtr data-latex="\\label{A}">
-      <mtd id="mjx-eqn:A">
-        <mtext data-latex="\\text{(}">(</mtext>
-        <mtext data-latex="\\text{1}">1</mtext>
-        <mtext data-latex="\\text{)}">)</mtext>
-      </mtd>
-      <mtd>
-        <mi data-latex="\\label{A}">a</mi>
-      </mtd>
-    </mlabeledtr>
-    <mlabeledtr data-latex="\\label{B}">
-      <mtd id="mjx-eqn:B">
-        <mtext data-latex="\\text{(}">(</mtext>
-        <mtext data-latex="\\text{2}">2</mtext>
-        <mtext data-latex="\\text{)}">)</mtext>
-      </mtd>
-      <mtd>
-        <mi data-latex="\\label{B}">c</mi>
-      </mtd>
-    </mlabeledtr>
-  </mtable>
-</math>"
-`;
-
-exports[`Referencing Nonumber 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}" display="block">
-  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}">
-    <mlabeledtr data-latex="a">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -7644,9 +7600,53 @@ exports[`Referencing Nonumber 1`] = `
         <mi data-latex="a">a</mi>
       </mtd>
     </mlabeledtr>
-    <mtr data-latex="\\nonumber">
+  </mtable>
+</math>"
+`;
+
+exports[`Referencing Label Multiple 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}" display="block">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
+      <mtd id="mjx-eqn:A">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
       <mtd>
-        <mi data-latex="\\nonumber">c</mi>
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c">
+      <mtd id="mjx-eqn:B">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{2}">2</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mi data-latex="c">c</mi>
+      </mtd>
+    </mlabeledtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Referencing Nonumber 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}" display="block">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
+      <mtd id="mjx-eqn:1">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mlabeledtr>
+    <mtr data-latex="c">
+      <mtd>
+        <mi data-latex="c">c</mi>
       </mtd>
     </mtr>
   </mtable>
@@ -7656,16 +7656,16 @@ exports[`Referencing Nonumber 1`] = `
 exports[`Referencing Ref 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}\\ref{A}" display="block">
   <mtable displaystyle="true" data-latex="a\\label{A}\\ref{A}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a\\text{???}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{)}">)</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\label{A}">a</mi>
-        <mrow href="#" class="MathJax_ref" data-latex="\\ref{A}">
-          <mtext>???</mtext>
+        <mi data-latex="a">a</mi>
+        <mrow href="#" class="MathJax_ref" data-latex="\\text{???}">
+          <mtext data-latex="\\text{???}">???</mtext>
         </mrow>
       </mtd>
     </mlabeledtr>
@@ -7676,16 +7676,16 @@ exports[`Referencing Ref 1`] = `
 exports[`Referencing Ref Unknown 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}\\ref{B}" display="block">
   <mtable displaystyle="true" data-latex="a\\label{A}\\ref{B}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a\\text{???}">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{)}">)</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\label{A}">a</mi>
-        <mrow href="#" class="MathJax_ref" data-latex="\\ref{B}">
-          <mtext>???</mtext>
+        <mi data-latex="a">a</mi>
+        <mrow href="#" class="MathJax_ref" data-latex="\\text{???}">
+          <mtext data-latex="\\text{???}">???</mtext>
         </mrow>
       </mtd>
     </mlabeledtr>
@@ -9026,7 +9026,7 @@ exports[`Sub and Superscripts SubSup 1`] = `
 exports[`Tagged Environments EqnTest 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqntest} a &amp; b \\end{eqntest}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="1em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{eqntest} a &amp; b \\end{eqntest}">
-    <mlabeledtr data-latex="a&amp;b">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -9048,7 +9048,7 @@ exports[`Tagged Environments EqnTest 1`] = `
 exports[`Tagged Environments Equation 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{equation} x \\end{equation}" display="block">
   <mtable displaystyle="true" data-latex="\\begin{equation} x \\end{equation}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;x">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -9092,7 +9092,7 @@ exports[`User Defined Environments Cases star 1`] = `
 exports[`User Defined Environments Crampedsubarray 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{crampedsubarray}{cc} a &amp; b \\\\ c &amp; d \\end{crampedsubarray}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{crampedsubarray}{cc} a &amp; b \\\\ c &amp; d \\end{crampedsubarray}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em" columnalign="center center" data-cramped="true">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em" columnalign="center center" data-cramped="true" data-latex="\\begin{crampedsubarray}{cc} a &amp; b \\\\ c &amp; d \\end{crampedsubarray}">
       <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -9155,7 +9155,7 @@ exports[`User Defined Environments pmatrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}">
     <mo data-mjx-texclass="OPEN">(</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}">
       <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -9181,7 +9181,7 @@ exports[`User Defined Environments pmatrix 1`] = `
 exports[`User Defined Environments smallmatrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="1" rowspacing=".2em">
+    <mtable data-mjx-smallmatrix="true" columnspacing="1" rowspacing=".2em" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}">
       <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
@@ -9205,9 +9205,9 @@ exports[`User Defined Environments smallmatrix 1`] = `
 
 exports[`User Defined Macros EqRef 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}\\eqref{A}" display="block">
-  <mi data-latex="\\label{A}">a</mi>
-  <mrow href="#" class="MathJax_ref" data-latex="\\eqref{A}">
-    <mtext>(???)</mtext>
+  <mi data-latex="a">a</mi>
+  <mrow href="#" class="MathJax_ref" data-latex="\\text{(???)}">
+    <mtext data-latex="\\text{(???)}">(???)</mtext>
   </mrow>
 </math>"
 `;

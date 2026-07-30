@@ -772,7 +772,7 @@ export class FnItem extends BaseItem {
           (NodeUtil.isType(mml, 'mstyle') &&
             mml.childNodes.length &&
             NodeUtil.isType(mml.childNodes[0].childNodes[0], 'mspace')) ||
-          NodeUtil.isType(mml, 'mspace')
+            NodeUtil.isType(mml, 'mspace')
         ) {
           // @test Fn Pos Space, Fn Neg Space
           return [[top, item], true];
@@ -832,16 +832,16 @@ export class NotItem extends BaseItem {
     }
     if (
       item.isKind('mml') &&
-      (NodeUtil.isType(item.First, 'mo') ||
-        NodeUtil.isType(item.First, 'mi') ||
-        NodeUtil.isType(item.First, 'mtext'))
+        (NodeUtil.isType(item.First, 'mo') ||
+          NodeUtil.isType(item.First, 'mi') ||
+          NodeUtil.isType(item.First, 'mtext'))
     ) {
       mml = item.First;
       c = NodeUtil.getText(mml as TextNode);
       if (
         c.length === 1 &&
-        !NodeUtil.getProperty(mml, 'movesupsub') &&
-        NodeUtil.getChildren(mml).length === 1
+          !NodeUtil.getProperty(mml, 'movesupsub') &&
+          NodeUtil.getChildren(mml).length === 1
       ) {
         if (this.remap.contains(c)) {
           // @test Negation Simple, Negation Complex
@@ -1107,6 +1107,7 @@ export class ArrayItem extends BaseItem {
     const scriptlevel = this.arraydef['scriptlevel'];
     delete this.arraydef['scriptlevel'];
     let mml = this.create('node', 'mtable', this.table, this.arraydef);
+    this.setTableLatex(mml);
     if (scriptlevel) {
       mml.setProperty('smallmatrix', true);
     }
@@ -1123,7 +1124,13 @@ export class ArrayItem extends BaseItem {
     }
     mml = this.handleFrame(mml);
     if (scriptlevel !== undefined) {
+      const table = mml;
       mml = this.create('node', 'mstyle', [mml], { scriptlevel });
+      const rawLatex = table.getProperty('rawLatex');
+      if (rawLatex) {
+        mml.setProperty('rawLatex', rawLatex);
+        mml.setProperty('rawLatexName', table.getProperty('rawLatexName'));
+      }
     }
     if (this.getProperty('open') || this.getProperty('close')) {
       // @test Cross Product Formula
@@ -1231,7 +1238,7 @@ export class ArrayItem extends BaseItem {
       if (start || end || ralign) {
         if (
           ++this.templateSubs >
-          parser.configuration.options.maxTemplateSubtitutions
+            parser.configuration.options.maxTemplateSubtitutions
         ) {
           throw new TexError(
             'MaxTemplateSubs',
@@ -1291,7 +1298,7 @@ export class ArrayItem extends BaseItem {
             envs--;
             break;
           }
-        // fall through if not closing a nested array environment
+          // fall through if not closing a nested array environment
         default: {
           if (braces || envs) continue;
           i -= match[2].length;
@@ -1394,18 +1401,129 @@ export class ArrayItem extends BaseItem {
    * @returns {string} The LaTeX source of the cell content.
    */
   public cellLatex(mtd: MmlNode): string {
-    const children = mtd.childNodes[0]?.childNodes || [];
-    let expr = '';
-    for (const child of children) {
-      const att = (child?.attributes?.get(TexConstant.Attr.LATEX) ||
-        '') as string;
-      if (!att) continue;
-      expr +=
-        expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)
-          ? ' ' + att
-          : att;
+    return NodeUtil.getChildrenLatex(mtd);
+  }
+
+  /**
+   * Captures the LaTeX source of this array/table environment (e.g., `>{...}`,
+   * `<{...}`, `@{...}`, or `!{...}`) before any entry-template substitutions
+   * are made.
+   *
+   * @param {TexParser} parser The current parser, positioned right after
+   *     `\begin{name}`, before the column-alignment argument (if any) has
+   *     been read.
+   * @param {string} name The environment name (e.g., `array`, `matrix`).
+   */
+  public captureLatex(parser: TexParser, name: string) {
+    this.setProperty('rawLatexName', name);
+    const source = parser.string.slice(parser.i);
+    const end = ArrayItem.findEnvEnd(source, name);
+    if (end >= 0) {
+      this.setProperty('rawLatex', `\\begin{${name}}${source.slice(0, end)}`);
+      return;
     }
-    return expr;
+    // No matching \end{name} could be found (e.g., produced by
+    // \newenvironment), save the start position instead, so the raw source can
+    // be taken from the parser's string once the table actually closes.
+    this.setProperty('rawLatexStart', parser.i);
+    this.setProperty(
+      'rawLatexGen',
+      (parser.stack.global['envSplice'] as number) || 0
+    );
+  }
+
+  /**
+   * Stashes the original source when a table is opened as a fall-back value for
+   * `data-latex` if the the postprocessing filter decides the attribute is
+   * incorrect.
+   *
+   * @param {MmlNode} mml The mtable node.
+   */
+  public setTableLatex(mml: MmlNode) {
+    const name = this.getProperty('rawLatexName') as string;
+    let tex = this.getProperty('rawLatex') as string;
+    if (!tex && name) {
+      const start = this.getProperty('rawLatexStart') as number;
+      const gen = this.getProperty('rawLatexGen') as number;
+      const currentGen = this.parser
+        ? (this.parser.stack.global['envSplice'] as number) || 0
+        : -1;
+      if (start != null && this.parser && gen === currentGen) {
+        // The environment's closing text is now in the parser's string, so the
+        // full source can finally be recovered. Expanded environment's
+        // can leave extra whitespace, so collapse.
+        // @test Environments Nested
+        const body = this.parser.string
+          .slice(start, this.parser.i)
+          .replace(/ {2,}/g, ' ');
+        tex = `\\begin{${name}}${body}`;
+      }
+    }
+    if (!tex && name) {
+      // Last resort: reconstruct the source from the table's own rows,
+      // whose `data-latex` is always tracked correctly.
+      const LATEX = TexConstant.Attr.LATEX;
+      const rows = this.table
+        .map((row) => (row.attributes.get(LATEX) as string) || '')
+        .filter((row) => row);
+      if (rows.length) {
+        tex = `\\begin{${name}}${rows.join('\\\\')}\\end{${name}}`;
+      }
+    }
+    if (!tex) return;
+    mml.setProperty('rawLatex', tex);
+    mml.setProperty('rawLatexName', name);
+  }
+
+  /**
+   * Find the position of the corresponding `\end{name}` in the string starting
+   * right after the corresponding `\begin{name}` (skipping nested environments
+   * of that name).
+   *
+   * @param {string} str The string to search.
+   * @param {string} name The environment name to look for.
+   * @returns {number} The index right after the matching `\end{name}`, or
+   *     -1 if no matching end was found.
+   */
+  private static findEnvEnd(str: string, name: string): number {
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const begin = new RegExp(`^\\\\begin\\s*\\{${escaped}\\}`);
+    const end = new RegExp(`^\\\\end\\s*\\{${escaped}\\}`);
+    let depth = 0;
+    let nested = 0;
+    let i = 0;
+    while (i < str.length) {
+      const c = str.charAt(i);
+      if (c === '\\') {
+        const rest = str.slice(i);
+        const mBegin = rest.match(begin);
+        if (mBegin) {
+          if (depth === 0) nested++;
+          i += mBegin[0].length;
+          continue;
+        }
+        const mEnd = rest.match(end);
+        if (mEnd) {
+          if (depth === 0) {
+            if (!nested) {
+              return i + mEnd[0].length;
+            }
+            nested--;
+          }
+          i += mEnd[0].length;
+          continue;
+        }
+        i += 2;
+        continue;
+      }
+      if (c === '{') {
+        depth++;
+      } else if (c === '}' && depth > 0) {
+        depth--;
+      }
+      i++;
+    }
+    return -1;
   }
 
   /**
@@ -1517,8 +1635,8 @@ export class EqnArrayItem extends ArrayItem {
     const calign = (this.arraydef.columnalign as string).split(/ /);
     const align =
       this.row.length && calign.length
-        ? calign[this.row.length % calign.length]
-        : 'right';
+      ? calign[this.row.length % calign.length]
+      : 'right';
     if (align !== 'right') {
       ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }
@@ -1536,6 +1654,7 @@ export class EqnArrayItem extends ArrayItem {
     const tag = this.factory.configuration.tags.getTag();
     if (tag) {
       this.row = [tag].concat(this.row);
+      this.rowLatex = [this.cellLatex(tag)].concat(this.rowLatex);
       this.setProperty('isLabeled', true);
     }
     this.factory.configuration.tags.clearTag();

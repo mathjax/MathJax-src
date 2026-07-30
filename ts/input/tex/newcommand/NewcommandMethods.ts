@@ -87,17 +87,17 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     const def = parser.GetArgument(name);
     !(params instanceof Array)
       ? // @test Def DoubleLet, DefReDef
-        NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [
-          def,
-          params,
-        ])
+      NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [
+        def,
+        params,
+      ])
       : // @test Def Let
-        NewcommandUtil.addMacro(
-          parser,
-          cs,
-          NewcommandMethods.MacroWithTemplate,
-          [def].concat(params)
-        );
+      NewcommandUtil.addMacro(
+        parser,
+        cs,
+        NewcommandMethods.MacroWithTemplate,
+        [def].concat(params)
+      );
     parser.Push(parser.itemFactory.create('null'));
   },
 
@@ -269,11 +269,20 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         if (edef) {
           // Parse the commands in the end environment definition.
           const rest = parser.string.slice(parser.i);
-          parser.string = ParseUtil.addArgs(
-            parser,
-            parser.string.substring(0, parser.i),
-            edef
+          let prefix = parser.string.substring(0, parser.i);
+          // Here `\end{name}` has already been parsed, but left in place it
+          // ends up in the LaTeX source. Remove it using whitespace to keep the
+          // counter correct.
+          const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const endTag = prefix.match(
+            new RegExp(`\\\\end\\s*\\{\\s*${escaped}\\s*\\}$`)
           );
+          if (endTag) {
+            prefix =
+              prefix.slice(0, prefix.length - endTag[0].length) +
+              ' '.repeat(endTag[0].length);
+          }
+          parser.string = ParseUtil.addArgs(parser, prefix, edef);
           parser.Parse();
           // Reset to parsing the remainder of the expression.
           parser.string = rest;
@@ -306,6 +315,10 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
       parser.string.slice(parser.i)
     );
     parser.i = 0;
+    // This destroys any absolute positions recorded by an enclosing environment
+    // This counter allows to detect that.
+    parser.stack.global['envSplice'] =
+      ((parser.stack.global['envSplice'] as number) || 0) + 1;
     parser.stack.global['beginEnv'] =
       ((parser.stack.global['beginEnv'] as number) || 0) + 1;
     return parser.itemFactory.create('beginEnv').setProperty('name', name);

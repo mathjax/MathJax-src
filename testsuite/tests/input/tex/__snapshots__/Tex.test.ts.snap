@@ -46,7 +46,7 @@ exports[`FindTeX ref undefined 1`] = `
 [
   "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ref{x}">
   <mrow href="#" class="MathJax_ref" data-latex="\\ref{x}">
-    <mtext>???</mtext>
+    <mtext data-latex="\\text{???}">???</mtext>
   </mrow>
 </math>",
 ]
