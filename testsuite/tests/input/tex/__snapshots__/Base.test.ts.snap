@@ -2672,7 +2672,7 @@ exports[`Complete Array column r c repeat | {} 2`] = `
 exports[`Complete Array column r c repeat | {} 3`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{r*{2}|c}a \\begin{array}{c}Q\\end{array}&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}" display="block">
   <mtable columnspacing="0 0" rowspacing="4pt" columnalign="right center center" columnlines="solid solid" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{r*{2}|c}a \\begin{array}{c}Q\\end{array}&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}">
-    <mtr data-latex="a{array}\\hspace{.5em}&amp;\\,&amp;\\hspace{.5em}b&amp;c">
+    <mtr data-latex="a\\begin{array}{c}Q\\end{array}\\hspace{.5em}&amp;\\,&amp;\\hspace{.5em}b&amp;c">
       <mtd>
         <mi data-latex="a">a</mi>
         <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c}Q\\end{array}">
@@ -3543,7 +3543,7 @@ exports[`Environments IndentAlign Single 1`] = `
 exports[`Environments Nested array 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{rcl}a&amp;{}{b}&amp;c\\begin{array}{cc}f&amp;h\\\\g\\end{array}\\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="right center left" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{rcl}a&amp;{}{b}&amp;c\\begin{array}{cc}f&amp;h\\\\g\\end{array}\\end{array}">
-    <mtr data-latex="a&amp;{}{b}&amp;c{array}">
+    <mtr data-latex="a&amp;{}{b}&amp;c\\begin{array}{cc}f&amp;h\\\\g\\end{array}">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>

@@ -40,12 +40,6 @@ exports[`Setoptions Set TeX option 1`] = `
 </math>"
 `;
 
-exports[`Setoptions Set pacjage regexp option 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/} \\operatorname{ab1}" display="block">
-  <mi data-latex="\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/} \\operatorname{ab1}">ab1</mi>
-</math>"
-`;
-
 exports[`Setoptions Set package boolean option 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[units]{loose=true} \\units[1]{kg}" display="block">
   <mn data-latex="1">1</mn>
@@ -53,6 +47,12 @@ exports[`Setoptions Set package boolean option 1`] = `
   <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{kg}">
     <mi data-mjx-auto-op="false" data-latex="kg">kg</mi>
   </mrow>
+</math>"
+`;
+
+exports[`Setoptions Set package regexp option 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/} \\operatorname{ab1}" display="block">
+  <mi data-latex="\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/} \\operatorname{ab1}">ab1</mi>
 </math>"
 `;
 

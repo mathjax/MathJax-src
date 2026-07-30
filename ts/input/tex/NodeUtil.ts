@@ -92,9 +92,10 @@ const NodeUtil = {
     const children = node.childNodes[0]?.childNodes || [];
     let expr = '';
     for (const child of children) {
-      const att = ((child as MmlNode)?.attributes?.get(
-        TexConstant.Attr.LATEX
-      ) || '') as string;
+      // For table child we prefer the `rawLatex` property.
+      const att = ((child as MmlNode)?.getProperty?.('rawLatex') ||
+        (child as MmlNode)?.attributes?.get(TexConstant.Attr.LATEX) ||
+        '') as string;
       if (!att) continue;
       expr +=
         expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)

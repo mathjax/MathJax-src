@@ -1654,7 +1654,7 @@ exports[`Ams Genfrac no delimiters 1`] = `
 exports[`Ams Issues Array with Tag 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c}a \\end{array}\\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="\\begin{array}{c}a \\end{array}\\tag{1}">
-    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;{array}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;\\begin{array}{c}a \\end{array}">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
