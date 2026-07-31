@@ -1,1 +1,16 @@
-{}
+{
+  "AlreadyDefined": "%1 ya está definido",
+  "BadWidth": "El ancho de %1 debe ser una dimensión",
+  "BetweenLines": "%1 debe estar solo en su propia fila",
+  "CommadExists": "El comando %1 ya está definido",
+  "CommandAtTheBeginingOfLine": "%1 debe estar al principio de la línea",
+  "CommandInMultlined": "%1 solo puede aparecer dentro de los entornos multline o multlined",
+  "DuplicateTagForm": "Forma de etiqueta duplicada: %1",
+  "ForbiddenMathtoolsSet": "%1 está deshabilitado",
+  "InvalidTagFormDef": "La definición de la forma de etiqueta para \"%1\" debe ser una matriz de tres cadenas",
+  "InvalidTagFormID": "El nombre de la forma de etiqueta no puede estar vacío",
+  "NotANumber": "El argumento de %1 no es un número",
+  "NotInAlignment": "%1 solo se puede usar en entornos de alineación",
+  "TagsNotMT": "%1 solo se puede usar con etiquetas ams o mathtools",
+  "UndefinedTagForm": "Forma de etiqueta no definida: %1"
+}

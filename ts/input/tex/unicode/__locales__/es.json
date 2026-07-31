@@ -1,1 +1,6 @@
-{}
+{
+  "BadFont": "El nombre de la fuente para %1 no puede contener punto y coma",
+  "BadUnicode": "El argumento de %1 debe ser un número",
+  "InvalidAlphanumeric": "Constante alfanumérica no válida para %1",
+  "MissingNumber": "Falta la constante numérica para %1"
+}
