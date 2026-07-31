@@ -83,11 +83,7 @@ export class MmlMtd extends AbstractMmlBaseNode {
    */
   protected verifyChildren(options: PropertyList) {
     if (this.parent && !this.parent.isKind('mtr')) {
-      this.mError(
-        this.kind + ' can only be a child of an mtr or mlabeledtr',
-        options,
-        true
-      );
+      this.mError('MML/mtrChild', [this.kind], options, true);
       return;
     }
     super.verifyChildren(options);

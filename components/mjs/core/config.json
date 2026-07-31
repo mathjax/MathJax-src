@@ -18,6 +18,14 @@
       "util/entities"
     ]
   },
+  "copy": [
+    {
+      "to": "[bundle]/core",
+      "from": "[ts]/core",
+      "copy": ["__locales__"],
+      "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
+    }
+  ],
   "webpack": {
     "name": "core"
   }

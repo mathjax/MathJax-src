@@ -41,15 +41,19 @@ import {
 import { FunctionList } from '../util/FunctionList.js';
 import { mjxRoot } from '#root/root.js';
 import { context } from '../util/context.js';
+import { Locale } from '../util/Locale.js';
+
+import { COMPONENT } from '../core/__locales__/Component.js';
 
 /**
  * Function used to determine path to a given package.
  */
-export type PathFilterFunction = (data: {
+export type PathFilterData = {
   name: string;
   original: string;
   addExtension: boolean;
-}) => boolean;
+};
+export type PathFilterFunction = (data: PathFilterData) => boolean;
 export type PathFilterList = (
   | PathFilterFunction
   | [PathFilterFunction, number]
@@ -99,11 +103,8 @@ export interface MathJaxObject extends MJObject {
  * Functions used to filter the path to a package
  */
 export const PathFilters: { [name: string]: PathFilterFunction } = {
-  /**
+  /*
    * Look up the path in the configuration's source list
-   *
-   * @param {PathFilterFunction} data The data object containing the filter functions
-   * @returns {boolean} True
    */
   source: (data) => {
     if (Object.hasOwn(CONFIG.source, data.name)) {
@@ -112,11 +113,8 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
     return true;
   },
 
-  /**
+  /*
    * Add [mathjax] before any relative path
-   *
-   * @param {PathFilterFunction} data The data object containing the filter functions
-   * @returns {boolean} True
    */
   normalize: (data) => {
     const name = data.name;
@@ -126,11 +124,8 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
     return true;
   },
 
-  /**
+  /*
    * Recursively replace path prefixes (e.g., [mathjax], [tex], etc.)
-   *
-   * @param {PathFilterFunction} data The data object containing the filter functions
-   * @returns {boolean} True
    */
   prefix: (data) => {
     let match;
@@ -141,11 +136,8 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
     return true;
   },
 
-  /**
+  /*
    * Add .js, if missing
-   *
-   * @param {PathFilterFunction} data The data object containing the filter functions
-   * @returns {boolean} True
    */
   addExtension: (data) => {
     if (data.addExtension && !data.name.match(/\.[^/]+$/)) {
@@ -197,7 +189,7 @@ export const Loader = {
   /**
    * Load the named packages and return a promise that is resolved when they are all loaded
    *
-   * @param {string[]} names  The packages to load
+   * @param {string[]} names    The packages to load
    * @returns {Promise<any[]>}  A promise that resolves when all the named packages are ready
    */
   load(...names: string[]): Promise<any[]> {
@@ -212,61 +204,67 @@ export const Loader = {
     //
     // Create a promise for this load() call
     //
-    const promise = Promise.resolve().then(async () => {
-      //
-      // Collect the promises for all the named packages,
-      // creating the package if needed, and add checks
-      // for the version numbers used in the components.
-      //
-      const promises = [];
-      for (const name of names) {
-        let extension = Package.packages.get(name);
-        if (!extension) {
-          extension = new Package(name);
-          extension.provides(CONFIG.provides[name]);
+    const promise = Promise.resolve()
+      .then(async () => {
+        //
+        // Collect the promises for all the named packages,
+        // creating the package if needed, and add checks
+        // for the version numbers used in the components.
+        //
+        const promises = [];
+        for (const name of names) {
+          let extension = Package.packages.get(name);
+          if (!extension) {
+            extension = new Package(name);
+            extension.provides(CONFIG.provides[name]);
+          }
+          extension.checkNoLoad();
+          promises.push(
+            extension.promise.then(() => {
+              if (
+                CONFIG.versionWarnings &&
+                extension.isLoaded &&
+                !Loader.versions.has(Package.resolvePath(name))
+              ) {
+                Locale.warn(COMPONENT, 'NoVersionFor', name);
+              }
+              return extension.result;
+            }) as Promise<any>
+          );
         }
-        extension.checkNoLoad();
-        promises.push(
-          extension.promise.then(() => {
-            if (
-              CONFIG.versionWarnings &&
-              extension.isLoaded &&
-              !Loader.versions.has(Package.resolvePath(name))
-            ) {
-              console.warn(
-                `No version information available for component ${name}`
-              );
-            }
-            return extension.result;
-          }) as Promise<any>
-        );
-      }
-      //
-      // Load everything that was requested and wait for
-      // them to be loaded.
-      //
-      Package.loadAll();
-      const result = await Promise.all(promises);
-      //
-      // If any other loads occurred while we were waiting,
-      // Wait for those promises, and clear the list so that
-      // if even MORE loads occur while waiting for those,
-      // we can wait for them, too.  Keep doing that until
-      // no additional loads occurred, in which case we are
-      // now done.
-      //
-      while (nested.length) {
-        const promise = Promise.all(nested);
-        nested = this.nestedLoads[this.nestedLoads.indexOf(nested)] = [];
-        await promise;
-      }
-      //
-      // Remove the (empty) list from the nested list,
-      // and return the result.
-      //
-      this.nestedLoads.splice(this.nestedLoads.indexOf(nested), 1);
-      return result;
-    });
+        //
+        // Load everything that was requested and wait for
+        // them to be loaded.
+        //
+        Package.loadAll();
+        const result = await Promise.all(promises);
+        //
+        // If any other loads occurred while we were waiting,
+        // Wait for those promises, and clear the list so that
+        // if even MORE loads occur while waiting for those,
+        // we can wait for them, too.  Keep doing that until
+        // no additional loads occurred, in which case we are
+        // now done.
+        //
+        while (nested.length) {
+          const promise = Promise.all(nested);
+          nested = this.nestedLoads[this.nestedLoads.indexOf(nested)] = [];
+          await promise;
+        }
+        //
+        // Remove the (empty) list from the nested list,
+        // and return the result.
+        //
+        this.nestedLoads.splice(this.nestedLoads.indexOf(nested), 1);
+        return result;
+      })
+      .then(async (result) => {
+        //
+        // If any of the components registered localization files, load them.
+        //
+        await Locale.setLocale();
+        return result;
+      });
     //
     // Add this load promise to the lists for any parent load() call that are
     // pending when this load() was performed, then return the load promise.
@@ -348,15 +346,13 @@ export const Loader = {
    *
    * @param {string} name       The name of the extension being checked
    * @param {string} version    The version of the extension to check
-   * @param {string} _type       The type of extension (future code may use this to check ranges of versions)
-   * @returns {boolean}          True if there was a mismatch, false otherwise
+   * @param {string} _type      The type of extension (future code may use this to check ranges of versions)
+   * @returns {boolean}         True if there was a mismatch, false otherwise
    */
   checkVersion(name: string, version: string, _type?: string): boolean {
     this.saveVersion(name);
     if (CONFIG.versionWarnings && version !== VERSION) {
-      console.warn(
-        `Component ${name} uses ${version} of MathJax; version in use is ${VERSION}`
-      );
+      Locale.warn(COMPONENT, 'WrongVersion', name, version, VERSION);
       return true;
     }
     return false;
@@ -365,7 +361,7 @@ export const Loader = {
   /**
    * Set the version of an extension (used for combined components so they can be loaded)
    *
-   * @param {string} name       The name of the extension being checked
+   * @param {string} name   The name of the extension being checked
    */
   saveVersion(name: string) {
     Loader.versions.set(Package.resolvePath(name), VERSION);
@@ -409,8 +405,9 @@ if (typeof MathJax.loader === 'undefined') {
     load: [],
     ready: Loader.defaultReady.bind(Loader),
     failed: (error: PackageError) =>
-      console.log(`MathJax(${error.package || '?'}): ${error.message}`),
+      console.warn(`MathJax(${error.package || '?'}): ${error.message}`),
     require: null,
+    json: null,
     pathFilters: [],
     versionWarnings: true,
   });

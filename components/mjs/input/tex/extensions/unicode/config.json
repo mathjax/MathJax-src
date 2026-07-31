@@ -2,7 +2,22 @@
   "build": {
     "id": "[tex]/unicode",
     "component": "input/tex/extensions/unicode",
-    "targets": ["input/tex/unicode"]
+    "targets": [
+      "input/tex/unicode"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/unicode",
+    "from": "[ts]/input/tex/unicode",
+    "copy": [
+      "__locales__"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/unicode",
+    "from": "[ts]/input/tex/unicode",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
   },
   "webpack": {
     "name": "input/tex/extensions/unicode",

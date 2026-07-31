@@ -22,7 +22,7 @@
  */
 
 import TexParser from '../TexParser.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import ParseOptions from '../ParseOptions.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { StackItem } from '../StackItem.js';
@@ -232,11 +232,11 @@ export class TextParser extends TexParser {
   /**
    * Throw an error
    *
-   * @param {string} id        The id for the message string
-   * @param {string} message   The English version of the message
-   * @param {string[]} args    Any substitution args for the message
+   * @param {string} component  The locale component
+   * @param {string} id         The id for the message string
+   * @param {string[]} args     Any substitution args for the message
    */
-  public Error(id: string, message: string, ...args: string[]) {
-    throw new TexError(id, message, ...args);
+  public Error(component: string, id: string, ...args: string[]) {
+    texError(component, id, ...args);
   }
 }

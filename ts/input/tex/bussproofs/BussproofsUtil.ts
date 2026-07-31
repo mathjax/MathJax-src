@@ -30,6 +30,9 @@ import { Property } from '../../../core/Tree/Node.js';
 import { MathItem } from '../../../core/MathItem.js';
 import { MathDocument } from '../../../core/MathDocument.js';
 
+import { Locale } from '../../../util/Locale.js';
+import { COMPONENT } from './__locales__/Component.js';
+
 type MATHITEM = MathItem<any, any, any>;
 type MATHDOCUMENT = MathDocument<any, any, any>;
 
@@ -622,9 +625,7 @@ export const makeBsprAttributes = function (arg: FilterData) {
 export const saveDocument = function (arg: FilterData) {
   doc = arg.document;
   if (!('getBBox' in doc.outputJax)) {
-    throw Error(
-      'The bussproofs extension requires an output jax with a getBBox() method'
-    );
+    Locale.throw(COMPONENT, 'RequiresOutputJax');
   }
 };
 

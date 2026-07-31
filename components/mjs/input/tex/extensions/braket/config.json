@@ -2,7 +2,9 @@
   "build": {
     "id": "[tex]/braket",
     "component": "input/tex/extensions/braket",
-    "targets": ["input/tex/braket"]
+    "targets": [
+      "input/tex/braket"
+    ]
   },
   "webpack": {
     "name": "input/tex/extensions/braket",

@@ -23,10 +23,12 @@
 
 import { ArrayItem } from './base/BaseItems.js';
 import TexParser from './TexParser.js';
-import TexError from './TexError.js';
+import { texError } from './TexError.js';
 import { lookup } from '../../util/Options.js';
 import { ParseUtil } from './ParseUtil.js';
 import { UnitUtil } from './UnitUtil.js';
+
+import { COMPONENT } from './__locales__/Component.js';
 
 /***********************************************************************/
 
@@ -145,10 +147,7 @@ export class ColumnParser {
     let n = 0;
     while (state.i < state.template.length) {
       if (n++ > this.MAXCOLUMNS) {
-        throw new TexError(
-          'MaxColumns',
-          'Too many column specifiers (perhaps looping column definitions?)'
-        );
+        texError(COMPONENT, 'MaxColumns');
       }
       const code = state.template.codePointAt(state.i);
       const c = (state.c = String.fromCodePoint(code));
@@ -173,7 +172,7 @@ export class ColumnParser {
    */
   protected processColumn(state: ColumnState, c: string) {
     if (!Object.hasOwn(this.columnHandler, c)) {
-      throw new TexError('BadPreamToken', 'Illegal pream-token (%1)', c);
+      texError(COMPONENT, 'BadPreamToken', c);
     }
     this.columnHandler[c](state);
   }
@@ -286,11 +285,7 @@ export class ColumnParser {
   public getDimen(state: ColumnState): string {
     const dim = this.getBraces(state);
     if (!UnitUtil.matchDimen(dim)[0]) {
-      throw new TexError(
-        'MissingColumnDimOrUnits',
-        'Missing dimension or its units for %1 column declaration',
-        state.c
-      );
+      texError(COMPONENT, 'MissingColumnDimOrUnits', state.c);
     }
     return dim;
   }
@@ -321,11 +316,7 @@ export class ColumnParser {
   public getBraces(state: ColumnState): string {
     while (state.template[state.i] === ' ') state.i++;
     if (state.i >= state.template.length) {
-      throw new TexError(
-        'MissingArgForColumn',
-        'Missing argument for %1 column declaration',
-        state.c
-      );
+      texError(COMPONENT, 'MissingArgForColumn', state.c);
     }
     if (state.template[state.i] !== '{') {
       return state.template[state.i++];
@@ -347,7 +338,7 @@ export class ColumnParser {
           break;
       }
     }
-    throw new TexError('MissingCloseBrace', 'Missing close brace');
+    return texError(COMPONENT, 'MissingCloseBrace');
   }
 
   /**
@@ -432,11 +423,7 @@ export class ColumnParser {
     const cols = this.getBraces(state);
     const n = parseInt(num);
     if (String(n) !== num) {
-      throw new TexError(
-        'ColArgNotNum',
-        'First argument to %1 column specifier must be a number',
-        '*'
-      );
+      texError(COMPONENT, 'ColArgNotNum', '*');
     }
     state.template =
       new Array(n).fill(cols).join('') + state.template.substring(state.i);

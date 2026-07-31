@@ -17,17 +17,24 @@ import { mathjax } from '#js/mathjax.js';
 import { OptionList } from '#js/util/Options.js';
 import { tmpJsonFile } from '#src/constants.js';
 import * as fs from 'fs';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { init } from '#source/node-main/node-main.mjs';
 import { expect } from '@jest/globals';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { source } from '#source/source.js';
+import { Locale } from '#js/util/Locale.js';
+import { asyncLoad } from '#js/util/AsyncLoad.js';
+import {
+  trapErrors,
+  trapAsyncErrors,
+  throwTexErrors,
+  throwCompileErrors,
+} from './traps.js';
 
 declare const MathJax: any;
 type MATHITEM = MathItem<any, any, any>;
 type PackageList = (string | [string, number])[];
+
+Locale.asyncLoad = asyncLoad;
+Locale.syncLoad = mathjax.asyncLoad;
 
 /**
  * The various conversion functions (set up in setupTex... function below).
@@ -55,87 +62,6 @@ const visitor = new SerializedMmlVisitor();
 export const toMathML = (node: MmlNode) => visitor.visitTree(node);
 
 /*********************************************************************/
-
-/**
- * Trap output produced while running code.
- *
- * @param {string} method The console method to trap.
- * @param {Function} code The code to run.
- * @returns {string} The output sent to the given method.
- */
-export function trapOutput(method: string, code: () => void): string {
-  const saved = (console as any)[method];
-  let message = '';
-  (console as any)[method] = (...msg: any[]) => {
-    message += (message ? '\n' : '') + msg.join(' ');
-  };
-  code();
-  (console as any)[method] = saved;
-  return message;
-}
-
-/**
- * Trap errors produced while running code.
- *
- * @param {Function} code The code to run.
- * @returns {string} The error message produced.
- */
-export function trapErrors(code: () => void): string {
-  let message = '(no error)';
-  reportErrors = true;
-  try {
-    code();
-  } catch (e) {
-    message = e.message;
-  }
-  reportErrors = false;
-  return message;
-}
-
-/**
- * Trap errors produced while running code.
- *
- * @param {Function} code The code to run.
- * @returns {string} The error message produced.
- */
-export async function trapAsyncErrors(code: () => Promise<void>) {
-  let message = '(no error)';
-  reportErrors = true;
-  await code().catch((e) => {
-    message = e.message;
-  });
-  reportErrors = false;
-  return message;
-}
-
-/**
- * When true, errors will throw rather than produce merror elements.
- */
-let reportErrors = false;
-
-/**
- * Configuration that causes TeX errors to throw rather than
- * generate merror elements, so we can trap them with trapErrors().
- */
-export const throwTexErrors = {
-  formatError(jax: any, err: Error) {
-    if (reportErrors) throw err;
-    return jax.formatError(err);
-  },
-};
-
-/**
- * Configuration that causes compile errors to throw rather than
- * generate merror elements, so we can trap them with trapErrors().
- */
-export const throwCompileErrors = {
-  options: {
-    compileError(jax: any, math: any, err: Error) {
-      if (reportErrors) throw err;
-      return jax.compileError(math, err);
-    },
-  },
-};
 
 /**
  * Trap TeX processing errors and return an expect() result
@@ -193,6 +119,7 @@ export function setupTex(
     options
   );
   const tex = new TeX(parserOptions);
+  Locale.setLocale();
   const html = new HTMLDocument('', adaptor, { InputJax: tex });
   convert = (expr: string, display: boolean) =>
     toMathML(html.convert(expr, { display: display, end: STATE.CONVERT }));
@@ -223,6 +150,7 @@ export function setupTexRender(
     html.findMath().compile();
     return toMathML((Array.from(html.math)[0] as MATHITEM).root);
   };
+  Locale.setLocale();
 }
 
 /**
@@ -297,6 +225,7 @@ export function setupTexWithOutput(
   packages: string[] = ['base'],
   options: OptionList = {}
 ) {
+  Locale.setLocale();
   const parserOptions = Object.assign({}, { packages: packages }, options);
   const tex = new TeX(parserOptions);
   const html = new HTMLDocument('', adaptor, {

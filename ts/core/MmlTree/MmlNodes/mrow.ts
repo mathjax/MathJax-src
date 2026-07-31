@@ -220,7 +220,7 @@ export class MmlInferredMrow extends MmlMrow {
    *
    * @returns {string} The child nodes string
    */
-  public toString() {
+  public toString(): string {
     return '[' + this.childNodes.join(',') + ']';
   }
 }

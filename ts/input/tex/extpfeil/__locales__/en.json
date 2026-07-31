@@ -1,0 +1,5 @@
+{
+  "NewextarrowArg1": "First argument to %1 must be a control sequence name",
+  "NewextarrowArg2": "Second argument to %1 must be two integers separated by a comma",
+  "NewextarrowArg3": "Third argument to %1 must be a unicode character number"
+}

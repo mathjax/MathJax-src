@@ -24,6 +24,8 @@
 import { HTMLAdaptor } from './HTMLAdaptor.js';
 import { NodeMixin, Constructor } from './NodeMixin.js';
 import { OptionList } from '../util/Options.js';
+import { Locale } from '../util/Locale.js';
+import { COMPONENT } from './linkedom/__locales__/Component.js';
 
 /**
  * The constructor for an HTMLAdaptor
@@ -85,7 +87,7 @@ export function linkedomAdaptor(
   window.Text.prototype.splitText = function (offset: number) {
     const text = this.data;
     if (offset > text.length) {
-      throw Error('Index Size Error');
+      Locale.throw(COMPONENT, 'BadIndex');
     }
     const newNode = window.document.createTextNode(text.substring(offset));
     this.parentNode.insertBefore(newNode, this.nextSibling);

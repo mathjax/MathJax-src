@@ -21,6 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import { localize } from '../core/__locales__/Component.js';
+
 /*****************************************************************/
 /*
  *  The legacy MathJax object  (FIXME: remove this after all v2 code is gone)
@@ -113,10 +115,7 @@ export function handleRetriesFor(code: () => any): Promise<any> {
  *                            actions will continue
  */
 export function retryAfter(promise: Promise<any>) {
-  const err = new Error(
-    'MathJax retry -- an asynchronous action is required; ' +
-      'try using one of the promise-based functions and await its resolution.'
-  ) as RetryError;
+  const err = new Error(localize('RetryError')) as RetryError;
   err.retry = promise;
   throw err;
 }

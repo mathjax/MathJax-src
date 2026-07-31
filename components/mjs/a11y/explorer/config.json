@@ -3,6 +3,20 @@
     "component": "a11y/explorer",
     "targets": ["a11y/explorer.ts", "a11y/explorer"]
   },
+  "copy": [
+    {
+      "to": "[bundle]/a11y/explorer",
+      "from": "[ts]/a11y/explorer",
+      "copy": ["__locales__"],
+      "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
+    },
+    {
+      "to": "[bundle]/a11y/aria",
+      "from": "[ts]/a11y/aria",
+      "copy": ["__locales__"],
+      "excludes": ["__locales__/Component.ts"]
+    }
+  ],
   "webpack": {
     "name": "a11y/explorer",
     "libs": [

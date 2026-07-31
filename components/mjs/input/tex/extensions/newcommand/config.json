@@ -2,7 +2,22 @@
   "build": {
     "id": "[tex]/newcommand",
     "component": "input/tex/extensions/newcommand",
-    "targets": ["input/tex/newcommand"]
+    "targets": [
+      "input/tex/newcommand"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/newcommand",
+    "from": "[ts]/input/tex/newcommand",
+    "copy": [
+      "__locales__"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/newcommand",
+    "from": "[ts]/input/tex/newcommand",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
   },
   "webpack": {
     "name": "input/tex/extensions/newcommand",

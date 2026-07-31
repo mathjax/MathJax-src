@@ -112,11 +112,7 @@ export class MmlMtr extends AbstractMmlNode {
    */
   protected verifyChildren(options: PropertyList) {
     if (this.parent && !this.parent.isKind('mtable')) {
-      this.mError(
-        this.kind + ' can only be a child of an mtable',
-        options,
-        true
-      );
+      this.mError('MML/mtableChild', [this.kind], options, true);
       return;
     }
     for (const child of this.childNodes) {
@@ -124,7 +120,7 @@ export class MmlMtr extends AbstractMmlNode {
         const mtd = this.replaceChild(this.factory.create('mtd'), child);
         mtd.appendChild(child);
         if (!options['fixMtables']) {
-          child.mError('Children of ' + this.kind + ' must be mtd', options);
+          child.mError('MML/mtrChildren', [this.kind], options);
         }
       }
     }

@@ -2,7 +2,22 @@
   "build": {
     "id": "[tex]/colortbl",
     "component": "input/tex/extensions/colortbl",
-    "targets": ["input/tex/colortbl"]
+    "targets": [
+      "input/tex/colortbl"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/colortbl",
+    "from": "[ts]/input/tex/colortbl",
+    "copy": [
+      "__locales__"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/colortbl",
+    "from": "[ts]/input/tex/colortbl",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
   },
   "webpack": {
     "name": "input/tex/extensions/colortbl",

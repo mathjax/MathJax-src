@@ -20,10 +20,12 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { ParserConfiguration } from '../Configuration.js';
 import { TeX } from '../../tex.js';
 import { AbstractTags, TagsFactory } from '../Tags.js';
+
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * The type for the Mathtools tags (including their data).
@@ -88,11 +90,7 @@ export function MathtoolsTagFormat(
       const forms = jax.parseOptions.options.mathtools.tagforms;
       for (const form of Object.keys(forms)) {
         if (!Array.isArray(forms[form]) || forms[form].length !== 3) {
-          throw new TexError(
-            'InvalidTagFormDef',
-            'The tag form definition for "%1" should be an array of three strings',
-            form
-          );
+          texError(COMPONENT, 'InvalidTagFormDef', form);
         }
         this.mtFormats.set(form, forms[form] as [string, string, string]);
       }

@@ -2,7 +2,22 @@
   "build": {
     "id": "[tex]/empheq",
     "component": "input/tex/extensions/empheq",
-    "targets": ["input/tex/empheq"]
+    "targets": [
+      "input/tex/empheq"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/empheq",
+    "from": "[ts]/input/tex/empheq",
+    "copy": [
+      "__locales__"
+    ]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/empheq",
+    "from": "[ts]/input/tex/empheq",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
   },
   "webpack": {
     "name": "input/tex/extensions/empheq",

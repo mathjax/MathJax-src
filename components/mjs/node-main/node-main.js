@@ -21,16 +21,18 @@
 
 import '../startup/init.js';
 import {Loader, CONFIG} from '#js/components/loader.js';
-import {Package} from '#js/components/package.js';
-import {combineDefaults, combineConfig} from '#js/components/global.js';
+import {MathJax, combineDefaults, combineConfig} from '#js/components/global.js';
+import {resolvePath} from '#js/util/AsyncLoad.js';
 import {context} from '#js/util/context.js';
 import '../core/core.js';
 import '../adaptors/liteDOM/liteDOM.js';
 import {source} from '../source.js';
+import {mathjax} from '#js/mathjax.js';
+import {Locale} from '#js/util/Locale.js';
+import {Package} from '#js/components/package.js';
 
-const MathJax = global.MathJax;
-
-const path = eval('require("path")');   // get path from node, not webpack
+const REQUIRE = eval('require');          // get require from node, not webpack
+const path = REQUIRE("path");
 const dir = context.path(MathJax.config.__dirname);   // set up by node-main.mjs or node-main.cjs
 
 /*
@@ -48,24 +50,31 @@ combineDefaults(MathJax.config, 'output', {font: 'mathjax-newcm'});
  */
 Loader.preLoaded('loader', 'startup', 'core', 'adaptors/liteDOM');
 
+/*
+ * Set the paths.
+ */
 if (path.basename(dir) === 'node-main') {
   CONFIG.paths.esm = CONFIG.paths.mathjax;
   CONFIG.paths.sre = '[esm]/sre';
-  CONFIG.paths.mathjax = path.dirname(dir);
+  CONFIG.paths.mathjax = path.resolve(dir, '..', '..', '..', 'bundle');
   combineDefaults(CONFIG, 'source', source);
 } else {
   CONFIG.paths.mathjax = dir;
 }
-//
-//  Set the asynchronous loader to use the js directory, so we can load
-//  other files like entity definitions
-//
-const ROOT = path.resolve(dir, '..', '..', '..', path.basename(path.dirname(dir)));
-const REQUIRE = MathJax.config.loader.require;
-MathJax._.mathjax.mathjax.asyncLoad = function (name) {
-  return REQUIRE(name.charAt(0) === '.' ? path.resolve(ROOT, name) :
-                 name.charAt(0) === '[' ? Package.resolvePath(name) : name);
+
+/*
+ * Set the asynchronous loader to handle json files
+ */
+mathjax.asyncLoad = function (name) {
+  return REQUIRE(
+    resolvePath(
+      name,
+      (name) => path.resolve(CONFIG.paths.mathjax, name),
+      (name) => Package.resolvePath(name)
+    )
+  );
 };
+mathjax.asyncIsSynchronous = true;
 
 /*
  * The initialization function.  Use as:
@@ -83,7 +92,8 @@ MathJax._.mathjax.mathjax.asyncLoad = function (name) {
  */
 const init = MathJax.init = (config = {}) => {
   combineConfig(MathJax.config, config);
-  return Loader.load(...CONFIG.load)
+  return Locale.setLocale(MathJax.config.locale ?? Locale.current)
+    .then(() => Loader.load(...CONFIG.load))
     .then(() => CONFIG.ready())
     .then(() => MathJax.startup.promise)    // Wait for MathJax to finish starting up
     .then(() => MathJax)                    // Pass MathJax global as argument to subsequent .then() calls

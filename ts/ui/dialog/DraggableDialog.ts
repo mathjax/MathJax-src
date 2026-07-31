@@ -24,6 +24,7 @@
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { StyleJson, StyleJsonSheet } from '../../util/StyleJson.js';
 import { context } from '../../util/context.js';
+import { localize } from '../../core/__locales__/Component.js';
 
 export type ADAPTOR = DOMAdaptor<HTMLElement, Text, Document>;
 
@@ -453,42 +454,6 @@ export class DraggableDialog {
     },
   };
 
-  protected static helpMessage: string = `
-    <p>The dialog boxes in MathJax are movable and sizeable.</p>
-
-    <p>For mouse users, dragging any of the edges will enlarge or shrink
-    the dialog box by moving that side.  Dragging any of the corners
-    changes the two sides that meet at that corner.  Dragging elsewhere on
-    the dialog frame will move the dialog without changing its size.</p>
-
-    <p>For keyboard users, there are two ways to adjust the position
-    and size of the dialog box.  The first is to hold the
-    <kbd>Alt</kbd> or <kbd>Option</kbd> key and press any of the arrow
-    keys to move the dialog box in the given direction.  Hold the
-    <kbd>Win</kbd> or <kbd>Command</kbd> key and press any of the
-    arrow keys to enlarge or shrink the dialog box.  Left and right
-    move the right-hand edge of the dialog, while up and down move the
-    bottom edge of the dialog.
-    </p>
-
-    <p>For some users, holding two keys down at once may be difficult,
-    so the second way is to press the <kbd>m</kbd> to start "move"
-    mode, then use the arrow keys to move the dialog box in the given
-    direction.  Press <kbd>m</kbd> again to stop moving the dialog.
-    Similarly, press <kbd>s</kbd> to start and stop "sizing" mode,
-    where the arrows will change the size of the dialog box.</p>
-
-    <p>Holding a <kbd>shift</kbd> key along with the arrow key will
-    make larger changes in the size or position, for either method
-    described above.</p>
-
-    <p>Use <kbd>Tab</kbd> to move among the text, buttons, and links
-    within the dialog.  The <kbd>Enter</kbd> or <kbd>Space</kbd> key
-    activates the focused item.  The <kbd>Escape</kbd> key closes the
-    dialog, as does clicking outside the dialog box, or clicking the
-    "\u00D7" icon in the upper right-hand corner of the dialog.</p>
-  `;
-
   /**
    * When moving/sizing by keyboard, this gives which is being adjusted.
    */
@@ -626,7 +591,7 @@ export class DraggableDialog {
             'data-drag': 'none',
             tabIndex: 0,
             role: 'button',
-            'aria-label': 'Dialog Help',
+            'aria-label': localize('Dialog/Btn/Help'),
           },
           [
             adaptor.node('mjx-dialog-icon', { 'aria-hidden': true }, [
@@ -641,7 +606,7 @@ export class DraggableDialog {
             'data-drag': 'none',
             tabIndex: 0,
             role: 'button',
-            'aria-label': 'Close Dialog Box',
+            'aria-label': localize('Dialog/Btn/Close'),
           },
           [
             adaptor.node('mjx-dialog-icon', { 'aria-hidden': true }, [
@@ -1033,7 +998,7 @@ export class DraggableDialog {
     try {
       document.execCommand('copy');
     } catch (err) {
-      alert(`Can't copy to clipboard: ${err.message}`);
+      alert(localize('Dialog/CantCopy', err.message));
     }
     document.getSelection().removeAllRanges();
   }
@@ -1112,8 +1077,8 @@ export class DraggableDialog {
    */
   protected helpDialog(adaptor: ADAPTOR, event: Event) {
     const help = new DraggableDialog({
-      title: 'MathJax Dialog Help',
-      message: (this.constructor as typeof DraggableDialog).helpMessage,
+      title: localize('Dialog/Help/Title'),
+      message: localize('Dialog/Help/Message'),
       adaptor: adaptor,
       className: 'mjx-dialog-help',
       styles: {

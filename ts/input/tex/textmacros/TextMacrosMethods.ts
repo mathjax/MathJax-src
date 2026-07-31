@@ -27,6 +27,9 @@ import { retryAfter } from '../../../util/Retries.js';
 import { TextParser } from './TextParser.js';
 import BaseMethods from '../base/BaseMethods.js';
 
+import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
+import { COMPONENT } from './__locales__/Component.js';
+
 /**
  * The methods used to implement the text-mode macros
  */
@@ -89,16 +92,13 @@ export const TextMacrosMethods = {
 
         case '}':
           if (braces === 0) {
-            parser.Error(
-              'ExtraCloseMissingOpen',
-              'Extra close brace or missing open brace'
-            );
+            parser.Error(TEX_COMPONENT, 'ExtraCloseMissingOpen');
           }
           braces--;
           break;
       }
     }
-    parser.Error('MathNotTerminated', 'Math mode is not properly terminated');
+    parser.Error(TEX_COMPONENT, 'MathNotTerminated');
   },
 
   /**
@@ -106,7 +106,7 @@ export const TextMacrosMethods = {
    * @param {string} c            The character that called this function
    */
   MathModeOnly(parser: TextParser, c: string) {
-    parser.Error('MathModeOnly', "'%1' allowed only in math mode", c);
+    parser.Error(COMPONENT, 'MathModeOnly', c);
   },
 
   /**
@@ -114,7 +114,7 @@ export const TextMacrosMethods = {
    * @param {string} c            The character that called this function
    */
   Misplaced(parser: TextParser, c: string) {
-    parser.Error('Misplaced', "Misplaced '%1'", c);
+    parser.Error(TEX_COMPONENT, 'Misplaced', c);
   },
 
   /**
@@ -143,10 +143,7 @@ export const TextMacrosMethods = {
       parser.saveText();
       parser.stack.env = parser.envStack.pop();
     } else {
-      parser.Error(
-        'ExtraCloseMissingOpen',
-        'Extra close brace or missing open brace'
-      );
+      parser.Error(TEX_COMPONENT, 'ExtraCloseMissingOpen');
     }
   },
 

@@ -22,13 +22,15 @@
  */
 
 import { ParseMethod } from '../Types.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import TexParser from '../TexParser.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { UnitUtil } from '../UnitUtil.js';
 import { StackItem } from '../StackItem.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import * as BussproofsUtil from './BussproofsUtil.js';
+
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Pads content of an inference rule.
@@ -160,21 +162,12 @@ function createRule(
 function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   const dollar = parser.GetNext();
   if (dollar !== '$') {
-    throw new TexError(
-      'IllegalUseOfCommand',
-      'Use of %1 does not match its definition.',
-      name
-    );
+    texError(COMPONENT, 'IllegalUseOfCommand', name);
   }
   parser.i++;
   const axiom = parser.GetUpTo(name, '$');
   if (!axiom.includes('\\fCenter')) {
-    throw new TexError(
-      'MissingProofCommand',
-      'Missing %1 in %2.',
-      '\\fCenter',
-      name
-    );
+    texError(COMPONENT, 'MissingProofCommand', '\\fCenter', name);
   }
   // Check for fCenter and throw error?
   const [prem, conc] = axiom.split('\\fCenter');
@@ -225,7 +218,7 @@ function doInference(
 ) {
   const top = getProofTree(parser);
   if (top.Size() < n) {
-    throw new TexError('BadProofTree', 'Proof tree badly specified.');
+    texError(COMPONENT, 'BadProofTree');
   }
   const rootAtTop = top.getProperty('rootAtTop') as boolean;
   const childCount = n === 1 && !top.Peek()[0].childNodes.length ? 0 : n;
@@ -428,13 +421,13 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
   DisplayProof(parser: TexParser, _name: string) {
     const top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
-      throw new TexError('BadProofTree', 'Proof tree badly specified.');
+      texError(COMPONENT, 'BadProofTree');
     }
     if (!top.getProperty('implicit')) {
       return;
     }
     if (top.Size() !== 1) {
-      throw new TexError('BadProofTree', 'Proof tree badly specified.');
+      texError(COMPONENT, 'BadProofTree');
     }
     const node = top.toMml();
     BussproofsUtil.setProperty(node, 'proof', true);

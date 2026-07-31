@@ -27,6 +27,7 @@ import { MultlineItem, FlalignItem } from './AmsItems.js';
 import { AbstractTags } from '../Tags.js';
 import './AmsMappings.js';
 import { NewcommandConfig } from '../newcommand/NewcommandConfiguration.js';
+export { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Standard AMS style tagging.

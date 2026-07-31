@@ -31,6 +31,9 @@ import { FunctionList } from '../../util/FunctionList.js';
 import { TeX } from '../tex.js';
 import { PrioritizedList } from '../../util/PrioritizedList.js';
 import { TagsFactory } from './Tags.js';
+import { Locale } from '../../util/Locale.js';
+import { COMPONENT } from './__locales__/Component.js';
+export { COMPONENT };
 
 export type StackItemConfig = { [kind: string]: StackItemClass };
 export type TagsConfig = { [kind: string]: TagsClass };
@@ -432,15 +435,15 @@ export class ParserConfiguration {
    * Find a package and check that it is for the targeted parser
    *
    * @param {string} name       The name of the package to check
-   * @returns {Configuration}    The configuration for the package
+   * @returns {Configuration}   The configuration for the package
    */
   protected getPackage(name: string): Configuration {
     const config = ConfigurationHandler.get(name);
     if (config && !this.parsers.includes(config.parser)) {
-      throw Error(`Package '${name}' doesn't target the proper parser`);
+      Locale.throw(COMPONENT, 'WrongParser', name);
     }
     if (!config) {
-      this.warn(`Package '${name}' not found.  Omitted.`);
+      Locale.warn(COMPONENT, 'PackageNotFound', name);
     }
     return config;
   }
@@ -479,14 +482,5 @@ export class ParserConfiguration {
     for (const [post, priority] of config.postprocessors) {
       jax.postFilters.add(post, priority);
     }
-  }
-
-  /**
-   * Prints a warning message.
-   *
-   * @param {string} message The warning.
-   */
-  private warn(message: string) {
-    console.warn('MathJax Warning: ' + message);
   }
 }

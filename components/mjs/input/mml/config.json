@@ -7,6 +7,12 @@
     ],
     "excludeSubdirs": true
   },
+  "copy": {
+    "to": "[bundle]/input/mml",
+    "from": "[ts]/input/mathml",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
+  },
   "webpack": {
     "name": "input/mml",
     "libs": ["components/src/core/lib"]
