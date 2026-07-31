@@ -124,8 +124,9 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
   /**
    * @param {Function} func  A function to apply to each node in the tree rooted at this node
    * @param {any} data       Data to pass to the function (as state information)
+   * @returns {any}          The (possibly modified) data structure
    */
-  walkTree(func: (node: N, data?: any) => void, data?: any): void;
+  walkTree(func: (node: N, data?: any) => boolean | void, data?: any): any;
 }
 
 /*********************************************************/
@@ -332,11 +333,14 @@ export abstract class AbstractNode<
   /**
    * @override
    */
-  public walkTree(func: (node: N, data?: any) => void, data?: any) {
-    func(this as any as N, data);
+  public walkTree(func: (node: N, data?: any) => boolean | void, data?: any, state: {continue: boolean} = {continue: true}): any {
+    if (func(this as any as N, data)) {
+      state.continue = false;
+      return data;
+    };
     for (const child of this.childNodes) {
-      if (child) {
-        child.walkTree(func, data);
+      if (child && state.continue) {
+        (child as unknown as AbstractNode<N, C>).walkTree(func, data, state);
       }
     }
     return data;

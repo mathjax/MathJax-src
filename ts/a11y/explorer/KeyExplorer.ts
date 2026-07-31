@@ -29,7 +29,6 @@ import { ExplorerPool } from './ExplorerPool.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, SemAttr } from '../speech/SpeechUtil.js';
 import { GeneratorPool } from '../speech/GeneratorPool.js';
-import { StructureUtil, StructureMap } from '../speech/StructureUtil.js';
 import { context } from '../../util/context.js';
 import { InfoDialog } from '../../ui/dialog/InfoDialog.js';
 import { localize } from './__locales__/Component.js';
@@ -363,11 +362,6 @@ export class SpeechExplorer
     ['click', this.Click.bind(this)],
     ['dblclick', this.DblClick.bind(this)],
   ]);
-
-  /**
-   * Semantic id to subtree map.
-   */
-  private subtrees: StructureMap = null;
 
   /**
    * @override
@@ -1100,8 +1094,6 @@ export class SpeechExplorer
     this.node.removeAttribute('aria-busy');
   }
 
-  private cacheParts: Map<string, HTMLElement[]> = new Map();
-
   /**
    * Get all nodes with the same semantic id (multiple nodes if there are line breaks).
    *
@@ -1113,39 +1105,10 @@ export class SpeechExplorer
     if (!id) {
       return [node];
     }
-    // Here we need to cache the subtrees.
-    if (this.cacheParts.has(id)) {
-      return this.cacheParts.get(id);
-    }
-    const parts = Array.from(
-      this.node.querySelectorAll(`[data-semantic-id="${id}"]`)
-    ) as HTMLElement[];
-    const subtree = this.subtree(id, parts);
-    this.cacheParts.set(id, [...parts, ...subtree]);
-    return this.cacheParts.get(id);
-  }
-
-  /**
-   * Retrieve the elements in the semantic subtree that are not in the DOM subtree.
-   *
-   * @param {string} id The semantic id of the root node.
-   * @param {HTMLElement[]} nodes The list of nodes corresponding to that id
-   *     (could be multiple for linebroken ones).
-   * @returns {HTMLElement[]} The list of nodes external to the DOM trees rooted
-   *     by any of the input nodes.
-   */
-  private subtree(id: string, nodes: HTMLElement[]): HTMLElement[] {
-    const sub = this.subtrees.get(id);
-    const children: Set<string> = new Set();
-    for (const node of nodes) {
-      (
-        Array.from(node.querySelectorAll(`[data-semantic-id]`)) as HTMLElement[]
-      ).forEach((x) => children.add(this.nodeId(x)));
-    }
-    const rest = StructureUtil.setdifference(sub, children);
-    return [...rest]
-      .map((child) => this.getNode(child))
-      .filter((node) => node !== null);
+    const nodes = (this.item.semanticNodes.get(id) ?? [id]).map(
+      (nid) => Array.from(this.node.querySelectorAll(`[data-semantic-id="${nid}"]`))
+    ).flat() as HTMLElement[];
+    return nodes;
   }
 
   /**
@@ -1774,9 +1737,7 @@ export class SpeechExplorer
    * @override
    */
   public async Start() {
-    if (!this.subtrees) {
-      this.subtrees = this.getSubtrees();
-    }
+    this.item.parseSemanticNodes();
     //
     // If we aren't attached or already active, return
     //
@@ -2019,17 +1980,5 @@ export class SpeechExplorer
       focus.unshift(`[${name}="${attr}"]`);
     }
     return focus.join(' ');
-  }
-
-  /**
-   * Populates the subtrees map from the data-semantic-structure attribute.
-   *
-   * @returns {StructureMap}  The structure of the expression.
-   */
-  protected getSubtrees(): StructureMap {
-    const node = this.node.querySelector('[data-semantic-structure]');
-    if (!node) return new Map();
-    const sexp = node.getAttribute('data-semantic-structure');
-    return StructureUtil.getStructure(sexp);
   }
 }

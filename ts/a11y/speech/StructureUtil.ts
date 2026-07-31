@@ -1,36 +1,22 @@
+import { MmlNode } from '../../core/MmlTree/MmlNode.js';
+
 /**********************************************************************/
 /*
  * Some Aux functions for parsing the semantic structure sexpression
  */
 
-export type StructureMap = Map<string, Set<string>>;
-type SexpTree = string | SexpTree[];
+export type SexpTree = string | SexpTree[];
+export type ParentMap = Map<string, string>;
+export type SemanticMap = Map<string, string[]>;
 
 export class StructureUtil {
-  /**
-   * Create the subtree mapping for an expression's structure sexp.
-   *
-   * @param {string} sexp      The structure sexp to process
-   * @returns {StructureMap}   The map from element ids to related ids
-   */
-  public static getStructure(sexp: string): StructureMap {
-    const map: StructureMap = new Map();
-    this.buildMap(this.parse(this.tokenize(sexp)), map);
-    for (const x of map.keys()) {
-      if (map.get(x).size === 0) {
-        map.delete(x);
-      }
-    }
-    return map;
-  }
-
   /**
    * Helper to tokenize input
    *
    * @param {string} str   The semantic structure.
    * @returns {string[]}   The tokenized list.
    */
-  public static tokenize(str: string): string[] {
+  protected static tokenize(str: string): string[] {
     return str.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').trim().split(/\s+/);
   }
 
@@ -40,7 +26,7 @@ export class StructureUtil {
    * @param {string} tokens   The tokens from the semantic structure.
    * @returns {SexpTree}      Array list for the semantic structure sexpression.
    */
-  public static parse(tokens: string[]): SexpTree {
+  protected static parse(tokens: string[]): SexpTree {
     const stack: SexpTree[][] = [[]];
     for (const token of tokens) {
       if (token === '(') {
@@ -57,49 +43,67 @@ export class StructureUtil {
   }
 
   /**
-   * Flattens the tree and builds the map.
+   * Recursively map semantic ids to the nearest parent ids
    *
-   * @param {SexpTree} tree                  The sexpression tree.
-   * @param {Map<string, Set<string>>} map   The map to populate.
-   * @returns {Set<string>}                  The descendant map.
+   * @param {MmlNode} node    The node to process
+   * @param {string} id       The id of the parent node
+   * @param {ParentMap} map   The map being built
+   * @returns {ParentMap}     The map of semantic ids to their nearset parent ids
    */
-  public static buildMap(tree: SexpTree, map: StructureMap): Set<string> {
-    if (typeof tree === 'string') {
-      if (!map.has(tree)) map.set(tree, new Set());
-      return new Set();
+  protected static mapParents(node: MmlNode, id: string = '', map: ParentMap = new Map()): ParentMap {
+    const nid = node.attributes.get('data-semantic-id') as string;
+    if (nid) {
+      map.set(nid, id);
     }
-    const [root, ...children] = tree;
-    const rootId = root as string;
-    const descendants: Set<string> = new Set();
-    for (const child of children) {
-      const childRoot = typeof child === 'string' ? child : child[0];
-      const childDescendants = this.buildMap(child, map);
-      descendants.add(childRoot as string);
-      childDescendants.forEach((d: string) => descendants.add(d));
+    if (node.isToken) return map;
+    for (const child of node.childNodes) {
+      this.mapParents(child, nid ?? id, map);
     }
-    map.set(rootId, descendants);
-    return descendants;
+    return map;
   }
 
-  // Can be replaced with ES2024 implementation of Set.prototype.difference
   /**
-   * Set difference between two sets A and B: A\B.
+   * Map the semantic ids to themselves and any nodes outside their MathML tree
    *
-   * @param {Set<string>} a   Initial set.
-   * @param {Set<string>} b   Set to remove from A.
-   * @returns {Set<string>}   The difference A\B.
+   * @param {MmlNode} root    The root node to process.
+   * @returns {SemanticMap}   The map of node ids to arrays of node ids for those that have
+   *                          nodes outside their MathML subtree.
    */
-  public static setdifference(a: Set<string>, b: Set<string>): Set<string> {
-    if (!a) {
-      return new Set();
-    }
-    if (!b) {
-      return a;
-    }
-    if ((a as any).difference) {
-      return (a as any).difference(b);
-    }
-    return new Set([...a].filter((x) => !b.has(x)));
+  public static semanticNodes(root: MmlNode): SemanticMap {
+    let sexp = '';
+    root.walkTree((node) => {
+      sexp = node.attributes?.get('data-semantic-structure') as string;
+      return !!sexp;
+    });
+    const tree = this.parse(this.tokenize(sexp));
+    const parents = this.mapParents(root);
+    const map = new Map() as SemanticMap;
+    this.mapExtras(tree, parents, map);
+    return map;
   }
 
+  /**
+   * Recursive helper function for semanticNodes().
+   *
+   * @param {SexpTree} tree       The semantic structure array.
+   * @param {ParentMap} parents   The map from semantic ids to their parent ids.
+   * @param {SemanticMap} map     The map being built.
+   * @returns {string[]}          The semantic nodes outside the MathML subtree.
+   */
+  protected static mapExtras(tree: SexpTree, parents: ParentMap, map: SemanticMap): string[] {
+    if (!Array.isArray(tree)) return [tree];
+    const id = tree[0] as string;
+    const extra: string[] = [];
+    for (const child of tree.slice(1)) {
+      for (const nid of this.mapExtras(child, parents, map)) {
+        if (parents.get(nid) !== id) {
+          extra.push(nid);
+        }
+      }
+    }
+    if (extra.length) {
+      map.set(id, [id, ...extra]);
+    }
+    return extra;
+  }
 }
