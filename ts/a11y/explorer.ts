@@ -36,6 +36,7 @@ import { context } from '../util/context.js';
 import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
 
 import * as Sre from './sre.js';
+import * as Aria from './aria/__locales__/Component.js';
 
 const isUnix = context.os === 'Unix';
 
@@ -156,7 +157,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
       const CLASS = this.constructor as typeof BaseClass;
       return CLASS.roleDescription === 'none'
         ? CLASS.none
-        : CLASS.roleDescription;
+        : Aria.localize(`${Aria.roleDescPrefix}/${CLASS.roleDescription}`);
     }
 
     public get none() {

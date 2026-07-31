@@ -128,7 +128,7 @@ function csSelectionBox(menu: MJContextMenu, locale: string): object {
     });
   }
   const sb = new SelectionDialog(
-    localize('.Clearspeak/Title'),
+    localize('Clearspeak/Title'),
     '',
     items,
     SelectionOrder.ALPHABETICAL,
@@ -138,7 +138,7 @@ function csSelectionBox(menu: MJContextMenu, locale: string): object {
   return {
     type: 'command',
     id: 'ClearspeakPreferences',
-    content: localize('.Clearspeak/SelectPrefs'),
+    content: localize('Clearspeak/SelectPrefs'),
     action: () => sb.post(),
   };
 }
@@ -160,13 +160,13 @@ function basePreferences(previous: string): object[] {
   const items = [
     {
       type: 'radio',
-      content: localize('.Clearspeak/NoPrefs'),
+      content: localize('Clearspeak/NoPrefs'),
       id: 'clearspeak-default',
       variable: 'speechRules',
     },
     {
       type: 'radio',
-      content: localize('.Clearspeak/CurrentPrefs'),
+      content: localize('Clearspeak/CurrentPrefs'),
       id: 'clearspeak-' + previous,
       variable: 'speechRules',
     },
@@ -192,7 +192,7 @@ function smartPreferences(
 ): object[] {
   const loc = localePreferences.get(locale);
   const items = [
-    { type: 'label', content: localize('.Clearspeak/PrefsFor', smart) },
+    { type: 'label', content: localize('Clearspeak/PrefsFor', smart) },
     { type: 'rule' },
   ];
   return items.concat(

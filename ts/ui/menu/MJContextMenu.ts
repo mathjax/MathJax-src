@@ -43,6 +43,27 @@ export type DynamicSubmenu = (
   callback: SubmenuCallback
 ) => void;
 
+/**
+ * Remap old menu ids to their new localization keys
+ */
+const RemapIds: { [key: string]: any } = {
+  Settings: {
+    Overflow: 'Wide/Expressions',
+  },
+  Speech: {
+    'Auto Voicing': 'AutoVoicing',
+  },
+  Braille: {
+    BrailleSpeech: 'Braille/Speech',
+    BrailleCombine: 'Braille/Combine',
+  },
+  Explorer: {
+    'Semantic Info': 'SemanticInfo',
+    'Role Description': 'RoleDescription',
+    'Math Help': 'MathHelp',
+  },
+};
+
 /*==========================================================================*/
 
 /**
@@ -132,15 +153,26 @@ export class MJContextMenu extends ContextMenu {
    * Find an item in the menu (recursively descending into submenus, if needed)
    *
    * @param {string[]} names   The menu IDs to look for
-   * @returns {Item}         The menu item (or null if not found)
+   * @returns {Item}           The menu item (or null if not found)
    */
   public findID(...names: string[]): Item {
+    let map = RemapIds;
     let menu = this as Menu;
     let item = null as Item;
-    for (const name of names) {
+    for (const fullname of names) {
       if (!menu) return null;
+      //
+      // Remap old menu ids to new prefixed ones
+      // (can be removed in a later version)
+      //
+      const remap = map?.[fullname];
+      const name = typeof remap === 'string' ? remap : fullname;
+      map = typeof remap === 'object' ? remap : null;
+      //
+      // Look for the id in the menu list
+      //
       for (item of menu.items) {
-        if (item.id === name) {
+        if (item.id === name || item.id?.replace(/.*\//, '') === name) {
           menu = item instanceof Submenu ? item.submenu : null;
           break;
         }
@@ -169,8 +201,8 @@ export class MJContextMenu extends ContextMenu {
     const original = this.findID('Show', 'Original');
     original.content =
       input === 'MathML'
-        ? localize('OriginalMathML')
-        : localize('Commands', input);
+        ? localize('Show/OriginalMathML')
+        : localize('Show/Commands', input);
     const clipboard = this.findID('Copy', 'Original');
     clipboard.content = original.content;
   }
@@ -190,8 +222,8 @@ export class MJContextMenu extends ContextMenu {
    */
   protected getSpeechMenu() {
     const speech = this.mathItem.outputData.speech;
-    this.findID('Show', 'SpeechText')[speech ? 'enable' : 'disable']();
-    this.findID('Copy', 'SpeechText')[speech ? 'enable' : 'disable']();
+    this.findID('Show', 'Speech')[speech ? 'enable' : 'disable']();
+    this.findID('Copy', 'Speech')[speech ? 'enable' : 'disable']();
   }
 
   /**
@@ -199,8 +231,8 @@ export class MJContextMenu extends ContextMenu {
    */
   protected getBrailleMenu() {
     const braille = this.mathItem.outputData.braille;
-    this.findID('Show', 'BrailleCode')[braille ? 'enable' : 'disable']();
-    this.findID('Copy', 'BrailleCode')[braille ? 'enable' : 'disable']();
+    this.findID('Show', 'Braille')[braille ? 'enable' : 'disable']();
+    this.findID('Copy', 'Braille')[braille ? 'enable' : 'disable']();
   }
 
   /**
@@ -208,8 +240,8 @@ export class MJContextMenu extends ContextMenu {
    */
   protected getSvgMenu() {
     const svg = this.jax.SVG;
-    this.findID('Show', 'SvgImage')[svg ? 'enable' : 'disable']();
-    this.findID('Copy', 'SvgImage')[svg ? 'enable' : 'disable']();
+    this.findID('Show', 'SVG')[svg ? 'enable' : 'disable']();
+    this.findID('Copy', 'SVG')[svg ? 'enable' : 'disable']();
   }
 
   /**
