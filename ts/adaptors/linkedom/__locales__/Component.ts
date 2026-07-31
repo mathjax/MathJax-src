@@ -22,7 +22,9 @@
  */
 
 import { Locale } from '../../../util/Locale.js';
+import { locale, data } from './preload.cjs';
 
 export const COMPONENT = 'adaptors/linkedom';
 
 Locale.registerLocaleFiles(COMPONENT, '../ts/adaptors/linkedom');
+Locale.registerMessages(COMPONENT, locale, data);

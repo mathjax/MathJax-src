@@ -1,5 +1,5 @@
 {
-  "BadPreamToken": "Illegal preamble token: %1",
+  "BadPreamToken": "Illegal pream-token (%1)",
   "BadRawUnicode": "Argument to %1 must a hexadecimal number with 1 to 6 digits",
   "ColArgNotNum": "First argument to %1 column specifier must be a number",
   "ConfigNotFound": "Configuration '%1' not found.  Omitted.",

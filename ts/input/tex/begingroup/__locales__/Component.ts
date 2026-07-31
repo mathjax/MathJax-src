@@ -22,7 +22,9 @@
  */
 
 import { Locale } from '../../../../util/Locale.js';
+import { locale, data } from './preload.cjs';
 
 export const COMPONENT = '[tex]/begingroup';
 
 Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/begingroup');
+Locale.registerMessages(COMPONENT, locale, data);

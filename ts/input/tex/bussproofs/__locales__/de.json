@@ -3,6 +3,7 @@
   "EnvMissingEnd": "\\end{%1} fehlt",
   "IllegalProofCommand": "Beweisbefehle sind nur in der prooftree-Umgebung zulässig.",
   "IllegalUseOfCommand": "Die Verwendung von %1 entspricht nicht seiner Definition.",
+  "MissingDisplayProof": "%1 fehlt, um den Beweisbaum anzuzeigen.",
   "MissingProofCommand": "%1 fehlt in %2.",
   "RequiresOutputJax": "Die Erweiterung bussproofs benötigt eine OutputJax mit einer getBBox() Methode"
 }

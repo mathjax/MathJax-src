@@ -154,7 +154,7 @@ export class Menu {
       zoom: 'NoZoom',
       zscale: '200%',
       renderer: 'CHTML',
-      locale: 'en',
+      locale: Locale.default,
       alt: true,
       cmd: false,
       ctrl: false,

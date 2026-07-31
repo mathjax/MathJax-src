@@ -22,7 +22,9 @@
  */
 
 import { Locale } from '../../../util/Locale.js';
+import { locale, data } from './preload.cjs';
 
 export const COMPONENT = 'a11y/semantic-enrich';
 
 Locale.registerLocaleFiles(COMPONENT, '../ts/a11y/semantic-enrich');
+Locale.registerMessages(COMPONENT, locale, data);

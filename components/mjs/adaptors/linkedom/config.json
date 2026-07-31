@@ -7,7 +7,7 @@
     "to": "[bundle]/adaptors/linkedom",
     "from": "[ts]/adaptors/linkedom",
     "copy": ["__locales__"],
-    "excludes": ["__locales__/Component.ts"]
+    "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
   },
   "webpack": {
     "name": "adaptors/linkedom",

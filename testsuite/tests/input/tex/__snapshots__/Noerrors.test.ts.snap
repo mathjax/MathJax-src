@@ -90,7 +90,7 @@ exports[`NoError EnvBadEnd 1`] = `
 
 exports[`NoError EnvMissingEnd Array 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}a" display="block">
-  <merror data-mjx-error="Illegal preamble token: a" title="Illegal preamble token: a">
+  <merror data-mjx-error="Illegal pream-token (a)" title="Illegal pream-token (a)">
     <mtext>\\begin{array}a</mtext>
   </merror>
 </math>"

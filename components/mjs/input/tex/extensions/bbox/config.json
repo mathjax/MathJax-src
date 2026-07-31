@@ -9,7 +9,7 @@
     "to": "[bundle]/input/tex/extensions/bbox",
     "from": "[ts]/input/tex/bbox",
     "copy": ["__locales__"],
-    "excludes": ["__locales__/Component.ts"]
+    "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
   },
   "webpack": {
     "name": "input/tex/extensions/bbox",

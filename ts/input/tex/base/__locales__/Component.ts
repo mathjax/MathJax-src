@@ -22,7 +22,9 @@
  */
 
 import { Locale } from '../../../../util/Locale.js';
+import { locale, data } from './preload.cjs';
 
 export const COMPONENT = '[tex]/base';
 
 Locale.registerLocaleFiles(COMPONENT, '../ts/input/tex/base');
+Locale.registerMessages(COMPONENT, locale, data);

@@ -22,10 +22,12 @@
  */
 
 import { Locale, namedData } from '../../../util/Locale.js';
+import { locale, data } from './preload.cjs';
 
 export const COMPONENT = 'input/mml';
 
 Locale.registerLocaleFiles(COMPONENT, '../ts/input/mathml');
+Locale.registerMessages(COMPONENT, locale, data);
 
 /**
  * Get a localized message for this component

@@ -22,12 +22,12 @@
  */
 
 import { Locale, namedData } from '../../../util/Locale.js';
-import data from '#ts/a11y/aria/__locales__/en.json' with { type: 'json' };
+import { locale, data } from './preload.cjs';
 
 export const COMPONENT = 'a11y/aria';
 
 Locale.registerLocaleFiles(COMPONENT, '../../ts/a11y/aira');
-Locale.registerMessages(COMPONENT, 'en', data);
+Locale.registerMessages(COMPONENT, locale, data);
 
 /**
  * Prefix to use for roleDescription localization
