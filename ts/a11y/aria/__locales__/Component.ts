@@ -16,16 +16,23 @@
  */
 
 /**
- * @file  Locale component registration for a11y/explorer
+ * @file  Locale component registration for a11y/aria
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import { Locale, namedData } from '../../util/Locale.js';
+import { Locale, namedData } from '../../../util/Locale.js';
+import data from '#ts/a11y/aria/__locales__/en.json' with { type: 'json' };
 
-export const COMPONENT = 'a11y';
+export const COMPONENT = 'a11y/aria';
 
-Locale.registerLocaleFiles(COMPONENT, '../ts/a11y');
+Locale.registerLocaleFiles(COMPONENT, '../../ts/a11y/aira');
+Locale.registerMessages(COMPONENT, 'en', data);
+
+/**
+ * Prefix to use for roleDescription localization
+ */
+export const roleDescPrefix = 'Aria/RoleDescription';
 
 /**
  * Get a localized message for this component

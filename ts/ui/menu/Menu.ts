@@ -50,7 +50,7 @@ import { locales } from './locales.js';
 
 import { Parser, Rule, CssStyles, Submenu } from './mj-context-menu.js';
 
-import { AriaRoleDescription, localizeAria } from '../../a11y/aria.js';
+import * as Aria from '../../a11y/aria/__locales__/Component.js';
 import { Locale } from '../../util/Locale.js';
 import { COMPONENT, localize } from './__locales__/Component.js';
 export { COMPONENT };
@@ -173,7 +173,7 @@ export class Menu {
       brailleSpeech: false,
       brailleCombine: false,
       speechRules: 'clearspeak-default',
-      roleDescription: AriaRoleDescription.MATH,
+      roleDescription: 'math',
       inTabOrder: true,
       tabSelects: 'all',
       help: true,
@@ -672,13 +672,13 @@ export class Menu {
           this.command('Show/MathMLcode', () => this.mathMLCode()),
           this.command('Show/Original', () => this.originalText()),
           this.rule(),
-          this.command('Show/SpeechText', () => this.speechText(), {
+          this.command('Show/Speech', () => this.speechText(), {
             disabled: true,
           }),
-          this.command('Show/BrailleCode', () => this.brailleText(), {
+          this.command('Show/Braille', () => this.brailleText(), {
             disabled: true,
           }),
-          this.command('Show/SvgImage', () => this.svgImage(), {
+          this.command('Show/SVG', () => this.svgImage(), {
             disabled: true,
           }),
           this.submenu('Show/Annotation'),
@@ -691,13 +691,13 @@ export class Menu {
           this.command('Show/MathMLcode', () => this.copyMathML()),
           this.command('Show/Original', () => this.copyOriginal()),
           this.rule(),
-          this.command('Show/SpeechText', () => this.copySpeechText(), {
+          this.command('Show/Speech', () => this.copySpeechText(), {
             disabled: true,
           }),
-          this.command('Show/BrailleCode', () => this.copyBrailleText(), {
+          this.command('Show/Braille', () => this.copyBrailleText(), {
             disabled: true,
           }),
-          this.command('Show/SvgImage', () => this.copySvgImage(), {
+          this.command('Show/SVG', () => this.copySvgImage(), {
             disabled: true,
           }),
           this.submenu('Copy/Annotation'),
@@ -709,41 +709,37 @@ export class Menu {
         this.rule(),
         this.submenu('Settings', [
           this.submenu(
-            'Renderer',
-            this.radioGroup('renderer', ['CHTML', 'SVG'])
+            'Settings/Renderer',
+            this.radioGroup('renderer', '.', ['CHTML', 'SVG'])
           ),
-          this.submenu('Wide/WideExpressions', [
-            this.radioGroup('overflow', [
-              'Wide/Overflow',
-              'Wide/Scroll',
-              'Wide/Linebreak',
-              'Wide/Scale',
-              'Wide/Truncate',
-              'Wide/Elide',
+          this.submenu('Wide/Expressions', [
+            this.radioGroup('overflow', 'Wide', [
+              'Overflow',
+              'Scroll',
+              'Linebreak',
+              'Scale',
+              'Truncate',
+              'Elide',
             ]),
             this.rule(),
             this.checkbox('Wide/BreakInline', 'breakInline'),
           ]),
           this.rule(),
-          this.submenu('MathmlIncludes', [
-            this.checkbox('showSRE', 'showSRE'),
-            this.checkbox('showTex', 'showTex'),
-            this.checkbox('texHints', 'texHints'),
-            this.checkbox('semantics', 'semantics'),
+          this.submenu('Settings/MathmlIncludes', [
+            this.checkbox('MML/showSRE', 'showSRE'),
+            this.checkbox('MML/showTex', 'showTex'),
+            this.checkbox('MML/texHints', 'texHints'),
+            this.checkbox('MML/semantics', 'semantics'),
           ]),
-          this.submenu('Language', this.languageSubmenu()),
+          this.submenu('Settings/Language', this.languageSubmenu()),
           this.rule(),
           this.submenu('Zoom/ZoomTrigger', [
             this.command('Zoom/ZoomNow', () => this.zoom(null, '')),
             this.rule(),
-            this.radioGroup('zoom', [
-              'Zoom/Click',
-              'Zoom/DoubleClick',
-              'Zoom/NoZoom',
-            ]),
+            this.radioGroup('zoom', 'Zoom', ['Click', 'DoubleClick', 'NoZoom']),
             this.rule(),
             this.label('Zoom/TriggerRequires'),
-            this.checkbox(MenuUtil.isMac ? 'Option' : 'Zoom/Alt', 'alt'),
+            this.checkbox(MenuUtil.isMac ? 'Zoom/Option' : 'Zoom/Alt', 'alt'),
             this.checkbox('Zoom/Command', 'cmd', {
               hidden: !MenuUtil.isMac,
             }),
@@ -754,7 +750,7 @@ export class Menu {
           ]),
           this.submenu(
             'Zoom/ZoomFactor',
-            this.radioGroup('zscale', [
+            this.radioGroup('zscale', '.', [
               '150%',
               '175%',
               '200%',
@@ -764,21 +760,21 @@ export class Menu {
             ])
           ),
           this.rule(),
-          this.command('ScaleAllMath', () => this.scaleAllMath()),
+          this.command('Settings/Scale', () => this.scaleAllMath()),
           this.rule(),
-          this.command('Reset', () => this.resetDefaults()),
+          this.command('Settings/Reset', () => this.resetDefaults()),
         ]),
         this.rule(),
-        this.label('Accessibility'),
+        this.label('Label/Accessibility'),
         this.submenu('Speech', [
           this.checkbox('Generate', 'speech'),
           this.checkbox('Subtitles', 'subtitles'),
           this.checkbox('AutoVoicing', 'voicing'),
           this.rule(),
-          this.label('Rules'),
+          this.label('Label/Rules'),
           this.submenu(
             'Mathspeak',
-            this.radioGroup('speechRules', [
+            this.radioGroup('speechRules', '', [
               'mathspeak-default',
               'mathspeak-brief',
               'mathspeak-sbrief',
@@ -786,7 +782,7 @@ export class Menu {
           ),
           this.submenu(
             'Clearspeak',
-            this.radioGroup('speechRules', ['clearspeak-default'])
+            this.radioGroup('speechRules', '', ['clearspeak-default'])
           ),
           this.rule(),
           this.submenu('A11yLanguage'),
@@ -794,61 +790,61 @@ export class Menu {
         this.submenu('Braille', [
           this.checkbox('Generate', 'braille'),
           this.checkbox('Subtitles', 'viewBraille'),
-          this.checkbox('BrailleSpeech', 'brailleSpeech', {
+          this.checkbox('Braille/Speech', 'brailleSpeech', {
             hidden: true,
           }),
-          this.checkbox('BrailleCombine', 'brailleCombine'),
+          this.checkbox('Braille/Combine', 'brailleCombine'),
           this.rule(),
-          this.label('Code'),
-          this.radioGroup('brailleCode', ['nemeth', 'ueb', 'euro']),
+          this.label('Label/Code'),
+          this.radioGroup('brailleCode', 'Braille', ['nemeth', 'ueb', 'euro']),
         ]),
         this.submenu('Explorer', [
           this.submenu('Highlight', [
             this.submenu(
               'Highlight/Background',
-              this.radioGroup('backgroundColor', [
-                'Highlight/Blue',
-                'Highlight/Red',
-                'Highlight/Green',
-                'Highlight/Yellow',
-                'Highlight/Cyan',
-                'Highlight/Magenta',
-                'Highlight/White',
-                'Highlight/Black',
+              this.radioGroup('backgroundColor', 'Highlight', [
+                'Blue',
+                'Red',
+                'Green',
+                'Yellow',
+                'Cyan',
+                'Magenta',
+                'White',
+                'Black',
               ])
             ),
             { type: 'slider', variable: 'backgroundOpacity', content: ' ' },
             this.submenu(
               'Highlight/Foreground',
-              this.radioGroup('foregroundColor', [
-                'Highlight/Black',
-                'Highlight/White',
-                'Highlight/Magenta',
-                'Highlight/Cyan',
-                'Highlight/Yellow',
-                'Highlight/Green',
-                'Highlight/Red',
-                'Highlight/Blue',
+              this.radioGroup('foregroundColor', 'Highlight', [
+                'Black',
+                'White',
+                'Magenta',
+                'Cyan',
+                'Yellow',
+                'Green',
+                'Red',
+                'Blue',
               ])
             ),
             { type: 'slider', variable: 'foregroundOpacity', content: ' ' },
             this.rule(),
-            this.radioGroup('highlight', [
-              'Highlight/None',
-              'Highlight/Hover',
-              'Highlight/Flame',
+            this.radioGroup('highlight', 'Highlight', [
+              'None',
+              'Hover',
+              'Flame',
             ]),
             this.rule(),
             this.checkbox('Highlight/TreeColoring', 'treeColoring'),
           ]),
           this.submenu('Magnification', [
-            this.radioGroup('magnification', [
-              'Magnification/None',
-              'Magnification/Keyboard',
-              'Magnification/Mouse',
+            this.radioGroup('magnification', 'Magnification', [
+              'None',
+              'Keyboard',
+              'Mouse',
             ]),
             this.rule(),
-            this.radioGroup('magnify', ['200%', '300%', '400%', '500%']),
+            this.radioGroup('magnify', '.', ['200%', '300%', '400%', '500%']),
           ]),
           this.submenu('Semantic/Info', [
             this.checkbox('Semantic/Type', 'infoType'),
@@ -857,30 +853,30 @@ export class Menu {
           ]),
           this.rule(),
           this.submenu('RoleDescription', [
-            this.radioGroup('roleDescription', [
-              AriaRoleDescription.EXPRESSION,
-              AriaRoleDescription.MATHJAX,
-              AriaRoleDescription.MATH,
-              AriaRoleDescription.CLICKABLE,
-              AriaRoleDescription.EXPLORABLE,
-              AriaRoleDescription.NONE,
+            this.radioGroup('roleDescription', Aria.roleDescPrefix, [
+              'MathJax expression',
+              'MathJax',
+              'math',
+              'clickable math',
+              'explorable math',
+              'none',
             ]),
           ]),
           this.checkbox('Tabbing/MathHelp', 'help'),
         ]),
         this.submenu('Options', [
-          this.checkbox('Enrich', 'enrich'),
-          this.checkbox('Collapsible', 'collapsible'),
-          this.checkbox('AutoCollapse', 'autocollapse', {
+          this.checkbox('Options/Enrich', 'enrich'),
+          this.checkbox('Options/Collapsible', 'collapsible'),
+          this.checkbox('Options/AutoCollapse', 'autocollapse', {
             disabled: true,
           }),
           this.rule(),
           this.checkbox('Tabbing/InTabOrder', 'inTabOrder'),
           this.submenu('Tabbing/TabSelects', [
-            this.radioGroup('tabSelects', ['Tabbing/all', 'Tabbing/last']),
+            this.radioGroup('tabSelects', 'Tabbing', ['all', 'last']),
           ]),
           this.rule(),
-          this.checkbox('AssistiveMml', 'assistiveMml'),
+          this.checkbox('Options/AssistiveMml', 'assistiveMml'),
         ]),
         this.rule(),
         this.command('About', () => this.about()),
@@ -889,7 +885,7 @@ export class Menu {
     }) as MJContextMenu;
     const menu = this.menu;
     menu.settings = this.settings;
-    menu.findID('Settings', 'Wide/WideExpressions', 'Wide/Elide').disable();
+    menu.findID('Settings', 'Wide/Expressions', 'Elide').disable();
     menu.findID('Braille', 'ueb').hide();
     menu.setJax(this.jax);
     this.checkLoadableItems();
@@ -1988,24 +1984,41 @@ export class Menu {
    * Create JSON for a group of connected radio buttons
    *
    * @param {string} variable   The (pool) variable to attach to each radio button
+   * @param {string} prefix     The prefix to use for localization, or '' for no localization
    * @param {string[]} radios   An array of [string] or [string, string], giving the id and content
    *                              for each radio button (if only one string is given it is used for both)
    * @returns {object[]}        An array of JSON objects for radion buttons
    */
-  public radioGroup(variable: string, radios: string[]): object[] {
-    return radios.map((item) => this.radio(item, variable));
+  public radioGroup(
+    variable: string,
+    prefix: string,
+    radios: string[]
+  ): object[] {
+    return radios.map((item) => this.radio(prefix, item, variable));
   }
 
   /**
    * Create JSON for a radio button item
    *
-   * @param {string} id           The id for the item
-   * @param {string} variable     The (pool) variable to attach to this radio button
-   * @param {object} other        Other values to include in the generated JSON object
-   * @returns {object}            The JSON for the radio button item
+   * @param {string} prefix     The prefix to use for localization, or '' for no localization
+   * @param {string} id         The id for the item
+   * @param {string} variable   The (pool) variable to attach to this radio button
+   * @param {object} other      Other values to include in the generated JSON object
+   * @returns {object}          The JSON for the radio button item
    */
-  public radio(id: string, variable: string, other: object = {}): object {
-    const content = id.match(/^\d+%$/) ? id : (localizeAria(id) ?? localize(id));
+  public radio(
+    prefix: string,
+    id: string,
+    variable: string,
+    other: object = {}
+  ): object {
+    const key = prefix ? `${prefix}/${id}` : id;
+    const content =
+      prefix === '.'
+        ? id
+        : prefix === Aria.roleDescPrefix
+          ? Aria.localize(key)
+          : localize(key);
     return Object.assign({ type: 'radio', id, content, variable }, other);
   }
 
