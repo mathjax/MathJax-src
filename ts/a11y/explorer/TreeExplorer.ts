@@ -35,7 +35,6 @@ export class AbstractTreeExplorer extends AbstractExplorer<void> {
     public pool: ExplorerPool,
     public region: Region<void>,
     protected node: HTMLElement,
-    protected mml: HTMLElement
   ) {
     super(document, pool, null, node);
   }

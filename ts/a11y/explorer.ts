@@ -22,13 +22,11 @@
  */
 
 import { Handler } from '../core/Handler.js';
-import { MmlNode } from '../core/MmlTree/MmlNode.js';
 import { MathML } from '../input/mathml.js';
 import { STATE, newState } from '../core/MathItem.js';
 import { SpeechMathItem, SpeechMathDocument, SpeechHandler } from './speech.js';
 import { MathDocumentConstructor } from '../core/MathDocument.js';
 import { OptionList, expandable } from '../util/Options.js';
-import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { hasWindow } from '../util/context.js';
 import { StyleJson } from '../util/StyleJson.js';
 import { context } from '../util/context.js';
@@ -112,20 +110,27 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
    * @param {HTMLElement} focus  The temporary focus element, if any
    */
   clearTemporaryFocus(focus: HTMLElement): void;
+
+  /**
+   * Get all nodes with the same semantic id (multiple nodes if there
+   * are line breaks).
+   *
+   * @param {HTMLElement} node  The node to check if it is split
+   * @returns {HTMLElement[]}   All the nodes for the given id
+   */
+  getSplitNodes(node: HTMLElement): HTMLElement[];
 }
 
 /**
  * The mixin for adding the Explorer to MathItems
  *
  * @param {B} BaseMathItem      The MathItem class to be extended
- * @param {Function} toMathML   The function to serialize the internal MathML
  * @returns {ExplorerMathItem}  The Explorer MathItem class
  *
  * @template B  The MathItem class to extend
  */
 export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
   BaseMathItem: B,
-  toMathML: (node: MmlNode) => string
 ): Constructor<ExplorerMathItem> & B {
   return class BaseClass extends BaseMathItem {
     /**
@@ -214,11 +219,10 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
       if (this.state() >= STATE.EXPLORER) return;
       if (!this.isEscaped && (document.options.enableExplorer || force)) {
         const node = this.typesetRoot;
-        const mml = toMathML(this.root);
         if (!this.explorers) {
           this.explorers = new ExplorerPool();
         }
-        this.explorers.init(document, node, mml, this);
+        this.explorers.init(document, node, this);
       }
       this.state(STATE.EXPLORER);
     }
@@ -281,6 +285,25 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         const promise = this.outputData.speechPromise ?? Promise.resolve();
         promise.then(() => setTimeout(() => focus.remove(), 100));
       }
+    }
+
+    /**
+     * Get all nodes with the same semantic id (multiple nodes if there are line breaks).
+     *
+     * @param {HTMLElement} node  The node to check if it is split
+     * @returns {HTMLElement[]}   All the nodes for the given id
+     */
+    public getSplitNodes(node: HTMLElement): HTMLElement[] {
+      const id = node.getAttribute('data-semantic-id');
+      if (!id) {
+        return [node];
+      }
+      const nodes = (this.semanticNodes.get(id) ?? [id]).map(
+        (nid: string) => Array.from(
+          this.typesetRoot.querySelectorAll(`[data-semantic-id="${nid}"]`)
+        )
+      ).flat() as HTMLElement[];
+      return nodes;
     }
   };
 }
@@ -499,15 +522,12 @@ export function ExplorerMathDocumentMixin<
       if (!ProcessBits.has('explorer')) {
         ProcessBits.allocate('explorer');
       }
-      const visitor = new SerializedMmlVisitor(this.mmlFactory);
-      const toMathML = (node: MmlNode) => visitor.visitTree(node);
       const options = this.options;
       if (!options.a11y.speechRules) {
         options.a11y.speechRules = `${options.sre.domain}-${options.sre.style}`;
       }
       const mathItem = (options.MathItem = ExplorerMathItemMixin(
-        options.MathItem,
-        toMathML
+        options.MathItem
       ));
       mathItem.roleDescription = options.roleDescription;
       this.explorerRegions = new RegionPool(this);

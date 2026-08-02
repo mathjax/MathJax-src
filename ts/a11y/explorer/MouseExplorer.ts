@@ -21,9 +21,10 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { A11yDocument, DummyRegion, Region } from './Region.js';
+import { A11yDocument, DummyRegion, Region, HoverRegion, ToolTip } from './Region.js';
 import { Explorer, AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
+import type { ExplorerMathItem } from '../explorer.js';
 import '../sre.js';
 
 /**
@@ -102,6 +103,7 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    *    will fire the hoverer.
    * @param {(node: HTMLElement) => T} nodeAccess Accessor to extract node value
    *    that is passed to the region.
+   * @param {ExplorerMathItem} item The MathItem for this explorer
    */
   protected constructor(
     public document: A11yDocument,
@@ -109,7 +111,8 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     public region: Region<T>,
     protected node: HTMLElement,
     protected nodeQuery: (node: HTMLElement) => boolean,
-    protected nodeAccess: (node: HTMLElement) => T
+    protected nodeAccess: (node: HTMLElement) => T,
+    protected item: ExplorerMathItem = null
   ) {
     super(document, pool, region, node);
   }
@@ -135,6 +138,14 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     }
     this.highlighter.unhighlight();
     this.highlighter.highlight([node]);
+    this.display(node, kind);
+  }
+
+  /**
+   * @param {HTMLElement} node   The target node to update
+   * @param {T} kind             The target kind to update
+   */
+  protected display(node: HTMLElement, kind: T) {
     this.region.Update(kind);
     this.region.Show(node);
   }
@@ -178,7 +189,27 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
  * @class
  * @augments {Hoverer}
  */
-export class ValueHoverer extends Hoverer<string> {}
+export class ValueHoverer extends Hoverer<string> {
+  /**
+   * @override
+   */
+  protected constructor(
+    document: A11yDocument,
+    pool: ExplorerPool,
+    region: ToolTip,
+    node: HTMLElement,
+    attr: string,
+  ) {
+    super(
+      document,
+      pool,
+      region,
+      node,
+      (x) => x.hasAttribute?.(attr),
+      (x) => x.getAttribute?.(attr)
+    );
+  }
+}
 
 /**
  * Hoverer that displays node content (e.g., for magnification).
@@ -186,7 +217,34 @@ export class ValueHoverer extends Hoverer<string> {}
  * @class
  * @augments {Hoverer}
  */
-export class ContentHoverer extends Hoverer<HTMLElement> {}
+export class ContentHoverer extends Hoverer<HTMLElement> {
+  /**
+   * @override
+   */
+  protected constructor(
+    document: A11yDocument,
+    pool: ExplorerPool,
+    public region: HoverRegion,
+    node: HTMLElement,
+    item: ExplorerMathItem,
+  ) {
+    super(
+      document,
+      pool,
+      region,
+      node,
+      (x) => x.hasAttribute?.('data-semantic-id'),
+      (x) => x,
+      item
+    );
+  }
+
+  display(node: HTMLElement) {
+    this.item.parseSemanticNodes();
+    this.region.splitNodes = this.item.getSplitNodes(node);
+    this.region.Show(node);
+  }
+}
 
 /**
  * Highlights maction nodes on hovering.
@@ -199,10 +257,10 @@ export class FlameHoverer extends Hoverer<void> {
    * @override
    */
   protected constructor(
-    public document: A11yDocument,
-    public pool: ExplorerPool,
+    document: A11yDocument,
+    pool: ExplorerPool,
     _ignore: any,
-    protected node: HTMLElement
+    node: HTMLElement
   ) {
     super(
       document,

@@ -1076,7 +1076,7 @@ export class SpeechExplorer
     this.current = node;
     this.currentMark = -1;
     if (this.current) {
-      const parts = [...this.getSplitNodes(this.current)];
+      const parts = [...this.item.getSplitNodes(this.current)];
       this.highlighter.encloseNodes(parts, this.node);
       for (const part of parts) {
         if (!part.getAttribute('data-sre-enclosed')) {
@@ -1092,23 +1092,6 @@ export class SpeechExplorer
     // Done making changes
     //
     this.node.removeAttribute('aria-busy');
-  }
-
-  /**
-   * Get all nodes with the same semantic id (multiple nodes if there are line breaks).
-   *
-   * @param {HTMLElement} node  The node to check if it is split
-   * @returns {HTMLElement[]}   All the nodes for the given id
-   */
-  protected getSplitNodes(node: HTMLElement): HTMLElement[] {
-    const id = this.nodeId(node);
-    if (!id) {
-      return [node];
-    }
-    const nodes = (this.item.semanticNodes.get(id) ?? [id]).map(
-      (nid) => Array.from(this.node.querySelectorAll(`[data-semantic-id="${nid}"]`))
-    ).flat() as HTMLElement[];
-    return nodes;
   }
 
   /**
@@ -1700,7 +1683,6 @@ export class SpeechExplorer
    * @param {HTMLElement} node The node the explorer is assigned to.
    * @param {LiveRegion} brailleRegion The braille region.
    * @param {HoverRegion} magnifyRegion The magnification region.
-   * @param {MmlNode} _mml The internal math node.
    * @param {ExplorerMathItem} item The math item.
    * @class
    * @augments {AbstractExplorer}
@@ -1712,7 +1694,6 @@ export class SpeechExplorer
     protected node: HTMLElement,
     public brailleRegion: LiveRegion,
     public magnifyRegion: HoverRegion,
-    _mml: MmlNode,
     public item: ExplorerMathItem
   ) {
     super(document, pool, null, node);
@@ -1782,6 +1763,7 @@ export class SpeechExplorer
       this.brailleRegion.Show(this.node);
     }
     if (a11y.keyMagnifier) {
+      this.magnifyRegion.splitNodes = this.item.getSplitNodes(this.current);
       this.magnifyRegion.Show(this.current);
     }
     this.Update();
@@ -1820,6 +1802,7 @@ export class SpeechExplorer
         this.brailleRegion
       );
     }
+    this.magnifyRegion.splitNodes = this.item.getSplitNodes(this.current);
     this.magnifyRegion.Update(this.current);
   }
 
