@@ -12,6 +12,6 @@
   "Unix/Title": "Unix utilizando Orca",
   "Unknown/Title": "un lector de pantalla",
   "Win/Braille": "Los usuarios de NVDA necesitan seleccionar esta opción, mientras que los usuarios de JAWS deberían ser capaces de obtener salida de Braille sin cambiar esta configuración.",
-  "Win/Select": "El lector de pantalla debería entrar automáticamente en modo de foco o formulario cuando la expresión recibe el foco del navegador; si no es así, puede alternar el modo de foco con NVDA+espacio en NVDA; en JAWS, Intro debería iniciar el modo de formulario, mientras que la tecla Más del teclado numérico lo cierra.  Tenga en cuenta también que puede usar la tecla NVDA o JAWS junto con las teclas de flecha para explorar la expresión incluso en modo de navegación, y puede usar NVDA+Mayús+teclas de flecha para salir de una expresión que tiene el foco en NVDA",
-  "Win/Title": "Windows con NVDA o JAWS"
+  "Win/Select": "El lector de pantalla debería entrar automáticamente en focus mode o formulario cuando la expresión recibe el focus del navegador; si no es así, puede alternar el modo de focus con NVDA+espacio en NVDA; en JAWS, Intro debería iniciar el modo de formulario, mientras que la tecla Más del teclado numérico lo cierra.  Tenga en cuenta también que puede usar la tecla NVDA o JAWS junto con las teclas de flecha para explorar la expresión incluso en modo de navegación, y puede usar NVDA+Mayús+teclas de flecha para salir de una expresión que tiene el focus en NVDA",
+  "Win/Title": "Windows utilizando NVDA o JAWS"
 }
