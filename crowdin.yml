@@ -1,5 +1,4 @@
 files:
-  - source: "/**/__locales__/*.json"
-    translation: "/**/__locales__/%two_letters_code%.json"
-
-preserve_hierarchy: true
+  - source: /**/__locales__/*.json
+    translation: /**/__locales__/%two_letters_code%.json
+preserve_hierarchy: 1
