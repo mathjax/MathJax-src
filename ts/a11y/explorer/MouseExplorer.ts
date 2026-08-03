@@ -115,30 +115,57 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     protected item: ExplorerMathItem = null
   ) {
     super(document, pool, region, node);
+    const top = this.node.querySelector('[data-semantic-structure]') || this.node;
+    this.topBBox = top.getBoundingClientRect();
+    this.nodeBBox = this.node.getBoundingClientRect();
+  }
+
+  protected current: HTMLElement;
+  protected listener = this.MouseMove.bind(this);
+  protected listening: boolean = false;
+  protected topBBox: DOMRect;
+  protected nodeBBox: DOMRect;
+
+  protected inBBox(x: number, y:number, bbox: DOMRect) {
+    const {left, right, top, bottom} = bbox;
+    return x >= left && x <= right && y >=top && y <= bottom;
   }
 
   /**
    * @override
    */
   public MouseOut(event: MouseEvent) {
-    this.highlighter.unhighlight();
-    this.region.Hide();
-    super.MouseOut(event);
+    if (!this.inBBox(event.x, event.y, this.topBBox)) {
+      this.highlighter.unhighlight();
+      this.region.Hide();
+      super.MouseOut(event);
+      this.current = null;
+    }
+    if (!this.inBBox(event.x, event.y, this.nodeBBox)) {
+      this.node.removeEventListener('mousemove', this.listener);
+      this.listening = false;
+    }
+  }
+
+  public MouseMove(event: MouseEvent) {
+      const target = event.target as HTMLElement;
+      const node = this.findClicked(target, event.x, event.y);
+      if (node && node !== this.current) {
+        this.current = node;
+        this.highlighter.unhighlight();
+        this.display(node, this.nodeAccess(node));
+      }
   }
 
   /**
    * @override
    */
   public MouseOver(event: MouseEvent) {
-    super.MouseOver(event);
-    const target = event.target as HTMLElement;
-    const [node, kind] = this.getNode(target);
-    if (!node) {
-      return;
+    if (!this.listening && this.inBBox(event.x, event.y, this.nodeBBox)) {
+      super.MouseOver(event);
+      this.node.addEventListener('mousemove', this.listener);
+      this.listening = true;
     }
-    this.highlighter.unhighlight();
-    this.highlighter.highlight([node]);
-    this.display(node, kind);
   }
 
   /**
@@ -146,40 +173,65 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * @param {T} kind             The target kind to update
    */
   protected display(node: HTMLElement, kind: T) {
+    this.highlighter.highlight([node]);
     this.region.Update(kind);
     this.region.Show(node);
   }
 
-  /**
-   * Retrieves the closest node on which the node query fires. Thereby closest
-   * is defined as:
-   * 1. The node or its ancestor on which the query is true.
-   * 2. In case 1 does not exist the left-most child on which query is true.
-   * 3. Otherwise fails.
-   *
-   * @param {HTMLElement} node The node on which the mouse event fired.
-   * @returns {[HTMLElement, T]} Node and output pair if successful.
-   */
-  public getNode(node: HTMLElement): [HTMLElement, T] {
-    const original = node;
-    while (node && node !== this.node) {
-      if (this.nodeQuery(node)) {
-        return [node, this.nodeAccess(node)];
-      }
-      node = node.parentNode as HTMLElement;
+  protected findClicked(
+    node: HTMLElement,
+    x: number,
+    y: number,
+    skip: HTMLElement[] = [],
+    icon: HTMLElement = null
+  ): HTMLElement {
+    let found = null;
+    //
+    // Check if the click is on the info icon and return that if it is.
+    //
+    if (icon && (icon === node || icon.contains(node))) {
+      return icon;
     }
-    node = original;
-    while (node) {
-      if (this.nodeQuery(node)) {
-        return [node, this.nodeAccess(node)];
+    //
+    // For SVG, look through the tree to find the element whose bounding box
+    // contains the click (x,y) position.
+    //
+    let clicked = this.node;
+    while (clicked) {
+      if (clicked.matches('[data-semantic-id]')) {
+        found = clicked; // could be this node, but check if (x,y) is in a child
       }
-      const child = node.childNodes[0] as HTMLElement;
-      node =
-        child && child.tagName === 'defs' // This is for SVG.
-          ? (node.childNodes[1] as HTMLElement)
-          : child;
+      const nodes = Array.from(clicked.childNodes) as HTMLElement[];
+      clicked = null;
+      for (let child of nodes) {
+        //
+        // Skip text or comment nodes
+        //
+        if (child.nodeName.charAt(0) === '#') {
+          continue;
+        }
+        //
+        // Move inside nodes used for tables with labels
+        // (for HTML they have 0 height and for SVG they are huge)
+        //
+        if (
+          child.nodeName.toLowerCase() === 'mjx-labels' ||
+          child.hasAttribute?.('data-table') ||
+          child.hasAttribute?.('data-labels')
+        ) {
+          child = child.firstChild as HTMLElement;
+        }
+        if (
+          !skip.includes(child) &&
+          child.nodeName.toLowerCase() !== 'rect' &&
+          this.inBBox(x, y, child.getBoundingClientRect() as DOMRect)
+        ) {
+          clicked = child;
+          break;
+        }
+      }
     }
-    return [null, null];
+    return found;
   }
 }
 
@@ -239,9 +291,14 @@ export class ContentHoverer extends Hoverer<HTMLElement> {
     );
   }
 
+  /**
+   * @override
+   */
   display(node: HTMLElement) {
     this.item.parseSemanticNodes();
-    this.region.splitNodes = this.item.getSplitNodes(node);
+    let parts = this.region.splitNodes = this.item.getSplitNodes(node);
+    parts = this.highlighter.encloseNodes([...parts], this.node);
+    this.highlighter.highlight(parts);
     this.region.Show(node);
   }
 }

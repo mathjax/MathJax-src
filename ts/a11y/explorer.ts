@@ -402,7 +402,7 @@ export function ExplorerMathDocumentMixin<
      * Styles to add for speech
      */
     public static speechStyles: StyleJson = {
-      'mjx-container[has-speech="true"]': {
+      'mjx-container /* explorers */': {
         position: 'relative',
         cursor: 'default',
       },

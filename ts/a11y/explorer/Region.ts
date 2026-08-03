@@ -812,7 +812,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
         if (math.nodeName === 'MJX-BBOX') {
           math = math.nextSibling;
         }
-        mjx = math.cloneNode(false);
+        mjx = math.cloneNode(false) as HTMLElement;
         const enclosed = this.splitNodes;
         math.nodeName === 'svg'
           ? this.svgClone(node, enclosed, mjx, container)
@@ -898,7 +898,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     ) {
       mjx.innerHTML = '';
       mjx.appendChild(container.cloneNode(true).firstChild);
-      mjx.querySelector('.mjx-selected').setAttribute('data-mjx-clone', 'true');
+      mjx.querySelector('.mjx-selected')?.setAttribute('data-mjx-clone', 'true');
       mjx.querySelector('[data-sre-highlighter-added]')?.remove();
       return;
     }
