@@ -1,1 +1,4 @@
-{}
+{
+  "MathMacro": "%1 understøttes kun i matematiktilstand",
+  "MathModeOnly": "'%1' er kun tilladt i matematiktilstand"
+}

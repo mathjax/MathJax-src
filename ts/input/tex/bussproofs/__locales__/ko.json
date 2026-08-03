@@ -1,1 +1,9 @@
-{}
+{
+  "BadProofTree": "증명 트리가 잘못 지정되었습니다.",
+  "EnvMissingEnd": "\\end{%1}이(가) 없습니다",
+  "IllegalProofCommand": "증명 명령은 prooftree 환경에서만 허용됩니다.",
+  "IllegalUseOfCommand": "%1의 사용이 정의와 일치하지 않습니다.",
+  "MissingDisplayProof": "증명 트리를 표시하려면 %1이(가) 필요합니다.",
+  "MissingProofCommand": "%2에 %1이(가) 없습니다.",
+  "RequiresOutputJax": "bussproofs 확장 기능에는 getBBox() 메서드가 있는 output jax가 필요합니다"
+}

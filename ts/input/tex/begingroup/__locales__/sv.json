@@ -1,1 +1,4 @@
-{}
+{
+  "IllegalGlobal": "Ogiltig användning av %1",
+  "MissingBegingroup": "\\begingroup saknas, eller överflödig \\endgroup"
+}

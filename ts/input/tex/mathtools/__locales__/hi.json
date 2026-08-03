@@ -1,1 +1,16 @@
-{}
+{
+  "AlreadyDefined": "%1 पहले से ही परिभाषित है",
+  "BadWidth": "%1 की चौड़ाई एक आयाम होनी चाहिए",
+  "BetweenLines": "%1 अपनी पंक्ति में अकेला होना चाहिए",
+  "CommadExists": "कमांड %1 पहले से ही परिभाषित है",
+  "CommandAtTheBeginingOfLine": "%1 पंक्ति की शुरुआत में होना चाहिए",
+  "CommandInMultlined": "%1 केवल multline या multlined परिवेश के भीतर ही दिखाई दे सकता है",
+  "DuplicateTagForm": "डुप्लिकेट टैग फ़ॉर्म: %1",
+  "ForbiddenMathtoolsSet": "%1 अक्षम है",
+  "InvalidTagFormDef": "\"%1\" के लिए टैग फ़ॉर्म परिभाषा तीन स्ट्रिंग्स की एक सरणी होनी चाहिए",
+  "InvalidTagFormID": "टैग फ़ॉर्म नाम खाली नहीं हो सकता",
+  "NotANumber": "%1 का तर्क एक संख्या नहीं है",
+  "NotInAlignment": "%1 का उपयोग केवल संरेखण परिवेश में किया जा सकता है",
+  "TagsNotMT": "%1 का उपयोग केवल ams या mathtools टैग के साथ किया जा सकता है",
+  "UndefinedTagForm": "अपरिभाषित टैग फ़ॉर्म: %1"
+}

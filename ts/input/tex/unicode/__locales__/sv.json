@@ -1,1 +1,6 @@
-{}
+{
+  "BadFont": "Typsnittsnamnet för %1 får inte innehålla semikolon",
+  "BadUnicode": "Argumentet till %1 måste vara ett tal",
+  "InvalidAlphanumeric": "Ogiltig alfanumerisk konstant för %1",
+  "MissingNumber": "Numerisk konstant saknas för %1"
+}

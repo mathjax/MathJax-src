@@ -1,1 +1,9 @@
-{}
+{
+  "BadProofTree": "Bevisträdet är felaktigt angivet.",
+  "EnvMissingEnd": "\\end{%1} saknas",
+  "IllegalProofCommand": "Bevis-kommandon är endast tillåtna i prooftree-miljön.",
+  "IllegalUseOfCommand": "Användningen av %1 stämmer inte överens med dess definition.",
+  "MissingDisplayProof": "%1 saknas för att visa bevisträdet.",
+  "MissingProofCommand": "%1 saknas i %2.",
+  "RequiresOutputJax": "bussproofs-tillägget kräver en output jax med en getBBox()-metod"
+}

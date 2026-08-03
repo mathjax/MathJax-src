@@ -1,1 +1,4 @@
-{}
+{
+  "InvalidNumber": "Ongeldige getal",
+  "ExtraOrMissingDelims": "Oortollige openings- of ontbrekende sluitingsafbakenteken"
+}

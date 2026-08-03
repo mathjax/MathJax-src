@@ -1,1 +1,8 @@
-{}
+{
+  "BadColorValue": "Ugyldig fargeverdi",
+  "InvalidDecimalNumber": "Ugyldig desimaltall",
+  "InvalidNumber": "Ugyldig tall",
+  "ModelArg1": "Fargeverdier for %1-modellen krever 3 tall",
+  "ModelArg2": "Fargeverdier for %1-modellen må være mellom %2 og %3",
+  "UndefinedColorModel": "Fargemodellen '%1' er ikke definert"
+}

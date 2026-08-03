@@ -1,1 +1,16 @@
-{}
+{
+  "AlreadyDefined": "%1 är redan definierat",
+  "BadWidth": "Bredden för %1 måste vara en dimension",
+  "BetweenLines": "%1 måste stå ensamt på sin egen rad",
+  "CommadExists": "Kommandot %1 är redan definierat",
+  "CommandAtTheBeginingOfLine": "%1 måste stå i början av raden",
+  "CommandInMultlined": "%1 kan bara förekomma inom multline- eller multlined-miljöerna",
+  "DuplicateTagForm": "Dubblerad taggform: %1",
+  "ForbiddenMathtoolsSet": "%1 är inaktiverat",
+  "InvalidTagFormDef": "Taggform-definitionen för \"%1\" måste vara en array med tre strängar",
+  "InvalidTagFormID": "Taggformens namn får inte vara tomt",
+  "NotANumber": "Argumentet till %1 är inte ett tal",
+  "NotInAlignment": "%1 kan endast användas i justeringsmiljöer",
+  "TagsNotMT": "%1 kan endast användas med ams- eller mathtools-taggar",
+  "UndefinedTagForm": "Odefinierad taggform: %1"
+}

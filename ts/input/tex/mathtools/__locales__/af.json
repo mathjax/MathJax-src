@@ -1,1 +1,16 @@
-{}
+{
+  "AlreadyDefined": "%1 is reeds gedefinieer",
+  "BadWidth": "Wydte vir %1 moet 'n afmeting wees",
+  "BetweenLines": "%1 moet alleen op sy eie ry wees",
+  "CommadExists": "Opdrag %1 is reeds gedefinieer",
+  "CommandAtTheBeginingOfLine": "%1 moet aan die begin van die reël wees",
+  "CommandInMultlined": "%1 kan slegs binne die multline- of multlined-omgewings voorkom",
+  "DuplicateTagForm": "Dubbele merkervorm: %1",
+  "ForbiddenMathtoolsSet": "%1 is gedeaktiveer",
+  "InvalidTagFormDef": "Die merkervorm-definisie vir \"%1\" moet 'n skikking van drie stringe wees",
+  "InvalidTagFormID": "Merkervormnaam mag nie leeg wees nie",
+  "NotANumber": "Argument vir %1 is nie 'n getal nie",
+  "NotInAlignment": "%1 kan slegs in belyningsomgewings gebruik word",
+  "TagsNotMT": "%1 kan slegs met ams- of mathtools-merkers gebruik word",
+  "UndefinedTagForm": "Ongedefinieerde merkervorm: %1"
+}

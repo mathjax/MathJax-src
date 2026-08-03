@@ -1,1 +1,8 @@
-{}
+{
+  "BadColorValue": "잘못된 색상 값",
+  "InvalidDecimalNumber": "잘못된 십진수",
+  "InvalidNumber": "잘못된 숫자",
+  "ModelArg1": "%1 모델의 색상 값에는 3개의 숫자가 필요합니다",
+  "ModelArg2": "%1 모델의 색상 값은 %2와(과) %3 사이여야 합니다",
+  "UndefinedColorModel": "색상 모델 '%1'이(가) 정의되지 않았습니다"
+}

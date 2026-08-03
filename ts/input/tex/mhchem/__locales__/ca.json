@@ -1,1 +1,5 @@
-{}
+{
+  "MhchemBug": "Error de mhchem %1. Informeu-ne, si us plau.",
+  "MhchemBug2": "Error de mhchem %1. Informeu-ne, si us plau. (%2)",
+  "MhchemErrorBond": "Error de mhchem. Tipus d'enllaç desconegut (%1)"
+}

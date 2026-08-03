@@ -1,1 +1,11 @@
-{}
+{
+  "BadMathStyleFor": "%1 के लिए गलत गणित शैली",
+  "CommandAtTheBeginingOfLine": "%1 पंक्ति की शुरुआत में होना चाहिए",
+  "CommandNotAllowedInEnv": "%1 की %2 परिवेश में अनुमति नहीं है",
+  "CommandOnlyAllowedInEnv": "%1 केवल %2 परिवेश में ही अनुमत है",
+  "IllegalAlign": "%1 में अवैध संरेखण निर्दिष्ट किया गया",
+  "MultipleCommand": "एकाधिक %1",
+  "MultlineRowsOneCol": "%1 परिवेश के भीतर पंक्तियों में ठीक एक ही स्तंभ होना चाहिए",
+  "PositiveIntegerArg": "%1 का तर्क एक धनात्मक पूर्णांक होना चाहिए",
+  "XalignOverflow": "%2 की पंक्ति में अतिरिक्त %1"
+}
