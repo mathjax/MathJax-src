@@ -390,6 +390,7 @@ class SvgHighlighter extends AbstractHighlighter {
       part.getAttribute('transform')
     );
     rect.setAttribute(ATTR.BBOX, 'true');
+    rect.setAttribute(ATTR.ADDED, 'true');
     part.parentNode.insertBefore(rect, part);
     return rect;
   }
@@ -490,6 +491,8 @@ class ChtmlHighlighter extends AbstractHighlighter {
     enclosure.style.left = x - base.left + 'px';
     enclosure.style.top = y - h - base.top + 'px';
     enclosure.style.position = 'absolute';
+    enclosure.setAttribute(ATTR.BBOX, 'true');
+    enclosure.setAttribute(ATTR.ADDED, 'true');
     node.prepend(enclosure);
     return enclosure;
   }

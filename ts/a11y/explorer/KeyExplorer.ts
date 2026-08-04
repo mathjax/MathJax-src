@@ -26,6 +26,7 @@ import { STATE } from '../../core/MathItem.js';
 import type { ExplorerMathItem, ExplorerMathDocument } from '../explorer.js';
 import { Explorer, AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
+import { ATTR } from './Highlighter.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, SemAttr } from '../speech/SpeechUtil.js';
 import { GeneratorPool } from '../speech/GeneratorPool.js';
@@ -463,7 +464,7 @@ export class SpeechExplorer
     //   otherwise record the click for the focusin handler
     //
     document.getSelection()?.removeAllRanges();
-    if ((event.target as HTMLElement).getAttribute('sre-highlighter-added')) {
+    if ((event.target as HTMLElement).getAttribute(ATTR.ADDED)) {
       this.refocus = clicked;
     } else {
       this.clicked = clicked;
@@ -1091,7 +1092,7 @@ export class SpeechExplorer
       const parts = [...this.item.getSplitNodes(this.current)];
       this.highlighter.encloseNodes(parts, this.node);
       for (const part of parts) {
-        if (!part.getAttribute('data-sre-enclosed')) {
+        if (!part.getAttribute(ATTR.ENCLOSED)) {
           part.classList.add('mjx-selected');
         }
       }

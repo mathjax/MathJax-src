@@ -22,7 +22,7 @@
  */
 
 import { A11yDocument, Region } from './Region.js';
-import { Highlighter } from './Highlighter.js';
+import { Highlighter, ATTR } from './Highlighter.js';
 
 import type { ExplorerPool } from './ExplorerPool.js';
 
@@ -327,7 +327,10 @@ export class AbstractExplorer<T> implements Explorer {
         //
         // Skip text or comment nodes
         //
-        if (child.nodeName.charAt(0) === '#') {
+        if (
+          child.nodeName.charAt(0) === '#' ||
+          child.hasAttribute?.(ATTR.ADDED)
+        ) {
           continue;
         }
         //
@@ -336,15 +339,15 @@ export class AbstractExplorer<T> implements Explorer {
         //
         if (
           child.nodeName.toLowerCase() === 'mjx-labels' ||
-            child.hasAttribute?.('data-table') ||
-            child.hasAttribute?.('data-labels')
+          child.hasAttribute?.('data-table') ||
+          child.hasAttribute?.('data-labels')
         ) {
           child = child.firstChild as HTMLElement;
         }
         if (
           !skip.includes(child) &&
-            child.nodeName.toLowerCase() !== 'rect' &&
-            this.inBBox(x, y, child.getBoundingClientRect() as DOMRect)
+          child.nodeName.toLowerCase() !== 'rect' &&
+          this.inBBox(x, y, child.getBoundingClientRect() as DOMRect)
         ) {
           clicked = child;
           break;
