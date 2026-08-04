@@ -92,6 +92,31 @@ export abstract class AbstractMouseExplorer<T>
  */
 export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
   /**
+   * The currently selected element
+   */
+  protected current: HTMLElement;
+
+  /**
+   * The mousemove event handler (added after a mouseover)
+   */
+  protected listener = this.MouseMove.bind(this);
+
+  /**
+   * True if the mousemove listener has been added
+   */
+  protected listening: boolean = false;
+
+  /**
+   * The bounding box for the box with data-semantic-structure
+   */
+  protected topBBox: DOMRect;
+
+  /**
+   * The bounding box for the top-level node
+   */
+  protected nodeBBox: DOMRect;
+
+  /**
    * @class
    * @augments {AbstractMouseExplorer<T>}
    *
@@ -120,17 +145,6 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     this.nodeBBox = this.node.getBoundingClientRect();
   }
 
-  protected current: HTMLElement;
-  protected listener = this.MouseMove.bind(this);
-  protected listening: boolean = false;
-  protected topBBox: DOMRect;
-  protected nodeBBox: DOMRect;
-
-  protected inBBox(x: number, y:number, bbox: DOMRect) {
-    const {left, right, top, bottom} = bbox;
-    return x >= left && x <= right && y >=top && y <= bottom;
-  }
-
   /**
    * @override
    */
@@ -147,16 +161,6 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     }
   }
 
-  public MouseMove(event: MouseEvent) {
-      const target = event.target as HTMLElement;
-      const node = this.findClicked(target, event.x, event.y);
-      if (node && node !== this.current) {
-        this.current = node;
-        this.highlighter.unhighlight();
-        this.display(node, this.nodeAccess(node));
-      }
-  }
-
   /**
    * @override
    */
@@ -168,6 +172,15 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     }
   }
 
+  public MouseMove(event: MouseEvent) {
+    const node = this.nodeAtXY(event, this.nodeQuery);
+    if (node && node !== this.current) {
+      this.current = node;
+      this.highlighter.unhighlight();
+      this.display(node, this.nodeAccess(node));
+    }
+  }
+
   /**
    * @param {HTMLElement} node   The target node to update
    * @param {T} kind             The target kind to update
@@ -176,62 +189,6 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     this.highlighter.highlight([node]);
     this.region.Update(kind);
     this.region.Show(node);
-  }
-
-  protected findClicked(
-    node: HTMLElement,
-    x: number,
-    y: number,
-    skip: HTMLElement[] = [],
-    icon: HTMLElement = null
-  ): HTMLElement {
-    let found = null;
-    //
-    // Check if the click is on the info icon and return that if it is.
-    //
-    if (icon && (icon === node || icon.contains(node))) {
-      return icon;
-    }
-    //
-    // For SVG, look through the tree to find the element whose bounding box
-    // contains the click (x,y) position.
-    //
-    let clicked = this.node;
-    while (clicked) {
-      if (clicked.matches('[data-semantic-id]')) {
-        found = clicked; // could be this node, but check if (x,y) is in a child
-      }
-      const nodes = Array.from(clicked.childNodes) as HTMLElement[];
-      clicked = null;
-      for (let child of nodes) {
-        //
-        // Skip text or comment nodes
-        //
-        if (child.nodeName.charAt(0) === '#') {
-          continue;
-        }
-        //
-        // Move inside nodes used for tables with labels
-        // (for HTML they have 0 height and for SVG they are huge)
-        //
-        if (
-          child.nodeName.toLowerCase() === 'mjx-labels' ||
-          child.hasAttribute?.('data-table') ||
-          child.hasAttribute?.('data-labels')
-        ) {
-          child = child.firstChild as HTMLElement;
-        }
-        if (
-          !skip.includes(child) &&
-          child.nodeName.toLowerCase() !== 'rect' &&
-          this.inBBox(x, y, child.getBoundingClientRect() as DOMRect)
-        ) {
-          clicked = child;
-          break;
-        }
-      }
-    }
-    return found;
   }
 }
 
@@ -294,7 +251,7 @@ export class ContentHoverer extends Hoverer<HTMLElement> {
   /**
    * @override
    */
-  display(node: HTMLElement) {
+  protected display(node: HTMLElement) {
     this.item.parseSemanticNodes();
     let parts = this.region.splitNodes = this.item.getSplitNodes(node);
     parts = this.highlighter.encloseNodes([...parts], this.node);

@@ -444,10 +444,11 @@ export class SpeechExplorer
     //
     // Get the speech element that was clicked
     //
-    const clicked = this.findClicked(
-      event.target as HTMLElement,
-      event.x,
-      event.y
+    const clicked = this.nodeAtXY(
+      event,
+      (node) => node.matches('[data-speech-node]'),
+      [this.speech, this.img],
+      this.document.infoIcon
     );
     //
     // If it is the info icon, top the event and let the click handler process it
@@ -489,10 +490,11 @@ export class SpeechExplorer
     //
     // Get the speech element that was clicked
     //
-    const clicked = this.findClicked(
-      event.target as HTMLElement,
-      event.x,
-      event.y
+    const clicked = this.nodeAtXY(
+      event,
+      (node) => node.matches('[data-speech-node]'),
+      [this.speech, this.img],
+      this.document.infoIcon
     );
     //
     // If it was the info icon, open the help dialog
@@ -501,6 +503,16 @@ export class SpeechExplorer
       this.stopEvent(event);
       this.help();
       return;
+    }
+    //
+    // If we have a key magnifier but no speech or Braille, show the clicked node
+    //
+    if (clicked && this.clicked) {
+      const {speech, braille, keyMagnifier} = this.document.options.a11y;
+      if (!speech && !braille && keyMagnifier) {
+        this.setCurrent(clicked);
+        return;
+      }
     }
     //
     // If the node contains the clicked element,
@@ -1546,58 +1558,6 @@ export class SpeechExplorer
   }
 
   /**
-   * Find the speech node that was clicked, if any
-   *
-   * @param {HTMLElement} node   The target node that was clicked
-   * @param {number} x           The x-coordinate of the click
-   * @param {number} y           The y-coordinate of the click
-   * @returns {HTMLElement}      The clicked node or null
-   */
-  protected findClicked(node: HTMLElement, x: number, y: number): HTMLElement {
-    //
-    // Check if the click is on the info icon and return that if it is.
-    //
-    const icon = this.document.infoIcon;
-    if (icon === node || icon.contains(node)) {
-      return icon;
-    }
-    //
-    // For CHTML, get the closest navigable parent element.
-    //
-    if (this.node.getAttribute('jax') !== 'SVG') {
-      return node.closest(nav) as HTMLElement;
-    }
-    //
-    // For SVG, look through the tree to find the element whose bounding box
-    // contains the click (x,y) position.
-    //
-    let found = null;
-    let clicked = this.node;
-    while (clicked) {
-      if (clicked.matches(nav)) {
-        found = clicked; // could be this node, but check if a child is clicked
-      }
-      const nodes = Array.from(clicked.childNodes) as HTMLElement[];
-      clicked = null;
-      for (const child of nodes) {
-        if (
-          child !== this.speech &&
-          child !== this.img &&
-          child.tagName &&
-          child.tagName.toLowerCase() !== 'rect'
-        ) {
-          const { left, right, top, bottom } = child.getBoundingClientRect();
-          if (left <= x && x <= right && top <= y && y <= bottom) {
-            clicked = child;
-            break;
-          }
-        }
-      }
-    }
-    return found;
-  }
-
-  /**
    * @param {HTMLElement} node   The node to test for having an href
    * @returns {boolean}          True if the node has a link, false otherwise
    */
@@ -1718,7 +1678,6 @@ export class SpeechExplorer
    * @override
    */
   public async Start() {
-    this.item.parseSemanticNodes();
     //
     // If we aren't attached or already active, return
     //
@@ -1748,6 +1707,7 @@ export class SpeechExplorer
     // speech node (or just use the top-level node), then set the
     // current node (which creates the speech) and start the explorer.
     //
+    this.item.parseSemanticNodes();
     const node = this.findStartNode();
     this.setCurrent(node || this.rootNode(), !node);
     super.Start();
