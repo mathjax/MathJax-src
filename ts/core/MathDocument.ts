@@ -1065,7 +1065,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
       try {
         this.compileMath(math);
       } catch (err) {
-        if (action) {
+        if (action && err.retry) {
           return err.retry.then(() =>
             this.compileAction(action, item, recompile)
           );
@@ -1104,7 +1104,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
       try {
         this.compileMath(math);
       } catch (err) {
-        if (action) {
+        if (action && err.retry) {
           return err.retry.then(() =>
             this.recompileAction(action, recompile, i)
           );
