@@ -247,6 +247,15 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
                 math.start.n = math.end.n = 0;
               }
               mml.nextToggleSelection();
+              if (mml.attributes.get('data-collapse-group')) {
+                const id = mml.attributes.get('id');
+                const selection = mml.attributes.get('selection');
+                math.root.walkTree((node) => {
+                  if (node.attributes.get('data-collapse-id') === id) {
+                    node.attributes.set('selection', selection);
+                  }
+                });
+              }
               mathjax.handleRetriesFor(() => {
                 math.rerender(
                   document,
