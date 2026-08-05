@@ -117,6 +117,11 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
   protected nodeBBox: DOMRect;
 
   /**
+   * used to tell if regino has splitNodes
+   */
+  protected isHover = this.region instanceof HoverRegion;
+
+  /**
    * @class
    * @augments {AbstractMouseExplorer<T>}
    *
@@ -135,9 +140,9 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     public pool: ExplorerPool,
     public region: Region<T>,
     protected node: HTMLElement,
+    protected item: ExplorerMathItem = null,
     protected nodeQuery: (node: HTMLElement) => boolean,
-    protected nodeAccess: (node: HTMLElement) => T,
-    protected item: ExplorerMathItem = null
+    protected nodeAccess: (node: HTMLElement) => T
   ) {
     super(document, pool, region, node);
     const top = this.node.querySelector('[data-semantic-structure]') || this.node;
@@ -186,8 +191,16 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * @param {T} kind             The target kind to update
    */
   protected display(node: HTMLElement, kind: T) {
-    this.highlighter.highlight([node]);
-    this.region.Update(kind);
+    this.item.parseSemanticNodes();
+    let parts = this.item.getSplitNodes(node);
+    if (this.isHover) {
+      (this.region as HoverRegion).splitNodes = parts;
+    }
+    parts = this.highlighter.encloseNodes([...parts], this.node);
+    this.highlighter.highlight(parts);
+    if (typeof kind === 'string') {
+      this.region.Update(kind);
+    }
     this.region.Show(node);
   }
 }
@@ -207,13 +220,15 @@ export class ValueHoverer extends Hoverer<string> {
     pool: ExplorerPool,
     region: ToolTip,
     node: HTMLElement,
-    attr: string,
+    item: ExplorerMathItem,
+    attr: string
   ) {
     super(
       document,
       pool,
       region,
       node,
+      item,
       (x) => x.hasAttribute?.(attr),
       (x) => x.getAttribute?.(attr)
     );
@@ -233,7 +248,7 @@ export class ContentHoverer extends Hoverer<HTMLElement> {
   protected constructor(
     document: A11yDocument,
     pool: ExplorerPool,
-    public region: HoverRegion,
+    region: HoverRegion,
     node: HTMLElement,
     item: ExplorerMathItem,
   ) {
@@ -242,21 +257,10 @@ export class ContentHoverer extends Hoverer<HTMLElement> {
       pool,
       region,
       node,
+      item,
       (x) => x.hasAttribute?.('data-semantic-id'),
-      (x) => x,
-      item
+      (x) => x
     );
-  }
-
-  /**
-   * @override
-   */
-  protected display(node: HTMLElement) {
-    this.item.parseSemanticNodes();
-    let parts = this.region.splitNodes = this.item.getSplitNodes(node);
-    parts = this.highlighter.encloseNodes([...parts], this.node);
-    this.highlighter.highlight(parts);
-    this.region.Show(node);
   }
 }
 
@@ -274,15 +278,30 @@ export class FlameHoverer extends Hoverer<void> {
     document: A11yDocument,
     pool: ExplorerPool,
     _ignore: any,
-    node: HTMLElement
+    node: HTMLElement,
+    item: ExplorerMathItem
   ) {
     super(
       document,
       pool,
       new DummyRegion(document),
       node,
-      (x) => this.highlighter.isMactionNode(x),
+      item,
+      (x) => x.hasAttribute('data-collapsible'),
       () => {}
     );
+  }
+
+  display(node: HTMLElement) {
+    const id = node.getAttribute('data-collapse-id');
+    if (id) {
+      node = this.node.querySelector(`#${id}`);
+    }
+    let parts: HTMLElement[] = node.hasAttribute('data-collapse-group')
+      ? this.highlighter.getMactionGroup(this.node, node)
+      : [node];
+    parts = this.highlighter.encloseNodes([...parts], this.node);
+    this.highlighter.highlight(parts);
+    this.region.Show(node);
   }
 }

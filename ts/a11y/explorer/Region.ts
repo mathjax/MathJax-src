@@ -670,6 +670,11 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   protected static className = 'MJX_HoverRegion';
 
   /**
+   * the split nodes for the math item
+   */
+  public splitNodes: any;
+
+  /**
    * @override
    */
   protected static style: StyleJsonSheet = new StyleJsonSheet({
@@ -773,8 +778,6 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     this.inner.style.top = '';
     this.inner.style.backgroundColor = '';
   }
-
-  public splitNodes: any;
 
   /**
    * @override

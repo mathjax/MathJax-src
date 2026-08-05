@@ -26,7 +26,7 @@ import type { ExplorerMathDocument, ExplorerMathItem } from '../explorer.js';
 
 import { Explorer } from './Explorer.js';
 import { SpeechExplorer } from './KeyExplorer.js';
-import * as me from './MouseExplorer.js';
+import { ValueHoverer, ContentHoverer, FlameHoverer } from './MouseExplorer.js';
 import { TreeColorer, FlameColorer } from './TreeExplorer.js';
 
 import { Highlighter, getHighlighter } from './Highlighter.js';
@@ -105,40 +105,43 @@ const allExplorers: { [options: string]: ExplorerInit } = {
     return explorer;
   },
   mouseMagnifier: (doc, pool, node, item) =>
-    me.ContentHoverer.create(
+    ContentHoverer.create(
       doc,
       pool,
       doc.explorerRegions.magnifier,
       node,
       item
     ),
-  hover: (doc, pool, node) => me.FlameHoverer.create(doc, pool, null, node),
-  infoType: (doc, pool, node) =>
-    me.ValueHoverer.create(
+  hover: (doc, pool, node) => FlameHoverer.create(doc, pool, null, node),
+  infoType: (doc, pool, node, item) =>
+    ValueHoverer.create(
       doc,
       pool,
       doc.explorerRegions.tooltip1,
       node,
+      item,
       'data-semantic-type'
     ),
-  infoRole: (doc, pool, node) =>
-    me.ValueHoverer.create(
+  infoRole: (doc, pool, node, item) =>
+    ValueHoverer.create(
       doc,
       pool,
       doc.explorerRegions.tooltip2,
       node,
+      item,
       'data-semantic-role'
     ),
-  infoPrefix: (doc, pool, node) =>
-    me.ValueHoverer.create(
+  infoPrefix: (doc, pool, node, item) =>
+    ValueHoverer.create(
       doc,
       pool,
       doc.explorerRegions.tooltip3,
       node,
+      item,
       'data-semantic-prefix-none',
     ),
   flame: (doc, pool, node) => FlameColorer.create(doc, pool, null, node),
-  treeColoring: (doc, pool, node) => TreeColorer.create(doc, pool, null, node),
+  treeColoring: (doc, pool, node, item) => TreeColorer.create(doc, pool, null, node, item),
 };
 
 /**
