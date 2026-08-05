@@ -50,7 +50,11 @@ export class StructureUtil {
    * @param {ParentMap} map   The map being built
    * @returns {ParentMap}     The map of semantic ids to their nearset parent ids
    */
-  protected static mapParents(node: MmlNode, id: string = '', map: ParentMap = new Map()): ParentMap {
+  protected static mapParents(
+    node: MmlNode,
+    id: string = '',
+    map: ParentMap = new Map()
+  ): ParentMap {
     const nid = node.attributes.get('data-semantic-id') as string;
     if (nid) {
       map.set(nid, id);
@@ -90,7 +94,11 @@ export class StructureUtil {
    * @param {SemanticMap} map     The map being built.
    * @returns {string[]}          The semantic nodes outside the MathML subtree.
    */
-  protected static mapExtras(tree: SexpTree, parents: ParentMap, map: SemanticMap): string[] {
+  protected static mapExtras(
+    tree: SexpTree,
+    parents: ParentMap,
+    map: SemanticMap
+  ): string[] {
     if (!Array.isArray(tree)) return [tree];
     const id = tree[0] as string;
     const extra: string[] = [];

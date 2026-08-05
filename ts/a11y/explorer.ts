@@ -130,7 +130,7 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
  * @template B  The MathItem class to extend
  */
 export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
-  BaseMathItem: B,
+  BaseMathItem: B
 ): Constructor<ExplorerMathItem> & B {
   return class BaseClass extends BaseMathItem {
     /**
@@ -298,11 +298,13 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
       if (!id) {
         return [node];
       }
-      const nodes = (this.semanticNodes.get(id) ?? [id]).map(
-        (nid: string) => Array.from(
-          this.typesetRoot.querySelectorAll(`[data-semantic-id="${nid}"]`)
+      const nodes = (this.semanticNodes.get(id) ?? [id])
+        .map((nid: string) =>
+          Array.from(
+            this.typesetRoot.querySelectorAll(`[data-semantic-id="${nid}"]`)
+          )
         )
-      ).flat() as HTMLElement[];
+        .flat() as HTMLElement[];
       return nodes;
     }
   };

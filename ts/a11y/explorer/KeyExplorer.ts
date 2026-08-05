@@ -509,7 +509,7 @@ export class SpeechExplorer
     // If we have a key magnifier but no speech or Braille, show the clicked node
     //
     if (clicked && this.clicked) {
-      const {speech, braille, keyMagnifier} = this.document.options.a11y;
+      const { speech, braille, keyMagnifier } = this.document.options.a11y;
       if (!speech && !braille && keyMagnifier) {
         this.setCurrent(clicked);
         return;

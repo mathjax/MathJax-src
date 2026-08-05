@@ -333,11 +333,15 @@ export abstract class AbstractNode<
   /**
    * @override
    */
-  public walkTree(func: (node: N, data?: any) => boolean | void, data?: any, state: {continue: boolean} = {continue: true}): any {
+  public walkTree(
+    func: (node: N, data?: any) => boolean | void,
+    data?: any,
+    state: { continue: boolean } = { continue: true }
+  ): any {
     if (func(this as any as N, data)) {
       state.continue = false;
       return data;
-    };
+    }
     for (const child of this.childNodes) {
       if (child && state.continue) {
         (child as unknown as AbstractNode<N, C>).walkTree(func, data, state);

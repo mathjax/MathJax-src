@@ -84,7 +84,7 @@ type ExplorerInit = (
   doc: ExplorerMathDocument,
   pool: ExplorerPool,
   node: HTMLElement,
-  item: ExplorerMathItem,
+  item: ExplorerMathItem
 ) => Explorer;
 
 /**
@@ -105,13 +105,7 @@ const allExplorers: { [options: string]: ExplorerInit } = {
     return explorer;
   },
   mouseMagnifier: (doc, pool, node, item) =>
-    ContentHoverer.create(
-      doc,
-      pool,
-      doc.explorerRegions.magnifier,
-      node,
-      item
-    ),
+    ContentHoverer.create(doc, pool, doc.explorerRegions.magnifier, node, item),
   hover: (doc, pool, node) => FlameHoverer.create(doc, pool, null, node),
   infoType: (doc, pool, node, item) =>
     ValueHoverer.create(
@@ -138,10 +132,11 @@ const allExplorers: { [options: string]: ExplorerInit } = {
       doc.explorerRegions.tooltip3,
       node,
       item,
-      'data-semantic-prefix-none',
+      'data-semantic-prefix-none'
     ),
   flame: (doc, pool, node) => FlameColorer.create(doc, pool, null, node),
-  treeColoring: (doc, pool, node, item) => TreeColorer.create(doc, pool, null, node, item),
+  treeColoring: (doc, pool, node, item) =>
+    TreeColorer.create(doc, pool, null, node, item),
 };
 
 /**
@@ -178,7 +173,7 @@ export class ExplorerPool {
   /**
    * The corresponding Mathml node as a string.
    */
-//  protected mml: string;
+  //  protected mml: string;
 
   /**
    * The primary highlighter shared by all explorers.

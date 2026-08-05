@@ -834,11 +834,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    * @param {Element[]} enclosed   The elements to be cloned
    * @param {HTMLElement} mjx      The container for the clones
    */
-  protected chtmlClone(
-    node: Element,
-    enclosed: Element[],
-    mjx: HTMLElement
-  ) {
+  protected chtmlClone(node: Element, enclosed: Element[], mjx: HTMLElement) {
     const included = new Set<string>();
     for (const child of enclosed) {
       const id = child.getAttribute('data-semantic-id');
@@ -875,9 +871,11 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
       if (rect?.getAttribute('data-sre-highlighter-added')) {
         const bbox = rect.getBBox();
         const [X, Y] = this.xy(rect);
-        x = X; y = Y + bbox.y;
+        [x, y] = [X, Y + bbox.y];
         if (left === undefined || x < left) left = x;
-        if (right === undefined || x + bbox.width > right) right = x + bbox.width;
+        if (right === undefined || x + bbox.width > right) {
+          right = x + bbox.width;
+        }
         top ??= bbox.height + bbox.y + Y;
         bot = y;
       }
@@ -901,7 +899,9 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     ) {
       mjx.innerHTML = '';
       mjx.appendChild(container.cloneNode(true).firstChild);
-      mjx.querySelector('.mjx-selected')?.setAttribute('data-mjx-clone', 'true');
+      mjx
+        .querySelector('.mjx-selected')
+        ?.setAttribute('data-mjx-clone', 'true');
       mjx.querySelector('[data-sre-highlighter-added]')?.remove();
       return;
     }

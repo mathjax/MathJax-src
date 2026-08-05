@@ -21,7 +21,13 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { A11yDocument, DummyRegion, Region, HoverRegion, ToolTip } from './Region.js';
+import {
+  A11yDocument,
+  DummyRegion,
+  Region,
+  HoverRegion,
+  ToolTip,
+} from './Region.js';
 import { Explorer, AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
 import type { ExplorerMathItem } from '../explorer.js';
@@ -145,7 +151,8 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     protected nodeAccess: (node: HTMLElement) => T
   ) {
     super(document, pool, region, node);
-    const top = this.node.querySelector('[data-semantic-structure]') || this.node;
+    const top =
+      this.node.querySelector('[data-semantic-structure]') || this.node;
     this.topBBox = top.getBoundingClientRect();
     this.nodeBBox = this.node.getBoundingClientRect();
   }
@@ -250,7 +257,7 @@ export class ContentHoverer extends Hoverer<HTMLElement> {
     pool: ExplorerPool,
     region: HoverRegion,
     node: HTMLElement,
-    item: ExplorerMathItem,
+    item: ExplorerMathItem
   ) {
     super(
       document,

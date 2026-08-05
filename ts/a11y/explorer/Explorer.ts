@@ -283,9 +283,9 @@ export class AbstractExplorer<T> implements Explorer {
    * @param {DOMRect} bbox   The bounding box to test
    * @returns {boolean}      True if (x,y) is inside the bounding box
    */
-  protected inBBox(x: number, y:number, bbox: DOMRect): boolean {
-    const {left, right, top, bottom} = bbox;
-    return x >= left && x <= right && y >=top && y <= bottom;
+  protected inBBox(x: number, y: number, bbox: DOMRect): boolean {
+    const { left, right, top, bottom } = bbox;
+    return x >= left && x <= right && y >= top && y <= bottom;
   }
 
   /**
@@ -304,7 +304,7 @@ export class AbstractExplorer<T> implements Explorer {
     skip: HTMLElement[] = [],
     icon: HTMLElement = null
   ): HTMLElement {
-    const {x, y, target} = event;
+    const { x, y, target } = event;
     let found = null;
     //
     // Check if the click is on the info icon and return that if it is.
