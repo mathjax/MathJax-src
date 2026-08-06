@@ -171,11 +171,6 @@ export class ExplorerPool {
   protected node: HTMLElement;
 
   /**
-   * The corresponding Mathml node as a string.
-   */
-  //  protected mml: string;
-
-  /**
    * The primary highlighter shared by all explorers.
    */
   private _highlighter: Highlighter;
