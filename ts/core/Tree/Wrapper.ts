@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { Node, NodeClass } from './Node.js';
+import { Node, NodeClass, TreeWalkerState } from './Node.js';
 import { WrapperFactory } from './WrapperFactory.js';
 
 /*********************************************************/
@@ -67,7 +67,7 @@ export interface Wrapper<
    * @param {Function} func  A function to apply to each wrapper in the tree rooted at this node
    * @param {any} data       Data to pass to the function (as state information)
    */
-  walkTree(func: (node: W, data?: any) => void, data?: any): void;
+  walkTree(func: (node: W, data?: any) => boolean | void, data?: any): void;
 }
 
 /*********************************************************/
@@ -156,12 +156,23 @@ export class AbstractWrapper<
   /**
    * @override
    */
-  public walkTree(func: (node: W, data?: any) => void, data?: any) {
-    func(this as any as W, data);
+  public walkTree(
+    func: (node: W, data?: any) => boolean | void,
+    data?: any,
+    state: TreeWalkerState = { continue: true }
+  ) {
+    if (func(this as any as W, data)) {
+      state.continue = false;
+      return data;
+    }
     if ('childNodes' in this) {
       for (const child of this.childNodes) {
-        if (child) {
-          child.walkTree(func, data);
+        if (child && state.continue) {
+          (child as any as AbstractWrapper<N, C, W>).walkTree(
+            func,
+            data,
+            state
+          );
         }
       }
     }

@@ -30,6 +30,11 @@ import { NodeFactory } from './NodeFactory.js';
 export type Property = string | number | boolean;
 export type PropertyList = { [key: string]: Property };
 
+/**
+ *  A state to tell if walking the tree should stop.
+ */
+export type TreeWalkerState = { continue: boolean };
+
 /*********************************************************/
 /**
  *  The generic Node interface
@@ -336,7 +341,7 @@ export abstract class AbstractNode<
   public walkTree(
     func: (node: N, data?: any) => boolean | void,
     data?: any,
-    state: { continue: boolean } = { continue: true }
+    state: TreeWalkerState = { continue: true }
   ): any {
     if (func(this as any as N, data)) {
       state.continue = false;
@@ -344,7 +349,7 @@ export abstract class AbstractNode<
     }
     for (const child of this.childNodes) {
       if (child && state.continue) {
-        (child as unknown as AbstractNode<N, C>).walkTree(func, data, state);
+        (child as any as AbstractNode<N, C>).walkTree(func, data, state);
       }
     }
     return data;
@@ -406,7 +411,7 @@ export abstract class AbstractEmptyNode<
    *
    * @override
    */
-  public walkTree(func: (node: N, data?: any) => void, data?: any) {
+  public walkTree(func: (node: N, data?: any) => boolean | void, data?: any) {
     func(this as any as N, data);
     return data;
   }
