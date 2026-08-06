@@ -123,11 +123,6 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
   protected nodeBBox: DOMRect;
 
   /**
-   * used to tell if regino has splitNodes
-   */
-  protected isHover = this.region instanceof HoverRegion;
-
-  /**
    * @class
    * @augments {AbstractMouseExplorer<T>}
    *
@@ -135,11 +130,11 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * @param {ExplorerPool} pool The explorer pool.
    * @param {Region<T>} region A region to display results.
    * @param {HTMLElement} node The node on which the explorer works.
+   * @param {ExplorerMathItem} item The MathItem for this explorer
    * @param {(node: HTMLElement) => boolean} nodeQuery Predicate on nodes that
    *    will fire the hoverer.
    * @param {(node: HTMLElement) => T} nodeAccess Accessor to extract node value
    *    that is passed to the region.
-   * @param {ExplorerMathItem} item The MathItem for this explorer
    */
   protected constructor(
     public document: A11yDocument,
@@ -200,8 +195,8 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
   protected display(node: HTMLElement, kind: T) {
     this.item.parseSemanticNodes();
     let parts = this.item.getSplitNodes(node);
-    if (this.isHover) {
-      (this.region as HoverRegion).splitNodes = parts;
+    if (this.region instanceof HoverRegion) {
+      this.region.splitNodes = parts;
     }
     parts = this.highlighter.encloseNodes([...parts], this.node);
     this.highlighter.highlight(parts);
