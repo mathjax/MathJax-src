@@ -2,9 +2,10 @@
   "extends": "./mjs.json",
   "compilerOptions": {
     "removeComments": false,
+    "rootDir": "../ts/a11y/sre",
     "outDir": "../cjs/a11y/sre",
     "module": "preserve",
-    "moduleResolution": "node"
+    "moduleResolution": "bundler"
   },
   "files": [
     "../ts/a11y/sre/speech-worker.ts",
