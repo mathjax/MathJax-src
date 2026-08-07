@@ -119,12 +119,12 @@ export const NewcommandUtil = {
    */
   GetTemplate(parser: TexParser, cmd: string, cs: string): number | string[] {
     // @test Def Double Let, Def ReDef, Def Let
-    let c = parser.GetNext();
+    parser.GetNext(); // Remove initial '{' from the string
     const params: string[] = [];
     let n = 0;
     let i = parser.i;
     while (parser.i < parser.string.length) {
-      c = parser.GetNext();
+      let c = parser.GetNext();
       if (c === '#') {
         // @test Def ReDef, Def Let, Def Optional Brace
         if (i !== parser.i) {
