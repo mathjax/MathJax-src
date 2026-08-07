@@ -794,6 +794,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     }
     this.inner.appendChild(mjx);
     this.position(node);
+    this.splitNodes = null;
   }
 
   /**

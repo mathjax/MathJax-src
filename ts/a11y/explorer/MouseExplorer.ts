@@ -179,6 +179,13 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     }
   }
 
+  /**
+   * Process a mousemove event to see if the node under the mouse has
+   * changed, and if so, unhighlight the old one and highlight the new
+   * one.
+   *
+   * @param {MouseEvent} event   The move event
+   */
   public MouseMove(event: MouseEvent) {
     const node = this.nodeAtXY(event, this.nodeQuery);
     if (node && node !== this.current) {

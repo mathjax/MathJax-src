@@ -1,2 +1,2 @@
-import { createRequire } from 'module';
+import {createRequire} from 'module';
 global.require = createRequire(import.meta.url);
