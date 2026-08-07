@@ -1,4 +1,5 @@
-import { describe, test, expect } from '@jest/globals';
+import { describe, test, expect, jest } from '@jest/globals';
+import '#helpers/locale.js';
 import * as Options from '#js/util/Options.js';
 
 const SYMB = Symbol('symbol');
@@ -348,15 +349,14 @@ describe('Options utility', () => {
     try {
       copy = Options.userOptions({}, { a: 1 });
     } catch (err) {
-      expect(err.message).toBe('Invalid option "a" (no default value).');
+      expect(err.message).toBe(`Invalid option 'a' (no default value).`);
     }
     expect(copy).toEqual(undefined);
 
     //
     //  Warn does not throw an error
     //
-    const warn = console.warn;
-    console.warn = () => {};
+    const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     OPTIONS.invalidOption = 'warn';
     try {
       copy = Options.userOptions({}, { a: 1 });
@@ -364,7 +364,7 @@ describe('Options utility', () => {
       // Should not throw an error
     }
     expect(copy).toEqual({});
-    console.warn = warn;
+    spy.mockRestore();
   });
 
   test('makeArray()', () => {

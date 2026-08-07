@@ -5,12 +5,14 @@ import { ParseResult, ParseMethod } from '../Types.js';
 import { ParseUtil } from '../ParseUtil.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { BeginItem, EqnArrayItem } from '../base/BaseItems.js';
 import { AmsTags } from '../ams/AmsConfiguration.js';
 import { StackItem, CheckType } from '../StackItem.js';
 import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
 import { EmpheqUtil } from '../empheq/EmpheqUtil.js';
+import { COMPONENT } from './__locales__/Component.js';
+export { COMPONENT };
 
 /**
  * The StackItem for the numcases environment.
@@ -181,10 +183,7 @@ export const CasesMethods = {
         //
         //  Extra alignment tabs are not allowed in cases
         //
-        throw new TexError(
-          'ExtraCasesAlignTab',
-          'Extra alignment tab in text for numcase environment'
-        );
+        texError(COMPONENT, 'ExtraCasesAlignTab');
       } else if (c === '\\' && braces === 0) {
         //
         //  If the macro is \cr or \\, end the search, otherwise skip the macro

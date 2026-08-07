@@ -228,13 +228,19 @@ describe('Newcommand', () => {
   });
 
   it('Def significant spaces 1', () => {
-    expectTexError('\\def\\x#1 #2{[#1,#2]} \\x{a}{b}').toBe('Runaway argument for \\x?');
+    expectTexError('\\def\\x#1 #2{[#1,#2]} \\x{a}{b}').toBe(
+      'Runaway argument for \\x?'
+    );
     expect(tex2mml('\\def\\x#1 #2{[#1,#2]} \\x{a} {b}')).toMatchSnapshot();
   });
 
   it('Def significant spaces 2', () => {
-    expectTexError('\\def\\x#1 #2 {[#1,#2]} \\x{a}{b}').toBe('Runaway argument for \\x?');
-    expectTexError('\\def\\x#1 #2 {[#1,#2]} \\x{a} {b}').toBe('Runaway argument for \\x?');
+    expectTexError('\\def\\x#1 #2 {[#1,#2]} \\x{a}{b}').toBe(
+      'Runaway argument for \\x?'
+    );
+    expectTexError('\\def\\x#1 #2 {[#1,#2]} \\x{a} {b}').toBe(
+      'Runaway argument for \\x?'
+    );
     expect(tex2mml('\\def\\x#1 #2{[#1,#2]} \\x{a} {b} ')).toMatchSnapshot();
   });
 });
@@ -438,7 +444,7 @@ describe('NewcommandError', () => {
 
   it('Recursive Macro', () => {
     expectTexError('\\def\\x{\\x} \\x').toBe(
-      'MathJax maximum macro substitution count exceeded; is here a recursive macro call?'
+      'MathJax maximum macro substitution count exceeded; is there a recursive macro call?'
     );
   });
 
@@ -646,4 +652,4 @@ describe('Nested Environments', () => {
 
 /**********************************************************************************/
 
-  afterAll(() => getTokens('newcommand'));
+afterAll(() => getTokens('newcommand'));

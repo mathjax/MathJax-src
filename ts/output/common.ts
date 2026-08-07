@@ -380,7 +380,11 @@ export abstract class CommonOutputJax<
    */
   protected createNode(): N {
     const jax = (this.constructor as typeof CommonOutputJax).NAME;
-    return this.html('mjx-container', { class: 'MathJax', jax: jax });
+    return this.html('mjx-container', {
+      class: 'MathJax',
+      jax: jax,
+      dir: 'ltr',
+    });
   }
 
   /**
@@ -445,7 +449,10 @@ export abstract class CommonOutputJax<
     if (linebreak) {
       this.getLinebreakWidth();
     }
-    const makeBreaks = this.options.linebreaks.inline && !math.display;
+    const makeBreaks =
+      this.options.linebreaks.inline &&
+      !math.display &&
+      !math.root.isEmbellished;
     let inlineMarked = !!math.root.getProperty('inlineMarked');
     if (
       inlineMarked &&

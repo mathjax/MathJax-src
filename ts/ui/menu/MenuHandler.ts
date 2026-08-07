@@ -207,8 +207,8 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       enableExplorer: true,
       enableExplorerHelp: true,
       enrichSpeech: 'none',
-      enrichError: (_doc: MenuMathDocument, _math: MenuMathItem, err: Error) =>
-        console.warn('Enrichment Error:', err),
+      enrichError: (doc: MenuMathDocument, math: MenuMathItem, err: Error) =>
+        doc.enrichError(doc, math, err),
       ...BaseDocument.OPTIONS,
       MenuClass: Menu,
       menuOptions: Menu.OPTIONS,
@@ -306,7 +306,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
     public _checkLoading(): MenuMathDocument {
       if (this.menu.isLoading) {
         mathjax.retryAfter(
-          this.menu.loadingPromise.catch((err) => console.log(err))
+          this.menu.loadingPromise.catch((err) => console.warn(err))
         );
       }
       if (this.options.enableComplexity) {

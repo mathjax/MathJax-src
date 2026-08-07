@@ -26,6 +26,8 @@ import { OptionList } from '../../util/Options.js';
 import { Message, ClientCommand, Structure } from './MessageTypes.js';
 import { SpeechMathItem } from '../speech.js';
 import { SemAttr } from './SpeechUtil.js';
+import { Locale } from '../../util/Locale.js';
+import { localize, COMPONENT } from './__locales__/Component.js';
 
 /**
  * Class for relevant task information.
@@ -77,7 +79,9 @@ export class WorkerHandler<N, T, D> {
    * This starts the worker.
    */
   public async Start() {
-    if (this.ready) throw Error('Worker already started');
+    if (this.ready) {
+      Locale.throw(COMPONENT, 'Worker/Started');
+    }
     this.worker = await this.adaptor.createWorker(
       this.Listener.bind(this),
       this.options
@@ -155,7 +159,7 @@ export class WorkerHandler<N, T, D> {
   public Cancel(item: SpeechMathItem<N, T, D>) {
     const i = this.tasks.findIndex((task) => task.item === item);
     if (i > 0) {
-      this.tasks[i].reject(`Task ${this.tasks[i].cmd.cmd} cancelled`);
+      this.tasks[i].reject(localize('Worker/Cancelled', this.tasks[i].cmd.cmd));
       this.tasks.splice(i, 1);
     }
   }
@@ -499,9 +503,7 @@ export class WorkerHandler<N, T, D> {
   public Terminate(): Promise<any> | void {
     this.debug('Terminating pending tasks');
     for (const task of this.tasks) {
-      task.reject(
-        `${task.cmd.data.cmd} cancelled by WorkerHandler termination`
-      );
+      task.reject(localize('Worker/Terminate', task.cmd.data.cmd));
     }
     this.tasks = [];
     this.debug('Terminating worker');
@@ -514,7 +516,7 @@ export class WorkerHandler<N, T, D> {
    */
   public async Stop() {
     if (!this.worker) {
-      throw Error('Worker has not been started');
+      Locale.throw(COMPONENT, 'Worker/NotStarted');
     }
     await this.Terminate();
     this.worker = null;

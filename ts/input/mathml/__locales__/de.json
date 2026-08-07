@@ -1,0 +1,8 @@
+{
+  "BadNode": "Unbekannter Knotentyp '%1'",
+  "BadText": "Unerwarteter Textknoten '%1'",
+  "MathNode": "MathML muss aus einem %1-Element bestehen, nicht aus %2",
+  "MmlError": "Fehler bei der Verarbeitung von MathML",
+  "SaxonNotFound": "#1 nicht gefunden.  Führen Sie folgenden Befehl aus: %2\n \nund versuchen Sie es erneut.",
+  "SingleNode": "MathML muss aus einem einzigen Element bestehen"
+}

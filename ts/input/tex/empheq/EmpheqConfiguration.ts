@@ -26,10 +26,12 @@ import { Configuration } from '../Configuration.js';
 import { CommandMap, EnvironmentMap } from '../TokenMap.js';
 import { ParseUtil } from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { BeginItem } from '../base/BaseItems.js';
 import { EmpheqUtil } from './EmpheqUtil.js';
 import ParseMethods from '../ParseMethods.js';
+import { COMPONENT } from './__locales__/Component.js';
+export { COMPONENT };
 
 /**
  * The methods that implement the empheq package.
@@ -62,12 +64,7 @@ export const EmpheqMethods = {
         .GetArgument('\\begin{' + begin.getName() + '}')
         .split(/=/);
       if (!EmpheqUtil.checkEnv(env)) {
-        throw new TexError(
-          'EmpheqInvalidEnv',
-          'Invalid environment "%1" for %2',
-          env,
-          begin.getName()
-        );
+        texError(COMPONENT, 'EmpheqInvalidEnv', env, begin.getName());
       }
       begin.setProperty('nestStart', true);
       if (opts) {

@@ -27,6 +27,7 @@ import { Configuration, ParserConfiguration } from '../Configuration.js';
 import { ColorMethods } from './ColorMethods.js';
 import { ColorModel } from './ColorUtil.js';
 import { TeX } from '../../tex.js';
+export { COMPONENT } from './__locales__/Component.js';
 
 /**
  * The color macros

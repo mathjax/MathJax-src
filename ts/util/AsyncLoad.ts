@@ -22,6 +22,7 @@
  */
 
 import { mathjax } from '../mathjax.js';
+import { localize } from '../core/__locales__/Component.js';
 
 /**
  * Load a file asynchronously using the mathjax.asynchLoad method, if there is one
@@ -31,9 +32,7 @@ import { mathjax } from '../mathjax.js';
  */
 export function asyncLoad(name: string): Promise<any> {
   if (!mathjax.asyncLoad) {
-    return Promise.reject(
-      `Can't load '${name}': No mathjax.asyncLoad method specified`
-    );
+    return Promise.reject(localize('NoAsync', name, 'mathjax.asyncLoad'));
   }
   return new Promise((ok, fail) => {
     const result = mathjax.asyncLoad(name);
@@ -43,4 +42,33 @@ export function asyncLoad(name: string): Promise<any> {
       ok(result);
     }
   });
+}
+
+/**
+ * Used to look up Package object, if it is in use
+ */
+declare const MathJax: any;
+
+/**
+ * Resolve a file name to a full path or URL
+ *
+ * @param {string} name                The file name to resolve
+ * @param {(string)=>string} relative  Function to get absolute path from relative one
+ * @param {(string)=>string} absolute  Function to fix up absolute path
+ * @returns {string}                   The full path name
+ */
+export function resolvePath(
+  name: string,
+  relative: (name: string) => string,
+  absolute: (name: string) => string = (name) => name
+): string {
+  const Package =
+    typeof MathJax === 'undefined'
+      ? null
+      : MathJax._?.components?.package?.Package;
+  return name.charAt(0) === '[' && Package
+    ? Package.resolvePath(name)
+    : name.charAt(0) === '.'
+      ? relative(name)
+      : absolute(name);
 }

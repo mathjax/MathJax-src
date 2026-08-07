@@ -24,6 +24,7 @@
 import { MathItem } from '../../core/MathItem.js';
 import { OptionList } from '../../util/Options.js';
 import { JaxList } from './Menu.js';
+import { localize } from './__locales__/Component.js';
 import { ExplorerMathItem } from '../../a11y/explorer.js';
 
 import {
@@ -41,6 +42,27 @@ export type DynamicSubmenu = (
   sub: Submenu,
   callback: SubmenuCallback
 ) => void;
+
+/**
+ * Remap old menu ids to their new localization keys
+ */
+const RemapIds: { [key: string]: any } = {
+  Settings: {
+    Overflow: 'Wide/Expressions',
+  },
+  Speech: {
+    'Auto Voicing': 'AutoVoicing',
+  },
+  Braille: {
+    BrailleSpeech: 'Braille/Speech',
+    BrailleCombine: 'Braille/Combine',
+  },
+  Explorer: {
+    'Semantic Info': 'SemanticInfo',
+    'Role Description': 'RoleDescription',
+    'Math Help': 'MathHelp',
+  },
+};
 
 /*==========================================================================*/
 
@@ -131,15 +153,26 @@ export class MJContextMenu extends ContextMenu {
    * Find an item in the menu (recursively descending into submenus, if needed)
    *
    * @param {string[]} names   The menu IDs to look for
-   * @returns {Item}         The menu item (or null if not found)
+   * @returns {Item}           The menu item (or null if not found)
    */
   public findID(...names: string[]): Item {
+    let map = RemapIds;
     let menu = this as Menu;
     let item = null as Item;
-    for (const name of names) {
+    for (const fullname of names) {
       if (!menu) return null;
+      //
+      // Remap old menu ids to new prefixed ones
+      // (can be removed in a later version)
+      //
+      const remap = map?.[fullname];
+      const name = typeof remap === 'string' ? remap : fullname;
+      map = typeof remap === 'object' ? remap : null;
+      //
+      // Look for the id in the menu list
+      //
       for (item of menu.items) {
-        if (item.id === name) {
+        if (item.id === name || item.id?.replace(/.*\//, '') === name) {
           menu = item instanceof Submenu ? item.submenu : null;
           break;
         }
@@ -167,7 +200,9 @@ export class MJContextMenu extends ContextMenu {
     const input = this.mathItem.inputJax.name;
     const original = this.findID('Show', 'Original');
     original.content =
-      input === 'MathML' ? 'Original MathML' : input + ' Commands';
+      input === 'MathML'
+        ? localize('Show/OriginalMathML')
+        : localize('Show/Commands', input);
     const clipboard = this.findID('Copy', 'Original');
     clipboard.content = original.content;
   }

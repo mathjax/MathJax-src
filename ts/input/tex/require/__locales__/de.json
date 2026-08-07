@@ -1,0 +1,6 @@
+{
+  "BadPackageName": "Das Argument für %1 ist kein gültiger Paketname",
+  "BadRequire": "Die Erweiterung \"%1\" darf nicht geladen werden",
+  "IllegalChar": "Im Präfix für \\require wurden ungültige Zeichen verwendet",
+  "RequireFail": "Die Erweiterung \"%1\" konnte nicht geladen werden"
+}

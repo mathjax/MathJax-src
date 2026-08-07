@@ -198,6 +198,33 @@ const RESOLVE = function (js, dir, target, libs) {
   };
 }
 
+/**
+ * Creates the rules needed for the modules section of the configuration.
+ *
+ * @param {string} locale   The locale to preload in the components
+ * @returns {object}        The module: configuration block
+ */
+function MODULES(locale) {
+  //
+  // If the locale isn't English, make a rule to replace "en" by the
+  // desired locale instead.
+  //
+  return locale === 'en'
+    ? {}
+    : {
+      rules: [
+        {
+          test: /preload\.cjs$/,
+          loader: 'string-replace-loader',
+          options: {
+            search: /en/g,
+            replace: locale,
+          }
+        },
+      ],
+    };
+}
+
 /****************************************************************/
 
 /**
@@ -218,7 +245,18 @@ const RESOLVE = function (js, dir, target, libs) {
  * @return {object}           The webpack configuration object
  */
 const PACKAGE = function (options) {
-  let {name, js, target = 'mjs', bundle = 'bundle', libs = [], dir, dist = '', font = true, jax = ''} = options;
+  let {
+    name,
+    js,
+    target = 'mjs',
+    bundle = 'bundle',
+    locale = 'en',
+    libs = [],
+    dir,
+    dist = '',
+    font = true,
+    jax = ''
+  } = options;
   dir = dir.replace(/\/$/, '');
   if (!js) {
     js = path.relative(process.cwd(), path.resolve(DIRNAME, '..', target));
@@ -236,6 +274,7 @@ const PACKAGE = function (options) {
     target: ['web', 'es' + (target === 'mjs' ? '6' : '5')],  // needed for IE11 and old browsers
     plugins: PLUGINS(js, dir, target, font, jax, name),
     resolve: RESOLVE(js, dir, target, libs),
+    module: MODULES(locale),
     performance: {
       hints: false
     },

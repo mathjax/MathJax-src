@@ -24,7 +24,7 @@
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { MapHandler } from '../MapHandler.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 import { CharacterMap, RegExpMap } from '../TokenMap.js';
@@ -37,6 +37,8 @@ import ParseMethods from '../ParseMethods.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { TexConstant } from '../TexConstants.js';
 import { context } from '../../../util/context.js';
+import { COMPONENT } from './__locales__/Component.js';
+export { COMPONENT };
 
 const MATHVARIANT = TexConstant.Variant;
 
@@ -89,11 +91,7 @@ export function Other(parser: TexParser, char: string) {
  */
 function csUndefined(_parser: TexParser, name: string) {
   // @test Undefined-CS
-  throw new TexError(
-    'UndefinedControlSequence',
-    'Undefined control sequence %1',
-    '\\' + name
-  );
+  texError(COMPONENT, 'UndefinedControlSequence', '\\' + name);
 }
 
 /**
@@ -104,7 +102,7 @@ function csUndefined(_parser: TexParser, name: string) {
  */
 function envUndefined(_parser: TexParser, env: string) {
   // @test Undefined-Env
-  throw new TexError('UnknownEnv', "Unknown environment '%1'", env);
+  texError(COMPONENT, 'UnknownEnv', env);
 }
 
 /**

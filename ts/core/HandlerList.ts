@@ -25,6 +25,8 @@ import { PrioritizedList } from '../util/PrioritizedList.js';
 import { OptionList } from '../util/Options.js';
 import { Handler } from './Handler.js';
 import { MathDocument } from './MathDocument.js';
+import { Locale } from '../util/Locale.js';
+import { COMPONENT } from '../core/__locales__/Component.js';
 
 /*****************************************************************/
 /**
@@ -55,8 +57,8 @@ export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>> {
   }
 
   /**
-   * @param {any} document  The document (string, window, DOM element, etc) to be handled
-   * @returns {Handler}      The handler from the list that can process the given document
+   * @param {any} document     The document (string, window, DOM element, etc) to be handled
+   * @returns {Handler}        The handler from the list that can process the given document
    */
   public handlesDocument(document: any): Handler<N, T, D> {
     for (const item of this) {
@@ -65,7 +67,7 @@ export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>> {
         return handler;
       }
     }
-    throw new Error(`Can't find handler for document`);
+    return Locale.throw(COMPONENT, 'NoHandler');
   }
 
   /**

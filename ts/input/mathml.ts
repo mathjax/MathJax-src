@@ -35,6 +35,7 @@ import { MmlFactory } from '../core/MmlTree/MmlFactory.js';
 
 import { FindMathML } from './mathml/FindMathML.js';
 import { MathMLCompile } from './mathml/MathMLCompile.js';
+import { localize } from './mathml/__locales__/Component.js';
 
 /*****************************************************************/
 /**
@@ -165,14 +166,12 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
       );
       const body = this.adaptor.body(doc);
       if (this.adaptor.childNodes(body).length !== 1) {
-        this.error('MathML must consist of a single element');
+        this.error(localize('SingleNode'));
       }
       mml = this.adaptor.remove(this.adaptor.firstChild(body)) as N;
       if (this.adaptor.kind(mml).replace(/^[a-z]+:/, '') !== 'math') {
         this.error(
-          'MathML must be formed by a <math> element, not <' +
-            this.adaptor.kind(mml) +
-            '>'
+          localize('MathNode', '<math>', `<${this.adaptor.kind(mml)}>`)
         );
       }
     }
@@ -193,7 +192,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
     const err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
     if (err) {
       if (this.adaptor.textContent(err) === '') {
-        this.error('Error processing MathML');
+        this.error(localize('MmlError'));
       }
       this.options['parseError'].call(this, err);
     }

@@ -26,6 +26,8 @@ import { AbstractTokenMap, TokenMap, CharacterMap } from './TokenMap.js';
 import { ParseInput, ParseResult, ParseMethod } from './Types.js';
 import { PrioritizedList } from '../../util/PrioritizedList.js';
 import { FunctionList } from '../../util/FunctionList.js';
+import { Locale } from '../../util/Locale.js';
+import { COMPONENT } from './__locales__/Component.js';
 
 export type HandlerConfig = { [P in HandlerType]?: string[] };
 export type FallbackConfig = { [P in HandlerType]?: ParseMethod };
@@ -79,7 +81,7 @@ export class SubHandler {
     for (const name of maps.slice().reverse()) {
       const map = MapHandler.getMap(name);
       if (!map) {
-        this.warn(`Configuration '${name}' not found! Omitted.`);
+        Locale.warn(COMPONENT, 'ConfigNotFound', name);
         return;
       }
       this._configuration.add(map, priority);
@@ -194,15 +196,6 @@ export class SubHandler {
       }
     }
     return null;
-  }
-
-  /**
-   * Prints a warning message.
-   *
-   * @param {string} message The warning.
-   */
-  private warn(message: string) {
-    console.log('TexParser Warning: ' + message);
   }
 }
 

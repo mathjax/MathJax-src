@@ -1,5 +1,470 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`BussproofsCommands Bottom Align Proof 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\bottomAlignProof\\AxiomC{A}\\UnaryInfC{B}\\DP" display="block">
+  <mtable align="baseline 2" rowlines="solid" framespacing="0 0" data-latex="\\bottomAlignProof\\AxiomC{A}\\UnaryInfC{B}\\DP" semantics="bspr_inferenceRule:down;bspr_inference:1;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>A</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mrow>
+          <mspace width=".5ex"></mspace>
+          <mtext>B</mtext>
+          <mspace width=".5ex"></mspace>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsCommands Center Align Proof 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\centerAlignProof\\AxiomC{A}\\UnaryInfC{B}\\DP" display="block">
+  <mtable align="center" rowlines="solid" framespacing="0 0" data-latex="\\centerAlignProof\\AxiomC{A}\\UnaryInfC{B}\\DP" semantics="bspr_inferenceRule:down;bspr_inference:1;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>A</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mrow>
+          <mspace width=".5ex"></mspace>
+          <mtext>B</mtext>
+          <mspace width=".5ex"></mspace>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsCommands Display Proof 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\AxiomC{A}\\UnaryInfC{B}\\DisplayProof" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\AxiomC{A}\\UnaryInfC{B}\\DisplayProof" semantics="bspr_inferenceRule:down;bspr_inference:1;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>A</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mrow>
+          <mspace width=".5ex"></mspace>
+          <mtext>B</mtext>
+          <mspace width=".5ex"></mspace>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsCommands Display Proof Inline 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="X = \\AxiomC{A}\\UnaryInfC{B}\\DP" display="block">
+  <mi data-latex="X">X</mi>
+  <mo data-latex="=">=</mo>
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\DP" semantics="bspr_inferenceRule:down;bspr_inference:1;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>A</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mrow>
+          <mspace width=".5ex"></mspace>
+          <mtext>B</mtext>
+          <mspace width=".5ex"></mspace>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsCommands Dotted Line 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AxiomC{A}\\dottedLine\\UnaryInfC{B}\\end{prooftree}" display="block">
+  <mtable align="top 2" rowlines="dotted" framespacing="0 0" data-latex="\\begin{prooftree}\\AxiomC{A}\\dottedLine\\UnaryInfC{B}\\end{prooftree}" semantics="bspr_inferenceRule:down;bspr_inference:1;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\dottedLine" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>A</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mrow>
+          <mspace width=".5ex"></mspace>
+          <mtext>B</mtext>
+          <mspace width=".5ex"></mspace>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsCommands Double Line 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AxiomC{A}\\doubleLine\\UnaryInfC{B}\\end{prooftree}" display="block">
+  <mtable align="top 2" rowlines="double" framespacing="0 0" data-latex="\\begin{prooftree}\\AxiomC{A}\\doubleLine\\UnaryInfC{B}\\end{prooftree}" semantics="bspr_inferenceRule:down;bspr_inference:1;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\doubleLine" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>A</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mrow>
+          <mspace width=".5ex"></mspace>
+          <mtext>B</mtext>
+          <mspace width=".5ex"></mspace>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsCommands Enable Abbreviations 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\EnableBpAbbreviations\\AXC{A}\\AXC{B}\\AXC{C}\\TIC{D}\\DP" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\EnableBpAbbreviations\\AXC{A}\\AXC{B}\\AXC{C}\\TIC{D}\\DP" semantics="bspr_inferenceRule:down;bspr_inference:3;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AXC{A}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>A</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+            <mtd></mtd>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AXC{B}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>B</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+            <mtd></mtd>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AXC{C}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>C</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mrow>
+          <mspace width=".5ex"></mspace>
+          <mtext>D</mtext>
+          <mspace width=".5ex"></mspace>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsCommands Insert Between Hyps 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AxiomC{A}\\AxiomC{B}\\insertBetweenHyps{\\hskip 2em}\\BinaryInfC{C}\\end{prooftree}" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\begin{prooftree}\\AxiomC{A}\\AxiomC{B}\\insertBetweenHyps{\\hskip 2em}\\BinaryInfC{C}\\end{prooftree}" semantics="bspr_inferenceRule:down;bspr_inference:2;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0" columnspacing="0em">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>A</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+            <mtd>
+              <mspace width="2em" data-latex="\\hskip 2em"></mspace>
+            </mtd>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\insertBetweenHyps{\\hskip 2em}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>B</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mrow>
+          <mspace width=".5ex"></mspace>
+          <mtext>C</mtext>
+          <mspace width=".5ex"></mspace>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsCommands Kern Hyps 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AxiomC{A}\\AxiomC{B}\\kernHyps{1em}\\BinaryInfC{C}\\end{prooftree}" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\begin{prooftree}\\AxiomC{A}\\AxiomC{B}\\kernHyps{1em}\\BinaryInfC{C}\\end{prooftree}" semantics="bspr_inferenceRule:down;bspr_inference:2;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mspace width="1em"></mspace>
+              <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>A</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+            <mtd></mtd>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\kernHyps{1em}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>B</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mrow>
+          <mspace width=".5ex"></mspace>
+          <mtext>C</mtext>
+          <mspace width=".5ex"></mspace>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsCommands Normal Align Proof 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\normalAlignProof\\AxiomC{A}\\UnaryInfC{B}\\DP" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\normalAlignProof\\AxiomC{A}\\UnaryInfC{B}\\DP" semantics="bspr_inferenceRule:down;bspr_inference:1;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>A</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mrow>
+          <mspace width=".5ex"></mspace>
+          <mtext>B</mtext>
+          <mspace width=".5ex"></mspace>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsCommands Quaternary Abbreviation 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\AXC{A}\\AXC{B}\\AXC{C}\\AXC{D}\\QIC{E}\\DP" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\AXC{A}\\AXC{B}\\AXC{C}\\AXC{D}\\QIC{E}\\DP" semantics="bspr_inferenceRule:down;bspr_inference:4;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AXC{A}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>A</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+            <mtd></mtd>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AXC{B}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>B</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+            <mtd></mtd>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AXC{C}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>C</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+            <mtd></mtd>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AXC{D}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>D</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mrow>
+          <mspace width=".5ex"></mspace>
+          <mtext>E</mtext>
+          <mspace width=".5ex"></mspace>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsCommands Quinary Abbreviation 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\AXC{A}\\AXC{B}\\AXC{C}\\AXC{D}\\AXC{E}\\QuIC{F}\\DP" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\AXC{A}\\AXC{B}\\AXC{C}\\AXC{D}\\AXC{E}\\QuIC{F}\\DP" semantics="bspr_inferenceRule:down;bspr_inference:5;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AXC{A}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>A</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+            <mtd></mtd>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AXC{B}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>B</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+            <mtd></mtd>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AXC{C}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>C</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+            <mtd></mtd>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AXC{D}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>D</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+            <mtd></mtd>
+            <mtd rowalign="bottom">
+              <mrow data-latex="\\AXC{E}" semantics="bspr_axiom:true">
+                <mspace width=".5ex"></mspace>
+                <mtext>E</mtext>
+                <mspace width=".5ex"></mspace>
+              </mrow>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mrow>
+          <mspace width=".5ex"></mspace>
+          <mtext>F</mtext>
+          <mspace width=".5ex"></mspace>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
 exports[`BussproofsRegInf Binary Inference 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AxiomC{A}\\AxiomC{B}\\BinaryInfC{C}\\end{prooftree}" display="block">
   <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\begin{prooftree}\\AxiomC{A}\\AxiomC{B}\\BinaryInfC{C}\\end{prooftree}" semantics="bspr_inferenceRule:down;bspr_inference:2;bspr_proof:true">
@@ -2706,6 +3171,983 @@ exports[`BussproofsRegProofs Simple Proofs Right Labels 1`] = `
         </mstyle>
       </mpadded>
     </mrow>
+  </mrow>
+</math>"
+`;
+
+exports[`BussproofsSequents Sequent Abbreviations 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\fCenter{\\vdash}\\AX$A \\fCenter B$\\AX$C \\fCenter D$\\BI$E \\fCenter F$\\DP" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\def\\fCenter{\\vdash}\\AX$A \\fCenter B$\\AX$C \\fCenter D$\\BI$E \\fCenter F$\\DP" semantics="bspr_inferenceRule:down;bspr_inference:2;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\AX$A \\fCenter B$" semantics="bspr_sequent:true;bspr_axiom:true">
+                <mtr>
+                  <mtd>
+                    <mi data-latex="A">A</mi>
+                  </mtd>
+                  <mtd>
+                    <mo data-latex="\\vdash">&#x22A2;</mo>
+                  </mtd>
+                  <mtd>
+                    <mi data-latex="B">B</mi>
+                  </mtd>
+                </mtr>
+              </mtable>
+            </mtd>
+            <mtd></mtd>
+            <mtd rowalign="bottom">
+              <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\AX$C \\fCenter D$" semantics="bspr_sequent:true;bspr_axiom:true">
+                <mtr>
+                  <mtd>
+                    <mi data-latex="C">C</mi>
+                  </mtd>
+                  <mtd>
+                    <mo data-latex="\\vdash">&#x22A2;</mo>
+                  </mtd>
+                  <mtd>
+                    <mi data-latex="D">D</mi>
+                  </mtd>
+                </mtr>
+              </mtable>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true">
+          <mtr>
+            <mtd>
+              <mi data-latex="E">E</mi>
+            </mtd>
+            <mtd>
+              <mo data-latex="\\vdash">&#x22A2;</mo>
+            </mtd>
+            <mtd>
+              <mi data-latex="F">F</mi>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsSequents Sequent Axiom Display Proof No Space 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Axiom$A\\fCenterA$\\DisplayProof" display="block">
+  <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\Axiom$A\\fCenterA$\\DisplayProof" semantics="bspr_sequent:true;bspr_axiom:true;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mi data-latex="A">A</mi>
+      </mtd>
+      <mtd></mtd>
+      <mtd>
+        <mi data-latex="A">A</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsSequents Sequent Axiom Only 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A \\fCenter B$\\end{prooftree}" display="block">
+  <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A \\fCenter B$\\end{prooftree}" semantics="bspr_sequent:true;bspr_axiom:true;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mi data-latex="A">A</mi>
+      </mtd>
+      <mtd>
+        <mo data-latex="\\vdash">&#x22A2;</mo>
+      </mtd>
+      <mtd>
+        <mi data-latex="B">B</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsSequents Sequent Binary 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$\\fCenter A$\\Axiom$B \\fCenter C,D$\\UnaryInf$B,X,Y,Z \\fCenter C$\\BinaryInf$A,B \\fCenter C$\\end{prooftree}" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$\\fCenter A$\\Axiom$B \\fCenter C,D$\\UnaryInf$B,X,Y,Z \\fCenter C$\\BinaryInf$A,B \\fCenter C$\\end{prooftree}" semantics="bspr_inferenceRule:down;bspr_inference:2;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\Axiom$\\fCenter A$" semantics="bspr_sequent:true;bspr_axiom:true">
+                <mtr>
+                  <mtd></mtd>
+                  <mtd>
+                    <mo data-latex="\\vdash">&#x22A2;</mo>
+                  </mtd>
+                  <mtd>
+                    <mi data-latex="A">A</mi>
+                  </mtd>
+                </mtr>
+              </mtable>
+            </mtd>
+            <mtd></mtd>
+            <mtd rowalign="bottom">
+              <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\UnaryInf$B,X,Y,Z \\fCenter C$" semantics="bspr_inferenceRule:down;bspr_inference:1">
+                <mtr>
+                  <mtd>
+                    <mtable framespacing="0 0">
+                      <mtr>
+                        <mtd rowalign="bottom">
+                          <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\Axiom$B \\fCenter C,D$" semantics="bspr_sequent:true;bspr_axiom:true;bspr_sequentAdjust_left:3.6700000000000004">
+                            <mtr>
+                              <mtd>
+                                <mspace width="3.67em"></mspace>
+                                <mi data-latex="B">B</mi>
+                              </mtd>
+                              <mtd>
+                                <mo data-latex="\\vdash">&#x22A2;</mo>
+                              </mtd>
+                              <mtd>
+                                <mi data-latex="C">C</mi>
+                                <mo data-latex=",">,</mo>
+                                <mi data-latex="D">D</mi>
+                              </mtd>
+                            </mtr>
+                          </mtable>
+                        </mtd>
+                      </mtr>
+                    </mtable>
+                  </mtd>
+                </mtr>
+                <mtr>
+                  <mtd>
+                    <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_right:1.2726666666666666">
+                      <mtr>
+                        <mtd>
+                          <mi data-latex="B">B</mi>
+                          <mo data-latex=",">,</mo>
+                          <mi data-latex="X">X</mi>
+                          <mo data-latex=",">,</mo>
+                          <mi data-latex="Y">Y</mi>
+                          <mo data-latex=",">,</mo>
+                          <mi data-latex="Z">Z</mi>
+                        </mtd>
+                        <mtd>
+                          <mo data-latex="\\vdash">&#x22A2;</mo>
+                        </mtd>
+                        <mtd>
+                          <mi data-latex="C">C</mi>
+                          <mspace width="1.273em"></mspace>
+                        </mtd>
+                      </mtr>
+                    </mtable>
+                  </mtd>
+                </mtr>
+              </mtable>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true">
+          <mtr>
+            <mtd>
+              <mi data-latex="A">A</mi>
+              <mo data-latex=",">,</mo>
+              <mi data-latex="B">B</mi>
+            </mtd>
+            <mtd>
+              <mo data-latex="\\vdash">&#x22A2;</mo>
+            </mtd>
+            <mtd>
+              <mi data-latex="C">C</mi>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsSequents Sequent Display Proof Chain 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\fCenter{\\vdash}\\Axiom$A,B,Q \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\UnaryInf$\\fCenter A,B,C$\\DP" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\def\\fCenter{\\vdash}\\Axiom$A,B,Q \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\UnaryInf$\\fCenter A,B,C$\\DP" semantics="bspr_inferenceRule:down;bspr_inference:1;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\UnaryInf$A \\fCenter B,C$" semantics="bspr_inferenceRule:down;bspr_inference:1">
+                <mtr>
+                  <mtd>
+                    <mtable framespacing="0 0">
+                      <mtr>
+                        <mtd rowalign="bottom">
+                          <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\Axiom$A,B,Q \\fCenter C$" semantics="bspr_sequent:true;bspr_axiom:true;bspr_sequentAdjust_right:2.3983333333333334">
+                            <mtr>
+                              <mtd>
+                                <mi data-latex="A">A</mi>
+                                <mo data-latex=",">,</mo>
+                                <mi data-latex="B">B</mi>
+                                <mo data-latex=",">,</mo>
+                                <mi data-latex="Q">Q</mi>
+                              </mtd>
+                              <mtd>
+                                <mo data-latex="\\vdash">&#x22A2;</mo>
+                              </mtd>
+                              <mtd>
+                                <mi data-latex="C">C</mi>
+                                <mspace width="2.398em"></mspace>
+                              </mtd>
+                            </mtr>
+                          </mtable>
+                        </mtd>
+                      </mtr>
+                    </mtable>
+                  </mtd>
+                </mtr>
+                <mtr>
+                  <mtd>
+                    <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:2.439333333333333;bspr_sequentAdjust_right:1.1946666666666665">
+                      <mtr>
+                        <mtd>
+                          <mspace width="2.439em"></mspace>
+                          <mi data-latex="A">A</mi>
+                        </mtd>
+                        <mtd>
+                          <mo data-latex="\\vdash">&#x22A2;</mo>
+                        </mtd>
+                        <mtd>
+                          <mi data-latex="B">B</mi>
+                          <mo data-latex=",">,</mo>
+                          <mi data-latex="C">C</mi>
+                          <mspace width="1.195em"></mspace>
+                        </mtd>
+                      </mtr>
+                    </mtable>
+                  </mtd>
+                </mtr>
+              </mtable>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:3.189333333333333">
+          <mtr>
+            <mtd>
+              <mspace width="3.189em"></mspace>
+            </mtd>
+            <mtd>
+              <mo data-latex="\\vdash">&#x22A2;</mo>
+            </mtd>
+            <mtd>
+              <mi data-latex="A">A</mi>
+              <mo data-latex=",">,</mo>
+              <mi data-latex="B">B</mi>
+              <mo data-latex=",">,</mo>
+              <mi data-latex="C">C</mi>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsSequents Sequent Root At Top 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\rootAtTop\\Axiom$A,B,Q,R \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\UnaryInf$\\fCenter A,B,C$\\end{prooftree}" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\rootAtTop\\Axiom$A,B,Q,R \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\UnaryInf$\\fCenter A,B,C$\\end{prooftree}" semantics="bspr_inferenceRule:up;bspr_inference:1;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:4.393">
+          <mtr>
+            <mtd>
+              <mspace width="4.393em"></mspace>
+            </mtd>
+            <mtd>
+              <mo data-latex="\\vdash">&#x22A2;</mo>
+            </mtd>
+            <mtd>
+              <mi data-latex="A">A</mi>
+              <mo data-latex=",">,</mo>
+              <mi data-latex="B">B</mi>
+              <mo data-latex=",">,</mo>
+              <mi data-latex="C">C</mi>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="top">
+              <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\UnaryInf$A \\fCenter B,C$" semantics="bspr_inferenceRule:up;bspr_inference:1">
+                <mtr>
+                  <mtd>
+                    <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:3.643;bspr_sequentAdjust_right:1.1946666666666665">
+                      <mtr>
+                        <mtd>
+                          <mspace width="3.643em"></mspace>
+                          <mi data-latex="A">A</mi>
+                        </mtd>
+                        <mtd>
+                          <mo data-latex="\\vdash">&#x22A2;</mo>
+                        </mtd>
+                        <mtd>
+                          <mi data-latex="B">B</mi>
+                          <mo data-latex=",">,</mo>
+                          <mi data-latex="C">C</mi>
+                          <mspace width="1.195em"></mspace>
+                        </mtd>
+                      </mtr>
+                    </mtable>
+                  </mtd>
+                </mtr>
+                <mtr>
+                  <mtd>
+                    <mtable framespacing="0 0">
+                      <mtr>
+                        <mtd rowalign="top">
+                          <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\Axiom$A,B,Q,R \\fCenter C$" semantics="bspr_sequent:true;bspr_axiom:true;bspr_sequentAdjust_right:2.3983333333333334">
+                            <mtr>
+                              <mtd>
+                                <mi data-latex="A">A</mi>
+                                <mo data-latex=",">,</mo>
+                                <mi data-latex="B">B</mi>
+                                <mo data-latex=",">,</mo>
+                                <mi data-latex="Q">Q</mi>
+                                <mo data-latex=",">,</mo>
+                                <mi data-latex="R">R</mi>
+                              </mtd>
+                              <mtd>
+                                <mo data-latex="\\vdash">&#x22A2;</mo>
+                              </mtd>
+                              <mtd>
+                                <mi data-latex="C">C</mi>
+                                <mspace width="2.398em"></mspace>
+                              </mtd>
+                            </mtr>
+                          </mtable>
+                        </mtd>
+                      </mtr>
+                    </mtable>
+                  </mtd>
+                </mtr>
+              </mtable>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsSequents Sequent Unary 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A,B \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\end{prooftree}" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A,B \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\end{prooftree}" semantics="bspr_inferenceRule:down;bspr_inference:1;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\Axiom$A,B \\fCenter C$" semantics="bspr_sequent:true;bspr_axiom:true;bspr_sequentAdjust_right:1.2036666666666667">
+                <mtr>
+                  <mtd>
+                    <mi data-latex="A">A</mi>
+                    <mo data-latex=",">,</mo>
+                    <mi data-latex="B">B</mi>
+                  </mtd>
+                  <mtd>
+                    <mo data-latex="\\vdash">&#x22A2;</mo>
+                  </mtd>
+                  <mtd>
+                    <mi data-latex="C">C</mi>
+                    <mspace width="1.204em"></mspace>
+                  </mtd>
+                </mtr>
+              </mtable>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:1.2036666666666667">
+          <mtr>
+            <mtd>
+              <mspace width="1.204em"></mspace>
+              <mi data-latex="A">A</mi>
+            </mtd>
+            <mtd>
+              <mo data-latex="\\vdash">&#x22A2;</mo>
+            </mtd>
+            <mtd>
+              <mi data-latex="B">B</mi>
+              <mo data-latex=",">,</mo>
+              <mi data-latex="C">C</mi>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsSequents Sequent Unary Chain 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A,B,Q,R \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\UnaryInf$\\fCenter A,B,C,D,E$\\end{prooftree}" display="block">
+  <mrow style="margin-left: 0em; margin-right: 0em" semantics="bspr_inference:1;bspr_proof:true">
+    <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A,B,Q,R \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\UnaryInf$\\fCenter A,B,C,D,E$\\end{prooftree}" semantics="bspr_inferenceRule:down">
+      <mtr>
+        <mtd>
+          <mtable framespacing="0 0">
+            <mtr>
+              <mtd rowalign="bottom">
+                <mrow style="margin-left: 0em; margin-right: 0em" semantics="bspr_inference:1">
+                  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\UnaryInf$A \\fCenter B,C$" semantics="bspr_inferenceRule:down">
+                    <mtr>
+                      <mtd>
+                        <mtable framespacing="0 0">
+                          <mtr>
+                            <mtd rowalign="bottom">
+                              <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\Axiom$A,B,Q,R \\fCenter C$" semantics="bspr_sequent:true;bspr_axiom:true;bspr_sequentAdjust_right:4.881666666666667">
+                                <mtr>
+                                  <mtd>
+                                    <mi data-latex="A">A</mi>
+                                    <mo data-latex=",">,</mo>
+                                    <mi data-latex="B">B</mi>
+                                    <mo data-latex=",">,</mo>
+                                    <mi data-latex="Q">Q</mi>
+                                    <mo data-latex=",">,</mo>
+                                    <mi data-latex="R">R</mi>
+                                  </mtd>
+                                  <mtd>
+                                    <mo data-latex="\\vdash">&#x22A2;</mo>
+                                  </mtd>
+                                  <mtd>
+                                    <mi data-latex="C">C</mi>
+                                    <mspace width="4.882em"></mspace>
+                                  </mtd>
+                                </mtr>
+                              </mtable>
+                            </mtd>
+                          </mtr>
+                        </mtable>
+                      </mtd>
+                    </mtr>
+                    <mtr>
+                      <mtd>
+                        <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:3.643;bspr_sequentAdjust_right:3.678">
+                          <mtr>
+                            <mtd>
+                              <mspace width="3.643em"></mspace>
+                              <mi data-latex="A">A</mi>
+                            </mtd>
+                            <mtd>
+                              <mo data-latex="\\vdash">&#x22A2;</mo>
+                            </mtd>
+                            <mtd>
+                              <mi data-latex="B">B</mi>
+                              <mo data-latex=",">,</mo>
+                              <mi data-latex="C">C</mi>
+                              <mspace width="3.678em"></mspace>
+                            </mtd>
+                          </mtr>
+                        </mtable>
+                      </mtd>
+                    </mtr>
+                  </mtable>
+                </mrow>
+              </mtd>
+            </mtr>
+          </mtable>
+        </mtd>
+      </mtr>
+      <mtr>
+        <mtd>
+          <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:4.393">
+            <mtr>
+              <mtd>
+                <mspace width="4.393em"></mspace>
+              </mtd>
+              <mtd>
+                <mo data-latex="\\vdash">&#x22A2;</mo>
+              </mtd>
+              <mtd>
+                <mi data-latex="A">A</mi>
+                <mo data-latex=",">,</mo>
+                <mi data-latex="B">B</mi>
+                <mo data-latex=",">,</mo>
+                <mi data-latex="C">C</mi>
+                <mo data-latex=",">,</mo>
+                <mi data-latex="D">D</mi>
+                <mo data-latex=",">,</mo>
+                <mi data-latex="E">E</mi>
+              </mtd>
+            </mtr>
+          </mtable>
+        </mtd>
+      </mtr>
+    </mtable>
+  </mrow>
+</math>"
+`;
+
+exports[`BussproofsSequents Sequent Unary Chain Binary Top 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\AxiomC{$P$}\\AxiomC{$Q$}\\BinaryInf$A,B,Q,R \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\UnaryInf$\\fCenter A,B,C$\\end{prooftree}" display="block">
+  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\AxiomC{$P$}\\AxiomC{$Q$}\\BinaryInf$A,B,Q,R \\fCenter C$\\UnaryInf$A \\fCenter B,C$\\UnaryInf$\\fCenter A,B,C$\\end{prooftree}" semantics="bspr_inferenceRule:down;bspr_inference:1;bspr_proof:true">
+    <mtr>
+      <mtd>
+        <mtable framespacing="0 0">
+          <mtr>
+            <mtd rowalign="bottom">
+              <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\UnaryInf$A \\fCenter B,C$" semantics="bspr_inferenceRule:down;bspr_inference:1">
+                <mtr>
+                  <mtd>
+                    <mtable framespacing="0 0">
+                      <mtr>
+                        <mtd rowalign="bottom">
+                          <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\BinaryInf$A,B,Q,R \\fCenter C$" semantics="bspr_inferenceRule:down;bspr_inference:2">
+                            <mtr>
+                              <mtd>
+                                <mtable framespacing="0 0">
+                                  <mtr>
+                                    <mtd rowalign="bottom">
+                                      <mrow data-latex="\\AxiomC{$P$}" semantics="bspr_axiom:true">
+                                        <mspace width=".5ex"></mspace>
+                                        <mrow data-mjx-texclass="ORD">
+                                          <mi data-latex="P">P</mi>
+                                        </mrow>
+                                        <mspace width=".5ex"></mspace>
+                                      </mrow>
+                                    </mtd>
+                                    <mtd></mtd>
+                                    <mtd rowalign="bottom">
+                                      <mrow data-latex="\\AxiomC{$Q$}" semantics="bspr_axiom:true">
+                                        <mspace width=".5ex"></mspace>
+                                        <mrow data-mjx-texclass="ORD">
+                                          <mi data-latex="Q">Q</mi>
+                                        </mrow>
+                                        <mspace width=".5ex"></mspace>
+                                      </mrow>
+                                    </mtd>
+                                  </mtr>
+                                </mtable>
+                              </mtd>
+                            </mtr>
+                            <mtr>
+                              <mtd>
+                                <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_right:2.3983333333333334">
+                                  <mtr>
+                                    <mtd>
+                                      <mi data-latex="A">A</mi>
+                                      <mo data-latex=",">,</mo>
+                                      <mi data-latex="B">B</mi>
+                                      <mo data-latex=",">,</mo>
+                                      <mi data-latex="Q">Q</mi>
+                                      <mo data-latex=",">,</mo>
+                                      <mi data-latex="R">R</mi>
+                                    </mtd>
+                                    <mtd>
+                                      <mo data-latex="\\vdash">&#x22A2;</mo>
+                                    </mtd>
+                                    <mtd>
+                                      <mi data-latex="C">C</mi>
+                                      <mspace width="2.398em"></mspace>
+                                    </mtd>
+                                  </mtr>
+                                </mtable>
+                              </mtd>
+                            </mtr>
+                          </mtable>
+                        </mtd>
+                      </mtr>
+                    </mtable>
+                  </mtd>
+                </mtr>
+                <mtr>
+                  <mtd>
+                    <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:3.643;bspr_sequentAdjust_right:1.1946666666666665">
+                      <mtr>
+                        <mtd>
+                          <mspace width="3.643em"></mspace>
+                          <mi data-latex="A">A</mi>
+                        </mtd>
+                        <mtd>
+                          <mo data-latex="\\vdash">&#x22A2;</mo>
+                        </mtd>
+                        <mtd>
+                          <mi data-latex="B">B</mi>
+                          <mo data-latex=",">,</mo>
+                          <mi data-latex="C">C</mi>
+                          <mspace width="1.195em"></mspace>
+                        </mtd>
+                      </mtr>
+                    </mtable>
+                  </mtd>
+                </mtr>
+              </mtable>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:4.393">
+          <mtr>
+            <mtd>
+              <mspace width="4.393em"></mspace>
+            </mtd>
+            <mtd>
+              <mo data-latex="\\vdash">&#x22A2;</mo>
+            </mtd>
+            <mtd>
+              <mi data-latex="A">A</mi>
+              <mo data-latex=",">,</mo>
+              <mi data-latex="B">B</mi>
+              <mo data-latex=",">,</mo>
+              <mi data-latex="C">C</mi>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`BussproofsSequents Sequent Unary Chain Labelled 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A,B,Q,R \\fCenter C$\\RightLabel{X}\\UnaryInf$A \\fCenter B,C$\\RightLabel{Y}\\UnaryInf$\\fCenter A,B,C$\\end{prooftree}" display="block">
+  <mrow data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A,B,Q,R \\fCenter C$\\RightLabel{X}\\UnaryInf$A \\fCenter B,C$\\RightLabel{Y}\\UnaryInf$\\fCenter A,B,C$\\end{prooftree}" semantics="bspr_labelledRule:right;bspr_inference:1;bspr_proof:true">
+    <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
+      <mtr>
+        <mtd>
+          <mtable framespacing="0 0">
+            <mtr>
+              <mtd rowalign="bottom">
+                <mrow style="margin-right: -0.966em" semantics="bspr_inference:1;bspr_labelledRule:right">
+                  <mrow data-latex="\\RightLabel{Y}">
+                    <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
+                      <mtr>
+                        <mtd>
+                          <mtable framespacing="0 0">
+                            <mtr>
+                              <mtd rowalign="bottom">
+                                <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\RightLabel{X}" semantics="bspr_sequent:true;bspr_axiom:true;bspr_sequentAdjust_right:2.3983333333333334">
+                                  <mtr>
+                                    <mtd>
+                                      <mi data-latex="A">A</mi>
+                                      <mo data-latex=",">,</mo>
+                                      <mi data-latex="B">B</mi>
+                                      <mo data-latex=",">,</mo>
+                                      <mi data-latex="Q">Q</mi>
+                                      <mo data-latex=",">,</mo>
+                                      <mi data-latex="R">R</mi>
+                                    </mtd>
+                                    <mtd>
+                                      <mo data-latex="\\vdash">&#x22A2;</mo>
+                                    </mtd>
+                                    <mtd>
+                                      <mi data-latex="C">C</mi>
+                                      <mspace width="2.398em"></mspace>
+                                    </mtd>
+                                  </mtr>
+                                </mtable>
+                              </mtd>
+                            </mtr>
+                          </mtable>
+                        </mtd>
+                      </mtr>
+                      <mtr>
+                        <mtd>
+                          <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:3.643;bspr_sequentAdjust_right:1.1946666666666665">
+                            <mtr>
+                              <mtd>
+                                <mspace width="3.643em"></mspace>
+                                <mi data-latex="A">A</mi>
+                              </mtd>
+                              <mtd>
+                                <mo data-latex="\\vdash">&#x22A2;</mo>
+                              </mtd>
+                              <mtd>
+                                <mi data-latex="B">B</mi>
+                                <mo data-latex=",">,</mo>
+                                <mi data-latex="C">C</mi>
+                                <mspace width="1.195em"></mspace>
+                              </mtd>
+                            </mtr>
+                          </mtable>
+                        </mtd>
+                      </mtr>
+                    </mtable>
+                    <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+                      <mtext>X</mtext>
+                    </mpadded>
+                  </mrow>
+                </mrow>
+              </mtd>
+            </mtr>
+          </mtable>
+        </mtd>
+      </mtr>
+      <mtr>
+        <mtd>
+          <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:4.393">
+            <mtr>
+              <mtd>
+                <mspace width="4.393em"></mspace>
+              </mtd>
+              <mtd>
+                <mo data-latex="\\vdash">&#x22A2;</mo>
+              </mtd>
+              <mtd>
+                <mi data-latex="A">A</mi>
+                <mo data-latex=",">,</mo>
+                <mi data-latex="B">B</mi>
+                <mo data-latex=",">,</mo>
+                <mi data-latex="C">C</mi>
+              </mtd>
+            </mtr>
+          </mtable>
+        </mtd>
+      </mtr>
+    </mtable>
+    <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+      <mstyle displaystyle="false">
+        <mtext>Y</mtext>
+      </mstyle>
+    </mpadded>
+  </mrow>
+</math>"
+`;
+
+exports[`BussproofsSequents Sequent Unary Chain Plain Line 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A,B \\fCenter C$\\UnaryInfC{intermediate}\\UnaryInf$A \\fCenter B,C,D,E$\\end{prooftree}" display="block">
+  <mrow style="margin-left: 0.754em" semantics="bspr_inference:1;bspr_proof:true">
+    <mrow style="margin-left: -0.754em; margin-right: 0em">
+      <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A,B \\fCenter C$\\UnaryInfC{intermediate}\\UnaryInf$A \\fCenter B,C,D,E$\\end{prooftree}" semantics="bspr_inferenceRule:down">
+        <mtr>
+          <mtd>
+            <mtable framespacing="0 0">
+              <mtr>
+                <mtd rowalign="bottom">
+                  <mrow style="margin-left: -0.754em; margin-right: -0.754em" semantics="bspr_inference:1">
+                    <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\UnaryInfC{intermediate}" semantics="bspr_inferenceRule:down">
+                      <mtr>
+                        <mtd>
+                          <mtable framespacing="0 0">
+                            <mtr>
+                              <mtd rowalign="bottom">
+                                <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\Axiom$A,B \\fCenter C$" semantics="bspr_sequent:true;bspr_axiom:true;bspr_sequentAdjust_right:3.6870000000000003">
+                                  <mtr>
+                                    <mtd>
+                                      <mi data-latex="A">A</mi>
+                                      <mo data-latex=",">,</mo>
+                                      <mi data-latex="B">B</mi>
+                                    </mtd>
+                                    <mtd>
+                                      <mo data-latex="\\vdash">&#x22A2;</mo>
+                                    </mtd>
+                                    <mtd>
+                                      <mi data-latex="C">C</mi>
+                                      <mspace width="3.687em"></mspace>
+                                    </mtd>
+                                  </mtr>
+                                </mtable>
+                              </mtd>
+                            </mtr>
+                          </mtable>
+                        </mtd>
+                      </mtr>
+                      <mtr>
+                        <mtd>
+                          <mrow>
+                            <mspace width=".5ex"></mspace>
+                            <mtext>intermediate</mtext>
+                            <mspace width=".5ex"></mspace>
+                          </mrow>
+                        </mtd>
+                      </mtr>
+                    </mtable>
+                  </mrow>
+                </mtd>
+              </mtr>
+            </mtable>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:1.2036666666666667">
+              <mtr>
+                <mtd>
+                  <mspace width="1.204em"></mspace>
+                  <mi data-latex="A">A</mi>
+                </mtd>
+                <mtd>
+                  <mo data-latex="\\vdash">&#x22A2;</mo>
+                </mtd>
+                <mtd>
+                  <mi data-latex="B">B</mi>
+                  <mo data-latex=",">,</mo>
+                  <mi data-latex="C">C</mi>
+                  <mo data-latex=",">,</mo>
+                  <mi data-latex="D">D</mi>
+                  <mo data-latex=",">,</mo>
+                  <mi data-latex="E">E</mi>
+                </mtd>
+              </mtr>
+            </mtable>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mrow>
+  </mrow>
+</math>"
+`;
+
+exports[`BussproofsSequents Sequent Widest At Bottom 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A \\fCenter B$\\UnaryInf$A,B \\fCenter C$\\UnaryInf$A,B,C,D \\fCenter E$\\UnaryInf$A,B,C,D,E,F \\fCenter G$\\end{prooftree}" display="block">
+  <mrow style="margin-left: 0em; margin-right: 0em" semantics="bspr_inference:1;bspr_proof:true">
+    <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\def\\fCenter{\\vdash}\\begin{prooftree}\\Axiom$A \\fCenter B$\\UnaryInf$A,B \\fCenter C$\\UnaryInf$A,B,C,D \\fCenter E$\\UnaryInf$A,B,C,D,E,F \\fCenter G$\\end{prooftree}" semantics="bspr_inferenceRule:down">
+      <mtr>
+        <mtd>
+          <mtable framespacing="0 0">
+            <mtr>
+              <mtd rowalign="bottom">
+                <mrow style="margin-left: 0em; margin-right: 0em" semantics="bspr_inference:1">
+                  <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\UnaryInf$A,B,C,D \\fCenter E$" semantics="bspr_inferenceRule:down">
+                    <mtr>
+                      <mtd>
+                        <mtable framespacing="0 0">
+                          <mtr>
+                            <mtd rowalign="bottom">
+                              <mtable align="top 2" rowlines="solid" framespacing="0 0" data-latex="\\UnaryInf$A,B \\fCenter C$" semantics="bspr_inferenceRule:down;bspr_inference:1">
+                                <mtr>
+                                  <mtd>
+                                    <mtable framespacing="0 0">
+                                      <mtr>
+                                        <mtd rowalign="bottom">
+                                          <mtable columnspacing=".5ex" columnalign="center 2" data-latex="\\Axiom$A \\fCenter B$" semantics="bspr_sequent:true;bspr_axiom:true;bspr_sequentAdjust_left:6.087333333333333;bspr_sequentAdjust_right:0.027000000000000024">
+                                            <mtr>
+                                              <mtd>
+                                                <mspace width="6.087em"></mspace>
+                                                <mi data-latex="A">A</mi>
+                                              </mtd>
+                                              <mtd>
+                                                <mo data-latex="\\vdash">&#x22A2;</mo>
+                                              </mtd>
+                                              <mtd>
+                                                <mi data-latex="B">B</mi>
+                                                <mspace width="0.027em"></mspace>
+                                              </mtd>
+                                            </mtr>
+                                          </mtable>
+                                        </mtd>
+                                      </mtr>
+                                    </mtable>
+                                  </mtd>
+                                </mtr>
+                                <mtr>
+                                  <mtd>
+                                    <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:4.883666666666666;bspr_sequentAdjust_right:0.026000000000000023">
+                                      <mtr>
+                                        <mtd>
+                                          <mspace width="4.884em"></mspace>
+                                          <mi data-latex="A">A</mi>
+                                          <mo data-latex=",">,</mo>
+                                          <mi data-latex="B">B</mi>
+                                        </mtd>
+                                        <mtd>
+                                          <mo data-latex="\\vdash">&#x22A2;</mo>
+                                        </mtd>
+                                        <mtd>
+                                          <mi data-latex="C">C</mi>
+                                          <mspace width="0.026em"></mspace>
+                                        </mtd>
+                                      </mtr>
+                                    </mtable>
+                                  </mtd>
+                                </mtr>
+                              </mtable>
+                            </mtd>
+                          </mtr>
+                        </mtable>
+                      </mtd>
+                    </mtr>
+                    <mtr>
+                      <mtd>
+                        <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true;bspr_sequentAdjust_left:2.4063333333333325;bspr_sequentAdjust_right:0.020000000000000018">
+                          <mtr>
+                            <mtd>
+                              <mspace width="2.406em"></mspace>
+                              <mi data-latex="A">A</mi>
+                              <mo data-latex=",">,</mo>
+                              <mi data-latex="B">B</mi>
+                              <mo data-latex=",">,</mo>
+                              <mi data-latex="C">C</mi>
+                              <mo data-latex=",">,</mo>
+                              <mi data-latex="D">D</mi>
+                            </mtd>
+                            <mtd>
+                              <mo data-latex="\\vdash">&#x22A2;</mo>
+                            </mtd>
+                            <mtd>
+                              <mi data-latex="E">E</mi>
+                              <mspace width="0.02em"></mspace>
+                            </mtd>
+                          </mtr>
+                        </mtable>
+                      </mtd>
+                    </mtr>
+                  </mtable>
+                </mrow>
+              </mtd>
+            </mtr>
+          </mtable>
+        </mtd>
+      </mtr>
+      <mtr>
+        <mtd>
+          <mtable columnspacing=".5ex" columnalign="center 2" semantics="bspr_sequent:true">
+            <mtr>
+              <mtd>
+                <mi data-latex="A">A</mi>
+                <mo data-latex=",">,</mo>
+                <mi data-latex="B">B</mi>
+                <mo data-latex=",">,</mo>
+                <mi data-latex="C">C</mi>
+                <mo data-latex=",">,</mo>
+                <mi data-latex="D">D</mi>
+                <mo data-latex=",">,</mo>
+                <mi data-latex="E">E</mi>
+                <mo data-latex=",">,</mo>
+                <mi data-latex="F">F</mi>
+              </mtd>
+              <mtd>
+                <mo data-latex="\\vdash">&#x22A2;</mo>
+              </mtd>
+              <mtd>
+                <mi data-latex="G">G</mi>
+              </mtd>
+            </mtr>
+          </mtable>
+        </mtd>
+      </mtr>
+    </mtable>
   </mrow>
 </math>"
 `;

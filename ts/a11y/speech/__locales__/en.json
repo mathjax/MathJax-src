@@ -1,0 +1,8 @@
+{
+  "ProsodyError": "Something went wrong with the prosody matching",
+  "SpeechError": "Speech generation error:",
+  "Worker/Cancelled": "Task %1 cancelled",
+  "Worker/NotStarted": "Worker has not been started",
+  "Worker/Started": "Worker already started",
+  "Worker/Terminate": "%1 cancelled by WorkerHandler termination"
+}

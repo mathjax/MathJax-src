@@ -22,15 +22,22 @@
  */
 
 const { mathjax } = require('../../mathjax.js');
+const { resolvePath } = require('../AsyncLoad.js');
 const path = require('path');
 const { dirname } = require('#source/source.cjs');
 
 let root = path.resolve(dirname, '..', '..', 'cjs');
 
+mathjax.json = async function readJsonFile(name) {
+  return require(name);
+};
+
 if (!mathjax.asyncLoad) {
-  mathjax.asyncLoad = async (name) => {
-    const file = name.charAt(0) === '.' ? path.resolve(root, name) : name;
-    return import(file).then((result) => result?.default || result);
+  mathjax.asyncLoad = (name) => {
+    const file = resolvePath(name, (name) => path.resolve(root, name));
+    return (file.match(/\.json$/) ? mathjax.json(file) : import(file)).then(
+      (result) => result?.default ?? result
+    );
   };
 }
 
@@ -42,4 +49,4 @@ exports.setBaseURL = function (URL) {
   if (!root.match(/\/$/)) {
     root += '/';
   }
-}
+};

@@ -2,7 +2,9 @@
   "build": {
     "id": "[tex]/texhtml",
     "component": "input/tex/extensions/texhtml",
-    "targets": ["input/tex/texhtml"]
+    "targets": [
+      "input/tex/texhtml"
+    ]
   },
   "webpack": {
     "name": "input/tex/extensions/texhtml",

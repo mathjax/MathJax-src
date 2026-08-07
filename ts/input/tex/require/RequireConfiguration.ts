@@ -30,7 +30,7 @@ import {
 import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { TeX } from '../../tex.js';
 
 import { MathJax } from '../../../components/startup.js';
@@ -39,6 +39,10 @@ import { Loader, CONFIG as LOADERCONFIG } from '../../../components/loader.js';
 import { mathjax } from '../../../mathjax.js';
 import { expandable } from '../../../util/Options.js';
 import { MenuMathDocument } from '../../../ui/menu/MenuHandler.js';
+
+import { Locale } from '../../../util/Locale.js';
+import { COMPONENT } from './__locales__/Component.js';
+export { COMPONENT };
 
 /**
  * The MathJax configuration block (for looking up user-defined package options)
@@ -168,18 +172,14 @@ export function RequireLoad(parser: TexParser, name: string) {
       ? allow[name]
       : options.defaultAllow;
   if (!allowed) {
-    throw new TexError(
-      'BadRequire',
-      'Extension "%1" is not allowed to be loaded',
-      extension
-    );
+    texError(COMPONENT, 'BadRequire', extension);
   }
   const data = Package.packages.get(extension);
   if (!data) {
     mathjax.retryAfter(Loader.load(extension).catch((_) => {}));
   }
   if (data.hasFailed) {
-    throw new TexError('RequireFail', 'Extension "%1" failed to load', name);
+    texError(COMPONENT, 'RequireFail', name);
   }
   const require = LOADERCONFIG[extension]?.rendererExtensions;
   const menu = (MathJax.startup.document as MenuMathDocument)?.menu;
@@ -208,7 +208,7 @@ function config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
   const options = jax.parseOptions.options.require;
   const prefix = options.prefix;
   if (prefix.match(/[^_a-zA-Z0-9]/)) {
-    throw Error('Illegal characters used in \\require prefix');
+    Locale.throw(COMPONENT, 'IllegalChar');
   }
   if (!LOADERCONFIG.paths[prefix]) {
     LOADERCONFIG.paths[prefix] = '[mathjax]/input/tex/extensions';
@@ -229,11 +229,7 @@ export const RequireMethods: { [key: string]: ParseMethod } = {
   Require(parser: TexParser, name: string) {
     const required = parser.GetArgument(name);
     if (required.match(/[^_a-zA-Z0-9]/) || required === '') {
-      throw new TexError(
-        'BadPackageName',
-        'Argument for %1 is not a valid package name',
-        name
-      );
+      texError(COMPONENT, 'BadPackageName', name);
     }
     RequireLoad(parser, required);
     parser.Push(parser.itemFactory.create('null'));

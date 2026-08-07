@@ -4,6 +4,20 @@
     "targets": ["ui/menu", "a11y/speech/SpeechMenu.ts"],
     "excludeSubdirs": true
   },
+  "copy": [
+    {
+      "to": "[bundle]/ui/menu",
+      "from": "[ts]/ui/menu",
+      "copy": ["__locales__"],
+      "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
+    },
+    {
+      "to": "[bundle]/a11y/aria",
+      "from": "[ts]/a11y/aria",
+      "copy": ["__locales__"],
+      "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
+    }
+  ],
   "webpack": {
     "name": "ui/menu",
     "libs": [

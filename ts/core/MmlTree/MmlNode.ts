@@ -32,6 +32,8 @@ import {
 } from '../Tree/Node.js';
 import { MmlFactory } from './MmlFactory.js';
 import { DOMAdaptor } from '../DOMAdaptor.js';
+import { Locale } from '../../util/Locale.js';
+import { COMPONENT } from '../__locales__/Component.js';
 
 /**
  *  Used in setInheritedAttributes() to pass originating node kind as well as property value
@@ -260,12 +262,18 @@ export interface MmlNode extends Node<MmlNode, MmlNodeClass> {
   /**
    * Replace the current node with an error message (or the name of the node)
    *
-   * @param {string} message         The error message to use
+   * @param {string} id              The id of the error message to use
+   * @param {string[]} args          The data to insert into the message
    * @param {PropertyList} options   The options telling how much to verify
    * @param {boolean} short          True means use just the kind if not using full errors
-   * @returns {MmlNode}               The construted merror
+   * @returns {MmlNode}              The constructed merror
    */
-  mError(message: string, options: PropertyList, short?: boolean): MmlNode;
+  mError(
+    id: string,
+    args: string[],
+    options: PropertyList,
+    short?: boolean
+  ): MmlNode;
 
   /**
    * Check integrity of MathML structure
@@ -916,11 +924,7 @@ export abstract class AbstractMmlNode
         ((arity === 1 && this.childNodes.length === 0) ||
           (arity !== 1 && this.childNodes.length !== arity))
       ) {
-        this.mError(
-          'Wrong number of children for "' + this.kind + '" node',
-          options,
-          true
-        );
+        this.mError('MML/Arity', [this.kind], options, true);
       }
     }
     this.verifyChildren(options);
@@ -947,10 +951,7 @@ export abstract class AbstractMmlNode
         // FIXME: add ability to check attribute values?
       }
       if (bad.length) {
-        this.mError(
-          'Unknown attributes for ' + this.kind + ' node: ' + bad.join(', '),
-          options
-        );
+        this.mError('MML/BadAttr', [this.kind, bad.join(', ')], options);
       }
     }
     if (options.checkMathvariants) {
@@ -960,7 +961,7 @@ export abstract class AbstractMmlNode
         !MATHVARIANTS.has(variant) &&
         !this.getProperty('ignore-variant')
       ) {
-        this.mError(`Invalid mathvariant: ${variant}`, options, true);
+        this.mError('MML/BadVariant', [variant], options, true);
       }
     }
   }
@@ -979,19 +980,22 @@ export abstract class AbstractMmlNode
   /**
    * Replace the current node with an error message (or the name of the node)
    *
-   * @param {string} message         The error message to use
+   * @param {string} id              The id of the error message to use
+   * @param {string[]} args          The data to insert into the message
    * @param {PropertyList} options   The options telling how much to verify
    * @param {boolean} short          True means use just the kind if not using full errors
-   * @returns {MmlNode}               The constructed merror
+   * @returns {MmlNode}              The constructed merror
    */
   public mError(
-    message: string,
+    id: string,
+    args: string[],
     options: PropertyList,
     short: boolean = false
   ): MmlNode {
     if (this.parent && this.parent.isKind('merror')) {
       return null;
     }
+    const message = Locale.message(COMPONENT, id, ...args);
     const merror = this.factory.create('merror');
     merror.attributes.set('data-mjx-message', message);
     if (options.fullErrors || short) {
@@ -1420,7 +1424,8 @@ export abstract class AbstractMmlEmptyNode
    *  @override
    */
   public mError(
-    _message: string,
+    _id: string,
+    _args: string[],
     _options: PropertyList,
     _short: boolean = false
   ) {
@@ -1455,7 +1460,7 @@ export class TextNode extends AbstractMmlEmptyNode {
 
   /**
    * @param {string} text  The text to use for the node
-   * @returns {TextNode}  The text node (for chaining of method calls)
+   * @returns {TextNode}   The text node (for chaining of method calls)
    */
   public setText(text: string): TextNode {
     this.text = text;

@@ -27,11 +27,12 @@ import TexParser from '../TexParser.js';
 import { MacroMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
 import ParseOptions from '../ParseOptions.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { HTMLDocument } from '../../../handlers/html/HTMLDocument.js';
 import { HtmlNode } from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
 import { HTMLDomStrings } from '../../../handlers/html/HTMLDomStrings.js';
 import { DOMAdaptor } from '../../../core/DOMAdaptor.js';
+import { COMPONENT } from '../__locales__/Component.js';
 
 export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
   /**
@@ -59,12 +60,7 @@ export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
     const end = (match[1] ? `<!${match[1]}>` : '') + '</tex-html>';
     const i = parser.string.slice(parser.i).indexOf(end);
     if (i < 0) {
-      throw new TexError(
-        'TokenNotFoundForCommand',
-        'Could not find %1 for %2',
-        end,
-        '<' + match[0]
-      );
+      texError(COMPONENT, 'TokenNotFoundForCommand', end, '<' + match[0]);
     }
     const html = parser.string.substring(parser.i, parser.i + i).trim();
     parser.i += i + 11 + (match[1] ? 3 + match[1].length : 0);

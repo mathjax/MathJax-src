@@ -1,4 +1,5 @@
 import { describe, test, expect } from '@jest/globals';
+import '#helpers/locale.js';
 import { BitField, BitFieldClass } from '#js/util/BitField.js';
 
 const MAXBIT = (BitField as any).MAXBIT;

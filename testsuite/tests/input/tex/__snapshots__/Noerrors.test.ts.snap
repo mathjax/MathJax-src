@@ -2,7 +2,7 @@
 
 exports[`NoError Ampersand-error 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="&amp;" display="block">
-  <merror data-mjx-error="Misplaced &amp;" title="Misplaced &amp;">
+  <merror data-mjx-error="Misplaced '&amp;'" title="Misplaced '&amp;'">
     <mtext>&amp;</mtext>
   </merror>
 </math>"
@@ -210,7 +210,7 @@ exports[`NoError Middle with Right 1`] = `
 
 exports[`NoError Misplaced Cr 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\cr b" display="block">
-  <merror data-mjx-error="Misplaced \\cr" title="Misplaced \\cr">
+  <merror data-mjx-error="Misplaced '\\cr'" title="Misplaced '\\cr'">
     <mtext>a\\cr b</mtext>
   </merror>
 </math>"
@@ -226,7 +226,7 @@ exports[`NoError Misplaced Move Root 1`] = `
 
 exports[`NoError Misplaced hline 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\hline" display="block">
-  <merror data-mjx-error="Misplaced \\hline" title="Misplaced \\hline">
+  <merror data-mjx-error="Misplaced '\\hline'" title="Misplaced '\\hline'">
     <mtext>\\hline</mtext>
   </merror>
 </math>"

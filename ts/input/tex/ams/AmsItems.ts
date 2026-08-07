@@ -24,10 +24,12 @@
 import { ArrayItem, EqnArrayItem } from '../base/BaseItems.js';
 import { ParseUtil } from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { TexConstant } from '../TexConstants.js';
 import StackItemFactory from '../StackItemFactory.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * Item dealing with multiline environments as a special case of arrays. Note,
@@ -78,11 +80,7 @@ export class MultlineItem extends ArrayItem {
   public EndRow() {
     if (this.row.length !== 1) {
       // @test MultlineRowsOneCol
-      throw new TexError(
-        'MultlineRowsOneCol',
-        'The rows within the %1 environment must have exactly one column',
-        'multline'
-      );
+      texError(COMPONENT, 'MultlineRowsOneCol', 'multline');
     }
     const row = this.create('node', 'mtr', this.row);
     this.setRowLatex(row);
@@ -186,12 +184,7 @@ export class FlalignItem extends EqnArrayItem {
     const n = this.getProperty('xalignat') as number;
     if (!n) return;
     if (this.row.length > n) {
-      throw new TexError(
-        'XalignOverflow',
-        'Extra %1 in row of %2',
-        '&',
-        this.name
-      );
+      texError(COMPONENT, 'XalignOverflow', '&', this.name);
     }
   }
 

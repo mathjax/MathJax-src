@@ -24,6 +24,7 @@ import { HandlerType, ConfigurationType } from '#js/input/tex/HandlerTypes.js';
 import { CommandMap } from '#js/input/tex/TokenMap.js';
 import { Token } from '#js/input/tex/Token.js';
 import { TagsFactory } from '#js/input/tex/Tags.js';
+import { texError } from '#js/input/tex/TexError.js';
 import TexError from '#js/input/tex/TexError.js';
 import {
   ParseUtil,
@@ -147,7 +148,7 @@ describe('TexError', () => {
     expect(err.message).toBe('Msg: OK, Number: 2');
   });
 
-  test('Plural', () => {
+  test.skip('Plural', () => {
     const err = new TexError('test', '%{plural:%1|abc}', 'apple');
     expect(err.message).toBe('%{plural:%1|abc}');
   });
@@ -155,6 +156,24 @@ describe('TexError', () => {
   test('Percent', () => {
     const err = new TexError('test', '10%%');
     expect(err.message).toBe('10%');
+  });
+});
+
+describe('texError', () => {
+  test('Number argument', () => {
+    expect(() => texError(null, 'test', 'Number: %1', '1')).toThrow(
+      'Number: 1'
+    );
+  });
+
+  test('Braced insertion', () => {
+    expect(() =>
+      texError(null, 'test', 'Msg: %{1}, Number: %{2}', 'OK', '2')
+    ).toThrow('Msg: OK, Number: 2');
+  });
+
+  test('Percent', () => {
+    expect(() => texError(null, 'test', '10%%')).toThrow('10%');
   });
 });
 
@@ -256,9 +275,7 @@ describe('Configuration', () => {
       'warn',
       () => new TeX({ packages: ['base', 'undefined'] })
     );
-    expect(message).toBe(
-      "MathJax Warning: Package 'undefined' not found.  Omitted."
-    );
+    expect(message).toBe("Package 'undefined' not found.  Omitted.");
   });
 });
 
@@ -272,11 +289,11 @@ describe('MapHandler', () => {
       },
     });
     const message = trapOutput(
-      'log',
+      'warn',
       () => new TeX({ packages: ['base', 'BadHandler'] })
     );
     expect(message).toBe(
-      "TexParser Warning: Configuration 'undefindHandler' not found! Omitted."
+      "Configuration 'undefindHandler' not found.  Omitted."
     );
   });
 

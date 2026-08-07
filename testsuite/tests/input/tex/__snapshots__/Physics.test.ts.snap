@@ -1154,6 +1154,22 @@ exports[`Options Italicdif true 1`] = `
 </math>"
 `;
 
+exports[`Physics Errors Extra Open Delimiter 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin((1\\over2)" display="block">
+  <merror data-mjx-error="Extra open or missing close delimiter">
+    <mtext>Extra open or missing close delimiter</mtext>
+  </merror>
+</math>"
+`;
+
+exports[`Physics Errors Missing Closing Delimiter 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin(1\\over2" display="block">
+  <merror data-mjx-error="Extra open or missing close delimiter">
+    <mtext>Extra open or missing close delimiter</mtext>
+  </merror>
+</math>"
+`;
+
 exports[`Physics1_0 Quantities_Quantities_0 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\quantity" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\quantity">

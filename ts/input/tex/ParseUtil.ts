@@ -27,10 +27,12 @@ import { ArrayItem } from './base/BaseItems.js';
 import ParseOptions from './ParseOptions.js';
 import NodeUtil from './NodeUtil.js';
 import TexParser from './TexParser.js';
-import TexError from './TexError.js';
+import { texError } from './TexError.js';
 import { entities } from '../../util/Entities.js';
 import { MmlMunderover } from '../../core/MmlTree/MmlNodes/munderover.js';
 import { UnitUtil } from './UnitUtil.js';
+
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  * The data needed for checking the value of a key-value pair.
@@ -185,10 +187,8 @@ function readValue(
       // Closing braces.
       case '}':
         if (!braces) {
-          throw new TexError(
-            'ExtraCloseMissingOpen',
-            'Extra close brace or missing open brace'
-          );
+          // Closing braces.
+          texError(COMPONENT, 'ExtraCloseMissingOpen');
         }
         braces--;
         countBraces = false; // Stop counting start left braces.
@@ -211,10 +211,7 @@ function readValue(
     value += c;
   }
   if (braces) {
-    throw new TexError(
-      'ExtraOpenMissingClose',
-      'Extra open brace or missing close brace'
-    );
+    texError(COMPONENT, 'ExtraOpenMissingClose');
   }
   return dropBrace && start
     ? ['', '', removeBraces(value, 1)]
@@ -546,11 +543,7 @@ export const ParseUtil = {
                 .substring(i)
                 .match(/^\s*(?:([0-9A-F])|\{\s*([0-9A-F]+)\s*\})/);
               if (!arg) {
-                throw new TexError(
-                  'BadRawUnicode',
-                  'Argument to %1 must a hexadecimal number with 1 to 6 digits',
-                  '\\U'
-                );
+                texError(COMPONENT, 'BadRawUnicode', '\\U');
               }
               //  Replace \U{...} with specified character
               const c = String.fromCodePoint(parseInt(arg[1] || arg[2], 16));
@@ -565,10 +558,7 @@ export const ParseUtil = {
       }
       if (match !== '') {
         // @test Internal Math Error
-        throw new TexError(
-          'MathNotTerminated',
-          'Math mode is not properly terminated'
-        );
+        texError(COMPONENT, 'MathNotTerminated');
       }
     }
     if (k < text.length) {
@@ -733,10 +723,7 @@ export const ParseUtil = {
           text += c;
         } else {
           if (!c.match(/[1-9]/) || parseInt(c, 10) > args.length) {
-            throw new TexError(
-              'IllegalMacroParam',
-              'Illegal macro parameter reference'
-            );
+            texError(COMPONENT, 'IllegalMacroParam');
           }
           newstring = ParseUtil.addArgs(
             parser,
@@ -767,11 +754,7 @@ export const ParseUtil = {
       s1 += ' ';
     }
     if (s1.length + s2.length > parser.configuration.options['maxBuffer']) {
-      throw new TexError(
-        'MaxBufferSize',
-        'MathJax internal buffer size exceeded; is there a' +
-          ' recursive macro call?'
-      );
+      texError(COMPONENT, 'MaxBufferSize');
     }
     return s1 + s2;
   },
@@ -787,17 +770,9 @@ export const ParseUtil = {
       return;
     }
     if (isMacro) {
-      throw new TexError(
-        'MaxMacroSub1',
-        'MathJax maximum macro substitution count exceeded; ' +
-          'is here a recursive macro call?'
-      );
+      texError(COMPONENT, 'MaxMacroSub1');
     } else {
-      throw new TexError(
-        'MaxMacroSub2',
-        'MathJax maximum substitution count exceeded; ' +
-          'is there a recursive latex environment?'
-      );
+      texError(COMPONENT, 'MaxMacroSub2');
     }
   },
 
@@ -820,10 +795,7 @@ export const ParseUtil = {
       return;
     }
     if (!top.isKind('start') || first) {
-      throw new TexError(
-        'ErroneousNestingEq',
-        'Erroneous nesting of equation structures'
-      );
+      texError(COMPONENT, 'ErroneousNestingEq');
     }
   },
 
@@ -902,17 +874,13 @@ export const ParseUtil = {
             const type = allowed[key] as KeyValueDef<any>;
             const value = String(def[key]);
             if (!type.verify(value)) {
-              throw new TexError(
-                'InvalidValue',
-                "Value for key '%1' is not of the expected type",
-                key
-              );
+              texError(COMPONENT, 'InvalidValue', key);
             }
             def[key] = type.convert(value);
           }
         } else {
           if (error) {
-            throw new TexError('InvalidOption', 'Invalid option: %1', key);
+            texError(COMPONENT, 'InvalidOption', key);
           }
           delete def[key];
         }

@@ -30,12 +30,14 @@ import {
 import { TeX } from '../../tex.js';
 import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { Macro } from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
 import { expandable, isObject } from '../../../util/Options.js';
 import { PrioritizedList } from '../../../util/PrioritizedList.js';
+import { COMPONENT } from './__locales__/Component.js';
+export { COMPONENT };
 
 export const SetOptionsUtil = {
   /**
@@ -47,7 +49,7 @@ export const SetOptionsUtil = {
    */
   filterPackage(parser: TexParser, extension: string): boolean {
     if (extension !== 'tex' && !ConfigurationHandler.get(extension)) {
-      throw new TexError('NotAPackage', 'Not a defined package: %1', extension);
+      texError(COMPONENT, 'NotAPackage', extension);
     }
     const config = parser.options.setoptions;
     const options = config.allowOptions[extension];
@@ -55,11 +57,7 @@ export const SetOptionsUtil = {
       (options === undefined && !config.allowPackageDefault) ||
       options === false
     ) {
-      throw new TexError(
-        'PackageNotSettable',
-        'Options can\'t be set for package "%1"',
-        extension
-      );
+      texError(COMPONENT, 'PackageNotSettable', extension);
     }
     return true;
   },
@@ -82,35 +80,17 @@ export const SetOptionsUtil = {
         : null;
     if (allow === false || (allow === null && !config.allowOptionsDefault)) {
       if (isTex) {
-        throw new TexError(
-          'TeXOptionNotSettable',
-          'Option "%1" is not allowed to be set',
-          option
-        );
+        texError(COMPONENT, 'TeXOptionNotSettable', option);
       } else {
-        throw new TexError(
-          'OptionNotSettable',
-          'Option "%1" is not allowed to be set for package %2',
-          option,
-          extension
-        );
+        texError(COMPONENT, 'OptionNotSettable', option, extension);
       }
     }
     const extOptions = isTex ? parser.options : parser.options[extension];
     if (!extOptions || !Object.hasOwn(extOptions, option)) {
       if (isTex) {
-        throw new TexError(
-          'InvalidTexOption',
-          'Invalid TeX option "%1"',
-          option
-        );
+        texError(COMPONENT, 'InvalidTexOption', option);
       } else {
-        throw new TexError(
-          'InvalidOptionKey',
-          'Invalid option "%1" for package "%2"',
-          option,
-          extension
-        );
+        texError(COMPONENT, 'InvalidOptionKey', option, extension);
       }
     }
     return true;

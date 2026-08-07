@@ -28,6 +28,8 @@ import { EnvList } from './StackItem.js';
 import ParseOptions from './ParseOptions.js';
 import NodeUtil from './NodeUtil.js';
 import { TexConstant } from './TexConstants.js';
+import { Locale } from '../../util/Locale.js';
+import { COMPONENT } from './__locales__/Component.js';
 
 /**
  *  Simple class for label objects.
@@ -706,7 +708,7 @@ export const TagsFactory = {
   create(name: string): Tags {
     const constr = tagsMapping.get(name) || tagsMapping.get(defaultTags);
     if (!constr) {
-      throw Error('Unknown tags class');
+      Locale.throw(COMPONENT, 'UnknownTag');
     }
     return new constr();
   },

@@ -28,7 +28,8 @@ import {
   SelectionOrder,
   SelectionGrid,
 } from '../../ui/dialog/SelectionDialog.js';
-import { SubMenu, Submenu } from '../../ui/menu/mj-context-menu.js';
+import { Submenu } from '../../ui/menu/mj-context-menu.js';
+import { localize } from '../../ui/menu/__locales__/Component.js';
 import * as Sre from '../sre.js';
 
 /**
@@ -127,7 +128,7 @@ function csSelectionBox(menu: MJContextMenu, locale: string): object {
     });
   }
   const sb = new SelectionDialog(
-    'Clearspeak Preferences',
+    localize('Clearspeak/Title'),
     '',
     items,
     SelectionOrder.ALPHABETICAL,
@@ -137,7 +138,7 @@ function csSelectionBox(menu: MJContextMenu, locale: string): object {
   return {
     type: 'command',
     id: 'ClearspeakPreferences',
-    content: 'Select Preferences',
+    content: localize('Clearspeak/SelectPrefs'),
     action: () => sb.post(),
   };
 }
@@ -159,13 +160,13 @@ function basePreferences(previous: string): object[] {
   const items = [
     {
       type: 'radio',
-      content: 'No Preferences',
+      content: localize('Clearspeak/NoPrefs'),
       id: 'clearspeak-default',
       variable: 'speechRules',
     },
     {
       type: 'radio',
-      content: 'Current Preferences',
+      content: localize('Clearspeak/CurrentPrefs'),
       id: 'clearspeak-' + previous,
       variable: 'speechRules',
     },
@@ -191,7 +192,7 @@ function smartPreferences(
 ): object[] {
   const loc = localePreferences.get(locale);
   const items = [
-    { type: 'label', content: 'Preferences for ' + smart },
+    { type: 'label', content: localize('Clearspeak/PrefsFor', smart) },
     { type: 'rule' },
   ];
   return items.concat(
@@ -282,50 +283,3 @@ export async function clearspeakMenu(
   exit(items);
 }
 MJContextMenu.DynamicSubmenus.set('Clearspeak', [clearspeakMenu, 'speech']);
-
-let LOCALE_MENU: SubMenu = null;
-
-/**
- * Creates dynamic locale menu.
- *
- * @param {MJContextMenu} menu The context menu.
- * @param {Submenu} sub The submenu to attach elements to.
- * @param {SubmenuCallback} callback Callback to apply on the constructed
- *   submenu.
- */
-export function localeMenu(
-  menu: MJContextMenu,
-  sub: Submenu,
-  callback: SubmenuCallback
-) {
-  if (LOCALE_MENU) {
-    callback(LOCALE_MENU);
-    return;
-  }
-  const radios: {
-    type: string;
-    id: string;
-    content: string;
-    variable: string;
-  }[] = [];
-  for (const lang of Sre.locales.keys()) {
-    if (lang === 'nemeth' || lang === 'euro') continue;
-    radios.push({
-      type: 'radio',
-      id: lang,
-      content: Sre.locales.get(lang) || lang,
-      variable: 'locale',
-    });
-  }
-  radios.sort((x, y) => x.content.localeCompare(y.content, 'en'));
-  LOCALE_MENU = menu.factory.get('subMenu')(
-    menu.factory,
-    {
-      items: radios,
-      id: 'Language',
-    },
-    sub
-  );
-  callback(LOCALE_MENU);
-}
-MJContextMenu.DynamicSubmenus.set('A11yLanguage', [localeMenu, 'speech']);

@@ -22,6 +22,7 @@
  */
 
 import { InfoDialog, InfoDialogArgs } from './InfoDialog.js';
+import { localize } from '../../core/__locales__/Component.js';
 
 /**
  * The args for a CopyDialog
@@ -49,7 +50,7 @@ export class CopyDialog extends InfoDialog {
     args.extraNodes ??= [];
     const copy = args.adaptor.node('input', {
       type: 'button',
-      value: 'Copy to Clipboard',
+      value: localize('Dialog/CopyToClip'),
       'data-drag': 'none',
     });
     copy.addEventListener('click', this.copyToClipboard.bind(this));

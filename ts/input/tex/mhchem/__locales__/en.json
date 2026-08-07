@@ -1,0 +1,5 @@
+{
+  "MhchemBug": "mhchem bug %1. Please report.",
+  "MhchemBug2": "mhchem bug %1. Please report. (%2)",
+  "MhchemErrorBond": "mhchem Error. Unknown bond type (%1)"
+}

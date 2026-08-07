@@ -192,7 +192,8 @@ export class MmlMtable extends AbstractMmlNode {
             mtr.appendChild(factory.create('mtd'));
           }
           const merror = child.mError(
-            'Children of ' + this.kind + ' must be mtr or mlabeledtr',
+            'MML/mtableChildren',
+            [this.kind],
             options,
             isMtd
           );
