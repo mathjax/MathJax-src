@@ -59,7 +59,10 @@ export class ListItem<DataClass> {
    */
   public prev: ListItem<DataClass> = null;
 
-  public get isEnd() {
+  /**
+   * @returns {boolean}   True if the list item is the last one in the list
+   */
+  public get isEnd(): boolean {
     return this.data === END;
   }
 
@@ -112,6 +115,11 @@ export class LinkedList<DataClass> {
     return a < b;
   }
 
+  /**
+   * Get the first item in the list
+   *
+   * @returns {ListItem<DataClass>}   The first item in the lest
+   */
   public first(): ListItem<DataClass> {
     return this.list.next;
   }

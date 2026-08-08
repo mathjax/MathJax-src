@@ -141,8 +141,9 @@ export interface MathItem<N, T, D> {
    *
    * @param {MathDocument} document  The MathDocument in which the math resides
    * @param {number=} end            The state to end rerendering at (default = LAST)
+   * @returns {MmlNode | N}          The typesetRoot or root node of the converted MathItem
    */
-  convert(document: MathDocument<N, T, D>, end?: number): void;
+  convert(document: MathDocument<N, T, D>, end?: number): MmlNode | N;
 
   /**
    * Converts the expression into the internal format by calling the input jax
@@ -387,7 +388,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   /**
    * @override
    */
-  public convert(document: MathDocument<N, T, D>, end: number = STATE.LAST) {
+  public convert(document: MathDocument<N, T, D>, end: number = STATE.LAST): MmlNode | N {
     return document.renderActions.renderConvert(this, document, end);
   }
 
