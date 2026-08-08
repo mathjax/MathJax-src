@@ -74,7 +74,7 @@ export const mathjax = {
   asyncLoad: null as (file: string) => any,
 
   /**
-   * When asyncLoad uses require(), it actually operates synchronously and this is true
+   * When asyncLoad uses a synchronous function like require(), this should be set to true
    */
   asyncIsSynchronous: false,
 };
