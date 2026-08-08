@@ -22,6 +22,7 @@
  */
 
 import { mathjax } from '../mathjax.js';
+import { asyncLoad } from './AsyncLoad.js';
 import { OptionList } from './Options.js';
 
 /**
@@ -507,7 +508,7 @@ function replace(match: string, entity: string): string {
       entity.charAt(0).toLowerCase();
     if (!loaded[file]) {
       loaded[file] = true;
-      const promise = mathjax.asyncLoad(`./util/entities/${file}.js`);
+      const promise = asyncLoad(`./util/entities/${file}.js`);
       if (mathjax.asyncIsSynchronous) {
         return replace(match, entity);
       }

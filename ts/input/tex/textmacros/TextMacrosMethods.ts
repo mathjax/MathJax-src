@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
+import { mathjax } from '../../../mathjax.js';
 import { HandlerType } from '../HandlerTypes.js';
 import TexParser from '../TexParser.js';
-import { retryAfter } from '../../../util/Retries.js';
 import { TextParser } from './TextParser.js';
 import BaseMethods from '../base/BaseMethods.js';
 
@@ -290,7 +290,7 @@ export const TextMacrosMethods = {
     if (!macro || (autoload && macro._func === autoload.Autoload)) {
       texParser.parse(HandlerType.MACRO, [texParser, name]);
       if (!macro) return;
-      retryAfter(Promise.resolve());
+      mathjax.retryAfter(Promise.resolve());
     }
     texParser.parse(HandlerType.MACRO, [parser, name]);
   },

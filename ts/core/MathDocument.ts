@@ -36,7 +36,6 @@ import { MmlFactory } from '../core/MmlTree/MmlFactory.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
 import { BitField, BitFieldClass } from '../util/BitField.js';
 import { PrioritizedList } from '../util/PrioritizedList.js';
-import { handleRetriesFor } from '../util/Retries.js';
 import { localize } from './__locales__/Component.js';
 import { Locale } from '../util/Locale.js';
 import { mathjax } from '../mathjax.js';
@@ -883,7 +882,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    */
   public renderPromise() {
     return this.whenReady(() =>
-      handleRetriesFor(async () => {
+      mathjax.handleRetriesFor(async () => {
         this.render();
         await this.actionPromises();
         this.clearPromises();
@@ -906,7 +905,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    */
   public rerenderPromise(start: number = STATE.RERENDER) {
     return this.whenReady(() =>
-      handleRetriesFor(async () => {
+      mathjax.handleRetriesFor(async () => {
         this.rerender(start);
         await this.actionPromises();
         this.clearPromises();
@@ -962,7 +961,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    */
   public convertPromise(math: string, options: OptionList = {}) {
     return this.whenReady(() =>
-      handleRetriesFor(async () => {
+      mathjax.handleRetriesFor(async () => {
         const node = this.convert(math, options);
         await this.actionPromises();
         this.clearPromises();
