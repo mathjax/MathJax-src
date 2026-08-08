@@ -52,6 +52,11 @@ import { XMLNode } from '../../../core/MmlTree/MmlNode.js';
 import { StyleJson } from '../../../util/StyleJson.js';
 import { StyleList } from '../../../util/Styles.js';
 
+export type FontStyles = {
+  'font-family': string;
+  'font-size': string;
+};
+
 /*****************************************************************/
 /**
  * The ChtmlSemantics interface for the CHTML Semantics wrapper
@@ -244,7 +249,10 @@ export interface ChtmlXmlNodeNTD<N, T, D>
       ChtmlFontData,
       ChtmlFontDataClass
     > {
-  getFontStyles(): {'font-family': string, 'font-size': string};
+  /**
+   * @returns {FontStyles}  the font family and size data
+   */
+  getFontStyles(): FontStyles;
 }
 
 /**
@@ -315,7 +323,10 @@ export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
       this.dom = [this.adaptor.append(parents[0], this.getHTML()) as N];
     }
 
-    public getFontStyles(): { 'font-family': string; 'font-size': string } {
+    /**
+     * @override
+     */
+    public getFontStyles(): FontStyles {
       const style = super.getFontStyles();
       style['font-size'] = '1em';
       return style;
