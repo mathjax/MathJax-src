@@ -70,8 +70,7 @@ export interface SvgMactionNTD<N, T, D>
       SvgDelimiterData,
       SvgFontData,
       SvgFontDataClass
-    > {
-}
+    > {}
 
 /**
  * The SvgMactionClass interface for the SVG maction wrapper

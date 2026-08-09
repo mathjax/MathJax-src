@@ -67,8 +67,7 @@ export interface ChtmlMactionNTD<N, T, D>
       ChtmlDelimiterData,
       ChtmlFontData,
       ChtmlFontDataClass
-    > {
-}
+    > {}
 
 /**
  * The ChtmlMactionClass interface for the CHTML Maction wrapper

@@ -247,13 +247,13 @@ export interface CommonMaction<
    * Public access to em method (for use in notation functions)
    *
    * @param {number} m   The number to convert to pixels
-   * @returns {string}    The dimension with "px" units
+   * @returns {string}   The dimension with "px" units
    */
   Em(m: number): string;
 
   /**
    * @param {number} m   The number to convert to pixels
-   * @returns {string}    The dimension with "px" units
+   * @returns {string}   The dimension with "px" units
    */
   Px(m: number): string;
 }
