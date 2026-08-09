@@ -388,7 +388,10 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   /**
    * @override
    */
-  public convert(document: MathDocument<N, T, D>, end: number = STATE.LAST): MmlNode | N {
+  public convert(
+    document: MathDocument<N, T, D>,
+    end: number = STATE.LAST
+  ): MmlNode | N {
     return document.renderActions.renderConvert(this, document, end);
   }
 
