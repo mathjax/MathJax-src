@@ -39,10 +39,9 @@ import {
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMaction } from '../../../core/MmlTree/MmlNodes/maction.js';
 import { ActionDef } from '../../common/Wrappers/maction.js';
-import { EventHandler, TooltipData } from '../../common/Wrappers/maction.js';
+import { TooltipData } from '../../common/Wrappers/maction.js';
 import { TextNode } from '../../../core/MmlTree/MmlNode.js';
 import { StyleJson } from '../../../util/StyleJson.js';
-import { STATE } from '../../../core/MathItem.js';
 
 /*****************************************************************/
 /**
@@ -69,23 +68,6 @@ export interface ChtmlMactionNTD<N, T, D>
       ChtmlFontData,
       ChtmlFontDataClass
     > {
-  /**
-   * Add an event handler to the output for this maction
-   *
-   * @param {string} type The event handler type.
-   * @param {EventHandler} handler The actual event handler.
-   * @param {N=} dom The DOM node. If not provided goes over all elements of
-   *the dom tree of this wrapper.
-   */
-  setEventHandler(type: string, handler: EventHandler, dom?: N): void;
-
-  /**
-   * Public access to em method (for use in notation functions)
-   *
-   * @param {number} m   The number to convert to pixels
-   * @returns {string}    The dimension with "px" units
-   */
-  Em(m: number): string;
 }
 
 /**
@@ -215,52 +197,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
      * @override
      */
     public static actions = new Map([
-      [
-        'toggle',
-        [
-          (node, _data) => {
-            //
-            // Mark which child is selected
-            //
-            node.dom.forEach((dom) => {
-              node.adaptor.setAttribute(
-                dom,
-                'toggle',
-                node.node.attributes.get('selection') as string
-              );
-            });
-            //
-            // Cache the data needed to select another node
-            //
-            const math = node.factory.jax.math;
-            const document = node.factory.jax.document;
-            const mml = node.node as MmlMaction;
-            //
-            // Add a click handler that changes the selection and rerenders the expression
-            //
-            node.setEventHandler('click', (event: Event) => {
-              if (!math.end.node) {
-                //
-                // If the MathItem was created by hand, it might not have a node
-                // telling it where to replace the existing math, so set it.
-                //
-                math.start.node = math.end.node = math.typesetRoot;
-                math.start.n = math.end.n = 0;
-              }
-              mml.nextToggleSelection();
-              math.rerender(
-                document,
-                mml.attributes.get('data-maction-id')
-                  ? STATE.ENRICHED
-                  : STATE.RERENDER
-              );
-              event.stopPropagation();
-            });
-          },
-          {},
-        ],
-      ],
-
+      ...Base.actions, // override tooltip from the base actions
       [
         'tooltip',
         [
@@ -330,46 +267,6 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
           TooltipData,
         ],
       ],
-
-      [
-        'statusline',
-        [
-          (node, data) => {
-            const tip = node.childNodes[1];
-            if (!tip) return;
-            if (tip.node.isKind('mtext')) {
-              const adaptor = node.adaptor;
-              const text = (tip.node as TextNode).getText();
-              node.dom.forEach((dom) =>
-                adaptor.setAttribute(dom, 'statusline', text)
-              );
-              //
-              // Set up event handlers to change the status window
-              //
-              node.setEventHandler('mouseover', (event: Event) => {
-                if (data.status === null) {
-                  const body = adaptor.body(adaptor.document);
-                  data.status = adaptor.append(
-                    body,
-                    node.html('mjx-status', {}, [node.text(text)])
-                  );
-                }
-                event.stopPropagation();
-              });
-              node.setEventHandler('mouseout', (event: Event) => {
-                if (data.status) {
-                  adaptor.remove(data.status);
-                  data.status = null;
-                }
-                event.stopPropagation();
-              });
-            }
-          },
-          {
-            status: null, // cached status line
-          },
-        ],
-      ],
     ] as ActionDef<
       N,
       T,
@@ -385,24 +282,6 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
       ChtmlFontDataClass,
       ChtmlMactionNTD<N, T, D>
     >[]);
-
-    /*************************************************************/
-
-    /**
-     * @override
-     */
-    public setEventHandler(type: string, handler: EventHandler, dom: N = null) {
-      (dom ? [dom] : this.dom).forEach((node) =>
-        (node as any).addEventListener(type, handler)
-      );
-    }
-
-    /**
-     * @override
-     */
-    public Em(m: number): string {
-      return this.em(m);
-    }
 
     /*************************************************************/
 

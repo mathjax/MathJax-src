@@ -37,7 +37,7 @@ import {
   CommonMactionMixin,
 } from '../../common/Wrappers/maction.js';
 import { ActionDef } from '../../common/Wrappers/maction.js';
-import { EventHandler, TooltipData } from '../../common/Wrappers/maction.js';
+import { TooltipData } from '../../common/Wrappers/maction.js';
 import { MmlMaction } from '../../../core/MmlTree/MmlNodes/maction.js';
 import {
   MmlNode,
@@ -45,7 +45,6 @@ import {
   AbstractMmlNode,
 } from '../../../core/MmlTree/MmlNode.js';
 import { StyleJson } from '../../../util/StyleJson.js';
-import { STATE } from '../../../core/MathItem.js';
 
 /*****************************************************************/
 /**
@@ -72,16 +71,6 @@ export interface SvgMactionNTD<N, T, D>
       SvgFontData,
       SvgFontDataClass
     > {
-  /**
-   * Add an event handler to the output for this maction
-   */
-  setEventHandler(type: string, handler: EventHandler, dom?: N): void;
-
-  /**
-   * @param {number} m   The number to convert to pixels
-   * @returns {string}    The dimension with "px" units
-   */
-  Px(m: number): string;
 }
 
 /**
@@ -153,6 +142,13 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
     /**
      * @override
      */
+    public get prefix(): string {
+      return 'data-';
+    }
+
+    /**
+     * @override
+     */
     public static styles: StyleJson = {
       '[jax="SVG"] mjx-tool': {
         display: 'inline-block',
@@ -213,52 +209,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
      * @override
      */
     public static actions = new Map([
-      [
-        'toggle',
-        [
-          (node, _data) => {
-            //
-            // Mark which child is selected
-            //
-            node.dom.forEach((dom) => {
-              node.adaptor.setAttribute(
-                dom,
-                'data-toggle',
-                node.node.attributes.get('selection') as string
-              );
-            });
-            //
-            // Cache the data needed to select another node
-            //
-            const math = node.factory.jax.math;
-            const document = node.factory.jax.document;
-            const mml = node.node as MmlMaction;
-            //
-            // Add a click handler that changes the selection and rerenders the expression
-            //
-            node.setEventHandler('click', (event: Event) => {
-              if (!math.end.node) {
-                //
-                // If the MathItem was created by hand, it might not have a node
-                // telling it where to replace the existing math, so set it.
-                //
-                math.start.node = math.end.node = math.typesetRoot;
-                math.start.n = math.end.n = 0;
-              }
-              mml.nextToggleSelection();
-              math.rerender(
-                document,
-                mml.attributes.get('data-maction-id')
-                  ? STATE.ENRICHED
-                  : STATE.RERENDER
-              );
-              event.stopPropagation();
-            });
-          },
-          {},
-        ],
-      ],
-
+      ...Base.actions, // override tooltip from the base actions
       [
         'tooltip',
         [
@@ -347,46 +298,6 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
           TooltipData,
         ],
       ],
-
-      [
-        'statusline',
-        [
-          (node, data) => {
-            const tip = node.childNodes[1];
-            if (!tip) return;
-            if (tip.node.isKind('mtext')) {
-              const adaptor = node.adaptor;
-              const text = (tip.node as TextNode).getText();
-              node.dom.forEach((dom) =>
-                adaptor.setAttribute(dom, 'data-statusline', text)
-              );
-              //
-              // Set up event handlers to change the status window
-              //
-              node.setEventHandler('mouseover', (event: Event) => {
-                if (data.status === null) {
-                  const body = adaptor.body(adaptor.document);
-                  data.status = adaptor.append(
-                    body,
-                    node.html('mjx-status', {}, [node.text(text)])
-                  );
-                }
-                event.stopPropagation();
-              });
-              node.setEventHandler('mouseout', (event: Event) => {
-                if (data.status) {
-                  adaptor.remove(data.status);
-                  data.status = null;
-                }
-                event.stopPropagation();
-              });
-            }
-          },
-          {
-            status: null, // cached status line
-          },
-        ],
-      ],
     ] as ActionDef<
       N,
       T,
@@ -402,29 +313,6 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
       SvgFontDataClass,
       SvgMactionNTD<N, T, D>
     >[]);
-
-    /*************************************************************/
-
-    /**
-     * Add an event handler to the output for this maction
-     *
-     * @param {string} type The event handler type.
-     * @param {EventHandler} handler The actual event handler.
-     * @param {N=} dom The DOM node. If not provided goes over all elements of
-     *    the dom tree of this wrapper.
-     */
-    public setEventHandler(type: string, handler: EventHandler, dom: N = null) {
-      (dom ? [dom] : this.dom).forEach((node) =>
-        (node as any).addEventListener(type, handler)
-      );
-    }
-
-    /**
-     * @override
-     */
-    public Px(m: number): string {
-      return this.px(m);
-    }
 
     /*************************************************************/
 
