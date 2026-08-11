@@ -24,7 +24,7 @@
 import {Slider} from './mj-context-menu.js';
 
 //
-// Fix slider actions (FIXME: remove when mj-context-menu is mergerd into MathJax-src repo)
+// Fix slider actions (FIXME: remove when mj-context-menu is merged into MathJax-src repo)
 //
 export class mjSlider extends Slider {
   /**
