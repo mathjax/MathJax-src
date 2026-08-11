@@ -18,7 +18,7 @@
 /**
  * @file  Implements a radio button with customizable comparator.
  *
- * @author v.sorge@mathjax.org (Volker Sorge)
+ * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {Slider} from './mj-context-menu.js';
