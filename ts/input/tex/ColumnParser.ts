@@ -338,7 +338,7 @@ export class ColumnParser {
           break;
       }
     }
-    return texError(COMPONENT, 'MissingCloseBrace');
+    texError(COMPONENT, 'MissingCloseBrace');
   }
 
   /**

@@ -466,7 +466,7 @@ export default class TexParser {
       }
     }
     // @test MissingCloseBracket
-    return texError(COMPONENT, 'MissingCloseBracket', this.currentCS);
+    texError(COMPONENT, 'MissingCloseBracket', this.currentCS);
   }
 
   /**
@@ -491,7 +491,7 @@ export default class TexParser {
       }
     }
     // @test MissingOrUnrecognizedDelim1, MissingOrUnrecognizedDelim2
-    return texError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
+    texError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
   }
 
   /**
@@ -518,7 +518,7 @@ export default class TexParser {
       }
     }
     // @test MissingDimOrUnits
-    return texError(COMPONENT, 'MissingDimOrUnits', this.currentCS);
+    texError(COMPONENT, 'MissingDimOrUnits', this.currentCS);
   }
 
   /**
@@ -561,12 +561,7 @@ export default class TexParser {
       }
     }
     // @test TokenNotFoundForCommand
-    return texError(
-      COMPONENT,
-      'TokenNotFoundForCommand',
-      token,
-      this.currentCS
-    );
+    texError(COMPONENT, 'TokenNotFoundForCommand', token, this.currentCS);
   }
 
   /**
@@ -613,7 +608,7 @@ export default class TexParser {
       return c;
     }
     // @test MissingOrUnrecognizedDelim
-    return texError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
+    texError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
   }
 
   /**

@@ -202,7 +202,7 @@ export const NewcommandUtil = {
       arg.push(NewcommandUtil.trimToken(token, legacyMacroTemplates));
     }
     // @test No Replacement
-    return texError(COMPONENT, 'MissingReplacementString', cmd);
+    texError(COMPONENT, 'MissingReplacementString', cmd);
   },
 
   /**
@@ -259,7 +259,7 @@ export const NewcommandUtil = {
     }
     if (initial) return null;
     // @test Runaway Argument
-    return texError(COMPONENT, 'RunawayArgument', name);
+    texError(COMPONENT, 'RunawayArgument', name);
   },
 
   /**
