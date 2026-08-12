@@ -119,7 +119,7 @@ export const NewcommandUtil = {
    */
   GetTemplate(parser: TexParser, cmd: string, cs: string): number | string[] {
     // @test Def Double Let, Def ReDef, Def Let
-    parser.GetNext(); // Remove initial '{' from the string
+    parser.GetNext(); // Move past the first non-whitespace character.
     const params: string[] = [];
     let n = 0;
     let i = parser.i;
