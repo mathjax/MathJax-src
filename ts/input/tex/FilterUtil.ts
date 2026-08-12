@@ -354,8 +354,8 @@ const FilterUtil = {
    *   tagged equation, or another array), `addLatexItem` sets `data-latex` from
    *   the `\end{name}` argument alone (e.g., `{array}`), which is wrong.
    *
-   * This filter only replace a `data-latex` value that looks missing or
-   * broken, so that already-correct values (e.g., the literal source of a bare
+   * This filter only replaces a `data-latex` value that looks missing or
+   * broken, so that already correct values (e.g., the literal source of a bare
    * top-level array, or the macro call for macros that build their own
    * array-like content) are left alone.
    *

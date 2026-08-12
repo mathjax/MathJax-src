@@ -38,6 +38,7 @@ import StackItemFactory from '../StackItemFactory.js';
 import { CheckType, BaseItem, StackItem, EnvList } from '../StackItem.js';
 import { TRBL } from '../../../util/Styles.js';
 import { TexConstant } from '../TexConstants.js';
+import { quotePattern } from '../../../util/string.js';
 
 import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
 import { COMPONENT } from './__locales__/Component.js';
@@ -768,7 +769,7 @@ export class FnItem extends BaseItem {
           (NodeUtil.isType(mml, 'mstyle') &&
             mml.childNodes.length &&
             NodeUtil.isType(mml.childNodes[0].childNodes[0], 'mspace')) ||
-            NodeUtil.isType(mml, 'mspace')
+          NodeUtil.isType(mml, 'mspace')
         ) {
           // @test Fn Pos Space, Fn Neg Space
           return [[top, item], true];
@@ -828,16 +829,16 @@ export class NotItem extends BaseItem {
     }
     if (
       item.isKind('mml') &&
-        (NodeUtil.isType(item.First, 'mo') ||
-          NodeUtil.isType(item.First, 'mi') ||
-          NodeUtil.isType(item.First, 'mtext'))
+      (NodeUtil.isType(item.First, 'mo') ||
+        NodeUtil.isType(item.First, 'mi') ||
+        NodeUtil.isType(item.First, 'mtext'))
     ) {
       mml = item.First;
       c = NodeUtil.getText(mml as TextNode);
       if (
         c.length === 1 &&
-          !NodeUtil.getProperty(mml, 'movesupsub') &&
-          NodeUtil.getChildren(mml).length === 1
+        !NodeUtil.getProperty(mml, 'movesupsub') &&
+        NodeUtil.getChildren(mml).length === 1
       ) {
         if (this.remap.contains(c)) {
           // @test Negation Simple, Negation Complex
@@ -1234,7 +1235,7 @@ export class ArrayItem extends BaseItem {
       if (start || end || ralign) {
         if (
           ++this.templateSubs >
-            parser.configuration.options.maxTemplateSubtitutions
+          parser.configuration.options.maxTemplateSubtitutions
         ) {
           texError(COMPONENT, 'MaxTemplateSubs');
         }
@@ -1290,7 +1291,7 @@ export class ArrayItem extends BaseItem {
             envs--;
             break;
           }
-          // fall through if not closing a nested array environment
+        // fall through if not closing a nested array environment
         default: {
           if (braces || envs) continue;
           i -= match[2].length;
@@ -1478,7 +1479,7 @@ export class ArrayItem extends BaseItem {
    *     -1 if no matching end was found.
    */
   private static findEnvEnd(str: string, name: string): number {
-    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escaped = quotePattern(name);
     const begin = new RegExp(`^\\\\begin\\s*\\{${escaped}\\}`);
     const end = new RegExp(`^\\\\end\\s*\\{${escaped}\\}`);
     let depth = 0;
@@ -1627,8 +1628,8 @@ export class EqnArrayItem extends ArrayItem {
     const calign = (this.arraydef.columnalign as string).split(/ /);
     const align =
       this.row.length && calign.length
-      ? calign[this.row.length % calign.length]
-      : 'right';
+        ? calign[this.row.length % calign.length]
+        : 'right';
     if (align !== 'right') {
       ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }

@@ -32,6 +32,7 @@ import { ParseUtil } from '../ParseUtil.js';
 import { UnitUtil } from '../UnitUtil.js';
 import { StackItem } from '../StackItem.js';
 import { NewcommandUtil } from './NewcommandUtil.js';
+import { quotePattern } from '../../../util/string.js';
 
 import { COMPONENT } from './__locales__/Component.js';
 
@@ -89,17 +90,17 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     const def = parser.GetArgument(name);
     !(params instanceof Array)
       ? // @test Def DoubleLet, DefReDef
-      NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [
-        def,
-        params,
-      ])
+        NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [
+          def,
+          params,
+        ])
       : // @test Def Let
-      NewcommandUtil.addMacro(
-        parser,
-        cs,
-        NewcommandMethods.MacroWithTemplate,
-        [def].concat(params)
-      );
+        NewcommandUtil.addMacro(
+          parser,
+          cs,
+          NewcommandMethods.MacroWithTemplate,
+          [def].concat(params)
+        );
     parser.Push(parser.itemFactory.create('null'));
   },
 
@@ -271,7 +272,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
           // Here `\end{name}` has already been parsed, but left in place it
           // ends up in the LaTeX source. Remove it using whitespace to keep the
           // counter correct.
-          const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const escaped = quotePattern(name);
           const endTag = prefix.match(
             new RegExp(`\\\\end\\s*\\{\\s*${escaped}\\s*\\}$`)
           );
