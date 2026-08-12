@@ -296,7 +296,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         args.push(parser.GetArgument(`\\begin{${name}}`));
       }
       bdef = ParseUtil.substituteArgs(parser, args, bdef);
-      edef = ParseUtil.substituteArgs(parser, [], edef); // no args, but get errors for #n in edef
+      ParseUtil.substituteArgs(parser, [], edef); // no args, but get errors for #n in edef
     }
     parser.string = ParseUtil.addArgs(
       parser,

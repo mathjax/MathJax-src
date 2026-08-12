@@ -93,7 +93,6 @@ export class MultlineItem extends ArrayItem {
     super.EndTable();
     if (this.table.length) {
       const m = this.table.length - 1;
-      let label = -1;
       if (
         !NodeUtil.getAttribute(
           NodeUtil.getChildren(this.table[0])[0],
@@ -120,7 +119,7 @@ export class MultlineItem extends ArrayItem {
       }
       const tag = this.factory.configuration.tags.getTag();
       if (tag) {
-        label =
+        const label =
           this.arraydef.side === TexConstant.Align.LEFT
             ? 0
             : this.table.length - 1;
