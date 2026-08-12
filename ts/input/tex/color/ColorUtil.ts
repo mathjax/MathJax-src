@@ -46,7 +46,7 @@ export class ColorModel {
    *
    * @param {string} model The coloring model type: `rgb` `RGB` or `gray`.
    * @param {string} def The color definition: `0.5,0,1`, `128,0,255`, `0.5`.
-   * @returns {string} The color definition in CSS format e.g. `#44ff00`.
+   * @returns {string|undefined} The color definition in CSS format e.g. `#44ff00`.
    */
   private normalizeColor(model: string, def: string): string {
     if (!model || model === 'named') {
