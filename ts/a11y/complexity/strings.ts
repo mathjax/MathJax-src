@@ -29,4 +29,5 @@ export const PROP = {
 
 export const DATA = {
   COMPLEXITY: 'data-collapse-complexity',
+  PREFIX: 'data-collapse-',
 };
