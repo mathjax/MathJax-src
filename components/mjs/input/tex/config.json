@@ -11,7 +11,8 @@
       "input/tex/noundefined",
       "input/tex/require",
       "input/tex/autoload",
-      "input/tex/configmacros"
+      "input/tex/configmacros",
+      "input/tex/__locales__"
     ],
     "excludeSubdirs": true
   },

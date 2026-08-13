@@ -45,6 +45,7 @@ import { length2em } from '../util/lengths.js';
 import { StyleList, Styles } from '../util/Styles.js';
 import { StyleJson, StyleJsonSheet } from '../util/StyleJson.js';
 import { BBox } from '../util/BBox.js';
+import { SEM } from '../a11y/semantic-enrich/strings.js';
 
 /*****************************************************************/
 
@@ -592,10 +593,7 @@ export abstract class CommonOutputJax<
             child.childNodes[0].setProperty('inline-breaks', true);
             node.parent.setProperty('process-breaks', 'true');
           }
-        } else if (
-          child.isKind('mrow') &&
-          child.attributes.get('data-semantic-added')
-        ) {
+        } else if (child.isKind('mrow') && child.attributes.get(SEM.ADDED)) {
           this.markInlineBreaks(child);
           if (child.getProperty('process-breaks')) {
             child.setProperty('inline-breaks', true);

@@ -22,7 +22,8 @@
  */
 
 import { A11yDocument, Region } from './Region.js';
-import { Highlighter, ATTR } from './Highlighter.js';
+import { Highlighter } from './Highlighter.js';
+import { HILITE } from './strings.js';
 
 import type { ExplorerPool } from './ExplorerPool.js';
 
@@ -329,7 +330,7 @@ export class AbstractExplorer<T> implements Explorer {
         //
         if (
           child.nodeName.charAt(0) === '#' ||
-          child.hasAttribute?.(ATTR.ADDED)
+          child.hasAttribute?.(HILITE.ADDED)
         ) {
           continue;
         }

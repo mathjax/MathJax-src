@@ -47,6 +47,7 @@ import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
 import { BBox } from '../../../util/BBox.js';
 import { LineBBox } from '../LineBBox.js';
 import { DIRECTION } from '../FontData.js';
+import { SEM } from '../../../a11y/semantic-enrich/strings.js';
 
 /*****************************************************************/
 /**
@@ -527,7 +528,7 @@ export function CommonScriptbaseMixin<
      */
     public getSemanticBase(): WW {
       const fence = this.node.attributes.getExplicit(
-        'data-semantic-fencepointer'
+        SEM.FENCEPOINTER
       ) as string;
       return this.getBaseFence(this.baseChild, fence);
     }
@@ -539,7 +540,7 @@ export function CommonScriptbaseMixin<
       if (!fence || !fence.node.attributes || !id) {
         return null;
       }
-      if (fence.node.attributes.getExplicit('data-semantic-id') === id) {
+      if (fence.node.attributes.getExplicit(SEM.ID) === id) {
         return fence;
       }
       for (const child of fence.childNodes) {

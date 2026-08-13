@@ -31,6 +31,8 @@ import {
 import { Explorer, AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
 import type { ExplorerMathItem } from '../explorer.js';
+import { SEM } from '../semantic-enrich/strings.js';
+import { MACTION } from '../semantic-enrich/maction.js';
 import '../sre.js';
 
 /**
@@ -146,8 +148,7 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     protected nodeAccess: (node: HTMLElement) => T
   ) {
     super(document, pool, region, node);
-    const top =
-      this.node.querySelector('[data-semantic-structure]') || this.node;
+    const top = this.node.querySelector(`[${SEM.STRUCTURE}]`) || this.node;
     this.topBBox = top.getBoundingClientRect();
     this.nodeBBox = this.node.getBoundingClientRect();
   }
@@ -267,7 +268,7 @@ export class ContentHoverer extends Hoverer<HTMLElement> {
       region,
       node,
       item,
-      (x) => x.hasAttribute?.('data-semantic-id'),
+      (x) => x.hasAttribute?.(SEM.ID),
       (x) => x
     );
   }
@@ -296,17 +297,17 @@ export class FlameHoverer extends Hoverer<void> {
       new DummyRegion(document),
       node,
       item,
-      (x) => x.hasAttribute('data-collapsible'),
+      (x) => x.hasAttribute(MACTION.COLLAPSIBLE),
       () => {}
     );
   }
 
   display(node: HTMLElement) {
-    const id = node.getAttribute('data-collapse-id');
+    const id = node.getAttribute(MACTION.GROUPID);
     if (id) {
       node = this.node.querySelector(`#${id}`);
     }
-    let parts: HTMLElement[] = node.hasAttribute('data-collapse-group')
+    let parts: HTMLElement[] = node.hasAttribute(MACTION.GROUP)
       ? this.highlighter.getMactionGroup(this.node, node)
       : [node];
     parts = this.highlighter.encloseNodes([...parts], this.node);

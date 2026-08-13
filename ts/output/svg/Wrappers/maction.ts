@@ -47,6 +47,7 @@ import {
 import { StyleJson } from '../../../util/StyleJson.js';
 import { STATE } from '../../../core/MathItem.js';
 import { mathjax } from '../../../mathjax.js';
+import { MACTION } from '../../../a11y/semantic-enrich/maction.js';
 
 /*****************************************************************/
 /**
@@ -190,7 +191,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
         'background-color': '#F8F8F8',
         color: 'black',
       },
-      'g[data-mjx-collapsed]': {
+      [`g[${MACTION.COLLAPSED}]`]: {
         fill: '#55F',
       },
 
@@ -204,7 +205,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
           'background-color': '#303030',
           color: '#E0E0E0',
         },
-        'g[data-mjx-collapsed]': {
+        [`g[${MACTION.COLLAPSED}]`]: {
           fill: '#88F',
         },
       },
@@ -247,11 +248,11 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
                 math.start.n = math.end.n = 0;
               }
               mml.nextToggleSelection();
-              if (mml.attributes.get('data-collapse-group')) {
+              if (mml.attributes.get(MACTION.GROUP)) {
                 const id = mml.attributes.get('id');
                 const selection = mml.attributes.get('selection');
                 math.root.walkTree((node) => {
-                  if (node.attributes.get('data-collapse-id') === id) {
+                  if (node.attributes.get(MACTION.GROUPID) === id) {
                     node.attributes.set('selection', selection);
                   }
                 });
@@ -259,7 +260,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
               mathjax.handleRetriesFor(() => {
                 math.rerender(
                   document,
-                  mml.attributes.get('data-maction-id')
+                  mml.attributes.get(MACTION.ID)
                     ? STATE.ENRICHED
                     : STATE.RERENDER
                 );

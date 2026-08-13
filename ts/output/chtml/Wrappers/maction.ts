@@ -44,6 +44,7 @@ import { TextNode } from '../../../core/MmlTree/MmlNode.js';
 import { StyleJson } from '../../../util/StyleJson.js';
 import { STATE } from '../../../core/MathItem.js';
 import { mathjax } from '../../../mathjax.js';
+import { MACTION } from '../../../a11y/semantic-enrich/maction.js';
 
 /*****************************************************************/
 /**
@@ -191,7 +192,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
         'background-color': '#F8F8F8',
         color: 'black',
       },
-      'mjx-container [data-mjx-collapsed]': {
+      [`mjx-container [${MACTION.COLLAPSED}]`]: {
         color: '#55F',
       },
 
@@ -206,7 +207,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
           'background-color': '#303030',
           color: '#E0E0E0',
         },
-        'mjx-container [data-mjx-collapsed]': {
+        [`mjx-container [${MACTION.COLLAPSED}]`]: {
           color: '#88F',
         },
       },
@@ -249,11 +250,11 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
                 math.start.n = math.end.n = 0;
               }
               mml.nextToggleSelection();
-              if (mml.attributes.get('data-collapse-group')) {
+              if (mml.attributes.get(MACTION.GROUP)) {
                 const id = mml.attributes.get('id');
                 const selection = mml.attributes.get('selection');
                 math.root.walkTree((node) => {
-                  if (node.attributes.get('data-collapse-id') === id) {
+                  if (node.attributes.get(MACTION.GROUPID) === id) {
                     node.attributes.set('selection', selection);
                   }
                 });
@@ -261,7 +262,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
               mathjax.handleRetriesFor(() => {
                 math.rerender(
                   document,
-                  mml.attributes.get('data-maction-id')
+                  mml.attributes.get(MACTION.ID)
                     ? STATE.ENRICHED
                     : STATE.RERENDER
                 );

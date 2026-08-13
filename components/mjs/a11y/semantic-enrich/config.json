@@ -2,7 +2,9 @@
   "build": {
     "component": "a11y/semantic-enrich",
     "targets": [
-      "a11y/semantic-enrich.ts"
+      "a11y/semantic-enrich.ts",
+      "a11y/semantic-enrich",
+      "a11y/speech/strings.ts"
     ]
   },
   "copy": {

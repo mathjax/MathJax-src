@@ -30,7 +30,9 @@ import { OptionList, expandable } from '../util/Options.js';
 import { hasWindow } from '../util/context.js';
 import { StyleJson } from '../util/StyleJson.js';
 import { context } from '../util/context.js';
+import { SEM } from './semantic-enrich/strings.js';
 
+import { SAVED_HREF } from './explorer/KeyExplorer.js';
 import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
 
 import * as Sre from './sre.js';
@@ -294,15 +296,13 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      * @returns {HTMLElement[]}   All the nodes for the given id
      */
     public getSplitNodes(node: HTMLElement): HTMLElement[] {
-      const id = node.getAttribute('data-semantic-id');
+      const id = node.getAttribute(SEM.ID);
       if (!id) {
         return [node];
       }
       const nodes = (this.semanticNodes.get(id) ?? [id])
         .map((nid: string) =>
-          Array.from(
-            this.typesetRoot.querySelectorAll(`[data-semantic-id="${nid}"]`)
-          )
+          Array.from(this.typesetRoot.querySelectorAll(`[${SEM.ID}="${nid}"]`))
         )
         .flat() as HTMLElement[];
       return nodes;
@@ -423,11 +423,11 @@ export function ExplorerMathDocumentMixin<
         outline: '2px solid black',
       },
 
-      'mjx-container a[data-mjx-href]': {
+      [`mjx-container a[${SAVED_HREF}]`]: {
         color: 'LinkText',
         cursor: 'pointer',
       },
-      'mjx-container a[data-mjx-href].mjx-visited': {
+      [`mjx-container a[${SAVED_HREF}].mjx-visited`]: {
         color: 'VisitedText',
       },
 
