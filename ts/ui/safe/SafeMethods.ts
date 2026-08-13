@@ -334,7 +334,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   },
 
   /**
-   * Filter a on* attribute (don't allow them)
+   * Filter an on* attribute (don't allow them)
    *
    * @param {Safe<N,T,D>} _safe  The Safe object being used
    * @param {string} _value      The attribute's value
