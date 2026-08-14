@@ -383,6 +383,8 @@ export class SpeechExplorer
     if (!this.clicked) {
       this.Start();
       this.backTab = event.target === this.img;
+    } else if (!this.focusSpeech) {
+      this.speak('');  // don't speak initial equation until click event
     }
     this.clicked = null;
   }
