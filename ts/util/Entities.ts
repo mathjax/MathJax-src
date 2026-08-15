@@ -22,7 +22,6 @@
  */
 
 import { mathjax } from '../mathjax.js';
-import { asyncLoad } from './AsyncLoad.js';
 import { OptionList } from './Options.js';
 
 /**
