@@ -1313,7 +1313,7 @@ export class FontData<
     if (!dynamic.promise) {
       dynamic.promise = Promise.resolve();
       try {
-        asyncLoad(this.dynamicFileName(dynamic));
+        mathjax.asyncLoad(this.dynamicFileName(dynamic));
       } catch (err) {
         dynamic.failed = true;
         console.warn(err);
