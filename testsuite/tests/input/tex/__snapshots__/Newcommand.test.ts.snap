@@ -14,11 +14,11 @@ exports[`Nested Environments Environments Intermixed 1`] = `
 
 exports[`Nested Environments Environments Nested 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newenvironment{boxed}{\\begin{array}{|c|c|}\\hline}{\\\\\\hline\\end{array}}\\begin{boxed}\\begin{boxed}a&amp;b\\\\c&amp;d\\end{boxed} &amp; X \\end{boxed}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex="{array}">
-    <mtr data-latex="{|c|c|}">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex="\\begin{array}\\begin{array}{|c|c|}\\hline a&amp;b\\\\c&amp;d \\\\\\hline\\end{array}&amp;X\\end{array}">
+    <mtr data-latex="\\begin{array}{|c|c|}\\hline a&amp;b\\\\c&amp;d \\\\\\hline\\end{array}&amp;X">
       <mtd>
-        <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex="{array}">
-          <mtr data-latex="{|c|c|}">
+        <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex="\\begin{array}{|c|c|}\\hline a&amp;b\\\\c&amp;d \\\\\\hline\\end{array}">
+          <mtr data-latex="a&amp;b">
             <mtd>
               <mi data-latex="a">a</mi>
             </mtd>
@@ -26,7 +26,7 @@ exports[`Nested Environments Environments Nested 1`] = `
               <mi data-latex="b">b</mi>
             </mtd>
           </mtr>
-          <mtr data-latex="{|c|c|}">
+          <mtr data-latex="c&amp;d">
             <mtd>
               <mi data-latex="c">c</mi>
             </mtd>
@@ -56,8 +56,8 @@ exports[`Nested Environments Nested Begins 1`] = `
 
 exports[`Nested Environments Newenvironment with Begin 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newenvironment{boxed}{\\begin{array}{|c|c|}\\hline}{\\\\\\hline\\end{array}}\\begin{boxed}a&amp;b\\\\c&amp;d\\end{boxed}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex="{array}">
-    <mtr data-latex="{|c|c|}">
+  <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex="\\begin{array}{|c|c|}\\hline a&amp;b\\\\c&amp;d \\\\\\hline\\end{array}">
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -65,7 +65,7 @@ exports[`Nested Environments Newenvironment with Begin 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr data-latex="{|c|c|}">
+    <mtr data-latex="c&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>

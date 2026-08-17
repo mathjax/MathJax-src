@@ -75,6 +75,12 @@ export default class TexParser {
   private saveI: number = 0;
 
   /**
+   * Set by skipLatex() to tell the next call to updateResult() that LaTeX
+   * sources of the current macro does not produce an Mml node.
+   */
+  private _skipLatex: boolean = false;
+
+  /**
    * @class
    * @param {string} _string The string to parse.
    * @param {EnvList} env The intial environment representing the current parse
@@ -244,6 +250,15 @@ export default class TexParser {
     for (const arg of args) {
       this.stack.Push(arg);
     }
+  }
+
+  /**
+   * Marks the LaTeX source as skippable, so macros producing no Mml node (e.g.,
+   * \label, \tag, \notag) do not have their source code attached to the
+   * `data-latex` attribute of the most recently created node.
+   */
+  public skipLatex() {
+    this._skipLatex = true;
   }
 
   /**
@@ -608,6 +623,10 @@ export default class TexParser {
    */
   // Currently works without translating environments that generate typesetting.
   private updateResult(input: string, old: number) {
+    if (this._skipLatex) {
+      this._skipLatex = false;
+      return;
+    }
     const node = this.stack.Prev(true) as MmlNode;
     if (!node) {
       return;

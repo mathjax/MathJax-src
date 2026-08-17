@@ -32,6 +32,7 @@ import { MmlMo } from '../../core/MmlTree/MmlNodes/mo.js';
 import { Property, PropertyList } from '../../core/Tree/Node.js';
 import { Args } from './Types.js';
 import { OperatorDef } from '../../core/MmlTree/OperatorDictionary.js';
+import { TexConstant } from './TexConstants.js';
 
 const NodeUtil = {
   attrs: new Set<string>([
@@ -76,6 +77,32 @@ const NodeUtil = {
    */
   getText(node: TextNode): string {
     return node.getText();
+  },
+
+  /**
+   * Reconstructs the LaTeX source of a node (e.g., an mtd) from the
+   * `data-latex` attributes of the children of its first child (e.g., to
+   * rebuild the source of a table cell from its content nodes).
+   *
+   * @param {MmlNode} node The node whose content's LaTeX source should be
+   *     reconstructed.
+   * @returns {string} The reconstructed LaTeX source.
+   */
+  getChildrenLatex(node: MmlNode): string {
+    const children = node.childNodes[0]?.childNodes || [];
+    let expr = '';
+    for (const child of children) {
+      // For table child we prefer the `rawLatex` property.
+      const att = ((child as MmlNode)?.getProperty?.('rawLatex') ||
+        (child as MmlNode)?.attributes?.get(TexConstant.Attr.LATEX) ||
+        '') as string;
+      if (!att) continue;
+      expr +=
+        expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)
+          ? ' ' + att
+          : att;
+    }
+    return expr;
   },
 
   /**

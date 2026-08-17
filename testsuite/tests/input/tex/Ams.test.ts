@@ -1038,4 +1038,12 @@ describe('Ams symbols', () => {
 
 /**********************************************************************************/
 
+describe('Ams Issues', () => {
+  it('Array with Tag', () => {
+    expect(tex2mml('\\begin{array}{c}a \\end{array}\\tag{1}')).toMatchSnapshot();
+  });
+});
+
+/**********************************************************************************/
+
 afterAll(() => getTokens('ams'));

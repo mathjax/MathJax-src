@@ -3,7 +3,7 @@
 exports[`Cases Numcases 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{numcases}{f(x)=} 1 &amp; if $x &gt; 0$ \\\\ 0 &amp; otherwise \\end{numcases}" display="block">
   <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{f(x)=} 1 &amp; if $x &gt; 0$ \\\\ 0 &amp; otherwise \\end{numcases}">
-    <mlabeledtr data-latex="{f(x)=}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;1&amp;&amp;">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -22,7 +22,7 @@ exports[`Cases Numcases 1`] = `
             <mphantom>
               <mpadded width="0">
                 <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
-                  <mlabeledtr data-latex="{f(x)=}">
+                  <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;1&amp;&amp;">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{1}">1</mtext>
@@ -48,7 +48,7 @@ exports[`Cases Numcases 1`] = `
                       <mstyle indentshift="2em"></mstyle>
                     </mtd>
                   </mlabeledtr>
-                  <mlabeledtr data-latex="{f(x)=}">
+                  <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;0&amp;&amp;">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{2}">2</mtext>
@@ -73,7 +73,7 @@ exports[`Cases Numcases 1`] = `
           <mphantom>
             <mpadded width="0">
               <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
-                <mlabeledtr data-latex="{f(x)=}">
+                <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;1&amp;&amp;">
                   <mtd>
                     <mtext data-latex="\\text{(}">(</mtext>
                     <mtext data-latex="\\text{1}">1</mtext>
@@ -124,7 +124,7 @@ exports[`Cases Numcases 1`] = `
         <mstyle indentshift="2em"></mstyle>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="{f(x)=}">
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;0&amp;&amp;">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -150,7 +150,7 @@ exports[`Cases Numcases 1`] = `
 exports[`Cases Numcases with macro 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{numcases}{A=} 1 &amp; if {x\\\\y}\\$ \\end{numcases}" display="block">
   <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{A=} 1 &amp; if {x\\\\y}\\$ \\end{numcases}">
-    <mlabeledtr data-latex="{A=}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;1&amp;&amp;">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -166,7 +166,7 @@ exports[`Cases Numcases with macro 1`] = `
             <mphantom>
               <mpadded width="0">
                 <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
-                  <mlabeledtr data-latex="{A=}">
+                  <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;1&amp;&amp;">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{1}">1</mtext>
@@ -191,7 +191,7 @@ exports[`Cases Numcases with macro 1`] = `
           <mphantom>
             <mpadded width="0">
               <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
-                <mlabeledtr data-latex="{A=}">
+                <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;1&amp;&amp;">
                   <mtd>
                     <mtext data-latex="\\text{(}">(</mtext>
                     <mtext data-latex="\\text{1}">1</mtext>
@@ -233,7 +233,7 @@ exports[`Cases Numcases with macro 1`] = `
 exports[`Cases entry not in numcases 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{cc} x &amp; y \\end{array}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{cc} x &amp; y \\end{array}">
-    <mtr data-latex="{cc}">
+    <mtr data-latex="x&amp;y">
       <mtd>
         <mi data-latex="x">x</mi>
       </mtd>
@@ -248,7 +248,7 @@ exports[`Cases entry not in numcases 1`] = `
 exports[`Cases numcases with explicit tag 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{numcases}{A=} x\\tag{A} &amp; y \\end{numcases}" display="block">
   <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{numcases}{A=} x\\tag{A} &amp; y \\end{numcases}">
-    <mlabeledtr data-latex="{A=}">
+    <mlabeledtr data-latex="\\text{(}\\text{A}\\text{)}&amp;x&amp;&amp;">
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{A}">A</mtext>
@@ -264,14 +264,14 @@ exports[`Cases numcases with explicit tag 1`] = `
             <mphantom>
               <mpadded width="0">
                 <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
-                  <mlabeledtr data-latex="{A=}">
+                  <mlabeledtr data-latex="\\text{(}\\text{A}\\text{)}&amp;x&amp;&amp;">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{A}">A</mtext>
                       <mtext data-latex="\\text{)}">)</mtext>
                     </mtd>
                     <mtd>
-                      <mi data-latex="\\tag{A}">x</mi>
+                      <mi data-latex="x">x</mi>
                     </mtd>
                     <mtd>
                       <mstyle indentshift="2em">
@@ -289,14 +289,14 @@ exports[`Cases numcases with explicit tag 1`] = `
           <mphantom>
             <mpadded width="0">
               <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
-                <mlabeledtr data-latex="{A=}">
+                <mlabeledtr data-latex="\\text{(}\\text{A}\\text{)}&amp;x&amp;&amp;">
                   <mtd>
                     <mtext data-latex="\\text{(}">(</mtext>
                     <mtext data-latex="\\text{A}">A</mtext>
                     <mtext data-latex="\\text{)}">)</mtext>
                   </mtd>
                   <mtd>
-                    <mi data-latex="\\tag{A}">x</mi>
+                    <mi data-latex="x">x</mi>
                   </mtd>
                   <mtd>
                     <mstyle indentshift="2em">
@@ -313,7 +313,7 @@ exports[`Cases numcases with explicit tag 1`] = `
         </mpadded>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{A}">x</mi>
+        <mi data-latex="x">x</mi>
       </mtd>
       <mtd>
         <mstyle indentshift="2em">
@@ -331,7 +331,7 @@ exports[`Cases numcases with explicit tag 1`] = `
 exports[`Cases subnumcases 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{subnumcases}{f(x)=} 1 &amp; if $x &gt; 0$ \\\\ 0 &amp; otherwise \\end{subnumcases}" display="block">
   <mtable columnalign="right left left left" columnspacing="0em 1em" rowspacing=".2em" data-break-align="top top top" data-latex="\\begin{subnumcases}{f(x)=} 1 &amp; if $x &gt; 0$ \\\\ 0 &amp; otherwise \\end{subnumcases}">
-    <mlabeledtr data-latex="{f(x)=}">
+    <mlabeledtr data-latex="\\text{(}\\text{1a}\\text{)}&amp;1&amp;&amp;">
       <mtd id="mjx-eqn:1a">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1a}">1a</mtext>
@@ -350,7 +350,7 @@ exports[`Cases subnumcases 1`] = `
             <mphantom>
               <mpadded width="0">
                 <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top">
-                  <mlabeledtr data-latex="{f(x)=}">
+                  <mlabeledtr data-latex="\\text{(}\\text{1a}\\text{)}&amp;1&amp;&amp;">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{1a}">1a</mtext>
@@ -376,7 +376,7 @@ exports[`Cases subnumcases 1`] = `
                       <mstyle indentshift="2em"></mstyle>
                     </mtd>
                   </mlabeledtr>
-                  <mlabeledtr data-latex="{f(x)=}">
+                  <mlabeledtr data-latex="\\text{(}\\text{1b}\\text{)}&amp;0&amp;&amp;">
                     <mtd>
                       <mtext data-latex="\\text{(}">(</mtext>
                       <mtext data-latex="\\text{1b}">1b</mtext>
@@ -401,7 +401,7 @@ exports[`Cases subnumcases 1`] = `
           <mphantom>
             <mpadded width="0">
               <mtable columnalign="left left left" columnspacing="1em" rowspacing=".2em" data-break-align="top top top" align="baseline 1">
-                <mlabeledtr data-latex="{f(x)=}">
+                <mlabeledtr data-latex="\\text{(}\\text{1a}\\text{)}&amp;1&amp;&amp;">
                   <mtd>
                     <mtext data-latex="\\text{(}">(</mtext>
                     <mtext data-latex="\\text{1a}">1a</mtext>
@@ -452,7 +452,7 @@ exports[`Cases subnumcases 1`] = `
         <mstyle indentshift="2em"></mstyle>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="{f(x)=}">
+    <mlabeledtr data-latex="\\text{(}\\text{1b}\\text{)}&amp;0&amp;&amp;">
       <mtd id="mjx-eqn:1b">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1b}">1b</mtext>
