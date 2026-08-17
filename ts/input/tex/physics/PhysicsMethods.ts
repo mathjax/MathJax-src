@@ -137,14 +137,11 @@ function vectorApplication(
   if (!right) {
     return;
   }
-  let lfence = '',
-    rfence = '',
-    arg = '';
   const enlarge = fences.includes(left);
   if (left === '{') {
-    arg = parser.GetArgument(name);
-    lfence = enlarge ? '\\left\\{' : '';
-    rfence = enlarge ? '\\right\\}' : '';
+    const arg = parser.GetArgument(name);
+    const lfence = enlarge ? '\\left\\{' : '';
+    const rfence = enlarge ? '\\right\\}' : '';
     const macro = `${lfence} ${arg} ${rfence}`;
     parser.string = macro + parser.string.slice(parser.i);
     parser.i = 0;
@@ -681,7 +678,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
         parser.i = saveI;
       }
     }
-    let macro = '';
+    let macro;
     if (hasKet) {
       macro =
         starBra || starKet
@@ -727,7 +724,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     if (parser.GetNext() === '{') {
       ket = parser.GetArgument(name, true);
     }
-    let macro = '';
+    let macro;
     if (ket == null) {
       macro = star
         ? `\\langle{${bra}}\\vert{${bra}}\\rangle`
@@ -755,7 +752,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     if (parser.GetNext() === '{') {
       bra = parser.GetArgument(name, true);
     }
-    let macro = '';
+    let macro;
     if (bra == null) {
       macro = star
         ? `\\vert{${ket}}\\rangle\\!\\langle{${ket}}\\vert`
@@ -928,7 +925,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       parser.i = 0;
       return;
     }
-    let matrix = '';
+    let matrix;
     if (n === 1 && m === 1) {
       // Case 1: n=m=1, no index.
       matrix = arg1;
@@ -1010,7 +1007,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     const endI = parser.i;
     parser.i = startI + 1;
     const elements = [];
-    let element = '';
+    let element;
     let currentI = parser.i;
     while (currentI < endI) {
       try {

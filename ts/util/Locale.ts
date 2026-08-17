@@ -41,10 +41,6 @@ export const COMPONENT = 'locale';
  */
 export class Locale {
   /**
-   * Whether setLocale() has been called or not.
-   */
-  public static initialized: boolean = false;
-  /**
    * The current locale
    */
   public static current: string = locale;
@@ -271,7 +267,6 @@ export class Locale {
       }
     }
     this.current = locale;
-    this.initialized = true;
     const promises = [];
     for (const [component, [directory, loaded]] of Object.entries(
       this.locations

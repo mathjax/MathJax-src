@@ -59,6 +59,18 @@ export class ColorArrayItem extends ArrayItem {
   };
 
   /**
+   * The LaTeX source of a pending \cellcolor, \rowcolor, or \columncolor
+   * macro, used to include the macro itself in the `data-latex` attribute
+   * of the mtr/mlabeledtr row it belongs to (it produces no Mml node of its
+   * own, so it does not appear in the data-latex of any content node).
+   */
+  public colorLatex: ColorData = {
+    cell: '',
+    row: '',
+    col: [],
+  };
+
+  /**
    * True if any cell is colored (we will make sure the edge cells are full sized).
    */
   public hasColor: boolean = false;
@@ -68,13 +80,22 @@ export class ColorArrayItem extends ArrayItem {
    */
   public EndEntry() {
     super.EndEntry();
-    const cell = this.row[this.row.length - 1];
-    const color =
-      this.color.cell || this.color.row || this.color.col[this.row.length - 1];
+    const n = this.row.length - 1;
+    const cell = this.row[n];
+    const color = this.color.cell || this.color.row || this.color.col[n];
     if (color) {
       cell.attributes.set('mathbackground', color);
       this.color.cell = '';
       this.hasColor = true;
+    }
+    const colorLatex =
+      this.colorLatex.cell || this.colorLatex.row || this.colorLatex.col[n];
+    if (colorLatex) {
+      const i = this.rowLatex.length - 1;
+      this.rowLatex[i] = colorLatex + this.rowLatex[i];
+      this.colorLatex.cell = '';
+      this.colorLatex.row = '';
+      delete this.colorLatex.col[n];
     }
   }
 
@@ -84,6 +105,7 @@ export class ColorArrayItem extends ArrayItem {
   public EndRow() {
     super.EndRow();
     this.color.row = '';
+    this.colorLatex.row = '';
   }
 
   /**
@@ -126,7 +148,9 @@ export class ColorArrayItem extends ArrayItem {
 function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
   const lookup = parser.configuration.packageData.get('color').model; // use the color extension's color model
   const model = parser.GetBrackets(name, '');
-  const color = lookup.getColor(model, parser.GetArgument(name));
+  const arg = parser.GetArgument(name);
+  const color = lookup.getColor(model, arg);
+  const latex = `${name}${model ? `[${model}]` : ''}{${arg}}`;
   //
   // Check that we are in a colorable array.
   //
@@ -142,6 +166,7 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
       texError(COMPONENT, 'ColumnColorNotTop', name);
     }
     top.color.col[top.row.length] = color;
+    top.colorLatex.col[top.row.length] = latex;
     //
     // Ignore the left and right overlap options.
     //
@@ -150,10 +175,18 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
     }
   } else {
     top.color[type] = color;
+    top.colorLatex[type] = latex;
     if (type === 'row' && (top.Size() || top.row.length)) {
       texError(COMPONENT, 'RowColorNotFirst', name);
     }
   }
+  //
+  // This macro produces no Mml node of its own, so don't let its source
+  // text be attached as the data-latex of whatever node precedes it.  Its
+  // own source is instead folded into the data-latex of the mtr/mlabeledtr
+  // row it belongs to (see ColorArrayItem.EndEntry).
+  //
+  parser.skipLatex();
 }
 
 //

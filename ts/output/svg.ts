@@ -197,6 +197,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
    */
   public reset() {
     this.clearFontCache();
+    this.svgStyles = null;
   }
 
   /**

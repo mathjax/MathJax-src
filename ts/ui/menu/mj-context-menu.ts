@@ -27,6 +27,7 @@ export { SubMenu } from '#menu/sub_menu.js';
 export { Submenu } from '#menu/item_submenu.js';
 export { Radio } from '#menu/item_radio.js';
 export { Rule } from '#menu/item_rule.js';
+export { Slider } from '#menu/item_slider.js';
 export { ParserFactory } from '#menu/parser_factory.js';
 export { Parser } from '#menu/parse.js';
 export * as CssStyles from '#menu/css_util.js';
