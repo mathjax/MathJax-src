@@ -2097,7 +2097,7 @@ function buildMap(tree: SexpTree, map: Map<string, Set<string>>): Set<string> {
   return descendants;
 }
 
-// Can be replaced with ES2024 implementation of Set.prototyp.difference
+// Can be replaced with ES2024 implementation of Set.prototype.difference
 /**
  * Set difference between two sets A and B: A\B.
  *

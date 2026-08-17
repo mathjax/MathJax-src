@@ -49,7 +49,7 @@ export type CollapseFunctionMap = Map<string, CollapseFunction>;
 export type TypeRole<T> = { [type: string]: T | { [role: string]: T } };
 
 /**
- * The class for determining of a subtree can be collapsed
+ * The class for determining if a subtree can be collapsed
  */
 export class Collapse {
   /**
