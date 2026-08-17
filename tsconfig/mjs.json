@@ -2,6 +2,7 @@
   "extends": "./common.json",
   "compilerOptions": {
     "target": "ES6",
+    "rootDir": "../ts",
     "outDir": "../mjs",
     "module": "nodenext",
     "moduleResolution": "nodenext",

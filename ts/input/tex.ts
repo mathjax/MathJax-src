@@ -163,6 +163,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       [FilterUtil.cleanSubSup, -7],
       [FilterUtil.setInherited, -6],
       [FilterUtil.checkScriptlevel, -5],
+      [FilterUtil.fixArrayLatex, -4.5],
       [FilterUtil.moveLimits, -4],
       [FilterUtil.cleanStretchy, -3],
       [FilterUtil.cleanAttributes, -2],

@@ -324,7 +324,8 @@ export const SvgXmlNode = (function <N, T, D>(): SvgXmlNodeClass<N, T, D> {
               y: this.jax.fixed(-h * em) + 'px',
               width: this.jax.fixed(w * em) + 'px',
               height: this.jax.fixed((h + d) * em) + 'px',
-              transform: `scale(${scale}) matrix(1 0 0 -1 0 0)`,
+              transform: `scale(${scale} ${-scale})`,
+              'font-size': 'initial',
             },
             [this.getHTML()]
           )

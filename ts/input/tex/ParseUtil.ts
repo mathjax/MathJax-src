@@ -112,7 +112,7 @@ function readKeyval(text: string, l3keys: boolean = false): EnvList {
     [key, end, rest] = readValue(rest, ['=', ','], l3keys, dropBrace);
     dropBrace = false;
     if (end === '=') {
-      [val, end, rest] = readValue(rest, [','], l3keys);
+      [val, , rest] = readValue(rest, [','], l3keys);
       val = val === 'false' || val === 'true' ? JSON.parse(val) : val;
       options[key] = val;
     } else if (key) {

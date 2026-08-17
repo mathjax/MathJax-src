@@ -481,7 +481,8 @@ export function CommonMmultiscriptsMixin<
      */
     public getUVQ(subbox: BBox, supbox: BBox) {
       if (!this.UVQ) {
-        let [u, v, q] = [0, 0, 0];
+        let u;
+        let [v, q] = [0, 0];
         if (subbox.w === 0) {
           //
           //  Use placement for superscript only

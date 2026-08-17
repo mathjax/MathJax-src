@@ -1,7 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "downlevelIteration": true,
+    "strict": false,
     "declaration": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -10,7 +10,6 @@
     "removeComments": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "baseUrl": ".",
     "lib": ["ES6", "DOM", "ES2022"],
     "noLib": false,
     "sourceMap": true,

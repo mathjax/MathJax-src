@@ -155,7 +155,7 @@ export const NewcommandUtil = {
    * @param {TexParser} parser The calling parser.
    * @param {string} cmd The string starting with the template.
    * @param {string} cs The control sequence of the \def.
-   * @returns {number|(string|string[])[]} The number of parameters or a string array
+   * @returns {number | (string | string[])[] | undefined} The number of parameters or a string array
    *   of the tokens that delimit the arguments.
    */
   GetTemplate(
@@ -165,7 +165,7 @@ export const NewcommandUtil = {
   ): number | (string | string[])[] {
     const { legacyComments, legacyMacroTemplates } =
       parser.configuration.options;
-    parser.GetNext();
+    parser.GetNext(); // Move past whitespace characters
     const params: string[][] = [];
     let arg: string[] = [];
     let n = 0;
@@ -212,7 +212,7 @@ export const NewcommandUtil = {
    * @param {string} name The name of the calling command.
    * @param {string[]} tokens The tokens that end the argument.
    * @param {boolean} initial True when this is the initial token list with no parameter
-   * @returns {string} The parameter.
+   * @returns {string|undefined} The parameter.
    */
   GetParameter(
     parser: TexParser,

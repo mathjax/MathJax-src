@@ -184,8 +184,8 @@ exports[`Ams Complex A Cross Product Formula 1`] = `
   <mo data-latex="=">=</mo>
   <mrow data-mjx-texclass="INNER" data-latex="{vmatrix}">
     <mo data-mjx-texclass="OPEN">|</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr>
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{vmatrix} \\mathbf{i} &amp; \\mathbf{j} &amp; \\mathbf{k} \\\\    \\frac{\\partial X}{\\partial u} &amp; \\frac{\\partial Y}{\\partial u} &amp; 0 \\\\    \\frac{\\partial X}{\\partial v} &amp; \\frac{\\partial Y}{\\partial v} &amp; 0 \\\\   \\end{vmatrix}">
+      <mtr data-latex="\\mathbf{i}&amp;\\mathbf{j}&amp;\\mathbf{k}">
         <mtd>
           <mrow data-mjx-texclass="ORD" data-latex="\\mathbf{i}">
             <mi mathvariant="bold" data-latex="i">i</mi>
@@ -202,7 +202,7 @@ exports[`Ams Complex A Cross Product Formula 1`] = `
           </mrow>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="\\frac{\\partial X}{\\partial u}&amp;\\frac{\\partial Y}{\\partial u}&amp;0">
         <mtd>
           <mfrac data-latex="\\frac{\\partial X}{\\partial u}">
             <mrow data-latex="\\partial X">
@@ -231,7 +231,7 @@ exports[`Ams Complex A Cross Product Formula 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="\\frac{\\partial X}{\\partial v}&amp;\\frac{\\partial Y}{\\partial v}&amp;0">
         <mtd>
           <mfrac data-latex="\\frac{\\partial X}{\\partial v}">
             <mrow data-latex="\\partial X">
@@ -269,7 +269,7 @@ exports[`Ams Complex A Cross Product Formula 1`] = `
 exports[`Ams Complex Cubic Binomial 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}(x+y)^{3}&amp;=&amp;(x+y)(x+y)(x+y)\\\\&amp;=&amp;xxx+xxy+xyx+{\\underline {xyy}}+yxx+{\\underline {yxy}}+{\\underline {yyx}}+yyy\\\\&amp;=&amp;x^{3}+3x^{2}y+{\\underline {3xy^{2}}}+y^{3}.\\end{eqnarray}" display="block">
   <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex="\\begin{eqnarray}(x+y)^{3}&amp;=&amp;(x+y)(x+y)(x+y)\\\\&amp;=&amp;xxx+xxy+xyx+{\\underline {xyy}}+yxx+{\\underline {yxy}}+{\\underline {yyx}}+yyy\\\\&amp;=&amp;x^{3}+3x^{2}y+{\\underline {3xy^{2}}}+y^{3}.\\end{eqnarray}">
-    <mtr>
+    <mtr data-latex="(x+y)^{3}&amp;=&amp;(x+y)(x+y)(x+y)">
       <mtd>
         <mo data-latex="(" stretchy="false">(</mo>
         <mi data-latex="x">x</mi>
@@ -307,7 +307,7 @@ exports[`Ams Complex Cubic Binomial 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;=&amp;x x x+x x y+x y x+{\\underline {xyy}}+y x x+{\\underline {yxy}}+{\\underline {yyx}}+y y y">
       <mtd></mtd>
       <mtd>
         <mi></mi>
@@ -370,7 +370,7 @@ exports[`Ams Complex Cubic Binomial 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;=&amp;x^{3}+3x^{2}y+{\\underline {3xy^{2}}}+y^{3}.">
       <mtd></mtd>
       <mtd>
         <mi></mi>
@@ -427,7 +427,7 @@ exports[`Ams Complex Cubic Binomial 1`] = `
 exports[`Ams Complex Maxwell's Equations 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align} \\nabla \\times \\vec{\\mathbf{B}} -\\, \\frac1c\\, \\frac{\\partial\\vec{\\mathbf{E}}}{\\partial t} &amp; = \\frac{4\\pi}{c}\\vec{\\mathbf{j}} \\\\  \\nabla \\cdot \\vec{\\mathbf{E}} &amp; = 4 \\pi \\rho \\\\  \\nabla \\times \\vec{\\mathbf{E}}\\, +\\, \\frac1c\\, \\frac{\\partial\\vec{\\mathbf{B}}}{\\partial t} &amp; = \\vec{\\mathbf{0}} \\\\  \\nabla \\cdot \\vec{\\mathbf{B}} &amp; = 0 \\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} \\nabla \\times \\vec{\\mathbf{B}} -\\, \\frac1c\\, \\frac{\\partial\\vec{\\mathbf{E}}}{\\partial t} &amp; = \\frac{4\\pi}{c}\\vec{\\mathbf{j}} \\\\  \\nabla \\cdot \\vec{\\mathbf{E}} &amp; = 4 \\pi \\rho \\\\  \\nabla \\times \\vec{\\mathbf{E}}\\, +\\, \\frac1c\\, \\frac{\\partial\\vec{\\mathbf{B}}}{\\partial t} &amp; = \\vec{\\mathbf{0}} \\\\  \\nabla \\cdot \\vec{\\mathbf{B}} &amp; = 0 \\end{align}">
-    <mtr>
+    <mtr data-latex="\\nabla\\times\\vec{\\mathbf{B}}-\\,\\frac1c\\,\\frac{\\partial\\vec{\\mathbf{E}}}{\\partial t}&amp;=\\frac{4\\pi}{c}\\vec{\\mathbf{j}}">
       <mtd>
         <mi mathvariant="normal" data-latex="\\nabla">&#x2207;</mi>
         <mo data-latex="\\times">&#xD7;</mo>
@@ -486,7 +486,7 @@ exports[`Ams Complex Maxwell's Equations 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\nabla\\cdot\\vec{\\mathbf{E}}&amp;=4\\pi\\rho">
       <mtd>
         <mi mathvariant="normal" data-latex="\\nabla">&#x2207;</mi>
         <mo data-latex="\\cdot">&#x22C5;</mo>
@@ -509,7 +509,7 @@ exports[`Ams Complex Maxwell's Equations 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\nabla\\times\\vec{\\mathbf{E}}\\,+\\,\\frac1c\\,\\frac{\\partial\\vec{\\mathbf{B}}}{\\partial t}&amp;=\\vec{\\mathbf{0}}">
       <mtd>
         <mi mathvariant="normal" data-latex="\\nabla">&#x2207;</mi>
         <mo data-latex="\\times">&#xD7;</mo>
@@ -562,7 +562,7 @@ exports[`Ams Complex Maxwell's Equations 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\nabla\\cdot\\vec{\\mathbf{B}}&amp;=0">
       <mtd>
         <mi mathvariant="normal" data-latex="\\nabla">&#x2207;</mi>
         <mo data-latex="\\cdot">&#x22C5;</mo>
@@ -590,7 +590,7 @@ exports[`Ams Complex Maxwell's Equations 1`] = `
 exports[`Ams Complex The Lorenz Equations 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}\\dot{x} &amp; = \\sigma(y-x) \\\\\\dot{y} &amp; = \\rho x - y - xz \\\\\\dot{z} &amp; = -\\beta z + xy\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align}\\dot{x} &amp; = \\sigma(y-x) \\\\\\dot{y} &amp; = \\rho x - y - xz \\\\\\dot{z} &amp; = -\\beta z + xy\\end{align}">
-    <mtr>
+    <mtr data-latex="\\dot{x}&amp;=\\sigma(y-x)">
       <mtd>
         <mrow data-mjx-texclass="ORD" data-latex="\\dot{x}">
           <mover>
@@ -612,7 +612,7 @@ exports[`Ams Complex The Lorenz Equations 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\dot{y}&amp;=\\rho x-y-x z">
       <mtd>
         <mrow data-mjx-texclass="ORD" data-latex="\\dot{y}">
           <mover>
@@ -635,7 +635,7 @@ exports[`Ams Complex The Lorenz Equations 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\dot{z}&amp;=-\\beta z+x y">
       <mtd>
         <mrow data-mjx-texclass="ORD" data-latex="\\dot{z}">
           <mover>
@@ -760,7 +760,7 @@ exports[`Ams Display Sub Fraction 1`] = `
 exports[`Ams Environments Align 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align} a&amp;=b \\\\ c&amp;=d \\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a&amp;=b \\\\ c&amp;=d \\end{align}">
-    <mtr>
+    <mtr data-latex="a&amp;=b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -772,7 +772,7 @@ exports[`Ams Environments Align 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -791,7 +791,7 @@ exports[`Ams Environments Align 1`] = `
 exports[`Ams Environments Align Star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*} a&amp;=b \\\\ c&amp;=d \\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align*} a&amp;=b \\\\ c&amp;=d \\end{align*}">
-    <mtr>
+    <mtr data-latex="a&amp;=b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -803,7 +803,7 @@ exports[`Ams Environments Align Star 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -822,7 +822,7 @@ exports[`Ams Environments Align Star 1`] = `
 exports[`Ams Environments Alignat 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{alignat}{2} a&amp;=b \\\\ c&amp;=d \\end{alignat}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{alignat}{2} a&amp;=b \\\\ c&amp;=d \\end{alignat}">
-    <mtr data-latex="{2}">
+    <mtr data-latex="a&amp;=b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -834,7 +834,7 @@ exports[`Ams Environments Alignat 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr data-latex="{2}">
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -853,7 +853,7 @@ exports[`Ams Environments Alignat 1`] = `
 exports[`Ams Environments Alignat Star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{alignat*}{2} a&amp;=b \\\\ c&amp;=d \\end{alignat*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{alignat*}{2} a&amp;=b \\\\ c&amp;=d \\end{alignat*}">
-    <mtr data-latex="{2}">
+    <mtr data-latex="a&amp;=b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -865,7 +865,7 @@ exports[`Ams Environments Alignat Star 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr data-latex="{2}">
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -884,7 +884,7 @@ exports[`Ams Environments Alignat Star 1`] = `
 exports[`Ams Environments Aligned 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*} a&amp;=b \\begin{aligned} r&amp;=s\\\\ &amp; =t \\end{aligned} \\\\ c&amp;=d \\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align*} a&amp;=b \\begin{aligned} r&amp;=s\\\\ &amp; =t \\end{aligned} \\\\ c&amp;=d \\end{align*}">
-    <mtr>
+    <mtr data-latex="a&amp;=b{aligned}">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -894,7 +894,7 @@ exports[`Ams Environments Aligned 1`] = `
           <mo data-latex="=">=</mo>
           <mi data-latex="b">b</mi>
           <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="{aligned}">
-            <mtr data-latex=" ">
+            <mtr data-latex="r&amp;=s">
               <mtd>
                 <mi data-latex="r">r</mi>
               </mtd>
@@ -906,7 +906,7 @@ exports[`Ams Environments Aligned 1`] = `
                 </mstyle>
               </mtd>
             </mtr>
-            <mtr data-latex=" ">
+            <mtr data-latex="&amp;=t">
               <mtd></mtd>
               <mtd>
                 <mstyle indentshift="2em">
@@ -920,7 +920,7 @@ exports[`Ams Environments Aligned 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -939,7 +939,7 @@ exports[`Ams Environments Aligned 1`] = `
 exports[`Ams Environments Alignedat 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*} a&amp;=b \\begin{alignedat}{2} r&amp;=s\\\\ &amp; =t \\end{alignedat} \\\\ c&amp;=d \\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align*} a&amp;=b \\begin{alignedat}{2} r&amp;=s\\\\ &amp; =t \\end{alignedat} \\\\ c&amp;=d \\end{align*}">
-    <mtr>
+    <mtr data-latex="a&amp;=b{alignedat}">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -949,7 +949,7 @@ exports[`Ams Environments Alignedat 1`] = `
           <mo data-latex="=">=</mo>
           <mi data-latex="b">b</mi>
           <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="{alignedat}">
-            <mtr data-latex="{2}">
+            <mtr data-latex="r&amp;=s">
               <mtd>
                 <mi data-latex="r">r</mi>
               </mtd>
@@ -961,7 +961,7 @@ exports[`Ams Environments Alignedat 1`] = `
                 </mstyle>
               </mtd>
             </mtr>
-            <mtr data-latex="{2}">
+            <mtr data-latex="&amp;=t">
               <mtd></mtd>
               <mtd>
                 <mstyle indentshift="2em">
@@ -975,7 +975,7 @@ exports[`Ams Environments Alignedat 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -995,8 +995,8 @@ exports[`Ams Environments Bmatrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Bmatrix} a &amp; b \\\\ c &amp; d \\end{Bmatrix}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Bmatrix} a &amp; b \\\\ c &amp; d \\end{Bmatrix}">
     <mo data-mjx-texclass="OPEN">{</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr>
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{Bmatrix} a &amp; b \\\\ c &amp; d \\end{Bmatrix}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -1004,7 +1004,7 @@ exports[`Ams Environments Bmatrix 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -1021,7 +1021,7 @@ exports[`Ams Environments Bmatrix 1`] = `
 exports[`Ams Environments Eqnarray 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{eqnarray}" display="block">
   <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex="\\begin{eqnarray} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{eqnarray}">
-    <mtr>
+    <mtr data-latex="a&amp;=&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1035,7 +1035,7 @@ exports[`Ams Environments Eqnarray 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -1056,7 +1056,7 @@ exports[`Ams Environments Eqnarray 1`] = `
 exports[`Ams Environments Eqnarray Star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray*} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{eqnarray*}" display="block">
   <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex="\\begin{eqnarray*} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{eqnarray*}">
-    <mtr>
+    <mtr data-latex="a&amp;=&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1070,7 +1070,7 @@ exports[`Ams Environments Eqnarray Star 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -1103,14 +1103,14 @@ exports[`Ams Environments Equation Star 1`] = `
 exports[`Ams Environments Gather 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{gather} a=b \\\\ c=d \\end{gather}" display="block">
   <mtable displaystyle="true" columnspacing="1em" rowspacing="3pt" data-break-align="middle" data-latex="\\begin{gather} a=b \\\\ c=d \\end{gather}">
-    <mtr>
+    <mtr data-latex="a=b">
       <mtd>
         <mi data-latex="a">a</mi>
         <mo data-latex="=">=</mo>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c=d">
       <mtd>
         <mi data-latex="c">c</mi>
         <mo data-latex="=">=</mo>
@@ -1124,14 +1124,14 @@ exports[`Ams Environments Gather 1`] = `
 exports[`Ams Environments Gather Star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{gather*} a=b \\\\ c=d \\end{gather*}" display="block">
   <mtable displaystyle="true" columnspacing="1em" rowspacing="3pt" data-break-align="middle" data-latex="\\begin{gather*} a=b \\\\ c=d \\end{gather*}">
-    <mtr>
+    <mtr data-latex="a=b">
       <mtd>
         <mi data-latex="a">a</mi>
         <mo data-latex="=">=</mo>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c=d">
       <mtd>
         <mi data-latex="c">c</mi>
         <mo data-latex="=">=</mo>
@@ -1145,7 +1145,7 @@ exports[`Ams Environments Gather Star 1`] = `
 exports[`Ams Environments Gathered 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*} a&amp;=b \\begin{gathered} r=s\\\\  =t \\end{gathered} \\\\ c&amp;=d \\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align*} a&amp;=b \\begin{gathered} r=s\\\\  =t \\end{gathered} \\\\ c&amp;=d \\end{align*}">
-    <mtr>
+    <mtr data-latex="a&amp;=b{gathered}">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1155,14 +1155,14 @@ exports[`Ams Environments Gathered 1`] = `
           <mo data-latex="=">=</mo>
           <mi data-latex="b">b</mi>
           <mtable displaystyle="true" columnspacing="1em" rowspacing="3pt" data-break-align="middle" data-latex="{gathered}">
-            <mtr data-latex=" ">
+            <mtr data-latex="r=s">
               <mtd>
                 <mi data-latex="r">r</mi>
                 <mo data-latex="=">=</mo>
                 <mi data-latex="s">s</mi>
               </mtd>
             </mtr>
-            <mtr data-latex=" ">
+            <mtr data-latex="=t">
               <mtd>
                 <mo data-latex="=">=</mo>
                 <mi data-latex="t">t</mi>
@@ -1172,7 +1172,7 @@ exports[`Ams Environments Gathered 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -1191,17 +1191,17 @@ exports[`Ams Environments Gathered 1`] = `
 exports[`Ams Environments Multline 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\ b \\\\ c \\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\ b \\\\ c \\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -1213,17 +1213,17 @@ exports[`Ams Environments Multline 1`] = `
 exports[`Ams Environments Multline Star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline*} a\\\\ b \\\\ c \\end{multline*}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline*} a\\\\ b \\\\ c \\end{multline*}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -1235,8 +1235,8 @@ exports[`Ams Environments Multline Star 1`] = `
 exports[`Ams Environments Small Matrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix}a\\end{smallmatrix}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix}a\\end{smallmatrix}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-      <mtr>
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{smallmatrix}a\\end{smallmatrix}">
+      <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -1249,7 +1249,7 @@ exports[`Ams Environments Small Matrix 1`] = `
 exports[`Ams Environments Split 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*} a&amp;=b \\begin{split} r&amp;=s\\\\ &amp; =t \\end{split} \\\\ c&amp;=d \\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align*} a&amp;=b \\begin{split} r&amp;=s\\\\ &amp; =t \\end{split} \\\\ c&amp;=d \\end{align*}">
-    <mtr>
+    <mtr data-latex="a&amp;=b{split}">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1259,7 +1259,7 @@ exports[`Ams Environments Split 1`] = `
           <mo data-latex="=">=</mo>
           <mi data-latex="b">b</mi>
           <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="{split}">
-            <mtr>
+            <mtr data-latex="r&amp;=s">
               <mtd>
                 <mi data-latex="r">r</mi>
               </mtd>
@@ -1271,7 +1271,7 @@ exports[`Ams Environments Split 1`] = `
                 </mstyle>
               </mtd>
             </mtr>
-            <mtr>
+            <mtr data-latex="&amp;=t">
               <mtd></mtd>
               <mtd>
                 <mstyle indentshift="2em">
@@ -1285,7 +1285,7 @@ exports[`Ams Environments Split 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -1304,8 +1304,8 @@ exports[`Ams Environments Split 1`] = `
 exports[`Ams Environments Subarray 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{subarray}{c}a\\end{subarray}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{subarray}{c}a\\end{subarray}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em">
-      <mtr data-latex="{c}">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em" data-latex="\\begin{subarray}{c}a\\end{subarray}">
+      <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -1319,8 +1319,8 @@ exports[`Ams Environments Vmatrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vmatrix} a &amp; b \\\\ c &amp; d \\end{Vmatrix}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Vmatrix} a &amp; b \\\\ c &amp; d \\end{Vmatrix}">
     <mo data-mjx-texclass="OPEN">&#x2016;</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr>
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{Vmatrix} a &amp; b \\\\ c &amp; d \\end{Vmatrix}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -1328,7 +1328,7 @@ exports[`Ams Environments Vmatrix 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -1346,8 +1346,8 @@ exports[`Ams Environments bmatrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{bmatrix} a &amp; b \\\\ c &amp; d \\end{bmatrix}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{bmatrix} a &amp; b \\\\ c &amp; d \\end{bmatrix}">
     <mo data-mjx-texclass="OPEN">[</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr>
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{bmatrix} a &amp; b \\\\ c &amp; d \\end{bmatrix}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -1355,7 +1355,7 @@ exports[`Ams Environments bmatrix 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -1378,8 +1378,8 @@ exports[`Ams Environments cases 1`] = `
   <mo data-latex="=">=</mo>
   <mrow data-mjx-texclass="INNER" data-latex="{cases}">
     <mo data-mjx-texclass="OPEN">{</mo>
-    <mtable columnspacing="1em" rowspacing=".2em" columnalign="left left">
-      <mtr>
+    <mtable columnspacing="1em" rowspacing=".2em" columnalign="left left" data-latex="\\begin{cases} 1 &amp; \\text{if $x &gt; 1$} \\\\ 0 &amp; \\text{otherwise} \\end{cases}">
+      <mtr data-latex="1&amp;\\text{if $x &gt; 1$}">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -1394,7 +1394,7 @@ exports[`Ams Environments cases 1`] = `
           </mrow>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="0&amp;\\text{otherwise}">
         <mtd>
           <mn data-latex="0">0</mn>
         </mtd>
@@ -1411,7 +1411,7 @@ exports[`Ams Environments cases 1`] = `
 exports[`Ams Environments flalign 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{flalign} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{flalign}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="right left center right" columnspacing="0em" columnwidth="auto auto fit auto" rowspacing="3pt" data-break-align="bottom top middle bottom" data-width-includes-label="true" data-latex="\\begin{flalign} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{flalign}">
-    <mtr>
+    <mtr data-latex="a&amp;=&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1426,7 +1426,7 @@ exports[`Ams Environments flalign 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -1448,7 +1448,7 @@ exports[`Ams Environments flalign 1`] = `
 exports[`Ams Environments flalign small 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{flalign} a&amp;b \\end{flalign}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" columnwidth="auto auto" rowspacing="3pt" data-break-align="bottom top" data-width-includes-label="true" data-latex="\\begin{flalign} a&amp;b \\end{flalign}">
-    <mtr>
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1465,7 +1465,7 @@ exports[`Ams Environments flalign small 1`] = `
 exports[`Ams Environments matrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{matrix} a &amp; b \\\\ c &amp; d \\end{matrix}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{matrix} a &amp; b \\\\ c &amp; d \\end{matrix}">
-    <mtr>
+    <mtr data-latex="a&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1473,7 +1473,7 @@ exports[`Ams Environments matrix 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -1489,8 +1489,8 @@ exports[`Ams Environments pmatrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}">
     <mo data-mjx-texclass="OPEN">(</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr>
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}">
+      <mtr data-latex="a&amp;b">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -1498,7 +1498,7 @@ exports[`Ams Environments pmatrix 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="c&amp;d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -1515,7 +1515,7 @@ exports[`Ams Environments pmatrix 1`] = `
 exports[`Ams Environments xalign tagged 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{xalignat}{2} a &amp; b \\tag{1}\\end{xalignat}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="center right left center right left center" columnspacing="0em" columnwidth="fit auto auto fit auto auto fit" rowspacing="3pt" data-break-align="middle bottom top middle bottom top middle" minlabelspacing="0" data-width-includes-label="true" data-latex="\\begin{xalignat}{2} a &amp; b \\tag{1}\\end{xalignat}">
-    <mlabeledtr data-latex="{2}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;b">
       <mtd id="mjx-eqn:1">
         <mpadded width="0" lspace="-1width">
           <mtext data-latex="\\text{(}">(</mtext>
@@ -1529,7 +1529,7 @@ exports[`Ams Environments xalign tagged 1`] = `
       </mtd>
       <mtd>
         <mstyle indentshift="2em">
-          <mi data-latex="\\tag{1}">b</mi>
+          <mi data-latex="b">b</mi>
         </mstyle>
       </mtd>
       <mtd></mtd>
@@ -1546,7 +1546,7 @@ exports[`Ams Environments xalign tagged 1`] = `
 exports[`Ams Environments xalignat 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{xalignat}{2} a&amp;b &amp; c&amp;d \\end{xalignat}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="center right left center right left center" columnspacing="0em" columnwidth="fit auto auto fit auto auto fit" rowspacing="3pt" data-break-align="middle bottom top middle bottom top middle" minlabelspacing="0" data-width-includes-label="true" data-latex="\\begin{xalignat}{2} a&amp;b &amp; c&amp;d \\end{xalignat}">
-    <mtr data-latex="{2}">
+    <mtr data-latex="a&amp;b&amp;c&amp;d">
       <mtd></mtd>
       <mtd>
         <mi data-latex="a">a</mi>
@@ -1574,7 +1574,7 @@ exports[`Ams Environments xalignat 1`] = `
 exports[`Ams Environments xalignat padding 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{xalignat}{2} a&amp;b \\end{xalignat}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="center right left center right left center" columnspacing="0em" columnwidth="fit auto auto fit auto auto fit" rowspacing="3pt" data-break-align="middle bottom top middle bottom top middle" minlabelspacing="0" data-width-includes-label="true" data-latex="\\begin{xalignat}{2} a&amp;b \\end{xalignat}">
-    <mtr data-latex="{2}">
+    <mtr data-latex="a&amp;b">
       <mtd></mtd>
       <mtd>
         <mi data-latex="a">a</mi>
@@ -1598,7 +1598,7 @@ exports[`Ams Environments xalignat padding 1`] = `
 exports[`Ams Environments xxalignat 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{xxalignat}{2} a&amp;b &amp; c&amp;d \\end{xxalignat}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="right left center right left" columnspacing="0em" columnwidth="auto auto fit auto auto" rowspacing="3pt" data-break-align="bottom top middle bottom top" minlabelspacing="0" data-width-includes-label="true" data-latex="\\begin{xxalignat}{2} a&amp;b &amp; c&amp;d \\end{xxalignat}">
-    <mtr data-latex="{2}">
+    <mtr data-latex="a&amp;b&amp;c&amp;d">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1648,6 +1648,29 @@ exports[`Ams Genfrac no delimiters 1`] = `
       <mi data-latex="b">b</mi>
     </mfrac>
   </mstyle>
+</math>"
+`;
+
+exports[`Ams Issues Array with Tag 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c}a \\end{array}\\tag{1}" display="block">
+  <mtable displaystyle="true" data-latex="\\begin{array}{c}a \\end{array}\\tag{1}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;\\begin{array}{c}a \\end{array}">
+      <mtd id="mjx-eqn:1">
+        <mtext data-latex="\\text{(}">(</mtext>
+        <mtext data-latex="\\text{1}">1</mtext>
+        <mtext data-latex="\\text{)}">)</mtext>
+      </mtd>
+      <mtd>
+        <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex="\\begin{array}{c}a \\end{array}">
+          <mtr data-latex="a">
+            <mtd>
+              <mi data-latex="a">a</mi>
+            </mtd>
+          </mtr>
+        </mtable>
+      </mtd>
+    </mlabeledtr>
+  </mtable>
 </math>"
 `;
 
@@ -2006,7 +2029,7 @@ exports[`Ams Symbol 1`] = `
 exports[`Ams Tagged Environments Align 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align} a&amp;=b \\\\ c&amp;=d \\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a&amp;=b \\\\ c&amp;=d \\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2023,7 +2046,7 @@ exports[`Ams Tagged Environments Align 1`] = `
         </mstyle>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c&amp;=d">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -2047,7 +2070,7 @@ exports[`Ams Tagged Environments Align 1`] = `
 exports[`Ams Tagged Environments Align Notag 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align} a&amp;=b \\\\ &amp;=c \\notag \\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align} a&amp;=b \\\\ &amp;=c \\notag \\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2064,13 +2087,13 @@ exports[`Ams Tagged Environments Align Notag 1`] = `
         </mstyle>
       </mtd>
     </mlabeledtr>
-    <mtr>
+    <mtr data-latex="&amp;=c">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em">
           <mi></mi>
           <mo data-latex="=">=</mo>
-          <mi data-latex="\\notag">c</mi>
+          <mi data-latex="c">c</mi>
         </mstyle>
       </mtd>
     </mtr>
@@ -2081,7 +2104,7 @@ exports[`Ams Tagged Environments Align Notag 1`] = `
 exports[`Ams Tagged Environments Align Star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*} a&amp;=b \\\\ c&amp;=d \\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align*} a&amp;=b \\\\ c&amp;=d \\end{align*}">
-    <mtr>
+    <mtr data-latex="a&amp;=b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -2093,7 +2116,7 @@ exports[`Ams Tagged Environments Align Star 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -2112,7 +2135,7 @@ exports[`Ams Tagged Environments Align Star 1`] = `
 exports[`Ams Tagged Environments Alignat 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{alignat}{2} a&amp;=b \\\\ c&amp;=d \\end{alignat}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{alignat}{2} a&amp;=b \\\\ c&amp;=d \\end{alignat}">
-    <mlabeledtr data-latex="{2}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2129,7 +2152,7 @@ exports[`Ams Tagged Environments Alignat 1`] = `
         </mstyle>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr data-latex="{2}">
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c&amp;=d">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -2153,7 +2176,7 @@ exports[`Ams Tagged Environments Alignat 1`] = `
 exports[`Ams Tagged Environments Alignat Star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{alignat*}{2} a&amp;=b \\\\ c&amp;=d \\end{alignat*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{alignat*}{2} a&amp;=b \\\\ c&amp;=d \\end{alignat*}">
-    <mtr data-latex="{2}">
+    <mtr data-latex="a&amp;=b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -2165,7 +2188,7 @@ exports[`Ams Tagged Environments Alignat Star 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr data-latex="{2}">
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -2184,7 +2207,7 @@ exports[`Ams Tagged Environments Alignat Star 1`] = `
 exports[`Ams Tagged Environments Aligned 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*} a&amp;=b \\begin{aligned} r&amp;=s\\\\ &amp; =t \\end{aligned} \\\\ c&amp;=d \\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align*} a&amp;=b \\begin{aligned} r&amp;=s\\\\ &amp; =t \\end{aligned} \\\\ c&amp;=d \\end{align*}">
-    <mtr>
+    <mtr data-latex="a&amp;=b{aligned}">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -2194,7 +2217,7 @@ exports[`Ams Tagged Environments Aligned 1`] = `
           <mo data-latex="=">=</mo>
           <mi data-latex="b">b</mi>
           <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="{aligned}">
-            <mtr data-latex=" ">
+            <mtr data-latex="r&amp;=s">
               <mtd>
                 <mi data-latex="r">r</mi>
               </mtd>
@@ -2206,7 +2229,7 @@ exports[`Ams Tagged Environments Aligned 1`] = `
                 </mstyle>
               </mtd>
             </mtr>
-            <mtr data-latex=" ">
+            <mtr data-latex="&amp;=t">
               <mtd></mtd>
               <mtd>
                 <mstyle indentshift="2em">
@@ -2220,7 +2243,7 @@ exports[`Ams Tagged Environments Aligned 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -2239,7 +2262,7 @@ exports[`Ams Tagged Environments Aligned 1`] = `
 exports[`Ams Tagged Environments Alignedat 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*} a&amp;=b \\begin{alignedat}{2} r&amp;=s\\\\ &amp; =t \\end{alignedat} \\\\ c&amp;=d \\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align*} a&amp;=b \\begin{alignedat}{2} r&amp;=s\\\\ &amp; =t \\end{alignedat} \\\\ c&amp;=d \\end{align*}">
-    <mtr>
+    <mtr data-latex="a&amp;=b{alignedat}">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -2249,7 +2272,7 @@ exports[`Ams Tagged Environments Alignedat 1`] = `
           <mo data-latex="=">=</mo>
           <mi data-latex="b">b</mi>
           <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="{alignedat}">
-            <mtr data-latex="{2}">
+            <mtr data-latex="r&amp;=s">
               <mtd>
                 <mi data-latex="r">r</mi>
               </mtd>
@@ -2261,7 +2284,7 @@ exports[`Ams Tagged Environments Alignedat 1`] = `
                 </mstyle>
               </mtd>
             </mtr>
-            <mtr data-latex="{2}">
+            <mtr data-latex="&amp;=t">
               <mtd></mtd>
               <mtd>
                 <mstyle indentshift="2em">
@@ -2275,7 +2298,7 @@ exports[`Ams Tagged Environments Alignedat 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -2294,7 +2317,7 @@ exports[`Ams Tagged Environments Alignedat 1`] = `
 exports[`Ams Tagged Environments Eqnarray 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{eqnarray}" display="block">
   <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex="\\begin{eqnarray} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{eqnarray}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=&amp;b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2313,7 +2336,7 @@ exports[`Ams Tagged Environments Eqnarray 1`] = `
         </mstyle>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c&amp;=&amp;d">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -2339,7 +2362,7 @@ exports[`Ams Tagged Environments Eqnarray 1`] = `
 exports[`Ams Tagged Environments Eqnarray Star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray*} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{eqnarray*}" display="block">
   <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex="\\begin{eqnarray*} a &amp; = &amp; b\\\\ c &amp; = &amp; d \\end{eqnarray*}">
-    <mtr>
+    <mtr data-latex="a&amp;=&amp;b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -2353,7 +2376,7 @@ exports[`Ams Tagged Environments Eqnarray Star 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=&amp;d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -2374,7 +2397,7 @@ exports[`Ams Tagged Environments Eqnarray Star 1`] = `
 exports[`Ams Tagged Environments Equation 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{equation} a \\end{equation}" display="block">
   <mtable displaystyle="true" data-latex="\\begin{equation} a \\end{equation}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2397,7 +2420,7 @@ exports[`Ams Tagged Environments Equation Star 1`] = `
 exports[`Ams Tagged Environments Gather 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{gather} a=b \\\\ c=d \\end{gather}" display="block">
   <mtable displaystyle="true" columnspacing="1em" rowspacing="3pt" data-break-align="middle" data-latex="\\begin{gather} a=b \\\\ c=d \\end{gather}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a=b">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2409,7 +2432,7 @@ exports[`Ams Tagged Environments Gather 1`] = `
         <mi data-latex="b">b</mi>
       </mtd>
     </mlabeledtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;c=d">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -2428,14 +2451,14 @@ exports[`Ams Tagged Environments Gather 1`] = `
 exports[`Ams Tagged Environments Gather Star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{gather*} a=b \\\\ c=d \\end{gather*}" display="block">
   <mtable displaystyle="true" columnspacing="1em" rowspacing="3pt" data-break-align="middle" data-latex="\\begin{gather*} a=b \\\\ c=d \\end{gather*}">
-    <mtr>
+    <mtr data-latex="a=b">
       <mtd>
         <mi data-latex="a">a</mi>
         <mo data-latex="=">=</mo>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c=d">
       <mtd>
         <mi data-latex="c">c</mi>
         <mo data-latex="=">=</mo>
@@ -2449,7 +2472,7 @@ exports[`Ams Tagged Environments Gather Star 1`] = `
 exports[`Ams Tagged Environments Gathered 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*} a&amp;=b \\begin{gathered} r=s\\\\  =t \\end{gathered} \\\\ c&amp;=d \\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align*} a&amp;=b \\begin{gathered} r=s\\\\  =t \\end{gathered} \\\\ c&amp;=d \\end{align*}">
-    <mtr>
+    <mtr data-latex="a&amp;=b{gathered}">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -2459,14 +2482,14 @@ exports[`Ams Tagged Environments Gathered 1`] = `
           <mo data-latex="=">=</mo>
           <mi data-latex="b">b</mi>
           <mtable displaystyle="true" columnspacing="1em" rowspacing="3pt" data-break-align="middle" data-latex="{gathered}">
-            <mtr data-latex=" ">
+            <mtr data-latex="r=s">
               <mtd>
                 <mi data-latex="r">r</mi>
                 <mo data-latex="=">=</mo>
                 <mi data-latex="s">s</mi>
               </mtd>
             </mtr>
-            <mtr data-latex=" ">
+            <mtr data-latex="=t">
               <mtd>
                 <mo data-latex="=">=</mo>
                 <mi data-latex="t">t</mi>
@@ -2476,7 +2499,7 @@ exports[`Ams Tagged Environments Gathered 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -2495,7 +2518,7 @@ exports[`Ams Tagged Environments Gathered 1`] = `
 exports[`Ams Tagged Environments Left Gather Align 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{gather}\\begin{align} a &amp;= b \\end{align}\\end{gather}" display="block">
   <mtable displaystyle="true" columnspacing="1em" rowspacing="3pt" data-break-align="middle" side="left" data-latex="\\begin{gather}\\begin{align} a &amp;= b \\end{align}\\end{gather}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{2}\\text{)}&amp;{align}">
       <mtd id="mjx-eqn:2">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{2}">2</mtext>
@@ -2503,7 +2526,7 @@ exports[`Ams Tagged Environments Left Gather Align 1`] = `
       </mtd>
       <mtd>
         <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" side="left" data-latex="{align}">
-          <mlabeledtr>
+          <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;=b">
             <mtd id="mjx-eqn:1">
               <mtext data-latex="\\text{(}">(</mtext>
               <mtext data-latex="\\text{1}">1</mtext>
@@ -2530,14 +2553,14 @@ exports[`Ams Tagged Environments Left Gather Align 1`] = `
 exports[`Ams Tagged Environments Left multline tagged left 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\tag{1} \\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" side="left" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\tag{1} \\end{multline}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{)}">)</mtext>
       </mtd>
       <mtd columnalign="left">
-        <mi data-latex="\\tag{1}">a</mi>
+        <mi data-latex="a">a</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -2547,7 +2570,7 @@ exports[`Ams Tagged Environments Left multline tagged left 1`] = `
 exports[`Ams Tagged Environments Left xalign tagged left 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{xalignat}{2} a &amp; b \\tag{1}\\end{xalignat}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="center right left center right left center" columnspacing="0em" columnwidth="fit auto auto fit auto auto fit" rowspacing="3pt" data-break-align="middle bottom top middle bottom top middle" side="left" minlabelspacing="0" data-width-includes-label="true" data-latex="\\begin{xalignat}{2} a &amp; b \\tag{1}\\end{xalignat}">
-    <mlabeledtr data-latex="{2}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;b">
       <mtd id="mjx-eqn:1">
         <mpadded width="0">
           <mtext data-latex="\\text{(}">(</mtext>
@@ -2561,7 +2584,7 @@ exports[`Ams Tagged Environments Left xalign tagged left 1`] = `
       </mtd>
       <mtd>
         <mstyle indentshift="2em">
-          <mi data-latex="\\tag{1}">b</mi>
+          <mi data-latex="b">b</mi>
         </mstyle>
       </mtd>
       <mtd></mtd>
@@ -2578,17 +2601,17 @@ exports[`Ams Tagged Environments Left xalign tagged left 1`] = `
 exports[`Ams Tagged Environments Multline 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\ b \\\\ c \\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\ b \\\\ c \\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;c">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2605,17 +2628,17 @@ exports[`Ams Tagged Environments Multline 1`] = `
 exports[`Ams Tagged Environments Multline Star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline*} a\\\\ b \\\\ c \\end{multline*}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline*} a\\\\ b \\\\ c \\end{multline*}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -2627,8 +2650,8 @@ exports[`Ams Tagged Environments Multline Star 1`] = `
 exports[`Ams Tagged Environments Small Matrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix}a\\end{smallmatrix}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix}a\\end{smallmatrix}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-      <mtr>
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{smallmatrix}a\\end{smallmatrix}">
+      <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -2641,7 +2664,7 @@ exports[`Ams Tagged Environments Small Matrix 1`] = `
 exports[`Ams Tagged Environments Split 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*} a&amp;=b \\begin{split} r&amp;=s\\\\ &amp; =t \\end{split} \\\\ c&amp;=d \\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\begin{align*} a&amp;=b \\begin{split} r&amp;=s\\\\ &amp; =t \\end{split} \\\\ c&amp;=d \\end{align*}">
-    <mtr>
+    <mtr data-latex="a&amp;=b{split}">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -2651,7 +2674,7 @@ exports[`Ams Tagged Environments Split 1`] = `
           <mo data-latex="=">=</mo>
           <mi data-latex="b">b</mi>
           <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="{split}">
-            <mtr>
+            <mtr data-latex="r&amp;=s">
               <mtd>
                 <mi data-latex="r">r</mi>
               </mtd>
@@ -2663,7 +2686,7 @@ exports[`Ams Tagged Environments Split 1`] = `
                 </mstyle>
               </mtd>
             </mtr>
-            <mtr>
+            <mtr data-latex="&amp;=t">
               <mtd></mtd>
               <mtd>
                 <mstyle indentshift="2em">
@@ -2677,7 +2700,7 @@ exports[`Ams Tagged Environments Split 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c&amp;=d">
       <mtd>
         <mi data-latex="c">c</mi>
       </mtd>
@@ -2696,8 +2719,8 @@ exports[`Ams Tagged Environments Split 1`] = `
 exports[`Ams Tagged Environments Subarray 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{subarray}{c}a\\end{subarray}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{subarray}{c}a\\end{subarray}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em">
-      <mtr data-latex="{c}">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em" data-latex="\\begin{subarray}{c}a\\end{subarray}">
+      <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
@@ -2710,12 +2733,12 @@ exports[`Ams Tagged Environments Subarray 1`] = `
 exports[`Ams Tagged Environments aligned [b] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{aligned} [b] a \\\\ b \\end{aligned}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" align="baseline -1" data-latex="\\begin{aligned} [b] a \\\\ b \\end{aligned}">
-    <mtr data-latex=" [b]">
+    <mtr data-latex="a">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr data-latex=" [b]">
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
@@ -2727,7 +2750,7 @@ exports[`Ams Tagged Environments aligned [b] 1`] = `
 exports[`Ams Tagged Environments aligned [x] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{aligned} [x] a \\\\ b \\end{aligned}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="[x] a \\\\ b \\end{aligned}">
-    <mtr>
+    <mtr data-latex="[x]a">
       <mtd>
         <mo data-latex="[" stretchy="false">[</mo>
         <mi data-latex="x">x</mi>
@@ -2735,7 +2758,7 @@ exports[`Ams Tagged Environments aligned [x] 1`] = `
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
@@ -2747,7 +2770,7 @@ exports[`Ams Tagged Environments aligned [x] 1`] = `
 exports[`Ams Tagged Environments flalign 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{flalign} a&amp;b &amp; \\end{flalign}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="right left center right" columnspacing="0em" columnwidth="auto auto fit auto" rowspacing="3pt" data-break-align="bottom top middle bottom" data-width-includes-label="true" data-latex="\\begin{flalign} a&amp;b &amp; \\end{flalign}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;b&amp;">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -2771,7 +2794,7 @@ exports[`Ams Tagged Environments flalign 1`] = `
 exports[`Ams Tagged Environments xalignet 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{xalignat}{1} a&amp;b \\end{xalignat}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="center right left center" columnspacing="0em" columnwidth="fit auto auto fit" rowspacing="3pt" data-break-align="middle bottom top middle" minlabelspacing="0" data-width-includes-label="true" data-latex="\\begin{xalignat}{1} a&amp;b \\end{xalignat}">
-    <mlabeledtr data-latex="{1}">
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a&amp;b">
       <mtd id="mjx-eqn:1">
         <mpadded width="0" lspace="-1width">
           <mtext data-latex="\\text{(}">(</mtext>
@@ -2797,7 +2820,7 @@ exports[`Ams Tagged Environments xalignet 1`] = `
 exports[`Ams Tagged Environments xalignet star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{xalignat*}{1} a&amp;b \\end{xalignat*}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="center right left center" columnspacing="0em" columnwidth="fit auto auto fit" rowspacing="3pt" data-break-align="middle bottom top middle" minlabelspacing="0" data-width-includes-label="true" data-latex="\\begin{xalignat*}{1} a&amp;b \\end{xalignat*}">
-    <mtr data-latex="{1}">
+    <mtr data-latex="a&amp;b">
       <mtd></mtd>
       <mtd>
         <mi data-latex="a">a</mi>
@@ -2816,7 +2839,7 @@ exports[`Ams Tagged Environments xalignet star 1`] = `
 exports[`Ams Tagged Environments xalignet star 2`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{flalign*} a&amp;b &amp; \\end{flalign*}" display="block">
   <mtable width="100%" displaystyle="true" columnalign="right left center right" columnspacing="0em" columnwidth="auto auto fit auto" rowspacing="3pt" data-break-align="bottom top middle bottom" data-width-includes-label="true" data-latex="\\begin{flalign*} a&amp;b &amp; \\end{flalign*}">
-    <mtr>
+    <mtr data-latex="a&amp;b&amp;">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -3230,13 +3253,13 @@ exports[`Ams symbols math0mo 19 1`] = `
 exports[`Ams symbols substack 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\substack{a\\\\b}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{subarray}{c}a\\\\b\\end{subarray}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em">
-      <mtr data-latex="{c}">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em" data-latex="\\begin{subarray}{c}a\\\\b\\end{subarray}">
+      <mtr data-latex="a">
         <mtd>
           <mi data-latex="a">a</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="{c}">
+      <mtr data-latex="b">
         <mtd>
           <mi data-latex="b">b</mi>
         </mtd>
@@ -3253,7 +3276,7 @@ exports[`InternalMath Mbox Eqref 1`] = `
     <mtext>&#xA0;</mtext>
     <mrow data-mjx-texclass="ORD">
       <mrow href="#" class="MathJax_ref" data-latex="\\eqref{1}">
-        <mtext>(???)</mtext>
+        <mtext data-latex="\\text{(???)}">(???)</mtext>
       </mrow>
     </mrow>
     <mtext>&#xA0;</mtext>
@@ -3330,17 +3353,17 @@ exports[`Multirel Preset Rspace Lspace 1`] = `
 exports[`MultlineShove Shove Left Bottom 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\ b\\\\\\shoveleft c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\ b\\\\\\shoveleft c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="left">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3352,17 +3375,17 @@ exports[`MultlineShove Shove Left Bottom 1`] = `
 exports[`MultlineShove Shove Left Middle 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\\\shoveleft b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\\\shoveleft b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="left">
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3374,17 +3397,17 @@ exports[`MultlineShove Shove Left Middle 1`] = `
 exports[`MultlineShove Shove Left Right 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\\\shoveleft\\shoveright b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\\\shoveleft\\shoveright b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="right">
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3396,17 +3419,17 @@ exports[`MultlineShove Shove Left Right 1`] = `
 exports[`MultlineShove Shove Left Top 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}\\shoveleft a\\\\ b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline}\\shoveleft a\\\\ b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3418,17 +3441,17 @@ exports[`MultlineShove Shove Left Top 1`] = `
 exports[`MultlineShove Shove None 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\ b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\ b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3440,17 +3463,17 @@ exports[`MultlineShove Shove None 1`] = `
 exports[`MultlineShove Shove Right Bottom 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\ b\\\\\\shoveright c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\ b\\\\\\shoveright c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3462,17 +3485,17 @@ exports[`MultlineShove Shove Right Bottom 1`] = `
 exports[`MultlineShove Shove Right Left 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\\\shoveright\\shoveleft b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\\\shoveright\\shoveleft b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="left">
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3484,17 +3507,17 @@ exports[`MultlineShove Shove Right Left 1`] = `
 exports[`MultlineShove Shove Right Middle 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline} a\\\\\\shoveright b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline} a\\\\\\shoveright b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="right">
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>
@@ -3506,17 +3529,17 @@ exports[`MultlineShove Shove Right Middle 1`] = `
 exports[`MultlineShove Shove Right Top 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}\\shoveright a\\\\ b\\\\ c\\end{multline}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex="\\begin{multline}\\shoveright a\\\\ b\\\\ c\\end{multline}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="right">
         <mi data-latex="a">a</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c">
       <mtd columnalign="right">
         <mi data-latex="c">c</mi>
       </mtd>

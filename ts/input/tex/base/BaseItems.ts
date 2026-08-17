@@ -38,6 +38,7 @@ import StackItemFactory from '../StackItemFactory.js';
 import { CheckType, BaseItem, StackItem, EnvList } from '../StackItem.js';
 import { TRBL } from '../../../util/Styles.js';
 import { TexConstant } from '../TexConstants.js';
+import { quotePattern } from '../../../util/string.js';
 
 import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
 import { COMPONENT } from './__locales__/Component.js';
@@ -962,6 +963,14 @@ export class ArrayItem extends BaseItem {
   public row: MmlNode[] = [];
 
   /**
+   * The LaTeX source for the content cells of the current row, used to
+   * reconstruct the `data-latex` attribute of the row (mtr/mlabeledtr) node.
+   *
+   * @type {string[]}
+   */
+  public rowLatex: string[] = [];
+
+  /**
    * Frame specification as a list of pairs of strings [side, style].
    *
    * @type {[string, string][]}
@@ -1095,6 +1104,7 @@ export class ArrayItem extends BaseItem {
     const scriptlevel = this.arraydef['scriptlevel'];
     delete this.arraydef['scriptlevel'];
     let mml = this.create('node', 'mtable', this.table, this.arraydef);
+    this.setTableLatex(mml);
     if (scriptlevel) {
       mml.setProperty('smallmatrix', true);
     }
@@ -1111,7 +1121,13 @@ export class ArrayItem extends BaseItem {
     }
     mml = this.handleFrame(mml);
     if (scriptlevel !== undefined) {
+      const table = mml;
       mml = this.create('node', 'mstyle', [mml], { scriptlevel });
+      const rawLatex = table.getProperty('rawLatex');
+      if (rawLatex) {
+        mml.setProperty('rawLatex', rawLatex);
+        mml.setProperty('rawLatexName', table.getProperty('rawLatexName'));
+      }
     }
     if (this.getProperty('open') || this.getProperty('close')) {
       // @test Cross Product Formula
@@ -1342,6 +1358,7 @@ export class ArrayItem extends BaseItem {
     this.breakAlign.cell = '';
     //
     this.row.push(mtd);
+    this.rowLatex.push(this.cellLatex(mtd));
     this.Clear();
     this.hfill = [];
   }
@@ -1366,10 +1383,158 @@ export class ArrayItem extends BaseItem {
       NodeUtil.setAttribute(node, 'data-break-align', this.breakAlign.row);
       this.breakAlign.row = '';
     }
-    this.addLatexItem(node);
+    this.setRowLatex(node);
     this.table.push(node);
     this.row = [];
+    this.rowLatex = [];
     this.atEnd = false;
+  }
+
+  /**
+   * Reconstructs the LaTeX source of a single table cell from the `data-latex`
+   * attributes of its content nodes.
+   *
+   * @param {MmlNode} mtd The mtd node whose content is reconstructed.
+   * @returns {string} The LaTeX source of the cell content.
+   */
+  public cellLatex(mtd: MmlNode): string {
+    return NodeUtil.getChildrenLatex(mtd);
+  }
+
+  /**
+   * Captures the LaTeX source of this array/table environment (e.g., `>{...}`,
+   * `<{...}`, `@{...}`, or `!{...}`) before any entry-template substitutions
+   * are made.
+   *
+   * @param {TexParser} parser The current parser, positioned right after
+   *     `\begin{name}`, before the column-alignment argument (if any) has
+   *     been read.
+   * @param {string} name The environment name (e.g., `array`, `matrix`).
+   */
+  public captureLatex(parser: TexParser, name: string) {
+    this.setProperty('rawLatexName', name);
+    const source = parser.string.slice(parser.i);
+    const end = ArrayItem.findEnvEnd(source, name);
+    if (end >= 0) {
+      this.setProperty('rawLatex', `\\begin{${name}}${source.slice(0, end)}`);
+      return;
+    }
+    // No matching \end{name} could be found (e.g., produced by
+    // \newenvironment), save the start position instead, so the raw source can
+    // be taken from the parser's string once the table actually closes.
+    this.setProperty('rawLatexStart', parser.i);
+    this.setProperty(
+      'rawLatexGen',
+      (parser.stack.global['envSplice'] as number) || 0
+    );
+  }
+
+  /**
+   * Stashes the original source when a table is opened as a fall-back value for
+   * `data-latex` if the the postprocessing filter decides the attribute is
+   * incorrect.
+   *
+   * @param {MmlNode} mml The mtable node.
+   */
+  public setTableLatex(mml: MmlNode) {
+    const name = this.getProperty('rawLatexName') as string;
+    let tex = this.getProperty('rawLatex') as string;
+    if (!tex && name) {
+      const start = this.getProperty('rawLatexStart') as number;
+      const gen = this.getProperty('rawLatexGen') as number;
+      const currentGen = this.parser
+        ? (this.parser.stack.global['envSplice'] as number) || 0
+        : -1;
+      if (start != null && this.parser && gen === currentGen) {
+        // The environment's closing text is now in the parser's string, so the
+        // full source can finally be recovered. Expanded environment's
+        // can leave extra whitespace, so collapse.
+        // @test Environments Nested
+        const body = this.parser.string
+          .slice(start, this.parser.i)
+          .replace(/ {2,}/g, ' ');
+        tex = `\\begin{${name}}${body}`;
+      }
+    }
+    if (!tex && name) {
+      // Last resort: reconstruct the source from the table's own rows,
+      // whose `data-latex` is always tracked correctly.
+      const LATEX = TexConstant.Attr.LATEX;
+      const rows = this.table
+        .map((row) => (row.attributes.get(LATEX) as string) || '')
+        .filter((row) => row);
+      if (rows.length) {
+        tex = `\\begin{${name}}${rows.join('\\\\')}\\end{${name}}`;
+      }
+    }
+    if (!tex) return;
+    mml.setProperty('rawLatex', tex);
+    mml.setProperty('rawLatexName', name);
+  }
+
+  /**
+   * Find the position of the corresponding `\end{name}` in the string starting
+   * right after the corresponding `\begin{name}` (skipping nested environments
+   * of that name).
+   *
+   * @param {string} str The string to search.
+   * @param {string} name The environment name to look for.
+   * @returns {number} The index right after the matching `\end{name}`, or
+   *     -1 if no matching end was found.
+   */
+  private static findEnvEnd(str: string, name: string): number {
+    const escaped = quotePattern(name);
+    const begin = new RegExp(`^\\\\begin\\s*\\{${escaped}\\}`);
+    const end = new RegExp(`^\\\\end\\s*\\{${escaped}\\}`);
+    let depth = 0;
+    let nested = 0;
+    let i = 0;
+    while (i < str.length) {
+      const c = str.charAt(i);
+      if (c === '\\') {
+        const rest = str.slice(i);
+        const mBegin = rest.match(begin);
+        if (mBegin) {
+          if (depth === 0) nested++;
+          i += mBegin[0].length;
+          continue;
+        }
+        const mEnd = rest.match(end);
+        if (mEnd) {
+          if (depth === 0) {
+            if (!nested) {
+              return i + mEnd[0].length;
+            }
+            nested--;
+          }
+          i += mEnd[0].length;
+          continue;
+        }
+        i += 2;
+        continue;
+      }
+      if (c === '{') {
+        depth++;
+      } else if (c === '}' && depth > 0) {
+        depth--;
+      }
+      i++;
+    }
+    return -1;
+  }
+
+  /**
+   * Sets the `data-latex` attribute of a row node by joining the LaTeX source
+   * of its content cells with `&`.
+   *
+   * @param {MmlNode} node The mtr/mlabeledtr node.
+   */
+  public setRowLatex(node: MmlNode) {
+    const tex = this.rowLatex.join('&');
+    if (tex) {
+      node.attributes.set(TexConstant.Attr.LATEXITEM, tex);
+      node.attributes.set(TexConstant.Attr.LATEX, tex);
+    }
   }
 
   /**
@@ -1486,6 +1651,7 @@ export class EqnArrayItem extends ArrayItem {
     const tag = this.factory.configuration.tags.getTag();
     if (tag) {
       this.row = [tag].concat(this.row);
+      this.rowLatex = [this.cellLatex(tag)].concat(this.rowLatex);
       this.setProperty('isLabeled', true);
     }
     this.factory.configuration.tags.clearTag();

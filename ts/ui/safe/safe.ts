@@ -170,6 +170,7 @@ export class Safe<N, T, D> {
     ['scriptsizemultiplier', 'filterSizeMultiplier'],
     ['scriptlevel', 'filterScriptLevel'],
     ['data-', 'filterData'],
+    ['on*', 'filterListeners'],
   ]);
 
   /**
@@ -259,7 +260,9 @@ export class Safe<N, T, D> {
       method ||
       (id.substring(0, 5) === 'data-'
         ? this.filterAttributes.get('data-')
-        : null);
+        : id.substring(0, 2) === 'on'
+          ? this.filterAttributes.get('on*')
+          : null);
     if (!filter) {
       return value;
     }

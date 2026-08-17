@@ -3,7 +3,7 @@
 exports[`Mathtools Boxed Equations Aboxed 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*}\\Aboxed{ a &amp; = b} \\\\ &amp; = c \\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\rlap{\\boxed{a{}= b}}\\kern.267em\\phantom{a}&amp;\\phantom{{}= b}\\kern.267em \\\\ &amp; = c \\end{align*}">
-    <mtr>
+    <mtr data-latex="\\rlap{\\boxed{a{}= b}}\\kern.267em\\phantom{a}&amp;\\phantom{{}= b}\\kern.267em">
       <mtd>
         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\boxed{a{}= b}}">
           <mpadded width="0">
@@ -39,7 +39,7 @@ exports[`Mathtools Boxed Equations Aboxed 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;=c">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em">
@@ -56,7 +56,7 @@ exports[`Mathtools Boxed Equations Aboxed 1`] = `
 exports[`Mathtools Boxed Equations Aboxed odd column 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{aligned} &amp; \\Aboxed{ a &amp; = b} \\end{aligned}" display="block">
   <mtable displaystyle="true" columnalign="right left right left" columnspacing="0em 2em 0em" rowspacing="3pt" data-break-align="bottom top bottom top" data-latex="\\rlap{\\boxed{a{}= b}}\\kern.267em\\phantom{a}&amp;\\phantom{{}= b}\\kern.267em \\end{aligned}">
-    <mtr data-latex=" ">
+    <mtr data-latex="&amp;\\rlap{\\boxed{a{}= b}}\\kern.267em\\phantom{a}&amp;\\phantom{{}= b}\\kern.267em">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em"></mstyle>
@@ -103,7 +103,7 @@ exports[`Mathtools Boxed Equations Aboxed odd column 1`] = `
 exports[`Mathtools Boxed Equations MakeAboxedCommand 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\MakeAboxedCommand\\Afbox\\fbox \\begin{align}\\Afbox{a &amp;= b}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\rlap{\\fbox{$\\displaystyle{a{}= b}$}}\\kern.267em\\phantom{a}&amp;\\phantom{{}= b}\\kern.267em\\end{align}">
-    <mtr>
+    <mtr data-latex="\\rlap{\\fbox{$\\displaystyle{a{}= b}$}}\\kern.267em\\phantom{a}&amp;\\phantom{{}= b}\\kern.267em">
       <mtd>
         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\fbox{$\\displaystyle{a{}= b}$}}">
           <mpadded width="0">
@@ -146,7 +146,7 @@ exports[`Mathtools Boxed Equations MakeAboxedCommand 1`] = `
 exports[`Mathtools Boxed Equations MakeAboxedCommand star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\mybox#1{\\bbox[yellow, 5px, border:2px solid]{#1}}\\MakeAboxedCommand*\\Afbox\\mybox \\begin{align}\\Afbox{a &amp;= b}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\rlap{\\mybox{a{}= b}}\\kern.267em\\phantom{a}&amp;\\phantom{{}= b}\\kern.267em\\end{align}">
-    <mtr>
+    <mtr data-latex="\\rlap{\\mybox{a{}= b}}\\kern.267em\\phantom{a}&amp;\\phantom{{}= b}\\kern.267em">
       <mtd>
         <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\mybox{a{}= b}}">
           <mpadded width="0">
@@ -528,8 +528,8 @@ exports[`Mathtools Matrix Environments Bmatrix* 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Bmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Bmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Bmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Bmatrix*}">
     <mo data-mjx-texclass="OPEN">{</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr data-latex=" ">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{Bmatrix*}-1 &amp; 3 \\\\ 2 &amp; -4 \\end{Bmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -538,7 +538,7 @@ exports[`Mathtools Matrix Environments Bmatrix* 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex=" ">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -557,8 +557,8 @@ exports[`Mathtools Matrix Environments Bmatrix*[c] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Bmatrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Bmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Bmatrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Bmatrix*}">
     <mo data-mjx-texclass="OPEN">{</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr data-latex="[c]">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{Bmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Bmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -567,7 +567,7 @@ exports[`Mathtools Matrix Environments Bmatrix*[c] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[c]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -586,8 +586,8 @@ exports[`Mathtools Matrix Environments Bmatrix*[l] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Bmatrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Bmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Bmatrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Bmatrix*}">
     <mo data-mjx-texclass="OPEN">{</mo>
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="left">
-      <mtr data-latex="[l]">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="left" data-latex="\\begin{Bmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Bmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -596,7 +596,7 @@ exports[`Mathtools Matrix Environments Bmatrix*[l] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[l]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -615,8 +615,8 @@ exports[`Mathtools Matrix Environments Bmatrix*[r] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Bmatrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Bmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Bmatrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Bmatrix*}">
     <mo data-mjx-texclass="OPEN">{</mo>
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="right">
-      <mtr data-latex="[r]">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="right" data-latex="\\begin{Bmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Bmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -625,7 +625,7 @@ exports[`Mathtools Matrix Environments Bmatrix*[r] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[r]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -644,8 +644,8 @@ exports[`Mathtools Matrix Environments Vmatrix* 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Vmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}">
     <mo data-mjx-texclass="OPEN">&#x2016;</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr data-latex=" ">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{Vmatrix*}-1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -654,7 +654,7 @@ exports[`Mathtools Matrix Environments Vmatrix* 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex=" ">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -673,8 +673,8 @@ exports[`Mathtools Matrix Environments Vmatrix*[c] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vmatrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Vmatrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}">
     <mo data-mjx-texclass="OPEN">&#x2016;</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr data-latex="[c]">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{Vmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -683,7 +683,7 @@ exports[`Mathtools Matrix Environments Vmatrix*[c] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[c]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -702,8 +702,8 @@ exports[`Mathtools Matrix Environments Vmatrix*[l] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vmatrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Vmatrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}">
     <mo data-mjx-texclass="OPEN">&#x2016;</mo>
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="left">
-      <mtr data-latex="[l]">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="left" data-latex="\\begin{Vmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -712,7 +712,7 @@ exports[`Mathtools Matrix Environments Vmatrix*[l] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[l]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -731,8 +731,8 @@ exports[`Mathtools Matrix Environments Vmatrix*[r] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{Vmatrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Vmatrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}">
     <mo data-mjx-texclass="OPEN">&#x2016;</mo>
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="right">
-      <mtr data-latex="[r]">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="right" data-latex="\\begin{Vmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{Vmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -741,7 +741,7 @@ exports[`Mathtools Matrix Environments Vmatrix*[r] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[r]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -760,8 +760,8 @@ exports[`Mathtools Matrix Environments bmatrix* 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{bmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{bmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{bmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{bmatrix*}">
     <mo data-mjx-texclass="OPEN">[</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr data-latex=" ">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{bmatrix*}-1 &amp; 3 \\\\ 2 &amp; -4 \\end{bmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -770,7 +770,7 @@ exports[`Mathtools Matrix Environments bmatrix* 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex=" ">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -789,8 +789,8 @@ exports[`Mathtools Matrix Environments bmatrix*[c] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{bmatrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{bmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{bmatrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{bmatrix*}">
     <mo data-mjx-texclass="OPEN">[</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr data-latex="[c]">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{bmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{bmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -799,7 +799,7 @@ exports[`Mathtools Matrix Environments bmatrix*[c] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[c]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -818,8 +818,8 @@ exports[`Mathtools Matrix Environments bmatrix*[l] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{bmatrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{bmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{bmatrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{bmatrix*}">
     <mo data-mjx-texclass="OPEN">[</mo>
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="left">
-      <mtr data-latex="[l]">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="left" data-latex="\\begin{bmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{bmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -828,7 +828,7 @@ exports[`Mathtools Matrix Environments bmatrix*[l] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[l]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -847,8 +847,8 @@ exports[`Mathtools Matrix Environments bmatrix*[r] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{bmatrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{bmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{bmatrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{bmatrix*}">
     <mo data-mjx-texclass="OPEN">[</mo>
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="right">
-      <mtr data-latex="[r]">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="right" data-latex="\\begin{bmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{bmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -857,7 +857,7 @@ exports[`Mathtools Matrix Environments bmatrix*[r] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[r]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -875,7 +875,7 @@ exports[`Mathtools Matrix Environments bmatrix*[r] 1`] = `
 exports[`Mathtools Matrix Environments matrix* 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{matrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{matrix*}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{matrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{matrix*}">
-    <mtr data-latex=" ">
+    <mtr data-latex="-1&amp;3">
       <mtd>
         <mo data-latex="-">&#x2212;</mo>
         <mn data-latex="1">1</mn>
@@ -884,7 +884,7 @@ exports[`Mathtools Matrix Environments matrix* 1`] = `
         <mn data-latex="3">3</mn>
       </mtd>
     </mtr>
-    <mtr data-latex=" ">
+    <mtr data-latex="2&amp;-4">
       <mtd>
         <mn data-latex="2">2</mn>
       </mtd>
@@ -900,7 +900,7 @@ exports[`Mathtools Matrix Environments matrix* 1`] = `
 exports[`Mathtools Matrix Environments matrix*[c] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{matrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{matrix*}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{matrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{matrix*}">
-    <mtr data-latex="[c]">
+    <mtr data-latex="-1&amp;3">
       <mtd>
         <mo data-latex="-">&#x2212;</mo>
         <mn data-latex="1">1</mn>
@@ -909,7 +909,7 @@ exports[`Mathtools Matrix Environments matrix*[c] 1`] = `
         <mn data-latex="3">3</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="[c]">
+    <mtr data-latex="2&amp;-4">
       <mtd>
         <mn data-latex="2">2</mn>
       </mtd>
@@ -925,7 +925,7 @@ exports[`Mathtools Matrix Environments matrix*[c] 1`] = `
 exports[`Mathtools Matrix Environments matrix*[l] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{matrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{matrix*}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="left" data-latex="\\begin{matrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{matrix*}">
-    <mtr data-latex="[l]">
+    <mtr data-latex="-1&amp;3">
       <mtd>
         <mo data-latex="-">&#x2212;</mo>
         <mn data-latex="1">1</mn>
@@ -934,7 +934,7 @@ exports[`Mathtools Matrix Environments matrix*[l] 1`] = `
         <mn data-latex="3">3</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="[l]">
+    <mtr data-latex="2&amp;-4">
       <mtd>
         <mn data-latex="2">2</mn>
       </mtd>
@@ -950,7 +950,7 @@ exports[`Mathtools Matrix Environments matrix*[l] 1`] = `
 exports[`Mathtools Matrix Environments matrix*[r] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{matrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{matrix*}" display="block">
   <mtable columnspacing="1em" rowspacing="4pt" columnalign="right" data-latex="\\begin{matrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{matrix*}">
-    <mtr data-latex="[r]">
+    <mtr data-latex="-1&amp;3">
       <mtd>
         <mo data-latex="-">&#x2212;</mo>
         <mn data-latex="1">1</mn>
@@ -959,7 +959,7 @@ exports[`Mathtools Matrix Environments matrix*[r] 1`] = `
         <mn data-latex="3">3</mn>
       </mtd>
     </mtr>
-    <mtr data-latex="[r]">
+    <mtr data-latex="2&amp;-4">
       <mtd>
         <mn data-latex="2">2</mn>
       </mtd>
@@ -976,8 +976,8 @@ exports[`Mathtools Matrix Environments pmatrix* 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{pmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{pmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{pmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{pmatrix*}">
     <mo data-mjx-texclass="OPEN">(</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr data-latex=" ">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{pmatrix*}-1 &amp; 3 \\\\ 2 &amp; -4 \\end{pmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -986,7 +986,7 @@ exports[`Mathtools Matrix Environments pmatrix* 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex=" ">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -1005,8 +1005,8 @@ exports[`Mathtools Matrix Environments pmatrix*[c] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{pmatrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{pmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{pmatrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{pmatrix*}">
     <mo data-mjx-texclass="OPEN">(</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr data-latex="[c]">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{pmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{pmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1015,7 +1015,7 @@ exports[`Mathtools Matrix Environments pmatrix*[c] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[c]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -1034,8 +1034,8 @@ exports[`Mathtools Matrix Environments pmatrix*[l] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{pmatrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{pmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{pmatrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{pmatrix*}">
     <mo data-mjx-texclass="OPEN">(</mo>
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="left">
-      <mtr data-latex="[l]">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="left" data-latex="\\begin{pmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{pmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1044,7 +1044,7 @@ exports[`Mathtools Matrix Environments pmatrix*[l] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[l]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -1063,8 +1063,8 @@ exports[`Mathtools Matrix Environments pmatrix*[r] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{pmatrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{pmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{pmatrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{pmatrix*}">
     <mo data-mjx-texclass="OPEN">(</mo>
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="right">
-      <mtr data-latex="[r]">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="right" data-latex="\\begin{pmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{pmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1073,7 +1073,7 @@ exports[`Mathtools Matrix Environments pmatrix*[r] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[r]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -1092,8 +1092,8 @@ exports[`Mathtools Matrix Environments vmatrix* 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{vmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{vmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{vmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{vmatrix*}">
     <mo data-mjx-texclass="OPEN">|</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr data-latex=" ">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{vmatrix*}-1 &amp; 3 \\\\ 2 &amp; -4 \\end{vmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1102,7 +1102,7 @@ exports[`Mathtools Matrix Environments vmatrix* 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex=" ">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -1121,8 +1121,8 @@ exports[`Mathtools Matrix Environments vmatrix*[c] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{vmatrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{vmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{vmatrix*}[c] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{vmatrix*}">
     <mo data-mjx-texclass="OPEN">|</mo>
-    <mtable columnspacing="1em" rowspacing="4pt">
-      <mtr data-latex="[c]">
+    <mtable columnspacing="1em" rowspacing="4pt" data-latex="\\begin{vmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{vmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1131,7 +1131,7 @@ exports[`Mathtools Matrix Environments vmatrix*[c] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[c]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -1150,8 +1150,8 @@ exports[`Mathtools Matrix Environments vmatrix*[l] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{vmatrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{vmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{vmatrix*}[l] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{vmatrix*}">
     <mo data-mjx-texclass="OPEN">|</mo>
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="left">
-      <mtr data-latex="[l]">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="left" data-latex="\\begin{vmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{vmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1160,7 +1160,7 @@ exports[`Mathtools Matrix Environments vmatrix*[l] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[l]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -1179,8 +1179,8 @@ exports[`Mathtools Matrix Environments vmatrix*[r] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{vmatrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{vmatrix*}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{vmatrix*}[r] -1 &amp; 3 \\\\ 2 &amp; -4 \\end{vmatrix*}">
     <mo data-mjx-texclass="OPEN">|</mo>
-    <mtable columnspacing="1em" rowspacing="4pt" columnalign="right">
-      <mtr data-latex="[r]">
+    <mtable columnspacing="1em" rowspacing="4pt" columnalign="right" data-latex="\\begin{vmatrix*} -1 &amp; 3 \\\\ 2 &amp; -4 \\end{vmatrix*}">
+      <mtr data-latex="-1&amp;3">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1189,7 +1189,7 @@ exports[`Mathtools Matrix Environments vmatrix*[r] 1`] = `
           <mn data-latex="3">3</mn>
         </mtd>
       </mtr>
-      <mtr data-latex="[r]">
+      <mtr data-latex="2&amp;-4">
         <mtd>
           <mn data-latex="2">2</mn>
         </mtd>
@@ -1207,7 +1207,7 @@ exports[`Mathtools Matrix Environments vmatrix*[r] 1`] = `
 exports[`Mathtools More Environments ArrowBetweenLines 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{alignat*}{2}&amp;&amp; \\framebox[1.5cm]{} &amp;= \\framebox[3cm]{} \\\\\\ArrowBetweenLines&amp;&amp; \\framebox[1.5cm]{} &amp;= \\framebox[2cm]{}\\end{alignat*}" display="block">
   <mtable displaystyle="true" columnalign="right left right left" columnspacing="0em 0em 0em" rowspacing="3pt" data-break-align="bottom top bottom top" data-latex="\\begin{alignat*}{2}&amp;&amp; \\framebox[1.5cm]{} &amp;= \\framebox[3cm]{} \\\\\\ArrowBetweenLines&amp;&amp; \\framebox[1.5cm]{} &amp;= \\framebox[2cm]{}\\end{alignat*}">
-    <mtr data-latex="{2}">
+    <mtr data-latex="&amp;&amp;\\framebox[1.5cm]{}&amp;=\\framebox[3cm]{}">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em"></mstyle>
@@ -1231,13 +1231,13 @@ exports[`Mathtools More Environments ArrowBetweenLines 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr data-latex="{2}">
+    <mtr data-latex="\\Updownarrow\\quad">
       <mtd>
         <mo stretchy="false" data-latex="\\Updownarrow">&#x21D5;</mo>
         <mspace width="1em" data-latex="\\quad"></mspace>
       </mtd>
     </mtr>
-    <mtr data-latex="{2}">
+    <mtr data-latex="&amp;&amp;\\framebox[1.5cm]{}&amp;=\\framebox[2cm]{}">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em"></mstyle>
@@ -1268,7 +1268,7 @@ exports[`Mathtools More Environments ArrowBetweenLines 1`] = `
 exports[`Mathtools More Environments ArrowBetweenLines* 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{alignat*}{2}&amp;&amp; \\framebox[1.5cm]{} &amp;= \\framebox[3cm]{} &amp;&amp;\\\\\\ArrowBetweenLines*[\\Downarrow]&amp;&amp; \\framebox[1.5cm]{} &amp;= \\framebox[2cm]{} &amp;&amp;\\end{alignat*}" display="block">
   <mtable displaystyle="true" columnalign="right left right left right left" columnspacing="0em 0em 0em 0em 0em" rowspacing="3pt" data-break-align="bottom top bottom top bottom top" data-latex="\\begin{alignat*}{2}&amp;&amp; \\framebox[1.5cm]{} &amp;= \\framebox[3cm]{} &amp;&amp;\\\\\\ArrowBetweenLines*[\\Downarrow]&amp;&amp; \\framebox[1.5cm]{} &amp;= \\framebox[2cm]{} &amp;&amp;\\end{alignat*}">
-    <mtr data-latex="{2}">
+    <mtr data-latex="&amp;&amp;\\framebox[1.5cm]{}&amp;=\\framebox[3cm]{}&amp;&amp;">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em"></mstyle>
@@ -1296,7 +1296,7 @@ exports[`Mathtools More Environments ArrowBetweenLines* 1`] = `
         <mstyle indentshift="2em"></mstyle>
       </mtd>
     </mtr>
-    <mtr data-latex="{2}">
+    <mtr data-latex="&amp;&amp;\\quad\\Downarrow">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em"></mstyle>
@@ -1306,7 +1306,7 @@ exports[`Mathtools More Environments ArrowBetweenLines* 1`] = `
         <mo stretchy="false" data-latex="\\Downarrow">&#x21D3;</mo>
       </mtd>
     </mtr>
-    <mtr data-latex="{2}">
+    <mtr data-latex="&amp;&amp;\\framebox[1.5cm]{}&amp;=\\framebox[2cm]{}&amp;&amp;">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em"></mstyle>
@@ -1341,7 +1341,7 @@ exports[`Mathtools More Environments ArrowBetweenLines* 1`] = `
 exports[`Mathtools More Environments MoveEqLeft 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*}\\MoveEqLeft \\framebox[10cm][c]{Long first line} \\\\  &amp; = \\framebox[6cm][c]{ \\vphantom{g} 2nd line} \\\\  &amp; \\leq \\dots\\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex="\\hspace{2em}&amp;\\hspace{-2em}\\framebox[10cm][c]{Long first line} \\\\  &amp; = \\framebox[6cm][c]{ \\vphantom{g} 2nd line} \\\\  &amp; \\leq \\dots\\end{align*}">
-    <mtr>
+    <mtr data-latex="\\hspace{2em}&amp;\\hspace{-2em}\\framebox[10cm][c]{Long first line}">
       <mtd>
         <mspace width="2em" data-latex="\\hspace{2em}"></mspace>
       </mtd>
@@ -1358,7 +1358,7 @@ exports[`Mathtools More Environments MoveEqLeft 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;=\\framebox[6cm][c]{ \\vphantom{g} 2nd line}">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em">
@@ -1374,7 +1374,7 @@ exports[`Mathtools More Environments MoveEqLeft 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;\\leq">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em">
@@ -1391,14 +1391,14 @@ exports[`Mathtools More Environments MoveEqLeft 1`] = `
 exports[`Mathtools More Environments Spreadlines 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{spreadlines}{20pt}\\begin{gather}a=b\\\\c=d\\end{gather}\\end{spreadlines}" display="block">
   <mtable displaystyle="true" columnspacing="1em" rowspacing="2.3em" data-break-align="middle" data-latex="\\begin{spreadlines}{20pt}\\begin{gather}a=b\\\\c=d\\end{gather}\\end{spreadlines}">
-    <mtr>
+    <mtr data-latex="a=b">
       <mtd>
         <mi data-latex="a">a</mi>
         <mo data-latex="=">=</mo>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c=d">
       <mtd>
         <mi data-latex="c">c</mi>
         <mo data-latex="=">=</mo>
@@ -1412,14 +1412,14 @@ exports[`Mathtools More Environments Spreadlines 1`] = `
 exports[`Mathtools More Environments Spreadlines multiple environments 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{spreadlines}{20pt}\\begin{gather}a=b\\\\c=d\\end{gather}\\\\\\begin{gather}x=y\\\\z\\end{gather}\\end{spreadlines}" display="block">
   <mtable displaystyle="true" columnspacing="1em" rowspacing="2.3em" data-break-align="middle" data-latex="{gather}">
-    <mtr>
+    <mtr data-latex="a=b">
       <mtd>
         <mi data-latex="a">a</mi>
         <mo data-latex="=">=</mo>
         <mi data-latex="b">b</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="c=d">
       <mtd>
         <mi data-latex="c">c</mi>
         <mo data-latex="=">=</mo>
@@ -1429,14 +1429,14 @@ exports[`Mathtools More Environments Spreadlines multiple environments 1`] = `
   </mtable>
   <mspace linebreak="newline" data-latex="\\\\"></mspace>
   <mtable displaystyle="true" columnspacing="1em" rowspacing="2.3em" data-break-align="middle" data-latex="{gather}">
-    <mtr>
+    <mtr data-latex="x=y">
       <mtd>
         <mi data-latex="x">x</mi>
         <mo data-latex="=">=</mo>
         <mi data-latex="y">y</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="z">
       <mtd>
         <mi data-latex="z">z</mi>
       </mtd>
@@ -1458,7 +1458,7 @@ exports[`Mathtools More Environments cases* 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{cases*} 1 &amp; if $x&gt;0$ \\\\ -1 &amp; otherwise \\end{cases*}">
     <mo data-mjx-texclass="OPEN">{</mo>
     <mtable rowspacing=".2em" columnspacing="1em" columnalign="left">
-      <mtr>
+      <mtr data-latex="1&amp;if $x&gt;0$">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -1473,7 +1473,7 @@ exports[`Mathtools More Environments cases* 1`] = `
           </mstyle>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="-1&amp;otherwise">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1492,8 +1492,8 @@ exports[`Mathtools More Environments dcases 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{dcases} 1 &amp; x&gt;0 \\\\ -1 &amp; x\\le 0 \\end{dcases}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{dcases} 1 &amp; x&gt;0 \\\\ -1 &amp; x\\le 0 \\end{dcases}">
     <mo data-mjx-texclass="OPEN">{</mo>
-    <mtable columnspacing="1em" rowspacing=".2em" columnalign="left left" displaystyle="true">
-      <mtr>
+    <mtable columnspacing="1em" rowspacing=".2em" columnalign="left left" displaystyle="true" data-latex="\\begin{dcases} 1 &amp; x&gt;0 \\\\ -1 &amp; x\\le 0 \\end{dcases}">
+      <mtr data-latex="1&amp;x&gt;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -1503,7 +1503,7 @@ exports[`Mathtools More Environments dcases 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="-1&amp;x\\le0">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1525,7 +1525,7 @@ exports[`Mathtools More Environments dcases* 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{dcases*} 1 &amp; if $x&gt;0$ \\\\ -1 &amp; otherwise \\end{dcases*}">
     <mo data-mjx-texclass="OPEN">{</mo>
     <mtable rowspacing=".2em" columnspacing="1em" columnalign="left" displaystyle="true">
-      <mtr>
+      <mtr data-latex="1&amp;if $x&gt;0$">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -1540,7 +1540,7 @@ exports[`Mathtools More Environments dcases* 1`] = `
           </mstyle>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="-1&amp;otherwise">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1561,8 +1561,8 @@ exports[`Mathtools More Environments drcases 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{drcases} 1 &amp; x&gt;0 \\\\ -1 &amp; x\\le 0 \\end{drcases}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{drcases} 1 &amp; x&gt;0 \\\\ -1 &amp; x\\le 0 \\end{drcases}">
     <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true"></mo>
-    <mtable columnspacing="1em" rowspacing=".2em" columnalign="left left" displaystyle="true">
-      <mtr>
+    <mtable columnspacing="1em" rowspacing=".2em" columnalign="left left" displaystyle="true" data-latex="\\begin{drcases} 1 &amp; x&gt;0 \\\\ -1 &amp; x\\le 0 \\end{drcases}">
+      <mtr data-latex="1&amp;x&gt;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -1572,7 +1572,7 @@ exports[`Mathtools More Environments drcases 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="-1&amp;x\\le0">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1594,7 +1594,7 @@ exports[`Mathtools More Environments drcases* 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{drcases*} 1 &amp; if $x&gt;0$ \\\\ -1 &amp; otherwise \\end{drcases*}">
     <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true"></mo>
     <mtable rowspacing=".2em" columnspacing="1em" columnalign="left" displaystyle="true">
-      <mtr>
+      <mtr data-latex="1&amp;if $x&gt;0$">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -1609,7 +1609,7 @@ exports[`Mathtools More Environments drcases* 1`] = `
           </mstyle>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="-1&amp;otherwise">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1629,7 +1629,7 @@ exports[`Mathtools More Environments drcases* 1`] = `
 exports[`Mathtools More Environments lgathered 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{lgathered} a+b+c \\\\ d \\end{lgathered}" display="block">
   <mtable displaystyle="true" columnalign="left" columnspacing="1em" rowspacing="3pt" data-latex="\\begin{lgathered} a+b+c \\\\ d \\end{lgathered}">
-    <mtr data-latex=" ">
+    <mtr data-latex="a+b+c">
       <mtd>
         <mi data-latex="a">a</mi>
         <mo data-latex="+">+</mo>
@@ -1638,7 +1638,7 @@ exports[`Mathtools More Environments lgathered 1`] = `
         <mi data-latex="c">c</mi>
       </mtd>
     </mtr>
-    <mtr data-latex=" ">
+    <mtr data-latex="d">
       <mtd>
         <mi data-latex="d">d</mi>
       </mtd>
@@ -1650,7 +1650,7 @@ exports[`Mathtools More Environments lgathered 1`] = `
 exports[`Mathtools More Environments multlined [b] width 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined}[b][7cm]\\framebox[4cm]{first}\\\\\\framebox[4cm]{last}\\end{multlined} = B" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="7cm" columnwidth="100%" align="baseline -1" data-latex="{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1662,7 +1662,7 @@ exports[`Mathtools More Environments multlined [b] width 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1683,7 +1683,7 @@ exports[`Mathtools More Environments multlined [b] width 1`] = `
 exports[`Mathtools More Environments multlined [c] width 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined}[c][7cm]\\framebox[4cm]{first}\\\\\\framebox[4cm]{last}\\end{multlined} = B" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="7cm" columnwidth="100%" data-latex="{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1695,7 +1695,7 @@ exports[`Mathtools More Environments multlined [c] width 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1716,7 +1716,7 @@ exports[`Mathtools More Environments multlined [c] width 1`] = `
 exports[`Mathtools More Environments multlined [t] width 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined}[t][7cm]\\framebox[4cm]{first}\\\\\\framebox[4cm]{last}\\end{multlined} = B" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="7cm" columnwidth="100%" align="baseline 1" data-latex="{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1728,7 +1728,7 @@ exports[`Mathtools More Environments multlined [t] width 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1751,7 +1751,7 @@ exports[`Mathtools More Environments multlined 1`] = `
   <mi data-latex="A">A</mi>
   <mo data-latex="=">=</mo>
   <mtable displaystyle="true" rowspacing=".5em" columnwidth="100%" align="baseline 1" data-latex="{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1763,7 +1763,7 @@ exports[`Mathtools More Environments multlined 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1783,7 +1783,7 @@ exports[`Mathtools More Environments multlined 1`] = `
 exports[`Mathtools More Environments multlined empty row 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined} a \\\\ \\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnwidth="100%" data-latex="\\begin{multlined} a \\\\ \\end{multlined}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
@@ -1795,7 +1795,7 @@ exports[`Mathtools More Environments multlined empty row 1`] = `
 exports[`Mathtools More Environments multlined shoved 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined}[c][7cm]\\framebox[4cm]{first} \\\\\\shoveright{\\framebox[4cm]{second}} \\\\\\shoveleft{\\framebox[4cm]{third}} \\\\\\framebox[4cm]{last}\\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="7cm" columnwidth="100%" data-latex="\\begin{multlined}[c][7cm]\\framebox[4cm]{first} \\\\\\shoveright{\\framebox[4cm]{second}} \\\\\\shoveleft{\\framebox[4cm]{third}} \\\\\\framebox[4cm]{last}\\end{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1807,7 +1807,7 @@ exports[`Mathtools More Environments multlined shoved 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\shoveright{\\framebox[4cm]{second}}">
       <mtd columnalign="right">
         <mrow data-mjx-texclass="ORD" data-latex="\\shoveright{\\framebox[4cm]{second}}">
           <menclose notation="box">
@@ -1818,7 +1818,7 @@ exports[`Mathtools More Environments multlined shoved 1`] = `
         </mrow>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\shoveleft{\\framebox[4cm]{third}}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\shoveleft{\\framebox[4cm]{third}}">
           <menclose notation="box">
@@ -1829,7 +1829,7 @@ exports[`Mathtools More Environments multlined shoved 1`] = `
         </mrow>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1848,7 +1848,7 @@ exports[`Mathtools More Environments multlined shoved 1`] = `
 exports[`Mathtools More Environments multlined shoved distance 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined}[c][7cm]\\framebox[4cm]{first} \\\\\\shoveright[1cm]{\\framebox[4cm]{second}} \\\\\\shoveleft[1cm]{\\framebox[4cm]{third}} \\\\\\framebox[4cm]{last}\\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="7cm" columnwidth="100%" data-latex="\\begin{multlined}[c][7cm]\\framebox[4cm]{first} \\\\\\shoveright[1cm]{\\framebox[4cm]{second}} \\\\\\shoveleft[1cm]{\\framebox[4cm]{third}} \\\\\\framebox[4cm]{last}\\end{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1860,7 +1860,7 @@ exports[`Mathtools More Environments multlined shoved distance 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\shoveright[1cm]{\\framebox[4cm]{second}}">
       <mtd columnalign="right">
         <mrow data-latex="\\shoveright[1cm]{\\framebox[4cm]{second}}">
           <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{second}">
@@ -1874,7 +1874,7 @@ exports[`Mathtools More Environments multlined shoved distance 1`] = `
         </mrow>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\shoveleft[1cm]{\\framebox[4cm]{third}}">
       <mtd columnalign="left">
         <mrow data-latex="\\shoveleft[1cm]{\\framebox[4cm]{third}}">
           <mspace width="1cm"></mspace>
@@ -1888,7 +1888,7 @@ exports[`Mathtools More Environments multlined shoved distance 1`] = `
         </mrow>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1907,7 +1907,7 @@ exports[`Mathtools More Environments multlined shoved distance 1`] = `
 exports[`Mathtools More Environments multlined width 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multlined}[7cm]\\framebox[4cm]{first}\\\\\\framebox[4cm]{last}\\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="7cm" columnwidth="100%" data-latex="\\begin{multlined}[7cm]\\framebox[4cm]{first}\\\\\\framebox[4cm]{last}\\end{multlined}">
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{first}">
       <mtd columnalign="left">
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{first}">
           <menclose notation="box">
@@ -1919,7 +1919,7 @@ exports[`Mathtools More Environments multlined width 1`] = `
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="\\framebox[4cm]{last}">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mrow data-mjx-texclass="ORD" data-latex="\\framebox[4cm]{last}">
@@ -1939,8 +1939,8 @@ exports[`Mathtools More Environments rcases 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{rcases} 1 &amp; x&gt;0 \\\\ -1 &amp; x\\le 0 \\end{rcases}" display="block">
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{rcases} 1 &amp; x&gt;0 \\\\ -1 &amp; x\\le 0 \\end{rcases}">
     <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true"></mo>
-    <mtable columnspacing="1em" rowspacing=".2em" columnalign="left left">
-      <mtr>
+    <mtable columnspacing="1em" rowspacing=".2em" columnalign="left left" data-latex="\\begin{rcases} 1 &amp; x&gt;0 \\\\ -1 &amp; x\\le 0 \\end{rcases}">
+      <mtr data-latex="1&amp;x&gt;0">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -1950,7 +1950,7 @@ exports[`Mathtools More Environments rcases 1`] = `
           <mn data-latex="0">0</mn>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="-1&amp;x\\le0">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -1972,7 +1972,7 @@ exports[`Mathtools More Environments rcases* 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{rcases*} 1 &amp; if $x&gt;0$ \\\\ -1 &amp; otherwise \\end{rcases*}">
     <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true"></mo>
     <mtable rowspacing=".2em" columnspacing="1em" columnalign="left">
-      <mtr>
+      <mtr data-latex="1&amp;if $x&gt;0$">
         <mtd>
           <mn data-latex="1">1</mn>
         </mtd>
@@ -1987,7 +1987,7 @@ exports[`Mathtools More Environments rcases* 1`] = `
           </mstyle>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="-1&amp;otherwise">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mn data-latex="1">1</mn>
@@ -2005,7 +2005,7 @@ exports[`Mathtools More Environments rcases* 1`] = `
 exports[`Mathtools More Environments rgathered 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{rgathered} a+b+c \\\\ d \\end{rgathered}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="1em" rowspacing="3pt" data-latex="\\begin{rgathered} a+b+c \\\\ d \\end{rgathered}">
-    <mtr data-latex=" ">
+    <mtr data-latex="a+b+c">
       <mtd>
         <mi data-latex="a">a</mi>
         <mo data-latex="+">+</mo>
@@ -2014,7 +2014,7 @@ exports[`Mathtools More Environments rgathered 1`] = `
         <mi data-latex="c">c</mi>
       </mtd>
     </mtr>
-    <mtr data-latex=" ">
+    <mtr data-latex="d">
       <mtd>
         <mi data-latex="d">d</mi>
       </mtd>
@@ -2026,7 +2026,7 @@ exports[`Mathtools More Environments rgathered 1`] = `
 exports[`Mathtools More Environments smallvdotswithin star 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{aligned}A&amp;+ B \\\\&amp;\\shortvdotswithin*{+}C &amp;+ D\\end{aligned}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="0.1em 0.1em 0.30000000000000004em" data-break-align="bottom top" data-latex="\\begin{aligned}A&amp;+ B \\\\&amp;\\shortvdotswithin*{+}C &amp;+ D\\end{aligned}">
-    <mtr>
+    <mtr data-latex="A&amp;+B">
       <mtd>
         <mi data-latex="A">A</mi>
       </mtd>
@@ -2038,7 +2038,7 @@ exports[`Mathtools More Environments smallvdotswithin star 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em">
@@ -2055,7 +2055,7 @@ exports[`Mathtools More Environments smallvdotswithin star 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="C&amp;+D">
       <mtd>
         <mi data-latex="C">C</mi>
       </mtd>
@@ -2074,7 +2074,7 @@ exports[`Mathtools More Environments smallvdotswithin star 1`] = `
 exports[`Mathtools More Environments vdotswithin smallvdotswithin 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align*}a &amp;= b \\\\&amp; \\vdotswithin{=} \\\\&amp; = c \\\\\\shortvdotswithin{=}&amp; = d\\end{align*}" display="block">
   <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt 0.3em 0.1em 0.1em 0.30000000000000004em" data-break-align="bottom top" data-latex="\\begin{align*}a &amp;= b \\\\&amp; \\vdotswithin{=} \\\\&amp; = c \\\\\\shortvdotswithin{=}&amp; = d\\end{align*}">
-    <mtr>
+    <mtr data-latex="a&amp;=b">
       <mtd>
         <mi data-latex="a">a</mi>
       </mtd>
@@ -2086,7 +2086,7 @@ exports[`Mathtools More Environments vdotswithin smallvdotswithin 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;\\vdotswithin{=}">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em">
@@ -2103,7 +2103,7 @@ exports[`Mathtools More Environments vdotswithin smallvdotswithin 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;=c">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em">
@@ -2113,7 +2113,7 @@ exports[`Mathtools More Environments vdotswithin smallvdotswithin 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em">
@@ -2130,7 +2130,7 @@ exports[`Mathtools More Environments vdotswithin smallvdotswithin 1`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;=d">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em">
@@ -2147,7 +2147,7 @@ exports[`Mathtools More Environments vdotswithin smallvdotswithin 1`] = `
 exports[`Mathtools More Environments vdotswithin smallvdotswithin 2`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{alignat*}{3}A&amp;+ B &amp;&amp;= C &amp;&amp;+ D \\\\\\MTFlushSpaceAbove&amp;\\vdotswithin{+} &amp;&amp;&amp;&amp; \\vdotswithin{+}\\MTFlushSpaceBelow C &amp;+ D &amp;&amp;= Y &amp;&amp;+K\\end{alignat*}" display="block">
   <mtable displaystyle="true" columnalign="right left right left right left" columnspacing="0em 0em 0em 0em 0em" rowspacing="0.1em 0.1em 0.30000000000000004em" data-break-align="bottom top bottom top bottom top" data-latex="\\begin{alignat*}{3}A&amp;+ B &amp;&amp;= C &amp;&amp;+ D \\\\\\MTFlushSpaceAbove&amp;\\vdotswithin{+} &amp;&amp;&amp;&amp; \\vdotswithin{+}\\MTFlushSpaceBelow C &amp;+ D &amp;&amp;= Y &amp;&amp;+K\\end{alignat*}">
-    <mtr data-latex="{3}">
+    <mtr data-latex="A&amp;+B&amp;&amp;=C&amp;&amp;+D">
       <mtd>
         <mi data-latex="A">A</mi>
       </mtd>
@@ -2175,7 +2175,7 @@ exports[`Mathtools More Environments vdotswithin smallvdotswithin 2`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr data-latex="{3}">
+    <mtr data-latex="&amp;\\vdotswithin{+}&amp;&amp;&amp;&amp;\\vdotswithin{+}">
       <mtd></mtd>
       <mtd>
         <mstyle indentshift="2em">
@@ -2211,7 +2211,7 @@ exports[`Mathtools More Environments vdotswithin smallvdotswithin 2`] = `
         </mstyle>
       </mtd>
     </mtr>
-    <mtr data-latex="{3}">
+    <mtr data-latex="C&amp;+D&amp;&amp;=Y&amp;&amp;+K">
       <mtd>
         <mi data-latex="C">C</mi>
       </mtd>
@@ -2443,8 +2443,8 @@ exports[`Mathtools Small Matrix Environments Bsmallmatrix 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Bsmallmatrix} -a &amp; b \\\\ c &amp; -d \\end{Bsmallmatrix}">
     <mo data-mjx-texclass="OPEN">{</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{Bsmallmatrix} -a &amp; b \\\\ c &amp; -d \\end{Bsmallmatrix}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2453,7 +2453,7 @@ exports[`Mathtools Small Matrix Environments Bsmallmatrix 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2474,8 +2474,8 @@ exports[`Mathtools Small Matrix Environments Bsmallmatrix* 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Bsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{Bsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">{</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr data-latex=" ">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{Bsmallmatrix*}-a &amp; b \\\\ c &amp; -d \\end{Bsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2484,7 +2484,7 @@ exports[`Mathtools Small Matrix Environments Bsmallmatrix* 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex=" ">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2505,8 +2505,8 @@ exports[`Mathtools Small Matrix Environments Bsmallmatrix*[c] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Bsmallmatrix*}[c] -a &amp; b \\\\ c &amp; -d \\end{Bsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">{</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr data-latex="[c]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{Bsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{Bsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2515,7 +2515,7 @@ exports[`Mathtools Small Matrix Environments Bsmallmatrix*[c] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[c]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2536,8 +2536,8 @@ exports[`Mathtools Small Matrix Environments Bsmallmatrix*[l] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Bsmallmatrix*}[l] -a &amp; b \\\\ c &amp; -d \\end{Bsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">{</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left">
-        <mtr data-latex="[l]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left" data-latex="\\begin{Bsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{Bsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2546,7 +2546,7 @@ exports[`Mathtools Small Matrix Environments Bsmallmatrix*[l] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[l]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2567,8 +2567,8 @@ exports[`Mathtools Small Matrix Environments Bsmallmatrix*[r] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Bsmallmatrix*}[r] -a &amp; b \\\\ c &amp; -d \\end{Bsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">{</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right">
-        <mtr data-latex="[r]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right" data-latex="\\begin{Bsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{Bsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2577,7 +2577,7 @@ exports[`Mathtools Small Matrix Environments Bsmallmatrix*[r] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[r]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2598,8 +2598,8 @@ exports[`Mathtools Small Matrix Environments Vsmallmatrix 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Vsmallmatrix} -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix}">
     <mo data-mjx-texclass="OPEN">&#x2016;</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{Vsmallmatrix} -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2608,7 +2608,7 @@ exports[`Mathtools Small Matrix Environments Vsmallmatrix 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2629,8 +2629,8 @@ exports[`Mathtools Small Matrix Environments Vsmallmatrix* 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Vsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">&#x2016;</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr data-latex=" ">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{Vsmallmatrix*}-a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2639,7 +2639,7 @@ exports[`Mathtools Small Matrix Environments Vsmallmatrix* 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex=" ">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2660,8 +2660,8 @@ exports[`Mathtools Small Matrix Environments Vsmallmatrix*[c] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Vsmallmatrix*}[c] -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">&#x2016;</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr data-latex="[c]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{Vsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2670,7 +2670,7 @@ exports[`Mathtools Small Matrix Environments Vsmallmatrix*[c] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[c]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2691,8 +2691,8 @@ exports[`Mathtools Small Matrix Environments Vsmallmatrix*[l] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Vsmallmatrix*}[l] -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">&#x2016;</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left">
-        <mtr data-latex="[l]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left" data-latex="\\begin{Vsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2701,7 +2701,7 @@ exports[`Mathtools Small Matrix Environments Vsmallmatrix*[l] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[l]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2722,8 +2722,8 @@ exports[`Mathtools Small Matrix Environments Vsmallmatrix*[r] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{Vsmallmatrix*}[r] -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">&#x2016;</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right">
-        <mtr data-latex="[r]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right" data-latex="\\begin{Vsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{Vsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2732,7 +2732,7 @@ exports[`Mathtools Small Matrix Environments Vsmallmatrix*[r] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[r]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2753,8 +2753,8 @@ exports[`Mathtools Small Matrix Environments bsmallmatrix 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{bsmallmatrix} -a &amp; b \\\\ c &amp; -d \\end{bsmallmatrix}">
     <mo data-mjx-texclass="OPEN">[</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{bsmallmatrix} -a &amp; b \\\\ c &amp; -d \\end{bsmallmatrix}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2763,7 +2763,7 @@ exports[`Mathtools Small Matrix Environments bsmallmatrix 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2784,8 +2784,8 @@ exports[`Mathtools Small Matrix Environments bsmallmatrix* 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{bsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{bsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">[</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr data-latex=" ">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{bsmallmatrix*}-a &amp; b \\\\ c &amp; -d \\end{bsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2794,7 +2794,7 @@ exports[`Mathtools Small Matrix Environments bsmallmatrix* 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex=" ">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2815,8 +2815,8 @@ exports[`Mathtools Small Matrix Environments bsmallmatrix*[c] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{bsmallmatrix*}[c] -a &amp; b \\\\ c &amp; -d \\end{bsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">[</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr data-latex="[c]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{bsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{bsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2825,7 +2825,7 @@ exports[`Mathtools Small Matrix Environments bsmallmatrix*[c] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[c]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2846,8 +2846,8 @@ exports[`Mathtools Small Matrix Environments bsmallmatrix*[l] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{bsmallmatrix*}[l] -a &amp; b \\\\ c &amp; -d \\end{bsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">[</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left">
-        <mtr data-latex="[l]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left" data-latex="\\begin{bsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{bsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2856,7 +2856,7 @@ exports[`Mathtools Small Matrix Environments bsmallmatrix*[l] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[l]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2877,8 +2877,8 @@ exports[`Mathtools Small Matrix Environments bsmallmatrix*[r] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{bsmallmatrix*}[r] -a &amp; b \\\\ c &amp; -d \\end{bsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">[</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right">
-        <mtr data-latex="[r]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right" data-latex="\\begin{bsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{bsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2887,7 +2887,7 @@ exports[`Mathtools Small Matrix Environments bsmallmatrix*[r] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[r]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2908,8 +2908,8 @@ exports[`Mathtools Small Matrix Environments psmallmatrix 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{psmallmatrix} -a &amp; b \\\\ c &amp; -d \\end{psmallmatrix}">
     <mo data-mjx-texclass="OPEN">(</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{psmallmatrix} -a &amp; b \\\\ c &amp; -d \\end{psmallmatrix}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2918,7 +2918,7 @@ exports[`Mathtools Small Matrix Environments psmallmatrix 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2939,8 +2939,8 @@ exports[`Mathtools Small Matrix Environments psmallmatrix* 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{psmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{psmallmatrix*}">
     <mo data-mjx-texclass="OPEN">(</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr data-latex=" ">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{psmallmatrix*}-a &amp; b \\\\ c &amp; -d \\end{psmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2949,7 +2949,7 @@ exports[`Mathtools Small Matrix Environments psmallmatrix* 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex=" ">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -2970,8 +2970,8 @@ exports[`Mathtools Small Matrix Environments psmallmatrix*[c] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{psmallmatrix*}[c] -a &amp; b \\\\ c &amp; -d \\end{psmallmatrix*}">
     <mo data-mjx-texclass="OPEN">(</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr data-latex="[c]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{psmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{psmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -2980,7 +2980,7 @@ exports[`Mathtools Small Matrix Environments psmallmatrix*[c] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[c]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -3001,8 +3001,8 @@ exports[`Mathtools Small Matrix Environments psmallmatrix*[l] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{psmallmatrix*}[l] -a &amp; b \\\\ c &amp; -d \\end{psmallmatrix*}">
     <mo data-mjx-texclass="OPEN">(</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left">
-        <mtr data-latex="[l]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left" data-latex="\\begin{psmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{psmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -3011,7 +3011,7 @@ exports[`Mathtools Small Matrix Environments psmallmatrix*[l] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[l]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -3032,8 +3032,8 @@ exports[`Mathtools Small Matrix Environments psmallmatrix*[r] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{psmallmatrix*}[r] -a &amp; b \\\\ c &amp; -d \\end{psmallmatrix*}">
     <mo data-mjx-texclass="OPEN">(</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right">
-        <mtr data-latex="[r]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right" data-latex="\\begin{psmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{psmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -3042,7 +3042,7 @@ exports[`Mathtools Small Matrix Environments psmallmatrix*[r] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[r]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -3061,8 +3061,8 @@ exports[`Mathtools Small Matrix Environments psmallmatrix*[r] 1`] = `
 exports[`Mathtools Small Matrix Environments smallmatrix 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix} -a &amp; b \\\\ c &amp; -d \\end{smallmatrix}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix} -a &amp; b \\\\ c &amp; -d \\end{smallmatrix}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-      <mtr>
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{smallmatrix} -a &amp; b \\\\ c &amp; -d \\end{smallmatrix}">
+      <mtr data-latex="-a&amp;b">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mi data-latex="a">a</mi>
@@ -3071,7 +3071,7 @@ exports[`Mathtools Small Matrix Environments smallmatrix 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="c&amp;-d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -3088,8 +3088,8 @@ exports[`Mathtools Small Matrix Environments smallmatrix 1`] = `
 exports[`Mathtools Small Matrix Environments smallmatrix 2`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix} -a &amp; b \\\\ c &amp; -d \\end{smallmatrix}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix} -a &amp; b \\\\ c &amp; -d \\end{smallmatrix}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-      <mtr>
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{smallmatrix} -a &amp; b \\\\ c &amp; -d \\end{smallmatrix}">
+      <mtr data-latex="-a&amp;b">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mi data-latex="a">a</mi>
@@ -3098,7 +3098,7 @@ exports[`Mathtools Small Matrix Environments smallmatrix 2`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr>
+      <mtr data-latex="c&amp;-d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -3115,8 +3115,8 @@ exports[`Mathtools Small Matrix Environments smallmatrix 2`] = `
 exports[`Mathtools Small Matrix Environments smallmatrix* 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{smallmatrix*}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{smallmatrix*}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-      <mtr data-latex=" ">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{smallmatrix*}-a &amp; b \\\\ c &amp; -d \\end{smallmatrix*}">
+      <mtr data-latex="-a&amp;b">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mi data-latex="a">a</mi>
@@ -3125,7 +3125,7 @@ exports[`Mathtools Small Matrix Environments smallmatrix* 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex=" ">
+      <mtr data-latex="c&amp;-d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -3142,8 +3142,8 @@ exports[`Mathtools Small Matrix Environments smallmatrix* 1`] = `
 exports[`Mathtools Small Matrix Environments smallmatrix*[c] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix*}[c] -a &amp; b \\\\ c &amp; -d \\end{smallmatrix*}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix*}[c] -a &amp; b \\\\ c &amp; -d \\end{smallmatrix*}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-      <mtr data-latex="[c]">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{smallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{smallmatrix*}">
+      <mtr data-latex="-a&amp;b">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mi data-latex="a">a</mi>
@@ -3152,7 +3152,7 @@ exports[`Mathtools Small Matrix Environments smallmatrix*[c] 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="[c]">
+      <mtr data-latex="c&amp;-d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -3169,8 +3169,8 @@ exports[`Mathtools Small Matrix Environments smallmatrix*[c] 1`] = `
 exports[`Mathtools Small Matrix Environments smallmatrix*[l] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix*}[l] -a &amp; b \\\\ c &amp; -d \\end{smallmatrix*}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix*}[l] -a &amp; b \\\\ c &amp; -d \\end{smallmatrix*}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left">
-      <mtr data-latex="[l]">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left" data-latex="\\begin{smallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{smallmatrix*}">
+      <mtr data-latex="-a&amp;b">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mi data-latex="a">a</mi>
@@ -3179,7 +3179,7 @@ exports[`Mathtools Small Matrix Environments smallmatrix*[l] 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="[l]">
+      <mtr data-latex="c&amp;-d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -3196,8 +3196,8 @@ exports[`Mathtools Small Matrix Environments smallmatrix*[l] 1`] = `
 exports[`Mathtools Small Matrix Environments smallmatrix*[r] 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix*}[r] -a &amp; b \\\\ c &amp; -d \\end{smallmatrix*}" display="block">
   <mstyle scriptlevel="1" data-latex="\\begin{smallmatrix*}[r] -a &amp; b \\\\ c &amp; -d \\end{smallmatrix*}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right">
-      <mtr data-latex="[r]">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right" data-latex="\\begin{smallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{smallmatrix*}">
+      <mtr data-latex="-a&amp;b">
         <mtd>
           <mo data-latex="-">&#x2212;</mo>
           <mi data-latex="a">a</mi>
@@ -3206,7 +3206,7 @@ exports[`Mathtools Small Matrix Environments smallmatrix*[r] 1`] = `
           <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
-      <mtr data-latex="[r]">
+      <mtr data-latex="c&amp;-d">
         <mtd>
           <mi data-latex="c">c</mi>
         </mtd>
@@ -3225,8 +3225,8 @@ exports[`Mathtools Small Matrix Environments vsmallmatrix 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{vsmallmatrix} -a &amp; b \\\\ c &amp; -d \\end{vsmallmatrix}">
     <mo data-mjx-texclass="OPEN">|</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr>
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{vsmallmatrix} -a &amp; b \\\\ c &amp; -d \\end{vsmallmatrix}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -3235,7 +3235,7 @@ exports[`Mathtools Small Matrix Environments vsmallmatrix 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr>
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -3256,8 +3256,8 @@ exports[`Mathtools Small Matrix Environments vsmallmatrix* 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{vsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{vsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">|</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr data-latex=" ">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{vsmallmatrix*}-a &amp; b \\\\ c &amp; -d \\end{vsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -3266,7 +3266,7 @@ exports[`Mathtools Small Matrix Environments vsmallmatrix* 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex=" ">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -3287,8 +3287,8 @@ exports[`Mathtools Small Matrix Environments vsmallmatrix*[c] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{vsmallmatrix*}[c] -a &amp; b \\\\ c &amp; -d \\end{vsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">|</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
-        <mtr data-latex="[c]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" data-latex="\\begin{vsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{vsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -3297,7 +3297,7 @@ exports[`Mathtools Small Matrix Environments vsmallmatrix*[c] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[c]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -3318,8 +3318,8 @@ exports[`Mathtools Small Matrix Environments vsmallmatrix*[l] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{vsmallmatrix*}[l] -a &amp; b \\\\ c &amp; -d \\end{vsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">|</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left">
-        <mtr data-latex="[l]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="left" data-latex="\\begin{vsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{vsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -3328,7 +3328,7 @@ exports[`Mathtools Small Matrix Environments vsmallmatrix*[l] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[l]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -3349,8 +3349,8 @@ exports[`Mathtools Small Matrix Environments vsmallmatrix*[r] 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\begin{vsmallmatrix*}[r] -a &amp; b \\\\ c &amp; -d \\end{vsmallmatrix*}">
     <mo data-mjx-texclass="OPEN">|</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right">
-        <mtr data-latex="[r]">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right" data-latex="\\begin{vsmallmatrix*} -a &amp; b \\\\ c &amp; -d \\end{vsmallmatrix*}">
+        <mtr data-latex="-a&amp;b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="a">a</mi>
@@ -3359,7 +3359,7 @@ exports[`Mathtools Small Matrix Environments vsmallmatrix*[r] 1`] = `
             <mi data-latex="b">b</mi>
           </mtd>
         </mtr>
-        <mtr data-latex="[r]">
+        <mtr data-latex="c&amp;-d">
           <mtd>
             <mi data-latex="c">c</mi>
           </mtd>
@@ -3570,8 +3570,8 @@ exports[`Mathtools Spacing Control crampedsubstack 1`] = `
   <munder data-latex="\\begin{crampedsubarray}{c}x^2 \\\\y^2 \\end{crampedsubarray}}">
     <mo data-latex="\\sum">&#x2211;</mo>
     <mrow data-mjx-texclass="ORD" data-latex="{{crampedsubarray}}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em" data-cramped="true" data-latex="{crampedsubarray}">
-        <mtr data-latex="{c}">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em" data-cramped="true" data-latex="\\begin{crampedsubarray}{c}x^2\\\\y^2\\end{crampedsubarray}">
+        <mtr data-latex="x^2">
           <mtd>
             <msup data-latex="x^2">
               <mi data-latex="x">x</mi>
@@ -3579,7 +3579,7 @@ exports[`Mathtools Spacing Control crampedsubstack 1`] = `
             </msup>
           </mtd>
         </mtr>
-        <mtr data-latex="{c}">
+        <mtr data-latex="y^2">
           <mtd>
             <msup data-latex="y^2">
               <mi data-latex="y">y</mi>
@@ -3915,14 +3915,14 @@ exports[`Mathtools Symbols Other 1`] = `
 exports[`Mathtools Tagging Tags add 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newtagform{bars}||\\usetagform{bars} x\\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="\\newtagform{bars}||\\usetagform{bars} x\\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{|}\\text{1}\\text{|}&amp;x">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{|}">|</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{|}">|</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{1}">x</mi>
+        <mi data-latex="x">x</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -3932,7 +3932,7 @@ exports[`Mathtools Tagging Tags add 1`] = `
 exports[`Mathtools Tagging newtagform 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newtagform{brackets}{[}{]}\\usetagform{brackets} E=mc^2\\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="\\newtagform{brackets}{[}{]}\\usetagform{brackets} E=mc^2 \\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{[}\\text{1}\\text{]}&amp;E=m c^2">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{[}">[</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -3955,7 +3955,7 @@ exports[`Mathtools Tagging newtagform 1`] = `
 exports[`Mathtools Tagging newtagform styled 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newtagform{bfbrackets}[\\textbf]{[}{]}\\usetagform{bfbrackets} E=mc^2\\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="\\newtagform{bfbrackets}[\\textbf]{[}{]}\\usetagform{bfbrackets} E=mc^2 \\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{[}\\text{\\textbf{1}}\\text{]}&amp;E=m c^2">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{[}">[</mtext>
         <mtext data-latex="\\text{\\textbf{1}}">\\textbf{1}</mtext>
@@ -3978,7 +3978,7 @@ exports[`Mathtools Tagging newtagform styled 1`] = `
 exports[`Mathtools Tagging refeq 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}E=mc^2\\label{test}\\tag*{\\textsf{A}}\\\\ \\refeq{test}\\end{align}" display="block">
   <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex="\\begin{align}E=mc^2 \\label{test}\\tag*{\\textsf{A}}\\\\ \\refeq{test}\\end{align}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{\\textsf{A}}&amp;E=m c^2">
       <mtd id="mjx-eqn:test">
         <mtext data-latex="\\text{\\textsf{A}}">\\textsf{A}</mtext>
       </mtd>
@@ -3992,10 +3992,10 @@ exports[`Mathtools Tagging refeq 1`] = `
         </msup>
       </mtd>
     </mlabeledtr>
-    <mtr>
+    <mtr data-latex="\\text{\\textsf{A}}">
       <mtd>
-        <mrow href="#mjx-eqn%3Atest" class="MathJax_ref" data-latex="\\refeq{test}">
-          <mtext>\\textsf{A}</mtext>
+        <mrow href="#mjx-eqn%3Atest" class="MathJax_ref" data-latex="\\text{\\textsf{A}}">
+          <mtext data-latex="\\text{\\textsf{A}}">\\textsf{A}</mtext>
         </mrow>
       </mtd>
     </mtr>
@@ -4006,7 +4006,7 @@ exports[`Mathtools Tagging refeq 1`] = `
 exports[`Mathtools Tagging renewtagform 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newtagform{a}{(}{)}\\renewtagform{a}{((}{))}\\usetagform{a} E=mc^2\\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="\\newtagform{a}{(}{)}\\renewtagform{a}{((}{))}\\usetagform{a} E=mc^2 \\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{((}\\text{1}\\text{))}&amp;E=m c^2">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{((}">((</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
@@ -4107,7 +4107,7 @@ exports[`Mathtools options legacycolonsymbols option 2`] = `
 exports[`Mathtools options mathtoolsset 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathtoolsset{multlined-pos={}}\\begin{multlined} a \\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnwidth="100%" data-latex="\\mathtoolsset{multlined-pos={}}\\begin{multlined} a \\end{multlined}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
       </mtd>
@@ -4247,7 +4247,7 @@ exports[`Mathtools options pairedDelimiters 3`] = `
 exports[`Mathtools options tagforms 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\usetagform{bold} a=b\\tag{x}" display="block">
   <mtable displaystyle="true" data-latex="\\usetagform{bold} a=b\\tag{x}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{[[}\\text{\\mathbf{x}}\\text{]]}&amp;a=b">
       <mtd id="mjx-eqn:x">
         <mtext data-latex="\\text{[[}">[[</mtext>
         <mtext data-latex="\\text{\\mathbf{x}}">\\mathbf{x}</mtext>
@@ -4256,7 +4256,7 @@ exports[`Mathtools options tagforms 1`] = `
       <mtd>
         <mi data-latex="a">a</mi>
         <mo data-latex="=">=</mo>
-        <mi data-latex="\\tag{x}">b</mi>
+        <mi data-latex="b">b</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -4266,14 +4266,14 @@ exports[`Mathtools options tagforms 1`] = `
 exports[`Mathtools options tagforms reset 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\usetagform{bold} \\usetagform{} a\\tag{1}" display="block">
   <mtable displaystyle="true" data-latex="\\usetagform{bold} \\usetagform{} a\\tag{1}">
-    <mlabeledtr>
+    <mlabeledtr data-latex="\\text{(}\\text{1}\\text{)}&amp;a">
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(}">(</mtext>
         <mtext data-latex="\\text{1}">1</mtext>
         <mtext data-latex="\\text{)}">)</mtext>
       </mtd>
       <mtd>
-        <mi data-latex="\\tag{1}">a</mi>
+        <mi data-latex="a">a</mi>
       </mtd>
     </mlabeledtr>
   </mtable>
@@ -4307,13 +4307,13 @@ exports[`Mathtools setoptions multlined gap and pos 1`] = `
   <mi data-latex="a">a</mi>
   <mo data-latex="+">+</mo>
   <mtable displaystyle="true" rowspacing=".5em" columnwidth="100%" align="baseline -1" data-latex="{multlined}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
         <mspace width="2em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="right">
         <mspace width="2em"></mspace>
         <mi data-latex="b">b</mi>
@@ -4328,13 +4328,13 @@ exports[`Mathtools setoptions multlined gap and pos 1`] = `
 exports[`Mathtools setoptions multlined skips 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathtoolsset{multlined-gap=2em,firstline-afterskip=3em,lastline-preskip=1em}\\begin{multlined}[b] a \\\\ b \\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" columnwidth="100%" align="baseline -1" data-latex="\\mathtoolsset{multlined-gap=2em,firstline-afterskip=3em,lastline-preskip=1em}\\begin{multlined}[b] a \\\\ b \\end{multlined}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
         <mspace width="3em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mi data-latex="b">b</mi>
@@ -4347,13 +4347,13 @@ exports[`Mathtools setoptions multlined skips 1`] = `
 exports[`Mathtools setoptions multlined width 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathtoolsset{multlined-width=5em}\\begin{multlined} a \\\\ b \\end{multlined}" display="block">
   <mtable displaystyle="true" rowspacing=".5em" width="5em" columnwidth="100%" data-latex="\\mathtoolsset{multlined-width=5em}\\begin{multlined} a \\\\ b \\end{multlined}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
         <mspace width="1em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="right">
         <mspace width="1em"></mspace>
         <mi data-latex="b">b</mi>
@@ -4368,13 +4368,13 @@ exports[`Mathtools setoptions multlined-pos override 1`] = `
   <mi data-latex="a">a</mi>
   <mo data-latex="+">+</mo>
   <mtable displaystyle="true" rowspacing=".5em" columnwidth="100%" align="baseline -1" data-latex="{multlined}">
-    <mtr>
+    <mtr data-latex="a">
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
         <mspace width="2em"></mspace>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="b">
       <mtd columnalign="right">
         <mspace width="2em"></mspace>
         <mi data-latex="b">b</mi>
@@ -4414,13 +4414,13 @@ exports[`Mathtools setoptions smallmatrix-align 1`] = `
   <mrow data-mjx-texclass="INNER" data-latex="\\mathtoolsset{smallmatrix-align=r}\\begin{psmallmatrix*} a \\\\ -b \\end{psmallmatrix*}">
     <mo data-mjx-texclass="OPEN">(</mo>
     <mstyle scriptlevel="1">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right">
-        <mtr data-latex=" ">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" columnalign="right" data-latex="\\begin{psmallmatrix*}a \\\\ -b \\end{psmallmatrix*}">
+        <mtr data-latex="a">
           <mtd>
             <mi data-latex="a">a</mi>
           </mtd>
         </mtr>
-        <mtr data-latex=" ">
+        <mtr data-latex="-b">
           <mtd>
             <mo data-latex="-">&#x2212;</mo>
             <mi data-latex="b">b</mi>

@@ -28,7 +28,7 @@ import { StyleJson } from '../../util/StyleJson.js';
 import { asyncLoad } from '../../util/AsyncLoad.js';
 import { retryAfter } from '../../util/Retries.js';
 import { Locale } from '../../util/Locale.js';
-import { COMPONENT, localize } from '../../core/__locales__/Component.js';
+import { COMPONENT } from '../../core/__locales__/Component.js';
 import { DIRECTION } from './Direction.js';
 export { DIRECTION } from './Direction.js';
 
@@ -1246,15 +1246,14 @@ export class FontData<
    */
   public async loadDynamicFile(dynamic: DynamicFile): Promise<void> {
     if (dynamic.failed) {
-      return Promise.reject(
-        new Error(localize('FontData/CantLoad', dynamic.file))
-      );
+      return dynamic.promise; // do nothing
     }
     if (!dynamic.promise) {
       dynamic.promise = asyncLoad(this.dynamicFileName(dynamic)).catch(
         (err) => {
           dynamic.failed = true;
-          console.warn(err);
+          Locale.warn(COMPONENT, 'FontData/CantLoad', dynamic.file, err.message);
+          return dynamic.promise = Promise.resolve();
         }
       );
     }
@@ -1308,19 +1307,21 @@ export class FontData<
   }
 
   /**
-   * @param {DynamicFile} dynamic    The dynamic file to load
+   * @param {DynamicFile} dynamic   The dynamic file to load
    */
   public loadDynamicFileSync(dynamic: DynamicFile) {
+    if (dynamic.failed) return;
     if (!dynamic.promise) {
       dynamic.promise = Promise.resolve();
       try {
         mathjax.asyncLoad(this.dynamicFileName(dynamic));
       } catch (err) {
         dynamic.failed = true;
-        console.warn(err);
+        Locale.warn(COMPONENT, 'FontData/CantLoad', dynamic.file, err.message);
+        return;
       }
-      dynamic.setup(this);
     }
+    dynamic.setup(this);
   }
 
   /**
@@ -1389,7 +1390,7 @@ export class FontData<
     const char = this.variant[name].chars[n];
     if (char && !Array.isArray(char)) {
       const variant = this.variant[name];
-      delete variant.chars[n];
+      this.deleteDef(variant.chars, n);
       variant.linked.forEach((link) => delete link[n]);
       if (mathjax.asyncIsSynchronous) {
         this.loadDynamicFileSync(char);
@@ -1399,6 +1400,20 @@ export class FontData<
       return null;
     }
     return char as CharDataArray<C>;
+  }
+
+  /**
+   * @param {CharMap<C>} chars   The char mapping whose entry is to be removed
+   * @param {number} n           The character code to remove from the map
+   */
+  protected deleteDef(chars: CharMap<C>, n: number) {
+    while (chars) {
+      if (Object.hasOwn(chars, n)) {
+        delete chars[n];
+        return;
+      }
+      chars = (chars as any).__proto__;
+    }
   }
 
   /**
