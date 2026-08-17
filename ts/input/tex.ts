@@ -74,7 +74,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     maxTemplateSubtitutions: 10000,
     // math-style to use for Latin and Greek letters
     mathStyle: 'TeX', // one of TeX, ISO, French, or upright
-    legacyComments: false, // true to handle comments as ealier v4 versions (not properly processed in arguments)
+    legacyComments: false, // true to handle comments as earlier v4 versions (not properly processed in arguments)
     legacyMacroTemplates: false, // true to handle spaces in macro as ealier v4 versions (not collapsed)
     formatError: (jax: TeX<any, any, any>, err: TexError) =>
       jax.formatError(err),
