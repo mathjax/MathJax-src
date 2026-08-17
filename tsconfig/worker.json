@@ -1,6 +1,7 @@
 {
   "extends": "./mjs.json",
   "compilerOptions": {
+    "rootDir": "../ts/a11y/sre",
     "outDir": "../mjs/a11y/sre",
     "removeComments": false,
   },
