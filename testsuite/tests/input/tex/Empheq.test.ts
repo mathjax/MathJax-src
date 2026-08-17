@@ -1,8 +1,8 @@
 import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
 import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
-import '#js/input/tex/empheq/EmpheqConfiguration';
-import '#js/input/tex/cases/CasesConfiguration';
-import '#js/input/tex/ams/AmsConfiguration';
+import '#js/input/tex/empheq/EmpheqConfiguration.js';
+import '#js/input/tex/cases/CasesConfiguration.js';
+import '#js/input/tex/ams/AmsConfiguration.js';
 
 beforeEach(() => setupTex(['base', 'ams', 'empheq', 'cases'], { tags: 'ams' }));
 

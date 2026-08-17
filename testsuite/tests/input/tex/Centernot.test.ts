@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
 import { getTokens, setupTex, tex2mml } from '#helpers';
-import '#js/input/tex/centernot/CenternotConfiguration';
+import '#js/input/tex/centernot/CenternotConfiguration.js';
 
 beforeEach(() => setupTex(['base', 'centernot']));
 

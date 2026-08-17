@@ -1,8 +1,8 @@
 import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
 import { getTokens, setupTexWithOutput, tex2mml } from '#helpers';
-import '#js/input/tex/bussproofs/BussproofsConfiguration';
-import '#js/input/tex/ams/AmsConfiguration';
-import '#js/input/tex/newcommand/NewcommandConfiguration';
+import '#js/input/tex/bussproofs/BussproofsConfiguration.js';
+import '#js/input/tex/ams/AmsConfiguration.js';
+import '#js/input/tex/newcommand/NewcommandConfiguration.js';
 
 beforeEach(() => setupTexWithOutput(['base', 'ams', 'bussproofs']));
 
