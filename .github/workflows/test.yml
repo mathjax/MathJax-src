@@ -16,10 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
         name: Install pnpm
         with:
-          version: 10
+          version: 11
           run_install: false
 
       - name: Install Node.js
@@ -31,24 +31,24 @@ jobs:
       - name: Install packages
         run: |
           pnpm -r i
-          pnpm -s link:src
+          pnpm --silent link:src
 
       - name: Compile MathJax
         run: |
-          pnpm -s mjs:compile
-          pnpm -s copy:assets mjs
+          pnpm --silent mjs:compile
+          pnpm --silent copy:assets mjs
           components/bin/makeAll --mjs --terse --build --copy components/mjs
-          pnpm -s cjs:compile
-          pnpm -s cjs:components:src:build
-          pnpm -s copy:assets cjs
+          pnpm --silent cjs:compile
+          pnpm --silent cjs:components:src:build
+          pnpm --silent copy:assets cjs
           components/bin/makeAll --cjs --terse --build --copy components/cjs
-          pnpm -s copy:pkg cjs
+          pnpm --silent copy:pkg cjs
 
       - name: Build tests
         run: pnpm tsc -p testsuite/tsconfig.json
           
       - name: Run tests
-        run: pnpm -s test:gh
+        run: pnpm --silent test:gh
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v6
