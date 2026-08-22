@@ -38,7 +38,6 @@ import StackItemFactory from '../StackItemFactory.js';
 import { CheckType, BaseItem, StackItem, EnvList } from '../StackItem.js';
 import { TRBL } from '../../../util/Styles.js';
 import { TexConstant } from '../TexConstants.js';
-import { quotePattern } from '../../../util/string.js';
 
 import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
 import { COMPONENT } from './__locales__/Component.js';
@@ -1413,10 +1412,14 @@ export class ArrayItem extends BaseItem {
    */
   public captureLatex(parser: TexParser, name: string) {
     this.setProperty('rawLatexName', name);
-    const source = parser.string.slice(parser.i);
-    const end = ArrayItem.findEnvEnd(source, name);
+    const start = parser.i;
+    const end = this.findEnvEnd(parser, name);
+    parser.i = start;
     if (end >= 0) {
-      this.setProperty('rawLatex', `\\begin{${name}}${source.slice(0, end)}`);
+      this.setProperty(
+        'rawLatex',
+        `\\begin{${name}}${parser.string.slice(start, end)}`
+      );
       return;
     }
     // No matching \end{name} could be found (e.g., produced by
@@ -1475,50 +1478,45 @@ export class ArrayItem extends BaseItem {
   /**
    * Find the position of the corresponding `\end{name}` in the string starting
    * right after the corresponding `\begin{name}` (skipping nested environments
-   * of that name).
+   * and braced groups).
    *
-   * @param {string} str The string to search.
+   * @param {TexParser} parser The current TeX parser
    * @param {string} name The environment name to look for.
    * @returns {number} The index right after the matching `\end{name}`, or
-   *     -1 if no matching end was found.
+   *     -1 if no matching end was found or if there is incorrect nesting of
+   *     environments or braces.
    */
-  private static findEnvEnd(str: string, name: string): number {
-    const escaped = quotePattern(name);
-    const begin = new RegExp(`^\\\\begin\\s*\\{${escaped}\\}`);
-    const end = new RegExp(`^\\\\end\\s*\\{${escaped}\\}`);
-    let depth = 0;
-    let nested = 0;
-    let i = 0;
-    while (i < str.length) {
-      const c = str.charAt(i);
+  protected findEnvEnd(parser: TexParser, name: string): number {
+    const nesting = [name];
+    let c;
+    while ((c = parser.GetNext())) {
+      parser.i += c.length;
       if (c === '\\') {
-        const rest = str.slice(i);
-        const mBegin = rest.match(begin);
-        if (mBegin) {
-          if (depth === 0) nested++;
-          i += mBegin[0].length;
+        const i = parser.i;
+        if (parser.string.substring(i, i + 5) === 'begin') {
+          parser.i += 5;
+          const cs = parser.GetArgument(name, true);
+          nesting.unshift(cs);
           continue;
         }
-        const mEnd = rest.match(end);
-        if (mEnd) {
-          if (depth === 0) {
-            if (!nested) {
-              return i + mEnd[0].length;
-            }
-            nested--;
-          }
-          i += mEnd[0].length;
+        if (parser.string.substring(i, i + 3) === 'end') {
+          parser.i += 3;
+          const cs = parser.GetArgument(name, true);
+          if (nesting[0] !== cs) return -1;
+          nesting.shift();
+          if (nesting.length === 0) return parser.i;
           continue;
         }
-        i += 2;
+        parser.i += 1;
         continue;
       }
       if (c === '{') {
-        depth++;
-      } else if (c === '}' && depth > 0) {
-        depth--;
+        nesting.unshift(c);
+      } else if (c === '}') {
+        if (nesting[0] !== '{') return -1;
+        nesting.shift();
+        if (nesting.length === 0) return parser.i;
       }
-      i++;
     }
     return -1;
   }
