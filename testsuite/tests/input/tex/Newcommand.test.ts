@@ -31,6 +31,12 @@ describe('Newcommand', () => {
     ).toMatchSnapshot();
   });
 
+  it('Providecommand', () => {
+    expect(
+      tex2mml('\\providecommand{\\a}{A}\\providecommand{\\a}{B}\\a')
+    ).toMatchSnapshot();
+  });
+
   it('Newenvironment Optional', () => {
     expect(
       tex2mml(
