@@ -21,7 +21,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { A11yDocument, DummyRegion, Region } from './Region.js';
+import type { ExplorerMathDocument } from '../explorer.js';
+import { DummyRegion, Region } from './Region.js';
 import { Explorer, AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
 import '../sre.js';
@@ -94,7 +95,7 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * @class
    * @augments {AbstractMouseExplorer<T>}
    *
-   * @param {A11yDocument} document The current document.
+   * @param {ExplorerMathDocument} document The current document.
    * @param {ExplorerPool} pool The explorer pool.
    * @param {Region<T>} region A region to display results.
    * @param {HTMLElement} node The node on which the explorer works.
@@ -104,7 +105,7 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    *    that is passed to the region.
    */
   protected constructor(
-    public document: A11yDocument,
+    public document: ExplorerMathDocument,
     public pool: ExplorerPool,
     public region: Region<T>,
     protected node: HTMLElement,
@@ -199,7 +200,7 @@ export class FlameHoverer extends Hoverer<void> {
    * @override
    */
   protected constructor(
-    public document: A11yDocument,
+    public document: ExplorerMathDocument,
     public pool: ExplorerPool,
     _ignore: any,
     protected node: HTMLElement

@@ -30,6 +30,7 @@ import {
   FontData,
   FontExtensionData,
   DIRECTION,
+  FONTDATA_OPTIONS,
 } from '../common/FontData.js';
 import { Usage } from './Usage.js';
 import { StringMap } from './Wrapper.js';
@@ -87,6 +88,16 @@ export interface ChtmlFontExtensionData<
 
 /****************************************************************************/
 
+export type OPTIONS = {
+  fontURL: string; //   The URL where the font woff2 files are
+};
+
+export interface CHTML_FONT_OPTIONS extends OPTIONS, FONTDATA_OPTIONS {}
+
+const options: OPTIONS = {
+  fontURL: './chtml/woff2',
+};
+
 /**
  * The CHTML FontData class
  */
@@ -100,8 +111,8 @@ export class ChtmlFontData extends FontData<
    */
   public static OPTIONS = {
     ...FontData.OPTIONS,
+    ...options,
     dynamicPrefix: './chtml/dynamic',
-    fontURL: './chtml/woff2',
   };
 
   /**
@@ -133,6 +144,11 @@ export class ChtmlFontData extends FontData<
   ];
 
   /***********************************************************************/
+
+  public options: CHTML_FONT_OPTIONS & {
+    adaptiveCSS: boolean;
+    mathmlSpacing: boolean;
+  };
 
   /**
    * Data about the characters used (for adaptive CSS)

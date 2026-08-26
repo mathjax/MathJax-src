@@ -167,6 +167,14 @@ async function webpackLib(dir) {
         .concat(list.filter(a => a.slice(2, 4) !== './').sort())
         .join('\n')
     );
+    if (!config.noDTS) {
+      const dts = config.dist
+            ? path.resolve(dir, config.dist, path.basename(config.name) + '.d.ts')
+            : path.resolve(jsPath, '..', bundle, config.name + '.d.ts');
+      if (!fs.existsSync(dts)) {
+        fs.writeFileSync(dts, `export {}`);
+      }
+    }
   } catch (err) {
     console.error(err);
   }

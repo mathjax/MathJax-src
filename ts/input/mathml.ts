@@ -21,21 +21,56 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { AbstractInputJax } from '../core/InputJax.js';
-import {
-  defaultOptions,
-  separateOptions,
-  OptionList,
-} from '../util/Options.js';
+import { AbstractInputJax, INPUTJAX_OPTIONS } from '../core/InputJax.js';
+import { separateOptions, OptionList } from '../util/Options.js';
 import { FunctionList } from '../util/FunctionList.js';
 import { MathDocument } from '../core/MathDocument.js';
 import { MathItem } from '../core/MathItem.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
 import { MmlFactory } from '../core/MmlTree/MmlFactory.js';
+import { MmlNode } from '../core/MmlTree/MmlNode.js';
+import { DOM, DOM_TYPES, N, T, D } from '../types/Types.js';
+import {
+  FilterFunctions,
+  FilterFunctionList,
+} from '../core/FilterFunctions.js';
 
 import { FindMathML } from './mathml/FindMathML.js';
 import { MathMLCompile } from './mathml/MathMLCompile.js';
 import { localize } from './mathml/__locales__/Component.js';
+
+/*****************************************************************/
+
+/**
+ * The MathML option types.
+ */
+export interface MATHML_OPTIONS<DOM extends DOM_TYPES> extends INPUTJAX_OPTIONS<
+  DOM,
+  string,
+  MmlNode
+> {
+  parseAs: 'html' | 'xml';
+  forceReparse: boolean;
+  mmlFilters: FilterFunctionList<N<DOM> | T<DOM>, DOM>;
+  FindMathML: FindMathML<N<DOM>, T<DOM>, D<DOM>>;
+  MathMLCompile: MathMLCompile<N<DOM>, T<DOM>, D<DOM>>;
+  parseError: (node: Node) => void;
+}
+
+/**
+ * The MathML option defaults.
+ */
+const options: MATHML_OPTIONS<DOM> = {
+  ...AbstractInputJax.OPTIONS,
+  parseAs: 'html', //         Whether to use HTML or XML parsing for the MathML string
+  forceReparse: false, //     Whether to force the string to be reparsed, or use the one from the document DOM
+  mmlFilters: [], //          Filters to add to the mmlFilters lost
+  FindMathML: null, //        The FindMathML instance to override the default one
+  MathMLCompile: null, //     The MathMLCompile instance to override the default one
+  parseError(node: Node) {
+    this.error(this.adaptor.textContent(node).replace(/\n.*/g, ''));
+  },
+};
 
 /*****************************************************************/
 /**
@@ -45,7 +80,13 @@ import { localize } from './mathml/__locales__/Component.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
+export class MathML<N, T, D> extends AbstractInputJax<
+  N,
+  T,
+  D,
+  string,
+  MmlNode
+> {
   /**
    * The name of this input jax
    */
@@ -54,20 +95,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
   /**
    * @override
    */
-  /* prettier-ignore */
-  public static OPTIONS: OptionList = defaultOptions({
-    parseAs: 'html',         // Whether to use HTML or XML parsing for the MathML string
-    forceReparse: false,     // Whether to force the string to be reparsed, or use the one from the document DOM
-    mmlFilters: [],          // Filters to add to the mmlFilters lost
-    FindMathML: null,        // The FindMathML instance to override the default one
-    MathMLCompile: null,     // The MathMLCompile instance to override the default one
-    /*
-     * The function to use to handle a parsing error (throw an error by default)
-     */
-    parseError: function (node: Node) {
-      this.error(this.adaptor.textContent(node).replace(/\n.*/g, ''));
-    }
-  }, AbstractInputJax.OPTIONS);
+  public static OPTIONS = options;
 
   /**
    * The FindMathML instance used to locate MathML in the document
@@ -82,7 +110,12 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
   /**
    * A list of functions to call on the parsed MathML DOM before conversion to internal structure
    */
-  public mmlFilters: FunctionList;
+  public mmlFilters: FilterFunctions<N | T, DOM<N, T, D>>;
+
+  /**
+   * @override
+   */
+  public options: MATHML_OPTIONS<DOM<N, T, D>>;
 
   /**
    * @override
@@ -149,7 +182,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
     if (
       !mml ||
       !math.end.node ||
-      this.options['forceReparse'] ||
+      this.options.forceReparse ||
       this.adaptor.kind(mml) === '#text'
     ) {
       let mathml = this.executeFilters(
@@ -158,11 +191,11 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
         document,
         (math.math || '<math></math>').trim()
       );
-      if (this.options['parseAs'] === 'html') {
+      if (this.options.parseAs === 'html') {
         mathml = `<html><head></head><body>${mathml}</body></html>`;
       }
       const doc = this.checkForErrors(
-        this.adaptor.parse(mathml, 'text/' + this.options['parseAs'])
+        this.adaptor.parse(mathml, 'text/' + this.options.parseAs)
       );
       const body = this.adaptor.body(doc);
       if (this.adaptor.childNodes(body).length !== 1) {
@@ -175,7 +208,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
         );
       }
     }
-    mml = this.executeFilters(this.mmlFilters, math, document, mml);
+    mml = this.executeFilters<N | T>(this.mmlFilters, math, document, mml);
     let root = this.mathml.compile(mml as N);
     root = this.executeFilters(this.postFilters, math, document, root);
     math.display = root.attributes.get('display') === 'block';
@@ -186,7 +219,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
    * Check a parsed MathML string for errors.
    *
    * @param {D} doc  The document returns from the DOMParser
-   * @returns {D}     The document
+   * @returns {D}    The document
    */
   protected checkForErrors(doc: D): D {
     const err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
@@ -194,7 +227,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
       if (this.adaptor.textContent(err) === '') {
         this.error(localize('MmlError'));
       }
-      this.options['parseError'].call(this, err);
+      this.options.parseError.call(this, err);
     }
     return doc;
   }

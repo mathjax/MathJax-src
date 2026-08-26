@@ -96,12 +96,30 @@ new CommandMap('units', {
   nicefrac: UnitsMethods.NiceFrac,
 });
 
+/**
+ * The [tex]/units option types.
+ */
+export type UNITS_OPTIONS = {
+  units: {
+    loose: boolean;
+    ugly: boolean;
+  };
+};
+
+/**
+ * The [tex]/units option defaults.
+ */
+const options: UNITS_OPTIONS = {
+  units: {
+    loose: false,
+    ugly: false,
+  },
+};
+
+/**
+ * The configuration object for the `units` package.
+ */
 export const UnitsConfiguration = Configuration.create('units', {
   [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['units'] },
-  [ConfigurationType.OPTIONS]: {
-    units: {
-      loose: false,
-      ugly: false,
-    },
-  },
+  [ConfigurationType.OPTIONS]: options,
 });

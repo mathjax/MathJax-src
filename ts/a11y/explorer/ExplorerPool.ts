@@ -292,16 +292,14 @@ export class ExplorerPool {
   public attach() {
     this.attached = [];
     const keyExplorers = [];
-    const a11y = this.document.options.a11y;
+    const a11y = this.document.options.a11y as {
+      [name: string]: string | number | boolean;
+    };
     for (const [key, explorer] of Object.entries(this.explorers)) {
       if (explorer instanceof SpeechExplorer) {
         explorer.stoppable = false;
         keyExplorers.unshift(explorer);
-        if (
-          this.speechExplorerKeys.some(
-            (exKey) => this.document.options.a11y[exKey]
-          )
-        ) {
+        if (this.speechExplorerKeys.some((exKey) => a11y[exKey])) {
           explorer.Attach();
           this.attached.push(key);
         } else {

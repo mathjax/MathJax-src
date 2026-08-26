@@ -37,7 +37,7 @@ import { MathJax } from '../../../components/startup.js';
 import { Package } from '../../../components/package.js';
 import { Loader, CONFIG as LOADERCONFIG } from '../../../components/loader.js';
 import { mathjax } from '../../../mathjax.js';
-import { expandable } from '../../../util/Options.js';
+import { expandable, EXPANDABLE_LIST_OF } from '../../../util/Options.js';
 import { MenuMathDocument } from '../../../ui/menu/MenuHandler.js';
 
 import { Locale } from '../../../util/Locale.js';
@@ -237,15 +237,33 @@ export const RequireMethods: { [key: string]: ParseMethod } = {
 };
 
 /**
- * The options for the require extension
+ * The [tex]/require option types.
  */
-export const options = {
+export type REQUIRE_OPTIONS = {
   require: {
     //
     // Specifies which extensions can/can't be required.
     // The keys are the names of extensions, and the value is true
     //   if the extension can be required, and false if it can't
     //
+    allow: EXPANDABLE_LIST_OF<boolean>;
+    //
+    //  The default allow value if the extension isn't in the list above
+    //
+    defaultAllow: boolean;
+    //
+    //  The path prefix to use for exensions:  'tex' means use '[tex]/'
+    //  before the extension name.
+    //
+    prefix: string;
+  };
+};
+
+/**
+ * The [tex]/require option defaults.
+ */
+const options: REQUIRE_OPTIONS = {
+  require: {
     allow: expandable({
       base: false,
       autoload: false,
@@ -254,14 +272,7 @@ export const options = {
       setoptions: false,
       texhtml: false,
     }),
-    //
-    //  The default allow value if the extension isn't in the list above
-    //
     defaultAllow: true,
-    //
-    //  The path prefix to use for exensions:  'tex' means use '[tex]/'
-    //  before the extension name.
-    //
     prefix: 'tex',
   },
 };
@@ -272,7 +283,7 @@ export const options = {
 new CommandMap('require', { require: RequireMethods.Require });
 
 /**
- * The configuration for the \require macro
+ * The configuration object for the `require` package.
  */
 export const RequireConfiguration = Configuration.create('require', {
   [ConfigurationType.HANDLER]: {

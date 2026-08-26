@@ -21,12 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { AbstractInputJax } from '../core/InputJax.js';
+import { AbstractInputJax, INPUTJAX_OPTIONS } from '../core/InputJax.js';
 import { userOptions, separateOptions, OptionList } from '../util/Options.js';
 import { MathDocument } from '../core/MathDocument.js';
 import { MathItem } from '../core/MathItem.js';
 import { MmlNode } from '../core/MmlTree/MmlNode.js';
 import { MmlFactory } from '../core/MmlTree/MmlFactory.js';
+import { DOM, DOM_TYPES, N, T, D } from '../types/Types.js';
 
 import { FindTeX } from './tex/FindTeX.js';
 
@@ -42,6 +43,40 @@ import { TexConstant } from './tex/TexConstants.js';
 import './tex/base/BaseConfiguration.js';
 
 /*****************************************************************/
+
+/**
+ * The TeX option types.
+ */
+export interface TEX_OPTIONS<DOM extends DOM_TYPES> extends INPUTJAX_OPTIONS<
+  DOM,
+  ParseOptions
+> {
+  FindTeX: FindTeX<N<DOM>, T<DOM>, D<DOM>>;
+  packages: string[];
+  // Maximum size of TeX string to process.
+  maxBuffer: number;
+  // Maximum number of array template substitutions (avoids infinite loop from @{\\} for example)
+  maxTemplateSubtitutions: number;
+  // math-style to use for Latin and Greek letters
+  mathStyle: 'TeX' | 'ISO' | 'French' | 'upright';
+  formatError: (jax: TeX<N<DOM>, T<DOM>, D<DOM>>, err: TexError) => MmlNode;
+}
+
+/**
+ * The TeX option defaults.
+ */
+const options: TEX_OPTIONS<DOM> = {
+  ...AbstractInputJax.OPTIONS,
+  FindTeX: null,
+  packages: ['base'],
+  maxBuffer: 5 * 1024,
+  maxTemplateSubtitutions: 10000,
+  mathStyle: 'TeX',
+  formatError: (jax: TeX<N<DOM>, T<DOM>, D<DOM>>, err: TexError) =>
+    jax.formatError(err),
+};
+
+/*****************************************************************/
 /*
  *  Implements the TeX class (extends AbstractInputJax)
  */
@@ -51,32 +86,16 @@ import './tex/base/BaseConfiguration.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
+export class TeX<N, T, D> extends AbstractInputJax<N, T, D, ParseOptions> {
   /**
    * Name of input jax.
-   *
-   * @type {string}
    */
   public static NAME: string = 'TeX';
 
   /**
    * Default options for the jax.
-   *
-   * @type {OptionList}
    */
-  public static OPTIONS: OptionList = {
-    ...AbstractInputJax.OPTIONS,
-    FindTeX: null,
-    packages: ['base'],
-    // Maximum size of TeX string to process.
-    maxBuffer: 5 * 1024,
-    // Maximum number of array template substitutions (avoids infinite loop from @{\\} for example)
-    maxTemplateSubtitutions: 10000,
-    // math-style to use for Latin and Greek letters
-    mathStyle: 'TeX', // one of TeX, ISO, French, or upright
-    formatError: (jax: TeX<any, any, any>, err: TexError) =>
-      jax.formatError(err),
-  };
+  public static OPTIONS = options;
 
   /**
    * The FindTeX instance used for locating TeX in strings
@@ -85,22 +104,16 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
   /**
    * The configuration of the TeX jax.
-   *
-   * @type {ParserConfiguration}
    */
   protected configuration: ParserConfiguration;
 
   /**
    * The LaTeX code that is parsed.
-   *
-   * @type {string}
    */
   protected latex: string;
 
   /**
    * The Math node that results from parsing.
-   *
-   * @type {MmlNode}
    */
   protected mathNode: MmlNode;
 
@@ -140,6 +153,11 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   /**
    * @override
    */
+  public options: TEX_OPTIONS<DOM<N, T, D>>;
+
+  /**
+   * @override
+   */
   constructor(options: OptionList = {}) {
     const [rest, tex, find] = separateOptions(
       options,
@@ -147,7 +165,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       FindTeX.OPTIONS
     );
     super(tex);
-    this.findTeX = this.options['FindTeX'] || new FindTeX(find);
+    this.findTeX = this.options.FindTeX || new FindTeX(find);
     const packages = this.options.packages;
     const configuration = (this.configuration = TeX.configure(packages));
     const parseOptions = (this._parseOptions = new ParseOptions(configuration, [

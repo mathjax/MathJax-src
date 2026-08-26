@@ -21,12 +21,11 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { MathDocument } from '../../core/MathDocument.js';
+//import { MathDocument } from '../../core/MathDocument.js';
 import { StyleJsonSheet } from '../../util/StyleJson.js';
 import { Highlighter } from './Highlighter.js';
 import { SsmlElement, buildSpeech } from '../speech/SpeechUtil.js';
-
-export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
+import type { ExplorerMathDocument } from '../explorer.ts';
 
 export interface Region<T> {
   /**
@@ -102,9 +101,9 @@ export abstract class AbstractRegion<T> implements Region<T> {
 
   /**
    * @class
-   * @param {A11yDocument} document The document the live region is added to.
+   * @param {ExplorerMathDocument} document The document the live region is added to.
    */
-  constructor(public document: A11yDocument) {
+  constructor(public document: ExplorerMathDocument) {
     this.CLASS = this.constructor as typeof AbstractRegion;
     this.AddStyles();
   }

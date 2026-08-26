@@ -22,7 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { A11yDocument, Region } from './Region.js';
+import type { ExplorerMathDocument } from '../explorer.js';
+import { Region } from './Region.js';
 import { AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
 
@@ -31,7 +32,7 @@ export class AbstractTreeExplorer extends AbstractExplorer<void> {
    * @override
    */
   protected constructor(
-    public document: A11yDocument,
+    public document: ExplorerMathDocument,
     public pool: ExplorerPool,
     public region: Region<void>,
     protected node: HTMLElement,

@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { AbstractOutputJax } from '../core/OutputJax.js';
+import { AbstractOutputJax, OUTPUTJAX_OPTIONS } from '../core/OutputJax.js';
 import { MathDocument } from '../core/MathDocument.js';
 import { MathItem, Metrics, STATE } from '../core/MathItem.js';
 import { MmlNode, TEXCLASS } from '../core/MmlTree/MmlNode.js';
@@ -45,6 +45,7 @@ import { length2em } from '../util/lengths.js';
 import { StyleList, Styles } from '../util/Styles.js';
 import { StyleJson, StyleJsonSheet } from '../util/StyleJson.js';
 import { BBox } from '../util/BBox.js';
+import { DOM, DOM_TYPES, N, T, D, EMPTY } from '../types/Types.js';
 
 /*****************************************************************/
 
@@ -67,6 +68,110 @@ export type UnknownMap = Map<string, UnknownBBox>;
 export type UnknownVariantMap = Map<string, UnknownMap>;
 
 export const FONTPATH = '@mathjax/%%FONT%%-font';
+
+/*****************************************************************/
+
+/**
+ * The option types for linebreaking.
+ */
+/* prettier-ignore */
+export type LINEBREAKS = {
+  inline: boolean;             // true for browser-based breaking of inline equations
+  width: string;               // a fixed size or a percentage of the container width
+  lineleading: number;         // the default lineleading in em units
+  LinebreakVisitor:            // The LinebreakVisitor to use
+  typeof LinebreakVisitor;
+};
+
+/**
+ * The option types for the common output jax.
+ */
+/* prettier-ignore */
+export interface COMMON_OPTIONS<
+  DOM extends DOM_TYPES,
+  WW extends CommonWrapper<
+    N<DOM>, T<DOM>, D<DOM>,
+    CommonOutputJax<N<DOM>, T<DOM>, D<DOM>, WW, WF, WC, CC, VV, DD, FD, FC>,
+    WW, WF, WC, CC, VV, DD, FD, FC
+  >,
+  WF extends CommonWrapperFactory<
+    N<DOM>, T<DOM>, D<DOM>,
+    CommonOutputJax<N<DOM>, T<DOM>, D<DOM>, WW, WF, WC, CC, VV, DD, FD, FC>,
+    WW, WF, WC, CC, VV, DD, FD, FC
+  >,
+  WC extends CommonWrapperClass<
+    N<DOM>, T<DOM>, D<DOM>,
+    CommonOutputJax<N<DOM>, T<DOM>, D<DOM>, WW, WF, WC, CC, VV, DD, FD, FC>,
+    WW, WF, WC, CC, VV, DD, FD, FC
+  >,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends OUTPUTJAX_OPTIONS {
+  scale: number;                 // global scaling factor for all expressions
+  minScale: number;              // smallest scaling factor to use
+  mtextInheritFont: boolean;     // true to make mtext elements use surrounding font
+  merrorInheritFont: boolean;    // true to make merror text use surrounding font
+  mtextFont: string;             // font to use for mtext, if not inheriting (empty means use MathJax fonts)
+  merrorFont: string;            // font to use for merror, if not inheriting (empty means use MathJax fonts)
+  mathmlSpacing: boolean;        // true for MathML spacing rules, false for TeX rules
+  skipAttributes: EMPTY;         // RFDa and other attributes NOT to copy to the output
+  exFactor: number;              // default size of ex in em units
+  displayAlign:                  // default for indentalign when set to 'auto'
+    'left' | 'center' | 'right' | 'auto';
+  displayIndent: string;         // default for indentshift when set to 'auto'
+  displayOverflow:               // default for how to handle wide expressions
+    'overflow' | 'scroll' | 'scale' | 'truncate' | 'elide' | 'linebreak';
+  linebreaks: LINEBREAKS;        // the line-breaking options
+  font: string;                  // the font component to load
+  fontExtensions: string[];      // the font extensions to load
+  htmlHDW:                       // How to handle data-mjx-hdw attributes
+    'auto' | 'use' | 'force' | 'ignore';
+  wrapperFactory:                // The wrapper factory to use
+    CommonWrapperFactory<
+      N<DOM>, T<DOM>, D<DOM>,
+      CommonOutputJax<N<DOM>, T<DOM>, D<DOM>, WW, WF, WC, CC, VV, DD, FD, FC>,
+      WW, WF, WC, CC, VV, DD, FD, FC
+    >,
+  fontData:                      // The FontData object to use
+    FontData<CC, VV, DD> | typeof FontData;
+  fontPath: string;              // The path to the font definitions
+  styleJson: StyleJsonSheet;     // The StyleJsonSheet object to use
+}
+
+/**
+ * The default options.
+ */
+const options: COMMON_OPTIONS<any, any, any, any, any, any, any, any, any> = {
+  ...AbstractOutputJax.OPTIONS,
+  scale: 1,
+  minScale: 0.5,
+  mtextInheritFont: false,
+  merrorInheritFont: false,
+  mtextFont: '',
+  merrorFont: 'serif',
+  mathmlSpacing: false,
+  skipAttributes: {},
+  exFactor: 0.5,
+  displayAlign: 'center',
+  displayIndent: '0',
+  displayOverflow: 'overflow',
+  linebreaks: {
+    inline: true,
+    width: '100%',
+    lineleading: 0.2,
+    LinebreakVisitor: null,
+  },
+  font: '',
+  fontExtensions: [],
+  htmlHDW: 'auto',
+  wrapperFactory: null,
+  fontData: null,
+  fontPath: FONTPATH,
+  styleJson: null,
+};
 
 /*****************************************************************/
 
@@ -122,35 +227,7 @@ export abstract class CommonOutputJax<
   /**
    * @override
    */
-  /* prettier-ignore */
-  public static OPTIONS: OptionList = {
-      ...AbstractOutputJax.OPTIONS,
-    scale: 1,                      // global scaling factor for all expressions
-    minScale: .5,                  // smallest scaling factor to use
-    mtextInheritFont: false,       // true to make mtext elements use surrounding font
-    merrorInheritFont: false,      // true to make merror text use surrounding font
-    mtextFont: '',                 // font to use for mtext, if not inheriting (empty means use MathJax fonts)
-    merrorFont: 'serif',           // font to use for merror, if not inheriting (empty means use MathJax fonts)
-    mathmlSpacing: false,          // true for MathML spacing rules, false for TeX rules
-    skipAttributes: {},            // RFDa and other attributes NOT to copy to the output
-    exFactor: .5,                  // default size of ex in em units
-    displayAlign: 'center',        // default for indentalign when set to 'auto'
-    displayIndent: '0',            // default for indentshift when set to 'auto'
-    displayOverflow: 'overflow',   // default for overflow (scroll/scale/truncate/elide/linebreak/overflow)
-    linebreaks: {                  // options for when overflow is linebreak
-      inline: true,                // true for browser-based breaking of inline equations
-      width: '100%',               // a fixed size or a percentage of the container width
-      lineleading: .2,             // the default lineleading in em units
-      LinebreakVisitor: null,      // The LinebreakVisitor to use
-    },
-    font: '',                      // the font component to load
-    fontExtensions: [],            // the font extensions to load
-    htmlHDW: 'auto',               // 'use', 'force', or 'ignore' data-mjx-hdw attributes
-    wrapperFactory: null,          // The wrapper factory to use
-    fontData: null,                // The FontData object to use
-    fontPath: FONTPATH,            // The path to the font definitions
-    styleJson: null                // The StyleJsonSheet object to use
-  };
+  public static OPTIONS = options;
 
   /**
    *  The default styles for the output jax
@@ -278,6 +355,11 @@ export abstract class CommonOutputJax<
    */
   protected unknownCache: UnknownVariantMap;
 
+  /**
+   * @override
+   */
+  public options: COMMON_OPTIONS<DOM<N, T, D>, WW, WF, WC, CC, VV, DD, FD, FC>;
+
   /*****************************************************************/
 
   /**
@@ -304,7 +386,7 @@ export abstract class CommonOutputJax<
     );
     super(jaxOptions);
     this.factory =
-      this.options.wrapperFactory ||
+      (this.options.wrapperFactory as any) ||
       /* prettier-ignore */
       new defaultFactory<
         N, T, D,
@@ -510,7 +592,7 @@ export abstract class CommonOutputJax<
   public getLinebreakWidth() {
     const W = this.math.metrics.containerWidth / this.pxPerEm;
     const width =
-      this.math.root.attributes.get('maxwidth') ||
+      (this.math.root.attributes.get('maxwidth') as string) ||
       this.options.linebreaks.width;
     this.containerWidth = length2em(width, W, 1, this.pxPerEm);
   }
@@ -840,7 +922,9 @@ export abstract class CommonOutputJax<
           2;
     const scale = Math.max(
       this.options.minScale,
-      this.options.matchFontHeight ? ex / this.font.params.x_height / em : 1
+      'matchFontHeight' in this.options && this.options.matchFontHeight
+        ? ex / this.font.params.x_height / em
+        : 1
     );
     return { em, ex, containerWidth, scale, family };
   }

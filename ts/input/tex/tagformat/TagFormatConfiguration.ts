@@ -118,17 +118,35 @@ export function tagformatConfig(
 }
 
 /**
- * The configuration object for configTags
+ * The [tex]/tagformat option types.
+ */
+export type TAGFORMAT_OPTIONS = {
+  tagformat: {
+    number: (n: number) => string;
+    tag: (tag: string) => string | [string, string, string];
+    ref: string; // '' means use the tag function
+    id: (id: string) => string;
+    url: (id: string, base: string) => string;
+  };
+};
+
+/**
+ * The [tex]/tagformat option defaults.
+ */
+const options: TAGFORMAT_OPTIONS = {
+  tagformat: {
+    number: (n: number) => n.toString(),
+    tag: (tag: string) => ['(', tag, ')'],
+    ref: '', // means use the tag function
+    id: (id: string) => 'mjx-eqn:' + id.replace(/\s/g, '_'),
+    url: (id: string, base: string) => base + '#' + encodeURIComponent(id),
+  },
+};
+
+/**
+ * The configuration object for the `configTags` package;
  */
 export const TagFormatConfiguration = Configuration.create('tagformat', {
   [ConfigurationType.CONFIG]: [tagformatConfig, 10],
-  [ConfigurationType.OPTIONS]: {
-    tagformat: {
-      number: (n: number) => n.toString(),
-      tag: (tag: string) => ['(', tag, ')'],
-      ref: '', // means use the tag function
-      id: (id: string) => 'mjx-eqn:' + id.replace(/\s/g, '_'),
-      url: (id: string, base: string) => base + '#' + encodeURIComponent(id),
-    },
-  },
+  [ConfigurationType.OPTIONS]: options,
 });

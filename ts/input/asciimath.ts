@@ -21,13 +21,33 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { AbstractInputJax } from '../core/InputJax.js';
+import { AbstractInputJax, INPUTJAX_OPTIONS } from '../core/InputJax.js';
 import { LegacyAsciiMath } from './asciimath/legacy.js';
 import { separateOptions, OptionList } from '../util/Options.js';
 import { MathDocument } from '../core/MathDocument.js';
 import { MathItem } from '../core/MathItem.js';
+import { DOM, DOM_TYPES, N, T, D } from '../types/Types.js';
 
 import { FindAsciiMath } from './asciimath/FindAsciiMath.js';
+
+/*****************************************************************/
+
+/**
+ * The AsciiMath option types.
+ */
+export interface ASCIIMATH_OPTIONS<
+  DOM extends DOM_TYPES,
+> extends INPUTJAX_OPTIONS<DOM, null> {
+  FindAsciiMath: FindAsciiMath<N<DOM>, T<DOM>, D<DOM>>;
+}
+
+/**
+ * The AsciiMath option defaults.
+ */
+const options: ASCIIMATH_OPTIONS<DOM> = {
+  ...AbstractInputJax.OPTIONS,
+  FindAsciiMath: null,
+};
 
 /*****************************************************************/
 /**
@@ -46,10 +66,7 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
   /**
    * @override
    */
-  public static OPTIONS: OptionList = {
-    ...AbstractInputJax.OPTIONS,
-    FindAsciiMath: null,
-  };
+  public static OPTIONS = options;
 
   /**
    * The FindMath object used to search for AsciiMath in the document
@@ -66,8 +83,7 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
       AsciiMath.OPTIONS
     );
     super(am);
-    this.findAsciiMath =
-      this.options['FindAsciiMath'] || new FindAsciiMath(find);
+    this.findAsciiMath = this.options.FindAsciiMath || new FindAsciiMath(find);
   }
 
   /**

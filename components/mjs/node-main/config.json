@@ -5,10 +5,13 @@
     "copy": [
       "node-main.mjs",
       "node-main.cjs",
-      "node-main-setup.cjs"
+      "node-main-setup.cjs",
+      "node-main.d.mts",
+      "node-main.d.cts"
     ]
   },
   "webpack": {
-    "name": "node-main"
+    "name": "node-main",
+    "noDTS": true
   }
 }

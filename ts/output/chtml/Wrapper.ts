@@ -25,7 +25,6 @@ import { OptionList } from '../../util/Options.js';
 import {
   CommonWrapper,
   CommonWrapperClass,
-  Constructor,
   StringMap,
   SPACE,
 } from '../common/Wrapper.js';
@@ -39,8 +38,10 @@ import {
   ChtmlFontData,
   ChtmlFontDataClass,
 } from './FontData.js';
+import { Constructor } from '../../types/Types.js';
 
-export { Constructor, StringMap } from '../common/Wrapper.js';
+export { Constructor } from '../../types/Types.js';
+export { StringMap } from '../common/Wrapper.js';
 
 /*****************************************************************/
 

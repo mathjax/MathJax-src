@@ -55,16 +55,30 @@ new CommandMap('bbm', {
   mathbbmtt: [BbmMethods.MathFont, '-bbm-monospace'],
 });
 
-//
-//  Define the package configuration, including switch for sans serif.
-//
+/**
+ * The [tex]/bbm option types.
+ */
+export type BBM_OPTIONS = {
+  bbm: {
+    bold: boolean;
+  };
+};
+
+/**
+ * The [tex]/bbom option defaults.
+ */
+const options: BBM_OPTIONS = {
+  bbm: {
+    bold: false,
+  },
+};
+
+/**
+ * The configuration object for the `bbm` package.
+ */
 export const BbmConfiguration = Configuration.create('bbm', {
   [ConfigurationType.HANDLER]: {
     [HandlerType.MACRO]: ['bbm'],
   },
-  [ConfigurationType.OPTIONS]: {
-    bbm: {
-      bold: false,
-    },
-  },
+  [ConfigurationType.OPTIONS]: options,
 });

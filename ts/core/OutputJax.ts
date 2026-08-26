@@ -26,6 +26,8 @@ import { MathDocument } from './MathDocument.js';
 import { MathItem } from './MathItem.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
 import { FunctionList } from '../util/FunctionList.js';
+import type { DOM, DOM_TYPES } from '../types/Types.js';
+import type { FilterFunctions, FilterFunctionList } from './FilterFunctions.js';
 
 /*****************************************************************/
 /**
@@ -118,6 +120,18 @@ export interface OutputJax<N, T, D> {
   pageElements(document: MathDocument<N, T, D>): N;
 }
 
+/**
+ * The OutputJax option types.
+ */
+export type OUTPUTJAX_OPTIONS<
+  D extends DOM_TYPES = DOM,
+  PRE = any,
+  POST = PRE,
+> = {
+  preFilters: FilterFunctionList<PRE, D>;
+  postFilters: FilterFunctionList<POST, D>;
+};
+
 /*****************************************************************/
 /**
  *  The OutputJax abstract class
@@ -135,7 +149,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
   /**
    * The default options for the output jax
    */
-  public static OPTIONS: OptionList = {
+  public static OPTIONS: OUTPUTJAX_OPTIONS = {
     preFilters: [],
     postFilters: [],
   };
@@ -148,12 +162,12 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
   /**
    * Filters to run before the output is processed
    */
-  public preFilters: FunctionList;
+  public preFilters: FilterFunctions<N, DOM<N, T, D>>;
 
   /**
    * Filters to run after the output is processed
    */
-  public postFilters: FunctionList;
+  public postFilters: FilterFunctions<N, DOM<N, T, D>>;
 
   /**
    * The MathDocument's DOMAdaptor

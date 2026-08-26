@@ -391,7 +391,7 @@ export abstract class AbstractMmlNode
   /**
    * This is the list of options for the verifyTree() method
    */
-  public static verifyDefaults: PropertyList = {
+  public static verifyDefaults = {
     checkArity: true,
     checkAttributes: false,
     checkMathvariants: true,

@@ -26,7 +26,7 @@ import { Configuration } from '../Configuration.js';
 import { Macro } from '../Token.js';
 import { CommandMap } from '../TokenMap.js';
 import NodeUtil from '../NodeUtil.js';
-import { expandable } from '../../../util/Options.js';
+import { expandable, EXPANDABLE_LIST_OF } from '../../../util/Options.js';
 import { ParserConfiguration } from '../Configuration.js';
 import { TeX } from '../../tex.js';
 import ParseOptions from '../ParseOptions.js';
@@ -88,8 +88,82 @@ export function fixPrescripts({ data }: { data: ParseOptions }) {
   }
 }
 
+type PAIRED_DELIM_DEFS = EXPANDABLE_LIST_OF<
+  | [left: string, right: string]
+  | [left: string, right: string, body: string, argcount: number]
+  | [
+      left: string,
+      right: string,
+      body: string,
+      argcount: number,
+      pre: string,
+      post: string,
+    ]
+>;
+
+type TAGFORM_DEFS = EXPANDABLE_LIST_OF<
+  [left: string, right: string, format: string]
+>;
+
 /**
- * The configuration for the mathtools package
+ * The [tex]/mathtools option types.
+ */
+export type MATHTOOLS_OPTIONS = {
+  mathtools: {
+    'multlined-gap': string; //               Horizontal space for multlined environments
+    'multlined-pos': string; //               Default alignment for multlined environments
+    'multlined-width': string; //             Default width for mutlined environments
+    'firstline-afterskip': string; //         Space for first line of multlined (overrides multlined-gap)
+    'lastline-preskip': string; //            Space for last line of multlined (overrides multlined-gap)
+    'smallmatrix-align': string; //           Default alignment for smallmatrix environments
+    shortvdotsadjustabove: string; //         Space to remove above \shortvdots
+    shortvdotsadjustbelow: string; //         Space to remove below \shortvdots
+    centercolon: boolean; //                  True to have colon automatically centered
+    'centercolon-offset': string; //          Vertical adjustment for centered colons
+    'thincolon-dx': string; //                Horizontal adjustment for thin colons (e.g., \coloneqq)
+    'thincolon-dw': string; //                Width adjustment for thin colons
+    'use-unicode': boolean; //                True to use unicode characters rather than multi-character
+    //                                          version for \coloneqq, etc., when possible
+    legacycolonsymbols: boolean; //           True to use legacy \coloneq, etc.
+    'prescript-sub-format': string; //        Format for \prescript subscript
+    'prescript-sup-format': string; //        Format for \prescript superscript
+    'prescript-arg-format': string; //        Format for \prescript base
+    'allow-mathtoolsset': boolean; //         True to allow \mathtoolsset to change settings
+    pairedDelimiters: PAIRED_DELIM_DEFS; //   Predefined paired delimiters
+    tagforms: TAGFORM_DEFS; //                Tag form definitions
+  };
+};
+
+/**
+ * The [tex]/mathtools option defaults.
+ */
+const options: MATHTOOLS_OPTIONS = {
+  mathtools: {
+    'multlined-gap': '1em',
+    'multlined-pos': 'c',
+    'multlined-width': '',
+    'firstline-afterskip': '',
+    'lastline-preskip': '',
+    'smallmatrix-align': 'c',
+    shortvdotsadjustabove: '.2em',
+    shortvdotsadjustbelow: '.2em',
+    centercolon: false,
+    'centercolon-offset': '.04em',
+    'thincolon-dx': '-.04em',
+    'thincolon-dw': '-.08em',
+    'use-unicode': false,
+    legacycolonsymbols: false,
+    'prescript-sub-format': '',
+    'prescript-sup-format': '',
+    'prescript-arg-format': '',
+    'allow-mathtoolsset': true,
+    pairedDelimiters: expandable<PAIRED_DELIM_DEFS>({}),
+    tagforms: expandable<TAGFORM_DEFS>({}),
+  },
+};
+
+/**
+ * The configuration object for the `mathtools` package.
  */
 export const MathtoolsConfiguration = Configuration.create('mathtools', {
   [ConfigurationType.HANDLER]: {
@@ -103,32 +177,5 @@ export const MathtoolsConfiguration = Configuration.create('mathtools', {
   },
   [ConfigurationType.CONFIG]: configMathtools,
   [ConfigurationType.POSTPROCESSORS]: [[fixPrescripts, -6]],
-  /* prettier-ignore */
-  [ConfigurationType.OPTIONS]: {
-    mathtools: {
-      'multlined-gap': '1em',                 // horizontal space for multlined environments
-      'multlined-pos': 'c',                   // default alignment for multlined environments
-      'multlined-width': '',                  // default width for mutlined environments
-      'firstline-afterskip': '',              // space for first line of multlined (overrides multlined-gap)
-      'lastline-preskip': '',                 // space for last line of multlined (overrides multlined-gap)
-      'smallmatrix-align': 'c',               // default alignment for smallmatrix environments
-      'shortvdotsadjustabove': '.2em',        // space to remove above \shortvdots
-      'shortvdotsadjustbelow': '.2em',        // space to remove below \shortvdots
-      'centercolon': false,                   // true to have colon automatically centered
-      'centercolon-offset': '.04em',          // vertical adjustment for centered colons
-      'thincolon-dx': '-.04em',               // horizontal adjustment for thin colons (e.g., \coloneqq)
-      'thincolon-dw': '-.08em',               // width adjustment for thin colons
-      'use-unicode': false,                   // true to use unicode characters rather than multi-character
-                                              //   version for \coloneqq, etc., when possible
-      'legacycolonsymbols': false,            // true to use legacy \coloneq, etc.
-      'prescript-sub-format': '',             // format for \prescript subscript
-      'prescript-sup-format': '',             // format for \prescript superscript
-      'prescript-arg-format': '',             // format for \prescript base
-      'allow-mathtoolsset': true,             // true to allow \mathtoolsset to change settings
-      pairedDelimiters: expandable({}),       // predefined paired delimiters
-                                              //     name: [left, right, body, argcount, pre, post]
-      tagforms: expandable({}),               // tag form definitions
-                                              //     name: [left, right, format]
-    }
-  },
+  [ConfigurationType.OPTIONS]: options,
 });

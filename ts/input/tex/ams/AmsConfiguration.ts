@@ -37,6 +37,33 @@ export { COMPONENT } from './__locales__/Component.js';
  */
 export class AmsTags extends AbstractTags {}
 
+/**
+ * The [tex]/ams option types.
+ */
+export type AMS_OPTIONS = {
+  multlineWidth: string;
+  ams: {
+    operatornamePattern: RegExp;
+    multlineWidth: string;
+    multlineIndent: string;
+  };
+};
+
+/**
+ * The [tex]/ams option defaults.
+ */
+const options: AMS_OPTIONS = {
+  multlineWidth: '',
+  ams: {
+    operatornamePattern: /^[-*a-zA-Z0-9]+/, // multiLetterIdentifier for \operatorname
+    multlineWidth: '100%', // The width to use for multline environments.
+    multlineIndent: '1em', // The margin to use on both sides of multline environments.
+  },
+};
+
+/**
+ * The configuration object for the `ams` package.
+ */
 export const AmsConfiguration = Configuration.create('ams', {
   [ConfigurationType.HANDLER]: {
     [HandlerType.CHARACTER]: ['AMSmath-operatorLetter'],
@@ -57,13 +84,6 @@ export const AmsConfiguration = Configuration.create('ams', {
     [FlalignItem.prototype.kind]: FlalignItem,
   },
   [ConfigurationType.TAGS]: { ams: AmsTags },
-  [ConfigurationType.OPTIONS]: {
-    multlineWidth: '',
-    ams: {
-      operatornamePattern: /^[-*a-zA-Z0-9]+/, // multiLetterIdentifier for \operatorname
-      multlineWidth: '100%', // The width to use for multline environments.
-      multlineIndent: '1em', // The margin to use on both sides of multline environments.
-    },
-  },
+  [ConfigurationType.OPTIONS]: options,
   [ConfigurationType.CONFIG]: NewcommandConfig,
 });

@@ -23,26 +23,70 @@
 
 import { MathItem } from '../../core/MathItem.js';
 import {
-  MathDocument,
+  AbstractMathDocument,
   MathDocumentConstructor,
+  DOCUMENT_OPTIONS,
 } from '../../core/MathDocument.js';
 import { Handler } from '../../core/Handler.js';
+import { DOM, DOM_TYPES, Constructor } from '../../types/Types.js';
 
 import { Safe } from './safe.js';
 
 /*==========================================================================*/
 
-/**
- * Generic constructor for Mixins
- */
-export type Constructor<T> = new (...args: any[]) => T;
+export type SAFE_ALLOW = 'all' | 'safe' | 'none';
+export type LENGTH_LIST = {
+  [name: string]: string | [number, number] | boolean;
+};
+export type SAFE_LIST = { [name: string]: boolean };
 
-/*==========================================================================*/
+/**
+ * The ui/safe option types.
+ */
+export type OPTIONS = {
+  safeOptions: {
+    allow: {
+      URLs: SAFE_ALLOW; //     Safe are in safeProtocols below
+      classes: SAFE_ALLOW; //  Safe start with mjx- (can be set by pattern below)
+      cssIDs: SAFE_ALLOW; //   Safe start with mjx- (can be set by pattern below)
+      styles: SAFE_ALLOW; //   Safe are in safeStyles below
+    };
+    lengthMax: number; //                              Largest padding/border/margin, etc. in em's
+    scriptsizemultiplierRange: [number, number]; //    Valid range for scriptsizemultiplier
+    scriptlevelRange: [number, number]; //             Valid range for scriptlevel
+    classPattern: RegExp; //                           Pattern for allowed class names
+    idPattern: RegExp; //                              Pattern for allowed ids
+    dataPattern: RegExp; //                            Pattern for data attributes
+    safeProtocols: SAFE_LIST; //                       Which URL protocols are allowed
+    safeStyles: SAFE_LIST; //                          Which styles are allowed
+    styleParts: SAFE_LIST; //                          CSS styles that have Top/Right/Bottom/Left versions
+    styleLengths: LENGTH_LIST; //                      CSS styles that are lengths needing max/min testing
+  };
+  SafeClass: typeof Safe;
+};
+
+/**
+ * The SafeMathDocument option types.
+ */
+export interface SAFE_OPTIONS<DOM extends DOM_TYPES>
+  extends OPTIONS, DOCUMENT_OPTIONS<DOM> {}
+
+/**
+ * The ui/safe option defaults.
+ */
+const options: OPTIONS = {
+  safeOptions: Safe.OPTIONS,
+  SafeClass: Safe,
+};
 
 /**
  * The properties needed in the MathDocument for sanitizing the internal MathML
  */
-export interface SafeMathDocument<N, T, D> extends MathDocument<N, T, D> {
+export interface SafeMathDocument<N, T, D> extends AbstractMathDocument<
+  N,
+  T,
+  D
+> {
   /**
    * The Safe object for this document
    */
@@ -52,7 +96,7 @@ export interface SafeMathDocument<N, T, D> extends MathDocument<N, T, D> {
 /**
  * The mixin for adding safe render action to MathDocuments
  *
- * @param {B} BaseDocument             The MathDocument class to be extended
+ * @param {B} BaseDocument              The MathDocument class to be extended
  * @returns {SafeMathDocument<N,T,D>}   The extended MathDocument class
  *
  * @template N  The HTMLElement node class
@@ -64,7 +108,10 @@ export function SafeMathDocumentMixin<
   N,
   T,
   D,
-  B extends MathDocumentConstructor<MathDocument<N, T, D>>,
+  B extends MathDocumentConstructor<
+    AbstractMathDocument<N, T, D>,
+    DOM<N, T, D>
+  >,
 >(BaseDocument: B): Constructor<SafeMathDocument<N, T, D>> & B {
   return class extends BaseDocument {
     /**
@@ -72,11 +119,10 @@ export function SafeMathDocumentMixin<
      */
     public static OPTIONS = {
       ...BaseDocument.OPTIONS,
-      safeOptions: {
-        ...Safe.OPTIONS,
-      },
-      SafeClass: Safe,
+      ...options,
     };
+
+    public options: SAFE_OPTIONS<DOM<N, T, D>>;
 
     /**
      * An instance of the Safe object
@@ -128,7 +174,7 @@ export function SafeMathDocumentMixin<
  * Add context-menu support to a Handler instance
  *
  * @param {Handler} handler   The Handler instance to enhance
- * @returns {Handler}          The handler that was modified (for purposes of chaining extensions)
+ * @returns {Handler}         The handler that was modified (for purposes of chaining extensions)
  */
 export function SafeHandler<N, T, D>(
   handler: Handler<N, T, D>

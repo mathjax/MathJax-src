@@ -43,8 +43,8 @@ new CommandMap('color', {
 /**
  * Config method for Color package.
  *
- * @param {Configuration} _config The current configuration.
- * @param {TeX} jax              The TeX jax having that configuration
+ * @param {Configuration} _config  The current configuration.
+ * @param {TeX} jax                The TeX jax having that configuration
  */
 const config = function (
   _config: ParserConfiguration,
@@ -54,17 +54,32 @@ const config = function (
 };
 
 /**
- * The configuration for the color macros
+ * The [tex]/color option types.
+ */
+export type COLOR_OPTIONS = {
+  color: {
+    padding: string;
+    borderWidth: string;
+  };
+};
+
+/**
+ * The [tex]/color option defaults.
+ */
+const options: COLOR_OPTIONS = {
+  color: {
+    padding: '5px',
+    borderWidth: '2px',
+  },
+};
+
+/**
+ * The configuration object for the `color` package.
  */
 export const ColorConfiguration = Configuration.create('color', {
   [ConfigurationType.HANDLER]: {
     [HandlerType.MACRO]: ['color'],
   },
-  [ConfigurationType.OPTIONS]: {
-    color: {
-      padding: '5px',
-      borderWidth: '2px',
-    },
-  },
+  [ConfigurationType.OPTIONS]: options,
   [ConfigurationType.CONFIG]: config,
 });

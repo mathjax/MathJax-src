@@ -76,6 +76,25 @@ export function NewcommandConfig(
   );
 }
 
+/**
+ * The [tex]/newcommand option types.
+ */
+export type NEWCOMMAND_OPTIONS = {
+  maxMacros: number;
+  protectedMacros: string[];
+};
+
+/**
+ * The [tex]/newcommand option defaults.
+ */
+const options: NEWCOMMAND_OPTIONS = {
+  maxMacros: 1000,
+  protectedMacros: ['begingroupSandbox'],
+};
+
+/**
+ * The configuration object for the `newcommand` package.
+ */
 export const NewcommandConfiguration = Configuration.create('newcommand', {
   [ConfigurationType.HANDLER]: {
     macro: ['Newcommand-macros'],
@@ -83,9 +102,6 @@ export const NewcommandConfiguration = Configuration.create('newcommand', {
   [ConfigurationType.ITEMS]: {
     [BeginEnvItem.prototype.kind]: BeginEnvItem,
   },
-  [ConfigurationType.OPTIONS]: {
-    maxMacros: 1000,
-    protectedMacros: ['begingroupSandbox'],
-  },
+  [ConfigurationType.OPTIONS]: options,
   [ConfigurationType.CONFIG]: NewcommandConfig,
 });
