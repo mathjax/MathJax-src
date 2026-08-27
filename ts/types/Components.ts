@@ -16,7 +16,7 @@
  */
 
 /**
- * @file  The compoonent type definitions
+ * @file  The component type definitions
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
