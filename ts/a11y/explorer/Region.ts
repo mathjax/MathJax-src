@@ -877,8 +877,13 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
         if (right === undefined || x + bbox.width > right) {
           right = x + bbox.width;
         }
-        top ??= bbox.height + bbox.y + Y;
-        bot = y;
+        if (top === undefined) {
+          top = bbox.height + y;
+          bot = y;
+        } else {
+          top = Math.max(top, bbox.height + y);
+          bot = Math.min(bot, y);
+        }
       }
       const clone = g.appendChild(child.cloneNode(true)) as HTMLElement;
       clone.classList.remove('mjx-selected');

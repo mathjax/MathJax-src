@@ -135,8 +135,7 @@ const allExplorers: { [options: string]: ExplorerInit } = {
       'data-semantic-prefix-none'
     ),
   flame: (doc, pool, node) => FlameColorer.create(doc, pool, null, node),
-  treeColoring: (doc, pool, node, item) =>
-    TreeColorer.create(doc, pool, null, node, item),
+  treeColoring: (doc, pool, node) => TreeColorer.create(doc, pool, null, node),
 };
 
 /**

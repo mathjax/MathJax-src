@@ -336,20 +336,25 @@ export abstract class AbstractNode<
   }
 
   /**
+   * Note that the `state` parameter is an internal state object, and
+   * is not intended for user input, so it is not listed in the
+   * interface above, and is not included in the jsDoc for that
+   * reason.
+   *
    * @override
    */
   public walkTree(
     func: (node: N, data?: any) => boolean | void,
     data?: any,
-    state: TreeWalkerState = { continue: true }
+    $state: TreeWalkerState = { continue: true } // internal state variable
   ): any {
     if (func(this as any as N, data)) {
-      state.continue = false;
+      $state.continue = false;
       return data;
     }
     for (const child of this.childNodes) {
-      if (child && state.continue) {
-        (child as any as AbstractNode<N, C>).walkTree(func, data, state);
+      if (child && $state.continue) {
+        (child as any as AbstractNode<N, C>).walkTree(func, data, $state);
       }
     }
     return data;
@@ -411,8 +416,14 @@ export abstract class AbstractEmptyNode<
    *
    * @override
    */
-  public walkTree(func: (node: N, data?: any) => boolean | void, data?: any) {
-    func(this as any as N, data);
+  public walkTree(
+    func: (node: N, data?: any) => boolean | void,
+    data?: any,
+    $state: TreeWalkerState = { continue: true } // internal state variable
+  ) {
+    if (func(this as any as N, data)) {
+      $state.continue = false;
+    }
     return data;
   }
 

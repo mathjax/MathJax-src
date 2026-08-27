@@ -154,24 +154,29 @@ export class AbstractWrapper<
   }
 
   /**
+   * Note that the `state` parameter is an internal state object, and
+   * is not intended for user input, so it is not listed in the
+   * interface above, and is not included in the jsDoc for that
+   * reason.
+   *
    * @override
    */
   public walkTree(
     func: (node: W, data?: any) => boolean | void,
     data?: any,
-    state: TreeWalkerState = { continue: true }
+    $state: TreeWalkerState = { continue: true } // internal state variable
   ) {
     if (func(this as any as W, data)) {
-      state.continue = false;
+      $state.continue = false;
       return data;
     }
     if ('childNodes' in this) {
       for (const child of this.childNodes) {
-        if (child && state.continue) {
+        if (child && $state.continue) {
           (child as any as AbstractWrapper<N, C, W>).walkTree(
             func,
             data,
-            state
+            $state
           );
         }
       }
