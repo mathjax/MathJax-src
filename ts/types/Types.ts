@@ -299,16 +299,16 @@ export type CONFIG<T extends COMPONENT_DEF> =
  */
 /* prettier-ignore */
 export type ADD_MATHJAX<T> =
-  T extends { options?: any; startup: { document: any } }
+  T extends { config?: {options?: any}; startup: { document: any } }
     ? {
-        startup?: {
+        startup: {
           mathjax: Omit<typeof mathjax, 'document'> &
           {
-            document: (doc: any, options: Partial<T['options']>) => T['startup']['document'];
+            document: (doc: any, options: Partial<T['config']['options']>) => T['startup']['document'];
           };
         } & Omit<T['startup'], 'mathjax'>;
       } & Omit<T, 'startup'>
-    : T & {xyz: boolean};
+    : T;
 
 /**
  * The type for the MathJax object based on a collection of component definitions.
