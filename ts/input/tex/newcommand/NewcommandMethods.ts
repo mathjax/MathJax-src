@@ -32,6 +32,7 @@ import { ParseUtil } from '../ParseUtil.js';
 import { UnitUtil } from '../UnitUtil.js';
 import { StackItem } from '../StackItem.js';
 import { NewcommandUtil } from './NewcommandUtil.js';
+import { quotePattern } from '../../../util/string.js';
 
 import { COMPONENT } from './__locales__/Component.js';
 
@@ -267,11 +268,20 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         if (edef) {
           // Parse the commands in the end environment definition.
           const rest = parser.string.slice(parser.i);
-          parser.string = ParseUtil.addArgs(
-            parser,
-            parser.string.substring(0, parser.i),
-            edef
+          let prefix = parser.string.substring(0, parser.i);
+          // Here `\end{name}` has already been parsed, but left in place it
+          // ends up in the LaTeX source. Remove it using whitespace to keep the
+          // counter correct.
+          const escaped = quotePattern(name);
+          const endTag = prefix.match(
+            new RegExp(`\\\\end\\s*\\{\\s*${escaped}\\s*\\}$`)
           );
+          if (endTag) {
+            prefix =
+              prefix.slice(0, prefix.length - endTag[0].length) +
+              ' '.repeat(endTag[0].length);
+          }
+          parser.string = ParseUtil.addArgs(parser, prefix, edef);
           parser.Parse();
           // Reset to parsing the remainder of the expression.
           parser.string = rest;
@@ -296,7 +306,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         args.push(parser.GetArgument(`\\begin{${name}}`));
       }
       bdef = ParseUtil.substituteArgs(parser, args, bdef);
-      edef = ParseUtil.substituteArgs(parser, [], edef); // no args, but get errors for #n in edef
+      ParseUtil.substituteArgs(parser, [], edef); // no args, but get errors for #n in edef
     }
     parser.string = ParseUtil.addArgs(
       parser,
@@ -304,6 +314,10 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
       parser.string.slice(parser.i)
     );
     parser.i = 0;
+    // This destroys any absolute positions recorded by an enclosing environment
+    // This counter allows to detect that.
+    parser.stack.global['envSplice'] =
+      ((parser.stack.global['envSplice'] as number) || 0) + 1;
     parser.stack.global['beginEnv'] =
       ((parser.stack.global['beginEnv'] as number) || 0) + 1;
     return parser.itemFactory.create('beginEnv').setProperty('name', name);

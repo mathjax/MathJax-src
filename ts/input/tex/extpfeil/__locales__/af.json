@@ -1,1 +1,5 @@
-{}
+{
+  "NewextarrowArg1": "Eerste argument vir %1 moet 'n kontrolevolgordenaam wees",
+  "NewextarrowArg2": "Tweede argument vir %1 moet twee heelgetalle wees, geskei deur 'n komma",
+  "NewextarrowArg3": "Derde argument vir %1 moet 'n unicode-karakternommer wees"
+}

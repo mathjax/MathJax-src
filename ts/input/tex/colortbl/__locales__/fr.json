@@ -1,1 +1,5 @@
-{}
+{
+  "ColumnColorNotTop": "%1 doit se trouver dans la première ligne ou dans le préambule",
+  "RowColorNotFirst": "%1 doit se trouver au début d'une ligne",
+  "UnsupportedTableColor": "Utilisation non prise en charge de %1"
+}

@@ -1,1 +1,8 @@
-{}
+{
+  "ProsodyError": "Något gick fel med prosodimatchningen",
+  "SpeechError": "Fel vid talgenerering:",
+  "Worker/Cancelled": "Uppgift %1 avbruten",
+  "Worker/NotStarted": "Worker har inte startats",
+  "Worker/Started": "Worker har redan startats",
+  "Worker/Terminate": "%1 avbruten av att WorkerHandler avslutades"
+}

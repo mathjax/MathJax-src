@@ -70,6 +70,7 @@ export class MultlineItem extends ArrayItem {
     );
     this.setProperty('shove', null);
     this.row.push(mtd);
+    this.rowLatex.push(this.cellLatex(mtd));
     this.Clear();
   }
 
@@ -82,8 +83,10 @@ export class MultlineItem extends ArrayItem {
       texError(COMPONENT, 'MultlineRowsOneCol', 'multline');
     }
     const row = this.create('node', 'mtr', this.row);
+    this.setRowLatex(row);
     this.table.push(row);
     this.row = [];
+    this.rowLatex = [];
   }
 
   /**
@@ -93,7 +96,6 @@ export class MultlineItem extends ArrayItem {
     super.EndTable();
     if (this.table.length) {
       const m = this.table.length - 1;
-      let label = -1;
       if (
         !NodeUtil.getAttribute(
           NodeUtil.getChildren(this.table[0])[0],
@@ -120,7 +122,7 @@ export class MultlineItem extends ArrayItem {
       }
       const tag = this.factory.configuration.tags.getTag();
       if (tag) {
-        label =
+        const label =
           this.arraydef.side === TexConstant.Align.LEFT
             ? 0
             : this.table.length - 1;
@@ -131,6 +133,16 @@ export class MultlineItem extends ArrayItem {
           [tag].concat(NodeUtil.getChildren(mtr))
         );
         NodeUtil.copyAttributes(mtr, mlabel);
+        const latex = [
+          this.cellLatex(tag),
+          mtr.attributes.get(TexConstant.Attr.LATEX),
+        ]
+          .filter((x) => x)
+          .join('&');
+        if (latex) {
+          mlabel.attributes.set(TexConstant.Attr.LATEXITEM, latex);
+          mlabel.attributes.set(TexConstant.Attr.LATEX, latex);
+        }
         this.table[label] = mlabel;
       }
     }

@@ -1,1 +1,5 @@
-{}
+{
+  "MhchemBug": "mhchem-fejl %1. Rapportér venligst.",
+  "MhchemBug2": "mhchem-fejl %1. Rapportér venligst. (%2)",
+  "MhchemErrorBond": "mhchem-fejl. Ukendt bindingstype (%1)"
+}

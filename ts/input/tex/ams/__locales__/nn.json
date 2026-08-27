@@ -1,1 +1,11 @@
-{}
+{
+  "BadMathStyleFor": "Feil matematikkstil for %1",
+  "CommandAtTheBeginingOfLine": "%1 må stå i byrjinga av linja",
+  "CommandNotAllowedInEnv": "%1 er ikkje tillate i %2-miljøet",
+  "CommandOnlyAllowedInEnv": "%1 er berre tillate i %2-miljøet",
+  "IllegalAlign": "Ugyldig justering spesifisert i %1",
+  "MultipleCommand": "Fleire %1",
+  "MultlineRowsOneCol": "Radene i %1-miljøet må ha nøyaktig éin kolonne",
+  "PositiveIntegerArg": "Argumentet til %1 må vere eit positivt heiltal",
+  "XalignOverflow": "Overflødig %1 i rad av %2"
+}

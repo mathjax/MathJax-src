@@ -1,1 +1,9 @@
-{}
+{
+  "BadProofTree": "Bevistreet er feil spesifisert.",
+  "EnvMissingEnd": "\\end{%1} mangler",
+  "IllegalProofCommand": "Bevis-kommandoer er kun tillatt i prooftree-miljøet.",
+  "IllegalUseOfCommand": "Bruken av %1 samsvarer ikke med definisjonen.",
+  "MissingDisplayProof": "%1 mangler for å vise bevistreet.",
+  "MissingProofCommand": "%1 mangler i %2.",
+  "RequiresOutputJax": "bussproofs-utvidelsen krever en output jax med en getBBox()-metode"
+}

@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
 import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
-import '#js/input/tex/ams/AmsConfiguration';
+import '#js/input/tex/ams/AmsConfiguration.js';
 
 beforeEach(() => setupTex(['base', 'ams']));
 
@@ -1033,6 +1033,14 @@ describe('Ams symbols', () => {
         '\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow'
       )
     ).toMatchSnapshot();
+  });
+});
+
+/**********************************************************************************/
+
+describe('Ams Issues', () => {
+  it('Array with Tag', () => {
+    expect(tex2mml('\\begin{array}{c}a \\end{array}\\tag{1}')).toMatchSnapshot();
   });
 });
 

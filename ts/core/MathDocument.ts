@@ -29,18 +29,22 @@ import {
 } from '../util/Options.js';
 import { InputJax, AbstractInputJax } from './InputJax.js';
 import { OutputJax, AbstractOutputJax } from './OutputJax.js';
-import { MathList, AbstractMathList } from './MathList.js';
+import { MathList, MathListItem, AbstractMathList } from './MathList.js';
 import { MathItem, AbstractMathItem, STATE } from './MathItem.js';
 import { MmlNode, TextNode } from './MmlTree/MmlNode.js';
 import { MmlFactory } from '../core/MmlTree/MmlFactory.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
 import { BitField, BitFieldClass } from '../util/BitField.js';
 import { PrioritizedList } from '../util/PrioritizedList.js';
-import { handleRetriesFor } from '../util/Retries.js';
 import { localize } from './__locales__/Component.js';
-import { Locale } from '../util/Locale.js';
+import { mathjax } from '../mathjax.js';
 
 /*****************************************************************/
+
+/**
+ * The return type for a render action
+ */
+export type RenderResult = Promise<boolean | void> | boolean | void;
 
 /**
  * A function to call while rendering a document (usually calls a MathDocument method)
@@ -49,7 +53,9 @@ import { Locale } from '../util/Locale.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export type RenderDoc<N, T, D> = (document: MathDocument<N, T, D>) => boolean;
+export type RenderDoc<N, T, D> = (
+  document: MathDocument<N, T, D>
+) => RenderResult;
 
 /**
  * A function to call while rendering a MathItem (usually calls one of its methods)
@@ -61,7 +67,7 @@ export type RenderDoc<N, T, D> = (document: MathDocument<N, T, D>) => boolean;
 export type RenderMath<N, T, D> = (
   math: MathItem<N, T, D>,
   document: MathDocument<N, T, D>
-) => boolean;
+) => RenderResult;
 
 /**
  * The data for an action to perform during rendering or conversion
@@ -200,16 +206,11 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
   ): [(document: any) => boolean, (math: any, document: any) => boolean] {
     return [
       (document: any) => {
-        if (method1) {
-          document[method1]();
-        }
-        return false;
+        const result = document[method1]?.() ?? false;
+        return result === document ? false : result;
       },
       (math: any, document: any) => {
-        if (method2) {
-          math[method2](document);
-        }
-        return false;
+        return math[method2]?.(document) ?? false;
       },
     ];
   }
@@ -219,15 +220,21 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
    *
    * @param {MathDocument} document   The MathDocument whose methods are to be called
    * @param {number=} start           The state at which to start rendering (default is UNPROCESSED)
+   * @param {number=} i               The index in the renderAction list to start at
    */
   public renderDoc(
     document: MathDocument<N, T, D>,
-    start: number = STATE.UNPROCESSED
+    start: number = STATE.UNPROCESSED,
+    i: number = 0
   ) {
-    for (const item of this.items) {
-      if (item.priority >= start) {
-        if (item.item.renderDoc(document)) return;
+    let item;
+    while ((item = this.items[i++])) {
+      if (item.priority < start) continue;
+      const result = item.item.renderDoc(document);
+      if (result instanceof Promise) {
+        mathjax.retryAfter(result, () => this.renderDoc(document, start, i));
       }
+      if (result) return;
     }
   }
 
@@ -237,16 +244,24 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
    * @param {MathItem} math           The MathItem whose methods are to be called
    * @param {MathDocument} document   The MathDocument to pass to the MathItem methods
    * @param {number=} start           The state at which to start rendering (default is UNPROCESSED)
+   * @param {number=} i               The index in the renderAction list to start at
    */
   public renderMath(
     math: MathItem<N, T, D>,
     document: MathDocument<N, T, D>,
-    start: number = STATE.UNPROCESSED
+    start: number = STATE.UNPROCESSED,
+    i: number = 0
   ) {
-    for (const item of this.items) {
-      if (item.priority >= start) {
-        if (item.item.renderMath(math, document)) return;
+    let item;
+    while ((item = this.items[i++])) {
+      if (item.priority < start || !item.item.renderMath) continue;
+      const result = item.item.renderMath(math, document);
+      if (result instanceof Promise) {
+        mathjax.retryAfter(result, () =>
+          this.renderMath(math, document, start, i)
+        );
       }
+      if (result) return;
     }
   }
 
@@ -256,18 +271,28 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
    * @param {MathItem} math           The MathItem whose methods are to be called
    * @param {MathDocument} document   The MathDocument to pass to the MathItem methods
    * @param {number=} end             The state at which to end rendering (default is LAST)
+   * @param {number=} i               The index in the renderAction list to start at
+   * @returns {N|MmlNode}             The typeset root or the MathML root, whichever is defined
    */
   public renderConvert(
     math: MathItem<N, T, D>,
     document: MathDocument<N, T, D>,
-    end: number = STATE.LAST
-  ) {
-    for (const item of this.items) {
-      if (item.priority > end) return;
-      if (item.item.convert) {
-        if (item.item.renderMath(math, document)) return;
+    end: number = STATE.LAST,
+    i: number = 0
+  ): N | MmlNode {
+    let item;
+    while ((item = this.items[i++])) {
+      if (item.priority > end) break;
+      if (!item.item.convert) continue;
+      const result = item.item.renderMath(math, document);
+      if (result instanceof Promise) {
+        mathjax.retryAfter(result, () =>
+          this.renderConvert(math, document, end, i)
+        );
       }
+      if (result) break;
     }
+    return math.typesetRoot ?? math.root;
   }
 
   /**
@@ -496,7 +521,7 @@ export interface MathDocument<N, T, D> {
    *
    * @returns {MathDocument}  The math document instance
    */
-  compile(): MathDocument<N, T, D>;
+  compile(): MathDocument<N, T, D> | Promise<void>;
 
   /**
    * Gets the metric information for the MathItems
@@ -510,7 +535,7 @@ export interface MathDocument<N, T, D> {
    *
    * @returns {MathDocument}  The math document instance
    */
-  typeset(): MathDocument<N, T, D>;
+  typeset(): MathDocument<N, T, D> | Promise<void>;
 
   /**
    * Updates the document to include the typeset math
@@ -692,9 +717,9 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
     },
     renderActions: expandable({
       find: [STATE.FINDMATH, 'findMath', '', false],
-      compile: [STATE.COMPILED],
+      compile: [STATE.COMPILED, 'compileAction', 'compile'],
       metrics: [STATE.METRICS, 'getMetrics', '', false],
-      typeset: [STATE.TYPESET],
+      typeset: [STATE.TYPESET, 'typesetAction', 'typeset'],
       update: [STATE.INSERTED, 'updateDocument', false],
     }) as RenderActions<any, any, any>,
   };
@@ -773,12 +798,6 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    * @class
    */
   constructor(document: D, adaptor: DOMAdaptor<N, T, D>, options: OptionList) {
-    if (!Locale.initialized) {
-      // FIXME: add URL when we have one.
-      console.error(
-        'MathJax locales not loaded.  You may receive cryptic error messages.'
-      );
-    }
     const CLASS = this.constructor as typeof AbstractMathDocument;
     this.document = document;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
@@ -847,7 +866,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    */
   public render() {
     this.clearPromises();
-    this.renderActions.renderDoc(this);
+    this.renderActions.renderDoc(this, STATE.UNPROCESSED, 0);
     return this;
   }
 
@@ -856,7 +875,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    */
   public renderPromise() {
     return this.whenReady(() =>
-      handleRetriesFor(async () => {
+      mathjax.handleRetriesFor(async () => {
         this.render();
         await this.actionPromises();
         this.clearPromises();
@@ -879,7 +898,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    */
   public rerenderPromise(start: number = STATE.RERENDER) {
     return this.whenReady(() =>
-      handleRetriesFor(async () => {
+      mathjax.handleRetriesFor(async () => {
         this.rerender(start);
         await this.actionPromises();
         this.clearPromises();
@@ -923,7 +942,10 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
       mitem.outputData.merrorFamily = family;
     }
     this.clearPromises();
-    mitem.convert(this, end);
+    const result = mitem.convert(this, end);
+    if (result instanceof Promise) {
+      mathjax.retryAfter(result, () => mitem.typesetRoot || mitem.root);
+    }
     return mitem.typesetRoot || mitem.root;
   }
 
@@ -932,7 +954,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    */
   public convertPromise(math: string, options: OptionList = {}) {
     return this.whenReady(() =>
-      handleRetriesFor(async () => {
+      mathjax.handleRetriesFor(async () => {
         const node = this.convert(math, options);
         await this.actionPromises();
         this.clearPromises();
@@ -1013,30 +1035,75 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    * @override
    */
   public compile() {
-    if (!this.processed.isSet('compile')) {
-      //
-      //  Compile all the math in the list
-      //
-      const recompile = [];
-      for (const math of this.math) {
+    return this.compileAction(false);
+  }
+
+  /**
+   * Compile action that handles retryAfter() calls.
+   *
+   * @param {boolean} action           True when called as a renderAction
+   * @param {MathListItem} item        The MathListItem to begin with
+   * @param {MathItem[]} recompile     Array of MathItems to be rerendered (e.g., with forward references)
+   * @returns {MathDocument|Promise}   A promise for restarting, otherwise void
+   */
+  protected compileAction(
+    action: boolean = true,
+    item: MathListItem<N, T, D> = this.math.first(),
+    recompile: MathItem<N, T, D>[] = []
+  ): MathDocument<N, T, D> | Promise<void> {
+    if (this.processed.isSet('compile')) return this;
+    while (!item.isEnd) {
+      const math = item.data as MathItem<N, T, D>;
+      try {
         this.compileMath(math);
-        if (math.inputData.recompile !== undefined) {
-          recompile.push(math);
+      } catch (err) {
+        if (action && err.retry) {
+          return err.retry.then(() =>
+            this.compileAction(action, item, recompile)
+          );
         }
+        throw err;
       }
-      //
-      //  If any were added to the recompile list,
-      //    compile them again
-      //
-      for (const math of recompile) {
-        const data = math.inputData.recompile;
-        math.state(data.state);
-        math.inputData.recompile = data;
-        this.compileMath(math);
+      if (math.inputData.recompile !== undefined) {
+        recompile.push(math);
       }
-      this.processed.set('compile');
+      item = item.next;
     }
+    const result = this.recompileAction(action, recompile, 0);
+    if (result) return result;
+    this.processed.set('compile');
     return this;
+  }
+
+  /**
+   * If any were added to the recompile list, compile them again
+   *
+   * @param {boolean} action         True when called as a renderAction
+   * @param {MathItem[]} recompile   Array of MathItems to be rerendered (e.g., with forward references)
+   * @param {number} i               The entry in the recompile list to start at
+   * @returns {Promise|void}         A promise for restarting, otherwise void
+   */
+  protected recompileAction(
+    action: boolean,
+    recompile: MathItem<N, T, D>[],
+    i: number = 0
+  ): Promise<void> | void {
+    while (i < recompile.length) {
+      const math = recompile[i++];
+      const data = math.inputData.recompile;
+      math.state(data.state);
+      math.inputData.recompile = data;
+      try {
+        this.compileMath(math);
+      } catch (err) {
+        if (action && err.retry) {
+          return err.retry.then(() =>
+            this.recompileAction(action, recompile, i)
+          );
+        }
+        throw err;
+      }
+    }
   }
 
   /**
@@ -1046,7 +1113,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
     try {
       math.compile(this);
     } catch (err) {
-      if (err.retry || err.restart) {
+      if (err.retry) {
         throw err;
       }
       this.options['compileError'](this, math, err);
@@ -1084,20 +1151,38 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    * @override
    */
   public typeset() {
-    if (!this.processed.isSet('typeset')) {
-      for (const math of this.math) {
-        try {
-          math.typeset(this);
-        } catch (err) {
-          if (err.retry || err.restart) {
-            throw err;
+    return this.typesetAction(false);
+  }
+
+  /**
+   * Typeset action that handles retryAfter() calls.
+   *
+   * @param {boolean} action      True when called as a renderAction
+   * @param {MathListItem} item   The MathList item to start with
+   * @returns {MathDocument}      The current MathDocument (for chaining)
+   */
+  protected typesetAction(
+    action: boolean = true,
+    item: MathListItem<N, T, D> = this.math.first()
+  ): AbstractMathDocument<N, T, D> | Promise<void> {
+    if (this.processed.isSet('typeset')) return this;
+    while (!item.isEnd) {
+      const math = item.data as MathItem<N, T, D>;
+      try {
+        math.typeset(this);
+      } catch (err) {
+        if (err.retry) {
+          if (action) {
+            return err.retry.then(() => this.typesetAction(action, item));
           }
-          this.options['typesetError'](this, math, err);
-          math.outputData['error'] = err;
+          throw err;
         }
+        this.options['typesetError'](this, math, err);
+        math.outputData['error'] = err;
       }
-      this.processed.set('typeset');
+      item = item.next;
     }
+    this.processed.set('typeset');
     return this;
   }
 

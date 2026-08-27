@@ -5,6 +5,7 @@
     "allowJs": true,
     "sourceMap": false,
     "declaration": false,
+    "rootDir": "../components/mjs",
     "outDir": "../components/cjs"
   },
   "include": [

@@ -1,1 +1,4 @@
-{}
+{
+  "InvalidNumber": "잘못된 숫자",
+  "ExtraOrMissingDelims": "여는 구분 기호가 초과되었거나 닫는 구분 기호가 없습니다"
+}

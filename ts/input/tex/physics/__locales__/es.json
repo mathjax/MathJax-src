@@ -1,1 +1,4 @@
-{}
+{
+  "InvalidNumber": "Número no válido",
+  "ExtraOrMissingDelims": "Delimitador de apertura sobrante o falta el de cierre"
+}

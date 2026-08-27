@@ -1,1 +1,8 @@
-{}
+{
+  "BadNode": "Tipus de node desconegut '%1'",
+  "BadText": "Node de text inesperat '%1'",
+  "MathNode": "El MathML ha d'estar format per un element %1, no %2",
+  "MmlError": "Error en processar el MathML",
+  "SaxonNotFound": "#1 no trobat.  Executeu l'ordre:\n %2\ni torneu-ho a provar.",
+  "SingleNode": "El MathML ha de consistir en un únic element"
+}

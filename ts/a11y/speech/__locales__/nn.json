@@ -1,1 +1,8 @@
-{}
+{
+  "ProsodyError": "Noko gjekk gale med prosoditilpassinga",
+  "SpeechError": "Feil ved talegenerering:",
+  "Worker/Cancelled": "Oppgåve %1 avbroten",
+  "Worker/NotStarted": "Worker er ikkje starta",
+  "Worker/Started": "Worker er alt starta",
+  "Worker/Terminate": "%1 avbroten av avslutning av WorkerHandler"
+}

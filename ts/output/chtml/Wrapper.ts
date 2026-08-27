@@ -518,14 +518,6 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
   }
 
   /**
-   * @param {string} text  The text from which to create an HTML text node
-   * @returns {T}           The generated text node with the given text
-   */
-  public text(text: string): T {
-    return this.jax.text(text);
-  }
-
-  /**
    * @param {number} n  A unicode code point to be converted to a character className reference.
    * @returns {string}   The className for the character
    */

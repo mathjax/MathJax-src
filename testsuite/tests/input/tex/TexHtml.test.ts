@@ -7,7 +7,7 @@ import {
   render2mml,
   expectTexError,
 } from '#helpers';
-import '#js/input/tex/texhtml/TexHtmlConfiguration';
+import '#js/input/tex/texhtml/TexHtmlConfiguration.js';
 
 /**********************************************************************************/
 

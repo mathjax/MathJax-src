@@ -7,9 +7,9 @@ import {
   setupComponents,
   expectTexError,
 } from '#helpers';
-import '#js/input/tex/setoptions/SetOptionsConfiguration';
-import '#js/input/tex/ams/AmsConfiguration';
-import '#js/input/tex/units/UnitsConfiguration';
+import '#js/input/tex/setoptions/SetOptionsConfiguration.js';
+import '#js/input/tex/ams/AmsConfiguration.js';
+import '#js/input/tex/units/UnitsConfiguration.js';
 
 /**********************************************************************************/
 
@@ -54,7 +54,7 @@ describe('Setoptions', () => {
     ).toMatchSnapshot();
   });
 
-  test('Set pacjage regexp option', () => {
+  test('Set package regexp option', () => {
     expect(
       tex2mml(
         '\\setOptions[ams]{operatornamePattern=/^[a-z0-9]+/} \\operatorname{ab1}'

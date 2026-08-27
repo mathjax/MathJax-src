@@ -1,1 +1,6 @@
-{}
+{
+  "BadPackageName": "Argument vir %1 is nie 'n geldige pakketnaam nie",
+  "BadRequire": "Uitbreiding \"%1\" mag nie gelaai word nie",
+  "IllegalChar": "Ongeldige karakters gebruik in \\require-voorvoegsel",
+  "RequireFail": "Uitbreiding \"%1\" kon nie gelaai word nie"
+}

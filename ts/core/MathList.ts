@@ -21,8 +21,18 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { LinkedList } from '../util/LinkedList.js';
+import { LinkedList, ListItem } from '../util/LinkedList.js';
 import { MathItem } from './MathItem.js';
+
+/*****************************************************************/
+/**
+ *  The MathListItem type (extends ListItem<MathItem>)
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export type MathListItem<N, T, D> = ListItem<MathItem<N, T, D>>;
 
 /*****************************************************************/
 /**

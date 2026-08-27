@@ -1,1 +1,6 @@
-{}
+{
+  "BadFont": "Le nom de police pour %1 ne peut pas contenir de points-virgules",
+  "BadUnicode": "L'argument de %1 doit être un nombre",
+  "InvalidAlphanumeric": "Constante alphanumérique non valide pour %1",
+  "MissingNumber": "Constante numérique manquante pour %1"
+}

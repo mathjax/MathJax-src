@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
 import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
-import '#js/input/tex/mhchem/MhchemConfiguration';
-import '#js/input/tex/ams/AmsConfiguration';
+import '#js/input/tex/mhchem/MhchemConfiguration.js';
+import '#js/input/tex/ams/AmsConfiguration.js';
 
 beforeEach(() => setupTex(['base', 'mhchem']));
 

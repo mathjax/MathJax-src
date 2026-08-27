@@ -1,1 +1,6 @@
-{}
+{
+  "BadFont": "El nom de la font per a %1 no pot contenir punts i comes",
+  "BadUnicode": "L'argument de %1 ha de ser un nombre",
+  "InvalidAlphanumeric": "Constant alfanumèrica no vàlida per a %1",
+  "MissingNumber": "Falta la constant numèrica per a %1"
+}

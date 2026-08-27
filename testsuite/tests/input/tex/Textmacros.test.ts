@@ -9,11 +9,11 @@ import {
   expectTexError,
   expectTypesetError,
 } from '#helpers';
-import '#js/input/tex/textmacros/TextMacrosConfiguration';
-import '#js/input/tex/newcommand/NewcommandConfiguration';
-import '#js/input/tex/color/ColorConfiguration';
-import '#js/input/tex/html/HtmlConfiguration';
-import '#js/input/tex/unicode/UnicodeConfiguration';
+import '#js/input/tex/textmacros/TextMacrosConfiguration.js';
+import '#js/input/tex/newcommand/NewcommandConfiguration.js';
+import '#js/input/tex/color/ColorConfiguration.js';
+import '#js/input/tex/html/HtmlConfiguration.js';
+import '#js/input/tex/unicode/UnicodeConfiguration.js';
 
 import { Configuration } from '#js/input/tex/Configuration.js';
 import { HandlerType, ConfigurationType } from '#js/input/tex/HandlerTypes.js';

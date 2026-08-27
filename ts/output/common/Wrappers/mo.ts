@@ -499,7 +499,8 @@ export function CommonMoMixin<
       const hasWHD = WHD.length === 2 && WHD[0] + WHD[1] === HD;
       const symmetric = this.node.attributes.get('symmetric');
       const [H, D] = hasWHD ? WHD : [HD, 0];
-      let [h, d] = [H + D, 0];
+      let h = H + D;
+      let d;
       if (symmetric) {
         //
         //  Center on the math axis

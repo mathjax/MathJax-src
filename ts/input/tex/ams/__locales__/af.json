@@ -1,1 +1,11 @@
-{}
+{
+  "BadMathStyleFor": "Verkeerde wiskundestyl vir %1",
+  "CommandAtTheBeginingOfLine": "%1 moet aan die begin van die reël wees",
+  "CommandNotAllowedInEnv": "%1 nie toegelaat in %2-omgewing nie",
+  "CommandOnlyAllowedInEnv": "%1 slegs toegelaat in %2-omgewing",
+  "IllegalAlign": "Ongeldige belyning gespesifiseer in %1",
+  "MultipleCommand": "Veelvuldige %1",
+  "MultlineRowsOneCol": "Die rye binne die %1-omgewing moet presies een kolom hê",
+  "PositiveIntegerArg": "Die argument vir %1 moet 'n positiewe heelgetal wees",
+  "XalignOverflow": "Oortollige %1 in ry van %2"
+}

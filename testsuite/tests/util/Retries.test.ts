@@ -3,7 +3,7 @@ import { handleRetriesFor, retryAfter } from '#js/util/Retries.js';
 import { MathJax as MJX, MathJaxObject } from '#js/components/global.js';
 
 /**
- * Add the legacy MathJax.CallBack for teting v2-style restarts
+ * Add the legacy MathJax.CallBack for testing v2-style restarts
  */
 type MathJaxGlobal = MathJaxObject & {
   /* eslint-disable @typescript-eslint/no-unsafe-function-type */
@@ -40,34 +40,33 @@ describe('handleRetriesFor() and retryAfter()', () => {
 
   /********************************************************************************/
 
-  test('handleRetriesFor().then called after 3 retries', () => {
+  test('handleRetriesFor().then called after 3 retries', async () => {
     let n = 0;
-    handleRetriesFor(() => {
+    const result = await handleRetriesFor(() => {
       if (++n < 3) {
         const p = new Promise<void>((ok, _fail) => {
-          setTimeout(() => ok(), 1);
+          setTimeout(ok, 1);
         });
         retryAfter(p);
       }
       return 'success';
-    }).then((result: string) => {
-      expect(result).toBe('success');
-      expect(n).toBe(3);
     });
+    expect(result).toBe('success');
+    expect(n).toBe(3);
   });
 
   /********************************************************************************/
 
-  test('handleRetriesFor().catch called for fail on 3rd retry', () => {
+  test('handleRetriesFor().catch called for fail on 3rd retry', async () => {
     let n = 0;
-    handleRetriesFor(() => {
+    await handleRetriesFor(() => {
       if (++n < 3) {
         const p = new Promise<void>((ok, fail) => {
           setTimeout(() => (n < 2 ? ok() : fail('fail')), 1);
         });
         retryAfter(p);
       }
-      return 'success';
+      throw 'success';
     }).catch((result: string) => {
       expect(result).toBe('fail');
       expect(n).toBe(2);
@@ -76,12 +75,12 @@ describe('handleRetriesFor() and retryAfter()', () => {
 
   /********************************************************************************/
 
-  test('handleRetriesFor().catch called for error on 3rd retry', () => {
+  test('handleRetriesFor().catch called for error on 3rd retry', async () => {
     let n = 0;
-    handleRetriesFor(() => {
+    await handleRetriesFor(() => {
       if (++n < 3) {
         const p = new Promise<void>((ok, _fail) => {
-          setTimeout(() => ok(), 1);
+          setTimeout(ok, 1);
         });
         retryAfter(p);
       }
@@ -94,28 +93,27 @@ describe('handleRetriesFor() and retryAfter()', () => {
 
   /********************************************************************************/
 
-  test('v2 retry', () => {
+  test('v2 retry', async () => {
     let n = 0;
-    handleRetriesFor(() => {
+    const result = await handleRetriesFor(() => {
       if (++n < 3) {
         throw Object.assign(new Error('restart'), {
           restart: MathJax.Callback.mock(), // mark this error as a v2 restart
         });
       }
       return 'success';
-    }).then((result: string) => {
-      expect(result).toBe('success');
-      expect(n).toBe(3);
     });
+    expect(result).toBe('success');
+    expect(n).toBe(3);
   });
 
   /********************************************************************************/
 
-  test('handleRetriedFor() async success', () => {
+  test('handleRetriesFor() async success', () => {
     expect(
       handleRetriesFor(async () => {
         const wait = new Promise((ok, _fail) =>
-          setTimeout(() => ok('success'), 1)
+          setTimeout(ok, 1, 'success')
         );
         return await wait;
       })
@@ -124,11 +122,11 @@ describe('handleRetriesFor() and retryAfter()', () => {
 
   /********************************************************************************/
 
-  test('handleRetriedFor() async fails', () => {
+  test('handleRetriesFor() async fails', () => {
     expect(
       handleRetriesFor(async () => {
         const wait = new Promise((_ok, fail) =>
-          setTimeout(() => fail('fail'), 1)
+          setTimeout(fail, 1, 'fail')
         );
         return await wait;
       })
@@ -137,20 +135,74 @@ describe('handleRetriesFor() and retryAfter()', () => {
 
   /********************************************************************************/
 
-  test('handleRetriedFor() async with retry', () => {
+  test('handleRetriesFor() async with retry', async () => {
     let n = 0;
-    handleRetriesFor(async () => {
+    const result = await handleRetriesFor(async () => {
       if (++n < 3) {
         await new Promise<void>((ok, _fail) => setTimeout(ok, 1));
         const p = new Promise<void>((ok, _fail) => {
-          setTimeout(() => ok(), 1);
+          setTimeout(ok, 1);
         });
         retryAfter(p);
       }
       return 'success';
-    }).then((result: string) => {
+    });
+    expect(result).toBe('success');
+    expect(n).toBe(3);
+  });
+
+  /********************************************************************************/
+
+  test('retryAfter() without restart code', async () => {
+    let n = 0;
+    const result = await handleRetriesFor(() => {
+      if (n++) return 'success';
+      retryAfter(Promise.resolve());
+      return 'failed';
+    })
+    expect(result).toBe('success');
+    expect(n).toBe(2);
+  });
+
+  /********************************************************************************/
+
+  test('retryAfter() with restart code', async () => {
+    let n = 0;
+    const result = await handleRetriesFor(() => {
+      if (n++) return 'failed';
+      retryAfter(Promise.resolve(), () => 'success');
+      return 'failed';
+    });
+    expect(result).toBe('success');
+    expect(n).toBe(1);
+  });
+
+  /********************************************************************************/
+
+  test('retryAfter() throws', async () => {
+    let n = 0;
+    await handleRetriesFor(() => {
+      if (n++) throw 'failed';
+      retryAfter(Promise.reject('success'));
+      throw 'failed';
+    }).catch((result: string) => {
       expect(result).toBe('success');
-      expect(n).toBe(3);
+      expect(n).toBe(1);
+    });
+  });
+
+  /********************************************************************************/
+
+  test('retryAfter() nested', async () => {
+    let n = 0;
+    await handleRetriesFor(() => {
+      retryAfter(new Promise<void>((_ok, _fail) => {
+        retryAfter(n++ < 3 ? Promise.resolve() : Promise.reject('success'))
+      }));
+      throw 'failed';
+    }).catch((result: string) => {
+      expect(result).toBe('success');
+      expect(n).toBe(4);
     });
   });
 

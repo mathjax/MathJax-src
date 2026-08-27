@@ -3,7 +3,7 @@
 exports[`AmsCD AmsCD-1 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
-    <mtr>
+    <mtr data-latex="A&amp;&amp;B">
       <mtd>
         <mi data-latex="A">A</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -20,7 +20,7 @@ exports[`AmsCD AmsCD-1 1`] = `
         <mi data-latex="B">B</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;&amp;&amp;">
       <mtd>
         <mrow>
           <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
@@ -60,7 +60,7 @@ exports[`AmsCD AmsCD-1 1`] = `
       </mtd>
       <mtd></mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="C&amp;&amp;D">
       <mtd>
         <mi data-latex="C">C</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -84,7 +84,7 @@ exports[`AmsCD AmsCD-1 1`] = `
 exports[`AmsCD AmsCD-2 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&lt;&lt;&lt; B @&gt;&gt;&gt; C\\\\@. @| @AAA\\\\@. D @= E\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&lt;&lt;&lt; B @&gt;&gt;&gt; C\\\\@. @| @AAA\\\\@. D @= E\\end{CD}">
-    <mtr>
+    <mtr data-latex="A&amp;&amp;B&amp;&amp;C">
       <mtd>
         <mi data-latex="A">A</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -112,7 +112,7 @@ exports[`AmsCD AmsCD-2 1`] = `
         <mi data-latex="C">C</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;&amp;&amp;&amp;&amp;">
       <mtd></mtd>
       <mtd></mtd>
       <mtd>
@@ -124,7 +124,7 @@ exports[`AmsCD AmsCD-2 1`] = `
       </mtd>
       <mtd></mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;&amp;D&amp;&amp;E">
       <mtd>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
       </mtd>
@@ -146,7 +146,7 @@ exports[`AmsCD AmsCD-2 1`] = `
 exports[`AmsCD AmsCD-3 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&gt;a&gt;b&gt; B\\\\@VlVrV @AlArA\\\\C @&lt;a&lt;b&lt; D\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&gt;a&gt;b&gt; B\\\\@VlVrV @AlArA\\\\C @&lt;a&lt;b&lt; D\\end{CD}">
-    <mtr>
+    <mtr data-latex="A&amp;&amp;B">
       <mtd>
         <mi data-latex="A">A</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -166,7 +166,7 @@ exports[`AmsCD AmsCD-3 1`] = `
         <mi data-latex="B">B</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;&amp;&amp;">
       <mtd>
         <mrow>
           <mstyle displaystyle="false" scriptlevel="1" data-latex="\\scriptstyle\\raise.125em{\\vcenter{\\llap{l}}}">
@@ -232,7 +232,7 @@ exports[`AmsCD AmsCD-3 1`] = `
       </mtd>
       <mtd></mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="C&amp;&amp;D">
       <mtd>
         <mi data-latex="C">C</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -259,7 +259,7 @@ exports[`AmsCD AmsCD-3 1`] = `
 exports[`AmsCD AmsCD-4 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&gt;&gt;&gt; B@&gt;\\text{very long label}&gt;&gt;C\\\\@VVV @VVV @VVV\\\\D @&gt;&gt;&gt; E@&gt;&gt;&gt; F\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&gt;&gt;&gt; B@&gt;\\text{very long label}&gt;&gt;C\\\\@VVV @VVV @VVV\\\\D @&gt;&gt;&gt; E@&gt;&gt;&gt; F\\end{CD}">
-    <mtr>
+    <mtr data-latex="A&amp;&amp;B&amp;&amp;C">
       <mtd>
         <mi data-latex="A">A</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -287,7 +287,7 @@ exports[`AmsCD AmsCD-4 1`] = `
         <mi data-latex="C">C</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;&amp;&amp;&amp;&amp;">
       <mtd>
         <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
       </mtd>
@@ -301,7 +301,7 @@ exports[`AmsCD AmsCD-4 1`] = `
       </mtd>
       <mtd></mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="D&amp;&amp;E&amp;&amp;F">
       <mtd>
         <mi data-latex="D">D</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -336,7 +336,7 @@ exports[`AmsCD AmsCD-4 1`] = `
 exports[`AmsCD AmsCD-5 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&gt;&gt;&gt; B @&gt;{\\text{very long label}}&gt;&gt; C \\\\@VVV @VVV @VVV \\\\D @&gt;&gt;&gt; E @&gt;{\\phantom{\\text{very long label}}}&gt;&gt; F\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&gt;&gt;&gt; B @&gt;{\\text{very long label}}&gt;&gt; C \\\\@VVV @VVV @VVV \\\\D @&gt;&gt;&gt; E @&gt;{\\phantom{\\text{very long label}}}&gt;&gt; F\\end{CD}">
-    <mtr>
+    <mtr data-latex="A&amp;&amp;B&amp;&amp;C">
       <mtd>
         <mi data-latex="A">A</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -366,7 +366,7 @@ exports[`AmsCD AmsCD-5 1`] = `
         <mi data-latex="C">C</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;&amp;&amp;&amp;&amp;">
       <mtd>
         <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
       </mtd>
@@ -380,7 +380,7 @@ exports[`AmsCD AmsCD-5 1`] = `
       </mtd>
       <mtd></mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="D&amp;&amp;E&amp;&amp;F">
       <mtd>
         <mi data-latex="D">D</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -421,7 +421,7 @@ exports[`AmsCD AmsCD-5 1`] = `
 exports[`AmsCD AmsCD-6 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&gt;&gt;&gt; B @&gt;{\\text{very long label}}&gt;&gt; C \\\\@VVV @VVV @VVV \\\\D @&gt;&gt;&gt; E @&gt;{\\rlap{\\scriptstyle{\\ \\ \\ \\text{shorter}}}\\phantom{\\text{very long label}}}&gt;&gt; F\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&gt;&gt;&gt; B @&gt;{\\text{very long label}}&gt;&gt; C \\\\@VVV @VVV @VVV \\\\D @&gt;&gt;&gt; E @&gt;{\\rlap{\\scriptstyle{\\ \\ \\ \\text{shorter}}}\\phantom{\\text{very long label}}}&gt;&gt; F\\end{CD}">
-    <mtr>
+    <mtr data-latex="A&amp;&amp;B&amp;&amp;C">
       <mtd>
         <mi data-latex="A">A</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -451,7 +451,7 @@ exports[`AmsCD AmsCD-6 1`] = `
         <mi data-latex="C">C</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;&amp;&amp;&amp;&amp;">
       <mtd>
         <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
       </mtd>
@@ -465,7 +465,7 @@ exports[`AmsCD AmsCD-6 1`] = `
       </mtd>
       <mtd></mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="D&amp;&amp;E&amp;&amp;F">
       <mtd>
         <mi data-latex="D">D</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -516,7 +516,7 @@ exports[`AmsCD AmsCD-6 1`] = `
 exports[`AmsCD AmsCD-both 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\minCDarrowheight{4cm}\\minCDarrowwidth{5cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\minCDarrowheight{4cm}\\minCDarrowwidth{5cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
-    <mtr>
+    <mtr data-latex="A&amp;&amp;B">
       <mtd>
         <mi data-latex="A">A</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -533,7 +533,7 @@ exports[`AmsCD AmsCD-both 1`] = `
         <mi data-latex="B">B</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;&amp;&amp;">
       <mtd>
         <mrow>
           <mo minsize="4cm" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
@@ -573,7 +573,7 @@ exports[`AmsCD AmsCD-both 1`] = `
       </mtd>
       <mtd></mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="C&amp;&amp;D">
       <mtd>
         <mi data-latex="C">C</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -597,7 +597,7 @@ exports[`AmsCD AmsCD-both 1`] = `
 exports[`AmsCD AmsCD-height 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\minCDarrowheight{4cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\minCDarrowheight{4cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
-    <mtr>
+    <mtr data-latex="A&amp;&amp;B">
       <mtd>
         <mi data-latex="A">A</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -614,7 +614,7 @@ exports[`AmsCD AmsCD-height 1`] = `
         <mi data-latex="B">B</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;&amp;&amp;">
       <mtd>
         <mrow>
           <mo minsize="4cm" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
@@ -654,7 +654,7 @@ exports[`AmsCD AmsCD-height 1`] = `
       </mtd>
       <mtd></mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="C&amp;&amp;D">
       <mtd>
         <mi data-latex="C">C</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -678,7 +678,7 @@ exports[`AmsCD AmsCD-height 1`] = `
 exports[`AmsCD AmsCD-width 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\minCDarrowwidth{5cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\minCDarrowwidth{5cm}\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
-    <mtr>
+    <mtr data-latex="A&amp;&amp;B">
       <mtd>
         <mi data-latex="A">A</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -695,7 +695,7 @@ exports[`AmsCD AmsCD-width 1`] = `
         <mi data-latex="B">B</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;&amp;&amp;">
       <mtd>
         <mrow>
           <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
@@ -735,7 +735,7 @@ exports[`AmsCD AmsCD-width 1`] = `
       </mtd>
       <mtd></mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="C&amp;&amp;D">
       <mtd>
         <mi data-latex="C">C</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -759,7 +759,7 @@ exports[`AmsCD AmsCD-width 1`] = `
 exports[`AmsCD Entry with prime (#3373) 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A' @&gt;&gt;&gt; B\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A' @&gt;&gt;&gt; B\\end{CD}">
-    <mtr>
+    <mtr data-latex="&amp;&amp;B">
       <mtd>
         <msup>
           <mi data-latex="A">A</mi>
@@ -786,7 +786,7 @@ exports[`AmsCD Entry with prime (#3373) 1`] = `
 exports[`AmsCD Options Hide Horizontal Labels 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @&gt;a&gt;&gt; B\\\\@VVbV @VVcV\\\\C @&gt;d&gt;&gt; D\\end{CD}">
-    <mtr>
+    <mtr data-latex="A&amp;&amp;B">
       <mtd>
         <mi data-latex="A">A</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -805,7 +805,7 @@ exports[`AmsCD Options Hide Horizontal Labels 1`] = `
         <mi data-latex="B">B</mi>
       </mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="&amp;&amp;&amp;">
       <mtd>
         <mrow>
           <mo minsize="1.75em" symmetric="true" lspace="0" rspace="0">&#x2193;</mo>
@@ -845,7 +845,7 @@ exports[`AmsCD Options Hide Horizontal Labels 1`] = `
       </mtd>
       <mtd></mtd>
     </mtr>
-    <mtr>
+    <mtr data-latex="C&amp;&amp;D">
       <mtd>
         <mi data-latex="C">C</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -871,7 +871,7 @@ exports[`AmsCD Options Hide Horizontal Labels 1`] = `
 exports[`AmsCD Spaces 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @ &gt; x &gt; &gt; B \\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @ &gt; x &gt; &gt; B \\end{CD}">
-    <mtr>
+    <mtr data-latex="A&amp;&amp;B">
       <mtd>
         <mi data-latex="A">A</mi>
         <mpadded height="8.5pt" depth="2pt"></mpadded>
@@ -895,7 +895,7 @@ exports[`AmsCD Spaces 1`] = `
 exports[`AmsCD Suspicious Return 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A @Ra&gt;&gt; BaD\\end{CD}" display="block">
   <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex="\\begin{CD}A @Ra&gt;&gt; BaD\\end{CD}">
-    <mtr>
+    <mtr data-latex="A@R a&gt;&gt;B a D">
       <mtd>
         <mi data-latex="A">A</mi>
         <mo data-latex="@">@</mo>

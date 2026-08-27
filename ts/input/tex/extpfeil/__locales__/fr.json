@@ -1,1 +1,5 @@
-{}
+{
+  "NewextarrowArg1": "Le premier argument de %1 doit être un nom de séquence de contrôle",
+  "NewextarrowArg2": "Le deuxième argument de %1 doit être deux entiers séparés par une virgule",
+  "NewextarrowArg3": "Le troisième argument de %1 doit être un numéro de caractère unicode"
+}

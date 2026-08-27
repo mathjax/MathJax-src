@@ -30,7 +30,6 @@ import { HTMLDocument } from '../../handlers/html/HTMLDocument.js';
 import { HTMLHandler } from '../../handlers/html/HTMLHandler.js';
 // import { EnrichedMathItem } from '../../a11y/semantic-enrich.js';
 import { SpeechMathItem } from '../../a11y/speech.js';
-import { handleRetriesFor } from '../../util/Retries.js';
 import { OptionList } from '../../util/Options.js';
 import { StyleJson } from '../../util/StyleJson.js';
 
@@ -568,7 +567,7 @@ export function LazyMathDocumentMixin<
       //  Typeset the math and put back the font cache when done.
       //
       this.reset();
-      return handleRetriesFor(() => this.render()).then(() => {
+      return this.renderPromise().then(() => {
         if (fontCache) this.outputJax.options.fontCache = fontCache;
       });
     }
@@ -622,16 +621,14 @@ export function LazyMathDocumentMixin<
     protected lazyHandleSet() {
       const set = this.lazySet;
       this.lazySet = new Set();
-      this.lazyPromise = this.lazyPromise.then(() => {
+      this.lazyPromise = this.lazyPromise.then(async () => {
         let state = this.compileEarlierItems(set)
           ? STATE.COMPILED
           : STATE.TYPESET;
         state = this.resetStates(set, state);
         this.state(state - 1, null); // reset processed bits to allow reprocessing
-        return handleRetriesFor(() => {
-          this.render();
-          this.lazyIdle = false;
-        });
+        await this.renderPromise();
+        this.lazyIdle = false;
       });
     }
 

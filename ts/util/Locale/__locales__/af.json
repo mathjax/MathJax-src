@@ -1,1 +1,5 @@
-{}
+{
+  "JsonError": "MathJax(%1): kan nie '%2' laai nie: %3",
+  "MessageNotFound": "MathJax(Locale): geen gelokaliseerde of verstekweergawe vir boodskap met id '%1' van '%2' nie",
+  "NoComponent": "MathJax(Locale): komponent '%1' bestaan nie"
+}

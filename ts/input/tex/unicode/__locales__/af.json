@@ -1,1 +1,6 @@
-{}
+{
+  "BadFont": "Lettertipenaam vir %1 mag nie kommapunte bevat nie",
+  "BadUnicode": "Argument vir %1 moet 'n getal wees",
+  "InvalidAlphanumeric": "Ongeldige alfanumeriese konstante vir %1",
+  "MissingNumber": "Numeriese konstante ontbreek vir %1"
+}

@@ -1,1 +1,5 @@
-{}
+{
+  "NewextarrowArg1": "Første argument til %1 må vere eit kontrollsekvensnamn",
+  "NewextarrowArg2": "Andre argument til %1 må vere to heiltal skilde med komma",
+  "NewextarrowArg3": "Tredje argument til %1 må vere eit unicode-teiknnummer"
+}

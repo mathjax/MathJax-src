@@ -36,20 +36,19 @@ declare const MathJax: {
 
 /*****************************************************************/
 /**
- *  Allow us to pass a promise as part of an Error object
+ *  Allow us to pass a promise and restart code as part of an Error object
  */
 
 export interface RetryError extends Error {
   retry: Promise<any>;
+  code: () => any;
 }
 
 /*****************************************************************/
 /**
  * A wrapper for actions that may be asynchronous.  This will
  *   rerun the action after the asychronous action completes.
- *   Usually, this is for dynamic loading of files.  Legacy
- *   MathJax does that a lot, so we still need it for now, but
- *   may be able to go without it in the future.
+ *   Usually, this is for dynamic loading of files.
  *
  *   Example:
  *
@@ -65,44 +64,43 @@ export interface RetryError extends Error {
  *       console.log(err.message);
  *     });
  *
- * @param {Function} code  The code to run that might cause retries
- * @returns {Promise}       A promise that is satisfied when the code
+ * @param {()=>any} code   The code to run that might cause retries
+ * @returns {Promise}      A promise that is satisfied when the code
  *                         runs completely, and fails if the code
  *                         generates an error (that is not a retry).
  */
-export function handleRetriesFor(code: () => any): Promise<any> {
-  return new Promise(function run(ok, fail) {
+export async function handleRetriesFor(code: () => any): Promise<any> {
+  const CODE = code;
+  while (code) {
     //
-    // Process an error (retry or actual error)
+    // Wait for the user code to run and return its value
+    // If there was an error,
+    //   If it was a retry error, restart with the given or original code,
+    //   Otherwise fail with the error.
+    // Continue to this until the user code runs successfully.
     //
-    const handleRetry = (err: any) => {
+    try {
+      return await code();
+    } catch (err) {
       if (err.retry instanceof Promise) {
-        err.retry.then(() => run(ok, fail)).catch((e: any) => fail(e));
+        code = () => (err as RetryError).retry.then(err.code ?? CODE);
       } else if (err.restart?.isCallback) {
         // FIXME: Remove this branch when all legacy code is gone
-        MathJax.Callback.After(() => run(ok, fail), err.restart);
+        code = () =>
+          new Promise((ok, fail) => {
+            MathJax.Callback.After(() => {
+              try {
+                ok(CODE());
+              } catch (e) {
+                fail(e);
+              }
+            }, err.restart);
+          });
       } else {
-        fail(err);
+        throw err;
       }
-    };
-    //
-    // Run the user code
-    //   If it returns a promise, wait on it
-    //     when done, resolve the original promise with its returned value,
-    //     or if it errors, handle a retry or fail with the error.
-    //   Otherwise resolve the original promise with the result.
-    // If there was an error, handle a retry otherwise fail with the error.
-    try {
-      const result = code();
-      if (result instanceof Promise) {
-        result.then((value) => ok(value)).catch((err) => handleRetry(err));
-      } else {
-        ok(result);
-      }
-    } catch (err) {
-      handleRetry(err);
     }
-  });
+  }
 }
 
 /*****************************************************************/
@@ -111,11 +109,13 @@ export function handleRetriesFor(code: () => any): Promise<any> {
  *   before rerunning the code.  Causes an error to be thrown, so
  *   calling this terminates the code at that point.
  *
- * @param {Promise} promise  The promise that must be satisfied before
- *                            actions will continue
+ * @param {Promise} promise    The promise that must be satisfied before
+ *                               actions will continue
+ * @param {boolean} code       Code to run after the retry is complete
  */
-export function retryAfter(promise: Promise<any>) {
+export function retryAfter(promise: Promise<any>, code: () => any = null) {
   const err = new Error(localize('RetryError')) as RetryError;
   err.retry = promise;
+  err.code = code;
   throw err;
 }

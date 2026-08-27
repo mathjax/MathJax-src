@@ -10,8 +10,8 @@ import {
   trapErrors,
   expectTexError,
 } from '#helpers';
-import '#js/input/tex/ams/AmsConfiguration';
-import '#js/input/tex/newcommand/NewcommandConfiguration';
+import '#js/input/tex/ams/AmsConfiguration.js';
+import '#js/input/tex/newcommand/NewcommandConfiguration.js';
 
 import { TeX } from '#js/input/tex.js';
 import { MmlFactory } from '#js/core/MmlTree/MmlFactory.js';
