@@ -259,11 +259,10 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
       let focus = null;
       if (this.explorers) {
         const speech = this.explorers.speech;
-        focus = speech?.attached ? document.tmpFocus : null;
-        if (focus) {
+        if (speech?.attached) {
+          focus = document.tmpFocus;
           this.refocus = speech.semanticFocus() ?? null;
-          const adaptor = document.adaptor;
-          adaptor.append(adaptor.body(), focus);
+          this.typesetRoot.after(focus);
         }
         this.explorers.reattach();
         focus?.focus();
@@ -535,10 +534,8 @@ export function ExplorerMathDocumentMixin<
         tabIndex: 0,
         style: {
           outline: 'none',
-          display: 'block',
+          display: 'inline-block',
           position: 'absolute',
-          top: 0,
-          left: '-10px',
           width: '1px',
           height: '1px',
           overflow: 'hidden',
