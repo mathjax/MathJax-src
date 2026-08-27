@@ -124,9 +124,7 @@ export type CONFIG_ARRAYS<T> = {
  * The convert() option list
  */
 export type CONVERT_OPTIONS = OPTIONAL<{
-  format: string;
   display: boolean;
-  end: number;
   em: number;
   ex: number;
   containerWidth: number;
@@ -262,8 +260,8 @@ export type INPUTJAX<N extends string, C, M extends string = N> = {
   config: { [name in N]: C };
   input: { [name in N]: true };
   properties:
-  { [name in N as `${name}2mml`]: (math: string, options?: CONVERT_OPTIONS & { end?: number}) => string } &
-    { [name in N as `${name}2mmlPromise`]: (math: string) => Promise<string> } &
+  { [name in N as `${name}2mml`]: (math: string, options?: CONVERT_OPTIONS) => string } &
+    { [name in N as `${name}2mmlPromise`]: (math: string, options?: CONVERT_OPTIONS) => Promise<string> } &
     { [name in N as `${name}Reset`]: (...args: any[]) => void };
 };
 
