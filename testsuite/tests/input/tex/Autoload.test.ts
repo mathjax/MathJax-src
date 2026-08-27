@@ -4,7 +4,7 @@ import {
   setupTexTypeset,
   typeset2mml,
   setupComponents,
-} from '#helpers';
+} from '#src/index.js';
 
 setupComponents({ loader: { load: ['input/tex-base', '[tex]/autoload'] } });
 

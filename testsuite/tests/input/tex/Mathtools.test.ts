@@ -5,7 +5,7 @@ import {
   tex2mml,
   expectTexError,
   trapErrors,
-} from '#helpers';
+} from '#src/index.js';
 import '#js/input/tex/mathtools/MathtoolsConfiguration.js';
 import '#js/input/tex/ams/AmsConfiguration.js';
 import '#js/input/tex/boldsymbol/BoldsymbolConfiguration.js';

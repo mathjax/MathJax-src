@@ -1,5 +1,5 @@
 import { afterAll, beforeEach, describe, test, expect } from '@jest/globals';
-import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
+import { getTokens, setupTex, tex2mml, expectTexError } from '#src/index.js';
 import '#js/input/tex/begingroup/BegingroupConfiguration.js';
 import '#js/input/tex/newcommand/NewcommandConfiguration.js';
 

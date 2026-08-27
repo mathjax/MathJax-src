@@ -5,7 +5,7 @@ import {
   typeset2mml,
   setupComponents,
   expectTypesetError,
-} from '#helpers';
+} from '#src/index.js';
 
 import { Configuration } from '#js/input/tex/Configuration.js';
 import { HandlerType, ConfigurationType } from '#js/input/tex/HandlerTypes.js';

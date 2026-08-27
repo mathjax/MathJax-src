@@ -1,5 +1,5 @@
 import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
-import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
+import { getTokens, setupTex, tex2mml, expectTexError } from '#src/index.js';
 import { ColorArrayItem } from '#js/input/tex/colortbl/ColortblConfiguration.js';
 import '#js/input/tex/color/ColorConfiguration.js';
 

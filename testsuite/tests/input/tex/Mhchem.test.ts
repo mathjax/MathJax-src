@@ -1,5 +1,5 @@
 import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
-import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
+import { getTokens, setupTex, tex2mml, expectTexError } from '#src/index.js';
 import '#js/input/tex/mhchem/MhchemConfiguration.js';
 import '#js/input/tex/ams/AmsConfiguration.js';
 

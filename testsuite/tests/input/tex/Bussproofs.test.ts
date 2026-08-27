@@ -1,5 +1,5 @@
 import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
-import { getTokens, setupTexWithOutput, tex2mml } from '#helpers';
+import { getTokens, setupTexWithOutput, tex2mml } from '#src/index.js';
 import '#js/input/tex/bussproofs/BussproofsConfiguration.js';
 import '#js/input/tex/ams/AmsConfiguration.js';
 import '#js/input/tex/newcommand/NewcommandConfiguration.js';

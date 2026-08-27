@@ -1,5 +1,5 @@
 import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
-import { getTokens, setupTex, tex2mml } from '#helpers';
+import { getTokens, setupTex, tex2mml } from '#src/index.js';
 import '#js/input/tex/action/ActionConfiguration.js';
 
 beforeEach(() => setupTex(['base', 'action']));

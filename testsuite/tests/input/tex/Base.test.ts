@@ -1,5 +1,5 @@
 import { afterAll, beforeEach, describe, it, expect } from '@jest/globals';
-import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
+import { getTokens, setupTex, tex2mml, expectTexError } from '#src/index.js';
 import ParseOptions from '#js/input/tex/ParseOptions.js';
 
 beforeEach(() => setupTex(['base']));

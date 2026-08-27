@@ -9,7 +9,7 @@ import {
   trapOutput,
   trapErrors,
   expectTexError,
-} from '#helpers';
+} from '#src/index.js';
 import '#js/input/tex/ams/AmsConfiguration.js';
 import '#js/input/tex/newcommand/NewcommandConfiguration.js';
 

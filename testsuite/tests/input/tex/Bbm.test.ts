@@ -1,5 +1,5 @@
 import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
-import { getTokens, setupTex, setupComponents, tex2mml } from '#helpers';
+import { getTokens, setupTex, setupComponents, tex2mml } from '#src/index.js';
 import '#js/input/tex/bbm/BbmConfiguration.js';
 
 /**********************************************************************************/

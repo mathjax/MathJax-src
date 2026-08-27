@@ -6,7 +6,7 @@ import {
   typeset2mml,
   setupComponents,
   expectTexError,
-} from '#helpers';
+} from '#src/index.js';
 import '#js/input/tex/setoptions/SetOptionsConfiguration.js';
 import '#js/input/tex/ams/AmsConfiguration.js';
 import '#js/input/tex/units/UnitsConfiguration.js';

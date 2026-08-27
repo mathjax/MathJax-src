@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from '@jest/globals';
-import { setupTex, tex2mml } from '#helpers';
+import { setupTex, tex2mml } from '#src/index.js';
 import '#js/input/tex/tagformat/TagFormatConfiguration.js';
 import '#js/input/tex/ams/AmsConfiguration.js';
 

@@ -8,7 +8,7 @@ import {
   setupComponents,
   expectTexError,
   expectTypesetError,
-} from '#helpers';
+} from '#src/index.js';
 import '#js/input/tex/textmacros/TextMacrosConfiguration.js';
 import '#js/input/tex/newcommand/NewcommandConfiguration.js';
 import '#js/input/tex/color/ColorConfiguration.js';
