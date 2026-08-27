@@ -1,1 +1,5 @@
-{}
+{
+  "ColumnColorNotTop": "%1 शीर्ष पंक्ति या प्रस्तावना में होना चाहिए",
+  "RowColorNotFirst": "%1 पंक्ति की शुरुआत में होना चाहिए",
+  "UnsupportedTableColor": "%1 का असमर्थित उपयोग"
+}

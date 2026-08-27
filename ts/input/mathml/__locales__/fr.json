@@ -1,1 +1,8 @@
-{}
+{
+  "BadNode": "Type de nœud inconnu '%1'",
+  "BadText": "Nœud de texte inattendu '%1'",
+  "MathNode": "MathML doit être formé d'un élément %1, et non %2",
+  "MmlError": "Erreur lors du traitement de MathML",
+  "SaxonNotFound": "#1 introuvable.  Exécutez la commande :\n %2\net réessayez.",
+  "SingleNode": "MathML doit consister en un seul élément"
+}

@@ -23,7 +23,7 @@
   "MML/BadVariant": "Ungültige mathvariant: %1",
   "MML/EqualPrescripts": "Benötigt die gleiche Anzahl von prescript Elementen jedes Typs",
   "MML/EqualScripts": "Benötigt die gleiche Anzahl von script Elementen jedes Typs",
-  "MML/NoVariant": "'%1'-Knoten darf keine Kinderknoten haben",
+  "MML/NoChildren": "'%1'-Knoten darf keine Kinderknoten haben",
   "MML/OnlyOnce": "%1 darf in %2 nur einmal vorkommen",
   "MML/TokenChild": "%1 darf nur ein Kinderknoten eines Token-Elements sein",
   "MML/mglyphAttr": "mglyph muss entweder die Attribute src oder fontfamily sowie das Attribut index aufweisen",

@@ -1,1 +1,13 @@
-{}
+{
+  "CantUseHash2": "Uso ilegal de # en la plantilla de %1",
+  "EnvBadEnd": "\\begin{%1} terminó con \\end{%2}",
+  "EnvMissingEnd": "Falta \\end{%1}",
+  "IllegalControlSequenceName": "Nombre de secuencia de control ilegal para %1",
+  "IllegalParamNumber": "Número de parámetros ilegal especificado en %1",
+  "MismatchUseDef": "El uso de %1 no coincide con su definición",
+  "MissingCS": "%1 debe ir seguido de una secuencia de control",
+  "MissingReplacementString": "Falta la cadena de reemplazo para la definición de %1",
+  "ProtectedMacro": "La secuencia de control %1 no se puede redefinir",
+  "RunawayArgument": "¿Argumento desbocado para %1?",
+  "SequentialParam": "Los parámetros de %1 deben numerarse secuencialmente"
+}

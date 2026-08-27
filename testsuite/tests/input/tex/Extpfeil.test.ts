@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
 import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
-import '#js/input/tex/extpfeil/ExtpfeilConfiguration';
+import '#js/input/tex/extpfeil/ExtpfeilConfiguration.js';
 
 beforeEach(() => setupTex(['base', 'extpfeil']));
 

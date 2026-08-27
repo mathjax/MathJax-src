@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
 import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
-import '#js/input/tex/color/ColorConfiguration';
+import '#js/input/tex/color/ColorConfiguration.js';
 
 beforeEach(() => setupTex(['base', 'color']));
 

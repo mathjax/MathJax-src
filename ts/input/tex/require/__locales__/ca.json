@@ -1,1 +1,6 @@
-{}
+{
+  "BadPackageName": "L'argument de %1 no és un nom de paquet vàlid",
+  "BadRequire": "No es permet carregar l'extensió \"%1\"",
+  "IllegalChar": "S'han utilitzat caràcters il·legals al prefix \\require",
+  "RequireFail": "No s'ha pogut carregar l'extensió \"%1\""
+}

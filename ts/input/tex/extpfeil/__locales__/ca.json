@@ -1,1 +1,5 @@
-{}
+{
+  "NewextarrowArg1": "El primer argument de %1 ha de ser un nom de seqüència de control",
+  "NewextarrowArg2": "El segon argument de %1 ha de ser dos enters separats per una coma",
+  "NewextarrowArg3": "El tercer argument de %1 ha de ser un número de caràcter unicode"
+}

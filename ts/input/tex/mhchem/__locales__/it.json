@@ -1,1 +1,5 @@
-{}
+{
+  "MhchemBug": "Bug di mhchem %1. Si prega di segnalarlo.",
+  "MhchemBug2": "Bug di mhchem %1. Si prega di segnalarlo. (%2)",
+  "MhchemErrorBond": "Errore di mhchem. Tipo di legame sconosciuto (%1)"
+}

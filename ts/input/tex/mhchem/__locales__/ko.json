@@ -1,1 +1,5 @@
-{}
+{
+  "MhchemBug": "mhchem 버그 %1. 신고해 주세요.",
+  "MhchemBug2": "mhchem 버그 %1. 신고해 주세요. (%2)",
+  "MhchemErrorBond": "mhchem 오류. 알 수 없는 결합 유형 (%1)"
+}

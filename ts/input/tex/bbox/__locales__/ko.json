@@ -1,1 +1,4 @@
-{}
+{
+  "InvalidBBoxProperty": "'%1'은(는) 색상, 여백 치수, 스타일 중 어느 것도 아닌 것 같습니다",
+  "MultipleBBoxProperty": "%1이(가) %2에서 두 번 지정되었습니다"
+}

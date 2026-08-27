@@ -1,1 +1,9 @@
-{}
+{
+  "BadProofTree": "Prova-treet er feil spesifisert.",
+  "EnvMissingEnd": "\\end{%1} manglar",
+  "IllegalProofCommand": "Prova-kommandoar er berre tillatne i prooftree-miljøet.",
+  "IllegalUseOfCommand": "Bruken av %1 samsvarer ikkje med definisjonen.",
+  "MissingDisplayProof": "%1 manglar for å vise prova-treet.",
+  "MissingProofCommand": "%1 manglar i %2.",
+  "RequiresOutputJax": "bussproofs-utvidinga krev ein output jax med ein getBBox()-metode"
+}

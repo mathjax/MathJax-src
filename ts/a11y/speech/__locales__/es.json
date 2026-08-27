@@ -1,1 +1,8 @@
-{}
+{
+  "ProsodyError": "Se produjo un error en la coincidencia de la prosodia",
+  "SpeechError": "Error de generación de voz:",
+  "Worker/Cancelled": "Tarea %1 cancelada",
+  "Worker/NotStarted": "El worker no se ha iniciado",
+  "Worker/Started": "El worker ya está iniciado",
+  "Worker/Terminate": "%1 cancelada por la finalización de WorkerHandler"
+}

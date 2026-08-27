@@ -1,1 +1,9 @@
-{}
+{
+  "BadProofTree": "प्रमाण वृक्ष खराब रूप से निर्दिष्ट है।",
+  "EnvMissingEnd": "\\end{%1} अनुपस्थित है",
+  "IllegalProofCommand": "प्रमाण कमांड केवल prooftree परिवेश में ही अनुमत हैं।",
+  "IllegalUseOfCommand": "%1 का उपयोग इसकी परिभाषा से मेल नहीं खाता।",
+  "MissingDisplayProof": "प्रमाण वृक्ष प्रदर्शित करने के लिए %1 अनुपस्थित है।",
+  "MissingProofCommand": "%2 में %1 अनुपस्थित है।",
+  "RequiresOutputJax": "bussproofs एक्सटेंशन को getBBox() विधि वाले output jax की आवश्यकता है"
+}

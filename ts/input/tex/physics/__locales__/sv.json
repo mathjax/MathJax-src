@@ -1,1 +1,4 @@
-{}
+{
+  "InvalidNumber": "Ogiltigt tal",
+  "ExtraOrMissingDelims": "Överflödig inlednings- eller saknad avslutande avgränsare"
+}

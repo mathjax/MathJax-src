@@ -1,1 +1,13 @@
-{}
+{
+  "CantUseHash2": "%1의 템플릿에서 #의 잘못된 사용",
+  "EnvBadEnd": "\\begin{%1}이(가) \\end{%2}(으)로 끝났습니다",
+  "EnvMissingEnd": "\\end{%1}이(가) 없습니다",
+  "IllegalControlSequenceName": "%1에 대한 잘못된 제어 시퀀스 이름",
+  "IllegalParamNumber": "%1에 잘못된 매개변수 수가 지정되었습니다",
+  "MismatchUseDef": "%1의 사용이 정의와 일치하지 않습니다",
+  "MissingCS": "%1 뒤에는 제어 시퀀스가 와야 합니다",
+  "MissingReplacementString": "%1의 정의에 대한 대체 문자열이 없습니다",
+  "ProtectedMacro": "제어 시퀀스 %1은(는) 재정의할 수 없습니다",
+  "RunawayArgument": "%1에 대한 폭주 인수인가요?",
+  "SequentialParam": "%1의 매개변수는 순차적으로 번호를 매겨야 합니다"
+}

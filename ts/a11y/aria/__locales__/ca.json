@@ -1,1 +1,8 @@
-{}
+{
+  "Aria/RoleDescription/MathJax expression": "expressió de MathJax",
+  "Aria/RoleDescription/MathJax": "MathJax",
+  "Aria/RoleDescription/clickable math": "matemàtiques clicables",
+  "Aria/RoleDescription/explorable math": "matemàtiques explorables",
+  "Aria/RoleDescription/math": "matemàtiques",
+  "Aria/RoleDescription/none": "sense descripció"
+}

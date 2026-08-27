@@ -1,1 +1,11 @@
-{}
+{
+  "BadMathStyleFor": "Forkert matematikstil for %1",
+  "CommandAtTheBeginingOfLine": "%1 skal stå i begyndelsen af linjen",
+  "CommandNotAllowedInEnv": "%1 er ikke tilladt i %2-omgivelsen",
+  "CommandOnlyAllowedInEnv": "%1 er kun tilladt i %2-omgivelsen",
+  "IllegalAlign": "Ugyldig justering angivet i %1",
+  "MultipleCommand": "Flere %1",
+  "MultlineRowsOneCol": "Rækkerne i %1-omgivelsen skal have præcis én kolonne",
+  "PositiveIntegerArg": "Argumentet til %1 skal være et positivt heltal",
+  "XalignOverflow": "Overskydende %1 i række af %2"
+}

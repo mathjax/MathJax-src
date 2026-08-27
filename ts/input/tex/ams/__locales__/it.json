@@ -1,1 +1,11 @@
-{}
+{
+  "BadMathStyleFor": "Stile matematico non corretto per %1",
+  "CommandAtTheBeginingOfLine": "%1 deve trovarsi all'inizio della riga",
+  "CommandNotAllowedInEnv": "%1 non è consentito nell'ambiente %2",
+  "CommandOnlyAllowedInEnv": "%1 è consentito solo nell'ambiente %2",
+  "IllegalAlign": "Allineamento illegale specificato in %1",
+  "MultipleCommand": "%1 multipli",
+  "MultlineRowsOneCol": "Le righe all'interno dell'ambiente %1 devono avere esattamente una colonna",
+  "PositiveIntegerArg": "L'argomento di %1 deve essere un intero positivo",
+  "XalignOverflow": "%1 in eccesso in una riga di %2"
+}

@@ -1,1 +1,16 @@
-{}
+{
+  "AlreadyDefined": "%1 è già definito",
+  "BadWidth": "La larghezza di %1 deve essere una dimensione",
+  "BetweenLines": "%1 deve trovarsi da solo sulla propria riga",
+  "CommadExists": "Il comando %1 è già definito",
+  "CommandAtTheBeginingOfLine": "%1 deve trovarsi all'inizio della riga",
+  "CommandInMultlined": "%1 può comparire solo all'interno degli ambienti multline o multlined",
+  "DuplicateTagForm": "Forma di tag duplicata: %1",
+  "ForbiddenMathtoolsSet": "%1 è disabilitato",
+  "InvalidTagFormDef": "La definizione della forma di tag per \"%1\" deve essere un array di tre stringhe",
+  "InvalidTagFormID": "Il nome della forma di tag non può essere vuoto",
+  "NotANumber": "L'argomento di %1 non è un numero",
+  "NotInAlignment": "%1 può essere usato solo in ambienti di allineamento",
+  "TagsNotMT": "%1 può essere usato solo con tag ams o mathtools",
+  "UndefinedTagForm": "Forma di tag non definita: %1"
+}

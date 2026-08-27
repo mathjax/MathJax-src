@@ -1,1 +1,9 @@
-{}
+{
+  "BadProofTree": "Bewysboom sleg gespesifiseer.",
+  "EnvMissingEnd": "\\end{%1} ontbreek",
+  "IllegalProofCommand": "Bewysopdragte word slegs in prooftree-omgewing toegelaat.",
+  "IllegalUseOfCommand": "Gebruik van %1 stem nie ooreen met sy definisie nie.",
+  "MissingDisplayProof": "%1 ontbreek om die bewysboom te vertoon.",
+  "MissingProofCommand": "%1 ontbreek in %2.",
+  "RequiresOutputJax": "Die bussproofs-uitbreiding vereis 'n output jax met 'n getBBox()-metode"
+}

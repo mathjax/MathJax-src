@@ -1,1 +1,8 @@
-{}
+{
+  "InvalidOptionKey": "Ongeldige opsie \"%1\" vir pakket \"%2\"",
+  "InvalidTexOption": "Ongeldige TeX-opsie \"%1\"",
+  "NotAPackage": "Nie 'n gedefinieerde pakket nie: %1",
+  "OptionNotSettable": "Opsie \"%1\" mag nie vir pakket %2 gestel word nie",
+  "PackageNotSettable": "Opsies kan nie vir pakket \"%1\" gestel word nie",
+  "TeXOptionNotSettable": "Opsie \"%1\" mag nie gestel word nie"
+}

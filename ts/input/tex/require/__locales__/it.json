@@ -1,1 +1,6 @@
-{}
+{
+  "BadPackageName": "L'argomento di %1 non è un nome di pacchetto valido",
+  "BadRequire": "Non è consentito caricare l'estensione \"%1\"",
+  "IllegalChar": "Sono stati usati caratteri illegali nel prefisso \\require",
+  "RequireFail": "Caricamento dell'estensione \"%1\" non riuscito"
+}

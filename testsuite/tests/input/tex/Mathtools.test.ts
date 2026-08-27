@@ -6,10 +6,10 @@ import {
   expectTexError,
   trapErrors,
 } from '#helpers';
-import '#js/input/tex/mathtools/MathtoolsConfiguration';
-import '#js/input/tex/ams/AmsConfiguration';
-import '#js/input/tex/boldsymbol/BoldsymbolConfiguration';
-import '#js/input/tex/bbox/BboxConfiguration';
+import '#js/input/tex/mathtools/MathtoolsConfiguration.js';
+import '#js/input/tex/ams/AmsConfiguration.js';
+import '#js/input/tex/boldsymbol/BoldsymbolConfiguration.js';
+import '#js/input/tex/bbox/BboxConfiguration.js';
 
 import { Configuration } from '#js/input/tex/Configuration.js';
 import { ConfigurationType } from '#js/input/tex/HandlerTypes.js';
