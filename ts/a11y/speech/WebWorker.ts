@@ -26,6 +26,7 @@ import { OptionList } from '../../util/Options.js';
 import { Message, ClientCommand, Structure } from './MessageTypes.js';
 import { SpeechMathItem } from '../speech.js';
 import { SemAttr } from './SpeechUtil.js';
+import { StyleJsonData } from '../../util/StyleJson.js';
 import { Locale } from '../../util/Locale.js';
 import { localize, COMPONENT } from './__locales__/Component.js';
 
@@ -63,6 +64,19 @@ export class WorkerHandler<N, T, D> {
    * The webworker
    */
   protected worker: minWorker;
+
+  /**
+   * The styles to use for the warning live region
+   */
+  protected liveStyles: StyleJsonData = {
+    display: 'inline-block',
+    position: 'absolute',
+    top: 0,
+    left: '-10px',
+    width: '1px',
+    height: '1px',
+    overflow: 'hidden',
+  };
 
   /**
    * The adaptor to work with typeset nodes.
@@ -526,6 +540,16 @@ export class WorkerHandler<N, T, D> {
     }
   }
 
+  public LiveWarn(message: string) {
+    const adaptor = this.adaptor;
+    const live = adaptor.node('mjx-worker-live', {
+      'aria-live': 'assertive',
+      style: this.liveStyles,
+    });
+    adaptor.insert(live, adaptor.firstChild(adaptor.body()));
+    setTimeout(() => adaptor.append(live, adaptor.text(message)), 1000);
+  }
+
   /**
    * Worker call to compute clearspeak preferences for the current locale.
    *
@@ -633,6 +657,7 @@ export class WorkerHandler<N, T, D> {
         data,
         `${path}/${worker}`
       );
+      handler.LiveWarn(localize('Worker/Warning'));
       handler.Stop();
     },
 
@@ -650,6 +675,7 @@ export class WorkerHandler<N, T, D> {
         data,
         maps
       );
+      handler.LiveWarn(localize('Worker/Warning'));
       handler.Stop();
     },
   };
