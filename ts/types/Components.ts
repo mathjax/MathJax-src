@@ -40,6 +40,7 @@ import type { STARTUP_TYPES } from '../components/startup.js';
 import type { LOADER_TYPES } from '../components/loader.js';
 
 import type { HTMLDOCUMENT_OPTIONS } from '../handlers/html/HTMLDocument.js';
+import type { HTMLDOMSTRINGS_OPTIONS } from '../handlers/html/HTMLDomStrings.js';
 
 import type { TEX_OPTIONS } from '../input/tex.js';
 import type { FINDTEX_OPTIONS } from '../input/tex/FindTeX.js';
@@ -219,7 +220,7 @@ export type COMPONENTS<DOM extends DOM_TYPES> = {
 
   startup: STARTUP_TYPES<DOM> &
     LOADER_TYPES &
-    DOC_OPTIONS<HTMLDOCUMENT_OPTIONS<DOM>>;
+    DOC_OPTIONS<HTMLDOCUMENT_OPTIONS<DOM> & HTMLDOMSTRINGS_OPTIONS<DOM>>;
   loader: LOADER_TYPES;
 
   'mml-chtml':

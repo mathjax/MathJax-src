@@ -29,14 +29,62 @@ import {
   expandable,
 } from '../../util/Options.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+import { DOM, DOM_TYPES, N, T, D } from '../../types/Types.js';
 
 /**
- *  List of consecutive text nodes and their text lengths
+ * List of consecutive text nodes and their text lengths
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  */
 export type HTMLNodeList<N, T> = [N | T, number][];
+
+/**
+ * The data for HTML to be allowed in TeX expressions
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document node class
+ */
+export type HTMLTagData<N, T, D> =
+  | string
+  | ((node: N, adaptor: DOMAdaptor<N, T, D>) => string);
+
+/*****************************************************************/
+
+export type HTMLDOMSTRINGS_OPTIONS<DOM extends DOM_TYPES> = {
+  //
+  // The names of the tags whose contents will not be scanned for math
+  // delimiters.
+  //
+  skipHtmlTags: string[];
+  //
+  // Tags to be included in the text (and what text to replace them
+  // with).
+  //
+  includeHtmlTags: {[tag: string]: HTMLTagData<N<DOM>, T<DOM>, D<DOM>>};
+  //
+  // The class name of elements whose contents should NOT be processed
+  // by tex2jax.  Note that this is used as a regular expression, so
+  // be sure to quote any regexp special characters.
+  //
+  ignoreHtmlClass: string,
+  //
+  // The class name of elements whose contents SHOULD be processed
+  // when they appear inside ones that are ignored.  Note that this is
+  // used as a regular expression, so be sure to quote any regexp
+  // special characters.
+  //
+  processHtmlClass: string,
+};
+
+const options: HTMLDOMSTRINGS_OPTIONS<DOM> = {
+  skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code',
+                 'math', 'select', 'option', 'mjx-container'],
+  includeHtmlTags: expandable({br: '\n', wbr: '', '#comment': ''}),
+  ignoreHtmlClass: 'mathjax_ignore',
+  processHtmlClass: 'mathjax_process',
+};
 
 /*****************************************************************/
 /**
@@ -52,27 +100,7 @@ export class HTMLDomStrings<N, T, D> {
   /**
    * The default options for string processing
    */
-  /* prettier-ignore */
-  public static OPTIONS: OptionList = {
-    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code',
-                   'math', 'select', 'option', 'mjx-container'],
-                                        // The names of the tags whose contents will not be
-                                        // scanned for math delimiters
-
-    includeHtmlTags: expandable({br: '\n', wbr: '', '#comment': ''}),
-                                        //  tags to be included in the text (and what
-                                        //  text to replace them with)
-
-    ignoreHtmlClass: 'mathjax_ignore',  // the class name of elements whose contents should
-                                        // NOT be processed by tex2jax.  Note that this
-                                        // is a regular expression, so be sure to quote any
-                                        // regexp special characters
-
-    processHtmlClass: 'mathjax_process' // the class name of elements whose contents SHOULD
-                                        // be processed when they appear inside ones that
-                                        // are ignored.  Note that this is a regular expression,
-                                        // so be sure to quote any regexp special characters
-  };
+  public static OPTIONS = options;
 
   /**
    * The options for this instance
