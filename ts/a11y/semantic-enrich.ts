@@ -39,6 +39,7 @@ import { MathML } from '../input/mathml.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { OptionList, expandable } from '../util/Options.js';
 import * as Sre from './sre.js';
+import { StructureUtil, SemanticMap } from './speech/StructureUtil.js';
 import { Locale } from '../util/Locale.js';
 import { COMPONENT } from './semantic-enrich/__locales__/Component.js';
 
@@ -110,6 +111,16 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
  */
 export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
   /**
+   * Maps semantic ids to extra nodes outside the DOM subtree.
+   */
+  semanticNodes: SemanticMap;
+
+  /**
+   * Get any extra nodes outside the DOM tree from the semantic structure
+   */
+  parseSemanticNodes(): void;
+
+  /**
    * The serialization visitor
    */
   toMathML: (node: MmlNode, math: MathItem<N, T, D>) => string;
@@ -162,6 +173,20 @@ export function EnrichedMathItemMixin<
     public toMathML = toMathML;
 
     /**
+     * Semantic id to extra nodes outside the DOM subtree
+     */
+    public semanticNodes: SemanticMap;
+
+    /**
+     * @override
+     */
+    public parseSemanticNodes() {
+      if (!this.semanticNodes) {
+        this.semanticNodes = StructureUtil.semanticNodes(this.root);
+      }
+    }
+
+    /**
      * @param {any} node  The node to be serialized
      * @returns {string}   The serialized version of node
      */
@@ -194,6 +219,7 @@ export function EnrichedMathItemMixin<
     public enrich(document: MathDocument<N, T, D>, force: boolean = false) {
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
+        this.semanticNodes = null;
         const math = new document.options.MathItem('', MmlJax);
         try {
           let mml;
@@ -245,6 +271,7 @@ export function EnrichedMathItemMixin<
       math.display = this.display;
       math.compile(document);
       this.root = math.root;
+      this.semanticNodes = null;
     }
 
     /**

@@ -38,6 +38,7 @@ import { MmlVisitor } from '../../core/MmlTree/MmlVisitor.js';
 import { MmlFactory } from '../../core/MmlTree/MmlFactory.js';
 import { Collapse } from './collapse.js';
 import { OptionList, userOptions, defaultOptions } from '../../util/Options.js';
+import type { SemanticMap } from '../speech/StructureUtil.js';
 
 /*==========================================================================*/
 
@@ -107,10 +108,10 @@ export class ComplexityVisitor extends MmlVisitor {
   /**
    * @override
    */
-  public visitTree(node: MmlNode, id: number) {
+  public visitTree(node: MmlNode, id: number, parts: SemanticMap) {
     super.visitTree(node, true);
     if (this.options.makeCollapsible) {
-      id = this.collapse.makeCollapse(node, id);
+      id = this.collapse.makeCollapse(node, id, parts);
     }
     return id;
   }

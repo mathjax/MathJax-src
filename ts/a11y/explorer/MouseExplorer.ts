@@ -21,9 +21,16 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { A11yDocument, DummyRegion, Region } from './Region.js';
+import {
+  A11yDocument,
+  DummyRegion,
+  Region,
+  HoverRegion,
+  ToolTip,
+} from './Region.js';
 import { Explorer, AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
+import type { ExplorerMathItem } from '../explorer.js';
 import '../sre.js';
 
 /**
@@ -91,6 +98,21 @@ export abstract class AbstractMouseExplorer<T>
  */
 export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
   /**
+   * The currently selected element
+   */
+  protected current: HTMLElement;
+
+  /**
+   * The mousemove event handler (added after a mouseover)
+   */
+  protected listener = this.MouseMove.bind(this);
+
+  /**
+   * True if the mousemove listener has been added
+   */
+  protected listening: boolean = false;
+
+  /**
    * @class
    * @augments {AbstractMouseExplorer<T>}
    *
@@ -98,6 +120,7 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * @param {ExplorerPool} pool The explorer pool.
    * @param {Region<T>} region A region to display results.
    * @param {HTMLElement} node The node on which the explorer works.
+   * @param {ExplorerMathItem} item The MathItem for this explorer
    * @param {(node: HTMLElement) => boolean} nodeQuery Predicate on nodes that
    *    will fire the hoverer.
    * @param {(node: HTMLElement) => T} nodeAccess Accessor to extract node value
@@ -108,6 +131,7 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     public pool: ExplorerPool,
     public region: Region<T>,
     protected node: HTMLElement,
+    protected item: ExplorerMathItem = null,
     protected nodeQuery: (node: HTMLElement) => boolean,
     protected nodeAccess: (node: HTMLElement) => T
   ) {
@@ -118,57 +142,66 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * @override
    */
   public MouseOut(event: MouseEvent) {
-    this.highlighter.unhighlight();
-    this.region.Hide();
-    super.MouseOut(event);
+    const top =
+      this.node.querySelector('[data-semantic-structure]') || this.node;
+    const topBBox = top.getBoundingClientRect();
+    const nodeBBox = this.node.getBoundingClientRect();
+    if (!this.inBBox(event.x, event.y, topBBox)) {
+      this.highlighter.unhighlight();
+      this.region.Hide();
+      super.MouseOut(event);
+      this.current = null;
+    }
+    if (!this.inBBox(event.x, event.y, nodeBBox)) {
+      this.node.removeEventListener('mousemove', this.listener);
+      this.listening = false;
+    }
   }
 
   /**
    * @override
    */
   public MouseOver(event: MouseEvent) {
-    super.MouseOver(event);
-    const target = event.target as HTMLElement;
-    const [node, kind] = this.getNode(target);
-    if (!node) {
-      return;
+    const nodeBBox = this.node.getBoundingClientRect();
+    if (!this.listening && this.inBBox(event.x, event.y, nodeBBox)) {
+      super.MouseOver(event);
+      this.node.addEventListener('mousemove', this.listener);
+      this.listening = true;
     }
-    this.highlighter.unhighlight();
-    this.highlighter.highlight([node]);
-    this.region.Update(kind);
-    this.region.Show(node);
   }
 
   /**
-   * Retrieves the closest node on which the node query fires. Thereby closest
-   * is defined as:
-   * 1. The node or its ancestor on which the query is true.
-   * 2. In case 1 does not exist the left-most child on which query is true.
-   * 3. Otherwise fails.
+   * Process a mousemove event to see if the node under the mouse has
+   * changed, and if so, unhighlight the old one and highlight the new
+   * one.
    *
-   * @param {HTMLElement} node The node on which the mouse event fired.
-   * @returns {[HTMLElement, T]} Node and output pair if successful.
+   * @param {MouseEvent} event   The move event
    */
-  public getNode(node: HTMLElement): [HTMLElement, T] {
-    const original = node;
-    while (node && node !== this.node) {
-      if (this.nodeQuery(node)) {
-        return [node, this.nodeAccess(node)];
-      }
-      node = node.parentNode as HTMLElement;
+  public MouseMove(event: MouseEvent) {
+    const node = this.nodeAtXY(event, this.nodeQuery);
+    if (node && node !== this.current) {
+      this.current = node;
+      this.highlighter.unhighlight();
+      this.display(node, this.nodeAccess(node));
     }
-    node = original;
-    while (node) {
-      if (this.nodeQuery(node)) {
-        return [node, this.nodeAccess(node)];
-      }
-      const child = node.childNodes[0] as HTMLElement;
-      node =
-        child && child.tagName === 'defs' // This is for SVG.
-          ? (node.childNodes[1] as HTMLElement)
-          : child;
+  }
+
+  /**
+   * @param {HTMLElement} node   The target node to update
+   * @param {T} kind             The target kind to update
+   */
+  protected display(node: HTMLElement, kind: T) {
+    this.item.parseSemanticNodes();
+    let parts = this.item.getSplitNodes(node);
+    if (this.region instanceof HoverRegion) {
+      this.region.splitNodes = parts;
     }
-    return [null, null];
+    parts = this.highlighter.encloseNodes([...parts], this.node);
+    this.highlighter.highlight(parts);
+    if (typeof kind === 'string') {
+      this.region.Update(kind);
+    }
+    this.region.Show(node);
   }
 }
 
@@ -178,7 +211,29 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
  * @class
  * @augments {Hoverer}
  */
-export class ValueHoverer extends Hoverer<string> {}
+export class ValueHoverer extends Hoverer<string> {
+  /**
+   * @override
+   */
+  protected constructor(
+    document: A11yDocument,
+    pool: ExplorerPool,
+    region: ToolTip,
+    node: HTMLElement,
+    item: ExplorerMathItem,
+    attr: string
+  ) {
+    super(
+      document,
+      pool,
+      region,
+      node,
+      item,
+      (x) => x.hasAttribute?.(attr),
+      (x) => x.getAttribute?.(attr)
+    );
+  }
+}
 
 /**
  * Hoverer that displays node content (e.g., for magnification).
@@ -186,7 +241,28 @@ export class ValueHoverer extends Hoverer<string> {}
  * @class
  * @augments {Hoverer}
  */
-export class ContentHoverer extends Hoverer<HTMLElement> {}
+export class ContentHoverer extends Hoverer<HTMLElement> {
+  /**
+   * @override
+   */
+  protected constructor(
+    document: A11yDocument,
+    pool: ExplorerPool,
+    region: HoverRegion,
+    node: HTMLElement,
+    item: ExplorerMathItem
+  ) {
+    super(
+      document,
+      pool,
+      region,
+      node,
+      item,
+      (x) => x.hasAttribute?.('data-semantic-id'),
+      (x) => x
+    );
+  }
+}
 
 /**
  * Highlights maction nodes on hovering.
@@ -199,18 +275,33 @@ export class FlameHoverer extends Hoverer<void> {
    * @override
    */
   protected constructor(
-    public document: A11yDocument,
-    public pool: ExplorerPool,
+    document: A11yDocument,
+    pool: ExplorerPool,
     _ignore: any,
-    protected node: HTMLElement
+    node: HTMLElement,
+    item: ExplorerMathItem
   ) {
     super(
       document,
       pool,
       new DummyRegion(document),
       node,
-      (x) => this.highlighter.isMactionNode(x),
+      item,
+      (x) => x.hasAttribute('data-collapsible'),
       () => {}
     );
+  }
+
+  display(node: HTMLElement) {
+    const id = node.getAttribute('data-collapse-id');
+    if (id) {
+      node = this.node.querySelector(`#${id}`);
+    }
+    let parts: HTMLElement[] = node.hasAttribute('data-collapse-group')
+      ? this.highlighter.getMactionGroup(this.node, node)
+      : [node];
+    parts = this.highlighter.encloseNodes([...parts], this.node);
+    this.highlighter.highlight(parts);
+    this.region.Show(node);
   }
 }

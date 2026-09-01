@@ -197,9 +197,11 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
         visitorOptions
       );
       const computeComplexity = (math: ComplexityMathItem<N, T, D>) => {
+        math.parseSemanticNodes();
         math.initialID = this.complexityVisitor.visitTree(
           math.root,
-          math.initialID
+          math.initialID,
+          math.semanticNodes
         );
       };
       this.options.MathItem = ComplexityMathItemMixin<
