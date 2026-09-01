@@ -26,7 +26,7 @@ import { Configuration, ParserConfiguration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
 import { Macro } from '../Token.js';
-import { TeX } from '../../tex.js';
+import { TEX } from '../../tex.js';
 
 import {
   RequireLoad,
@@ -99,9 +99,9 @@ function initAutoload(config: ParserConfiguration) {
  * (except for \color, which is overridden if present)
  *
  * @param {ParserConfiguration} config The parser configuration.
- * @param {TeX} jax The current tex input jax.
+ * @param {TEX} jax The current tex input jax.
  */
-function configAutoload(config: ParserConfiguration, jax: TeX<any, any, any>) {
+function configAutoload(config: ParserConfiguration, jax: TEX) {
   const parser = jax.parseOptions;
   const macros = parser.handlers.get(HandlerType.MACRO);
   const environments = parser.handlers.get(HandlerType.ENVIRONMENT);

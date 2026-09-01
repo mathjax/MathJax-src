@@ -23,79 +23,49 @@
 
 import { CommonWrapper, CommonWrapperClass, Constructor } from '../Wrapper.js';
 import { CommonWrapperFactory } from '../WrapperFactory.js';
-import {
-  CharOptions,
-  VariantData,
-  DelimiterData,
-  FontData,
-  FontDataClass,
-} from '../FontData.js';
-import { CommonOutputJax } from '../../common.js';
+import { CommonOutputJax, COMMON_FONT } from '../../common.js';
 import { CommonMsqrt, CommonMsqrtClass } from './msqrt.js';
 import { BBox } from '../../../util/BBox.js';
+import { DOM_TYPES } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The CommonMroot interface
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export interface CommonMroot<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-> extends CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+> extends CommonMsqrt<DOM, FONT, JX, WW, WF, WC> {}
 
 /**
  * The CommonMrootClass interface
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export interface CommonMrootClass<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-> extends CommonMsqrtClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+> extends CommonMsqrtClass<DOM, FONT, JX, WW, WF, WC> {}
 
 /*****************************************************************/
 /**
@@ -103,41 +73,28 @@ export interface CommonMrootClass<
  *
  * @param {Constructor} Base The constructor class to extend
  * @returns {B} The mixin constructor
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
  *
- * @template B   The mixin interface to create
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
+ *
+ * @template B     The mixin interface to create
  */
 export function CommonMrootMixin<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonMsqrtClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
->(
-  Base: Constructor<CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>
-): B {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+  B extends CommonMsqrtClass<DOM, FONT, JX, WW, WF, WC>,
+>(Base: Constructor<CommonMsqrt<DOM, FONT, JX, WW, WF, WC>>): B {
   return class CommonMrootMixin
     extends Base
-    implements CommonMroot<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+    implements CommonMroot<DOM, FONT, JX, WW, WF, WC>
   {
     /**
      * @override

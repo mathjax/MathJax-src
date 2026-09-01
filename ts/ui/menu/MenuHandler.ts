@@ -46,7 +46,7 @@ import type {
 } from '../../a11y/speech.js';
 import type { EXPLORER_OPTIONS } from '../../a11y/explorer.ts';
 import { expandable } from '../../util/Options.js';
-import { DOM, Constructor } from '../../types/Types.js';
+import { Constructor } from '../../types/Types.js';
 import { HTML_DOM } from '../../types/dom/html.js';
 
 import { Menu, OPTIONS as SETTINGS } from './Menu.js';
@@ -59,9 +59,9 @@ import '../../a11y/speech/SpeechMenu.js';
  */
 /* prettier-ignore */
 export type A11yMathItem =
-  SpeechMathItem<HTMLElement, Text, Document> &
-  ComplexityMathItem<HTMLElement, Text, Document> &
-  AssistiveMmlMathItem<HTMLElement, Text, Document>;
+  SpeechMathItem<HTML_DOM> &
+  ComplexityMathItem<HTML_DOM> &
+  AssistiveMmlMathItem<HTML_DOM>;
 
 /**
  * Constructor for base MathItem for MenuMathItem
@@ -75,16 +75,16 @@ export type A11yMathItemConstructor = {
  */
 /* prettier-ignore */
 export type A11yMathDocument =
-  ComplexityMathDocument<HTMLElement, Text, Document> &
-  SpeechMathDocument<HTMLElement, Text, Document> &
-  AssistiveMmlMathDocument<HTMLElement, Text, Document>;
+  ComplexityMathDocument<HTML_DOM> &
+  SpeechMathDocument<HTML_DOM> &
+  AssistiveMmlMathDocument<HTML_DOM>;
 
 /**
  * Constructor for base document for MenuMathDocument
  */
 export type A11yDocumentConstructor = MathDocumentConstructor<
   A11yMathDocument,
-  DOM<HTMLElement, Text, Document>
+  HTML_DOM
 >;
 
 /*==========================================================================*/
@@ -119,7 +119,7 @@ export interface MenuMathItem extends A11yMathItem {
  * The mixin for adding context menus to MathItems
  *
  * @param {B} BaseMathItem   The MathItem class to be extended
- * @returns {MenuMathItem}    The extended MathItem class
+ * @returns {MenuMathItem}   The extended MathItem class
  *
  * @template B  The MathItem class to extend
  */
@@ -244,8 +244,8 @@ export interface MenuMathDocument extends A11yMathDocument {
 /**
  * The mixin for adding context menus to MathDocuments
  *
- * @param {B} BaseDocument     The MathDocument class to be extended
- * @returns {MenuMathDocument}      The extended MathDocument class
+ * @param {B} BaseDocument       The MathDocument class to be extended
+ * @returns {MenuMathDocument}   The extended MathDocument class
  *
  * @template B  The MathDocument class to extend
  */
@@ -265,7 +265,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       a11y:
         (BaseDocument.OPTIONS as SPEECH_OPTIONS<HTML_DOM>).a11y ||
         expandable({}),
-      renderActions: expandable<RenderActions<HTMLElement, Text, Document>>({
+      renderActions: expandable<RenderActions<HTML_DOM>>({
         ...BaseDocument.OPTIONS.renderActions,
         addMenu: [STATE.CONTEXT_MENU],
         getMenus: [STATE.INSERTED + 5, false],
@@ -392,11 +392,9 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
  * Add context-menu support to a Handler instance
  *
  * @param {Handler} handler   The Handler instance to enhance
- * @returns {Handler}          The handler that was modified (for purposes of chaining extensions)
+ * @returns {Handler}         The handler that was modified (for purposes of chaining extensions)
  */
-export function MenuHandler(
-  handler: Handler<HTMLElement, Text, Document>
-): Handler<HTMLElement, Text, Document> {
+export function MenuHandler(handler: Handler<HTML_DOM>): Handler<HTML_DOM> {
   handler.documentClass = MenuMathDocumentMixin<A11yDocumentConstructor>(
     handler.documentClass as any
   );

@@ -24,26 +24,29 @@
 import { AbstractHandler } from '../../core/Handler.js';
 import { MinHTMLAdaptor } from '../../adaptors/HTMLAdaptor.js';
 import { HTMLDocument } from './HTMLDocument.js';
+import { MathDocumentConstructor } from '../../core/MathDocument.js';
 import { OptionList } from '../../util/Options.js';
+import { DOM_TYPES, N } from '../../types/Types.js';
 
 /*****************************************************************/
 /**
  *  Implements the HTMLHandler class (extends AbstractHandler)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
+export class HTMLHandler<DOM extends DOM_TYPES> extends AbstractHandler<DOM> {
   /**
    * The DOMAdaptor for the document being handled
    */
-  public adaptor: MinHTMLAdaptor<N, T, D>; // declare a more specific adaptor type
+  public adaptor: MinHTMLAdaptor<DOM>; // declare a more specific adaptor type
 
   /**
    * @override
    */
-  public documentClass = HTMLDocument;
+  public documentClass = HTMLDocument<DOM> as any as MathDocumentConstructor<
+    HTMLDocument<DOM>,
+    DOM
+  >;
 
   /**
    * @override
@@ -81,10 +84,10 @@ export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
       document instanceof adaptor.window.HTMLElement ||
       document instanceof adaptor.window.DocumentFragment
     ) {
-      const child = document as N;
+      const child = document as N<DOM>;
       document = adaptor.parse('', 'text/html');
       adaptor.append(adaptor.body(document), child);
     }
-    return super.create(document, options) as HTMLDocument<N, T, D>;
+    return super.create(document, options) as HTMLDocument<DOM>;
   }
 }

@@ -25,6 +25,7 @@ import { AbstractFindMath } from '../../core/FindMath.js';
 import { OptionList } from '../../util/Options.js';
 import { sortLength, quotePattern } from '../../util/string.js';
 import { ProtoItem, protoItem } from '../../core/MathItem.js';
+import { DOM_TYPES } from '../../types/Types.js';
 
 /**
  * Shorthand types for data about end delimiters and delimiter pairs
@@ -67,11 +68,9 @@ const options: FINDTEX_OPTIONS = {
  */
 
 /**
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
+export class FindTeX<DOM extends DOM_TYPES> extends AbstractFindMath<DOM> {
   /**
    * the default options
    */
@@ -186,21 +185,21 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
    * @param {number} n               The index of the string being searched
    * @param {RegExpExecArray} start  The result array from the start-delimiter search
    * @param {EndItem} end            The end-delimiter data corresponding to the start delimiter
-   * @returns {ProtoItem<N,T>}        The proto math item for the math, if found
+   * @returns {ProtoItem<DOM>}       The proto math item for the math, if found
    */
   protected findEnd(
     text: string,
     n: number,
     start: RegExpExecArray,
     end: EndItem
-  ): ProtoItem<N, T> {
+  ): ProtoItem<DOM> {
     const [close, display, pattern] = end;
     const i = (pattern.lastIndex = start.index + start[0].length);
     let match: RegExpExecArray,
       braces: number = 0;
     while ((match = pattern.exec(text))) {
       if ((match[1] || match[0]) === close && braces === 0) {
-        return protoItem<N, T>(
+        return protoItem<DOM>(
           start[0],
           text.substring(i, match.index),
           match[0],
@@ -226,7 +225,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
    * @param {number} n          The index of the string being searched
    * @param {string} text       The string being searched
    */
-  protected findMathInString(math: ProtoItem<N, T>[], n: number, text: string) {
+  protected findMathInString(math: ProtoItem<DOM>[], n: number, text: string) {
     let start, match;
     this.start.lastIndex = 0;
     while ((start = this.start.exec(text))) {
@@ -245,7 +244,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
         const math = start[this.sub];
         const end = start.index + start[this.sub].length;
         if (math.length === 2) {
-          match = protoItem<N, T>(
+          match = protoItem<DOM>(
             '\\',
             math.substring(1),
             '',
@@ -254,7 +253,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
             end
           );
         } else {
-          match = protoItem<N, T>('', math, '', n, start.index, end, false);
+          match = protoItem<DOM>('', math, '', n, start.index, end, false);
         }
       } else {
         match = this.findEnd(text, n, start, this.end[start[0]]);
@@ -272,7 +271,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
    * @override
    */
   public findMath(strings: string[]) {
-    const math: ProtoItem<N, T>[] = [];
+    const math: ProtoItem<DOM>[] = [];
     if (this.hasPatterns) {
       for (let i = 0, m = strings.length; i < m; i++) {
         this.findMathInString(math, i, strings[i]);

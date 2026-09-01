@@ -33,6 +33,7 @@ import { HtmlNode } from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
 import { HTMLDomStrings } from '../../../handlers/html/HTMLDomStrings.js';
 import { DOMAdaptor } from '../../../core/DOMAdaptor.js';
 import { COMPONENT } from '../__locales__/Component.js';
+import { DOM } from '../../../types/Types.js';
 
 export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
   /**
@@ -114,10 +115,7 @@ export const TexHtmlConfiguration = Configuration.create('texhtml', {
       //
       const include = HTMLDomStrings.OPTIONS.includeHtmlTags;
       if (!include['tex-html']) {
-        include['tex-html'] = (
-          node: any,
-          adaptor: DOMAdaptor<any, any, any>
-        ) => {
+        include['tex-html'] = (node: any, adaptor: DOMAdaptor<DOM>) => {
           //
           // Use the node's serialized contents, and check if there are
           //   nested <tex-html> nodes; if so, mark the one that we are using
@@ -136,7 +134,7 @@ export const TexHtmlConfiguration = Configuration.create('texhtml', {
     }
   },
   [ConfigurationType.PREPROCESSORS]: [
-    (data: { document: HTMLDocument<any, any, any>; data: ParseOptions }) => {
+    (data: { document: HTMLDocument<DOM>; data: ParseOptions }) => {
       data.data.packageData.set('texhtml', { adaptor: data.document.adaptor }); // save the DOMadaptor
     },
   ],

@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonTeXAtom,
   CommonTeXAtomClass,
@@ -38,62 +31,47 @@ import {
 } from '../../common/Wrappers/TeXAtom.js';
 import { TeXAtom } from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
 import { MmlNode, TEXCLASSNAMES } from '../../../core/MmlTree/MmlNode.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgTeXAtom interface for the SVG TeXAtom wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM Node types
  */
-export interface SvgTeXAtomNTD<N, T, D>
+export interface SvgTeXAtomNTD<DOM extends DOM_TYPES>
   extends
-    SvgWrapper<N, T, D>,
+    SvgWrapper<DOM>,
     CommonTeXAtom<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgTeXAtomClass interface for the SVG TeXAtom wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM Node types
  */
-export interface SvgTeXAtomClass<N, T, D>
+export interface SvgTeXAtomClass<DOM extends DOM_TYPES>
   extends
-    SvgWrapperClass<N, T, D>,
+    SvgWrapperClass<DOM>,
     CommonTeXAtomClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgTeXAtomNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgTeXAtomNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -101,26 +79,18 @@ export interface SvgTeXAtomClass<N, T, D>
 /**
  * The SvgTeXAtom wrapper for the MmlTeXAtom class
  */
-export const SvgTeXAtom = (function <N, T, D>(): SvgTeXAtomClass<N, T, D> {
+export const SvgTeXAtom = (function (): SvgTeXAtomClass<DOM> {
   const Base = CommonTeXAtomMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgTeXAtomClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgTeXAtomClass<DOM>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  return class SvgTeXAtom extends Base implements SvgTeXAtomNTD<N, T, D> {
+  return class SvgTeXAtom extends Base implements SvgTeXAtomNTD<DOM> {
     /**
      * @override
      */
@@ -129,7 +99,7 @@ export const SvgTeXAtom = (function <N, T, D>(): SvgTeXAtomClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       super.toSVG(parents);
       this.adaptor.setAttribute(
         this.dom[0],
@@ -137,5 +107,5 @@ export const SvgTeXAtom = (function <N, T, D>(): SvgTeXAtomClass<N, T, D> {
         TEXCLASSNAMES[this.node.texClass]
       );
     }
-  } as any as SvgTeXAtomClass<N, T, D>;
-})<any, any, any>();
+  } as any as SvgTeXAtomClass<DOM>;
+})();

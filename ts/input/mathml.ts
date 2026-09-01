@@ -29,7 +29,7 @@ import { MathItem } from '../core/MathItem.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
 import { MmlFactory } from '../core/MmlTree/MmlFactory.js';
 import { MmlNode } from '../core/MmlTree/MmlNode.js';
-import { DOM, DOM_TYPES, N, T, D } from '../types/Types.js';
+import { DOM, DOM_TYPES, N, D, NT } from '../types/Types.js';
 import {
   FilterFunctions,
   FilterFunctionList,
@@ -51,9 +51,9 @@ export interface MATHML_OPTIONS<DOM extends DOM_TYPES> extends INPUTJAX_OPTIONS<
 > {
   parseAs: 'html' | 'xml';
   forceReparse: boolean;
-  mmlFilters: FilterFunctionList<N<DOM> | T<DOM>, DOM>;
-  FindMathML: FindMathML<N<DOM>, T<DOM>, D<DOM>>;
-  MathMLCompile: MathMLCompile<N<DOM>, T<DOM>, D<DOM>>;
+  mmlFilters: FilterFunctionList<NT<DOM>, DOM>;
+  FindMathML: FindMathML<DOM>;
+  MathMLCompile: MathMLCompile<DOM>;
   parseError: (node: Node) => void;
 }
 
@@ -76,14 +76,10 @@ const options: MATHML_OPTIONS<DOM> = {
 /**
  *  Implements the MathML class (extends AbstractInputJax)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class MathML<N, T, D> extends AbstractInputJax<
-  N,
-  T,
-  D,
+export class MathML<DOM extends DOM_TYPES> extends AbstractInputJax<
+  DOM,
   string,
   MmlNode
 > {
@@ -100,22 +96,22 @@ export class MathML<N, T, D> extends AbstractInputJax<
   /**
    * The FindMathML instance used to locate MathML in the document
    */
-  protected findMathML: FindMathML<N, T, D>;
+  protected findMathML: FindMathML<DOM>;
 
   /**
    * The MathMLCompile instance used to convert the MathML tree to internal format
    */
-  protected mathml: MathMLCompile<N, T, D>;
+  protected mathml: MathMLCompile<DOM>;
 
   /**
    * A list of functions to call on the parsed MathML DOM before conversion to internal structure
    */
-  public mmlFilters: FilterFunctions<N | T, DOM<N, T, D>>;
+  public mmlFilters: FilterFunctions<NT<DOM>, DOM>;
 
   /**
    * @override
    */
-  public options: MATHML_OPTIONS<DOM<N, T, D>>;
+  public options: MATHML_OPTIONS<DOM>;
 
   /**
    * @override
@@ -127,9 +123,8 @@ export class MathML<N, T, D> extends AbstractInputJax<
       MathMLCompile.OPTIONS
     );
     super(mml);
-    this.findMathML = this.options.FindMathML || new FindMathML<N, T, D>(find);
-    this.mathml =
-      this.options.MathMLCompile || new MathMLCompile<N, T, D>(compile);
+    this.findMathML = this.options.FindMathML || new FindMathML<DOM>(find);
+    this.mathml = this.options.MathMLCompile || new MathMLCompile<DOM>(compile);
     this.mmlFilters = new FunctionList(this.options.mmlFilters);
   }
 
@@ -138,7 +133,7 @@ export class MathML<N, T, D> extends AbstractInputJax<
    *
    * @override
    */
-  public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
+  public setAdaptor(adaptor: DOMAdaptor<DOM>) {
     super.setAdaptor(adaptor);
     this.findMathML.adaptor = adaptor;
     this.mathml.adaptor = adaptor;
@@ -177,7 +172,7 @@ export class MathML<N, T, D> extends AbstractInputJax<
    *
    * @override
    */
-  public compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>) {
+  public compile(math: MathItem<DOM>, document: MathDocument<DOM>) {
     let mml = math.start.node;
     if (
       !mml ||
@@ -201,15 +196,15 @@ export class MathML<N, T, D> extends AbstractInputJax<
       if (this.adaptor.childNodes(body).length !== 1) {
         this.error(localize('SingleNode'));
       }
-      mml = this.adaptor.remove(this.adaptor.firstChild(body)) as N;
+      mml = this.adaptor.remove(this.adaptor.firstChild(body)) as N<DOM>;
       if (this.adaptor.kind(mml).replace(/^[a-z]+:/, '') !== 'math') {
         this.error(
           localize('MathNode', '<math>', `<${this.adaptor.kind(mml)}>`)
         );
       }
     }
-    mml = this.executeFilters<N | T>(this.mmlFilters, math, document, mml);
-    let root = this.mathml.compile(mml as N);
+    mml = this.executeFilters<NT<DOM>>(this.mmlFilters, math, document, mml);
+    let root = this.mathml.compile(mml as N<DOM>);
     root = this.executeFilters(this.postFilters, math, document, root);
     math.display = root.attributes.get('display') === 'block';
     return root;
@@ -221,7 +216,7 @@ export class MathML<N, T, D> extends AbstractInputJax<
    * @param {D} doc  The document returns from the DOMParser
    * @returns {D}    The document
    */
-  protected checkForErrors(doc: D): D {
+  protected checkForErrors(doc: D<DOM>): D<DOM> {
     const err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
     if (err) {
       if (this.adaptor.textContent(err) === '') {
@@ -244,7 +239,7 @@ export class MathML<N, T, D> extends AbstractInputJax<
   /**
    * @override
    */
-  public findMath(node: N) {
+  public findMath(node: N<DOM>) {
     return this.findMathML.findMath(node);
   }
 }

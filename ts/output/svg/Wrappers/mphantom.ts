@@ -25,30 +25,31 @@ import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMphantom } from '../../../core/MmlTree/MmlNodes/mphantom.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMphantom interface for the SVG Mphantom wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMphantomNTD<N, T, D> extends SvgWrapper<N, T, D> {}
+export interface SvgMphantomNTD<
+  DOM extends DOM_TYPES,
+> extends SvgWrapper<DOM> {}
 
 /**
  * The SvgMphantomClass interface for the SVG Mphantom wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMphantomClass<N, T, D> extends SvgWrapperClass<N, T, D> {
+export interface SvgMphantomClass<
+  DOM extends DOM_TYPES,
+> extends SvgWrapperClass<DOM> {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMphantomNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMphantomNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -56,21 +57,19 @@ export interface SvgMphantomClass<N, T, D> extends SvgWrapperClass<N, T, D> {
 /**
  * The SvgMphantom wrapper class for the MmlMphantom class
  */
-export const SvgMphantom = (function <N, T, D>(): SvgMphantomClass<N, T, D> {
-  return class SvgMphantom
-    extends SvgWrapper<N, T, D>
-    implements SvgMphantomNTD<N, T, D>
-  {
-    /**
-     * @override
-     */
-    public static kind = MmlMphantom.prototype.kind;
+export class SvgMphantom
+  extends SvgWrapper<DOM>
+  implements SvgMphantomNTD<DOM>
+{
+  /**
+   * @override
+   */
+  public static kind = MmlMphantom.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toSVG(parents: N[]) {
-      this.standardSvgNodes(parents);
-    }
-  };
-})<any, any, any>();
+  /**
+   * @override
+   */
+  public toSVG(parents: N<DOM>[]) {
+    this.standardSvgNodes(parents);
+  }
+}

@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonMspace,
   CommonMspaceClass,
@@ -38,62 +31,47 @@ import {
 } from '../../common/Wrappers/mspace.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMspace } from '../../../core/MmlTree/MmlNodes/mspace.js';
+import { DOM, DOM_TYPES } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMspace interface for the SVG Mspace wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMspaceNTD<N, T, D>
+export interface SvgMspaceNTD<DOM extends DOM_TYPES>
   extends
-    SvgWrapper<N, T, D>,
+    SvgWrapper<DOM>,
     CommonMspace<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMspaceClass interface for the SVG Mspace wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMspaceClass<N, T, D>
+export interface SvgMspaceClass<DOM extends DOM_TYPES>
   extends
-    SvgWrapperClass<N, T, D>,
+    SvgWrapperClass<DOM>,
     CommonMspaceClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMspaceNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMspaceNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -101,30 +79,22 @@ export interface SvgMspaceClass<N, T, D>
 /**
  * The SvgMspace wrapper class for the MmlMspace class
  */
-export const SvgMspace = (function <N, T, D>(): SvgMspaceClass<N, T, D> {
+export const SvgMspace = (function (): SvgMspaceClass<DOM> {
   const Base = CommonMspaceMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMspaceClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMspaceClass<DOM>
   >(SvgWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgMspace extends Base implements SvgMspaceNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMspace extends Base implements SvgMspaceNTD<DOM> {
     /**
      * @override
      */
     public static kind = MmlMspace.prototype.kind;
   };
-})<any, any, any>();
+})();

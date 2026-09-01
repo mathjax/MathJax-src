@@ -23,30 +23,29 @@
 
 import { userOptions, defaultOptions, OptionList } from '../util/Options.js';
 import { ProtoItem } from './MathItem.js';
+import { DOM_TYPES, N } from '../types/Types.js';
 
 /*****************************************************************/
 /**
  *  The FindMath interface
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template _D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface FindMath<N, T, _D> {
+export interface FindMath<DOM extends DOM_TYPES> {
   /**
    * One of two possibilities:  Look through a DOM element,
    *   or look through an array of strings for delimited math.
    *
    * @param {N} node   The node to search for math
-   * @returns {ProtoItem<N, T>[]}
+   * @returns {ProtoItem<DOM>[]}
    */
-  findMath(node: N): ProtoItem<N, T>[];
+  findMath(node: N<DOM>): ProtoItem<DOM>[];
   /**
    *
    * @param {string[]} strings    The strings to search for math
-   * @returns {ProtoItem<N, T>[]}
+   * @returns {ProtoItem<DOM>[]}
    */
-  findMath(strings: string[]): ProtoItem<N, T>[];
+  findMath(strings: string[]): ProtoItem<DOM>[];
 }
 
 /*****************************************************************/
@@ -55,11 +54,11 @@ export interface FindMath<N, T, _D> {
  */
 
 /**
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
+export abstract class AbstractFindMath<
+  DOM extends DOM_TYPES,
+> implements FindMath<DOM> {
   /**
    * The default options for FindMath
    */
@@ -84,5 +83,5 @@ export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
    * @param {Element | string[]} where  The node or string array to search for math
    * @returns {ProtoItem[]}              The array of proto math items found
    */
-  public abstract findMath(where: N | string[]): ProtoItem<N, T>[];
+  public abstract findMath(where: N<DOM> | string[]): ProtoItem<DOM>[];
 }

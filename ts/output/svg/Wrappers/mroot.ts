@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonMroot,
   CommonMrootClass,
@@ -40,62 +33,47 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMroot } from '../../../core/MmlTree/MmlNodes/mroot.js';
 import { SvgMsqrt, SvgMsqrtClass, SvgMsqrtNTD } from './msqrt.js';
 import { BBox } from '../../../util/BBox.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMroot interface for the SVG Mroot wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMrootNTD<N, T, D>
+export interface SvgMrootNTD<DOM extends DOM_TYPES>
   extends
-    SvgMsqrtNTD<N, T, D>,
+    SvgMsqrtNTD<DOM>,
     CommonMroot<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMrootClass interface for the SVG Mroot wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMrootClass<N, T, D>
+export interface SvgMrootClass<DOM extends DOM_TYPES>
   extends
-    SvgMsqrtClass<N, T, D>,
+    SvgMsqrtClass<DOM>,
     CommonMrootClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMrootNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMrootNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -103,27 +81,19 @@ export interface SvgMrootClass<N, T, D>
 /**
  * The SvgMroot wrapper class for the MmlMroot class
  */
-export const SvgMroot = (function <N, T, D>(): SvgMrootClass<N, T, D> {
+export const SvgMroot = (function (): SvgMrootClass<DOM> {
   const Base = CommonMrootMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMrootClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMrootClass<DOM>
   >(SvgMsqrt);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgMroot extends Base implements SvgMrootNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMroot extends Base implements SvgMrootNTD<DOM> {
     /**
      * @override
      */
@@ -133,8 +103,8 @@ export const SvgMroot = (function <N, T, D>(): SvgMrootClass<N, T, D> {
      * @override
      */
     protected addRoot(
-      ROOT: N[],
-      root: SvgWrapper<N, T, D>,
+      ROOT: N<DOM>[],
+      root: SvgWrapper<DOM>,
       sbox: BBox,
       H: number
     ) {
@@ -145,4 +115,4 @@ export const SvgMroot = (function <N, T, D>(): SvgMrootClass<N, T, D> {
       return x;
     }
   };
-})<any, any, any>();
+})();

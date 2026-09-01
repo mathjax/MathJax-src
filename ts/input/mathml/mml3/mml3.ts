@@ -27,6 +27,7 @@ import { MathDocument } from '../../../core/MathDocument.js';
 import { Handler } from '../../../core/Handler.js';
 import { createTransform } from './mml3-node.js';
 import { MathML } from '../../mathml.js';
+import { DOM_TYPES, N } from '../../../types/Types.js';
 
 /**
  * The mml/mml3 option types.
@@ -45,20 +46,20 @@ const options: MML3_OPTIONS = {
 /**
  * The data for a MathML prefilter.
  *
- * @template N  The HTMLElement node class
+ * @template DOM   The DOM node types
  * @template T  The Text node class
  * @template D  The Document class
  */
-export type FILTERDATA<N, T, D> = {
-  math: MathItem<N, T, D>;
-  document: MathDocument<N, T, D> & { options: MML3_OPTIONS };
-  data: N;
+export type FILTERDATA<DOM extends DOM_TYPES> = {
+  math: MathItem<DOM>;
+  document: MathDocument<DOM> & { options: MML3_OPTIONS };
+  data: N<DOM>;
 };
 
 /**
  * Class that handles XSLT transform for MathML3 elementary math tags.
  */
-export class Mml3<N, T, D> {
+export class Mml3<DOM extends DOM_TYPES> {
   /**
    * The XSLT transform as a string;
    */
@@ -68,13 +69,13 @@ export class Mml3<N, T, D> {
    * The function to convert serialized MathML using the XSLT.
    * (Different for browser and node environments.)
    */
-  protected transform: (node: N, doc: MathDocument<N, T, D>) => N;
+  protected transform: (node: N<DOM>, doc: MathDocument<DOM>) => N<DOM>;
 
   /**
    * @param {MathDocument} document   The MathDocument for the transformation
    * @class
    */
-  constructor(document: MathDocument<N, T, D>) {
+  constructor(document: MathDocument<DOM>) {
     if (typeof XSLTProcessor === 'undefined') {
       //
       // For Node, get the trasnform from the external module
@@ -90,13 +91,13 @@ export class Mml3<N, T, D> {
         'text/xml'
       ) as any as Node;
       processor.importStylesheet(parsed);
-      this.transform = (node: N) => {
+      this.transform = (node: N<DOM>) => {
         const adaptor = document.adaptor;
         const div = adaptor.node('div', {}, [adaptor.clone(node)]);
         const dom = adaptor.parse(adaptor.serializeXML(div), 'text/xml');
         const mml = processor.transformToDocument(
           dom as any as Node
-        ) as any as N;
+        ) as any as N<DOM>;
         return mml ? adaptor.tags(mml, 'math')[0] : node;
       };
     }
@@ -107,7 +108,7 @@ export class Mml3<N, T, D> {
    *
    * @param {FILTERDATA} args  The data from the pre-filter chain.
    */
-  public mmlFilter(args: FILTERDATA<N, T, D>) {
+  public mmlFilter(args: FILTERDATA<DOM>) {
     if (args.document.options.enableMml3) {
       args.data = this.transform(args.data, args.document);
     }
@@ -119,10 +120,12 @@ export class Mml3<N, T, D> {
  *
  * @param {Handler} handler The current handler.
  * @returns {Handler} The provided handler for pipelining.
+ *
+ * @template DOM   THe DOM node types
  */
-export function Mml3Handler<N, T, D>(
-  handler: Handler<N, T, D>
-): Handler<N, T, D> {
+export function Mml3Handler<DOM extends DOM_TYPES>(
+  handler: Handler<DOM>
+): Handler<DOM> {
   handler.documentClass = class extends handler.documentClass {
     /**
      * @override
@@ -145,7 +148,7 @@ export function Mml3Handler<N, T, D>(
           if (!jax.options._mml3) {
             // prevent filter being added twice (e.g., when a11y tools load)
             const mml3 = new Mml3(this);
-            (jax as MathML<N, T, D>).mmlFilters.add(mml3.mmlFilter.bind(mml3));
+            (jax as MathML<DOM>).mmlFilters.add(mml3.mmlFilter.bind(mml3));
             jax.options._mml3 = true;
           }
           break;

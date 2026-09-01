@@ -17,7 +17,7 @@
 
 /**
  * @file  A visitor that produces a serilaied MathML string
- *                that contains addition information about inherited
+ *                that contains additional information about inherited
  *                attributes and internal properties.
  *                (For testing purposes only.)
  *

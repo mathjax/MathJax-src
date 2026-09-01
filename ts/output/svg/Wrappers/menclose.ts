@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonMenclose,
   CommonMencloseClass,
@@ -41,32 +34,25 @@ import { MmlMenclose } from '../../../core/MmlTree/MmlNodes/menclose.js';
 import * as Notation from '../Notation.js';
 import { SvgMsqrtNTD } from './msqrt.js';
 import { OptionList } from '../../../util/Options.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMenclose interface for the SVG menclose wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMencloseNTD<N, T, D>
+export interface SvgMencloseNTD<DOM extends DOM_TYPES>
   extends
-    SvgWrapper<N, T, D>,
+    SvgWrapper<DOM>,
     CommonMenclose<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass,
-      SvgMsqrtNTD<N, T, D>
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>,
+      SvgMsqrtNTD<DOM>
     > {
   /**
    * Create a line element
@@ -74,7 +60,7 @@ export interface SvgMencloseNTD<N, T, D>
    * @param {number[]} pq   The coordinates of the endpoints, [x1, y1, x2, y2]
    * @returns {N}            The newly created line element
    */
-  line(pq: [number, number, number, number]): N;
+  line(pq: [number, number, number, number]): N<DOM>;
 
   /**
    * Create a rectangle element
@@ -85,7 +71,7 @@ export interface SvgMencloseNTD<N, T, D>
    * @param {number=} r   The corner radius for a rounded rectangle
    * @returns {N}          The newly created line element
    */
-  box(w: number, h: number, d: number, r?: number): N;
+  box(w: number, h: number, d: number, r?: number): N<DOM>;
 
   /**
    * Create an ellipse element
@@ -95,7 +81,7 @@ export interface SvgMencloseNTD<N, T, D>
    * @param {number} d  The depth of the ellipse
    * @returns {N}        The newly created ellipse node
    */
-  ellipse(w: number, h: number, d: number): N;
+  ellipse(w: number, h: number, d: number): N<DOM>;
 
   /**
    * Create a path element from the commands that specify it
@@ -104,7 +90,7 @@ export interface SvgMencloseNTD<N, T, D>
    * @param {(string|number)[]} P   The list of commands and coordinates for the path
    * @returns {N}                    The newly created path
    */
-  path(join: string, ...P: (string | number)[]): N;
+  path(join: string, ...P: (string | number)[]): N<DOM>;
 
   /**
    * Create a filled path element from the commands the specify it
@@ -113,38 +99,30 @@ export interface SvgMencloseNTD<N, T, D>
    * @param {(string|number)[]} P   The list of commands and coordinates for the path
    * @returns {N}                    The newly created path
    */
-  fill(...P: (string | number)[]): N;
+  fill(...P: (string | number)[]): N<DOM>;
 }
 
 /**
  * The SvgMencloseClass interface for the SVG menclose wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMencloseClass<N, T, D>
+export interface SvgMencloseClass<DOM extends DOM_TYPES>
   extends
-    SvgWrapperClass<N, T, D>,
+    SvgWrapperClass<DOM>,
     CommonMencloseClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMencloseNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMencloseNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -152,28 +130,20 @@ export interface SvgMencloseClass<N, T, D>
 /**
  * The SvgMenclose wrapper for the MmlMenclose class
  */
-export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
+export const SvgMenclose = (function (): SvgMencloseClass<DOM> {
   const Base = CommonMencloseMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMsqrtNTD<N, T, D>,
-    SvgMencloseClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMsqrtNTD<DOM>,
+    SvgMencloseClass<DOM>
   >(SvgWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgMenclose extends Base implements SvgMencloseNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMenclose extends Base implements SvgMencloseNTD<DOM> {
     /**
      * @override
      */
@@ -182,7 +152,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     /**
      *  The definitions of the various notations
      */
-    public static notations: Notation.DefList<SvgMenclose, N> = new Map([
+    public static notations: Notation.DefList<SvgMenclose, N<DOM>> = new Map([
       Notation.Border('top'),
       Notation.Border('right'),
       Notation.Border('bottom'),
@@ -346,14 +316,14 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
           renderChild: true,
         },
       ],
-    ] as Notation.DefPair<SvgMenclose, N>[]);
+    ] as Notation.DefPair<SvgMenclose, N<DOM>>[]);
 
     /********************************************************/
 
     /**
      * @override
      */
-    public line(pq: [number, number, number, number]): N {
+    public line(pq: [number, number, number, number]): N<DOM> {
       const [x1, y1, x2, y2] = pq;
       return this.svg('line', {
         x1: this.fixed(x1),
@@ -367,7 +337,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     /**
      * @override
      */
-    public box(w: number, h: number, d: number, r: number = 0): N {
+    public box(w: number, h: number, d: number, r: number = 0): N<DOM> {
       const t = this.thickness;
       const def: OptionList = {
         x: this.fixed(t / 2),
@@ -386,7 +356,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     /**
      * @override
      */
-    public ellipse(w: number, h: number, d: number): N {
+    public ellipse(w: number, h: number, d: number): N<DOM> {
       const t = this.thickness;
       return this.svg('ellipse', {
         rx: this.fixed((w - t) / 2),
@@ -401,7 +371,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     /**
      * @override
      */
-    public path(join: string, ...P: (string | number)[]): N {
+    public path(join: string, ...P: (string | number)[]): N<DOM> {
       return this.svg('path', {
         d: P.map((x) => (typeof x === 'string' ? x : this.fixed(x))).join(' '),
         style: { 'stroke-width': this.fixed(this.thickness) },
@@ -414,7 +384,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     /**
      * @override
      */
-    public fill(...P: (string | number)[]): N {
+    public fill(...P: (string | number)[]): N<DOM> {
       return this.svg('path', {
         d: P.map((x) => (typeof x === 'string' ? x : this.fixed(x))).join(' '),
       });
@@ -425,44 +395,97 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     /**
      * @override
      */
-    /* prettier-ignore */
-    public arrow(W: number, a: number, double: boolean, offset: string = '', dist: number = 0): N {
-      const {w, h, d} = this.getBBox();
+    public arrow(
+      W: number,
+      a: number,
+      double: boolean,
+      offset: string = '',
+      dist: number = 0
+    ): N<DOM> {
+      const { w, h, d } = this.getBBox();
       const dw = (W - w) / 2;
       const m = (h - d) / 2;
       const t = this.thickness;
       const t2 = t / 2;
-      const [x, y, dx] = [t * this.arrowhead.x, t * this.arrowhead.y, t * this.arrowhead.dx];
-      const arrow =
-        (double ?
-         this.fill(
-           'M', w + dw, m,                            // point of arrow
-           'l', -(x + dx), y,  'l', dx, t2 - y,       // upper right head
-           'L', x - dw, m + t2,                       // upper side of shaft
-           'l', dx, y - t2, 'l', -(x + dx), - y,      // left point
-           'l', x + dx, -y,    'l', -dx, y - t2,      // lower left head
-           'L', w + dw - x, m - t2,                   // lower side of shaft
-           'l', -dx, t2 - y, 'Z'                      // lower head
-         ) :
-         this.fill(
-           'M', w + dw, m,                            // point of arrow
-           'l', -(x + dx), y,  'l', dx, t2 - y,       // upper head
-           'L', -dw, m + t2, 'l', 0, -t,              // upper side of shaft
-           'L', w + dw - x, m - t2,                   // lower side of shaft
-           'l', -dx, t2 - y, 'Z'                      // lower head
-         ));
+      const [x, y, dx] = [
+        t * this.arrowhead.x,
+        t * this.arrowhead.y,
+        t * this.arrowhead.dx,
+      ];
+      const arrow = double
+        ? this.fill(
+            'M',
+            w + dw,
+            m, //                            Point of arrow
+            'l',
+            -(x + dx),
+            y,
+            'l',
+            dx,
+            t2 - y, //       Upper right head
+            'L',
+            x - dw,
+            m + t2, //                       Upper side of shaft
+            'l',
+            dx,
+            y - t2,
+            'l',
+            -(x + dx),
+            -y, //      Left point
+            'l',
+            x + dx,
+            -y,
+            'l',
+            -dx,
+            y - t2, //      Lower left head
+            'L',
+            w + dw - x,
+            m - t2, //                   Lower side of shaft
+            'l',
+            -dx,
+            t2 - y,
+            'Z' //                      Lower head
+          )
+        : this.fill(
+            'M',
+            w + dw,
+            m, //                            Point of arrow
+            'l',
+            -(x + dx),
+            y,
+            'l',
+            dx,
+            t2 - y, //       Upper head
+            'L',
+            -dw,
+            m + t2,
+            'l',
+            0,
+            -t, //              Upper side of shaft
+            'L',
+            w + dw - x,
+            m - t2, //                   Lower side of shaft
+            'l',
+            -dx,
+            t2 - y,
+            'Z' //                      Lower head
+          );
       const transform = [];
       if (dist) {
-        transform.push(offset === 'X' ? `translate(${this.fixed(-dist)} 0)` : `translate(0 ${this.fixed(dist)})`);
+        transform.push(
+          offset === 'X'
+            ? `translate(${this.fixed(-dist)} 0)`
+            : `translate(0 ${this.fixed(dist)})`
+        );
       }
       if (a) {
-        const A = this.jax.fixed(-a * 180 / Math.PI);
+        const A = this.jax.fixed((-a * 180) / Math.PI);
         transform.push(`rotate(${A} ${this.fixed(w / 2)} ${this.fixed(m)})`);
       }
       if (transform.length) {
         this.adaptor.setAttribute(arrow, 'transform', transform.join(' '));
       }
-      return arrow as N;
+      return arrow as N<DOM>;
     }
 
     /********************************************************/
@@ -470,7 +493,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       const svg = this.standardSvgNodes(parents);
       //
       //  Create a box at the correct position and add the children
@@ -480,7 +503,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
       if (left > 0) {
         def.transform = 'translate(' + this.fixed(left) + ', 0)';
       }
-      const block = this.adaptor.append(svg[0], this.svg('g', def)) as N;
+      const block = this.adaptor.append(svg[0], this.svg('g', def)) as N<DOM>;
       if (this.renderChild) {
         this.renderChild(this, block);
       } else {
@@ -498,4 +521,4 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
       }
     }
   };
-})<any, any, any>();
+})();

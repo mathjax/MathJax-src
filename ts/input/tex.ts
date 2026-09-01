@@ -27,7 +27,7 @@ import { MathDocument } from '../core/MathDocument.js';
 import { MathItem } from '../core/MathItem.js';
 import { MmlNode } from '../core/MmlTree/MmlNode.js';
 import { MmlFactory } from '../core/MmlTree/MmlFactory.js';
-import { DOM, DOM_TYPES, N, T, D } from '../types/Types.js';
+import { DOM, DOM_TYPES } from '../types/Types.js';
 
 import { FindTeX } from './tex/FindTeX.js';
 
@@ -51,7 +51,7 @@ export interface TEX_OPTIONS<DOM extends DOM_TYPES> extends INPUTJAX_OPTIONS<
   DOM,
   ParseOptions
 > {
-  FindTeX: FindTeX<N<DOM>, T<DOM>, D<DOM>>;
+  FindTeX: FindTeX<DOM>;
   packages: string[];
   // Maximum size of TeX string to process.
   maxBuffer: number;
@@ -59,7 +59,7 @@ export interface TEX_OPTIONS<DOM extends DOM_TYPES> extends INPUTJAX_OPTIONS<
   maxTemplateSubtitutions: number;
   // math-style to use for Latin and Greek letters
   mathStyle: 'TeX' | 'ISO' | 'French' | 'upright';
-  formatError: (jax: TeX<N<DOM>, T<DOM>, D<DOM>>, err: TexError) => MmlNode;
+  formatError: (jax: TeX<DOM>, err: TexError) => MmlNode;
 }
 
 /**
@@ -72,21 +72,24 @@ const options: TEX_OPTIONS<DOM> = {
   maxBuffer: 5 * 1024,
   maxTemplateSubtitutions: 10000,
   mathStyle: 'TeX',
-  formatError: (jax: TeX<N<DOM>, T<DOM>, D<DOM>>, err: TexError) =>
-    jax.formatError(err),
+  formatError: (jax: TeX<DOM>, err: TexError) => jax.formatError(err),
 };
+
+/**
+ * A generic TeX input jax.
+ */
+export type TEX = TeX<DOM>;
 
 /*****************************************************************/
 /*
  *  Implements the TeX class (extends AbstractInputJax)
+ *
+ * @template DOM   The DOM node types
  */
-
-/**
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- */
-export class TeX<N, T, D> extends AbstractInputJax<N, T, D, ParseOptions> {
+export class TeX<DOM extends DOM_TYPES> extends AbstractInputJax<
+  DOM,
+  ParseOptions
+> {
   /**
    * Name of input jax.
    */
@@ -100,7 +103,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D, ParseOptions> {
   /**
    * The FindTeX instance used for locating TeX in strings
    */
-  protected findTeX: FindTeX<N, T, D>;
+  protected findTeX: FindTeX<DOM>;
 
   /**
    * The configuration of the TeX jax.
@@ -130,7 +133,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D, ParseOptions> {
   ): ParserConfiguration {
     const configuration = new ParserConfiguration(packages, ['tex']);
     configuration.init();
-    return configuration;
+    return configuration as ParserConfiguration;
   }
 
   /**
@@ -153,7 +156,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D, ParseOptions> {
   /**
    * @override
    */
-  public options: TEX_OPTIONS<DOM<N, T, D>>;
+  public options: TEX_OPTIONS<DOM>;
 
   /**
    * @override
@@ -213,10 +216,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D, ParseOptions> {
   /**
    * @override
    */
-  public compile(
-    math: MathItem<N, T, D>,
-    document: MathDocument<N, T, D>
-  ): MmlNode {
+  public compile(math: MathItem<DOM>, document: MathDocument<DOM>): MmlNode {
     this.parseOptions.clear();
     this.parseOptions.mathItem = math;
     this.executeFilters(this.preFilters, math, document, this.parseOptions);

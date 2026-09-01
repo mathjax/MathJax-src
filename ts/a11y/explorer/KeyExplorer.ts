@@ -36,6 +36,7 @@ import { GeneratorPool } from '../speech/GeneratorPool.js';
 import { context } from '../../util/context.js';
 import { InfoDialog } from '../../ui/dialog/InfoDialog.js';
 import { localize } from './__locales__/Component.js';
+import { HTML_DOM } from '../../types/dom/html.js';
 
 /**********************************************************************/
 
@@ -217,7 +218,7 @@ export class SpeechExplorer
    *
    * @returns {GeneratorPool} The item's generator pool.
    */
-  private get generators(): GeneratorPool<HTMLElement, Text, Document> {
+  private get generators(): GeneratorPool<HTML_DOM> {
     return this.item?.generatorPool;
   }
 
@@ -383,7 +384,7 @@ export class SpeechExplorer
       this.Start();
       this.backTab = event.target === this.img;
     } else if (!this.focusSpeech) {
-      this.speak('');  // don't speak initial equation until click event
+      this.speak(''); // don't speak initial equation until click event
     }
     this.clicked = null;
   }

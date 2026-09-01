@@ -21,18 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-  VFUZZ,
-  HFUZZ,
-} from '../FontData.js';
+import { SvgCharOptions, VFUZZ, HFUZZ } from '../FontData.js';
 import {
   CommonMo,
   CommonMoClass,
@@ -42,94 +34,67 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
 import { BBox } from '../../../util/BBox.js';
 import { DIRECTION, SvgCharData } from '../FontData.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMo interface for the SVG Mo wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMoNTD<N, T, D>
+export interface SvgMoNTD<DOM extends DOM_TYPES>
   extends
-    SvgWrapper<N, T, D>,
+    SvgWrapper<DOM>,
     CommonMo<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMoClass interface for the SVG Mo wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMoClass<N, T, D>
+export interface SvgMoClass<DOM extends DOM_TYPES>
   extends
-    SvgWrapperClass<N, T, D>,
+    SvgWrapperClass<DOM>,
     CommonMoClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMoNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMoNTD<DOM>;
 }
 
 /*****************************************************************/
 
 /**
  * The SvgMo wrapper class for the MmlMo class
- *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  */
-export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
+export const SvgMo = (function (): SvgMoClass<DOM> {
   const Base = CommonMoMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMoClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMoClass<DOM>
   >(SvgWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgMo extends Base implements SvgMoNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMo extends Base implements SvgMoNTD<DOM> {
     /**
      * @override
      */
@@ -138,7 +103,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       const attributes = this.node.attributes;
       const symmetric =
         (attributes.get('symmetric') as boolean) &&
@@ -207,7 +172,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      *
      * @returns {string[]} The variants array
      */
-    protected getStretchVariants() {
+    protected getStretchVariants(): string[] {
       const c = this.stretch.c || this.getText().codePointAt(0);
       const variants = [] as string[];
       for (const i of this.stretch.stretch.keys()) {
@@ -291,7 +256,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       variant: string,
       x: number,
       y: number,
-      parent: N = null
+      parent: N<DOM> = null
     ): number {
       if (parent) {
         return this.placeChar(n, x, y, parent, variant);
@@ -360,7 +325,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
       adaptor.setAttribute(
-        glyph as N,
+        glyph as N<DOM>,
         'transform',
         `scale(1,${this.jax.fixed(s)})`
       );
@@ -447,7 +412,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
       adaptor.setAttribute(
-        glyph as N,
+        glyph as N<DOM>,
         'transform',
         `scale(${this.jax.fixed(s)},1)`
       );
@@ -484,4 +449,4 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       return [(W - w) / 2, (W + w) / 2];
     }
   };
-})<any, any, any>();
+})();

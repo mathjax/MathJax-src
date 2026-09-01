@@ -24,6 +24,7 @@
 import { XMLNode } from '../MmlNode.js';
 import { DOMAdaptor } from '../../DOMAdaptor.js';
 import { PropertyList } from '../../Tree/Node.js';
+import { DOM } from '../../../types/Types.js';
 
 /******************************************************************/
 /**
@@ -49,12 +50,9 @@ export class HtmlNode<N> extends XMLNode {
   /**
    * @param {N} html               The HTML content to be saved
    * @param {DOMAdaptor} adaptor   DOM adaptor for the content
-   * @returns {HtmlNode}            The HTML node (for chaining of method calls)
+   * @returns {HtmlNode}           The HTML node (for chaining of method calls)
    */
-  public setHTML(
-    html: N,
-    adaptor: DOMAdaptor<any, any, any> = null
-  ): HtmlNode<N> {
+  public setHTML(html: N, adaptor: DOMAdaptor<DOM> = null): HtmlNode<N> {
     //
     // Test if the HTML element has attributes and wrap in a <span> if not
     //

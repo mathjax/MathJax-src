@@ -31,14 +31,17 @@ import { SPEECH, BRAILLE } from './strings.js';
 import { StyleJsonData } from '../../util/StyleJson.js';
 import { Locale } from '../../util/Locale.js';
 import { localize, COMPONENT } from './__locales__/Component.js';
+import { DOM_TYPES, N, NT } from '../../types/Types.js';
 
 /**
  * Class for relevant task information.
+ *
+ * @template DOM   The DOM node types
  */
-class Task<N, T, D> {
+class Task<DOM extends DOM_TYPES> {
   constructor(
     public cmd: ClientCommand,
-    public item: SpeechMathItem<N, T, D>,
+    public item: SpeechMathItem<DOM>,
     public resolve: (value: any) => void,
     public reject: (cmd: string) => void
   ) {}
@@ -47,11 +50,9 @@ class Task<N, T, D> {
 /**
  * The main WorkerHandler class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class WorkerHandler<N, T, D> {
+export class WorkerHandler<DOM extends DOM_TYPES> {
   /**
    * Callback for ready signal
    */
@@ -60,7 +61,7 @@ export class WorkerHandler<N, T, D> {
   /**
    * The task queue
    */
-  private tasks: Task<N, T, D>[] = [];
+  private tasks: Task<DOM>[] = [];
 
   /**
    * The webworker
@@ -87,7 +88,7 @@ export class WorkerHandler<N, T, D> {
    * @param {OptionList} options The worker options.
    */
   constructor(
-    public adaptor: DOMAdaptor<N, T, D>,
+    public adaptor: DOMAdaptor<DOM>,
     private options: OptionList
   ) {}
 
@@ -142,10 +143,7 @@ export class WorkerHandler<N, T, D> {
    *     command name as input.
    * @returns {Promise<any>} A promise that resolves when the command completes
    */
-  public Post(
-    msg: ClientCommand,
-    item?: SpeechMathItem<N, T, D>
-  ): Promise<any> {
+  public Post(msg: ClientCommand, item?: SpeechMathItem<DOM>): Promise<any> {
     const promise = new Promise((resolve, reject) => {
       this.tasks.push(new Task(msg, item, resolve, reject));
     });
@@ -172,7 +170,7 @@ export class WorkerHandler<N, T, D> {
    *
    * @param {SpeechMathItem} item   The item whose task is to be canceled.
    */
-  public Cancel(item: SpeechMathItem<N, T, D>) {
+  public Cancel(item: SpeechMathItem<DOM>) {
     const i = this.tasks.findIndex((task) => task.item === item);
     if (i > 0) {
       this.tasks[i].reject(localize('Worker/Cancelled', this.tasks[i].cmd.cmd));
@@ -209,7 +207,7 @@ export class WorkerHandler<N, T, D> {
   public async Speech(
     math: string,
     options: OptionList,
-    item: SpeechMathItem<N, T, D>
+    item: SpeechMathItem<DOM>
   ): Promise<void> {
     this.Attach(
       item,
@@ -237,7 +235,7 @@ export class WorkerHandler<N, T, D> {
   public async nextRules(
     math: string,
     options: OptionList,
-    item: SpeechMathItem<N, T, D>
+    item: SpeechMathItem<DOM>
   ): Promise<void> {
     this.Attach(
       item,
@@ -273,7 +271,7 @@ export class WorkerHandler<N, T, D> {
     math: string,
     options: OptionList,
     nodeId: string,
-    item: SpeechMathItem<N, T, D>
+    item: SpeechMathItem<DOM>
   ): Promise<void> {
     this.Attach(
       item,
@@ -304,7 +302,7 @@ export class WorkerHandler<N, T, D> {
   public async speechFor(
     math: string,
     options: OptionList,
-    item: SpeechMathItem<N, T, D>
+    item: SpeechMathItem<DOM>
   ): Promise<Structure> {
     const data = await this.Post(
       {
@@ -325,7 +323,7 @@ export class WorkerHandler<N, T, D> {
    * @param {string} structure          The speech JSON structure to attach
    */
   public Attach(
-    item: SpeechMathItem<N, T, D>,
+    item: SpeechMathItem<DOM>,
     speech: boolean,
     braille: boolean,
     structure: string
@@ -347,9 +345,9 @@ export class WorkerHandler<N, T, D> {
       if (!node || !adaptor.childNodes(node)[0]) {
         continue;
       }
-      node = adaptor.childNodes(node)[0] as N;
+      node = adaptor.childNodes(node)[0] as N<DOM>;
       if (adaptor.kind(node) === 'rect') {
-        node = adaptor.next(node) as N;
+        node = adaptor.next(node) as N<DOM>;
       }
       adaptor.setAttribute(node, SEM.TYPE, 'dummy');
       this.setSpecialAttributes(node, sid, '');
@@ -387,7 +385,7 @@ export class WorkerHandler<N, T, D> {
    * @param {boolean} braille  True when Braille should be added
    */
   protected setSpeechAttribute(
-    node: N,
+    node: N<DOM>,
     data: Structure,
     speech: boolean,
     braille: boolean
@@ -414,7 +412,7 @@ export class WorkerHandler<N, T, D> {
   /**
    * Add the speech attributes to a node's DOM tree
    *
-   * @param {N|T} root         The node to add speech to
+   * @param {NT} root          The node to add speech to
    * @param {string} rootId    The root nodes's ID
    * @param {Structure} data   The speech data to use
    * @param {boolean} speech   True when speech should be added
@@ -422,7 +420,7 @@ export class WorkerHandler<N, T, D> {
    * @returns {string}         The updated root ID
    */
   protected setSpeechAttributes(
-    root: N | T,
+    root: NT<DOM>,
     rootId: string,
     data: Structure,
     speech: boolean,
@@ -436,7 +434,7 @@ export class WorkerHandler<N, T, D> {
     ) {
       return rootId;
     }
-    root = root as N;
+    root = root as N<DOM>;
     if (adaptor.hasAttribute(root, SEM.ID)) {
       this.setSpeechAttribute(root, data, speech, braille);
       if (!rootId && !adaptor.hasAttribute(root, SEM.PARENT)) {
@@ -458,7 +456,7 @@ export class WorkerHandler<N, T, D> {
    * @param {string[]} keys An optional list to select only those attributes.
    */
   protected setSpecialAttributes(
-    node: N,
+    node: N<DOM>,
     map: OptionList,
     prefix: string,
     keys?: string[]
@@ -478,7 +476,7 @@ export class WorkerHandler<N, T, D> {
    *
    * @param {SpeechMathItem} item   The MathItem whose speech attributes should be removed.
    */
-  public Detach(item: SpeechMathItem<N, T, D>) {
+  public Detach(item: SpeechMathItem<DOM>) {
     const container = item.typesetRoot;
     this.adaptor.removeAttribute(container, SPEECH.ATTACHED);
     this.adaptor.removeAttribute(container, BRAILLE.ATTACHED);
@@ -490,7 +488,7 @@ export class WorkerHandler<N, T, D> {
    *
    * @param {N} node  The root node of the tree to modify
    */
-  public detachSpeech(node: N) {
+  public detachSpeech(node: N<DOM>) {
     const adaptor = this.adaptor;
     const children = adaptor.childNodes(node);
     if (!children) return;
@@ -507,7 +505,7 @@ export class WorkerHandler<N, T, D> {
       }
     }
     for (const child of children) {
-      this.detachSpeech(child as N);
+      this.detachSpeech(child as N<DOM>);
     }
   }
 
@@ -604,7 +602,7 @@ export class WorkerHandler<N, T, D> {
    * The list of valid commands from the Worker.
    */
   public Commands: {
-    [id: string]: (handler: WorkerHandler<N, T, D>, data: Message) => void;
+    [id: string]: (handler: WorkerHandler<DOM>, data: Message) => void;
   } = {
     /**
      * This signals that the worker in the iframe is loaded and ready
@@ -612,7 +610,7 @@ export class WorkerHandler<N, T, D> {
      * @param {WorkerHandler} handler The active handler for the worker.
      * @param {Message} _data The data received from the worker. Ignored.
      */
-    Ready(handler: WorkerHandler<N, T, D>, _data: Message) {
+    Ready(handler: WorkerHandler<DOM>, _data: Message) {
       handler.ready = true;
       handler.postNext();
     },
@@ -623,7 +621,7 @@ export class WorkerHandler<N, T, D> {
      * @param {WorkerHandler} handler The active handler for the worker.
      * @param {Message} data The data received from the worker.
      */
-    Finished(handler: WorkerHandler<N, T, D>, data: Message) {
+    Finished(handler: WorkerHandler<DOM>, data: Message) {
       const task = handler.tasks.shift();
       if (data.success) {
         task.resolve(data.result);
@@ -639,7 +637,7 @@ export class WorkerHandler<N, T, D> {
      * @param {WorkerHandler} handler The active handler for the worker.
      * @param {Message} data The data received from the worker.
      */
-    Log(handler: WorkerHandler<N, T, D>, data: Message) {
+    Log(handler: WorkerHandler<DOM>, data: Message) {
       if (handler.options.debug) {
         console.log('Log:', data);
       }
@@ -651,7 +649,7 @@ export class WorkerHandler<N, T, D> {
      * @param {WorkerHandler} handler The active handler for the worker.
      * @param {Message} data The data received from the worker.
      */
-    Failed(handler: WorkerHandler<N, T, D>, data: Message) {
+    Failed(handler: WorkerHandler<DOM>, data: Message) {
       const { path, worker } = handler.options;
       Locale.warn(
         COMPONENT,
@@ -669,7 +667,7 @@ export class WorkerHandler<N, T, D> {
      * @param {WorkerHandler} handler The active handler for the worker.
      * @param {Message} data The data received from the worker.
      */
-    Maps(handler: WorkerHandler<N, T, D>, data: Message) {
+    Maps(handler: WorkerHandler<DOM>, data: Message) {
       const { maps } = handler.options;
       Locale.warn(
         COMPONENT,

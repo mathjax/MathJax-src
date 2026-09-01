@@ -23,26 +23,42 @@
 
 import { MathDocument } from './MathDocument.js';
 import { MathItem } from './MathItem.js';
-import { DOM_TYPES, N, T, D } from '../types/Types.js';
+import { DOM_TYPES } from '../types/Types.js';
 import { FunctionList } from '../util/FunctionList.js';
 
 /**
- * Types for filter functions
+ * Data passed to a filter
  */
 export type FilterData<U, DOM extends DOM_TYPES> = {
-  math: MathItem<N<DOM>, T<DOM>, D<DOM>>;
-  document: MathDocument<N<DOM>, T<DOM>, D<DOM>>;
+  math: MathItem<DOM>;
+  document: MathDocument<DOM>;
   data: U;
 };
+
+/**
+ * A fulter function itself
+ */
 export type FilterFunction<T, D extends DOM_TYPES> = (
   arg: FilterData<T, D>
 ) => boolean | void;
+
+/**
+ * A filter function or one with a priority
+ */
 export type FilterFunctionDef<T, D extends DOM_TYPES> =
   FilterFunction<T, D> | [FilterFunction<T, D>, number];
+
+/**
+ * A list of filter function definitions
+ */
 export type FilterFunctionList<T, D extends DOM_TYPES> = FilterFunctionDef<
   T,
   D
 >[];
+
+/**
+ * A FunctionList of filter functions
+ */
 export type FilterFunctions<T, D extends DOM_TYPES> = FunctionList<
   FilterFunction<T, D>
 >;

@@ -22,13 +22,14 @@
  */
 
 import { AbstractMathList } from '../../core/MathList.js';
+import { DOM_TYPES } from '../../types/Types.js';
 
 /*****************************************************************/
 /**
  *  Implement the HTMLMathList class (extends AbstractMathList)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class HTMLMathList<N, T, D> extends AbstractMathList<N, T, D> {}
+export class HTMLMathList<
+  DOM extends DOM_TYPES,
+> extends AbstractMathList<DOM> {}

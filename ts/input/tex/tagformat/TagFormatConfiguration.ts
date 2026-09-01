@@ -23,7 +23,7 @@
 
 import { ConfigurationType } from '../HandlerTypes.js';
 import { Configuration, ParserConfiguration } from '../Configuration.js';
-import { TeX } from '../../tex.js';
+import { TEX } from '../../tex.js';
 import { AbstractTags as _AbstractTags, TagsFactory } from '../Tags.js';
 
 /**
@@ -37,12 +37,9 @@ let tagID = 0;
  * to control the formatting of the tags
  *
  * @param {Configuration} config   The configuration for the input jax
- * @param {TeX} jax                The TeX input jax
+ * @param {TEX} jax                The TeX input jax
  */
-export function tagformatConfig(
-  config: ParserConfiguration,
-  jax: TeX<any, any, any>
-) {
+export function tagformatConfig(config: ParserConfiguration, jax: TEX) {
   /**
    * If the tag format is being added by one of the other extensions,
    *   as is done for the 'ams' tags, make sure it is defined so we can create it.

@@ -26,30 +26,29 @@ import { SvgWrapperFactory } from '../WrapperFactory.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMerror } from '../../../core/MmlTree/MmlNodes/merror.js';
 import { StyleJson } from '../../../util/StyleJson.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMerror interface for the Svg merror wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMerrorNTD<N, T, D> extends SvgWrapper<N, T, D> {}
+export interface SvgMerrorNTD<DOM extends DOM_TYPES> extends SvgWrapper<DOM> {}
 
 /**
  * The SvgMerrorClass interface for the SVG merror wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMerrorClass<N, T, D> extends SvgWrapperClass<N, T, D> {
+export interface SvgMerrorClass<
+  DOM extends DOM_TYPES,
+> extends SvgWrapperClass<DOM> {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMerrorNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMerrorNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -57,53 +56,48 @@ export interface SvgMerrorClass<N, T, D> extends SvgWrapperClass<N, T, D> {
 /**
  * The SvgMerror wrapper class for the MmlMerror class
  */
-export const SvgMerror = (function <N, T, D>(): SvgMerrorClass<N, T, D> {
-  return class SvgMerror
-    extends SvgWrapper<N, T, D>
-    implements SvgMerrorNTD<N, T, D>
-  {
-    /**
-     * @override
-     */
-    public static kind = MmlMerror.prototype.kind;
+export class SvgMerror extends SvgWrapper<DOM> implements SvgMerrorNTD<DOM> {
+  /**
+   * @override
+   */
+  public static kind = MmlMerror.prototype.kind;
 
-    /**
-     * @override
-     */
-    public static styles: StyleJson = {
-      'g[data-mml-node="merror"] > g': {
-        fill: 'red',
-        stroke: 'red',
-      },
-      'g[data-mml-node="merror"] > rect[data-background]': {
-        fill: 'yellow',
-        stroke: 'none',
-      },
-    };
+  /**
+   * @override
+   */
+  public static styles: StyleJson = {
+    'g[data-mml-node="merror"] > g': {
+      fill: 'red',
+      stroke: 'red',
+    },
+    'g[data-mml-node="merror"] > rect[data-background]': {
+      fill: 'yellow',
+      stroke: 'none',
+    },
+  };
 
-    /**
-     * @override
-     */
-    public toSVG(parents: N[]) {
-      const svg = this.standardSvgNodes(parents);
-      const { h, d, w } = this.getBBox();
+  /**
+   * @override
+   */
+  public toSVG(parents: N<DOM>[]) {
+    const svg = this.standardSvgNodes(parents);
+    const { h, d, w } = this.getBBox();
+    this.adaptor.append(
+      this.dom[0],
+      this.svg('rect', {
+        'data-background': true,
+        width: this.fixed(w),
+        height: this.fixed(h + d),
+        y: this.fixed(-d),
+      })
+    );
+    const title = this.node.attributes.get('title') as string;
+    if (title) {
       this.adaptor.append(
         this.dom[0],
-        this.svg('rect', {
-          'data-background': true,
-          width: this.fixed(w),
-          height: this.fixed(h + d),
-          y: this.fixed(-d),
-        })
+        this.svg('title', {}, [this.adaptor.text(title)])
       );
-      const title = this.node.attributes.get('title') as string;
-      if (title) {
-        this.adaptor.append(
-          this.dom[0],
-          this.svg('title', {}, [this.adaptor.text(title)])
-        );
-      }
-      this.addChildren(svg);
     }
-  };
-})<any, any, any>();
+    this.addChildren(svg);
+  }
+}

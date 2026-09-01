@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
 import {
   CommonMn,
   CommonMnClass,
@@ -38,62 +31,47 @@ import {
 } from '../../common/Wrappers/mn.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMn } from '../../../core/MmlTree/MmlNodes/mn.js';
+import { DOM, DOM_TYPES } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlMn interface for the CHTML Mn wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlMnNTD<N, T, D>
+export interface ChtmlMnNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonMn<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {}
 
 /**
  * The ChtmlMnClass interface for the CHTML Mn wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlMnClass<N, T, D>
+export interface ChtmlMnClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonMnClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlMnNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlMnNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -101,29 +79,21 @@ export interface ChtmlMnClass<N, T, D>
 /**
  * The ChtmlMn wrapper class for the MmlMn class
  */
-export const ChtmlMn = (function <N, T, D>(): ChtmlMnClass<N, T, D> {
+export const ChtmlMn = (function (): ChtmlMnClass<DOM> {
   const Base = CommonMnMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlMnClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlMnClass<DOM>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  return class ChtmlMn extends Base implements ChtmlMnNTD<N, T, D> {
+  return class ChtmlMn extends Base implements ChtmlMnNTD<DOM> {
     /**
      * @override
      */
     public static kind = MmlMn.prototype.kind;
   };
-})<any, any, any>();
+})();

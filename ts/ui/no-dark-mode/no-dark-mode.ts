@@ -24,6 +24,7 @@
 import { MathJax } from '../../components/global.js';
 import { MathJaxObject } from '../../components/startup.js';
 import { AbstractHandler } from '../../core/Handler.js';
+import { DOM } from '../../types/Types.js';
 
 [
   [
@@ -47,7 +48,7 @@ import { AbstractHandler } from '../../core/Handler.js';
         'mjx-ignore'
       ] = { ignore: 1 };
       (MathJax as MathJaxObject).startup.extendHandler(
-        (handler: AbstractHandler<any, any, any>) => {
+        (handler: AbstractHandler<DOM>) => {
           delete (handler.documentClass as any).speechStyles[
             '@media (prefers-color-scheme: dark) /* explorer */'
           ];

@@ -41,15 +41,14 @@ export const HFUZZ = 0.07; // overlap for horizontal stretchy glyphs
 /**
  * The extra options allowed in a CharData array
  */
-/* prettier-ignore */
 export interface CharOptions {
-  ic?: number;                  // italic correction value
-  oc?: number;                  // original ic for -tex-mit font
-  sk?: number;                  // skew value
-  dx?: number;                  // offset for combining characters
-  unknown?: boolean;            // true if not found in the given variant
-  smp?: number;                 // Math Alphanumeric codepoint this char is mapped to
-  hd?: [number, number];        // the original height and depth for an extender
+  ic?: number; //                  Italic correction value
+  oc?: number; //                  Original ic for -tex-mit font
+  sk?: number; //                  Skew value
+  dx?: number; //                  Offset for combining characters
+  unknown?: boolean; //            True if not found in the given variant
+  smp?: number; //                 Math Alphanumeric codepoint this char is mapped to
+  hd?: [number, number]; //        The original height and depth for an extender
 }
 
 /****************************************************************************/
@@ -135,22 +134,21 @@ export type CssFontMap = {
 /**
  * Data needed for stretchy vertical and horizontal characters
  */
-/* prettier-ignore */
 export type DelimiterData = {
-  dir: string;          // vertical or horizontal direction
-  sizes?: number[];     // Array of fixed sizes for this character
-  variants?: number[];  // The variants in which the different sizes can be found (if not the default)
-  schar?: number[];     // The character number to use for each size (if different from the default)
-  stretch?: number[];   // The unicode code points for the parts of multi-character versions [beg, ext, end, mid?]
-  stretchv?: number[];  // the variants to use for the stretchy characters (index into variant name array)
-  HDW?: number[];       // [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
-                        //            for horizontal, h and d are the multi-character ones, w is for the normal size).
-  hd?: number[];        // The extender's original [h, d] values
-  ext?: number;         // The extenders left- plus right-bearing
-  min?: number;         // The minimum size a multi-character version can be
-  c?: number;           // The character number (for aliased delimiters)
-  fullExt?: [number, number]  // When present, extenders must be full sized, and the first number is
-                              //   the size of the extender, while the second is the total size of the ends
+  dir: string; //          Vertical or horizontal direction
+  sizes?: number[]; //     Array of fixed sizes for this character
+  variants?: number[]; //  The variants in which the different sizes can be found (if not the default)
+  schar?: number[]; //     The character number to use for each size (if different from the default)
+  stretch?: number[]; //   The unicode code points for the parts of multi-character versions [beg, ext, end, mid?]
+  stretchv?: number[]; //  The variants to use for the stretchy characters (index into variant name array)
+  HDW?: number[]; //       [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
+  //                                  For horizontal, h and d are the multi-character ones, w is for the normal size).
+  hd?: number[]; //        The extender's original [h, d] values
+  ext?: number; //         The extenders left- plus right-bearing
+  min?: number; //         The minimum size a multi-character version can be
+  c?: number; //           The character number (for aliased delimiters)
+  fullExt?: [number, number]; //  When present, extenders must be full sized, and the first number is
+  //                              The size of the extender, while the second is the total size of the ends
 };
 
 /**
@@ -286,15 +284,14 @@ export type DynamicFileDef = [string, DynamicVariants, DynamicRanges?];
 /**
  * Data stored about a dynamic font
  */
-/* prettier-ignore */
 export type DynamicFile = {
-  extension: string;              // name of the extension for this file (or blank)
-  file: string;                   // file containing the character data
-  variants: DynamicVariants;      // characters in each variant in the file
-  delimiters: DynamicRanges;      // delimiters in the file
-  setup: DynamicSetup;            // setup function to call to add the characters to the font
-  promise: Promise<void>;         // promise for when the file is loaded
-  failed: boolean;                // true when loading has failed
+  extension: string; //              Name of the extension for this file (or blank)
+  file: string; //                   File containing the character data
+  variants: DynamicVariants; //      Characters in each variant in the file
+  delimiters: DynamicRanges; //      Delimiters in the file
+  setup: DynamicSetup; //            Setup function to call to add the characters to the font
+  promise: Promise<void>; //         Promise for when the file is loaded
+  failed: boolean; //                True when loading has failed
 };
 
 /**
@@ -514,88 +511,83 @@ export class FontData<
   /**
    * Character ranges to remap into Math Alphanumerics
    */
-  /* prettier-ignore */
   public static SmpRanges = [
-    [0, 0x41, 0x5A],   // Upper-case alpha
-    [1, 0x61, 0x7A],   // Lower-case alpha
-    [2, 0x391, 0x3A9], // Upper-case Greek
-    [3, 0x3B1, 0x3C9], // Lower-case Greek
-    [4, 0x30, 0x39]    // Numbers
+    [0, 0x41, 0x5a], //   Upper-case alpha
+    [1, 0x61, 0x7a], //   Lower-case alpha
+    [2, 0x391, 0x3a9], // Upper-case Greek
+    [3, 0x3b1, 0x3c9], // Lower-case Greek
+    [4, 0x30, 0x39], //   Numbers
   ];
 
   /**
    * Characters to map back to other Unicode positions
    * (holes in the Math Alphanumeric ranges)
    */
-  /* prettier-ignore */
   public static SmpRemap: SmpMap = {
-    0x1D455: 0x210E,   // PLANCK CONSTANT
-    0x1D49D: 0x212C,   // SCRIPT CAPITAL B
-    0x1D4A0: 0x2130,   // SCRIPT CAPITAL E
-    0x1D4A1: 0x2131,   // SCRIPT CAPITAL F
-    0x1D4A3: 0x210B,   // SCRIPT CAPITAL H
-    0x1D4A4: 0x2110,   // SCRIPT CAPITAL I
-    0x1D4A7: 0x2112,   // SCRIPT CAPITAL L
-    0x1D4A8: 0x2133,   // SCRIPT CAPITAL M
-    0x1D4AD: 0x211B,   // SCRIPT CAPITAL R
-    0x1D4BA: 0x212F,   // SCRIPT SMALL E
-    0x1D4BC: 0x210A,   // SCRIPT SMALL G
-    0x1D4C4: 0x2134,   // SCRIPT SMALL O
-    0x1D506: 0x212D,   // BLACK-LETTER CAPITAL C
-    0x1D50B: 0x210C,   // BLACK-LETTER CAPITAL H
-    0x1D50C: 0x2111,   // BLACK-LETTER CAPITAL I
-    0x1D515: 0x211C,   // BLACK-LETTER CAPITAL R
-    0x1D51D: 0x2128,   // BLACK-LETTER CAPITAL Z
-    0x1D53A: 0x2102,   // DOUBLE-STRUCK CAPITAL C
-    0x1D53F: 0x210D,   // DOUBLE-STRUCK CAPITAL H
-    0x1D545: 0x2115,   // DOUBLE-STRUCK CAPITAL N
-    0x1D547: 0x2119,   // DOUBLE-STRUCK CAPITAL P
-    0x1D548: 0x211A,   // DOUBLE-STRUCK CAPITAL Q
-    0x1D549: 0x211D,   // DOUBLE-STRUCK CAPITAL R
-    0x1D551: 0x2124,   // DOUBLE-STRUCK CAPITAL Z
+    0x1d455: 0x210e, //   Planck CONSTANT
+    0x1d49d: 0x212c, //   Script CAPITAL B
+    0x1d4a0: 0x2130, //   Script CAPITAL E
+    0x1d4a1: 0x2131, //   Script CAPITAL F
+    0x1d4a3: 0x210b, //   Script CAPITAL H
+    0x1d4a4: 0x2110, //   Script CAPITAL I
+    0x1d4a7: 0x2112, //   Script CAPITAL L
+    0x1d4a8: 0x2133, //   Script CAPITAL M
+    0x1d4ad: 0x211b, //   Script CAPITAL R
+    0x1d4ba: 0x212f, //   Script SMALL E
+    0x1d4bc: 0x210a, //   Script SMALL G
+    0x1d4c4: 0x2134, //   Script SMALL O
+    0x1d506: 0x212d, //   Black-LETTER CAPITAL C
+    0x1d50b: 0x210c, //   Black-LETTER CAPITAL H
+    0x1d50c: 0x2111, //   Black-LETTER CAPITAL I
+    0x1d515: 0x211c, //   Black-LETTER CAPITAL R
+    0x1d51d: 0x2128, //   Black-LETTER CAPITAL Z
+    0x1d53a: 0x2102, //   Double-STRUCK CAPITAL C
+    0x1d53f: 0x210d, //   Double-STRUCK CAPITAL H
+    0x1d545: 0x2115, //   Double-STRUCK CAPITAL N
+    0x1d547: 0x2119, //   Double-STRUCK CAPITAL P
+    0x1d548: 0x211a, //   Double-STRUCK CAPITAL Q
+    0x1d549: 0x211d, //   Double-STRUCK CAPITAL R
+    0x1d551: 0x2124, //   Double-STRUCK CAPITAL Z
   };
 
   /**
    * Greek upper-case variants
    */
-  /* prettier-ignore */
   public static SmpRemapGreekU: SmpMap = {
-    0x2207: 0x19,  // nabla
-    0x03F4: 0x11   // theta symbol
+    0x2207: 0x19, //  Nabla
+    0x03f4: 0x11, //   Theta symbol
   };
 
   /**
    * Greek lower-case variants
    */
-  /* prettier-ignore */
   public static SmpRemapGreekL: SmpMap = {
-    0x3D1: 0x1B,  // theta symbol
-    0x3D5: 0x1D,  // phi symbol
-    0x3D6: 0x1F,  // omega symbol
-    0x3F0: 0x1C,  // kappa symbol
-    0x3F1: 0x1E,  // rho symbol
-    0x3F5: 0x1A,  // lunate epsilon symbol
-    0x2202: 0x19  // partial differential
+    0x3d1: 0x1b, //   theta symbol
+    0x3d5: 0x1d, //   phi symbol
+    0x3d6: 0x1f, //   omega symbol
+    0x3f0: 0x1c, //   kappa symbol
+    0x3f1: 0x1e, //   rho symbol
+    0x3f5: 0x1a, //   lunate epsilon symbol
+    0x2202: 0x19, //  partial differential
   };
 
   /**
    *  The default remappings
    */
-  /* prettier-ignore */
   public static defaultAccentMap: RemapMap = {
-    0x005E: '\u02C6',  // hat
-    0x007E: '\u02DC',  // tilde
-    0x0300: '\u02CB',  // grave accent
-    0x0301: '\u02CA',  // acute accent
-    0x0302: '\u02C6',  // curcumflex
-    0x0303: '\u02DC',  // tilde accent
-    0x0304: '\u02C9',  // macron
-    0x0306: '\u02D8',  // breve
-    0x0307: '\u02D9',  // dot
-    0x0308: '\u00A8',  // diaresis
-    0x030A: '\u02DA',  // ring above
-    0x030C: '\u02C7',  // caron
-    0x2192: '\u20D7'
+    0x005e: '\u02C6', //  Hat
+    0x007e: '\u02DC', //  Tilde
+    0x0300: '\u02CB', //  Grave accent
+    0x0301: '\u02CA', //  Acute accent
+    0x0302: '\u02C6', //  Curcumflex
+    0x0303: '\u02DC', //  Tilde accent
+    0x0304: '\u02C9', //  Macron
+    0x0306: '\u02D8', //  Breve
+    0x0307: '\u02D9', //  Dot
+    0x0308: '\u00A8', //  Diaresis
+    0x030a: '\u02DA', //  Ring above
+    0x030c: '\u02C7', //  Caron
+    0x2192: '\u20D7', //  Vector
   };
 
   /**
@@ -648,11 +640,11 @@ export class FontData<
     delimiterfactor:     901,
     delimitershortfall:   .3,
 
-    rule_factor:         1.25,     // multiply surd_height and rule_thickness by this for CHTML
-    min_rule_thickness:  1.25,     // in pixels
-    separation_factor:   1.75,     // expansion factor for spacing e.g. between accents and base
-    extra_ic:            .033,     // extra spacing for scripts (compensate for not having actual ic values)
-    extender_factor:     .333      // factor to adjust between full stretchy height/depth and extender height/depth
+    rule_factor:         1.25, //     Multiply surd_height and rule_thickness by this for CHTML
+    min_rule_thickness:  1.25, //     In pixels
+    separation_factor:   1.75, //     Expansion factor for spacing e.g. between accents and base
+    extra_ic:            .033, //     Extra spacing for scripts (compensate for not having actual ic values)
+    extender_factor:     .333, //     Factor to adjust between full stretchy height/depth and extender height/depth
   };
 
   /**
@@ -753,8 +745,8 @@ export class FontData<
   }
 
   /**
-   * @param {CharMap} font   The font to check
-   * @param {number} n       The character to get options for
+   * @param {CharMap} font    The font to check
+   * @param {number} n        The character to get options for
    * @returns {CharOptions}   The options for the character
    */
   public static charOptions(
@@ -778,8 +770,8 @@ export class FontData<
   /**
    * Define the dynamic file information.
    *
-   * @param {DynamicFileDef[]} dynamicFiles   The definitions to make
-   * @param {string} extension                The name of the extension for this file (or empty)
+   * @param {DynamicFileDef[]} dynamicFiles    The definitions to make
+   * @param {string} extension                 The name of the extension for this file (or empty)
    * @returns {DynamicFileList}                The object of dynamic file data
    */
   public static defineDynamicFiles(
@@ -806,11 +798,12 @@ export class FontData<
   /**
    * Create the setup function for a given dynamically loaded file
    *
-   * @param {string} extension      The name of the font extension for this file
-   * @param {string} file           The file being loaded
-   * @param {CharMapMap} variants   The character data to be added
-   * @param {DelimiterMap} delimiters The delimiter data to be added
-   * @param {string[]} fonts        The fonts to add CSS to
+   * @param {string} extension          The name of the font extension for this file
+   * @param {string} file               The file being loaded
+   * @param {CharMapMap} variants       The character data to be added
+   * @param {DelimiterMap} delimiters   The delimiter data to be added
+   * @param {string[]} fonts            The fonts to add CSS to
+   *
    * @template C  The CharOptions type
    * @template D  The DelimiterData type
    */
@@ -968,7 +961,7 @@ export class FontData<
    *
    * @param {FontExtensionData} data    The data for the font extension to merge into this font.
    * @param {string} prefix             The [prefix] to add to all component names
-   * @returns {string[]}                 The new CSS rules needed for this extension
+   * @returns {string[]}                The new CSS rules needed for this extension
    */
   public addExtension(
     data: FontExtensionData<C, D>,
@@ -1063,7 +1056,7 @@ export class FontData<
    * @param {string} name     The new variant to create
    * @param {string} inherit  The variant to use if a character is not in this one
    * @param {string} link     A variant to search before the inherit one (but only
-   *                           its top-level object).
+   *                          its top-level object).
    */
   public createVariant(
     name: string,
@@ -1089,8 +1082,8 @@ export class FontData<
    * Create the mapping from Basic Latin and Greek blocks to
    * the Math Alphanumeric block for a given variant.
    *
-   * @param {CharMap<C>} chars The character mapping to fill.
-   * @param {string} name The new variant name.
+   * @param {CharMap<C>} chars   The character mapping to fill.
+   * @param {string} name        The new variant name.
    */
   protected remapSmpChars(chars: CharMap<C>, name: string) {
     const CLASS = this.CLASS;
@@ -1122,7 +1115,7 @@ export class FontData<
   }
 
   /**
-   * @param {number} n           Math Alphanumerics position for this remapping
+   * @param {number} n            Math Alphanumerics position for this remapping
    * @returns {CharDataArray<C>}  The character data for the remapping
    */
   protected smpChar(n: number): CharDataArray<C> {
@@ -1133,7 +1126,7 @@ export class FontData<
    * Create a collection of variants
    *
    * @param {string[][]} variants  Array of [name, inherit?, link?] values for
-   *                              the variants to define
+   *                               the variants to define
    */
   public createVariants(variants: string[][]) {
     for (const variant of variants) {
@@ -1219,7 +1212,7 @@ export class FontData<
    *
    * @param {DynamicRanges} ranges   The ranges to be flattened
    * @param {DynamicFile} dynamic    The DynamicFile to tie to the ranges
-   * @returns {DynamicCharMap}        The map from character positions to dynamic file
+   * @returns {DynamicCharMap}       The map from character positions to dynamic file
    */
   protected flattenRanges(
     ranges: DynamicRanges,
@@ -1240,7 +1233,7 @@ export class FontData<
 
   /**
    * @param {DynamicFile} dynamic    The data for the dynamic file
-   * @returns {string}                The prefixed name for the file
+   * @returns {string}               The prefixed name for the file
    */
   protected dynamicFileName(dynamic: DynamicFile): string {
     const prefix = !dynamic.extension
@@ -1256,7 +1249,7 @@ export class FontData<
    *   and do any associated setup that needs access to the FontData instance.
    *
    * @param {DynamicFile} dynamic   The data for the file to load
-   * @returns {Promise<void>}        The promise that is resolved when the file is loaded
+   * @returns {Promise<void>}       The promise that is resolved when the file is loaded
    */
   public async loadDynamicFile(dynamic: DynamicFile): Promise<void> {
     if (dynamic.failed) {
@@ -1352,8 +1345,8 @@ export class FontData<
   public addDynamicFontCss(_fonts: string[], _root?: string) {}
 
   /**
-   * @param {number} n  The delimiter character number whose data is desired
-   * @returns {DelimiterData}  The data for that delimiter (or undefined)
+   * @param {number} n          The delimiter character number whose data is desired
+   * @returns {DelimiterData}   The data for that delimiter (or undefined)
    */
   public getDelimiter(n: number): DelimiterData {
     const delim = this.delimiters[n];
@@ -1370,8 +1363,8 @@ export class FontData<
   }
 
   /**
-   * @param {number} n  The delimiter character number whose variant is needed
-   * @param {number} i  The index in the size array of the size whose variant is needed
+   * @param {number} n   The delimiter character number whose variant is needed
+   * @param {number} i   The index in the size array of the size whose variant is needed
    * @returns {string}   The variant of the i-th size for delimiter n
    */
   public getSizeVariant(n: number, i: number): string {
@@ -1383,8 +1376,8 @@ export class FontData<
   }
 
   /**
-   * @param {number} n  The delimiter character number whose variant is needed
-   * @param {number} i  The index in the stretch array of the part whose variant is needed
+   * @param {number} n   The delimiter character number whose variant is needed
+   * @param {number} i   The index in the stretch array of the part whose variant is needed
    * @returns {string}   The variant of the i-th part for delimiter n
    */
   public getStretchVariant(n: number, i: number): string {
@@ -1393,7 +1386,7 @@ export class FontData<
   }
 
   /**
-   * @param {number} n   The delimiter character number whose variants are needed
+   * @param {number} n    The delimiter character number whose variants are needed
    * @returns {string[]}  The variants for the parts of the delimiter
    */
   public getStretchVariants(n: number): string[] {
@@ -1403,7 +1396,7 @@ export class FontData<
   /**
    * @param {string} name       The variant whose character data is being querried
    * @param {number} n          The unicode number for the character to be found
-   * @returns {CharDataArray}    The data for the given character (or undefined)
+   * @returns {CharDataArray}   The data for the given character (or undefined)
    */
   public getChar(name: string, n: number): CharDataArray<C> {
     const char = this.variant[name].chars[n];
@@ -1437,7 +1430,7 @@ export class FontData<
 
   /**
    * @param {string} name   The name of the variant whose data is to be obtained
-   * @returns {V}            The data for the requested variant (or undefined)
+   * @returns {V}           The data for the requested variant (or undefined)
    */
   public getVariant(name: string): V {
     return this.variant[name];
@@ -1445,7 +1438,7 @@ export class FontData<
 
   /**
    * @param {string} variant   The name of the variant whose data is to be obtained
-   * @returns {CssFontData}     The CSS data for the requested variant
+   * @returns {CssFontData}    The CSS data for the requested variant
    */
   public getCssFont(variant: string): CssFontData {
     return this.cssFontMap[variant] || ['serif', false, false];
@@ -1453,7 +1446,7 @@ export class FontData<
 
   /**
    * @param {string} family   The font camily to use
-   * @returns {string}         The family with the css prefix
+   * @returns {string}        The family with the css prefix
    */
   public getFamily(family: string): string {
     return this.cssFamilyPrefix ? this.cssFamilyPrefix + ', ' + family : family;
@@ -1462,7 +1455,7 @@ export class FontData<
   /**
    * @param {string} name   The name of the map to query
    * @param {number} c      The character to remap
-   * @returns {string}       The remapped character (or the original)
+   * @returns {string}      The remapped character (or the original)
    */
   public getRemappedChar(name: string, c: number): string {
     const map = this.remapChars[name] || ({} as RemapMap);

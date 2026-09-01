@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonMmultiscripts,
   CommonMmultiscriptsClass,
@@ -40,6 +33,7 @@ import { SvgMsubsup, SvgMsubsupNTD, SvgMsubsupClass } from './msubsup.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMmultiscripts } from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';
 import { split } from '../../../util/string.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 
@@ -70,95 +64,63 @@ export function AlignX(align: string): AlignFunction {
 /**
  * The SvgMmultiscripts interface for the SVG Mmultiscripts wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMmultiscriptsNTD<N, T, D>
+export interface SvgMmultiscriptsNTD<DOM extends DOM_TYPES>
   extends
-    SvgMsubsupNTD<N, T, D>,
+    SvgMsubsupNTD<DOM>,
     CommonMmultiscripts<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMmultiscriptsClass interface for the SVG Mmultiscripts wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMmultiscriptsClass<N, T, D>
+export interface SvgMmultiscriptsClass<DOM extends DOM_TYPES>
   extends
-    SvgMsubsupClass<N, T, D>,
+    SvgMsubsupClass<DOM>,
     CommonMmultiscriptsClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMmultiscriptsNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMmultiscriptsNTD<DOM>;
 }
 
 /*****************************************************************/
 
 /**
  * The SvgMmultiscripts wrapper class for the MmlMmultiscripts class
- *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  */
-export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
-  N,
-  T,
-  D
-> {
+export const SvgMmultiscripts = (function (): SvgMmultiscriptsClass<DOM> {
   const Base = CommonMmultiscriptsMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMmultiscriptsClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMmultiscriptsClass<DOM>
   >(SvgMsubsup);
 
   return class SvgMmultiscripts
-    // @ts-expect-error Avoid message about base constructors not having the
-    // same type (they should both be SvgWrapper<N, T, D>, but are thought of as
-    // different by typescript)
+    // @ts-expect-error Avoid message about base constructors not having the same type
     extends Base
-    implements SvgMmultiscriptsNTD<N, T, D>
+    implements SvgMmultiscriptsNTD<DOM>
   {
     /**
      * @override
@@ -168,7 +130,7 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       if (this.toEmbellishedSVG(parents)) return;
       const svg = this.standardSvgNodes(parents);
       const data = this.scriptData;
@@ -224,7 +186,7 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
      * @returns {number}        The right-hand offset of the scripts
      */
     protected addScripts(
-      svg: N,
+      svg: N<DOM>,
       x: number,
       u: number,
       v: number,
@@ -234,8 +196,8 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
     ): number {
       const adaptor = this.adaptor;
       const alignX = AlignX(align);
-      const supRow = adaptor.append(svg, this.svg('g')) as N;
-      const subRow = adaptor.append(svg, this.svg('g')) as N;
+      const supRow = adaptor.append(svg, this.svg('g')) as N<DOM>;
+      const subRow = adaptor.append(svg, this.svg('g')) as N<DOM>;
       this.place(x, u, supRow);
       this.place(x, v, subRow);
       const m = i + 2 * n;
@@ -254,4 +216,4 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
       return x + dx;
     }
   };
-})<any, any, any>();
+})();

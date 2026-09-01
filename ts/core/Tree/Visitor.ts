@@ -56,8 +56,8 @@ export interface Visitor<N extends VisitorNode<N>> {
   /**
    * Visit the tree rooted at the given node (passing along any needed parameters)
    *
-   * @param {N} tree      The node that is the root of the tree
-   * @param {any[]} args  The arguments to pass to the visitNode functions
+   * @param {N} tree       The node that is the root of the tree
+   * @param {any[]} args   The arguments to pass to the visitNode functions
    * @returns {any}        Whatever the visitNode function returns for the root tree node
    */
   visitTree(tree: N, ...args: any[]): any;
@@ -66,8 +66,8 @@ export interface Visitor<N extends VisitorNode<N>> {
    * Visit a node by calling the visitor function for the given type of node
    *  (passing along any needed parameters)
    *
-   * @param {N} node      The node to visit
-   * @param {any[]} args  The arguments to pass to the visitor function for this node
+   * @param {N} node       The node to visit
+   * @param {any[]} args   The arguments to pass to the visitor function for this node
    * @returns {any}        Whatever the visitor function returns for this node
    */
   visitNode(node: N, ...args: any[]): any;
@@ -75,8 +75,8 @@ export interface Visitor<N extends VisitorNode<N>> {
   /**
    * The default visitor function for when no node-specific function is defined
    *
-   * @param {N} node      The node to visit
-   * @param {any[]} args  The arguments to pass to the visitor function for this node
+   * @param {N} node       The node to visit
+   * @param {any[]} args   The arguments to pass to the visitor function for this node
    * @returns {any}        Whatever the visitor function returns for this node
    */
   visitDefault(node: N, ...args: any[]): any;
@@ -121,8 +121,8 @@ export abstract class AbstractVisitor<
    *  Visitor functions are named "visitKindNode" where "Kind" is replaced by
    *    the node kind; e.g., visitTextNode for kind = text.
    *
-   *  @param {string} kind  The node kind whose method name is needed
-   *  @returns {string}  The name of the visitor method for the given node kind
+   *  @param {string} kind   The node kind whose method name is needed
+   *  @returns {string}      The name of the visitor method for the given node kind
    */
   protected static methodName(kind: string): string {
     return (

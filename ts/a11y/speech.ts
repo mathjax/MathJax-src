@@ -40,7 +40,7 @@ import { GeneratorPool } from './speech/GeneratorPool.js';
 import { WorkerHandler } from './speech/WebWorker.js';
 import { sreRoot } from '#root/sre-root.js';
 import { localize } from './speech/__locales__/Component.js';
-import { DOM, DOM_TYPES, N, T, D, Constructor } from '../types/Types.js';
+import { DOM, DOM_TYPES, Constructor } from '../types/Types.js';
 
 /*==========================================================================*/
 
@@ -54,25 +54,25 @@ newState('ATTACHSPEECH', STATE.INSERTED + 10);
 /**
  * The functions added to MathItem for enrichment
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SpeechMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
+export interface SpeechMathItem<
+  DOM extends DOM_TYPES,
+> extends EnrichedMathItem<DOM> {
   /**
    * The speech generators for this math item.
    */
-  generatorPool: GeneratorPool<N, T, D>;
+  generatorPool: GeneratorPool<DOM>;
 
   /**
    * @param {MathDocument} document  The document where speech is added
    */
-  attachSpeech(document: MathDocument<N, T, D>): void;
+  attachSpeech(document: MathDocument<DOM>): void;
 
   /**
    * @param {MathDocument} document The MathDocument for the MathItem
    */
-  detachSpeech(document: MathDocument<N, T, D>): void;
+  detachSpeech(document: MathDocument<DOM>): void;
 
   /**
    * @param {string} mml The MathML whose speech is needed.
@@ -87,29 +87,25 @@ export interface SpeechMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
  * @param {B} EnrichedMathItem     The MathItem class to be extended
  * @returns {SpeechMathItem}  The enriched MathItem class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template B  The MathItem class to extend
+ * @template DOM   The DOM node types
+ * @template B     The MathItem class to extend
  */
 export function SpeechMathItemMixin<
-  N,
-  T,
-  D,
-  B extends Constructor<EnrichedMathItem<N, T, D>>,
->(EnrichedMathItem: B): Constructor<SpeechMathItem<N, T, D>> & B {
+  DOM extends DOM_TYPES,
+  B extends Constructor<EnrichedMathItem<DOM>>,
+>(EnrichedMathItem: B): Constructor<SpeechMathItem<DOM>> & B {
   return class extends EnrichedMathItem {
     /**
      * @override
      */
-    public generatorPool = new GeneratorPool<N, T, D>();
+    public generatorPool = new GeneratorPool<DOM>();
 
     /**
      * Attaches the aria labels for speech and braille.
      *
      * @param {MathDocument} document   The MathDocument for the MathItem
      */
-    public attachSpeech(document: SpeechMathDocument<N, T, D>) {
+    public attachSpeech(document: SpeechMathDocument<DOM>) {
       this.outputData.speechPromise = null;
       if (this.state() >= STATE.ATTACHSPEECH) return;
       this.state(STATE.ATTACHSPEECH);
@@ -137,7 +133,7 @@ export function SpeechMathItemMixin<
     /**
      * @param {SpeechMathDocument} document  The MathDocument for the MathItem
      */
-    public detachSpeech(document: SpeechMathDocument<N, T, D>) {
+    public detachSpeech(document: SpeechMathDocument<DOM>) {
       document.webworker.Detach(this);
     }
 
@@ -177,8 +173,8 @@ export type OPTIONS<DOM extends DOM_TYPES> = {
   enableSpeech: boolean;
   enableBraille: boolean;
   speechError: (
-    doc: SpeechMathDocument<N<DOM>, T<DOM>, D<DOM>>,
-    math: SpeechMathItem<N<DOM>, T<DOM>, D<DOM>>,
+    doc: SpeechMathDocument<DOM>,
+    math: SpeechMathItem<DOM>,
     err: string
   ) => void;
   worker: {
@@ -201,7 +197,7 @@ export type A11Y_OPTIONS = {
  */
 export interface SPEECH_OPTIONS<DOM extends DOM_TYPES>
   extends OPTIONS<DOM>, A11Y_OPTIONS, ENRICH_OPTIONS<DOM> {
-  MathItem: Constructor<SpeechMathItem<N<DOM>, T<DOM>, D<DOM>>>;
+  MathItem: Constructor<SpeechMathItem<DOM>>;
 }
 
 /**
@@ -224,24 +220,20 @@ const options: OPTIONS<DOM> = {
 /**
  * The functions added to MathDocument for enrichment
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SpeechMathDocument<N, T, D> extends EnrichedMathDocument<
-  N,
-  T,
-  D
-> {
+export interface SpeechMathDocument<
+  DOM extends DOM_TYPES,
+> extends EnrichedMathDocument<DOM> {
   /**
    * @override
    */
-  options: SPEECH_OPTIONS<DOM<N, T, D>>;
+  options: SPEECH_OPTIONS<DOM>;
 
   /**
    * The webworker handler for the document
    */
-  webworker: WorkerHandler<N, T, D>;
+  webworker: WorkerHandler<DOM>;
 
   /**
    * Attach speech to the MathItems in the MathDocument
@@ -256,8 +248,8 @@ export interface SpeechMathDocument<N, T, D> extends EnrichedMathDocument<
    * @param {string} err               The error message being processed
    */
   speechError(
-    doc: SpeechMathDocument<N, T, D>,
-    math: SpeechMathItem<N, T, D>,
+    doc: SpeechMathDocument<DOM>,
+    math: SpeechMathItem<DOM>,
     err: string
   ): void;
 
@@ -273,22 +265,15 @@ export interface SpeechMathDocument<N, T, D> extends EnrichedMathDocument<
  * @param {B} EnrichedMathDocument The MathDocument class to be extended
  * @returns {SpeechMathDocument}  The enriched MathDocument class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template B  The MathDocument class to extend
+ * @template DOM   The DOM node types
+ * @template B     The MathDocument class to extend
  */
 export function SpeechMathDocumentMixin<
-  N,
-  T,
-  D,
-  B extends MathDocumentConstructor<
-    EnrichedMathDocument<N, T, D>,
-    DOM<N, T, D>
-  >,
+  DOM extends DOM_TYPES,
+  B extends MathDocumentConstructor<EnrichedMathDocument<DOM>, DOM>,
 >(
   EnrichedMathDocument: B
-): MathDocumentConstructor<SpeechMathDocument<N, T, D>, DOM<N, T, D>> & B {
+): MathDocumentConstructor<SpeechMathDocument<DOM>, DOM> & B {
   return class extends EnrichedMathDocument {
     /**
      * @override
@@ -296,7 +281,7 @@ export function SpeechMathDocumentMixin<
     public static OPTIONS = {
       ...EnrichedMathDocument.OPTIONS,
       ...options,
-      renderActions: expandable<RenderActions<N, T, D>>({
+      renderActions: expandable<RenderActions<DOM>>({
         ...EnrichedMathDocument.OPTIONS.renderActions,
         attachSpeech: [STATE.ATTACHSPEECH],
       }),
@@ -309,12 +294,12 @@ export function SpeechMathDocumentMixin<
     /**
      * @override
      */
-    public options: SPEECH_OPTIONS<DOM<N, T, D>>;
+    public options: SPEECH_OPTIONS<DOM>;
 
     /**
      * The webworker handler for the document
      */
-    public webworker: WorkerHandler<N, T, D> = null;
+    public webworker: WorkerHandler<DOM> = null;
 
     /**
      * Enrich the MathItem class used for this MathDocument, and create the
@@ -331,10 +316,8 @@ export function SpeechMathDocumentMixin<
         ProcessBits.allocate('attach-speech');
       }
       this.options.MathItem = SpeechMathItemMixin<
-        N,
-        T,
-        D,
-        Constructor<EnrichedMathItem<N, T, D>>
+        DOM,
+        Constructor<EnrichedMathItem<DOM>>
       >(this.options.MathItem);
     }
 
@@ -361,7 +344,7 @@ export function SpeechMathDocumentMixin<
         ) {
           this.getWebworker();
           for (const math of this.math) {
-            (math as SpeechMathItem<N, T, D>).attachSpeech(this);
+            (math as SpeechMathItem<DOM>).attachSpeech(this);
           }
         }
         this.processed.set('attach-speech');
@@ -373,8 +356,8 @@ export function SpeechMathDocumentMixin<
      * @override
      */
     public speechError(
-      _doc: SpeechMathDocument<N, T, D>,
-      _math: SpeechMathItem<N, T, D>,
+      _doc: SpeechMathDocument<DOM>,
+      _math: SpeechMathItem<DOM>,
       err: string
     ) {
       if (err) {
@@ -391,7 +374,7 @@ export function SpeechMathDocumentMixin<
         this.processed.clear('attach-speech');
         if (state >= STATE.TYPESET) {
           for (const math of this.math) {
-            (math as SpeechMathItem<N, T, D>).detachSpeech(this);
+            (math as SpeechMathItem<DOM>).detachSpeech(this);
           }
         }
       }
@@ -417,17 +400,18 @@ export function SpeechMathDocumentMixin<
  * @param {MathML} MmlJax     The MathML input jax to use for reading the enriched MathML
  * @returns {Handler}         The handler that was modified (for purposes of chainging extensions)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export function SpeechHandler<N, T, D>(
-  handler: Handler<N, T, D>,
-  MmlJax: MathML<N, T, D>
-): Handler<N, T, D> {
+export function SpeechHandler<DOM extends DOM_TYPES>(
+  handler: Handler<DOM>,
+  MmlJax: MathML<DOM>
+): Handler<DOM> {
   if (!handler.documentClass.prototype.enrich && MmlJax) {
     handler = EnrichHandler(handler, MmlJax);
   }
-  handler.documentClass = SpeechMathDocumentMixin(handler.documentClass as any);
+  handler.documentClass = SpeechMathDocumentMixin<
+    DOM,
+    MathDocumentConstructor<EnrichedMathDocument<DOM>, DOM>
+  >(handler.documentClass as any);
   return handler;
 }

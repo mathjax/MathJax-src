@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass, StringMap } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
 import {
   CommonMpadded,
   CommonMpaddedClass,
@@ -39,62 +32,47 @@ import {
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMpadded } from '../../../core/MmlTree/MmlNodes/mpadded.js';
 import { StyleJson } from '../../../util/StyleJson.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlMpadded interface for the CHTML Mpadded wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   THe DOM node types
  */
-export interface ChtmlMpaddedNTD<N, T, D>
+export interface ChtmlMpaddedNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonMpadded<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {}
 
 /**
  * The ChtmlMpaddedClass interface for the CHTML Mpadded wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   THe DOM node types
  */
-export interface ChtmlMpaddedClass<N, T, D>
+export interface ChtmlMpaddedClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonMpaddedClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlMpaddedNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlMpaddedNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -102,27 +80,19 @@ export interface ChtmlMpaddedClass<N, T, D>
 /**
  * The ChtmlMpadded wrapper class for the MmlMpadded class
  */
-export const ChtmlMpadded = (function <N, T, D>(): ChtmlMpaddedClass<N, T, D> {
+export const ChtmlMpadded = (function (): ChtmlMpaddedClass<DOM> {
   const Base = CommonMpaddedMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlMpaddedClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlMpaddedClass<DOM>
   >(ChtmlWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  //   type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
-  //   different by typescript)
-  return class ChtmlMpadded extends Base implements ChtmlMpaddedNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class ChtmlMpadded extends Base implements ChtmlMpaddedNTD<DOM> {
     /**
      * @override
      */
@@ -144,10 +114,10 @@ export const ChtmlMpadded = (function <N, T, D>(): ChtmlMpaddedClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
+    public toCHTML(parents: N<DOM>[]) {
       if (this.toEmbellishedCHTML(parents)) return;
       let chtml = this.standardChtmlNodes(parents);
-      const content: N[] = [];
+      const content: N<DOM>[] = [];
       const style: StringMap = {};
       const [, , W, dh, dd, dw, x, y, dx] = this.getDimens();
       //
@@ -188,7 +158,7 @@ export const ChtmlMpadded = (function <N, T, D>(): ChtmlMpaddedClass<N, T, D> {
         this.adaptor.append(
           chtml[0],
           this.html('mjx-block', { style: style }, content)
-        ) as N,
+        ) as N<DOM>,
       ];
       if (this.childNodes[0].childNodes.length) {
         this.childNodes[0].toCHTML([content[0] || chtml[0]]);
@@ -198,4 +168,4 @@ export const ChtmlMpadded = (function <N, T, D>(): ChtmlMpaddedClass<N, T, D> {
       }
     }
   };
-})<any, any, any>();
+})();

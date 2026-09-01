@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
 import {
   CommonMenclose,
   CommonMencloseClass,
@@ -43,6 +36,7 @@ import * as Notation from '../Notation.js';
 import { OptionList } from '../../../util/Options.js';
 import { StyleJson } from '../../../util/StyleJson.js';
 import { em } from '../../../util/lengths.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 
@@ -65,41 +59,33 @@ const ANGLE = Angle(Notation.ARROWDX, Notation.ARROWY);
 /**
  * The ChtmlMenclose interface for the CHTML Menclose wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export interface ChtmlMencloseNTD<N, T, D>
+export interface ChtmlMencloseNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonMenclose<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass,
-      ChtmlMsqrtNTD<N, T, D>
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>,
+      ChtmlMsqrtNTD<DOM>
     > {
   /**
    * @param {N} node   The HTML element whose border width must be
    *                   adjusted if the thickness isn't the default
    * @returns {N}       The adjusted element
    */
-  adjustBorder(node: N): N;
+  adjustBorder(node: N<DOM>): N<DOM>;
 
   /**
    * @param {N} shape   The svg element whose stroke-thickness must be
    *                    adjusted if the thickness isn't the default
    * @returns {N}        The adjusted element
    */
-  adjustThickness(shape: N): N;
+  adjustThickness(shape: N<DOM>): N<DOM>;
 
   /**
    * @param {number} m    A number to be shown with a fixed number of digits
@@ -120,32 +106,24 @@ export interface ChtmlMencloseNTD<N, T, D>
 /**
  * The ChtmlMencloseClass interface for the CHTML Menclose wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export interface ChtmlMencloseClass<N, T, D>
+export interface ChtmlMencloseClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonMencloseClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlMencloseNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlMencloseNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -153,36 +131,22 @@ export interface ChtmlMencloseClass<N, T, D>
 /**
  * The ChtmlMenclose wrapper class for the MmlMenclose class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
-  N,
-  T,
-  D
-> {
+export const ChtmlMenclose = (function (): ChtmlMencloseClass<DOM> {
   const Base = CommonMencloseMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlMsqrtNTD<N, T, D>,
-    ChtmlMencloseClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlMsqrtNTD<DOM>,
+    ChtmlMencloseClass<DOM>
   >(ChtmlWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class ChtmlMenclose extends Base implements ChtmlMencloseNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class ChtmlMenclose extends Base implements ChtmlMencloseNTD<DOM> {
     /**
      * @override
      */
@@ -358,7 +322,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
     /**
      *  @override
      */
-    public static notations: Notation.DefList<ChtmlMencloseNTD<N, T, D>, N> =
+    public static notations: Notation.DefList<ChtmlMencloseNTD<DOM>, N<DOM>> =
       new Map([
         Notation.Border('top'),
         Notation.Border('right'),
@@ -487,11 +451,11 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
               const arc1 = adaptor.append(
                 node.dom[0],
                 node.html('mjx-dbox-top')
-              ) as N;
+              ) as N<DOM>;
               const arc2 = adaptor.append(
                 node.dom[0],
                 node.html('mjx-dbox-bot')
-              ) as N;
+              ) as N<DOM>;
               const t = node.thickness;
               const p = node.padding;
               if (t !== Notation.THICKNESS) {
@@ -543,7 +507,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
             renderChild: true,
           },
         ],
-      ] as Notation.DefPair<ChtmlMencloseNTD<N, T, D>, N>[]);
+      ] as Notation.DefPair<ChtmlMencloseNTD<DOM>, N<DOM>>[]);
 
     /********************************************************/
 
@@ -551,7 +515,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
      * @param {N} arrow          The arrow whose thickness and arrow head is to be adjusted
      * @param {boolean} double   True if the arrow is double-headed
      */
-    protected adjustArrow(arrow: N, double: boolean) {
+    protected adjustArrow(arrow: N<DOM>, double: boolean) {
       const t = this.thickness;
       const head = this.arrowhead;
       if (
@@ -565,7 +529,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
       const a = Angle(head.dx, head.y);
       const [line, rthead, rbhead, lthead, lbhead] = this.adaptor.childNodes(
         arrow
-      ) as N[];
+      ) as N<DOM>[];
       this.adjustHead(rthead, [y, '0', '1px', x], a);
       this.adjustHead(rbhead, ['1px', '0', y, x], '-' + a);
       this.adjustHead(lthead, [y, x, '1px', '0'], '-' + a);
@@ -578,7 +542,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
      * @param {string[]} border   The border sizes [T, R, B, L]
      * @param {string} a          The skew angle for the piece
      */
-    protected adjustHead(head: N, border: string[], a: string) {
+    protected adjustHead(head: N<DOM>, border: string[], a: string) {
       if (head) {
         this.adaptor.setStyle(head, 'border-width', border.join(' '));
         this.adaptor.setStyle(head, 'transform', 'skewX(' + a + 'rad)');
@@ -591,7 +555,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
      * @param {number} x         The arrow head x size
      * @param {boolean} double   True if the arrow is double-headed
      */
-    protected adjustLine(line: N, t: number, x: number, double: boolean) {
+    protected adjustLine(line: N<DOM>, t: number, x: number, double: boolean) {
       this.adaptor.setStyle(line, 'borderTop', this.em(t) + ' solid');
       this.adaptor.setStyle(line, 'top', this.em(-t / 2));
       this.adaptor.setStyle(line, 'right', this.em(t * (x - 1)));
@@ -605,7 +569,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
      * @param {string} offset  The direction to move the arrow
      * @param {number} d       The distance to translate in that direction
      */
-    protected moveArrow(arrow: N, offset: string, d: number) {
+    protected moveArrow(arrow: N<DOM>, offset: string, d: number) {
       if (!d) return;
       const transform = this.adaptor.getStyle(arrow, 'transform');
       this.adaptor.setStyle(
@@ -620,7 +584,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
     /**
      * @override
      */
-    public adjustBorder(node: N): N {
+    public adjustBorder(node: N<DOM>): N<DOM> {
       if (this.thickness !== Notation.THICKNESS) {
         this.adaptor.setStyle(node, 'borderWidth', this.em(this.thickness));
       }
@@ -630,7 +594,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
     /**
      * @override
      */
-    public adjustThickness(shape: N): N {
+    public adjustThickness(shape: N<DOM>): N<DOM> {
       if (this.thickness !== Notation.THICKNESS) {
         this.adaptor.setStyle(shape, 'strokeWidth', this.fixed(this.thickness));
       }
@@ -662,14 +626,14 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
+    public toCHTML(parents: N<DOM>[]) {
       const adaptor = this.adaptor;
       const chtml = this.standardChtmlNodes(parents);
       //
       //  Create a box for the child (that can have padding and borders added by the notations)
       //    and add the child HTML into it
       //
-      const block = adaptor.append(chtml[0], this.html('mjx-box')) as N;
+      const block = adaptor.append(chtml[0], this.html('mjx-box')) as N<DOM>;
       if (this.renderChild) {
         this.renderChild(this, block);
       } else {
@@ -705,7 +669,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
       double: boolean,
       offset: string = '',
       dist: number = 0
-    ): N {
+    ): N<DOM> {
       const W = this.getBBox().w;
       const style = { width: this.em(w) } as OptionList;
       if (W !== w) {
@@ -729,4 +693,4 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
       return arrow;
     }
   };
-})<any, any, any>();
+})();

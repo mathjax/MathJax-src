@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
 import {
   CommonMglyph,
   CommonMglyphClass,
@@ -40,62 +33,47 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMglyph } from '../../../core/MmlTree/MmlNodes/mglyph.js';
 import { ChtmlTextNodeNTD } from './TextNode.js';
 import { StyleJson, StyleJsonData } from '../../../util/StyleJson.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlMglyph interface for the CHTML Mglyph wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM nod types
  */
-export interface ChtmlMglyphNTD<N, T, D>
+export interface ChtmlMglyphNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonMglyph<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {}
 
 /**
  * The ChtmlMglyphClass interface for the CHTML Mglyph wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM nod types
  */
-export interface ChtmlMglyphClass<N, T, D>
+export interface ChtmlMglyphClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonMglyphClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlMglyphNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlMglyphNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -103,27 +81,19 @@ export interface ChtmlMglyphClass<N, T, D>
 /**
  * The ChtmlMglyph wrapper class for the MmlMglyph class
  */
-export const ChtmlMglyph = (function <N, T, D>(): ChtmlMglyphClass<N, T, D> {
+export const ChtmlMglyph = (function (): ChtmlMglyphClass<DOM> {
   const Base = CommonMglyphMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlMglyphClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlMglyphClass<DOM>
   >(ChtmlWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class ChtmlMglyph extends Base implements ChtmlMglyphNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class ChtmlMglyph extends Base implements ChtmlMglyphNTD<DOM> {
     /**
      * @override
      */
@@ -143,10 +113,10 @@ export const ChtmlMglyph = (function <N, T, D>(): ChtmlMglyphClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
+    public toCHTML(parents: N<DOM>[]) {
       const chtml = this.standardChtmlNodes(parents);
       if (this.charWrapper) {
-        (this.charWrapper as ChtmlTextNodeNTD<N, T, D>).toCHTML(chtml);
+        (this.charWrapper as ChtmlTextNodeNTD<DOM>).toCHTML(chtml);
         return;
       }
       const { src, alt } = this.node.attributes.getList('src', 'alt');
@@ -166,4 +136,4 @@ export const ChtmlMglyph = (function <N, T, D>(): ChtmlMglyphClass<N, T, D> {
       this.adaptor.append(chtml[0], img);
     }
   };
-})<any, any, any>();
+})();

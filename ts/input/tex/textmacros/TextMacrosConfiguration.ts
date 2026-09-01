@@ -22,7 +22,7 @@
  */
 
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
-import { TeX } from '../../tex.js';
+import { TEX } from '../../tex.js';
 import TexParser from '../TexParser.js';
 import { Configuration, ParserConfiguration } from '../Configuration.js';
 import ParseOptions from '../ParseOptions.js';
@@ -132,12 +132,9 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
   [ConfigurationType.PRIORITY]: 1,
   /**
    * @param {ParserConfiguration} _config  The configuration object we are being configured within
-   * @param {TeX<any,any,any>} jax         The TeX input jax in which we are running
+   * @param {TEX} jax                      The TeX input jax in which we are running
    */
-  [ConfigurationType.CONFIG]: (
-    _config: ParserConfiguration,
-    jax: TeX<any, any, any>
-  ) => {
+  [ConfigurationType.CONFIG]: (_config: ParserConfiguration, jax: TEX) => {
     //
     //  Create the configuration and parseOptions objects for the
     //    internal TextParser and add the textBase configuration.

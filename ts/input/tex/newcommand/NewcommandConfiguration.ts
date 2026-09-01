@@ -21,7 +21,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { TeX } from '../../tex.js';
+import { TEX } from '../../tex.js';
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration, ParserConfiguration } from '../Configuration.js';
 import { BeginEnvItem } from './NewcommandItems.js';
@@ -36,12 +36,9 @@ export { COMPONENT } from './__locales__/Component.js';
  * if they aren't already in place.
  *
  * @param {ParserConfiguration} _config  The parser configuration (ignored)
- * @param {TeX} jax                      The TeX input jax
+ * @param {TEX} jax                      The TeX input jax
  */
-export function NewcommandConfig(
-  _config: ParserConfiguration,
-  jax: TeX<any, any, any>
-) {
+export function NewcommandConfig(_config: ParserConfiguration, jax: TEX) {
   //
   //  Check if we are already initialzied (since other packages call this)
   //

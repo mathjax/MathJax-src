@@ -35,6 +35,7 @@ import { MmlFactory } from './MmlFactory.js';
 import { DOMAdaptor } from '../DOMAdaptor.js';
 import { Locale } from '../../util/Locale.js';
 import { COMPONENT } from '../__locales__/Component.js';
+import { DOM } from '../../types/Types.js';
 
 /**
  *  Used in setInheritedAttributes() to pass originating node kind as well as property value
@@ -1506,7 +1507,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
   /**
    * DOM adaptor for the content
    */
-  protected adaptor: DOMAdaptor<any, any, any> = null;
+  protected adaptor: DOMAdaptor<DOM> = null;
 
   /**
    * @override
@@ -1529,7 +1530,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
    */
   public setXML(
     xml: Object, // eslint-disable-line @typescript-eslint/no-wrapper-object-types
-    adaptor: DOMAdaptor<any, any, any> = null
+    adaptor: DOMAdaptor<DOM> = null
   ): XMLNode {
     this.xml = xml;
     this.adaptor = adaptor;

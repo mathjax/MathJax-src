@@ -23,23 +23,19 @@
 
 import { HTMLAdaptor } from './HTMLAdaptor.js';
 import { NodeMixin, MIXIN_OPTIONS, Constructor } from './NodeMixin.js';
+import { HTML_DOM } from '../types/dom/html.js';
 
 /**
  * The constructor for an HTMLAdaptor
  */
-export type HTMLAdaptorConstructor = Constructor<
-  HTMLAdaptor<HTMLElement, Text, Document>
->;
+export type HTMLAdaptorConstructor = Constructor<HTMLAdaptor<HTML_DOM>>;
 
 /**
  * The JsdomAdaptor class
  */
-export class JsdomAdaptor extends NodeMixin<
-  HTMLElement,
-  Text,
-  Document,
-  HTMLAdaptorConstructor
->(HTMLAdaptor) {}
+export class JsdomAdaptor extends NodeMixin<HTML_DOM, HTMLAdaptorConstructor>(
+  HTMLAdaptor
+) {}
 
 /**
  * Function for creating an HTML adaptor using jsdom

@@ -21,57 +21,39 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CommonOutputJax } from '../common.js';
+import { CommonOutputJax, COMMON_FONT } from '../common.js';
 import { AbstractWrapperFactory } from '../../core/Tree/WrapperFactory.js';
 import { CommonWrapper, CommonWrapperClass } from './Wrapper.js';
-import {
-  CharOptions,
-  VariantData,
-  DelimiterData,
-  FontData,
-  FontDataClass,
-} from './FontData.js';
 import { MmlNode, MmlNodeClass } from '../../core/MmlTree/MmlNode.js';
+import { DOM as ANY_DOM, DOM_TYPES } from '../../types/Types.js';
 
 /*****************************************************************/
 
 /**
  *  The OutputWrapperFactory class for creating OutputWrapper nodes
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export class CommonWrapperFactory<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, any, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
 > extends AbstractWrapperFactory<MmlNode, MmlNodeClass, WW, WC> {
   /**
    * The default list of wrapper nodes this factory can create
    *   (filled in by subclasses)
    */
-  /* prettier-ignore */
   public static defaultNodes: {
-    [kind: string]: CommonWrapperClass<any, any, any, any, any, any, any, any, any, any, any, any>;
+    /* prettier-ignore */
+    [kind: string]: CommonWrapperClass<ANY_DOM, COMMON_FONT, any, any, any, any>;
   } = {};
 
   /**

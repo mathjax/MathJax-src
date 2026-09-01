@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
 import {
   CommonTeXAtom,
   CommonTeXAtomClass,
@@ -38,62 +31,47 @@ import {
 } from '../../common/Wrappers/TeXAtom.js';
 import { TeXAtom } from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
 import { MmlNode, TEXCLASSNAMES } from '../../../core/MmlTree/MmlNode.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlTeXAtom interface for the CHTML TeXAtom wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlTeXAtomNTD<N, T, D>
+export interface ChtmlTeXAtomNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonTeXAtom<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {}
 
 /**
  * The ChtmlTeXAtomClass interface for the CHTML TeXAtom wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlTeXAtomClass<N, T, D>
+export interface ChtmlTeXAtomClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonTeXAtomClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlTeXAtomNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlTeXAtomNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -101,26 +79,18 @@ export interface ChtmlTeXAtomClass<N, T, D>
 /**
  * The ChtmlTeXAtom wrapper class for the MmlTeXAtom class
  */
-export const ChtmlTeXAtom = (function <N, T, D>(): ChtmlTeXAtomClass<N, T, D> {
+export const ChtmlTeXAtom = (function (): ChtmlTeXAtomClass<DOM> {
   const Base = CommonTeXAtomMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlTeXAtomClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlTeXAtomClass<DOM>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  return class ChtmlTeXAtom extends Base implements ChtmlTeXAtomNTD<N, T, D> {
+  return class ChtmlTeXAtom extends Base implements ChtmlTeXAtomNTD<DOM> {
     /**
      * @override
      */
@@ -129,7 +99,7 @@ export const ChtmlTeXAtom = (function <N, T, D>(): ChtmlTeXAtomClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
+    public toCHTML(parents: N<DOM>[]) {
       super.toCHTML(parents);
       this.dom.forEach((dom) =>
         this.adaptor.setAttribute(
@@ -140,4 +110,4 @@ export const ChtmlTeXAtom = (function <N, T, D>(): ChtmlTeXAtomClass<N, T, D> {
       );
     }
   };
-})<any, any, any>();
+})();

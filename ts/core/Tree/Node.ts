@@ -80,7 +80,7 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
   removeProperty(...names: string[]): void;
 
   /**
-   * @param {string} kind  The type of node to test for
+   * @param {string} kind   The type of node to test for
    * @returns {boolean}     True when the node is of the given type
    */
   isKind(kind: string): boolean;
@@ -91,27 +91,27 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
   setChildren(children: N[]): void;
 
   /**
-   * @param {N} child  A node to add to this node's children
+   * @param {N} child   A node to add to this node's children
    * @returns {N}       The child node that was added
    */
   appendChild(child: N): N;
 
   /**
-   * @param {N} newChild  A child node to be inserted
-   * @param {N} oldChild  A child node to be replaced
+   * @param {N} newChild   A child node to be inserted
+   * @param {N} oldChild   A child node to be replaced
    * @returns {N}          The old child node that was removed
    */
   replaceChild(newChild: N, oldChild: N): N;
 
   /**
    * @param {N} child   Child node to be removed
-   * @returns {N}        The old child node that was removed
+   * @returns {N}       The old child node that was removed
    */
   removeChild(child: N): N;
 
   /**
-   * @param {N} child  A child node whose index in childNodes is desired
-   * @returns {number}     The index of the child in childNodes, or null if not found
+   * @param {N} child    A child node whose index in childNodes is desired
+   * @returns {number}   The index of the child in childNodes, or null if not found
    */
   childIndex(child: N): number;
 
@@ -121,8 +121,8 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
   copy(): N;
 
   /**
-   * @param {string} kind  The kind of nodes to be located in the tree
-   * @returns {N[]}      An array of nodes that are children (at any depth) of the given kind
+   * @param {string} kind   The kind of nodes to be located in the tree
+   * @returns {N[]}         An array of nodes that are children (at any depth) of the given kind
    */
   findNodes(kind: string): N[];
 
@@ -143,10 +143,10 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
  */
 export interface NodeClass<N extends Node<N, C>, C extends NodeClass<N, C>> {
   /**
-   * @param {NodeFactory} factory  The NodeFactory to use to create new nodes when needed
-   * @param {PropertyList} properties  Any properties to be added to the node, if any
-   * @param {N[]} children  The initial child nodes, if any
-   * @returns {N}  The newly created node
+   * @param {NodeFactory} factory       The NodeFactory to use to create new nodes when needed
+   * @param {PropertyList} properties   Any properties to be added to the node, if any
+   * @param {N[]} children              The initial child nodes, if any
+   * @returns {N}                       The newly created node
    */
   new (
     factory: NodeFactory<N, C>,

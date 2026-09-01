@@ -29,9 +29,7 @@ import ParseMethods from '../ParseMethods.js';
 import { Macro } from '../Token.js';
 import NewcommandMethods from '../newcommand/NewcommandMethods.js';
 import { BeginEnvItem } from '../newcommand/NewcommandItems.js';
-import { TeX } from '../../tex.js';
-
-type TEX = TeX<any, any, any>;
+import { TEX } from '../../tex.js';
 
 /**
  * The name to use for the macros map
@@ -73,7 +71,7 @@ function configmacrosInit(config: ParserConfiguration) {
  * Create the user-defined macros and environments from their options
  *
  * @param {Configuration} _config  The configuration object for the input jax
- * @param {TeX} jax                The TeX input jax
+ * @param {TEX} jax                The TeX input jax
  */
 function configmacrosConfig(_config: ParserConfiguration, jax: TEX) {
   configActives(jax);
@@ -107,7 +105,7 @@ function setMacros(name: string, map: string, jax: TEX) {
 /**
  * Create user-defined active characters from the active option
  *
- * @param {TeX} jax   The TeX input jax
+ * @param {TEX} jax   The TeX input jax
  */
 function configActives(jax: TEX) {
   setMacros('active', ACTIVEMAP, jax);
@@ -116,7 +114,7 @@ function configActives(jax: TEX) {
 /**
  * Create user-defined macros from the macros option
  *
- * @param {TeX} jax   The TeX input jax
+ * @param {TEX} jax   The TeX input jax
  */
 function configMacros(jax: TEX) {
   setMacros('macros', MACROSMAP, jax);
@@ -125,7 +123,7 @@ function configMacros(jax: TEX) {
 /**
  * Create user-defined environments from the environments option
  *
- * @param {TeX} jax   The TeX input jax
+ * @param {TEX} jax   The TeX input jax
  */
 function configEnvironments(jax: TEX) {
   const handler = jax.parseOptions.handlers.retrieve(

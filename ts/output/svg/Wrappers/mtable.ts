@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonMtable,
   CommonMtableClass,
@@ -42,6 +35,7 @@ import { SvgMtrNTD } from './mtr.js';
 import { SvgMtdNTD } from './mtd.js';
 import { OptionList } from '../../../util/Options.js';
 import { StyleJson } from '../../../util/StyleJson.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 const CLASSPREFIX = 'mjx-';
 
@@ -49,96 +43,68 @@ const CLASSPREFIX = 'mjx-';
 /**
  * The SvgMtable interface for the SVG Mtable wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMtableNTD<N, T, D>
+export interface SvgMtableNTD<DOM extends DOM_TYPES>
   extends
-    SvgWrapper<N, T, D>,
+    SvgWrapper<DOM>,
     CommonMtable<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass,
-      SvgMtrNTD<N, T, D>
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>,
+      SvgMtrNTD<DOM>
     > {
   /**
    * The column for labels
    */
-  labels: N;
+  labels: N<DOM>;
 }
 
 /**
  * The SvgMtableClass interface for the SVG Mtable wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMtableClass<N, T, D>
+export interface SvgMtableClass<DOM extends DOM_TYPES>
   extends
-    SvgWrapperClass<N, T, D>,
+    SvgWrapperClass<DOM>,
     CommonMtableClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMtableNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMtableNTD<DOM>;
 }
 
 /*****************************************************************/
 
 /**
  * The SvgMtable wrapper class for the MmlMtable class
- *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  */
-export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
+export const SvgMtable = (function (): SvgMtableClass<DOM> {
   const Base = CommonMtableMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMtrNTD<N, T, D>,
-    SvgMtableClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMtrNTD<DOM>,
+    SvgMtableClass<DOM>
   >(SvgWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgMtable extends Base implements SvgMtableNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMtable extends Base implements SvgMtableNTD<DOM> {
     /**
      * @override
      */
@@ -175,14 +141,14 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
     /**
      * @override
      */
-    public labels: N;
+    public labels: N<DOM>;
 
     /******************************************************************/
 
     /**
      * @param {N} svg  The container in which to place the rows
      */
-    protected placeRows(svg: N) {
+    protected placeRows(svg: N<DOM>) {
       const equal = this.node.attributes.get('equalrows') as boolean;
       const { H, D } = this.getTableData();
       const HD = this.getEqualRowHeight();
@@ -190,7 +156,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
       const rLines = [this.fLine, ...this.rLines, this.fLine];
       let y = this.getBBox().h - rLines[0];
       for (let i = 0; i < this.numRows; i++) {
-        const row = this.childNodes[i] as SvgMtrNTD<N, T, D>;
+        const row = this.childNodes[i] as SvgMtrNTD<DOM>;
         [row.H, row.D] = this.getRowHD(equal, HD, H[i], D[i]);
         [row.tSpace, row.bSpace] = [rSpace[i], rSpace[i + 1]];
         [row.tLine, row.bLine] = [rLines[i], rLines[i + 1]];
@@ -234,7 +200,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      *
      * @param {N} svg   The container for the table
      */
-    protected handleColumnLines(svg: N) {
+    protected handleColumnLines(svg: N<DOM>) {
       if (this.node.attributes.get('columnlines') === 'none') return;
       const lines = this.getColumnAttributes('columnlines');
       if (!lines) return;
@@ -256,7 +222,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      *
      * @param {N} svg   The container for the table
      */
-    protected handleRowLines(svg: N) {
+    protected handleRowLines(svg: N<DOM>) {
       if (this.node.attributes.get('rowlines') === 'none') return;
       const lines = this.getRowAttributes('rowlines');
       if (!lines) return;
@@ -281,7 +247,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      *
      * @param {N} svg   The container for the table
      */
-    protected handleFrame(svg: N) {
+    protected handleFrame(svg: N<DOM>) {
       if (this.frame && this.fLine) {
         const { h, d, w } = this.getBBox();
         const style = this.node.attributes.get('frame') as string;
@@ -293,7 +259,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @param {N} svg The svg element
      * @returns {number}   The x-adjustement needed to handle the true size of percentage-width tables
      */
-    protected handlePWidth(svg: N): number {
+    protected handlePWidth(svg: N<DOM>): number {
       if (!this.pWidth) {
         return 0;
       }
@@ -332,7 +298,12 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @param {string} style   The border style for the frame
      * @returns {N}            The SVG element for the frame
      */
-    protected makeFrame(w: number, h: number, d: number, style: string): N {
+    protected makeFrame(
+      w: number,
+      h: number,
+      d: number,
+      style: string
+    ): N<DOM> {
       const t = this.fLine;
       return this.svg(
         'rect',
@@ -353,7 +324,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @param {number} t       The line thickness
      * @returns {N}            The SVG element for the line
      */
-    protected makeVLine(x: number, style: string, t: number): N {
+    protected makeVLine(x: number, style: string, t: number): N<DOM> {
       const { h, d } = this.getBBox();
       const dt = style === 'dotted' ? t / 2 : 0;
       const X = this.fixed(x + t / 2);
@@ -376,7 +347,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @param {number} t       The line thickness
      * @returns {N}            The SVG element for the line
      */
-    protected makeHLine(y: number, style: string, t: number): N {
+    protected makeHLine(y: number, style: string, t: number): N<DOM> {
       const w = this.getBBox().w;
       const dt = style === 'dotted' ? t / 2 : 0;
       const Y = this.fixed(y - t / 2);
@@ -423,7 +394,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @param {N} _parent   The parent containing the the table
      * @param {number} dx   The adjustement for percentage width tables
      */
-    protected handleLabels(svg: N, _parent: N, dx: number) {
+    protected handleLabels(svg: N<DOM>, _parent: N<DOM>, dx: number) {
       if (!this.hasLabels) return;
       const labels = this.labels;
       const attributes = this.node.attributes;
@@ -457,11 +428,11 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
       //    and line thickness for each non-labeled row.
       //
       let y = h - this.fLine;
-      let current = adaptor.firstChild(this.labels) as N;
+      let current = adaptor.firstChild(this.labels) as N<DOM>;
       for (let i = 0; i < this.numRows; i++) {
-        const row = this.childNodes[i] as SvgMtrNTD<N, T, D>;
+        const row = this.childNodes[i] as SvgMtrNTD<DOM>;
         if (row.node.isKind('mlabeledtr')) {
-          const cell = row.childNodes[0] as SvgMtdNTD<N, T, D>;
+          const cell = row.childNodes[0] as SvgMtdNTD<DOM>;
           y -= space[i] + row.H;
           row.placeCell(cell, {
             x: 0,
@@ -473,7 +444,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
             rLine: 0,
           });
           y -= row.D + space[i + 1] + this.rLines[i];
-          current = adaptor.next(current) as N;
+          current = adaptor.next(current) as N<DOM>;
         } else {
           y -= space[i] + row.H + row.D + space[i + 1] + this.rLines[i];
         }
@@ -487,7 +458,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @param {N} labels      The group of labels
      * @param {string} side   The side alignment (left or right)
      */
-    protected topTable(svg: N, labels: N, side: string) {
+    protected topTable(svg: N<DOM>, labels: N<DOM>, side: string) {
       const adaptor = this.adaptor;
       const { h, d, w, L, R } = this.getBBox();
       const W = L + (this.pWidth || w) + R;
@@ -539,7 +510,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @param {string} side   The side alignment (left or right)
      * @param {number} dx     The adjustement for percentage width tables
      */
-    protected subTable(svg: N, labels: N, side: string, dx: number) {
+    protected subTable(svg: N<DOM>, labels: N<DOM>, side: string, dx: number) {
       const adaptor = this.adaptor;
       const { w, L, R } = this.getBBox();
       const W = L + (this.pWidth || w) + R;
@@ -570,9 +541,9 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @override
      */
     constructor(
-      factory: SvgWrapperFactory<N, T, D>,
+      factory: SvgWrapperFactory<DOM>,
       node: MmlNode,
-      parent: SvgWrapper<N, T, D> = null
+      parent: SvgWrapper<DOM> = null
     ) {
       super(factory, node, parent);
       const def: OptionList = { 'data-labels': true };
@@ -585,7 +556,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       const svg = this.standardSvgNodes(parents)[0];
       this.placeRows(svg);
       this.handleColumnLines(svg);
@@ -595,4 +566,4 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
       this.handleLabels(svg, parents[0], dx);
     }
   };
-})<any, any, any>();
+})();

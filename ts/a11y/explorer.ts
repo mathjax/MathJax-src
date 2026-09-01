@@ -55,12 +55,12 @@ const isUnix = context.os === 'Unix';
 /**
  * Shorthands for types with HTMLElement, Text, and Document instead of generics
  */
-export type HANDLER = Handler<HTMLElement, Text, Document>;
-export type HTMLDOCUMENT = SpeechMathDocument<HTMLElement, Text, Document> & {
+export type HANDLER = Handler<HTML_DOM>;
+export type HTMLDOCUMENT = SpeechMathDocument<HTML_DOM> & {
   menu?: any;
 };
-export type HTMLMATHITEM = SpeechMathItem<HTMLElement, Text, Document>;
-export type MATHML = MathML<HTMLElement, Text, Document>;
+export type HTMLMATHITEM = SpeechMathItem<HTML_DOM>;
+export type MATHML = MathML<HTML_DOM>;
 
 /*==========================================================================*/
 
@@ -468,7 +468,7 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
 /**
  * The mixin for adding the Explorer to MathDocuments
  *
- * @param {B} BaseDocument      The MathDocument class to be extended
+ * @param {B} BaseDocument          The MathDocument class to be extended
  * @returns {ExplorerMathDocument}  The extended MathDocument class
  *
  * @template B  The MathItem class to extend
@@ -482,17 +482,16 @@ export function ExplorerMathDocumentMixin<
     /**
      * @override
      */
-    /* prettier-ignore */
     public static OPTIONS = {
       ...BaseDocument.OPTIONS,
       ...options,
-      renderActions: expandable<RenderActions<HTMLElement, Text, Document>>({
+      renderActions: expandable<RenderActions<HTML_DOM>>({
         ...BaseDocument.OPTIONS.renderActions,
-        explorable: [STATE.EXPLORER]
+        explorable: [STATE.EXPLORER],
       }),
       sre: expandable<SRE_OPTIONS>({
-       ...(BaseDocument.OPTIONS as SPEECH_OPTIONS<HTML_DOM>).sre,
-        speech: 'none',                    // None as speech is explicitly computed
+        ...(BaseDocument.OPTIONS as SPEECH_OPTIONS<HTML_DOM>).sre,
+        speech: 'none', // None as speech is explicitly computed
       }),
       a11y: expandable<A11Y_OPTIONS['a11y']>({
         ...(BaseDocument.OPTIONS as SPEECH_OPTIONS<HTML_DOM>).a11y,

@@ -29,9 +29,9 @@ import type { mathjax } from '../mathjax.js';
  * The types for node, text, and document
  */
 export type DOM_TYPES = {
-  N: any;
-  T: any;
-  D: any;
+  N: unknown;
+  T: unknown;
+  D: unknown;
 };
 
 /**
@@ -40,6 +40,8 @@ export type DOM_TYPES = {
 export type N<DOM extends DOM_TYPES> = DOM['N'];
 export type T<DOM extends DOM_TYPES> = DOM['T'];
 export type D<DOM extends DOM_TYPES> = DOM['D'];
+
+export type NT<DOM extends DOM_TYPES> = N<DOM> | T<DOM>;
 
 /**
  * A DOM_TYPES instance

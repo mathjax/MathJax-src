@@ -36,8 +36,8 @@ export interface FactoryNode {
 export interface FactoryNodeClass<N extends FactoryNode> {
   /**
    * @param {Factory<N, FactoryNodeClass<N>>} factory  The factory for creating more nodes
-   * @param {any[]} args  Any additional arguments needed by the node
-   * @returns {N}  The newly created node
+   * @param {any[]} args   Any additional arguments needed by the node
+   * @returns {N}          The newly created node
    */
   new (factory: Factory<N, FactoryNodeClass<N>>, ...args: any[]): N;
 }
@@ -59,7 +59,7 @@ export interface FactoryNodeClass<N extends FactoryNode> {
 export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
   /**
    * @param {string} kind  The kind of node to create
-   * @returns {N}  The newly created node of the given kind
+   * @returns {N}          The newly created node of the given kind
    */
   create(kind: string): N;
 
@@ -73,7 +73,7 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
 
   /**
    * @param {string} kind  The kind of node whose class is to be returned
-   * @returns {C}  The class object for the given kind
+   * @returns {C}          The class object for the given kind
    */
   getNodeClass(kind: string): C;
 
@@ -83,14 +83,14 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
   deleteNodeClass(kind: string): void;
 
   /**
-   * @param {N} node  The node to test if it is of a given kind
-   * @param {string} kind  The kind to test for
-   * @returns {boolean}  True if the node is of the given kind, false otherwise
+   * @param {N} node        The node to test if it is of a given kind
+   * @param {string} kind   The kind to test for
+   * @returns {boolean}     True if the node is of the given kind, false otherwise
    */
   nodeIsKind(node: N, kind: string): boolean;
 
   /**
-   * @returns {string[]}  The names of all the available kinds of nodes
+   * @returns {string[]}   The names of all the available kinds of nodes
    */
   getKinds(): string[];
 }

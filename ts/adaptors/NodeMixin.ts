@@ -26,7 +26,7 @@
 import { DOMAdaptor, minWorker } from '../core/DOMAdaptor.js';
 import { userOptions, defaultOptions, OptionList } from '../util/Options.js';
 import { asyncLoad } from '../util/AsyncLoad.js';
-import { Constructor } from '../types/Types.js';
+import { Constructor, DOM_TYPES, N } from '../types/Types.js';
 export { Constructor };
 
 /**
@@ -40,8 +40,12 @@ export interface WebWorker {
 
 /**
  * The type of an Adaptor class
+ *
+ * @template DOM   The DOM node types
  */
-export type AdaptorConstructor<N, T, D> = Constructor<DOMAdaptor<N, T, D>>;
+export type AdaptorConstructor<DOM extends DOM_TYPES> = Constructor<
+  DOMAdaptor<DOM>
+>;
 
 export type MIXIN_OPTIONS = {
   badCSS?: boolean; //     getComputedStyles() is not implemented in the DOM
@@ -72,15 +76,13 @@ export type OPTIONS = {
  * @param {NodeMixinOptions} options The options
  * @returns {A} The NodeAdaptor mixin class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template A  Extension of AdaptorConstructor
+ * @template DOM   The DOM node types
+ * @template A     Extension of AdaptorConstructor
  */
-export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
-  Base: A,
-  options: MIXIN_OPTIONS = {}
-): A {
+export function NodeMixin<
+  DOM extends DOM_TYPES,
+  A extends AdaptorConstructor<DOM>,
+>(Base: A, options: MIXIN_OPTIONS = {}): A {
   options = userOptions(defaultOptions({}, NodeMixinOptions), options);
 
   return class NodeAdaptor extends Base {
@@ -155,7 +157,7 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
      *
      * @override
      */
-    public fontSize(node: N) {
+    public fontSize(node: N<DOM>) {
       return options.badCSS ? this.options.fontSize : super.fontSize(node);
     }
 
@@ -164,14 +166,14 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
      *
      * @override
      */
-    public fontFamily(node: N) {
+    public fontFamily(node: N<DOM>) {
       return options.badCSS ? this.options.fontFamily : super.fontFamily(node);
     }
 
     /**
      * @override
      */
-    public nodeSize(node: N, em: number = 1, local: boolean = null) {
+    public nodeSize(node: N<DOM>, em: number = 1, local: boolean = null) {
       if (!options.badSizes) {
         return super.nodeSize(node, em, local);
       }
@@ -187,7 +189,7 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
     /**
      * @override
      */
-    public nodeBBox(node: N) {
+    public nodeBBox(node: N<DOM>) {
       return options.badSizes
         ? { left: 0, right: 0, top: 0, bottom: 0 }
         : super.nodeBBox(node);

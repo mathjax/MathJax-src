@@ -27,14 +27,7 @@ import {
   CommonWrapperConstructor,
 } from '../Wrapper.js';
 import { CommonWrapperFactory } from '../WrapperFactory.js';
-import {
-  CharOptions,
-  VariantData,
-  DelimiterData,
-  FontData,
-  FontDataClass,
-} from '../FontData.js';
-import { CommonOutputJax } from '../../common.js';
+import { CommonOutputJax, COMMON_FONT } from '../../common.js';
 import { CommonMtr } from './mtr.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { BBox } from '../../../util/BBox.js';
@@ -42,6 +35,7 @@ import { DIRECTION } from '../FontData.js';
 import { split, isPercent } from '../../../util/string.js';
 import { sum, max } from '../../../util/numeric.js';
 import { Styles, TRBL } from '../../../util/Styles.js';
+import { DOM_TYPES } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
@@ -74,36 +68,24 @@ export const BREAK_BELOW = 0.333;
 /**
  * The CommonMtable interface
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  *
- * @template R   The class for table rows
+ * @template R     The class for table rows
  */
 export interface CommonMtable<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-  R extends CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+  R extends CommonMtr<DOM, FONT, JX, WW, WF, WC>,
+> extends CommonWrapper<DOM, FONT, JX, WW, WF, WC> {
   /**
    * The number of columns in the table
    */
@@ -447,33 +429,21 @@ export interface CommonMtable<
 /**
  * The CommonMtableClass interface
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export interface CommonMtableClass<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+> extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC> {}
 
 /*****************************************************************/
 /**
@@ -481,43 +451,30 @@ export interface CommonMtableClass<
  *
  * @param {CommonWrapperConstructor} Base The constructor class to extend
  * @returns {B} The mixin constructor
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
  *
- * @template R   The table row class
- * @template B   The mixin interface to create
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
+ *
+ * @template R     The table row class
+ * @template B     The mixin interface to create
  */
 export function CommonMtableMixin<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-  R extends CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
->(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
-): B {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+  R extends CommonMtr<DOM, FONT, JX, WW, WF, WC>,
+  B extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+>(Base: CommonWrapperConstructor<DOM, FONT, JX, WW, WF, WC>): B {
   return class CommonMtableMixin
     extends Base
-    implements CommonMtable<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, R>
+    implements CommonMtable<DOM, FONT, JX, WW, WF, WC, R>
   {
     /**
      * @override

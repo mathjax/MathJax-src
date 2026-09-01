@@ -26,21 +26,20 @@ import { MathDocument } from '../../../core/MathDocument.js';
 import { mjxRoot } from '#root/root.js';
 import { Locale } from '../../../util/Locale.js';
 import { COMPONENT } from '../__locales__/Component.js';
+import { DOM_TYPES, N } from '../../../types/Types.js';
 
 /**
  * Create the transform function that uses Saxon-js to perform the
  *   xslt transformation.
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM element types
  *
- * @returns {(node: N, doc: MathDocument<N,T,D>) => N}   The transformation function
+ * @returns {(node: N, doc: MathDocument<DOM>) => N}   The transformation function
  */
-export function createTransform<N, T, D>(): (
-  node: N,
-  doc: MathDocument<N, T, D>
-) => N {
+export function createTransform<DOM extends DOM_TYPES>(): (
+  node: N<DOM>,
+  doc: MathDocument<DOM>
+) => N<DOM> {
   // get the actual require from node.
   const nodeRequire = eval('require');
   try {
@@ -64,7 +63,7 @@ export function createTransform<N, T, D>(): (
   const xslt = nodeRequire(
     path.resolve(mjxRoot(), 'input', 'mml', 'extensions', 'mml3.sef.json')
   );
-  return (node: N, doc: MathDocument<N, T, D>) => {
+  return (node: N<DOM>, doc: MathDocument<DOM>) => {
     const adaptor = doc.adaptor;
     let mml = adaptor.outerHTML(node);
     //
@@ -91,7 +90,7 @@ export function createTransform<N, T, D>(): (
             }).principalResult
           )
         )
-      ) as N;
+      ) as N<DOM>;
     } catch (_err) {
       result = node;
     }

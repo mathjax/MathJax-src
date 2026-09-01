@@ -21,18 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass, StringMap } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-  VFUZZ,
-  HFUZZ,
-} from '../FontData.js';
+import { ChtmlCharOptions, VFUZZ, HFUZZ } from '../FontData.js';
 import { CharDataArray } from '../../common/FontData.js';
 import {
   CommonMo,
@@ -43,62 +35,47 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
 import { StyleJson } from '../../../util/StyleJson.js';
 import { DIRECTION } from '../FontData.js';
+import { DOM, DOM_TYPES, N, NT } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlMo interface for the CHTML Mo wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlMoNTD<N, T, D>
+export interface ChtmlMoNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonMo<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {}
 
 /**
  * The ChtmlMoClass interface for the CHTML Mo wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlMoClass<N, T, D>
+export interface ChtmlMoClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonMoClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlMoNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlMoNTD<DOM>;
 }
 
 export type PartData = CharDataArray<ChtmlCharOptions>;
@@ -107,32 +84,20 @@ export type PartData = CharDataArray<ChtmlCharOptions>;
 
 /**
  * The ChtmlMo wrapper class for the MmlMo class
- *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  */
-export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
+export const ChtmlMo = (function (): ChtmlMoClass<DOM> {
   const Base = CommonMoMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlMoClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlMoClass<DOM>
   >(ChtmlWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class ChtmlMo extends Base implements ChtmlMoNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class ChtmlMo extends Base implements ChtmlMoNTD<DOM> {
     /**
      * @override
      */
@@ -191,7 +156,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
+    public toCHTML(parents: N<DOM>[]) {
       const adaptor = this.adaptor;
       const attributes = this.node.attributes;
       const symmetric =
@@ -247,14 +212,14 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
      *
      * @param {N} chtml  The parent element in which to put the delimiter
      */
-    protected stretchHTML(chtml: N[]) {
+    protected stretchHTML(chtml: N<DOM>[]) {
       const c = this.getText().codePointAt(0);
       this.font.delimUsage.add(c);
       this.childNodes[0].markUsed();
       const delim = this.stretch;
       const stretch = delim.stretch;
       const stretchv = this.font.getStretchVariants(c);
-      const dom: N[] = [];
+      const dom: N<DOM>[] = [];
 
       //
       //  Look up the characters to use
@@ -317,7 +282,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       parts: PartData[],
       sn: number[],
       sv: string[],
-      dom: N[],
+      dom: N<DOM>[],
       wh: number,
       ext: number,
       nl: string = ''
@@ -372,7 +337,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       data: PartData,
       n: number,
       v: string,
-      dom: N[],
+      dom: N<DOM>[],
       W: number = 0,
       Wx: number = 0,
       nl: string = '',
@@ -386,7 +351,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         const font =
           options.ff || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
         const c = options.c || String.fromCodePoint(n);
-        let nodes = [] as (N | T)[];
+        let nodes = [] as NT<DOM>[];
         if (part === 'mjx-ext' && (Wx || options.dx)) {
           //
           // If the top and bottom must overlap, adjust the border sizes and remove the clipping
@@ -431,4 +396,4 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       }
     }
   };
-})<any, any, any>();
+})();

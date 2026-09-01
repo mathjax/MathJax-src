@@ -28,50 +28,37 @@ import {
 } from '../Wrapper.js';
 import { CommonWrapperFactory } from '../WrapperFactory.js';
 import {
-  CharOptions,
-  VariantData,
-  DelimiterData,
-  FontData,
-  FontDataClass,
-} from '../FontData.js';
-import { CommonOutputJax, ExtendedMetrics, UnknownBBox } from '../../common.js';
+  CommonOutputJax,
+  ExtendedMetrics,
+  UnknownBBox,
+  COMMON_FONT,
+} from '../../common.js';
 import { MmlNode, XMLNode } from '../../../core/MmlTree/MmlNode.js';
 import { BBox } from '../../../util/BBox.js';
 import { StyleList } from '../../../util/Styles.js';
 import { StyleJson } from '../../../util/StyleJson.js';
 import { split } from '../../../util/string.js';
+import { DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The CommonXmlNode interface
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export interface CommonXmlNode<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+> extends CommonWrapper<DOM, FONT, JX, WW, WF, WC> {
   /**
    * The relative scaling from the root to this node
    */
@@ -80,13 +67,13 @@ export interface CommonXmlNode<
   /**
    * @returns {N}  The HTML for the node
    */
-  getHTML(): N;
+  getHTML(): N<DOM>;
 
   /**
    * @param {N} html            The html to adjust if using or forcing HDW
    * @param {StyleList} styles  The styles object to add to, as needed
    */
-  addHDW(html: N, styles: StyleList): N;
+  addHDW(html: N<DOM>, styles: StyleList): N<DOM>;
 
   /**
    * @param {N} xml          The XML tree to check
@@ -94,7 +81,7 @@ export interface CommonXmlNode<
    * @param {string} force   The second (optional) xmlHDW value to check
    * @returns {string}       The data-mjx-hdw value, if the options are met
    */
-  getHDW(xml: N, use: string, force?: string): string;
+  getHDW(xml: N<DOM>, use: string, force?: string): string;
 
   /**
    * @param {string} hdw     The data-mjx-hdw string to split
@@ -106,33 +93,21 @@ export interface CommonXmlNode<
 /**
  * The CommonXmlNodeClass interface
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export interface CommonXmlNodeClass<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+> extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC> {}
 
 /*****************************************************************/
 /**
@@ -140,41 +115,28 @@ export interface CommonXmlNodeClass<
  *
  * @param {CommonWrapperConstructor} Base The constructor class to extend
  * @returns {B} The mixin constructor
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
  *
- * @template B   The Mixin interface to create
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
+ *
+ * @template B     The Mixin interface to create
  */
 export function CommonXmlNodeMixin<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
->(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
-): B {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+  B extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+>(Base: CommonWrapperConstructor<DOM, FONT, JX, WW, WF, WC>): B {
   abstract class CommonXmlNodeMixin
     extends Base
-    implements CommonXmlNode<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+    implements CommonXmlNode<DOM, FONT, JX, WW, WF, WC>
   {
     /**
      * Don't set up inline-block styles for this
@@ -226,7 +188,7 @@ export function CommonXmlNodeMixin<
      * @override
      */
     public computeBBox(bbox: BBox, _recompute: boolean = false) {
-      const xml = (this.node as XMLNode).getXML() as N;
+      const xml = (this.node as XMLNode).getXML() as N<DOM>;
       const hdw = this.getHDW(xml, 'use', 'force');
       const { h, d, w } = hdw ? this.splitHDW(hdw) : this.measureXmlNode(xml);
       bbox.w = w;
@@ -237,9 +199,9 @@ export function CommonXmlNodeMixin<
     /**
      * @override
      */
-    public getHTML(): N {
+    public getHTML(): N<DOM> {
       const adaptor = this.adaptor;
-      let html = adaptor.clone((this.node as XMLNode).getXML() as N);
+      let html = adaptor.clone((this.node as XMLNode).getXML() as N<DOM>);
       const styles = this.getFontStyles();
       const hdw = this.getHDW(html, 'force');
       if (hdw || this.jax.options.scale !== 1) {
@@ -255,12 +217,12 @@ export function CommonXmlNodeMixin<
     /**
      * @override
      */
-    abstract addHDW(html: N, _styles: StyleList): N;
+    abstract addHDW(html: N<DOM>, _styles: StyleList): N<DOM>;
 
     /**
      * @override
      */
-    public getHDW(xml: N, use: string, force: string = use): string {
+    public getHDW(xml: N<DOM>, use: string, force: string = use): string {
       const option = this.jax.options.htmlHDW;
       const hdw = this.adaptor.getAttribute(xml, 'data-mjx-hdw') as string;
       return hdw && (option === use || option === force) ? hdw : null;
@@ -299,7 +261,7 @@ export function CommonXmlNodeMixin<
      * @param {N} xml          The xml content node to be measured
      * @returns {UnknownBBox}  The width, height, and depth of the content
      */
-    public measureXmlNode(xml: N): UnknownBBox {
+    public measureXmlNode(xml: N<DOM>): UnknownBBox {
       const adaptor = this.adaptor;
       const content = this.html(
         'mjx-xml-block',

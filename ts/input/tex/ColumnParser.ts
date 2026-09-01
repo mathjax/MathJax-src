@@ -35,22 +35,21 @@ import { COMPONENT } from './__locales__/Component.js';
 /**
  * The state of the columns analyzed so far.
  */
-/* prettier-ignore */
 export type ColumnState = {
-  parser: TexParser,                    // the current TexParser
-  template: string;                     // the template string for the columns
-  i: number;                            // the current location in the template
-  c: string;                            // the current column identifier
-  j: number;                            // the current column number
-  calign: string[];                     // the column alignments
-  cwidth: string[];                     // the explicit column widths
-  cspace: string[];                     // the column spacing
-  clines: string[];                     // the column lines
-  cstart: string[];                     // the '>' declarations
-  cend:   string[];                     // the '<' declarations
-  cextra: boolean[];                    // the extra columns from '@' and '!' declarations
-  ralign: [string, string, string][];   // the row alignment and column width/align when specified
-}
+  parser: TexParser; //                    The current TexParser
+  template: string; //                     The template string for the columns
+  i: number; //                            The current location in the template
+  c: string; //                            The current column identifier
+  j: number; //                            The current column number
+  calign: string[]; //                     The column alignments
+  cwidth: string[]; //                     The explicit column widths
+  cspace: string[]; //                     The column spacing
+  clines: string[]; //                     The column lines
+  cstart: string[]; //                     The '>' declarations
+  cend: string[]; //                       The '<' declarations
+  cextra: boolean[]; //                    The extra columns from '@' and '!' declarations
+  ralign: [string, string, string][]; //   The row alignment and column width/align when specified
+};
 
 /**
  * A function to handle a column declaration

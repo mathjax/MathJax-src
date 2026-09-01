@@ -39,6 +39,7 @@ import { Loader, CONFIG as LOADERCONFIG } from '../../../components/loader.js';
 import { mathjax } from '../../../mathjax.js';
 import { expandable, EXPANDABLE_LIST_OF } from '../../../util/Options.js';
 import { MenuMathDocument } from '../../../ui/menu/MenuHandler.js';
+import { DOM } from '../../../types/Types.js';
 
 import { Locale } from '../../../util/Locale.js';
 import { COMPONENT } from './__locales__/Component.js';
@@ -55,7 +56,7 @@ const MJCONFIG = MathJax.config;
  * @param {TeX} jax       The TeX jax whose configuration is to be modified
  * @param {string} name   The name of the extension being added (e.g., '[tex]/amscd')
  */
-function RegisterExtension(jax: TeX<any, any, any>, name: string) {
+function RegisterExtension(jax: TeX<DOM>, name: string) {
   const require = jax.parseOptions.options.require;
   const required = jax.parseOptions.packageData.get('require')
     .required as string[];
@@ -90,11 +91,7 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
  * @param {string} name   The name of the extension being added (e.g., '[tex]/amscd')
  * @param {string} extension The name of the configuration handler for the extension.
  */
-function ProcessExtension(
-  jax: TeX<any, any, any>,
-  name: string,
-  extension: string
-) {
+function ProcessExtension(jax: TeX<DOM>, name: string, extension: string) {
   //
   //  If the required file loaded an extension...
   //
@@ -138,7 +135,7 @@ function ProcessExtension(
  *                             are complete (or null if no retries)
  */
 function RegisterDependencies(
-  jax: TeX<any, any, any>,
+  jax: TeX<DOM>,
   names: string[] = []
 ): Promise<any> {
   const prefix = jax.parseOptions.options.require.prefix;
@@ -182,7 +179,7 @@ export function RequireLoad(parser: TexParser, name: string) {
     texError(COMPONENT, 'RequireFail', name);
   }
   const require = LOADERCONFIG[extension]?.rendererExtensions;
-  const menu = (MathJax.startup.document as MenuMathDocument)?.menu;
+  const menu = (MathJax.startup.document as unknown as MenuMathDocument)?.menu;
   if (require && menu) {
     menu.addRequiredExtensions(require);
   }
@@ -198,12 +195,11 @@ export function RequireLoad(parser: TexParser, name: string) {
  * @param {ParserConfiguration} _config The parser configuration.
  * @param {TeX} jax The current TeX jax.
  */
-function config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
-  /* prettier-ignore */
+function config(_config: ParserConfiguration, jax: TeX<DOM>) {
   jax.parseOptions.packageData.set('require', {
-    jax: jax,                             // \require needs access to this
-    required: [...jax.options.packages],  // stores the names of the packages that have been added
-    configured: new Map()                 // stores the packages that have been configured
+    jax: jax, //                             \require needs access to this
+    required: [...jax.options.packages], //  stores the names of the packages that have been added
+    configured: new Map(), //                stores the packages that have been configured
   });
   const options = jax.parseOptions.options.require;
   const prefix = options.prefix;

@@ -25,20 +25,19 @@ import { AbstractMathItem, Location, STATE } from '../../core/MathItem.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { InputJax } from '../../core/InputJax.js';
 import { HTMLDocument } from './HTMLDocument.js';
+import { DOM_TYPES, NT, T } from '../../types/Types.js';
 
 /*****************************************************************/
 /**
  *  Implements the HTMLMathItem class (extends AbstractMathItem)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   the DOM node types
  */
-export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
+export class HTMLMathItem<DOM extends DOM_TYPES> extends AbstractMathItem<DOM> {
   /**
-   * @returns {DOMAdaptor<N, T, D>} Easy access to DOM adaptor
+   * @returns {DOMAdaptor<DOM>} Easy access to DOM adaptor
    */
-  get adaptor(): DOMAdaptor<N, T, D> {
+  get adaptor(): DOMAdaptor<DOM> {
     return this.inputJax.adaptor;
   }
 
@@ -47,10 +46,10 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
    */
   constructor(
     math: string,
-    jax: InputJax<N, T, D>,
+    jax: InputJax<DOM>,
     display: boolean = true,
-    start: Location<N, T> = { node: null, n: 0, delim: '' },
-    end: Location<N, T> = { node: null, n: 0, delim: '' }
+    start: Location<DOM> = { node: null, n: 0, delim: '' },
+    end: Location<DOM> = { node: null, n: 0, delim: '' }
   ) {
     super(math, jax, display, start, end);
   }
@@ -69,10 +68,10 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
    *
    * @override
    */
-  public updateDocument(_html: HTMLDocument<N, T, D>) {
+  public updateDocument(_html: HTMLDocument<DOM>) {
     if (this.state() < STATE.INSERTED) {
       if (this.inputJax.processStrings) {
-        let node = this.start.node as T;
+        let node = this.start.node as T<DOM>;
         if (node === this.end.node) {
           if (
             this.end.n &&
@@ -81,7 +80,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
             this.adaptor.split(this.end.node, this.end.n);
           }
           if (this.start.n) {
-            node = this.adaptor.split(this.start.node as T, this.start.n);
+            node = this.adaptor.split(this.start.node as T<DOM>, this.start.n);
           }
           if (this.adaptor.parent(node)) {
             this.adaptor.replace(this.typesetRoot, node);
@@ -91,7 +90,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
             node = this.adaptor.split(node, this.start.n);
           }
           while (node !== this.end.node) {
-            const next = this.adaptor.next(node) as T;
+            const next = this.adaptor.next(node) as T<DOM>;
             this.adaptor.remove(node);
             node = next;
           }
@@ -115,7 +114,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
    *
    * @param {HTMLDocument} document   The document whose styles are to be updated
    */
-  public updateStyleSheet(document: HTMLDocument<N, T, D>) {
+  public updateStyleSheet(document: HTMLDocument<DOM>) {
     document.addStyleSheet();
   }
 
@@ -130,7 +129,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
     if (this.state() >= STATE.TYPESET) {
       const adaptor = this.adaptor;
       const node = this.start.node;
-      let math: N | T = adaptor.text('');
+      let math: NT<DOM> = adaptor.text('');
       if (restore) {
         const text = this.start.delim + this.math + this.end.delim;
         if (this.inputJax.processStrings) {

@@ -33,6 +33,7 @@ import { TexConstant } from './TexConstants.js';
 import { defaultOptions, OptionList } from '../../util/Options.js';
 import { ParserConfiguration } from './Configuration.js';
 import { ColumnParser } from './ColumnParser.js';
+import { DOM } from '../../types/Types.js';
 
 const MATHVARIANT = TexConstant.Variant;
 
@@ -128,7 +129,7 @@ export default class ParseOptions {
   /**
    * The current MathItem
    */
-  public mathItem: MathItem<any, any, any>;
+  public mathItem: MathItem<DOM>;
 
   /**
    * The current root node.

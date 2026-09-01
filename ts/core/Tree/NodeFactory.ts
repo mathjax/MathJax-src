@@ -36,10 +36,10 @@ export interface NodeFactory<
   C extends FactoryNodeClass<N>,
 > extends Factory<N, C> {
   /**
-   * @param {string} kind  The kind of node to create
-   * @param {PropertyList} properties  The list of initial properties for the node (if any)
-   * @param {N[]} children  The array of initial child nodes (if any)
-   * @returns {N}  The newly created node of the given kind
+   * @param {string} kind               The kind of node to create
+   * @param {PropertyList} properties   The list of initial properties for the node (if any)
+   * @param {N[]} children              The array of initial child nodes (if any)
+   * @returns {N}                       The newly created node of the given kind
    */
   create(kind: string, properties?: PropertyList, children?: N[]): N;
 }

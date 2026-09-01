@@ -30,34 +30,31 @@ import {
 } from './semantics.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { HtmlNode } from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
+import { DOM, DOM_TYPES } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlHtmlNode interface for the CHTML HtmlNode wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export interface ChtmlHtmlNodeNTD<N, T, D> extends ChtmlXmlNodeNTD<N, T, D> {}
+export interface ChtmlHtmlNodeNTD<
+  DOM extends DOM_TYPES,
+> extends ChtmlXmlNodeNTD<DOM> {}
 
 /**
  * The ChtmlHtmlNodeClass interface for the CHTML HtmlNode wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export interface ChtmlHtmlNodeClass<N, T, D> extends ChtmlXmlNodeClass<
-  N,
-  T,
-  D
-> {
+export interface ChtmlHtmlNodeClass<
+  DOM extends DOM_TYPES,
+> extends ChtmlXmlNodeClass<DOM> {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlHtmlNodeNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlHtmlNodeNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -65,21 +62,13 @@ export interface ChtmlHtmlNodeClass<N, T, D> extends ChtmlXmlNodeClass<
 /**
  * The ChtmlHtmlNode wrapper class for the MmlHtmlNode class
  */
-export const ChtmlHtmlNode = (function <N, T, D>(): ChtmlHtmlNodeClass<
-  N,
-  T,
-  D
-> {
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class ChtmlHtmlNode
-    extends ChtmlXmlNode
-    implements ChtmlHtmlNodeNTD<N, T, D>
-  {
-    /**
-     * @override
-     */
-    public static kind = HtmlNode.prototype.kind;
-  };
-})<any, any, any>();
+export class ChtmlHtmlNode
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  extends ChtmlXmlNode
+  implements ChtmlHtmlNodeNTD<DOM>
+{
+  /**
+   * @override
+   */
+  public static kind = HtmlNode.prototype.kind;
+}

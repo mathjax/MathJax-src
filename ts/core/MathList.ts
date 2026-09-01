@@ -23,51 +23,48 @@
 
 import { LinkedList, ListItem } from '../util/LinkedList.js';
 import { MathItem } from './MathItem.js';
+import { DOM_TYPES } from '../types/Types.js';
 
 /*****************************************************************/
 /**
  *  The MathListItem type (extends ListItem<MathItem>)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export type MathListItem<N, T, D> = ListItem<MathItem<N, T, D>>;
+export type MathListItem<DOM extends DOM_TYPES> = ListItem<MathItem<DOM>>;
 
 /*****************************************************************/
 /**
  *  The MathList interface (extends LinkedList<MathItem>)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface MathList<N, T, D> extends LinkedList<MathItem<N, T, D>> {
+export interface MathList<DOM extends DOM_TYPES> extends LinkedList<
+  MathItem<DOM>
+> {
   /**
    * Test if one math item is before the other in the document (a < b)
    *
    * @param {MathItem} a   The first MathItem
    * @param {MathItem} b   The second MathItem
    */
-  isBefore(a: MathItem<N, T, D>, b: MathItem<N, T, D>): boolean;
+  isBefore(a: MathItem<DOM>, b: MathItem<DOM>): boolean;
 }
 
 /*****************************************************************/
 /**
  *  The MathList abstract class (extends LinkedList<MathItem>)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export abstract class AbstractMathList<N, T, D>
-  extends LinkedList<MathItem<N, T, D>>
-  implements MathList<N, T, D>
+export abstract class AbstractMathList<DOM extends DOM_TYPES>
+  extends LinkedList<MathItem<DOM>>
+  implements MathList<DOM>
 {
   /**
    * @override
    */
-  public isBefore(a: MathItem<N, T, D>, b: MathItem<N, T, D>) {
+  public isBefore(a: MathItem<DOM>, b: MathItem<DOM>) {
     return (
       a.start.i < b.start.i ||
       (a.start.i === b.start.i && a.start.n < b.start.n)

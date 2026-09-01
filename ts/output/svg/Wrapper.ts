@@ -28,15 +28,10 @@ import {
   CommonWrapperClass,
   CommonWrapperConstructor,
 } from '../common/Wrapper.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from './FontData.js';
-import { SVG, XLINKNS } from '../svg.js';
+import { SvgFontData } from './FontData.js';
+import { SVG, SVG_FONT, XLINKNS } from '../svg.js';
 import { SvgWrapperFactory } from './WrapperFactory.js';
+import { DOM_TYPES, N, NT } from '../../types/Types.js';
 
 export { Constructor, StringMap } from '../common/Wrapper.js';
 
@@ -45,71 +40,43 @@ export { Constructor, StringMap } from '../common/Wrapper.js';
 /**
  * Shorthand for makeing an SvgWrapper constructor
  */
-export type SvgConstructor<N, T, D> = CommonWrapperConstructor<
-  //
-  // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
-  //
-  N,
-  T,
-  D,
-  //
-  // The Wrapper type and its Factory and Class (these need to know N, T, and D)
-  //
-  SVG<N, T, D>,
-  SvgWrapper<N, T, D>,
-  SvgWrapperFactory<N, T, D>,
-  SvgWrapperClass<N, T, D>,
-  //
-  // These are font-related objects that depend on the output jax; e,g. the character options
-  //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
-  //
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass
+export type SvgConstructor<DOM extends DOM_TYPES> = CommonWrapperConstructor<
+  DOM,
+  SVG_FONT,
+  SVG<DOM>,
+  SvgWrapper<DOM>,
+  SvgWrapperFactory<DOM>,
+  SvgWrapperClass<DOM>
 >;
 
 /*****************************************************************/
 /**
  *  The type of the SvgWrapper class (used when creating the wrapper factory for this class)
  */
-export interface SvgWrapperClass<N, T, D> extends CommonWrapperClass<
-  N,
-  T,
-  D,
-  SVG<N, T, D>,
-  SvgWrapper<N, T, D>,
-  SvgWrapperFactory<N, T, D>,
-  SvgWrapperClass<N, T, D>,
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass
+export interface SvgWrapperClass<
+  DOM extends DOM_TYPES,
+> extends CommonWrapperClass<
+  DOM,
+  SVG_FONT,
+  SVG<DOM>,
+  SvgWrapper<DOM>,
+  SvgWrapperFactory<DOM>,
+  SvgWrapperClass<DOM>
 > {}
 
 /*****************************************************************/
 /**
  *  The base SvgWrapper class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class SvgWrapper<N, T, D> extends CommonWrapper<
-  N,
-  T,
-  D,
-  SVG<N, T, D>,
-  SvgWrapper<N, T, D>,
-  SvgWrapperFactory<N, T, D>,
-  SvgWrapperClass<N, T, D>,
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass
+export class SvgWrapper<DOM extends DOM_TYPES> extends CommonWrapper<
+  DOM,
+  SVG_FONT,
+  SVG<DOM>,
+  SvgWrapper<DOM>,
+  SvgWrapperFactory<DOM>,
+  SvgWrapperClass<DOM>
 > {
   /**
    * The kind of wrapper
@@ -141,9 +108,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * Create the HTML for the wrapped node.
    *
-   * @param {N[]} parents  The HTML nodes where the output is to be added
+   * @param {N[]} parents   The HTML nodes where the output is to be added
    */
-  public toSVG(parents: N[]) {
+  public toSVG(parents: N<DOM>[]) {
     if (this.toEmbellishedSVG(parents)) return;
     this.addChildren(this.standardSvgNodes(parents));
   }
@@ -151,10 +118,10 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * Create the HTML for an embellished mo, if this is one.
    *
-   * @param {N[]} parents  The HTML nodes where the output is to be added
+   * @param {N[]} parents   The HTML nodes where the output is to be added
    * @returns {boolean}     True when embellished output is produced, false if not
    */
-  public toEmbellishedSVG(parents: N[]): boolean {
+  public toEmbellishedSVG(parents: N<DOM>[]): boolean {
     if (
       parents.length <= 1 ||
       !this.node.isEmbellished ||
@@ -172,7 +139,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     for (const [parent, STYLE] of [
       [parents[0], 'before'],
       [parents[1], 'after'],
-    ] as [N, string][]) {
+    ] as [N<DOM>, string][]) {
       if (style !== STYLE) {
         this.toSVG([parent]);
         dom.push(this.dom[0]);
@@ -186,9 +153,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   }
 
   /**
-   * @param {N[]} parents  The element in which to add the children
+   * @param {N[]} parents   The element in which to add the children
    */
-  public addChildren(parents: N[]) {
+  public addChildren(parents: N<DOM>[]) {
     let x = 0;
     for (const child of this.childNodes) {
       child.toSVG(parents);
@@ -206,9 +173,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * Create the standard SVG element for the given wrapped node.
    *
    * @param {N[]} parents  The HTML elements in which the node is to be created
-   * @returns {N[]}  The roots of the HTML trees for the wrapped node's output
+   * @returns {N[]}        The roots of the HTML trees for the wrapped node's output
    */
-  protected standardSvgNodes(parents: N[]): N[] {
+  protected standardSvgNodes(parents: N<DOM>[]): N<DOM>[] {
     const svg = this.createSvgNodes(parents);
     this.handleStyles();
     this.handleScale();
@@ -220,9 +187,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
 
   /**
    * @param {N[]} parents  The HTML elements in which the node is to be created
-   * @returns {N[]}  The roots of the HTML tree for the wrapped node's output
+   * @returns {N[]}        The roots of the HTML tree for the wrapped node's output
    */
-  protected createSvgNodes(parents: N[]): N[] {
+  protected createSvgNodes(parents: N<DOM>[]): N<DOM>[] {
     this.dom = parents.map((_parent) =>
       this.svg('g', { 'data-mml-node': this.node.kind })
     ); // FIXME: add segment id
@@ -237,15 +204,18 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * Add an anchor for hrefs and insert hot boxes into the DOM containers
    *
    * @param {N[]} parents   The HTML nodes in which the output is to be placed
-   * @returns {N[]}          The roots of the HTML tree for the node's output
+   * @returns {N[]}         The roots of the HTML tree for the node's output
    */
-  protected handleHref(parents: N[]): N[] {
+  protected handleHref(parents: N<DOM>[]): N<DOM>[] {
     const href = this.node.attributes.get('href');
     if (!href) return parents;
     let i = 0;
     const isEmbellished = this.node.isEmbellished && !this.node.isKind('mo');
     return parents.map((parent) => {
-      parent = this.adaptor.append(parent, this.svg('a', { href: href })) as N;
+      parent = this.adaptor.append(
+        parent,
+        this.svg('a', { href: href })
+      ) as N<DOM>;
       const { h, d, w } = isEmbellished
         ? this.getOuterBBox()
         : this.getLineBBox(i);
@@ -380,7 +350,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
         [outerLB, outerRB, innerRB, innerLB],
         [outerLB, outerLT, innerLT, innerLB],
       ];
-      const child = adaptor.firstChild(dom) as N;
+      const child = adaptor.firstChild(dom) as N<DOM>;
       const dx = L * this.dx;
       for (const i of [0, 1, 2, 3]) {
         if (!border.width[i] || (i === 3 && !L) || (i === 1 && !R)) continue;
@@ -414,8 +384,8 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   protected addBorderSolid(
     path: number[][],
     color: string,
-    child: N,
-    parent: N,
+    child: N<DOM>,
+    parent: N<DOM>,
     dx: number
   ) {
     const border = this.svg('polygon', {
@@ -443,7 +413,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {number} t                  The thickness for the border line
    * @param {number} i                  The side being drawn
    * @param {N} parent                  The parent container
-   * @param {number} dx                  The offset of the node
+   * @param {number} dx                 The offset of the node
    */
   protected addBorderBroken(
     path: number[][],
@@ -451,7 +421,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     style: string,
     t: number,
     i: number,
-    parent: N,
+    parent: N<DOM>,
     dx: number
   ) {
     const dot = style === 'dotted';
@@ -533,7 +503,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {number} y   The y-offset for the element
    * @param {N} element  The element to be placed
    */
-  public place(x: number, y: number, element: N = null) {
+  public place(x: number, y: number, element: N<DOM> = null) {
     if (!element) {
       x += this.dx * this.bbox.rscale;
     }
@@ -558,8 +528,8 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    *   a <text> element (e.g., when mtextInheritFont is true), so add a text
    *   element to help Safari get the right location.
    *
-   * @param {number} y     The current offset of the element
-   * @returns {number}      The new offset for the element if it has an id
+   * @param {number} y   The current offset of the element
+   * @returns {number}   The new offset for the element if it has an id
    */
   protected handleId(y: number): number {
     if (!this.node.attributes || !this.node.attributes.get('id')) {
@@ -591,43 +561,43 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * Return the first child element, skipping id align boxes and href hit boxes
    *
-   * @param {N} dom The dom element
-   * @returns {N}   The first "real" child element
+   * @param {N} dom   The dom element
+   * @returns {N}     The first "real" child element
    */
-  public firstChild(dom: N = this.dom[0]): N {
+  public firstChild(dom: N<DOM> = this.dom[0]): N<DOM> {
     const adaptor = this.adaptor;
     let child = adaptor.firstChild(dom);
     if (
       child &&
       adaptor.kind(child) === 'text' &&
-      adaptor.getAttribute(child as N, 'data-id-align')
+      adaptor.getAttribute(child as N<DOM>, 'data-id-align')
     ) {
-      child = adaptor.firstChild(adaptor.next(child) as N);
+      child = adaptor.firstChild(adaptor.next(child) as N<DOM>);
     }
     if (
       child &&
       adaptor.kind(child) === 'rect' &&
-      adaptor.getAttribute(child as N, 'data-hitbox')
+      adaptor.getAttribute(child as N<DOM>, 'data-hitbox')
     ) {
       child = adaptor.next(child);
     }
-    return child as N;
+    return child as N<DOM>;
   }
 
   /**
-   * @param {number} n        The character number
-   * @param {number} x        The x-position of the character
-   * @param {number} y        The y-position of the character
-   * @param {N} parent        The container for the character
-   * @param {string} variant  The variant to use for the character
-   * @param {boolean} buffer  True to collect unknown characters into one text element
+   * @param {number} n         The character number
+   * @param {number} x         The x-position of the character
+   * @param {number} y         The y-position of the character
+   * @param {N} parent         The container for the character
+   * @param {string} variant   The variant to use for the character
+   * @param {boolean} buffer   True to collect unknown characters into one text element
    * @returns {number}         The width of the character
    */
   public placeChar(
     n: number,
     x: number,
     y: number,
-    parent: N,
+    parent: N<DOM>,
     variant: string = null,
     buffer: boolean = false
   ): number {
@@ -647,7 +617,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       this.place(
         x,
         y,
-        this.adaptor.append(parent, this.charNode(variant, C, path)) as N
+        this.adaptor.append(parent, this.charNode(variant, C, path)) as N<DOM>
       );
       return w + dx;
     }
@@ -655,7 +625,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       const g = this.adaptor.append(
         parent,
         this.svg('g', { 'data-c': C })
-      ) as N;
+      ) as N<DOM>;
       this.place(x + dx, y, g);
       x = 0;
       for (const n of this.unicodeChars(data.c, variant)) {
@@ -673,7 +643,12 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {string} variant   The variant to use for the string
    * @returns {number}         The computed width of the text
    */
-  protected addUtext(x: number, y: number, parent: N, variant: string): number {
+  protected addUtext(
+    x: number,
+    y: number,
+    parent: N<DOM>,
+    variant: string
+  ): number {
     const c = this.utext;
     if (!c) {
       return 0;
@@ -682,7 +657,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     const text = this.adaptor.append(
       parent,
       this.jax.unknownText(c, variant)
-    ) as N;
+    ) as N<DOM>;
     this.place(x, y, text);
     return this.jax.measureTextNodeWithCache(text, c, variant).w;
   }
@@ -691,9 +666,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {string} variant    The name of the variant being used
    * @param {string} C          The hex string for the character code
    * @param {string} path       The data from the character
-   * @returns {N}                The <path> or <use> node for the glyph
+   * @returns {N}               The <path> or <use> node for the glyph
    */
-  protected charNode(variant: string, C: string, path: string): N {
+  protected charNode(variant: string, C: string, path: string): N<DOM> {
     const cache = this.jax.options.fontCache;
     return cache !== 'none'
       ? this.useNode(variant, C, path)
@@ -703,9 +678,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * @param {string} C          The hex string for the character code
    * @param {string} path       The data from the character
-   * @returns {N}                The <path> for the glyph
+   * @returns {N}               The <path> for the glyph
    */
-  protected pathNode(C: string, path: string): N {
+  protected pathNode(C: string, path: string): N<DOM> {
     return this.svg('path', { 'data-c': C, d: path });
   }
 
@@ -713,9 +688,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {string} variant    The name of the variant being used
    * @param {string} C          The hex string for the character code
    * @param {string} path       The data from the character
-   * @returns {N}                The <use> node for the glyph
+   * @returns {N}               The <use> node for the glyph
    */
-  protected useNode(variant: string, C: string, path: string): N {
+  protected useNode(variant: string, C: string, path: string): N<DOM> {
     const use = this.svg('use', { 'data-c': C });
     const id = '#' + this.jax.fontCache.cachePath(variant, C, path);
     this.adaptor.setAttribute(
@@ -751,7 +726,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
         width: this.fixed(w),
         y: this.fixed(-d),
       }),
-    ] as N[]);
+    ] as N<DOM>[]);
     const node = this.dom[0] || this.parent.dom[0];
     this.adaptor.append(node, box);
   }
@@ -764,26 +739,34 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * @param {string} type      The tag name of the HTML node to be created
    * @param {OptionList} def   The properties to set for the created node
-   * @param {(N|T)[]} content  The child nodes for the created HTML node
-   * @returns {N}               The generated HTML tree
+   * @param {(NT)[]} content   The child nodes for the created HTML node
+   * @returns {N}              The generated HTML tree
    */
-  public html(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
+  public html(
+    type: string,
+    def: OptionList = {},
+    content: NT<DOM>[] = []
+  ): N<DOM> {
     return this.jax.html(type, def, content);
   }
 
   /**
    * @param {string} type      The tag name of the svg node to be created
    * @param {OptionList} def   The properties to set for the created node
-   * @param {(N|T)[]} content  The child nodes for the created SVG node
-   * @returns {N}               The generated SVG tree
+   * @param {(NT)[]} content   The child nodes for the created SVG node
+   * @returns {N}              The generated SVG tree
    */
-  public svg(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
+  public svg(
+    type: string,
+    def: OptionList = {},
+    content: NT<DOM>[] = []
+  ): N<DOM> {
     return this.jax.svg(type, def, content);
   }
 
   /**
-   * @param {number} x   The dimension to display
-   * @param {number=} n  The number of digits to display
+   * @param {number} x    The dimension to display
+   * @param {number=} n   The number of digits to display
    * @returns {string}    The dimension with the given number of digits (minus trailing zeros)
    */
   public fixed(x: number, n: number = 1): string {

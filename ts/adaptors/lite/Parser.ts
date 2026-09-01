@@ -28,6 +28,7 @@ import { LiteDocument } from './Document.js';
 import { LiteElement } from './Element.js';
 import { LiteText, LiteComment } from './Text.js';
 import { LiteAdaptor } from '../liteAdaptor.js';
+import { LITE_DOM } from '../../types/dom/lite.js';
 
 /**
  * Patterns used in parsing serialized HTML
@@ -56,7 +57,7 @@ export const PATTERNS = {
  * Implements a lightweight DOMParser replacement
  * (Not perfect, but handles most well-formed HTML)
  */
-export class LiteParser implements MinDOMParser<LiteDocument> {
+export class LiteParser implements MinDOMParser<LITE_DOM> {
   /**
    * The list of self-closing tags
    */

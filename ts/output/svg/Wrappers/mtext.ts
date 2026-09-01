@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonMtext,
   CommonMtextClass,
@@ -38,62 +31,47 @@ import {
 } from '../../common/Wrappers/mtext.js';
 import { MmlNode, TextNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMtext } from '../../../core/MmlTree/MmlNodes/mtext.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMtext interface for the SVG Mtext wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM types
  */
-export interface SvgMtextNTD<N, T, D>
+export interface SvgMtextNTD<DOM extends DOM_TYPES>
   extends
-    SvgWrapper<N, T, D>,
+    SvgWrapper<DOM>,
     CommonMtext<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMtextClass interface for the SVG Mtext wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM types
  */
-export interface SvgMtextClass<N, T, D>
+export interface SvgMtextClass<DOM extends DOM_TYPES>
   extends
-    SvgWrapperClass<N, T, D>,
+    SvgWrapperClass<DOM>,
     CommonMtextClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMtextNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMtextNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -101,27 +79,19 @@ export interface SvgMtextClass<N, T, D>
 /**
  * The SvgMtext wrapper class for the MmlMtext class
  */
-export const SvgMtext = (function <N, T, D>(): SvgMtextClass<N, T, D> {
+export const SvgMtext = (function (): SvgMtextClass<DOM> {
   const Base = CommonMtextMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMtextClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMtextClass<DOM>
   >(SvgWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  //   type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  //   different by typescript)
-  return class SvgMtext extends Base implements SvgMtextNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMtext extends Base implements SvgMtextNTD<DOM> {
     /**
      * @override
      */
@@ -130,7 +100,7 @@ export const SvgMtext = (function <N, T, D>(): SvgMtextClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       //
       // If no breakpoints, do the usual thing
       //
@@ -190,4 +160,4 @@ export const SvgMtext = (function <N, T, D>(): SvgMtextClass<N, T, D> {
       }
     }
   };
-})<any, any, any>();
+})();

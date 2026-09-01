@@ -28,17 +28,10 @@ import {
   StringMap,
   SPACE,
 } from '../common/Wrapper.js';
-import { CHTML } from '../chtml.js';
+import { CHTML, CHTML_FONT } from '../chtml.js';
 import { ChtmlWrapperFactory } from './WrapperFactory.js';
 import { BBox } from '../../util/BBox.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from './FontData.js';
-import { Constructor } from '../../types/Types.js';
+import { DOM_TYPES, N, T, Constructor } from '../../types/Types.js';
 
 export { Constructor } from '../../types/Types.js';
 export { StringMap } from '../common/Wrapper.js';
@@ -66,35 +59,23 @@ export const FONTSIZE: StringMap = {
 /**
  * Shorthand for making a ChtmlWrapper constructor
  */
-export type ChtmlConstructor<N, T, D> = Constructor<ChtmlWrapper<N, T, D>>;
+export type ChtmlConstructor<DOM extends DOM_TYPES> = Constructor<
+  ChtmlWrapper<DOM>
+>;
 
 /*****************************************************************/
 /**
  *  The type of the ChtmlWrapper class (used when creating the wrapper factory for this class)
  */
-export interface ChtmlWrapperClass<N, T, D> extends CommonWrapperClass<
-  //
-  // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
-  //
-  N,
-  T,
-  D,
-  //
-  // The Wrapper type and its Factory and Class (these need to know N, T, and D)
-  //
-  CHTML<N, T, D>,
-  ChtmlWrapper<N, T, D>,
-  ChtmlWrapperFactory<N, T, D>,
-  ChtmlWrapperClass<N, T, D>,
-  //
-  // These are font-related objects that depend on the output jax; e,g. the character options
-  //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
-  //
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass
+export interface ChtmlWrapperClass<
+  DOM extends DOM_TYPES,
+> extends CommonWrapperClass<
+  DOM,
+  CHTML_FONT,
+  CHTML<DOM>,
+  ChtmlWrapper<DOM>,
+  ChtmlWrapperFactory<DOM>,
+  ChtmlWrapperClass<DOM>
 > {
   /**
    * If true, this causes a style for the node type to be generated automatically
@@ -107,23 +88,15 @@ export interface ChtmlWrapperClass<N, T, D> extends CommonWrapperClass<
 /**
  *  The base ChtmlWrapper class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export class ChtmlWrapper<N, T, D> extends CommonWrapper<
-  N,
-  T,
-  D,
-  CHTML<N, T, D>,
-  ChtmlWrapper<N, T, D>,
-  ChtmlWrapperFactory<N, T, D>,
-  ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass
+export class ChtmlWrapper<DOM extends DOM_TYPES> extends CommonWrapper<
+  DOM,
+  CHTML_FONT,
+  CHTML<DOM>,
+  ChtmlWrapper<DOM>,
+  ChtmlWrapperFactory<DOM>,
+  ChtmlWrapperClass<DOM>
 > {
   /**
    * @override
@@ -143,7 +116,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
    *
    * @param {N[]} parents  The HTML nodes where the output is to be added
    */
-  public toCHTML(parents: N[]) {
+  public toCHTML(parents: N<DOM>[]) {
     if (this.toEmbellishedCHTML(parents)) return;
     this.addChildren(this.standardChtmlNodes(parents));
   }
@@ -154,7 +127,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
    * @param {N[]} parents  The HTML nodes where the output is to be added
    * @returns {boolean}     True when embellished output is produced, false if not
    */
-  public toEmbellishedCHTML(parents: N[]): boolean {
+  public toEmbellishedCHTML(parents: N<DOM>[]): boolean {
     if (parents.length <= 1 || !this.node.isEmbellished) return false;
     const adaptor = this.adaptor;
     parents.forEach((dom) => adaptor.append(dom, this.html('mjx-linestrut')));
@@ -168,7 +141,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
     for (const [parent, STYLE] of [
       [parents[0], 'before'],
       [parents[1], 'after'],
-    ] as [N, string][]) {
+    ] as [N<DOM>, string][]) {
       if (style !== STYLE) {
         this.toCHTML([parent]);
         dom.push(this.dom[0]);
@@ -186,7 +159,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
   /**
    * @param {N[]} parents  The HTML nodes where the children are to be added
    */
-  public addChildren(parents: N[]) {
+  public addChildren(parents: N<DOM>[]) {
     for (const child of this.childNodes) {
       child.toCHTML(parents);
     }
@@ -200,7 +173,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
    * @param {N[]} parents  The HTML elements in which the node is to be created
    * @returns {N[]}  The roots of the HTML tree for the wrapped node's output
    */
-  protected standardChtmlNodes(parents: N[]): N[] {
+  protected standardChtmlNodes(parents: N<DOM>[]): N<DOM>[] {
     this.markUsed();
     const chtml = this.createChtmlNodes(parents);
     this.handleStyles();
@@ -224,7 +197,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
    * @param {N[]} parents  The HTML elements in which the node is to be created
    * @returns {N[]}  The roots of the HTML tree for the wrapped node's output
    */
-  protected createChtmlNodes(parents: N[]): N[] {
+  protected createChtmlNodes(parents: N<DOM>[]): N<DOM>[] {
     this.dom = parents.map((_parent) => this.html('mjx-' + this.node.kind)); // FIXME: add segment id
     parents = this.handleHref(parents);
     for (const i of parents.keys()) {
@@ -239,12 +212,12 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
    * @param {N[]} parents   The HTML nodes in which the output is to be placed
    * @returns {N[]}          The roots of the HTML tree for the node's output
    */
-  protected handleHref(parents: N[]): N[] {
+  protected handleHref(parents: N<DOM>[]): N<DOM>[] {
     const href = this.node.attributes.get('href');
     if (!href) return parents;
     return parents.map(
       (parent) =>
-        this.adaptor.append(parent, this.html('a', { href: href })) as N
+        this.adaptor.append(parent, this.html('a', { href: href })) as N<DOM>
     );
   }
 
@@ -282,7 +255,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
    * @param {number} rscale      The relatie scale to apply
    * @returns {N}       The HTML node (for chaining)
    */
-  protected setScale(chtml: N, rscale: number): N {
+  protected setScale(chtml: N<DOM>, rscale: number): N<DOM> {
     const scale = Math.abs(rscale - 1) < 0.001 ? 1 : rscale;
     if (chtml && scale !== 1) {
       const size = this.percent(scale);
@@ -440,7 +413,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
    * @param {string} align  The alignment for the node
    * @param {number} shift  The indent (positive or negative) for the node
    */
-  protected setIndent(chtml: N, align: string, shift: number) {
+  protected setIndent(chtml: N<DOM>, align: string, shift: number) {
     const adaptor = this.adaptor;
     if (align === 'center' || align === 'left') {
       const L = this.getBBox().L;
@@ -488,7 +461,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
             'background-color': 'green',
           },
         }),
-      ] as N[]
+      ] as N<DOM>[]
     );
     const node = this.dom[0] || this.parent.dom[0];
     const size = this.adaptor.getAttribute(node, 'size');
@@ -514,7 +487,11 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
    * @param {(N|T)[]} content  The child nodes for the created HTML node
    * @returns {N}               The generated HTML tree
    */
-  public html(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
+  public html(
+    type: string,
+    def: OptionList = {},
+    content: (N<DOM> | T<DOM>)[] = []
+  ): N<DOM> {
     return this.jax.html(type, def, content);
   }
 

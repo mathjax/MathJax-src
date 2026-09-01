@@ -25,6 +25,7 @@ import { AbstractFindMath } from '../../core/FindMath.js';
 import { OptionList } from '../../util/Options.js';
 import { quotePattern } from '../../util/string.js';
 import { ProtoItem, protoItem } from '../../core/MathItem.js';
+import { DOM_TYPES } from '../../types/Types.js';
 
 /**
  * Shorthand types for data about end delimiters and delimiter pairs
@@ -54,11 +55,11 @@ const options: FINDASCIIMATH_OPTIONS = {
  *
  *  Locates AsciiMath expressions within strings
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
+export class FindAsciiMath<
+  DOM extends DOM_TYPES,
+> extends AbstractFindMath<DOM> {
   /**
    * @override
    */
@@ -129,13 +130,13 @@ export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
     n: number,
     start: RegExpExecArray,
     end: EndItem
-  ): ProtoItem<N, T> {
+  ): ProtoItem<DOM> {
     const [, display, pattern] = end;
     const i = (pattern.lastIndex = start.index + start[0].length);
     const match = pattern.exec(text);
     return !match
       ? null
-      : protoItem<N, T>(
+      : protoItem<DOM>(
           start[0],
           match.index < i ? '' : text.substring(i, match.index),
           match[0],
@@ -153,7 +154,7 @@ export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
    * @param {number} n          The index of the string being searched
    * @param {string} text       The string being searched
    */
-  protected findMathInString(math: ProtoItem<N, T>[], n: number, text: string) {
+  protected findMathInString(math: ProtoItem<DOM>[], n: number, text: string) {
     let start, match;
     this.start.lastIndex = 0;
     while ((start = this.start.exec(text))) {
@@ -171,7 +172,7 @@ export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
    * @override
    */
   public findMath(strings: string[]) {
-    const math: ProtoItem<N, T>[] = [];
+    const math: ProtoItem<DOM>[] = [];
     if (this.hasPatterns) {
       for (let i = 0, m = strings.length; i < m; i++) {
         this.findMathInString(math, i, strings[i]);

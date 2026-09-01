@@ -22,16 +22,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
 import {
   CommonSemantics,
   CommonSemanticsClass,
@@ -51,6 +44,7 @@ import {
 import { XMLNode } from '../../../core/MmlTree/MmlNode.js';
 import { StyleJson } from '../../../util/StyleJson.js';
 import { StyleList } from '../../../util/Styles.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 export type FontStyles = {
   'font-family': string;
@@ -61,57 +55,41 @@ export type FontStyles = {
 /**
  * The ChtmlSemantics interface for the CHTML Semantics wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export interface ChtmlSemanticsNTD<N, T, D>
+export interface ChtmlSemanticsNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonSemantics<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {}
 
 /**
  * The ChtmlSemanticsClass interface for the CHTML Semantics wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export interface ChtmlSemanticsClass<N, T, D>
+export interface ChtmlSemanticsClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonSemanticsClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlSemanticsNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlSemanticsNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -119,33 +97,18 @@ export interface ChtmlSemanticsClass<N, T, D>
 /**
  * The ChtmlSemantics wrapper class for the MmlSemantics class
  */
-export const ChtmlSemantics = (function <N, T, D>(): ChtmlSemanticsClass<
-  N,
-  T,
-  D
-> {
+export const ChtmlSemantics = (function (): ChtmlSemanticsClass<DOM> {
   const Base = CommonSemanticsMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlSemanticsClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlSemanticsClass<DOM>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  return class ChtmlSemantics
-    extends Base
-    implements ChtmlSemanticsNTD<N, T, D>
-  {
+  return class ChtmlSemantics extends Base implements ChtmlSemanticsNTD<DOM> {
     /**
      * @override
      */
@@ -154,7 +117,7 @@ export const ChtmlSemantics = (function <N, T, D>(): ChtmlSemanticsClass<
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
+    public toCHTML(parents: N<DOM>[]) {
       if (this.toEmbellishedCHTML(parents)) return;
       const chtml = this.standardChtmlNodes(parents);
       if (this.childNodes.length) {
@@ -162,92 +125,72 @@ export const ChtmlSemantics = (function <N, T, D>(): ChtmlSemanticsClass<
       }
     }
   };
-})<any, any, any>();
+})();
 
 /*****************************************************************/
 /**
  * The ChtmlAnnotation wrapper for the MmlAnnotation class
  */
-export const ChtmlAnnotation = (function <N, T, D>(): ChtmlWrapperClass<
-  N,
-  T,
-  D
-> {
-  return class ChtmlAnnotation extends ChtmlWrapper<N, T, D> {
-    /**
-     * @override
-     */
-    public static kind = MmlAnnotation.prototype.kind;
+export class ChtmlAnnotation extends ChtmlWrapper<DOM> {
+  /**
+   * @override
+   */
+  public static kind = MmlAnnotation.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toCHTML(parents: N[]) {
-      // FIXME:  output as plain text
-      super.toCHTML(parents);
-    }
+  /**
+   * @override
+   */
+  public toCHTML(parents: N<DOM>[]) {
+    // FIXME:  output as plain text
+    super.toCHTML(parents);
+  }
 
-    /**
-     * @override
-     */
-    public computeBBox() {
-      // FIXME:  compute using the DOM, if possible
-      return this.bbox;
-    }
-  };
-})<any, any, any>();
+  /**
+   * @override
+   */
+  public computeBBox() {
+    // FIXME:  compute using the DOM, if possible
+    return this.bbox;
+  }
+}
 
 /*****************************************************************/
 /**
  * The ChtmlAnnotationXML wrapper for the MmlAnnotationXML class
  */
-export const ChtmlAnnotationXML = (function <N, T, D>(): ChtmlWrapperClass<
-  N,
-  T,
-  D
-> {
-  return class ChtmlAnnotationXML extends ChtmlWrapper<N, T, D> {
-    /**
-     * @override
-     */
-    public static kind = MmlAnnotationXML.prototype.kind;
+export class ChtmlAnnotationXML extends ChtmlWrapper<DOM> {
+  /**
+   * @override
+   */
+  public static kind = MmlAnnotationXML.prototype.kind;
 
-    /**
-     * @override
-     */
-    public static styles: StyleJson = {
-      'mjx-annotation-xml': {
-        'font-family': 'initial',
-        'line-height': 'normal',
-      },
-    };
+  /**
+   * @override
+   */
+  public static styles: StyleJson = {
+    'mjx-annotation-xml': {
+      'font-family': 'initial',
+      'line-height': 'normal',
+    },
   };
-})<any, any, any>();
+}
 
 /*****************************************************************/
 /**
  * The ChtmlXmlNode interface for the CHTML XmlNode wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export interface ChtmlXmlNodeNTD<N, T, D>
+export interface ChtmlXmlNodeNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonXmlNode<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   /**
    * @returns {FontStyles}  the font family and size data
@@ -258,58 +201,42 @@ export interface ChtmlXmlNodeNTD<N, T, D>
 /**
  * The ChtmlXmlNodeClass interface for the CHTML XmlNode wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export interface ChtmlXmlNodeClass<N, T, D>
+export interface ChtmlXmlNodeClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonXmlNodeClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlXmlNodeNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlXmlNodeNTD<DOM>;
 }
 
 /**
  * The ChtmlXmlNode wrapper for the XMLNode class
  */
-export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
+export const ChtmlXmlNode = (function (): ChtmlXmlNodeClass<DOM> {
   const Base = CommonXmlNodeMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlXmlNodeClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlXmlNodeClass<DOM>
   >(ChtmlWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class ChtmlXmlNode extends Base implements ChtmlXmlNodeNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class ChtmlXmlNode extends Base implements ChtmlXmlNodeNTD<DOM> {
     /**
      * @override
      */
@@ -318,9 +245,9 @@ export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
+    public toCHTML(parents: N<DOM>[]) {
       this.markUsed();
-      this.dom = [this.adaptor.append(parents[0], this.getHTML()) as N];
+      this.dom = [this.adaptor.append(parents[0], this.getHTML()) as N<DOM>];
     }
 
     /**
@@ -335,7 +262,7 @@ export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
     /**
      * @override
      */
-    public addHDW(html: N, styles: StyleList): N {
+    public addHDW(html: N<DOM>, styles: StyleList): N<DOM> {
       const scale = this.jax.options.scale;
       const { h, d, w } = this.bbox;
       const rscale = scale * this.metrics.scale;
@@ -355,4 +282,4 @@ export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
       );
     }
   };
-})<any, any, any>();
+})();

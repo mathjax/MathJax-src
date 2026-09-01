@@ -32,7 +32,7 @@ import { CommandMap } from '../TokenMap.js';
 import TexParser from '../TexParser.js';
 import { texError } from '../TexError.js';
 
-import { TeX } from '../../tex.js';
+import { TEX } from '../../tex.js';
 import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
@@ -202,9 +202,9 @@ new CommandMap('colortbl', {
  * The configuration function for colortbl.
  *
  * @param {ParserConfiguration} config   The configuration being used.
- * @param {TeX} jax                      The TeX jax using this configuration.
+ * @param {TEX} jax                      The TeX jax using this configuration.
  */
-const config = function (config: ParserConfiguration, jax: TeX<any, any, any>) {
+const config = function (config: ParserConfiguration, jax: TEX) {
   //
   //  Make sure color is configured.  (It doesn't have to be included in tex.packages)
   //

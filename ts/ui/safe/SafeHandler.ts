@@ -28,7 +28,7 @@ import {
   DOCUMENT_OPTIONS,
 } from '../../core/MathDocument.js';
 import { Handler } from '../../core/Handler.js';
-import { DOM, DOM_TYPES, Constructor } from '../../types/Types.js';
+import { DOM_TYPES, Constructor } from '../../types/Types.js';
 
 import { Safe } from './safe.js';
 
@@ -81,38 +81,31 @@ const options: OPTIONS = {
 
 /**
  * The properties needed in the MathDocument for sanitizing the internal MathML
+ *
+ * @template DOM   The DOM node types
  */
-export interface SafeMathDocument<N, T, D> extends AbstractMathDocument<
-  N,
-  T,
-  D
-> {
+export interface SafeMathDocument<
+  DOM extends DOM_TYPES,
+> extends AbstractMathDocument<DOM> {
   /**
    * The Safe object for this document
    */
-  safe: Safe<N, T, D>;
+  safe: Safe<DOM>;
 }
 
 /**
  * The mixin for adding safe render action to MathDocuments
  *
- * @param {B} BaseDocument              The MathDocument class to be extended
- * @returns {SafeMathDocument<N,T,D>}   The extended MathDocument class
+ * @param {B} BaseDocument       The MathDocument class to be extended
+ * @returns {SafeMathDocument}   The extended MathDocument class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template B  The Base document
+ * @template DOM   The DOM node types
+ * @template B     The Base document
  */
 export function SafeMathDocumentMixin<
-  N,
-  T,
-  D,
-  B extends MathDocumentConstructor<
-    AbstractMathDocument<N, T, D>,
-    DOM<N, T, D>
-  >,
->(BaseDocument: B): Constructor<SafeMathDocument<N, T, D>> & B {
+  DOM extends DOM_TYPES,
+  B extends MathDocumentConstructor<AbstractMathDocument<DOM>, DOM>,
+>(BaseDocument: B): Constructor<SafeMathDocument<DOM>> & B {
   return class extends BaseDocument {
     /**
      * @override
@@ -122,12 +115,12 @@ export function SafeMathDocumentMixin<
       ...options,
     };
 
-    public options: SAFE_OPTIONS<DOM<N, T, D>>;
+    public options: SAFE_OPTIONS<DOM>;
 
     /**
      * An instance of the Safe object
      */
-    public safe: Safe<N, T, D>;
+    public safe: Safe<DOM>;
 
     /**
      * Extend the MathItem class used for this MathDocument
@@ -154,13 +147,13 @@ export function SafeMathDocumentMixin<
 
     /**
      * @param {object} data The argument containing math item and document
-     * @param {MathItem<N, T, D>} data.math The math item to sanitize
-     * @param {SafeMathDocument<N, T, D>} data.document The document to use for the
+     * @param {MathItem<DOM>} data.math The math item to sanitize
+     * @param {SafeMathDocument<DOM>} data.document The document to use for the
      *     filter (note: this has been bound to the input jax)
      */
     protected sanitize(data: {
-      math: MathItem<N, T, D>;
-      document: SafeMathDocument<N, T, D>;
+      math: MathItem<DOM>;
+      document: SafeMathDocument<DOM>;
     }) {
       data.math.root = (this as any).parseOptions.root;
       data.document.safe.sanitize(data.math, data.document);
@@ -176,9 +169,12 @@ export function SafeMathDocumentMixin<
  * @param {Handler} handler   The Handler instance to enhance
  * @returns {Handler}         The handler that was modified (for purposes of chaining extensions)
  */
-export function SafeHandler<N, T, D>(
-  handler: Handler<N, T, D>
-): Handler<N, T, D> {
-  handler.documentClass = SafeMathDocumentMixin(handler.documentClass);
+export function SafeHandler<DOM extends DOM_TYPES>(
+  handler: Handler<DOM>
+): Handler<DOM> {
+  handler.documentClass = SafeMathDocumentMixin<
+    DOM,
+    MathDocumentConstructor<AbstractMathDocument<DOM>, DOM>
+  >(handler.documentClass);
   return handler;
 }

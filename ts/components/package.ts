@@ -55,14 +55,13 @@ export type PackagePromise = (
 /**
  * The configuration data for a package
  */
-/* prettier-ignore */
 export interface PackageConfig {
-  ready?: PackageReady;                // Function to call when package is loaded successfully
-  failed?: PackageFailed;              // Function to call when package fails to load
-  checkReady?: () => Promise<void>;    // Function called to see if package is fully loaded
-                                       //   (may cause additional packages to load, for example)
-  extraLoads?: string[];               // Extra packages to load after this one
-  rendererExtensions?: string[];       // Font extensions to load when renderer changes
+  ready?: PackageReady; //                Function to call when package is loaded successfully
+  failed?: PackageFailed; //              Function to call when package fails to load
+  checkReady?: () => Promise<void>; //    Function called to see if package is fully loaded
+  //                                        (May cause additional packages to load, for example)
+  extraLoads?: string[]; //               Extra packages to load after this one
+  rendererExtensions?: string[]; //       Font extensions to load when renderer changes
 }
 
 /**

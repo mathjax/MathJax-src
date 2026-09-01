@@ -25,8 +25,9 @@ import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { StyleJson, StyleJsonSheet } from '../../util/StyleJson.js';
 import { context } from '../../util/context.js';
 import { localize } from '../../core/__locales__/Component.js';
+import { HTML_DOM } from '../../types/dom/html.js';
 
-export type ADAPTOR = DOMAdaptor<HTMLElement, Text, Document>;
+export type ADAPTOR = DOMAdaptor<HTML_DOM>;
 
 export type Action = (
   dialog: DraggableDialog,

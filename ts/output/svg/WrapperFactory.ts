@@ -21,49 +21,27 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../svg.js';
+import { SVG, SVG_FONT } from '../svg.js';
 import { CommonWrapperFactory } from '../common/WrapperFactory.js';
 import { SvgWrapper, SvgWrapperClass } from './Wrapper.js';
 import { SvgWrappers } from './Wrappers.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from './FontData.js';
+import { DOM_TYPES } from '../../types/Types.js';
 
 /*****************************************************************/
 /*
  *  The SvgWrapperFactory class for creating SvgWrapper nodes
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class SvgWrapperFactory<N, T, D> extends CommonWrapperFactory<
-  //
-  // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
-  //
-  N,
-  T,
-  D,
-  //
-  // The Wrapper type and its Factory and Class (these need to know N, T, and D)
-  //
-  SVG<N, T, D>,
-  SvgWrapper<N, T, D>,
-  SvgWrapperFactory<N, T, D>,
-  SvgWrapperClass<N, T, D>,
-  //
-  // These are font-related objects that depend on the output jax; e,g. the character options
-  //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
-  //
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass
+export class SvgWrapperFactory<
+  DOM extends DOM_TYPES,
+> extends CommonWrapperFactory<
+  DOM,
+  SVG_FONT,
+  SVG<DOM>,
+  SvgWrapper<DOM>,
+  SvgWrapperFactory<DOM>,
+  SvgWrapperClass<DOM>
 > {
   /**
    * The default list of wrapper nodes this factory can create

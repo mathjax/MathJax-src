@@ -36,6 +36,7 @@ import * as Entities from '../../util/Entities.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { Locale } from '../../util/Locale.js';
 import { COMPONENT } from './__locales__/Component.js';
+import { DOM_TYPES, N } from '../../types/Types.js';
 
 /********************************************************************/
 
@@ -49,7 +50,7 @@ export type MATHMLCOMPILE_OPTIONS = {
   allowHtmlInTokenNodes: boolean; //    True if HTML is allowed in token nodes
   fixMisplacedChildren: boolean; //     True if we want to use heuristics to try to fix
   //                                      problems with the tree based on HTML not handling
-  //                                       self-closing tags properly
+  //                                      self-closing tags properly
   verify: VERIFY_OPTIONS; //            Options to pass to verifyTree() controlling MathML verification
   translateEntities: boolean; //        True means translate entities in text nodes
 };
@@ -72,11 +73,9 @@ const options: MATHMLCOMPILE_OPTIONS = {
  *  The class for performing the MathML DOM node to
  *  internal MmlNode conversion.
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class MathMLCompile<N, T, D> {
+export class MathMLCompile<DOM extends DOM_TYPES> {
   /**
    *  The default options for this object
    */
@@ -85,7 +84,7 @@ export class MathMLCompile<N, T, D> {
   /**
    * The DOMAdaptor for the document being processed
    */
-  public adaptor: DOMAdaptor<N, T, D>;
+  public adaptor: DOMAdaptor<DOM>;
 
   /**
    *  The instance of the MmlFactory object and
@@ -117,10 +116,10 @@ export class MathMLCompile<N, T, D> {
   /**
    * Convert a MathML DOM tree to internal MmlNodes
    *
-   * @param {N} node     The <math> node to convert to MmlNodes
+   * @param {N} node      The <math> node to convert to MmlNodes
    * @returns {MmlNode}   The MmlNode at the root of the converted tree
    */
-  public compile(node: N): MmlNode {
+  public compile(node: N<DOM>): MmlNode {
     const mml = this.makeNode(node);
     mml.verifyTree(this.options['verify']);
     mml.setInheritedAttributes({}, false, 0, false);
@@ -134,10 +133,10 @@ export class MathMLCompile<N, T, D> {
    *
    *  FIXME: we should use data-* attributes rather than classes for these
    *
-   * @param {N} node     The node to convert to an MmlNode
+   * @param {N} node      The node to convert to an MmlNode
    * @returns {MmlNode}   The converted MmlNode
    */
-  public makeNode(node: N): MmlNode {
+  public makeNode(node: N<DOM>): MmlNode {
     const adaptor = this.adaptor;
     let limits = false;
     const kind = adaptor.kind(node).replace(/^.*:/, '');
@@ -163,15 +162,15 @@ export class MathMLCompile<N, T, D> {
   /**
    * Create an actual MmlNode tree from a given DOM node.
    *
-   * @param {string} type      The type of MmlNode to create
-   * @param {N} node           The original DOM node that is being transcribed
-   * @param {string} texClass  The texClass specified on the node, if any
-   * @param {boolean} limits   True if fixed limits are to be used
+   * @param {string} type       The type of MmlNode to create
+   * @param {N} node            The original DOM node that is being transcribed
+   * @param {string} texClass   The texClass specified on the node, if any
+   * @param {boolean} limits    True if fixed limits are to be used
    * @returns {MmlNode}         The final MmlNode tree
    */
   protected createMml(
     type: string,
-    node: N,
+    node: N<DOM>,
     texClass: string,
     limits: boolean
   ): MmlNode {
@@ -195,14 +194,14 @@ export class MathMLCompile<N, T, D> {
    *
    * @param {string} type   The type of node being requested
    * @param {N} node        The HTML node used to create it.
-   * @returns {MmlNode}      The HtmlNode holding the node (or null)
+   * @returns {MmlNode}     The HtmlNode holding the node (or null)
    */
-  protected unknownNode(type: string, node: N): MmlNode {
+  protected unknownNode(type: string, node: N<DOM>): MmlNode {
     if (
       this.factory.getNodeClass('html') &&
       this.options.allowHtmlInTokenNodes
     ) {
-      return (this.factory.create('html') as HtmlNode<N>).setHTML(
+      return (this.factory.create('html') as HtmlNode<N<DOM>>).setHTML(
         node,
         this.adaptor
       );
@@ -215,9 +214,9 @@ export class MathMLCompile<N, T, D> {
    * Copy the attributes from a MathML node to an MmlNode.
    *
    * @param {MmlNode} mml       The MmlNode to which attributes will be added
-   * @param {N} node  The MathML node whose attributes to copy
+   * @param {N} node            The MathML node whose attributes to copy
    */
-  protected addAttributes(mml: MmlNode, node: N) {
+  protected addAttributes(mml: MmlNode, node: N<DOM>) {
     let ignoreVariant = false;
     for (const attr of this.adaptor.allAttributes(node)) {
       const name = attr.name;
@@ -269,9 +268,9 @@ export class MathMLCompile<N, T, D> {
   /**
    * Provide a hook for the Safe extension to filter attribute values.
    *
-   * @param {string} _name  The name of an attribute to filter
-   * @param {string} value  The value to filter
-   * @returns {string} The filtered value.
+   * @param {string} _name   The name of an attribute to filter
+   * @param {string} value   The value to filter
+   * @returns {string}       The filtered value.
    */
   protected filterAttribute(_name: string, value: string): string {
     return value;
@@ -293,12 +292,12 @@ export class MathMLCompile<N, T, D> {
    * @param {MmlNode} mml  The MmlNode to which children will be added
    * @param {N} node       The MathML node whose children are to be copied
    */
-  protected addChildren(mml: MmlNode, node: N) {
+  protected addChildren(mml: MmlNode, node: N<DOM>) {
     if (mml.arity === 0) {
       return;
     }
     const adaptor = this.adaptor;
-    for (const child of adaptor.childNodes(node) as N[]) {
+    for (const child of adaptor.childNodes(node) as N<DOM>[]) {
       const name = adaptor.kind(child);
       if (name === '#comment') {
         continue;
@@ -340,7 +339,7 @@ export class MathMLCompile<N, T, D> {
    * @param {MmlNode} mml  The MmlNode to which text will be added
    * @param {N} child      The text node whose contents is to be copied
    */
-  protected addText(mml: MmlNode, child: N) {
+  protected addText(mml: MmlNode, child: N<DOM>) {
     let text = this.adaptor.value(child);
     if ((mml.isToken || mml.getProperty('isChars')) && mml.arity) {
       if (mml.isToken) {
@@ -357,9 +356,9 @@ export class MathMLCompile<N, T, D> {
    * Check for special MJX values in the class and process them
    *
    * @param {MmlNode} mml       The MmlNode to be modified according to the class markers
-   * @param {N} node  The MathML node whose class is to be processed
+   * @param {N} node            The MathML node whose class is to be processed
    */
-  protected checkClass(mml: MmlNode, node: N) {
+  protected checkClass(mml: MmlNode, node: N<DOM>) {
     const classList = [];
     for (const name of this.filterClassList(this.adaptor.allClasses(node))) {
       if (name.substring(0, 4) === 'MJX-') {
@@ -383,7 +382,7 @@ export class MathMLCompile<N, T, D> {
   /**
    * Fix the old incorrect spelling of calligraphic.
    *
-   * @param {string} variant  The mathvariant name
+   * @param {string} variant   The mathvariant name
    * @returns {string}         The corrected variant
    */
   protected fixCalligraphic(variant: string): string {
@@ -393,7 +392,7 @@ export class MathMLCompile<N, T, D> {
   /**
    * Check to see if an mrow has delimiters at both ends (so looks like an mfenced structure).
    *
-   * @param {MmlNode} mml  The node to check for mfenced structure
+   * @param {MmlNode} mml   The node to check for mfenced structure
    */
   protected markMrows(mml: MmlNode) {
     if (mml.isKind('mrow') && !mml.isInferred && mml.childNodes.length >= 2) {
@@ -418,7 +417,7 @@ export class MathMLCompile<N, T, D> {
   }
 
   /**
-   * @param {string} text  The text to have spacing normalized
+   * @param {string} text   The text to have spacing normalized
    * @returns {string}      The trimmed text
    */
   protected normalizeSpace(text: string): string {
@@ -442,8 +441,8 @@ export class MathMLCompile<N, T, D> {
     }
   }
   /**
-   * @param {string} message  The error message to produce
-   * @param {string[]} args   The substitution arguments
+   * @param {string} message   The error message to produce
+   * @param {string[]} args    The substitution arguments
    */
   protected error(message: string, ...args: string[]) {
     Locale.throw(COMPONENT, message, ...args);
