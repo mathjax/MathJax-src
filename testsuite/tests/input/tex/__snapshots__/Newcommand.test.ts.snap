@@ -907,6 +907,12 @@ exports[`Newcommand Overrides Let overrides existing macro as delimiter 1`] = `
 </math>"
 `;
 
+exports[`Newcommand Providecommand 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\providecommand{\\a}{A}\\providecommand{\\a}{B}\\a" display="block">
+  <mi data-latex="A">A</mi>
+</math>"
+`;
+
 exports[`Newcommand legacy Def legacy comments 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x #1%X{\\text{[#1]}}\\x a%X" display="block">
   <mtext data-latex="\\text{[a]}">[a]</mtext>
@@ -930,9 +936,5 @@ exports[`Newcommand legacy Def legacy macro templates 2`] = `
 Y{\\text{[#1]}}\\x aX
 Y" display="block">
   <mtext data-latex="\\text{[a]}">[a]</mtext>
-
-exports[`Newcommand Providecommand 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\providecommand{\\a}{A}\\providecommand{\\a}{B}\\a" display="block">
-  <mi data-latex="A">A</mi>
 </math>"
 `;
