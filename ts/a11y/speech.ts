@@ -179,7 +179,7 @@ export type OPTIONS<DOM extends DOM_TYPES> = {
   speechError: (
     doc: SpeechMathDocument<N<DOM>, T<DOM>, D<DOM>>,
     math: SpeechMathItem<N<DOM>, T<DOM>, D<DOM>>,
-    err: Error
+    err: string
   ) => void;
   worker: {
     path: string;

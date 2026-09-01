@@ -862,7 +862,6 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     mjx: HTMLElement,
     container: Element
   ) {
-    let [x, y] = [0, 0];
     let top, bot, left, right;
     const g = container.querySelector('g').cloneNode(false);
     for (const child of enclosed) {
@@ -870,7 +869,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
       if (rect?.getAttribute(HILITE.ADDED)) {
         const bbox = rect.getBBox();
         const [X, Y] = this.xy(rect);
-        [x, y] = [X, Y + bbox.y];
+        const [x, y] = [X, Y + bbox.y];
         if (left === undefined || x < left) left = x;
         if (right === undefined || x + bbox.width > right) {
           right = x + bbox.width;

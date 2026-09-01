@@ -37,14 +37,11 @@ import {
   RenderActions,
 } from '../core/MathDocument.js';
 import { expandable, OptionList } from '../util/Options.js';
-import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { hasWindow } from '../util/context.js';
 import { StyleJson } from '../util/StyleJson.js';
 import { context } from '../util/context.js';
 import { Constructor } from '../types/Types.js';
 import { HTML_DOM } from '../types/dom/html.js';
-import { MathDocumentConstructor } from '../core/MathDocument.js';
-import { OptionList, expandable } from '../util/Options.js';
 import { SEM } from './semantic-enrich/strings.js';
 
 import { SAVED_HREF } from './explorer/strings.js';

@@ -277,7 +277,7 @@ export class FlameHoverer extends Hoverer<void> {
    * @override
    */
   protected constructor(
-    document: A11yDocument,
+    document: ExplorerMathDocument,
     pool: ExplorerPool,
     _ignore: any,
     node: HTMLElement,
