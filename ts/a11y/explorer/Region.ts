@@ -27,12 +27,7 @@ import { Highlighter } from './Highlighter.js';
 import { SsmlElement, buildSpeech } from '../speech/SpeechUtil.js';
 import { SEM } from '../semantic-enrich/strings.js';
 import { MACTION } from '../semantic-enrich/maction.js';
-import { HILITE } from './strings.js';
-
-export const MAG = {
-  CLONE: 'data-mjx-clone',
-  CONTAINER: 'data-mjx-clone-container',
-};
+import { HILITE, MAG } from './strings.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
 

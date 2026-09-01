@@ -26,7 +26,7 @@ import { STATE } from '../../core/MathItem.js';
 import type { ExplorerMathItem, ExplorerMathDocument } from '../explorer.js';
 import { Explorer, AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
-import { HILITE } from './strings.js';
+import { HILITE, SAVED_HREF } from './strings.js';
 import { SEM } from '../semantic-enrich/strings.js';
 import { SPEECH } from '../speech/strings.js';
 import { MACTION } from '../semantic-enrich/maction.js';
@@ -42,8 +42,6 @@ import { localize } from './__locales__/Component.js';
 const isWindows = context.os === 'Windows';
 
 const BRAILLE_PADDING = Array(40).fill('\u2800').join('');
-
-export const SAVED_HREF = 'data-mjx-href';
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.

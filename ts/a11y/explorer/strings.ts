@@ -30,3 +30,16 @@ export const HILITE = {
   ADDED: 'data-sre-highlighter-added',
   PREFIX: 'data-sre-highlight-',
 };
+
+/**
+ * The attributes used on clones during magnification
+ */
+export const MAG = {
+  CLONE: 'data-mjx-clone',
+  CONTAINER: 'data-mjx-clone-container',
+};
+
+/**
+ * The attribute used for saving HREF attributes during exploration
+ */
+export const SAVED_HREF = 'data-mjx-href';

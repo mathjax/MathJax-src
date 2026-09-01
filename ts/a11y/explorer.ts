@@ -32,7 +32,7 @@ import { StyleJson } from '../util/StyleJson.js';
 import { context } from '../util/context.js';
 import { SEM } from './semantic-enrich/strings.js';
 
-import { SAVED_HREF } from './explorer/KeyExplorer.js';
+import { SAVED_HREF } from './explorer/strings.js';
 import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
 
 import * as Sre from './sre.js';
