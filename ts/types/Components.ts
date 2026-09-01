@@ -189,7 +189,7 @@ export type COMPONENTS<DOM extends DOM_TYPES> = {
   'a11y/semantic-enrich':
     | DOC_OPTIONS<ENRICH_OPTIONS<DOM>>
     | DOC_TYPE<EnrichedMathDocument<N<DOM>, T<DOM>, D<DOM>>>;
-  'a11y/assisitive-mml':
+  'a11y/assistive-mml':
     | DOC_OPTIONS<ASSISTIVEMML_OPTIONS>
     | DOC_TYPE<AssistiveMmlMathDocument<N<DOM>, T<DOM>, D<DOM>>>;
   'a11y/complexity':
