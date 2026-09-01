@@ -28,6 +28,10 @@ import {
 } from '../../core/MmlTree/MmlNode.js';
 import { PropertyList } from '../../core/Tree/Node.js';
 import { ComplexityVisitor } from './visitor.js';
+import { PROP, DATA } from './strings.js';
+import { SEM } from '../semantic-enrich/strings.js';
+import { SPEECH } from '../speech/strings.js';
+import { MACTION } from '../semantic-enrich/maction.js';
 import type { SemanticMap } from '../speech/StructureUtil.js';
 
 /*==========================================================================*/
@@ -156,7 +160,7 @@ export class Collapse {
         complexity = this.uncollapseChild(complexity, node, 1);
         if (
           complexity > (this.cutoff.fenced as number) &&
-          node.attributes.get('data-semantic-role') === 'leftright'
+          node.attributes.get(SEM.ROLE) === 'leftright'
         ) {
           complexity = this.recordCollapse(
             node,
@@ -180,8 +184,7 @@ export class Collapse {
           complexity = this.complexity.visitNode(node, false);
           const marker = this.marker.appl as { [name: string]: string };
           const text =
-            marker[node.attributes.get('data-semantic-role') as string] ||
-            marker.value;
+            marker[node.attributes.get(SEM.ROLE) as string] || marker.value;
           complexity = this.recordCollapse(node, complexity, text);
         }
         return complexity;
@@ -197,7 +200,7 @@ export class Collapse {
       (node, complexity) => {
         complexity = this.uncollapseChild(complexity, node, 0);
         if (complexity > (this.cutoff.sqrt as number)) {
-          node.setProperty('collapse-variant', true);
+          node.setProperty(PROP.VARIANT, true);
           complexity = this.recordCollapse(
             node,
             complexity,
@@ -212,7 +215,7 @@ export class Collapse {
       (node, complexity) => {
         complexity = this.uncollapseChild(complexity, node, 0, 2);
         if (complexity > (this.cutoff.sqrt as number)) {
-          node.setProperty('collapse-variant', true);
+          node.setProperty(PROP.VARIANT, true);
           complexity = this.recordCollapse(
             node,
             complexity,
@@ -232,7 +235,7 @@ export class Collapse {
         if (this.splitAttribute(node, 'children').length === 1) {
           const child = this.canUncollapse(node, 1);
           if (child) {
-            const marker = child.getProperty('collapse-marker') as string;
+            const marker = child.getProperty(PROP.MARKER) as string;
             this.unrecordCollapse(child);
             complexity = this.recordCollapse(
               node,
@@ -369,7 +372,7 @@ export class Collapse {
    * @returns {number}            The revised complexity
    */
   public check(node: MmlNode, complexity: number): number {
-    const type = node.attributes.get('data-semantic-type') as string;
+    const type = node.attributes.get(SEM.TYPE) as string;
     if (this.collapse.has(type)) {
       return this.collapse.get(type).call(this, node, complexity);
     }
@@ -392,7 +395,7 @@ export class Collapse {
     complexity: number,
     type: string
   ): number {
-    const role = node.attributes.get('data-semantic-role') as string;
+    const role = node.attributes.get(SEM.ROLE) as string;
     const check = this.cutoff[type];
     const cutoff =
       typeof check === 'number' ? check : check[role] || check.value;
@@ -417,8 +420,8 @@ export class Collapse {
     text: string
   ): number {
     text = '\u25C2' + text + '\u25B8';
-    node.setProperty('collapse-marker', text);
-    node.setProperty('collapse-complexity', complexity);
+    node.setProperty(PROP.MARKER, text);
+    node.setProperty(PROP.COMPLEXITY, complexity);
     return text.length * this.complexity.complexity.text;
   }
 
@@ -428,11 +431,11 @@ export class Collapse {
    * @param {MmlNode} node   The node to uncollapse
    */
   protected unrecordCollapse(node: MmlNode) {
-    const complexity = node.getProperty('collapse-complexity');
+    const complexity = node.getProperty(PROP.COMPLEXITY);
     if (complexity != null) {
-      node.attributes.set('data-semantic-complexity', complexity);
-      node.removeProperty('collapse-complexity');
-      node.removeProperty('collapse-marker');
+      node.attributes.set(DATA.COMPLEXITY, complexity);
+      node.removeProperty(PROP.COMPLEXITY);
+      node.removeProperty(PROP.MARKER);
     }
   }
 
@@ -454,7 +457,7 @@ export class Collapse {
           : node;
       if (mml && mml.childNodes[n]) {
         const child = mml.childNodes[n];
-        if (child.getProperty('collapse-marker')) {
+        if (child.getProperty(PROP.MARKER)) {
           return child;
         }
       }
@@ -479,7 +482,7 @@ export class Collapse {
     if (child) {
       this.unrecordCollapse(child);
       if (child.parent !== node) {
-        child.parent.attributes.set('data-semantic-complexity', undefined);
+        child.parent.attributes.set(DATA.COMPLEXITY, undefined);
       }
       complexity = this.complexity.visitNode(node, false) as number;
     }
@@ -492,9 +495,7 @@ export class Collapse {
    * @returns {string[]}     Array of ids in the attribute split at commas
    */
   protected splitAttribute(node: MmlNode, id: string): string[] {
-    return ((node.attributes.get('data-semantic-' + id) as string) || '').split(
-      /,/
-    );
+    return ((node.attributes.get(SEM.PREFIX + id) as string) || '').split(/,/);
   }
 
   /**
@@ -522,7 +523,7 @@ export class Collapse {
    * @returns {MmlNode|null}  The child node (or null if not found)
    */
   protected findChild(node: MmlNode, id: string): MmlNode | null {
-    if (!node || node.attributes.get('data-semantic-id') === id) return node;
+    if (!node || node.attributes.get(SEM.ID) === id) return node;
     if (!node.isToken) {
       for (const mml of node.childNodes) {
         const child = this.findChild(mml, id);
@@ -554,7 +555,7 @@ export class Collapse {
     }
     const nodes: MmlNode[] = [];
     node.walkTree((child: MmlNode) => {
-      if (child.getProperty('collapse-marker')) {
+      if (child.getProperty(PROP.MARKER)) {
         nodes.push(child);
       }
     });
@@ -573,9 +574,7 @@ export class Collapse {
   public makeActions(root: MmlNode, nodes: MmlNode[], parts: SemanticMap) {
     for (const node of nodes) {
       const extra =
-        parts
-          .get(node.attributes.get('data-semantic-id') as string)
-          ?.slice(1) ?? [];
+        parts.get(node.attributes.get(SEM.ID) as string)?.slice(1) ?? [];
       this.makeAction(root, node, extra);
     }
   }
@@ -597,10 +596,10 @@ export class Collapse {
       node = this.addMrow(node);
     }
     const factory = this.complexity.factory;
-    const marker = node.getProperty('collapse-marker') as string;
+    const marker = node.getProperty(PROP.MARKER) as string;
     const parent = node.parent;
-    const def = { 'data-mjx-collapsed': true } as PropertyList;
-    if (node.getProperty('collapse-variant')) {
+    const def = { [MACTION.COLLAPSED]: true } as PropertyList;
+    if (node.getProperty(PROP.VARIANT)) {
       def.mathvariant = '-tex-variant';
     }
     const maction = factory.create(
@@ -608,11 +607,9 @@ export class Collapse {
       {
         actiontype: 'toggle',
         selection: 2,
-        'data-collapsible': true,
+        [MACTION.COLLAPSIBLE]: true,
         id: this.makeId(),
-        'data-semantic-complexity': node.attributes.get(
-          'data-semantic-complexity'
-        ),
+        [DATA.COMPLEXITY]: node.attributes.get(DATA.COMPLEXITY),
       },
       [
         factory.create('mtext', def, [
@@ -621,12 +618,9 @@ export class Collapse {
       ]
     );
     maction.inheritAttributesFrom(node);
-    node.attributes.set(
-      'data-semantic-complexity',
-      node.getProperty('collapse-complexity')
-    );
-    node.removeProperty('collapse-marker');
-    node.removeProperty('collapse-complexity');
+    node.attributes.set(DATA.COMPLEXITY, node.getProperty(PROP.COMPLEXITY));
+    node.removeProperty(PROP.MARKER);
+    node.removeProperty(PROP.COMPLEXITY);
     parent.replaceChild(maction, node);
     maction.appendChild(node);
     this.makeActionGroup(root, maction, extra);
@@ -639,10 +633,10 @@ export class Collapse {
    */
   public makeActionGroup(root: MmlNode, action: MmlNode, extra: string[]) {
     if (!extra.length) return;
-    action.attributes.set('data-collapse-group', true);
+    action.attributes.set(MACTION.GROUP, true);
     const nodes: MmlNode[] = [];
     root.walkTree((node) => {
-      if (extra.includes(node.attributes.get('data-semantic-id') as string)) {
+      if (extra.includes(node.attributes.get(SEM.ID) as string)) {
         nodes.push(node);
       }
     });
@@ -654,11 +648,9 @@ export class Collapse {
         {
           actiontype: 'toggle',
           selection: 2,
-          'data-collapsible': true,
-          'data-collapse-id': action.attributes.get('id'),
-          'data-semantic-complexity': node.attributes.get(
-            'data-semantic-complexity'
-          ),
+          [MACTION.COLLAPSIBLE]: true,
+          [MACTION.GROUPID]: action.attributes.get('id'),
+          [DATA.COMPLEXITY]: node.attributes.get(DATA.COMPLEXITY),
         },
         [factory.create('mtext')]
       );
@@ -686,8 +678,8 @@ export class Collapse {
     const attributes = node.attributes.getAllAttributes();
     for (const name of Object.keys(attributes)) {
       if (
-        name.substring(0, 14) === 'data-semantic-' ||
-        name.substring(0, 12) === 'data-speech-' ||
+        name.substring(0, 14) === SEM.PREFIX ||
+        name.substring(0, 12) === SPEECH.PREFIX ||
         name.substring(0, 5) === 'aria-' ||
         name === 'role'
       ) {
@@ -696,13 +688,10 @@ export class Collapse {
       }
     }
 
-    mrow.setProperty('collapse-marker', node.getProperty('collapse-marker'));
-    mrow.setProperty(
-      'collapse-complexity',
-      node.getProperty('collapse-complexity')
-    );
-    node.removeProperty('collapse-marker');
-    node.removeProperty('collapse-complexity');
+    mrow.setProperty(PROP.MARKER, node.getProperty(PROP.MARKER));
+    mrow.setProperty(PROP.COMPLEXITY, node.getProperty(PROP.COMPLEXITY));
+    node.removeProperty(PROP.MARKER);
+    node.removeProperty(PROP.COMPLEXITY);
     return mrow;
   }
 }

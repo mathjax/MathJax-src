@@ -23,6 +23,7 @@
 
 import { LiveRegion, SpeechRegion, ToolTip, HoverRegion } from './Region.js';
 import type { ExplorerMathDocument, ExplorerMathItem } from '../explorer.js';
+import { SEM } from '../semantic-enrich/strings.js';
 
 import { Explorer } from './Explorer.js';
 import { SpeechExplorer } from './KeyExplorer.js';
@@ -114,7 +115,7 @@ const allExplorers: { [options: string]: ExplorerInit } = {
       doc.explorerRegions.tooltip1,
       node,
       item,
-      'data-semantic-type'
+      SEM.TYPE
     ),
   infoRole: (doc, pool, node, item) =>
     ValueHoverer.create(
@@ -123,7 +124,7 @@ const allExplorers: { [options: string]: ExplorerInit } = {
       doc.explorerRegions.tooltip2,
       node,
       item,
-      'data-semantic-role'
+      SEM.ROLE
     ),
   infoPrefix: (doc, pool, node, item) =>
     ValueHoverer.create(
@@ -132,7 +133,7 @@ const allExplorers: { [options: string]: ExplorerInit } = {
       doc.explorerRegions.tooltip3,
       node,
       item,
-      'data-semantic-prefix-none'
+      SEM.PREFIX_NONE
     ),
   flame: (doc, pool, node) => FlameColorer.create(doc, pool, null, node),
   treeColoring: (doc, pool, node) => TreeColorer.create(doc, pool, null, node),

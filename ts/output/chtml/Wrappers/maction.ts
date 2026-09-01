@@ -42,6 +42,7 @@ import { ActionDef } from '../../common/Wrappers/maction.js';
 import { TooltipData } from '../../common/Wrappers/maction.js';
 import { TextNode } from '../../../core/MmlTree/MmlNode.js';
 import { StyleJson } from '../../../util/StyleJson.js';
+import { MACTION } from '../../../a11y/semantic-enrich/maction.js';
 
 /*****************************************************************/
 /**
@@ -171,7 +172,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
         'background-color': '#F8F8F8',
         color: 'black',
       },
-      'mjx-container [data-mjx-collapsed]': {
+      [`mjx-container [${MACTION.COLLAPSED}]`]: {
         color: '#55F',
       },
 
@@ -186,7 +187,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
           'background-color': '#303030',
           color: '#E0E0E0',
         },
-        'mjx-container [data-mjx-collapsed]': {
+        [`mjx-container [${MACTION.COLLAPSED}]`]: {
           color: '#88F',
         },
       },

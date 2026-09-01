@@ -45,6 +45,7 @@ import {
   AbstractMmlNode,
 } from '../../../core/MmlTree/MmlNode.js';
 import { StyleJson } from '../../../util/StyleJson.js';
+import { MACTION } from '../../../a11y/semantic-enrich/maction.js';
 
 /*****************************************************************/
 /**
@@ -184,7 +185,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
         'background-color': '#F8F8F8',
         color: 'black',
       },
-      'g[data-mjx-collapsed]': {
+      [`g[${MACTION.COLLAPSED}]`]: {
         fill: '#55F',
       },
 
@@ -198,7 +199,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
           'background-color': '#303030',
           color: '#E0E0E0',
         },
-        'g[data-mjx-collapsed]': {
+        [`g[${MACTION.COLLAPSED}]`]: {
           fill: '#88F',
         },
       },

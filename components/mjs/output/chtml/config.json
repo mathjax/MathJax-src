@@ -5,7 +5,9 @@
       "output/chtml.ts",
       "output/chtml",
       "output/common.ts",
-      "output/common"
+      "output/common",
+      "a11y/semantic-enrich/strings.ts",
+      "a11y/semantic-enrich/maction.ts"
     ]
   },
   "webpack": {

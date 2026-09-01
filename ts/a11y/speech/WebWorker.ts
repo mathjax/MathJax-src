@@ -26,6 +26,8 @@ import { OptionList } from '../../util/Options.js';
 import { Message, ClientCommand, Structure } from './MessageTypes.js';
 import { SpeechMathItem } from '../speech.js';
 import { SemAttr } from './SpeechUtil.js';
+import { SEM } from '../semantic-enrich/strings.js';
+import { SPEECH, BRAILLE } from './strings.js';
 import { StyleJsonData } from '../../util/StyleJson.js';
 import { Locale } from '../../util/Locale.js';
 import { localize, COMPONENT } from './__locales__/Component.js';
@@ -331,14 +333,14 @@ export class WorkerHandler<N, T, D> {
     const data = JSON.parse(structure) as Structure;
     const container = item.typesetRoot;
     if (!container) return; // Element is gone, maybe retypeset or removed.
-    this.setSpecialAttributes(container, data.options, 'data-semantic-', [
+    this.setSpecialAttributes(container, data.options, SEM.PREFIX, [
       'locale',
       'domain',
       'style',
       'domain2style',
     ]);
     const adaptor = this.adaptor;
-    this.setSpecialAttributes(container, data.translations, 'data-semantic-');
+    this.setSpecialAttributes(container, data.translations, SEM.PREFIX);
     // Sort out Mactions
     for (const [id, sid] of Object.entries(data.mactions)) {
       let node = adaptor.getElement('#' + id, container);
@@ -349,7 +351,7 @@ export class WorkerHandler<N, T, D> {
       if (adaptor.kind(node) === 'rect') {
         node = adaptor.next(node) as N;
       }
-      adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
+      adaptor.setAttribute(node, SEM.TYPE, 'dummy');
       this.setSpecialAttributes(node, sid, '');
     }
     for (const child of adaptor.childNodes(container)) {
@@ -363,7 +365,7 @@ export class WorkerHandler<N, T, D> {
         adaptor.setAttribute(container, SemAttr.SPEECH_SSML, data.ssml);
         item.outputData.speech = data.label;
       }
-      adaptor.setAttribute(container, 'data-speech-attached', 'true');
+      adaptor.setAttribute(container, SPEECH.ATTACHED, 'true');
     }
     if (braille) {
       if (data.braillelabel) {
@@ -371,7 +373,7 @@ export class WorkerHandler<N, T, D> {
         item.outputData.braille = data.braillelabel;
       }
       if (data.braille) {
-        adaptor.setAttribute(container, 'data-braille-attached', 'true');
+        adaptor.setAttribute(container, BRAILLE.ATTACHED, 'true');
       }
     }
   }
@@ -391,19 +393,19 @@ export class WorkerHandler<N, T, D> {
     braille: boolean
   ) {
     const adaptor = this.adaptor;
-    const id = adaptor.getAttribute(node, 'data-semantic-id');
-    adaptor.removeAttribute(node, 'data-speech-node');
+    const id = adaptor.getAttribute(node, SEM.ID);
+    adaptor.removeAttribute(node, SPEECH.NODE);
     if (speech && data.speech[id]['speech-none']) {
-      adaptor.setAttribute(node, 'data-speech-node', 'true');
+      adaptor.setAttribute(node, SPEECH.NODE, 'true');
       for (let [key, value] of Object.entries(data.speech[id])) {
         key = key.replace(/-ssml$/, '');
         if (value) {
-          adaptor.setAttribute(node, `data-semantic-${key}`, value as string);
+          adaptor.setAttribute(node, `${SEM.PREFIX}${key}`, value as string);
         }
       }
     }
     if (braille && data.braille?.[id]?.['braille-none']) {
-      adaptor.setAttribute(node, 'data-speech-node', 'true');
+      adaptor.setAttribute(node, SPEECH.NODE, 'true');
       const value = data.braille[id]['braille-none'];
       adaptor.setAttribute(node, SemAttr.BRAILLE, value);
     }
@@ -435,10 +437,10 @@ export class WorkerHandler<N, T, D> {
       return rootId;
     }
     root = root as N;
-    if (adaptor.hasAttribute(root, 'data-semantic-id')) {
+    if (adaptor.hasAttribute(root, SEM.ID)) {
       this.setSpeechAttribute(root, data, speech, braille);
-      if (!rootId && !adaptor.hasAttribute(root, 'data-semantic-parent')) {
-        rootId = adaptor.getAttribute(root, 'data-semantic-id');
+      if (!rootId && !adaptor.hasAttribute(root, SEM.PARENT)) {
+        rootId = adaptor.getAttribute(root, SEM.ID);
       }
     }
     for (const child of Array.from(adaptor.childNodes(root))) {
@@ -478,8 +480,8 @@ export class WorkerHandler<N, T, D> {
    */
   public Detach(item: SpeechMathItem<N, T, D>) {
     const container = item.typesetRoot;
-    this.adaptor.removeAttribute(container, 'data-speech-attached');
-    this.adaptor.removeAttribute(container, 'data-braille-attached');
+    this.adaptor.removeAttribute(container, SPEECH.ATTACHED);
+    this.adaptor.removeAttribute(container, BRAILLE.ATTACHED);
     this.detachSpeech(container);
   }
 
@@ -501,7 +503,7 @@ export class WorkerHandler<N, T, D> {
         'summary',
         'braille',
       ]) {
-        adaptor.removeAttribute(node, `data-semantic-${key}`);
+        adaptor.removeAttribute(node, `${SEM.PREFIX}${key}`);
       }
     }
     for (const child of children) {
