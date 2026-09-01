@@ -47,8 +47,7 @@ export type HTMLNodeList<N, T> = [N | T, number][];
  * @template D  The Document node class
  */
 export type HTMLTagData<N, T, D> =
-  | string
-  | ((node: N, adaptor: DOMAdaptor<N, T, D>) => string);
+  string | ((node: N, adaptor: DOMAdaptor<N, T, D>) => string);
 
 /*****************************************************************/
 
@@ -62,26 +61,36 @@ export type HTMLDOMSTRINGS_OPTIONS<DOM extends DOM_TYPES> = {
   // Tags to be included in the text (and what text to replace them
   // with).
   //
-  includeHtmlTags: {[tag: string]: HTMLTagData<N<DOM>, T<DOM>, D<DOM>>};
+  includeHtmlTags: { [tag: string]: HTMLTagData<N<DOM>, T<DOM>, D<DOM>> };
   //
   // The class name of elements whose contents should NOT be processed
   // by tex2jax.  Note that this is used as a regular expression, so
   // be sure to quote any regexp special characters.
   //
-  ignoreHtmlClass: string,
+  ignoreHtmlClass: string;
   //
   // The class name of elements whose contents SHOULD be processed
   // when they appear inside ones that are ignored.  Note that this is
   // used as a regular expression, so be sure to quote any regexp
   // special characters.
   //
-  processHtmlClass: string,
+  processHtmlClass: string;
 };
 
 const options: HTMLDOMSTRINGS_OPTIONS<DOM> = {
-  skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code',
-                 'math', 'select', 'option', 'mjx-container'],
-  includeHtmlTags: expandable({br: '\n', wbr: '', '#comment': ''}),
+  skipHtmlTags: [
+    'script',
+    'noscript',
+    'style',
+    'textarea',
+    'pre',
+    'code',
+    'math',
+    'select',
+    'option',
+    'mjx-container',
+  ],
+  includeHtmlTags: expandable({ br: '\n', wbr: '', '#comment': '' }),
   ignoreHtmlClass: 'mathjax_ignore',
   processHtmlClass: 'mathjax_process',
 };
