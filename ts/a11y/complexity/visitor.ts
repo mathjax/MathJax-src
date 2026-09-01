@@ -37,7 +37,9 @@ import {
 import { MmlVisitor } from '../../core/MmlTree/MmlVisitor.js';
 import { MmlFactory } from '../../core/MmlTree/MmlFactory.js';
 import { Collapse } from './collapse.js';
+import { DATA, PROP } from './strings.js';
 import { OptionList, userOptions, defaultOptions } from '../../util/Options.js';
+import type { SemanticMap } from '../speech/StructureUtil.js';
 
 /*==========================================================================*/
 
@@ -125,10 +127,10 @@ export class ComplexityVisitor extends MmlVisitor {
   /**
    * @override
    */
-  public visitTree(node: MmlNode, id: number) {
+  public visitTree(node: MmlNode, id: number, parts: SemanticMap) {
     super.visitTree(node, true);
     if (this.options.makeCollapsible) {
-      id = this.collapse.makeCollapse(node, id);
+      id = this.collapse.makeCollapse(node, id, parts);
     }
     return id;
   }
@@ -137,7 +139,7 @@ export class ComplexityVisitor extends MmlVisitor {
    * @override
    */
   public visitNode(node: MmlNode, save: boolean) {
-    if (node.attributes.get('data-semantic-complexity')) return;
+    if (node.attributes.get(DATA.COMPLEXITY)) return;
     return super.visitNode(node, save);
   }
 
@@ -189,8 +191,8 @@ export class ComplexityVisitor extends MmlVisitor {
    *   (since it is counted in the children sum but is smaller)
    *
    * @param {MmlMroot} node   The node whose complixity is being computed
-   * @param {boolean} save   True if the complexity is to be saved or just returned
-   * @returns {number}       The complexity of the node
+   * @param {boolean} save    True if the complexity is to be saved or just returned
+   * @returns {number}        The complexity of the node
    */
   protected visitMrootNode(node: MmlMroot, save: boolean): number {
     const complexity =
@@ -234,8 +236,8 @@ export class ComplexityVisitor extends MmlVisitor {
    *   complexity for each child, and the subsup complexity.
    *
    * @param {MmlMsubsup} node   The node whose complixity is being computed
-   * @param {boolean} save   True if the complexity is to be saved or just returned
-   * @returns {number}       The complexity of the node
+   * @param {boolean} save      True if the complexity is to be saved or just returned
+   * @returns {number}          The complexity of the node
    */
   protected visitMsubsupNode(node: MmlMsubsup, save: boolean): number {
     super.visitDefault(node, true);
@@ -276,8 +278,8 @@ export class ComplexityVisitor extends MmlVisitor {
    *   underover amount.
    *
    * @param {MmlMunderover} node   The node whose complixity is being computed
-   * @param {boolean} save   True if the complexity is to be saved or just returned
-   * @returns {number}       The complexity of the node
+   * @param {boolean} save         True if the complexity is to be saved or just returned
+   * @returns {number}             The complexity of the node
    */
   protected visitMunderoverNode(node: MmlMunderover, save: boolean): number {
     super.visitDefault(node, true);
@@ -300,16 +302,16 @@ export class ComplexityVisitor extends MmlVisitor {
   }
   /**
    * @param {MmlMunder} node   The node whose complixity is being computed
-   * @param {boolean} save   True if the complexity is to be saved or just returned
-   * @returns {number}       The complexity of the node
+   * @param {boolean} save     True if the complexity is to be saved or just returned
+   * @returns {number}         The complexity of the node
    */
   protected visitMunderNode(node: MmlMunder, save: boolean): number {
     return this.visitMunderoverNode(node, save);
   }
   /**
    * @param {MmlMover} node   The node whose complixity is being computed
-   * @param {boolean} save   True if the complexity is to be saved or just returned
-   * @returns {number}       The complexity of the node
+   * @param {boolean} save    True if the complexity is to be saved or just returned
+   * @returns {number}        The complexity of the node
    */
   protected visitMoverNode(node: MmlMover, save: boolean): number {
     return this.visitMunderoverNode(node, save);
@@ -331,8 +333,8 @@ export class ComplexityVisitor extends MmlVisitor {
    * For actions, use the complexity of the selected child
    *
    * @param {MmlMaction} node   The node whose complixity is being computed
-   * @param {boolean} save   True if the complexity is to be saved or just returned
-   * @returns {number}       The complexity of the node
+   * @param {boolean} save      True if the complexity is to be saved or just returned
+   * @returns {number}          The complexity of the node
    */
   protected visitMactionNode(node: MmlMaction, save: boolean): number {
     this.childrenComplexity(node);
@@ -394,14 +396,12 @@ export class ComplexityVisitor extends MmlVisitor {
 
   /**
    * @param {MmlNode} node   The node whose complixity is needed
-   * @returns {number}        The complexity of the node (if collapsable, then the collapsed complexity)
+   * @returns {number}       The complexity of the node (if collapsable, then the collapsed complexity)
    */
   public getComplexity(node: MmlNode): number {
-    const collapsed = node.getProperty('collapsedComplexity');
+    const collapsed = node.getProperty(PROP.COMPLEXITY);
     return (
-      collapsed != null
-        ? collapsed
-        : node.attributes.get('data-semantic-complexity')
+      collapsed != null ? collapsed : node.attributes.get(DATA.COMPLEXITY)
     ) as number;
   }
 
@@ -420,14 +420,14 @@ export class ComplexityVisitor extends MmlVisitor {
       if (this.options.identifyCollapsible) {
         complexity = this.collapse.check(node, complexity);
       }
-      node.attributes.set('data-semantic-complexity', complexity);
+      node.attributes.set(DATA.COMPLEXITY, complexity);
     }
     return complexity;
   }
 
   /**
    * @param {MmlNode} node   The node whose children complexities are to be added
-   * @returns {number}        The sum of the complexities, plus child complexity for each one
+   * @returns {number}       The sum of the complexities, plus child complexity for each one
    */
   protected childrenComplexity(node: MmlNode): number {
     super.visitDefault(node, true);

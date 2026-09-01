@@ -1,7 +1,14 @@
 {
   "build": {
     "component": "ui/menu",
-    "targets": ["ui/menu", "a11y/speech/SpeechMenu.ts"],
+    "targets": [
+      "ui/menu",
+      "a11y/speech/SpeechMenu.ts",
+      "a11y/semantic-enrich/strings.ts",
+      "a11y/speech/strings.ts",
+      "ui/menu/__locales__",
+      "a11y/aria/__locales__"
+    ],
     "excludeSubdirs": true
   },
   "copy": [

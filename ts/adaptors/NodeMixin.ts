@@ -216,13 +216,19 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
           this.worker.terminate();
         }
       }
-      const { path, maps } = options;
-      const url = `${path}/${options.worker}`;
+      const { path, maps, worker: file } = options;
+      const url = `${path}/${file}`;
       const worker = new LiteWorker(url, {
         type: 'module',
         workerData: { maps },
       });
       worker.addEventListener('message', listener);
+      worker.addEventListener('error', (err) => {
+        const event = new MessageEvent('error', {
+          data: { cmd: 'Failed', data: err.message },
+        });
+        listener(event);
+      });
       return worker;
     }
   };

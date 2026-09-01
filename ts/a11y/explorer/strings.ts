@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2026 The MathJax Consortium
+ *  Copyright (c) 2026 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,23 +16,30 @@
  */
 
 /**
- * @file Mappings for TeX parsing for definitorial commands.
+ * @file  The data attribute strings for the explorer
  *
- * @author v.sorge@mathjax.org (Volker Sorge)
+ * @author dpvc@mathjax.org (Davide Cervone)
  */
-
-import NewcommandMethods from './NewcommandMethods.js';
-import { CommandMap } from '../TokenMap.js';
 
 /**
- * Macros for newcommand etc.
+ * The attributes for various markers
  */
-new CommandMap('Newcommand-macros', {
-  newcommand: NewcommandMethods.NewCommand,
-  renewcommand: NewcommandMethods.NewCommand,
-  providecommand: [NewcommandMethods.NewCommand, true],
-  newenvironment: NewcommandMethods.NewEnvironment,
-  renewenvironment: NewcommandMethods.NewEnvironment,
-  def: NewcommandMethods.MacroDef,
-  let: NewcommandMethods.Let,
-});
+export const HILITE = {
+  ENCLOSED: 'data-sre-enclosed',
+  BBOX: 'data-sre-highlighter-bbox',
+  ADDED: 'data-sre-highlighter-added',
+  PREFIX: 'data-sre-highlight-',
+};
+
+/**
+ * The attributes used on clones during magnification
+ */
+export const MAG = {
+  CLONE: 'data-mjx-clone',
+  CONTAINER: 'data-mjx-clone-container',
+};
+
+/**
+ * The attribute used for saving HREF attributes during exploration
+ */
+export const SAVED_HREF = 'data-mjx-href';

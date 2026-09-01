@@ -28,6 +28,11 @@ import {
 } from '../../core/MmlTree/MmlNode.js';
 import { PropertyList } from '../../core/Tree/Node.js';
 import { ComplexityVisitor } from './visitor.js';
+import { PROP, DATA } from './strings.js';
+import { SEM } from '../semantic-enrich/strings.js';
+import { SPEECH } from '../speech/strings.js';
+import { MACTION } from '../semantic-enrich/maction.js';
+import type { SemanticMap } from '../speech/StructureUtil.js';
 
 /*==========================================================================*/
 
@@ -155,7 +160,7 @@ export class Collapse {
         complexity = this.uncollapseChild(complexity, node, 1);
         if (
           complexity > (this.cutoff.fenced as number) &&
-          node.attributes.get('data-semantic-role') === 'leftright'
+          node.attributes.get(SEM.ROLE) === 'leftright'
         ) {
           complexity = this.recordCollapse(
             node,
@@ -179,8 +184,7 @@ export class Collapse {
           complexity = this.complexity.visitNode(node, false);
           const marker = this.marker.appl as { [name: string]: string };
           const text =
-            marker[node.attributes.get('data-semantic-role') as string] ||
-            marker.value;
+            marker[node.attributes.get(SEM.ROLE) as string] || marker.value;
           complexity = this.recordCollapse(node, complexity, text);
         }
         return complexity;
@@ -196,7 +200,7 @@ export class Collapse {
       (node, complexity) => {
         complexity = this.uncollapseChild(complexity, node, 0);
         if (complexity > (this.cutoff.sqrt as number)) {
-          node.setProperty('collapse-variant', true);
+          node.setProperty(PROP.VARIANT, true);
           complexity = this.recordCollapse(
             node,
             complexity,
@@ -211,7 +215,7 @@ export class Collapse {
       (node, complexity) => {
         complexity = this.uncollapseChild(complexity, node, 0, 2);
         if (complexity > (this.cutoff.sqrt as number)) {
-          node.setProperty('collapse-variant', true);
+          node.setProperty(PROP.VARIANT, true);
           complexity = this.recordCollapse(
             node,
             complexity,
@@ -231,7 +235,7 @@ export class Collapse {
         if (this.splitAttribute(node, 'children').length === 1) {
           const child = this.canUncollapse(node, 1);
           if (child) {
-            const marker = child.getProperty('collapse-marker') as string;
+            const marker = child.getProperty(PROP.MARKER) as string;
             this.unrecordCollapse(child);
             complexity = this.recordCollapse(
               node,
@@ -365,10 +369,10 @@ export class Collapse {
    *
    * @param {MmlNode} node        The node to check
    * @param {number} complexity   The current complexity of the node
-   * @returns {number}             The revised complexity
+   * @returns {number}            The revised complexity
    */
   public check(node: MmlNode, complexity: number): number {
-    const type = node.attributes.get('data-semantic-type') as string;
+    const type = node.attributes.get(SEM.TYPE) as string;
     if (this.collapse.has(type)) {
       return this.collapse.get(type).call(this, node, complexity);
     }
@@ -384,14 +388,14 @@ export class Collapse {
    * @param {MmlNode} node        The node to check
    * @param {number} complexity   The current complexity of the node
    * @param {string} type         The semantic type of the node
-   * @returns {number}             The revised complexity
+   * @returns {number}            The revised complexity
    */
   protected defaultCheck(
     node: MmlNode,
     complexity: number,
     type: string
   ): number {
-    const role = node.attributes.get('data-semantic-role') as string;
+    const role = node.attributes.get(SEM.ROLE) as string;
     const check = this.cutoff[type];
     const cutoff =
       typeof check === 'number' ? check : check[role] || check.value;
@@ -408,7 +412,7 @@ export class Collapse {
    * @param {MmlNode} node       The node to check
    * @param {number} complexity  The current complexity of the node
    * @param {string} text        The text to use for the collapsed node
-   * @returns {number}            The revised complexity for the collapsed node
+   * @returns {number}           The revised complexity for the collapsed node
    */
   protected recordCollapse(
     node: MmlNode,
@@ -416,8 +420,8 @@ export class Collapse {
     text: string
   ): number {
     text = '\u25C2' + text + '\u25B8';
-    node.setProperty('collapse-marker', text);
-    node.setProperty('collapse-complexity', complexity);
+    node.setProperty(PROP.MARKER, text);
+    node.setProperty(PROP.COMPLEXITY, complexity);
     return text.length * this.complexity.complexity.text;
   }
 
@@ -427,11 +431,11 @@ export class Collapse {
    * @param {MmlNode} node   The node to uncollapse
    */
   protected unrecordCollapse(node: MmlNode) {
-    const complexity = node.getProperty('collapse-complexity');
+    const complexity = node.getProperty(PROP.COMPLEXITY);
     if (complexity != null) {
-      node.attributes.set('data-semantic-complexity', complexity);
-      node.removeProperty('collapse-complexity');
-      node.removeProperty('collapse-marker');
+      node.attributes.set(DATA.COMPLEXITY, complexity);
+      node.removeProperty(PROP.COMPLEXITY);
+      node.removeProperty(PROP.MARKER);
     }
   }
 
@@ -439,7 +443,7 @@ export class Collapse {
    * @param {MmlNode} node    The node to check if its child is collapsible
    * @param {number} n        The position of the child node to check
    * @param {number=} m       The number of children node must have
-   * @returns {MmlNode|null}   The child node that was collapsed (or null)
+   * @returns {MmlNode|null}  The child node that was collapsed (or null)
    */
   protected canUncollapse(
     node: MmlNode,
@@ -453,7 +457,7 @@ export class Collapse {
           : node;
       if (mml && mml.childNodes[n]) {
         const child = mml.childNodes[n];
-        if (child.getProperty('collapse-marker')) {
+        if (child.getProperty(PROP.MARKER)) {
           return child;
         }
       }
@@ -466,7 +470,7 @@ export class Collapse {
    * @param {MmlNode} node        The node to check
    * @param {number} n            The position of the child node to check
    * @param {number=} m           The number of children the node must have
-   * @returns {number}             The updated complexity
+   * @returns {number}            The updated complexity
    */
   protected uncollapseChild(
     complexity: number,
@@ -478,7 +482,7 @@ export class Collapse {
     if (child) {
       this.unrecordCollapse(child);
       if (child.parent !== node) {
-        child.parent.attributes.set('data-semantic-complexity', undefined);
+        child.parent.attributes.set(DATA.COMPLEXITY, undefined);
       }
       complexity = this.complexity.visitNode(node, false) as number;
     }
@@ -488,12 +492,10 @@ export class Collapse {
   /**
    * @param {MmlNode} node   The node whose attribute is to be split
    * @param {string} id      The name of the data-semantic attribute to split
-   * @returns {string[]}      Array of ids in the attribute split at commas
+   * @returns {string[]}     Array of ids in the attribute split at commas
    */
   protected splitAttribute(node: MmlNode, id: string): string[] {
-    return ((node.attributes.get('data-semantic-' + id) as string) || '').split(
-      /,/
-    );
+    return ((node.attributes.get(SEM.PREFIX + id) as string) || '').split(/,/);
   }
 
   /**
@@ -508,7 +510,7 @@ export class Collapse {
   /**
    * @param {MmlNode} node   The node whose child text is needed
    * @param {string} id      The (semantic) id of the child needed
-   * @returns {string}        The text of the specified child node
+   * @returns {string}       The text of the specified child node
    */
   protected findChildText(node: MmlNode, id: string): string {
     const child = this.findChild(node, id);
@@ -518,10 +520,10 @@ export class Collapse {
   /**
    * @param {MmlNode} node    The node whose child is to be located
    * @param {string} id       The (semantic) id of the child to be found
-   * @returns {MmlNode|null}   The child node (or null if not found)
+   * @returns {MmlNode|null}  The child node (or null if not found)
    */
   protected findChild(node: MmlNode, id: string): MmlNode | null {
-    if (!node || node.attributes.get('data-semantic-id') === id) return node;
+    if (!node || node.attributes.get(SEM.ID) === id) return node;
     if (!node.isToken) {
       for (const mml of node.childNodes) {
         const child = this.findChild(mml, id);
@@ -534,11 +536,16 @@ export class Collapse {
   /**
    * Add maction nodes to the nodes in the tree that can collapse
    *
-   * @param {MmlNode} node     The root of the tree to check
-   * @param {number|null} id   The initial id to use
-   * @returns {number}         The initial id used
+   * @param {MmlNode} node        The root of the tree to check
+   * @param {number|null} id      The initial id to use
+   * @param {SemanticMap} parts   The map of ids to extra nodes
+   * @returns {number}            The initial id used
    */
-  public makeCollapse(node: MmlNode, id: number | null): number {
+  public makeCollapse(
+    node: MmlNode,
+    id: number | null,
+    parts: SemanticMap
+  ): number {
     let oldCount = null;
     if (id === null) {
       id = this.idCount;
@@ -548,11 +555,11 @@ export class Collapse {
     }
     const nodes: MmlNode[] = [];
     node.walkTree((child: MmlNode) => {
-      if (child.getProperty('collapse-marker')) {
+      if (child.getProperty(PROP.MARKER)) {
         nodes.push(child);
       }
     });
-    this.makeActions(nodes);
+    this.makeActions(node, nodes, parts);
     if (oldCount !== null) {
       this.idCount = oldCount;
     }
@@ -560,11 +567,15 @@ export class Collapse {
   }
 
   /**
-   * @param {MmlNode[]} nodes   The list of nodes to replace by maction nodes
+   * @param {MmlNode} root        The top of the MathML tree
+   * @param {MmlNode[]} nodes     The list of nodes to replace by maction nodes
+   * @param {SemanticMap} parts   The map of ids to extra nodes
    */
-  public makeActions(nodes: MmlNode[]) {
+  public makeActions(root: MmlNode, nodes: MmlNode[], parts: SemanticMap) {
     for (const node of nodes) {
-      this.makeAction(node);
+      const extra =
+        parts.get(node.attributes.get(SEM.ID) as string)?.slice(1) ?? [];
+      this.makeAction(root, node, extra);
     }
   }
 
@@ -576,45 +587,77 @@ export class Collapse {
   }
 
   /**
-   * @param {MmlNode} node   The node to make collapsible by replacing with an maction
+   * @param {MmlNode} root     The top of the MathML tree
+   * @param {MmlNode} node     The node to make collapsible by replacing with an maction
+   * @param {string[]} extra   The extra nodes (if any) that need to be included in linked mactions
    */
-  public makeAction(node: MmlNode) {
+  public makeAction(root: MmlNode, node: MmlNode, extra: string[]) {
     if (node.isKind('math')) {
       node = this.addMrow(node);
     }
     const factory = this.complexity.factory;
-    const marker = node.getProperty('collapse-marker') as string;
+    const marker = node.getProperty(PROP.MARKER) as string;
     const parent = node.parent;
-    const variant = { 'data-mjx-collapsed': true } as PropertyList;
-    if (node.getProperty('collapse-variant')) {
-      variant.mathvariant = '-tex-variant';
+    const def = { [MACTION.COLLAPSED]: true } as PropertyList;
+    if (node.getProperty(PROP.VARIANT)) {
+      def.mathvariant = '-tex-variant';
     }
     const maction = factory.create(
       'maction',
       {
         actiontype: 'toggle',
         selection: 2,
-        'data-collapsible': true,
+        [MACTION.COLLAPSIBLE]: true,
         id: this.makeId(),
-        'data-semantic-complexity': node.attributes.get(
-          'data-semantic-complexity'
-        ),
+        [DATA.COMPLEXITY]: node.attributes.get(DATA.COMPLEXITY),
       },
       [
-        factory.create('mtext', variant, [
+        factory.create('mtext', def, [
           (factory.create('text') as TextNode).setText(marker),
         ]),
       ]
     );
     maction.inheritAttributesFrom(node);
-    node.attributes.set(
-      'data-semantic-complexity',
-      node.getProperty('collapse-complexity')
-    );
-    node.removeProperty('collapse-marker');
-    node.removeProperty('collapse-complexity');
+    node.attributes.set(DATA.COMPLEXITY, node.getProperty(PROP.COMPLEXITY));
+    node.removeProperty(PROP.MARKER);
+    node.removeProperty(PROP.COMPLEXITY);
     parent.replaceChild(maction, node);
     maction.appendChild(node);
+    this.makeActionGroup(root, maction, extra);
+  }
+
+  /**
+   * @param {MmlNode} root     The root of the MathML tree
+   * @param {MmlNode} action   The maction node that controls the potential group
+   * @param {string[]} extra   The list of extra nodes for this group (if non-empty)
+   */
+  public makeActionGroup(root: MmlNode, action: MmlNode, extra: string[]) {
+    if (!extra.length) return;
+    action.attributes.set(MACTION.GROUP, true);
+    const nodes: MmlNode[] = [];
+    root.walkTree((node) => {
+      if (extra.includes(node.attributes.get(SEM.ID) as string)) {
+        nodes.push(node);
+      }
+    });
+    const factory = this.complexity.factory;
+    for (const node of nodes) {
+      const parent = node.parent;
+      const maction = factory.create(
+        'maction',
+        {
+          actiontype: 'toggle',
+          selection: 2,
+          [MACTION.COLLAPSIBLE]: true,
+          [MACTION.GROUPID]: action.attributes.get('id'),
+          [DATA.COMPLEXITY]: node.attributes.get(DATA.COMPLEXITY),
+        },
+        [factory.create('mtext')]
+      );
+      maction.inheritAttributesFrom(node);
+      parent.replaceChild(maction, node);
+      maction.appendChild(node);
+    }
   }
 
   /**
@@ -622,7 +665,7 @@ export class Collapse {
    *  in an maction (can't put one around the <math> node).
    *
    * @param {MmlNode} node  The math node to create an mrow for
-   * @returns {MmlNode}      The newly created mrow
+   * @returns {MmlNode}     The newly created mrow
    */
   public addMrow(node: MmlNode): MmlNode {
     const mrow = this.complexity.factory.create(
@@ -635,8 +678,8 @@ export class Collapse {
     const attributes = node.attributes.getAllAttributes();
     for (const name of Object.keys(attributes)) {
       if (
-        name.substring(0, 14) === 'data-semantic-' ||
-        name.substring(0, 12) === 'data-speech-' ||
+        name.substring(0, 14) === SEM.PREFIX ||
+        name.substring(0, 12) === SPEECH.PREFIX ||
         name.substring(0, 5) === 'aria-' ||
         name === 'role'
       ) {
@@ -645,13 +688,10 @@ export class Collapse {
       }
     }
 
-    mrow.setProperty('collapse-marker', node.getProperty('collapse-marker'));
-    mrow.setProperty(
-      'collapse-complexity',
-      node.getProperty('collapse-complexity')
-    );
-    node.removeProperty('collapse-marker');
-    node.removeProperty('collapse-complexity');
+    mrow.setProperty(PROP.MARKER, node.getProperty(PROP.MARKER));
+    mrow.setProperty(PROP.COMPLEXITY, node.getProperty(PROP.COMPLEXITY));
+    node.removeProperty(PROP.MARKER);
+    node.removeProperty(PROP.COMPLEXITY);
     return mrow;
   }
 }

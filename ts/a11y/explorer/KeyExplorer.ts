@@ -26,6 +26,10 @@ import { STATE } from '../../core/MathItem.js';
 import type { ExplorerMathItem, ExplorerMathDocument } from '../explorer.js';
 import { Explorer, AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
+import { HILITE, SAVED_HREF } from './strings.js';
+import { SEM } from '../semantic-enrich/strings.js';
+import { SPEECH } from '../speech/strings.js';
+import { MACTION } from '../semantic-enrich/maction.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, SemAttr } from '../speech/SpeechUtil.js';
 import { GeneratorPool } from '../speech/GeneratorPool.js';
@@ -86,7 +90,7 @@ export type keyMapping = (
 /**
  * Selectors for walking.
  */
-const nav = '[data-speech-node]';
+const nav = `[${SPEECH.NODE}]`;
 
 /**
  * Predicate to check if element is a MJX container.
@@ -334,7 +338,7 @@ export class SpeechExplorer
   /**
    * The anchors in this expression
    */
-  protected anchors: HTMLElement[];
+  protected anchors: HTMLElement[] = [];
 
   /**
    * The elements that are focusable for tab navigation
@@ -362,11 +366,6 @@ export class SpeechExplorer
     ['click', this.Click.bind(this)],
     ['dblclick', this.DblClick.bind(this)],
   ]);
-
-  /**
-   * Semantic id to subtree map.
-   */
-  private subtrees: Map<string, Set<string>> = null;
 
   /**
    * @override
@@ -451,10 +450,11 @@ export class SpeechExplorer
     //
     // Get the speech element that was clicked
     //
-    const clicked = this.findClicked(
-      event.target as HTMLElement,
-      event.x,
-      event.y
+    const clicked = this.nodeAtXY(
+      event,
+      (node) => node.matches(nav),
+      [this.speech, this.img],
+      this.document.infoIcon
     );
     //
     // If it is the info icon, top the event and let the click handler process it
@@ -469,7 +469,7 @@ export class SpeechExplorer
     //   otherwise record the click for the focusin handler
     //
     document.getSelection()?.removeAllRanges();
-    if ((event.target as HTMLElement).getAttribute('sre-highlighter-added')) {
+    if ((event.target as HTMLElement).getAttribute(HILITE.ADDED)) {
       this.refocus = clicked;
     } else {
       this.clicked = clicked;
@@ -496,10 +496,11 @@ export class SpeechExplorer
     //
     // Get the speech element that was clicked
     //
-    const clicked = this.findClicked(
-      event.target as HTMLElement,
-      event.x,
-      event.y
+    const clicked = this.nodeAtXY(
+      event,
+      (node) => node.matches(nav),
+      [this.speech, this.img],
+      this.document.infoIcon
     );
     //
     // If it was the info icon, open the help dialog
@@ -508,6 +509,16 @@ export class SpeechExplorer
       this.stopEvent(event);
       this.help();
       return;
+    }
+    //
+    // If we have a key magnifier but no speech or Braille, show the clicked node
+    //
+    if (clicked && this.clicked) {
+      const { speech, braille, keyMagnifier } = this.document.options.a11y;
+      if (!speech && !braille && keyMagnifier) {
+        this.setCurrent(clicked);
+        return;
+      }
     }
     //
     // If the node contains the clicked element,
@@ -646,7 +657,7 @@ export class SpeechExplorer
    * @param {HTMLElement} node   The node within the expression to receive the focus
    */
   protected tabTo(node: HTMLElement) {
-    if (node.getAttribute('data-mjx-href')) {
+    if (node.getAttribute(SAVED_HREF)) {
       this.setCurrent(this.linkFor(node));
     } else {
       node.focus();
@@ -692,7 +703,7 @@ export class SpeechExplorer
           return;
         }
         const tabs = this.getInternalTabs(this.current).filter(
-          (node) => !node.getAttribute('data-mjx-href')
+          (node) => !node.getAttribute(SAVED_HREF)
         );
         if (tabs.length) {
           tabs[0].focus();
@@ -896,8 +907,8 @@ export class SpeechExplorer
     this.speechType = 'd';
     const parts = [
       [
-        this.node.getAttribute('data-semantic-level') ?? 'Level',
-        this.current.getAttribute('data-semantic-level-number') ?? '0',
+        this.node.getAttribute(SEM.LEVEL) ?? 'Level',
+        this.current.getAttribute(SEM.LEVEL_NUMBER) ?? '0',
       ]
         .join(' ')
         .trim(),
@@ -907,8 +918,8 @@ export class SpeechExplorer
       parts.unshift(
         this.node.getAttribute(
           action.getAttribute('toggle') === '1'
-            ? 'data-semantic-expandable'
-            : 'data-semantic-collapsible'
+            ? MACTION.EXPANDABLE
+            : MACTION.COLLAPSIBLE
         ) ?? ''
       );
     }
@@ -937,7 +948,7 @@ export class SpeechExplorer
    * the expression.
    */
   public nextRules() {
-    this.node.removeAttribute('data-speech-attached');
+    this.node.removeAttribute(SPEECH.ATTACHED);
     this.restartAfter(this.generators.nextRules(this.item));
   }
 
@@ -946,7 +957,7 @@ export class SpeechExplorer
    * speech for the expression.
    */
   public nextStyle() {
-    this.node.removeAttribute('data-speech-attached');
+    this.node.removeAttribute(SPEECH.ATTACHED);
     this.restartAfter(this.generators.nextStyle(this.current, this.item));
   }
 
@@ -960,7 +971,7 @@ export class SpeechExplorer
     const action = this.actionable(this.current);
     if (
       !action ||
-      !action.getAttribute('data-collapsible') ||
+      !action.getAttribute(MACTION.COLLAPSIBLE) ||
       action.getAttribute('toggle') !== '1' ||
       this.speechType === 'z'
     ) {
@@ -974,7 +985,7 @@ export class SpeechExplorer
     const id = this.nodeId(this.current);
     let current: MmlNode;
     this.item.root.walkTree((node) => {
-      if (node.attributes.get('data-semantic-id') === id) {
+      if (node.attributes.get(SEM.ID) === id) {
         current = node;
       }
     });
@@ -986,7 +997,10 @@ export class SpeechExplorer
       mml = `<math>${mml}</math>`;
     }
     mml = mml.replace(
-      / (?:data-semantic-|aria-|data-speech-|data-latex).*?=".*?"/g,
+      new RegExp(
+        ` (?:${SEM.PREFIX}|${SPEECH.PREFIX}|aria-|data-latex).*?=".*?"`,
+        'g'
+      ),
       ''
     );
     //
@@ -1083,10 +1097,10 @@ export class SpeechExplorer
     this.current = node;
     this.currentMark = -1;
     if (this.current) {
-      const parts = [...this.getSplitNodes(this.current)];
+      const parts = [...this.item.getSplitNodes(this.current)];
       this.highlighter.encloseNodes(parts, this.node);
       for (const part of parts) {
-        if (!part.getAttribute('data-sre-enclosed')) {
+        if (!part.getAttribute(HILITE.ENCLOSED)) {
           part.classList.add('mjx-selected');
         }
       }
@@ -1099,54 +1113,6 @@ export class SpeechExplorer
     // Done making changes
     //
     this.node.removeAttribute('aria-busy');
-  }
-
-  private cacheParts: Map<string, HTMLElement[]> = new Map();
-
-  /**
-   * Get all nodes with the same semantic id (multiple nodes if there are line breaks).
-   *
-   * @param {HTMLElement} node  The node to check if it is split
-   * @returns {HTMLElement[]}   All the nodes for the given id
-   */
-  protected getSplitNodes(node: HTMLElement): HTMLElement[] {
-    const id = this.nodeId(node);
-    if (!id) {
-      return [node];
-    }
-    // Here we need to cache the subtrees.
-    if (this.cacheParts.has(id)) {
-      return this.cacheParts.get(id);
-    }
-    const parts = Array.from(
-      this.node.querySelectorAll(`[data-semantic-id="${id}"]`)
-    ) as HTMLElement[];
-    const subtree = this.subtree(id, parts);
-    this.cacheParts.set(id, [...parts, ...subtree]);
-    return this.cacheParts.get(id);
-  }
-
-  /**
-   * Retrieve the elements in the semantic subtree that are not in the DOM subtree.
-   *
-   * @param {string} id The semantic id of the root node.
-   * @param {HTMLElement[]} nodes The list of nodes corresponding to that id
-   *     (could be multiple for linebroken ones).
-   * @returns {HTMLElement[]} The list of nodes external to the DOM trees rooted
-   *     by any of the input nodes.
-   */
-  private subtree(id: string, nodes: HTMLElement[]): HTMLElement[] {
-    const sub = this.subtrees.get(id);
-    const children: Set<string> = new Set();
-    for (const node of nodes) {
-      (
-        Array.from(node.querySelectorAll(`[data-semantic-id]`)) as HTMLElement[]
-      ).forEach((x) => children.add(this.nodeId(x)));
-    }
-    const rest = setdifference(sub, children);
-    return [...rest]
-      .map((child) => this.getNode(child))
-      .filter((node) => node !== null);
   }
 
   /**
@@ -1185,6 +1151,7 @@ export class SpeechExplorer
         description += ', ' + localize('ForHelp');
       }
       speech += description;
+      speech = speech.replace(/^, /, '');
     }
     this.speak(
       speech,
@@ -1223,7 +1190,7 @@ export class SpeechExplorer
   }
 
   /**
-   * Create a new speech node and sets its needed attributes,
+   * Create a new speech node and set its needed attributes,
    *   then add it to the container and focus it.  If there is
    *   and old speech node, remove it after a delay (the delay
    *   is needed for Orca on Linux).
@@ -1239,6 +1206,12 @@ export class SpeechExplorer
     ssml: string[] = null,
     description: string = this.none
   ) {
+    if (!this.node.getAttribute('data-speech-attached') && speech) {
+      speech = localize('Word/Math');
+    }
+    if (!this.node.getAttribute('data-braille-attached') && braille) {
+      braille = localize('Word/Math');
+    }
     const oldspeech = this.speech;
     const speechNode = (this.speech = document.createElement('mjx-speech'));
     speechNode.setAttribute('role', this.role);
@@ -1305,9 +1278,10 @@ export class SpeechExplorer
       container.setAttribute('has-speech', 'true');
     }
     const description = item.roleDescription;
-    const speech =
+    const speech = (
       (container.getAttribute(SemAttr.SPEECH) || '') +
-      (description && description !== this.none ? ', ' + description : '');
+      (description && description !== this.none ? ', ' + description : '')
+    ).replace(/^, /, '');
     this.img?.remove();
     this.img = this.document.adaptor.node('mjx-speech', {
       'aria-label': speech,
@@ -1345,14 +1319,14 @@ export class SpeechExplorer
   }
 
   /**
-   * Move all the href attributes to data-mjx-href attributes
+   * Move all the href attributes to SAVED_HREF attributes
    * (so they won't be focusable links, as they are aria-hidden).
    */
   protected adjustAnchors() {
     this.anchors = Array.from(this.node.querySelectorAll('a[href]'));
     for (const anchor of this.anchors) {
       const href = anchor.getAttribute('href');
-      anchor.setAttribute('data-mjx-href', href);
+      anchor.setAttribute(SAVED_HREF, href);
       anchor.removeAttribute('href');
     }
     if (this.anchors.length) {
@@ -1365,8 +1339,8 @@ export class SpeechExplorer
    */
   protected restoreAnchors() {
     for (const anchor of this.anchors) {
-      anchor.setAttribute('href', anchor.getAttribute('data-mjx-href'));
-      anchor.removeAttribute('data-mjx-href');
+      anchor.setAttribute('href', anchor.getAttribute(SAVED_HREF));
+      anchor.removeAttribute(SAVED_HREF);
     }
     this.anchors = [];
   }
@@ -1385,7 +1359,7 @@ export class SpeechExplorer
   protected getInternalTabs(node: HTMLElement): HTMLElement[] {
     return Array.from(
       node.querySelectorAll(
-        'button, [data-mjx-href], input, select, textarea, [tabindex]:not([tabindex="-1"],mjx-speech)'
+        `button, [${SAVED_HREF}], input, select, textarea, [tabindex]:not([tabindex="-1"],mjx-speech)`
       )
     );
   }
@@ -1407,7 +1381,7 @@ export class SpeechExplorer
    * @returns {string}          The node's semantic ID
    */
   protected nodeId(node: HTMLElement): string {
-    return node.getAttribute('data-semantic-id');
+    return node.getAttribute(SEM.ID);
   }
 
   /**
@@ -1415,7 +1389,7 @@ export class SpeechExplorer
    * @returns {string}          The node's parent's semantic ID
    */
   protected parentId(node: HTMLElement): string {
-    return node.getAttribute('data-semantic-parent');
+    return node.getAttribute(SEM.PARENT);
   }
 
   /**
@@ -1423,7 +1397,7 @@ export class SpeechExplorer
    * @returns {HTMLElement}   The HTML node with that id
    */
   protected getNode(id: string): HTMLElement {
-    return id ? this.node.querySelector(`[data-semantic-id="${id}"]`) : null;
+    return id ? this.node.querySelector(`[${SEM.ID}="${id}"]`) : null;
   }
 
   /**
@@ -1439,7 +1413,7 @@ export class SpeechExplorer
    * @returns {string[]}         The array of semantic IDs of its children
    */
   protected childArray(node: HTMLElement): string[] {
-    return node ? node.getAttribute('data-semantic-children').split(/,/) : [];
+    return node ? node.getAttribute(SEM.CHILDREN).split(/,/) : [];
   }
 
   /**
@@ -1447,9 +1421,7 @@ export class SpeechExplorer
    * @returns {boolean}          True if the node is a cell node
    */
   protected isCell(node: HTMLElement): boolean {
-    return (
-      !!node && this.cellTypes.includes(node.getAttribute('data-semantic-type'))
-    );
+    return !!node && this.cellTypes.includes(node.getAttribute(SEM.TYPE));
   }
 
   /**
@@ -1457,7 +1429,7 @@ export class SpeechExplorer
    * @returns {boolean}          True if the node is a row node
    */
   protected isRow(node: HTMLElement): boolean {
-    return !!node && node.getAttribute('data-semantic-type') === 'row';
+    return !!node && node.getAttribute(SEM.TYPE) === 'row';
   }
 
   /**
@@ -1521,15 +1493,14 @@ export class SpeechExplorer
    * @returns {HTMLElement}      The first speech child of the node
    */
   protected firstNode(node: HTMLElement): HTMLElement {
-    const owns = node.getAttribute('data-semantic-owns');
-    if (!owns) {
-      return node.querySelector(nav) as HTMLElement;
-    }
-    const ownsList = owns.split(/ /);
-    for (const id of ownsList) {
-      const node = this.getNode(id);
-      if (node?.hasAttribute('data-speech-node')) {
-        return node;
+    const owns = node.getAttribute(SEM.OWNS);
+    if (owns) {
+      const ownsList = owns.split(/ /);
+      for (const id of ownsList) {
+        const node = this.getNode(id);
+        if (node?.hasAttribute(SPEECH.NODE)) {
+          return node;
+        }
       }
     }
     return node.querySelector(nav) as HTMLElement;
@@ -1547,14 +1518,11 @@ export class SpeechExplorer
    * @returns {HTMLElement} The semantic root or first speech node.
    */
   protected rootNode(): HTMLElement {
-    const base = this.node.querySelector('[data-semantic-structure]');
+    const base = this.node.querySelector(`[${SEM.STRUCTURE}]`);
     if (!base) {
       return this.node.querySelector(nav) as HTMLElement;
     }
-    const id = base
-      .getAttribute('data-semantic-structure')
-      .split(/ /)[0]
-      .replace('(', '');
+    const id = base.getAttribute(SEM.STRUCTURE).split(/ /)[0].replace('(', '');
     return this.getNode(id);
   }
 
@@ -1567,15 +1535,13 @@ export class SpeechExplorer
   protected nextSibling(node: HTMLElement): HTMLElement {
     const id = this.parentId(node);
     if (!id) return null;
-    const owns = this.getNode(id)
-      .getAttribute('data-semantic-owns')
-      ?.split(/ /);
+    const owns = this.getNode(id).getAttribute(SEM.OWNS)?.split(/ /);
     if (!owns) return null;
     let i = owns.indexOf(this.nodeId(node));
     let next;
     do {
       next = this.getNode(owns[++i]);
-    } while (next && !next.hasAttribute('data-speech-node'));
+    } while (next && !next.hasAttribute(SPEECH.NODE));
     return next;
   }
 
@@ -1588,68 +1554,14 @@ export class SpeechExplorer
   protected prevSibling(node: HTMLElement): HTMLElement {
     const id = this.parentId(node);
     if (!id) return null;
-    const owns = this.getNode(id)
-      .getAttribute('data-semantic-owns')
-      ?.split(/ /);
+    const owns = this.getNode(id).getAttribute(SEM.OWNS)?.split(/ /);
     if (!owns) return null;
     let i = owns.indexOf(this.nodeId(node));
     let prev;
     do {
       prev = this.getNode(owns[--i]);
-    } while (prev && !prev.hasAttribute('data-speech-node'));
+    } while (prev && !prev.hasAttribute(SPEECH.NODE));
     return prev;
-  }
-
-  /**
-   * Find the speech node that was clicked, if any
-   *
-   * @param {HTMLElement} node   The target node that was clicked
-   * @param {number} x           The x-coordinate of the click
-   * @param {number} y           The y-coordinate of the click
-   * @returns {HTMLElement}      The clicked node or null
-   */
-  protected findClicked(node: HTMLElement, x: number, y: number): HTMLElement {
-    //
-    // Check if the click is on the info icon and return that if it is.
-    //
-    const icon = this.document.infoIcon;
-    if (icon === node || icon.contains(node)) {
-      return icon;
-    }
-    //
-    // For CHTML, get the closest navigable parent element.
-    //
-    if (this.node.getAttribute('jax') !== 'SVG') {
-      return node.closest(nav) as HTMLElement;
-    }
-    //
-    // For SVG, look through the tree to find the element whose bounding box
-    // contains the click (x,y) position.
-    //
-    let found = null;
-    let clicked = this.node;
-    while (clicked) {
-      if (clicked.matches(nav)) {
-        found = clicked; // could be this node, but check if a child is clicked
-      }
-      const nodes = Array.from(clicked.childNodes) as HTMLElement[];
-      clicked = null;
-      for (const child of nodes) {
-        if (
-          child !== this.speech &&
-          child !== this.img &&
-          child.tagName &&
-          child.tagName.toLowerCase() !== 'rect'
-        ) {
-          const { left, right, top, bottom } = child.getBoundingClientRect();
-          if (left <= x && x <= right && top <= y && y <= bottom) {
-            clicked = child;
-            break;
-          }
-        }
-      }
-    }
-    return found;
   }
 
   /**
@@ -1657,7 +1569,7 @@ export class SpeechExplorer
    * @returns {boolean}          True if the node has a link, false otherwise
    */
   protected isLink(node: HTMLElement = this.current): boolean {
-    return !!node?.getAttribute('data-semantic-attributes')?.includes('href:');
+    return !!node?.getAttribute(SEM.ATTRIBUTES)?.includes('href:');
   }
 
   /**
@@ -1674,7 +1586,7 @@ export class SpeechExplorer
    * @returns {HTMLElement}        The node for which the <a> is handling the href
    */
   protected linkFor(anchor: HTMLElement): HTMLElement {
-    return anchor?.querySelector('[data-semantic-attributes*="href:"]');
+    return anchor?.querySelector(`[{SEM.ATTRIBUTES}*="href:"]`);
   }
 
   /**
@@ -1682,9 +1594,7 @@ export class SpeechExplorer
    * @returns {HTMLElement}      The parent node with an href that contains the given node
    */
   protected parentLink(node: HTMLElement): HTMLElement {
-    const link = node?.closest(
-      '[data-semantic-attributes*="href:"]'
-    ) as HTMLElement;
+    const link = node?.closest(`[${SEM.ATTRIBUTES}*="href:"]`) as HTMLElement;
     return link && this.node.contains(link) ? link : null;
   }
 
@@ -1738,7 +1648,6 @@ export class SpeechExplorer
    * @param {HTMLElement} node The node the explorer is assigned to.
    * @param {LiveRegion} brailleRegion The braille region.
    * @param {HoverRegion} magnifyRegion The magnification region.
-   * @param {MmlNode} _mml The internal math node.
    * @param {ExplorerMathItem} item The math item.
    * @class
    * @augments {AbstractExplorer}
@@ -1750,7 +1659,6 @@ export class SpeechExplorer
     protected node: HTMLElement,
     public brailleRegion: LiveRegion,
     public magnifyRegion: HoverRegion,
-    _mml: MmlNode,
     public item: ExplorerMathItem
   ) {
     super(document, pool, null, node);
@@ -1775,10 +1683,6 @@ export class SpeechExplorer
    * @override
    */
   public async Start() {
-    if (!this.subtrees) {
-      this.subtrees = new Map();
-      this.getSubtrees();
-    }
     //
     // If we aren't attached or already active, return
     //
@@ -1808,6 +1712,7 @@ export class SpeechExplorer
     // speech node (or just use the top-level node), then set the
     // current node (which creates the speech) and start the explorer.
     //
+    this.item.parseSemanticNodes();
     const node = this.findStartNode();
     this.setCurrent(node || this.rootNode(), !node);
     super.Start();
@@ -1823,6 +1728,7 @@ export class SpeechExplorer
       this.brailleRegion.Show(this.node);
     }
     if (a11y.keyMagnifier) {
+      this.magnifyRegion.splitNodes = this.item.getSplitNodes(this.current);
       this.magnifyRegion.Show(this.current);
     }
     this.Update();
@@ -1861,6 +1767,7 @@ export class SpeechExplorer
         this.brailleRegion
       );
     }
+    this.magnifyRegion.splitNodes = this.item.getSplitNodes(this.current);
     this.magnifyRegion.Update(this.current);
   }
 
@@ -1974,7 +1881,7 @@ export class SpeechExplorer
   }
 
   /**
-   * Executiving the trigger the link action.
+   * Triggers a link action, if there is one.
    *
    * @param {HTMLElement} node The node with the link.
    * @returns {boolean} True if link was successfully triggered.
@@ -1984,7 +1891,7 @@ export class SpeechExplorer
       const anchor = this.getAnchor(node);
       anchor.classList.add('mjx-visited');
       setTimeout(() => this.FocusOut(null), 50);
-      window.location.href = anchor.getAttribute('data-mjx-href');
+      window.location.href = anchor.getAttribute(SAVED_HREF);
       return true;
     }
     return false;
@@ -2008,11 +1915,11 @@ export class SpeechExplorer
    */
   public semanticFocus(): string {
     const focus = [];
-    let name = 'data-semantic-id';
+    let name = SEM.ID;
     let node = this.current || this.refocus || this.node;
     const action = this.actionable(node);
     if (action) {
-      name = action.hasAttribute('data-maction-id') ? 'data-maction-id' : 'id';
+      name = action.hasAttribute(MACTION.ID) ? MACTION.ID : 'id';
       node = action;
       focus.push(nav);
     }
@@ -2022,97 +1929,4 @@ export class SpeechExplorer
     }
     return focus.join(' ');
   }
-
-  /**
-   * Populates the subtrees map from the data-semantic-structure attribute.
-   */
-  private getSubtrees() {
-    const node = this.node.querySelector('[data-semantic-structure]');
-    if (!node) return;
-    const sexp = node.getAttribute('data-semantic-structure');
-    const tokens = tokenize(sexp);
-    const tree = parse(tokens);
-    buildMap(tree, this.subtrees);
-  }
-}
-
-/**********************************************************************/
-/*
- * Some Aux functions for parsing the semantic structure sexpression
- */
-type SexpTree = string | SexpTree[];
-
-/**
- * Helper to tokenize input
- *
- * @param {string} str The semantic structure.
- * @returns {string[]} The tokenized list.
- */
-function tokenize(str: string): string[] {
-  return str.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').trim().split(/\s+/);
-}
-
-/**
- * Recursive parser to convert tokens into a tree
- *
- * @param {string} tokens The tokens from the semantic structure.
- * @returns {SexpTree} Array list for the semantic structure sexpression.
- */
-function parse(tokens: string[]): SexpTree {
-  const stack: SexpTree[][] = [[]];
-  for (const token of tokens) {
-    if (token === '(') {
-      const newNode: SexpTree = [];
-      stack[stack.length - 1].push(newNode);
-      stack.push(newNode);
-    } else if (token === ')') {
-      stack.pop();
-    } else {
-      stack[stack.length - 1].push(token);
-    }
-  }
-  return stack[0][0];
-}
-
-/**
- * Flattens the tree and builds the map.
- *
- * @param {SexpTree} tree The sexpression tree.
- * @param {Map<string, Set<string>>} map The map to populate.
- * @returns {Set<string>} The descendant map.
- */
-function buildMap(tree: SexpTree, map: Map<string, Set<string>>): Set<string> {
-  if (typeof tree === 'string') {
-    if (!map.has(tree)) map.set(tree, new Set());
-    return new Set();
-  }
-  const [root, ...children] = tree;
-  const rootId = root as string;
-  const descendants: Set<string> = new Set();
-  for (const child of children) {
-    const childRoot = typeof child === 'string' ? child : child[0];
-    const childDescendants = buildMap(child, map);
-    descendants.add(childRoot as string);
-    childDescendants.forEach((d: string) => descendants.add(d));
-  }
-  map.set(rootId, descendants);
-  return descendants;
-}
-
-// Can be replaced with ES2024 implementation of Set.prototype.difference
-/**
- * Set difference between two sets A and B: A\B.
- *
- * @param {Set<string>} a Initial set.
- * @param {Set<string>} b Set to remove from A.
- * @returns {Set<string>} The difference A\B.
- */
-function setdifference(a: Set<string>, b: Set<string>): Set<string> {
-  if (!a) {
-    return new Set();
-  }
-  if (!b) {
-    return a;
-  }
-  return new Set([...a].filter((x) => !b.has(x)));
 }

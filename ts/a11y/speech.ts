@@ -253,12 +253,12 @@ export interface SpeechMathDocument<N, T, D> extends EnrichedMathDocument<
   /**
    * @param {SpeechMathDocument} doc   The MathDocument for the error
    * @param {SpeechMathItem} math      The MathItem causing the error
-   * @param {Error} err                  The error being processed
+   * @param {string} err               The error message being processed
    */
   speechError(
     doc: SpeechMathDocument<N, T, D>,
     math: SpeechMathItem<N, T, D>,
-    err: Error
+    err: string
   ): void;
 
   /**
@@ -375,9 +375,11 @@ export function SpeechMathDocumentMixin<
     public speechError(
       _doc: SpeechMathDocument<N, T, D>,
       _math: SpeechMathItem<N, T, D>,
-      err: Error
+      err: string
     ) {
-      console.warn(localize('SpeechError'), err);
+      if (err) {
+        console.warn(localize('SpeechError'), err);
+      }
     }
 
     /**

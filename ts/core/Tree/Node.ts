@@ -30,6 +30,11 @@ import { NodeFactory } from './NodeFactory.js';
 export type Property = string | number | boolean;
 export type PropertyList = { [key: string]: Property };
 
+/**
+ *  A state to tell if walking the tree should stop.
+ */
+export type TreeWalkerState = { continue: boolean };
+
 /*********************************************************/
 /**
  *  The generic Node interface
@@ -124,8 +129,9 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
   /**
    * @param {Function} func  A function to apply to each node in the tree rooted at this node
    * @param {any} data       Data to pass to the function (as state information)
+   * @returns {any}          The (possibly modified) data structure
    */
-  walkTree(func: (node: N, data?: any) => void, data?: any): void;
+  walkTree(func: (node: N, data?: any) => boolean | void, data?: any): any;
 }
 
 /*********************************************************/
@@ -330,13 +336,25 @@ export abstract class AbstractNode<
   }
 
   /**
+   * Note that the `state` parameter is an internal state object, and
+   * is not intended for user input, so it is not listed in the
+   * interface above, and is not included in the jsDoc for that
+   * reason.
+   *
    * @override
    */
-  public walkTree(func: (node: N, data?: any) => void, data?: any) {
-    func(this as any as N, data);
+  public walkTree(
+    func: (node: N, data?: any) => boolean | void,
+    data?: any,
+    $state: TreeWalkerState = { continue: true } // internal state variable
+  ): any {
+    if (func(this as any as N, data)) {
+      $state.continue = false;
+      return data;
+    }
     for (const child of this.childNodes) {
-      if (child) {
-        child.walkTree(func, data);
+      if (child && $state.continue) {
+        (child as any as AbstractNode<N, C>).walkTree(func, data, $state);
       }
     }
     return data;
@@ -398,8 +416,14 @@ export abstract class AbstractEmptyNode<
    *
    * @override
    */
-  public walkTree(func: (node: N, data?: any) => void, data?: any) {
-    func(this as any as N, data);
+  public walkTree(
+    func: (node: N, data?: any) => boolean | void,
+    data?: any,
+    $state: TreeWalkerState = { continue: true } // internal state variable
+  ) {
+    if (func(this as any as N, data)) {
+      $state.continue = false;
+    }
     return data;
   }
 

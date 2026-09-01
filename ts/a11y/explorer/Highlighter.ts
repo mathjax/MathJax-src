@@ -19,6 +19,8 @@
  */
 
 import { LiveRegion } from './Region.js';
+import { HILITE } from './strings.js';
+import { MACTION } from '../semantic-enrich/maction.js';
 
 export interface NamedColor {
   color: string;
@@ -34,15 +36,6 @@ const DEFAULT_BACKGROUND: NamedColor = { color: 'blue', alpha: 0.2 };
  * The default color if a none existing color is provided.
  */
 const DEFAULT_FOREGROUND: NamedColor = { color: 'black', alpha: 1 };
-
-/**
- * The attributes for various markers
- */
-export const ATTR = {
-  ENCLOSED: 'data-sre-enclosed',
-  BBOX: 'data-sre-highlighter-bbox',
-  ADDED: 'data-sre-highlighter-added',
-};
 
 export interface Highlighter {
   /**
@@ -95,6 +88,15 @@ export interface Highlighter {
   getMactionNodes(node: HTMLElement): HTMLElement[];
 
   /**
+   * Returns all the maction elements in a collapse group
+   *
+   * @param {HTMLElement} node      The root node for the MathML tree
+   * @param {HTMLElement} maction   The maction element whose group is to be found
+   * @returns {HTMLElement[]}       The nodes in the collapse group
+   */
+  getMactionGroup(node: HTMLElement, maction: HTMLElement): HTMLElement[];
+
+  /**
    * Sets of the color the highlighter is using.
    *
    * @param {NamedColor} background The new background color to use.
@@ -107,7 +109,7 @@ abstract class AbstractHighlighter implements Highlighter {
   /**
    * The Attribute for marking highlighted nodes.
    */
-  protected ATTR: string;
+  protected SRE: string;
 
   /**
    * The CSS selector to use to find the line-box container.
@@ -134,7 +136,7 @@ abstract class AbstractHighlighter implements Highlighter {
    */
   constructor(priority: number) {
     this.priority = priority;
-    this.ATTR = 'data-sre-highlight-' + priority;
+    this.SRE = HILITE.PREFIX + priority;
   }
 
   /**
@@ -168,7 +170,11 @@ abstract class AbstractHighlighter implements Highlighter {
   public highlightAll(node: HTMLElement) {
     const mactions = this.getMactionNodes(node);
     for (const maction of mactions) {
-      this.highlight([maction]);
+      let parts: HTMLElement[] = maction.hasAttribute(MACTION.GROUP)
+        ? this.getMactionGroup(node, maction)
+        : [maction];
+      parts = this.encloseNodes([...parts], node);
+      this.highlight(parts);
     }
   }
 
@@ -240,7 +246,7 @@ abstract class AbstractHighlighter implements Highlighter {
       if (list.length > 1) {
         let [L, T, R, B] = [Infinity, Infinity, -Infinity, -Infinity];
         for (const part of list) {
-          part.setAttribute(ATTR.ENCLOSED, 'true');
+          part.setAttribute(HILITE.ENCLOSED, 'true');
           const { left, top, right, bottom } = part.getBoundingClientRect();
           if (top === bottom && left === right) continue;
           if (left < L) L = left;
@@ -282,17 +288,28 @@ abstract class AbstractHighlighter implements Highlighter {
   }
 
   /**
-   * Returns the maction sub nodes of a given node.
-   *
-   * @param {HTMLElement} node The root node.
-   * @returns {HTMLElement[]} The list of maction sub nodes.
+   * @override
+   */
+  public abstract isMactionNode(node: Element): boolean;
+
+  /**
+   * @override
    */
   public abstract getMactionNodes(node: HTMLElement): HTMLElement[];
 
   /**
    * @override
    */
-  public abstract isMactionNode(node: Element): boolean;
+  public getMactionGroup(
+    node: HTMLElement,
+    maction: HTMLElement
+  ): HTMLElement[] {
+    return Array.from(
+      node.querySelectorAll(
+        `#${maction.id},[${MACTION.GROUPID}="${maction.id}"]`
+      )
+    );
+  }
 
   /**
    * Check if a node is already highlighted.
@@ -301,7 +318,7 @@ abstract class AbstractHighlighter implements Highlighter {
    * @returns {boolean} True if already highlighted.
    */
   public isHighlighted(node: HTMLElement): boolean {
-    return node.hasAttribute(this.ATTR);
+    return node.hasAttribute(this.SRE);
   }
 
   /**
@@ -310,7 +327,7 @@ abstract class AbstractHighlighter implements Highlighter {
    * @param {HTMLElement} node The node.
    */
   public setHighlighted(node: HTMLElement) {
-    node.setAttribute(this.ATTR, 'true');
+    node.setAttribute(this.SRE, 'true');
   }
 
   /**
@@ -319,8 +336,8 @@ abstract class AbstractHighlighter implements Highlighter {
    * @param {HTMLElement} node The node.
    */
   public unsetHighlighted(node: HTMLElement) {
-    node.removeAttribute(this.ATTR);
-    node.removeAttribute(ATTR.ENCLOSED);
+    node.removeAttribute(this.SRE);
+    node.removeAttribute(HILITE.ENCLOSED);
   }
 }
 
@@ -336,8 +353,8 @@ class SvgHighlighter extends AbstractHighlighter {
       this.isHighlighted(node) ||
       node.tagName === 'svg' ||
       node.tagName === 'MJX-CONTAINER' ||
-      node.hasAttribute(ATTR.BBOX) ||
-      node.hasAttribute(ATTR.ENCLOSED)
+      node.hasAttribute(HILITE.BBOX) ||
+      node.hasAttribute(HILITE.ENCLOSED)
     ) {
       return;
     }
@@ -359,12 +376,12 @@ class SvgHighlighter extends AbstractHighlighter {
    * @override
    */
   public unhighlightNode(node: HTMLElement) {
-    if (node.hasAttribute(ATTR.BBOX)) {
+    if (node.hasAttribute(HILITE.BBOX)) {
       node.remove();
       return;
     }
     const previous = node.previousSibling as HTMLElement;
-    if (previous?.hasAttribute(ATTR.ADDED)) {
+    if (previous?.hasAttribute(HILITE.ADDED)) {
       previous.remove();
     }
   }
@@ -389,7 +406,8 @@ class SvgHighlighter extends AbstractHighlighter {
       y2 - y1,
       part.getAttribute('transform')
     );
-    rect.setAttribute(ATTR.BBOX, 'true');
+    rect.setAttribute(HILITE.BBOX, 'true');
+    rect.setAttribute(HILITE.ADDED, 'true');
     part.parentNode.insertBefore(rect, part);
     return rect;
   }
@@ -429,7 +447,7 @@ class SvgHighlighter extends AbstractHighlighter {
   ): HTMLElement {
     const padding = 40;
     const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    rect.setAttribute(ATTR.ADDED, 'true'); // Mark highlighting rect.
+    rect.setAttribute(HILITE.ADDED, 'true'); // Mark highlighting rect.
     rect.setAttribute('x', String(x - padding));
     rect.setAttribute('y', String(y - padding));
     rect.setAttribute('width', String(w + 2 * padding));
@@ -451,7 +469,11 @@ class SvgHighlighter extends AbstractHighlighter {
    * @override
    */
   public getMactionNodes(node: HTMLElement): HTMLElement[] {
-    return Array.from(node.querySelectorAll('[data-mml-node="maction"]'));
+    return Array.from(
+      node.querySelectorAll(
+        `[data-mml-node="maction"][${MACTION.COLLAPSIBLE}]:not([${MACTION.GROUPID}])`
+      )
+    );
   }
 }
 
@@ -490,6 +512,8 @@ class ChtmlHighlighter extends AbstractHighlighter {
     enclosure.style.left = x - base.left + 'px';
     enclosure.style.top = y - h - base.top + 'px';
     enclosure.style.position = 'absolute';
+    enclosure.setAttribute(HILITE.BBOX, 'true');
+    enclosure.setAttribute(HILITE.ADDED, 'true');
     node.prepend(enclosure);
     return enclosure;
   }
@@ -505,7 +529,11 @@ class ChtmlHighlighter extends AbstractHighlighter {
    * @override
    */
   public getMactionNodes(node: HTMLElement): HTMLElement[] {
-    return Array.from(node.querySelectorAll('mjx-maction'));
+    return Array.from(
+      node.querySelectorAll(
+        `mjx-maction[${MACTION.COLLAPSIBLE}]:not([${MACTION.GROUPID}])`
+      )
+    );
   }
 }
 

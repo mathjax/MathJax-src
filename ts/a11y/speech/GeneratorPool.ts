@@ -27,6 +27,8 @@ import { buildLabel, SemAttr } from '../speech/SpeechUtil.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { SpeechMathItem } from '../speech.js';
 import { WorkerHandler } from './WebWorker.js';
+import { SEM } from '../semantic-enrich/strings.js';
+import { localize } from '../speech/__locales__/Component.js';
 
 /**
  * @template N  The HTMLElement node class
@@ -160,11 +162,10 @@ export class GeneratorPool<N, T, D> {
    */
   private getOptions(node: N): OptionList {
     return {
-      locale: this.adaptor.getAttribute(node, 'data-semantic-locale') ?? '',
-      domain: this.adaptor.getAttribute(node, 'data-semantic-domain') ?? '',
-      style: this.adaptor.getAttribute(node, 'data-semantic-style') ?? '',
-      domain2style:
-        this.adaptor.getAttribute(node, 'data-semantic-domain2style') ?? '',
+      locale: this.adaptor.getAttribute(node, SEM.LOCALE) ?? '',
+      domain: this.adaptor.getAttribute(node, SEM.DOMAIN) ?? '',
+      style: this.adaptor.getAttribute(node, SEM.STYLE) ?? '',
+      domain2style: this.adaptor.getAttribute(node, SEM.DOMAIN2STYLE) ?? '',
     };
   }
 
@@ -197,7 +198,7 @@ export class GeneratorPool<N, T, D> {
     return (this.promise = this.webworker.nextStyle(
       item.outputData.mml,
       Object.assign({}, this.options, { modality: 'speech' }),
-      this.adaptor.getAttribute(node, 'data-semantic-id'),
+      this.adaptor.getAttribute(node, SEM.ID),
       item
     ));
   }
@@ -212,6 +213,10 @@ export class GeneratorPool<N, T, D> {
    */
   public getLabel(node: N, _center: string = '', sep: string = ' '): string {
     const adaptor = this.adaptor;
+    if (!this.webworker.ready) {
+      // return document.querySelector('.mjx-selected').textContent;
+      return localize('NoSpeech');
+    }
     return (
       buildLabel(
         adaptor.getAttribute(node, SemAttr.SPEECH_SSML),
@@ -231,6 +236,10 @@ export class GeneratorPool<N, T, D> {
    */
   public getBraille(node: N): string {
     const adaptor = this.adaptor;
+    if (!this.webworker.ready) {
+      // return document.querySelector('.mjx-selected').textContent;
+      return localize('NoBraille');
+    }
     return (
       adaptor.getAttribute(node, 'aria-braillelabel') ||
       adaptor.getAttribute(node, SemAttr.BRAILLE)

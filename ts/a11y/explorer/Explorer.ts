@@ -24,6 +24,7 @@
 import type { ExplorerMathDocument } from '../explorer.js';
 import { Region } from './Region.js';
 import { Highlighter } from './Highlighter.js';
+import { HILITE } from './strings.js';
 
 import type { ExplorerPool } from './ExplorerPool.js';
 
@@ -276,5 +277,85 @@ export class AbstractExplorer<T> implements Explorer {
     if (this.stoppable) {
       AbstractExplorer.stopEvent(event);
     }
+  }
+
+  /**
+   * @param {number} x       The x-coordinate of the point to test
+   * @param {number} y       The y-coordinate of the point to test
+   * @param {DOMRect} bbox   The bounding box to test
+   * @returns {boolean}      True if (x,y) is inside the bounding box
+   */
+  protected inBBox(x: number, y: number, bbox: DOMRect): boolean {
+    const { left, right, top, bottom } = bbox;
+    return x >= left && x <= right && y >= top && y <= bottom;
+  }
+
+  /**
+   * Find the smallest item in the expression's DOM tree that contains am event's point.
+   *
+   * @param {MouseEvent} event                    The event whose (x,y) is to be used
+   * @param {(node:HTMLElement)=>boolean} query   A test for which nodes to accept
+   * @param {HTMLElement[]} skip                  Optional list of nodes to ignore
+   * @param {HTMLElement} icon                    The info icon, if there is one
+   * @returns {HTMLElement}                       The smallest matching element
+   *                                                containing the event's point
+   */
+  protected nodeAtXY(
+    event: MouseEvent,
+    query: (node: HTMLElement) => boolean,
+    skip: HTMLElement[] = [],
+    icon: HTMLElement = null
+  ): HTMLElement {
+    const { x, y, target } = event;
+    let found = null;
+    //
+    // Check if the click is on the info icon and return that if it is.
+    //
+    if (icon && (icon === target || icon.contains(target as HTMLElement))) {
+      return icon;
+    }
+    //
+    // For SVG, look through the tree to find the element whose bounding box
+    // contains the click (x,y) position.
+    //
+    let clicked = this.node;
+    while (clicked) {
+      if (query(clicked)) {
+        found = clicked; // could be this node, but check if (x,y) is in a child
+      }
+      const nodes = Array.from(clicked.childNodes) as HTMLElement[];
+      clicked = null;
+      for (let child of nodes) {
+        //
+        // Skip text or comment nodes
+        //
+        if (
+          child.nodeName.charAt(0) === '#' ||
+          child.hasAttribute?.(HILITE.ADDED)
+        ) {
+          continue;
+        }
+        //
+        // Move inside nodes used for tables with labels
+        // (for HTML they have 0 height and for SVG they are huge)
+        //
+        if (
+          child.nodeName.toLowerCase() === 'mjx-labels' ||
+          child.hasAttribute?.('data-table') ||
+          child.hasAttribute?.('data-labels')
+        ) {
+          child = child.firstChild as HTMLElement;
+        }
+        if (
+          !skip.includes(child) &&
+          child.nodeName.toLowerCase() !== 'rect' &&
+          this.inBBox(x, y, child.getBoundingClientRect() as DOMRect)
+        ) {
+          clicked = child;
+          break;
+        }
+      }
+    }
+    return found;
   }
 }

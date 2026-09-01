@@ -31,6 +31,7 @@ import {
 import { Submenu } from '../../ui/menu/mj-context-menu.js';
 import { localize } from '../../ui/menu/__locales__/Component.js';
 import * as Sre from '../sre.js';
+import { SEM } from '../semantic-enrich/strings.js';
 
 /**
  * Values for the ClearSpeak preference variables.
@@ -264,7 +265,7 @@ export async function clearspeakMenu(
     const previous = currentPreference(menu.settings.speechRules);
     items = items.concat(basePreferences(previous));
     const focus = explorer?.refocus;
-    const semantic = focus?.getAttribute('data-semantic-id') ?? null;
+    const semantic = focus?.getAttribute(SEM.ID) ?? null;
     const count = counter++;
     await item.generatorPool.getRelevantPreferences(
       item,

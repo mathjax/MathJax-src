@@ -29,6 +29,7 @@ import {
   AbstractNode,
   AbstractEmptyNode,
   NodeClass,
+  TreeWalkerState,
 } from '../Tree/Node.js';
 import { MmlFactory } from './MmlFactory.js';
 import { DOMAdaptor } from '../DOMAdaptor.js';
@@ -1091,11 +1092,18 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
    *
    * @override
    */
-  public walkTree(func: (node: MmlNode, data?: any) => void, data?: any) {
-    func(this, data);
+  public walkTree(
+    func: (node: MmlNode, data?: any) => boolean | void,
+    data?: any,
+    $state: TreeWalkerState = { continue: true } // internal state variable
+  ) {
+    if (func(this, data)) {
+      $state.continue = false;
+      return;
+    }
     for (const child of this.childNodes) {
-      if (child instanceof AbstractMmlNode) {
-        child.walkTree(func, data);
+      if (child instanceof AbstractMmlNode && $state.continue) {
+        (child as AbstractMmlNode).walkTree(func, data, $state);
       }
     }
     return data;

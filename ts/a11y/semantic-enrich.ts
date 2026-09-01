@@ -41,6 +41,10 @@ import { MathML } from '../input/mathml.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { expandable } from '../util/Options.js';
 import * as Sre from './sre.js';
+import { SEM } from './semantic-enrich/strings.js';
+import { SPEECH } from './speech/strings.js';
+import { MACTION } from './semantic-enrich/maction.js';
+import { StructureUtil, SemanticMap } from './speech/StructureUtil.js';
 import { Locale } from '../util/Locale.js';
 import { COMPONENT } from './semantic-enrich/__locales__/Component.js';
 import { DOM, DOM_TYPES, N, T, D, Constructor } from '../types/Types.js';
@@ -82,10 +86,10 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
       // Add maction id and make sure selection is the next attribute
       //
       attributes =
-        ` data-maction-id="${id}" selection="${node.attributes.get('selection')}"` +
+        ` ${MACTION.ID}="${id}" selection="${node.attributes.get('selection')}"` +
         attributes
           .replace(/ selection="\d+"/, '')
-          .replace(/ data-maction-id="\d+"/, '');
+          .replace(` ${MACTION.ID}="\\d+"`, '');
     }
     return (
       `${space}<maction${attributes}>` +
@@ -105,6 +109,16 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
  * @template D  The Document class
  */
 export interface EnrichedMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
+  /**
+   * Maps semantic ids to extra nodes outside the DOM subtree.
+   */
+  semanticNodes: SemanticMap;
+
+  /**
+   * Get any extra nodes outside the DOM tree from the semantic structure
+   */
+  parseSemanticNodes(): void;
+
   /**
    * The serialization visitor
    */
@@ -158,6 +172,20 @@ export function EnrichedMathItemMixin<
     public toMathML = toMathML;
 
     /**
+     * Semantic id to extra nodes outside the DOM subtree
+     */
+    public semanticNodes: SemanticMap;
+
+    /**
+     * @override
+     */
+    public parseSemanticNodes() {
+      if (!this.semanticNodes) {
+        this.semanticNodes = StructureUtil.semanticNodes(this.root);
+      }
+    }
+
+    /**
      * @param {any} node  The node to be serialized
      * @returns {string}   The serialized version of node
      */
@@ -193,6 +221,7 @@ export function EnrichedMathItemMixin<
     ) {
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
+        this.semanticNodes = null;
         const math = new document.options.MathItem('', MmlJax);
         try {
           let mml;
@@ -212,8 +241,8 @@ export function EnrichedMathItemMixin<
           // SRE is updated to do this itself.
           //
           math.math = math.math
-            .replace(/ role="treeitem"/g, ' data-speech-node="true"')
-            .replace(/ aria-level/g, ' data-semantic-level-number')
+            .replace(/ role="treeitem"/g, ` ${SPEECH.NODE}="true"`)
+            .replace(/ aria-level/g, ` ${SEM.LEVEL_NUMBER}`)
             .replace(/ aria-(?:posinset|owns|setsize)=".*?"/g, '');
           math.display = this.display;
           math.compile(document);
@@ -244,6 +273,7 @@ export function EnrichedMathItemMixin<
       math.display = this.display;
       math.compile(document);
       this.root = math.root;
+      this.semanticNodes = null;
     }
 
     /**
@@ -257,11 +287,11 @@ export function EnrichedMathItemMixin<
       const maction = [] as MmlNode[];
       this.root.walkTree((node: MmlNode) => {
         if (node.isKind('maction')) {
-          maction[node.attributes.get('data-maction-id') as number] = node;
+          maction[node.attributes.get(MACTION.ID) as number] = node;
         }
       });
       return mml.replace(
-        /(data-maction-id="(\d+)" selection=)"\d+"/g,
+        new RegExp(`(${MACTION.ID}="(\\d+)" selection=)"\\d+"`, 'g'),
         (_match: string, prefix: string, id: number) =>
           `${prefix}"${maction[id].attributes.get('selection')}"`
       );

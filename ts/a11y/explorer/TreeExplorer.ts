@@ -26,6 +26,7 @@ import type { ExplorerMathDocument } from '../explorer.js';
 import { Region } from './Region.js';
 import { AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
+import { SEM } from '../semantic-enrich/strings.js';
 
 export class AbstractTreeExplorer extends AbstractExplorer<void> {
   /**
@@ -35,8 +36,7 @@ export class AbstractTreeExplorer extends AbstractExplorer<void> {
     public document: ExplorerMathDocument,
     public pool: ExplorerPool,
     public region: Region<void>,
-    protected node: HTMLElement,
-    protected mml: HTMLElement
+    protected node: HTMLElement
   ) {
     super(document, pool, null, node);
   }
@@ -91,7 +91,7 @@ export class TreeColorer extends AbstractTreeExplorer {
   public contrast: ContrastPicker = new ContrastPicker();
 
   private leaves: HTMLElement[] = [];
-  private modality: string = 'data-semantic-foreground';
+  private modality: string = SEM.FOREGROUND;
 
   /**
    * @override
@@ -122,9 +122,7 @@ export class TreeColorer extends AbstractTreeExplorer {
    */
   private colorLeaves() {
     this.leaves = Array.from(
-      this.node.querySelectorAll(
-        '[data-semantic-id]:not([data-semantic-children])'
-      )
+      this.node.querySelectorAll(`[${SEM.ID}]:not([${SEM.CHILDREN}])`)
     );
     for (const leaf of this.leaves) {
       leaf.setAttribute(this.modality, this.contrast.generate());
