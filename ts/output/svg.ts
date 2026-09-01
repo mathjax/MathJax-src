@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CommonOutputJax, UnknownBBox } from './common.js';
+import { CommonOutputJax, UnknownBBox, COMMON_OPTIONS } from './common.js';
 import { OptionList } from '../util/Options.js';
 import { MathDocument } from '../core/MathDocument.js';
 import { MathItem } from '../core/MathItem.js';
@@ -40,9 +40,43 @@ import { unicodeChars } from '../util/string.js';
 import * as LENGTHS from '../util/lengths.js';
 import { SPACE } from './common/Wrapper.js';
 import { DefaultFont } from './svg/DefaultFont.js';
+import { DOM, DOM_TYPES, N, T, D } from '../types/Types.js';
 
 export const SVGNS = 'http://www.w3.org/2000/svg';
 export const XLINKNS = 'http://www.w3.org/1999/xlink';
+
+/*****************************************************************/
+
+/**
+ * The SVG option types.
+ */
+export interface SVG_OPTIONS<DOM extends DOM_TYPES> extends COMMON_OPTIONS<
+  DOM,
+  SvgWrapper<N<DOM>, T<DOM>, D<DOM>>,
+  SvgWrapperFactory<N<DOM>, T<DOM>, D<DOM>>,
+  SvgWrapperClass<N<DOM>, T<DOM>, D<DOM>>,
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData,
+  SvgFontData,
+  SvgFontDataClass
+> {
+  blacker: number; //                          Stroke-width to use for SVG character paths (in thousands of an em)
+  fontCache: 'local' | 'global' | 'none'; //   The type of character cache to use
+  localID: string; //                          ID to use for local font cache (for single equation processing)
+  useXlink: boolean; //                        true to include xlink namespace for <use> hrefs, false to not
+}
+
+/**
+ * The svg option defaults.
+ */
+const options: SVG_OPTIONS<DOM> = {
+  ...CommonOutputJax.OPTIONS,
+  blacker: 3,
+  fontCache: 'local',
+  localID: null,
+  useXlink: true,
+};
 
 /*****************************************************************/
 /**
@@ -84,13 +118,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * @override
    */
   /* prettier-ignore */
-  public static OPTIONS: OptionList = {
-    ...CommonOutputJax.OPTIONS,
-    blacker: 3,                     // the stroke-width to use for SVG character paths
-    fontCache: 'local',             // or 'global' or 'none'
-    localID: null,                  // ID to use for local font cache (for single equation processing)
-    useXlink: true,                 // true to include xlink namespace for <use> hrefs, false to not
-  };
+  public static OPTIONS = options;
 
   /**
    *  The default styles for SVG
@@ -165,6 +193,11 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * The SVG stylesheet, once it is constructed
    */
   public svgStyles: N = null;
+
+  /**
+   * @override
+   */
+  public options: SVG_OPTIONS<DOM<N, T, D>> & { matchFontHeight: boolean };
 
   /**
    * @override

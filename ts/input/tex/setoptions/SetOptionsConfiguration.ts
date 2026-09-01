@@ -34,7 +34,11 @@ import { texError } from '../TexError.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { Macro } from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
-import { expandable, isObject } from '../../../util/Options.js';
+import {
+  expandable,
+  EXPANDABLE_LIST_OF,
+  isObject,
+} from '../../../util/Options.js';
 import { PrioritizedList } from '../../../util/PrioritizedList.js';
 import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
@@ -170,42 +174,67 @@ function setoptionsConfig(
   }
 }
 
+type ALLOW_LIST = EXPANDABLE_LIST_OF<
+  boolean | { [option: string]: boolean | null }
+>;
+
+/**
+ * The [tex]/setoptions option types.
+ */
+export type SETOPTIONS_OPTIONS = {
+  setoptions: {
+    filterPackage: typeof SetOptionsUtil.filterPackage; //   Filter for whether a package can be configured
+    filterOption: typeof SetOptionsUtil.filterOption; //     Filter for whether an option can be set
+    filterValue: typeof SetOptionsUtil.filterValue; //       Filter for the value to assign to an option
+    allowPackageDefault: boolean; //    Default for allowing packages when not explicitly set in allowOptions
+    allowOptionsDefault: boolean; //    Default for allowing option that isn't explicitly set in allowOptions
+    allowOptions: ALLOW_LIST; //        List of packages to allow/disallow; and their options to allow/disallow
+  };
+};
+
+/**
+ * The [tex]/setoptions option defaults.
+ */
+const options: SETOPTIONS_OPTIONS = {
+  setoptions: {
+    filterPackage: SetOptionsUtil.filterPackage,
+    filterOption: SetOptionsUtil.filterOption,
+    filterValue: SetOptionsUtil.filterValue,
+    allowPackageDefault: true,
+    allowOptionsDefault: true,
+    allowOptions: expandable<ALLOW_LIST>({
+      //
+      //  top-level tex items can be set, but not these
+      //    (that leaves digits and the tagging options)
+      //
+      tex: {
+        FindTeX: false,
+        formatError: false,
+        package: false,
+        baseURL: false,
+        tags: false,
+        maxBuffer: false,
+        maxMaxros: false,
+        macros: false,
+        environments: false,
+      },
+      //
+      // These packages can't be configured at all
+      //
+      setoptions: false,
+      autoload: false,
+      require: false,
+      configmacros: false,
+      tagformat: false,
+    }),
+  },
+};
+
+/**
+ * The configuration object for the `setoptions` package.
+ */
 export const SetOptionsConfiguration = Configuration.create('setoptions', {
   [ConfigurationType.CONFIG]: setoptionsConfig,
   [ConfigurationType.PRIORITY]: 3, // must be less than the priority of the require package (which is 5).
-  /* prettier-ignore */
-  [ConfigurationType.OPTIONS]: {
-      setoptions: {
-        filterPackage: SetOptionsUtil.filterPackage,  // filter for whether a package can be configured
-        filterOption: SetOptionsUtil.filterOption,    // filter for whether an option can be set
-        filterValue: SetOptionsUtil.filterValue,      // filter for the value to assign to an option
-        allowPackageDefault: true,       // default for allowing packages when not explicitly set in allowOptions
-        allowOptionsDefault: true,       // default for allowing option that isn't explicitly set in allowOptions
-        allowOptions: expandable({       // list of packages to allow/disallow, and their options to allow/disallow
-          //
-          //  top-level tex items can be set, but not these
-          //    (that leaves digits and the tagging options)
-          //
-          tex: {
-            FindTeX: false,
-            formatError: false,
-            package: false,
-            baseURL: false,
-            tags: false,
-            maxBuffer: false,
-            maxMaxros: false,
-            macros: false,
-            environments: false
-          },
-          //
-          // These packages can't be configured at all
-          //
-          setoptions: false,
-          autoload: false,
-          require: false,
-          configmacros: false,
-          tagformat: false
-        })
-      }
-    },
+  [ConfigurationType.OPTIONS]: options,
 });

@@ -26,7 +26,6 @@
 import {
   MathJax as MJGlobal,
   MathJaxObject as MJObject,
-  MathJaxLibrary,
   MathJaxConfig as MJConfig,
   combineWithMathJax,
   combineDefaults,
@@ -41,6 +40,7 @@ import {
 import { FunctionList } from '../util/FunctionList.js';
 import { mjxRoot } from '#root/root.js';
 import { context } from '../util/context.js';
+import { OPTIONAL } from '../types/Types.js';
 import { Locale } from '../util/Locale.js';
 
 import { COMPONENT } from '../core/__locales__/Component.js';
@@ -55,48 +55,31 @@ export type PathFilterData = {
 };
 export type PathFilterFunction = (data: PathFilterData) => boolean;
 export type PathFilterList = (
-  | PathFilterFunction
-  | [PathFilterFunction, number]
+  PathFilterFunction | [PathFilterFunction, number]
 )[];
 
 /**
- * Update the configuration structure to include the loader configuration
+ * The loader option types.
  */
-/* prettier-ignore */
-export interface MathJaxConfig extends MJConfig {
-  loader?: {
-    paths?: {[name: string]: string};          // The path prefixes for use in locations
-    source?: {[name: string]: string};         // The URLs for the extensions, e.g., tex: [mathjax]/input/tex.js
-    dependencies?: {[name: string]: string[]}; // The dependencies for each package
-    provides?: {[name: string]: string[]};     // The sub-packages provided by each package
-    load?: string[];                           // The packages to load (found in locations or [mathjax]/name])
-    ready?: PackageReady;                      // A function to call when MathJax is ready
-    failed?: PackageFailed;                    // A function to call when MathJax fails to load
-    require?: (url: string) => any;            // A function for loading URLs
-    pathFilters?: PathFilterList;              // List of path filters (and optional priorities) to add
-    versionWarnings?: boolean;                 // True means warn when extension version doesn't match MJ version
-    [name: string]: any;                       // Other configuration blocks
-  };
-}
+export type LOADER_OPTIONS = {
+  paths: { [name: string]: string }; //            The path prefixes for use in locations
+  source: { [name: string]: string }; //           The URLs for the extensions, e.g., tex: [mathjax]/input/tex.js
+  dependencies: { [name: string]: string[] }; //   The dependencies for each package
+  provides: { [name: string]: string[] }; //       The sub-packages provided by each package
+  load: string[]; //                               The packages to load (found in locations or [mathjax]/name])
+  ready: PackageReady; //                          A function to call when MathJax is ready
+  failed: PackageFailed; //                        A function to call when MathJax fails to load
+  require: (url: string) => any; //                A function for loading URLs
+  json: (url: string) => any; //                   A function for loading JSON files
+  pathFilters: PathFilterList; //                  List of path filters (and optional priorities) to add
+  versionWarnings: boolean; //                     True means warn when extension version doesn't match MJ version
+};
 
 /**
- * Update the MathJax object to inclide the loader information
+ * The loader config option types.  It allows for package-specific configuration.
  */
-export interface MathJaxObject extends MJObject {
-  _: MathJaxLibrary;
-  config: MathJaxConfig;
-  loader: {
-    ready: (...names: string[]) => Promise<string[]>; // Get a promise for when all the named packages are loaded
-    load: (...names: string[]) => Promise<string>; // Load the packages and return a promise for when ready
-    preLoaded: (...names: string[]) => void; // Indicate that packages are already loaded by hand
-    defaultReady: () => void; // The function performed when all packages are loaded
-    getRoot: () => string; // Find the root URL for the MathJax files
-    checkVersion: (name: string, version: string) => boolean; // Check the version of an extension
-    saveVersion: (name: string) => void; // Set the version for a combined component
-    pathFilters: FunctionList; // The filters to use for looking for package paths
-    addPackageData: (name: string, data: PackageConfig) => void; // Add more package data for a package
-  };
-  startup?: any;
+export interface LOADER_CONFIG extends LOADER_OPTIONS {
+  [component: string]: any; // should be PackageConfig, but that causes problems with LOADER_TYPES
 }
 
 /**
@@ -302,13 +285,16 @@ export const Loader = {
     if (!config) {
       config = CONFIG[name] = {};
     }
-    for (const [key, value] of Object.entries(data)) {
+    for (const [key, value] of Object.entries(data) as [
+      keyof PackageConfig,
+      any,
+    ][]) {
       if (Array.isArray(value)) {
         if (!config[key]) {
-          config[key] = [];
+          config[key] = [] as any;
         }
-        const set = new Set([...config[key], ...value]);
-        config[key] = [...set];
+        const set = new Set([...(config[key] as any), ...value]);
+        config[key] = [...set] as any;
       } else {
         config[key] = value;
       }
@@ -382,6 +368,58 @@ Loader.pathFilters.add(PathFilters.prefix, 20);
 Loader.pathFilters.add(PathFilters.addExtension, 30);
 
 /**
+ * The loader default options.
+ */
+const options: LOADER_OPTIONS = {
+  paths: {
+    mathjax: Loader.getRoot(),
+    fonts: context.window
+      ? 'https://cdn.jsdelivr.net/npm/@mathjax'
+      : '@mathjax',
+  },
+  source: {},
+  dependencies: {},
+  provides: {},
+  load: [],
+  ready: Loader.defaultReady.bind(Loader),
+  failed: (error: PackageError) =>
+    console.warn(`MathJax(${error.package || '?'}): ${error.message}`),
+  require: null,
+  json: null,
+  pathFilters: [],
+  versionWarnings: true,
+};
+
+/**
+ * The component type definition for the loader component.
+ */
+export type LOADER_TYPES = {
+  component: { loader: true };
+  config: {
+    loader: LOADER_CONFIG;
+  };
+  properties: {
+    loader: typeof Loader;
+  };
+};
+
+/**
+ * Update the configuration structure to include the loader configuration
+ */
+export interface MathJaxConfig extends MJConfig {
+  loader?: OPTIONAL<LOADER_OPTIONS>;
+}
+
+/**
+ * Update the MathJax object to inclide the loader information
+ */
+export interface MathJaxObject extends MJObject {
+  config: MathJaxConfig;
+  loader: typeof Loader;
+  startup?: any;
+}
+
+/**
  * Export the global MathJax object for convenience
  */
 export const MathJax = MJGlobal as MathJaxObject;
@@ -392,28 +430,8 @@ export const MathJax = MJGlobal as MathJaxObject;
  *   Add any path filters from the configuration.
  */
 if (typeof MathJax.loader === 'undefined') {
-  combineDefaults(MathJax.config, 'loader', {
-    paths: {
-      mathjax: Loader.getRoot(),
-      fonts: context.window
-        ? 'https://cdn.jsdelivr.net/npm/@mathjax'
-        : '@mathjax',
-    },
-    source: {},
-    dependencies: {},
-    provides: {},
-    load: [],
-    ready: Loader.defaultReady.bind(Loader),
-    failed: (error: PackageError) =>
-      console.warn(`MathJax(${error.package || '?'}): ${error.message}`),
-    require: null,
-    json: null,
-    pathFilters: [],
-    versionWarnings: true,
-  });
-  combineWithMathJax({
-    loader: Loader,
-  });
+  combineDefaults(MathJax.config, 'loader', options);
+  combineWithMathJax({ loader: Loader });
 
   //
   // Add any path filters from the configuration
@@ -430,4 +448,4 @@ if (typeof MathJax.loader === 'undefined') {
 /**
  * Export the loader configuration for convenience
  */
-export const CONFIG = MathJax.config.loader;
+export const CONFIG = MathJax.config.loader as LOADER_CONFIG;

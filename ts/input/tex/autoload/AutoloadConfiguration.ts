@@ -33,7 +33,11 @@ import {
   RequireConfiguration,
 } from '../require/RequireConfiguration.js';
 import { Package } from '../../../components/package.js';
-import { expandable, defaultOptions } from '../../../util/Options.js';
+import {
+  expandable,
+  EXPANDABLE_LIST_OF,
+  defaultOptions,
+} from '../../../util/Options.js';
 
 /**
  * Autoload an extension when the first macro for it is encountered
@@ -145,64 +149,81 @@ const AutoloadMacros = new CommandMap('autoload-macros', {});
 const AutoloadEnvironments = new CommandMap('autoload-environments', {});
 
 /**
- * The configuration object for configmacros
+ * An autoload specification.
+ */
+export type AUTOLOAD_DEFS = EXPANDABLE_LIST_OF<string[] | [string[], string[]]>;
+
+/**
+ * The [tex]/autoload option types.
+ */
+export type AUTOLOAD_OPTIONS = {
+  autoload: AUTOLOAD_DEFS;
+};
+
+/**
+ * The [tex]/autoload option defaults.
+ */
+const options: AUTOLOAD_OPTIONS = {
+  //
+  //  These are the extension names and the macros and environments they contain.
+  //    The format is [macros...] or [[macros...], [environments...]]
+  //  You can prevent one from being autoloaded by setting
+  //    it to [] in the options when the TeX input jax is created.
+  //  You can include the prefix if it is not the default one from require
+  //
+  autoload: expandable<AUTOLOAD_DEFS>({
+    action: ['toggle', 'mathtip', 'texttip'],
+    amscd: [[], ['CD']],
+    bbox: ['bbox'],
+    boldsymbol: ['boldsymbol'],
+    braket: [
+      'bra',
+      'ket',
+      'braket',
+      'set',
+      'Bra',
+      'Ket',
+      'Braket',
+      'Set',
+      'ketbra',
+      'Ketbra',
+    ],
+    bussproofs: [[], ['prooftree']],
+    cancel: ['cancel', 'bcancel', 'xcancel', 'cancelto'],
+    color: ['color', 'definecolor', 'textcolor', 'colorbox', 'fcolorbox'],
+    enclose: ['enclose'],
+    extpfeil: [
+      'xtwoheadrightarrow',
+      'xtwoheadleftarrow',
+      'xmapsto',
+      'xlongequal',
+      'xtofrom',
+      'Newextarrow',
+    ],
+    html: ['data', 'href', 'class', 'style', 'cssId'],
+    mhchem: ['ce', 'pu'],
+    newcommand: [
+      'newcommand',
+      'renewcommand',
+      'newenvironment',
+      'renewenvironment',
+      'def',
+      'let',
+    ],
+    unicode: ['unicode', 'U', 'char'],
+    verb: ['verb'],
+  }),
+};
+
+/**
+ * The configuration object for the `autoload` component.
  */
 export const AutoloadConfiguration = Configuration.create('autoload', {
   [ConfigurationType.HANDLER]: {
     [HandlerType.MACRO]: ['autoload-macros'],
     [HandlerType.ENVIRONMENT]: ['autoload-environments'],
   },
-  [ConfigurationType.OPTIONS]: {
-    //
-    //  These are the extension names and the macros and environments they contain.
-    //    The format is [macros...] or [[macros...], [environments...]]
-    //  You can prevent one from being autoloaded by setting
-    //    it to [] in the options when the TeX input jax is created.
-    //  You can include the prefix if it is not the default one from require
-    //
-    autoload: expandable({
-      action: ['toggle', 'mathtip', 'texttip'],
-      amscd: [[], ['CD']],
-      bbox: ['bbox'],
-      boldsymbol: ['boldsymbol'],
-      braket: [
-        'bra',
-        'ket',
-        'braket',
-        'set',
-        'Bra',
-        'Ket',
-        'Braket',
-        'Set',
-        'ketbra',
-        'Ketbra',
-      ],
-      bussproofs: [[], ['prooftree']],
-      cancel: ['cancel', 'bcancel', 'xcancel', 'cancelto'],
-      color: ['color', 'definecolor', 'textcolor', 'colorbox', 'fcolorbox'],
-      enclose: ['enclose'],
-      extpfeil: [
-        'xtwoheadrightarrow',
-        'xtwoheadleftarrow',
-        'xmapsto',
-        'xlongequal',
-        'xtofrom',
-        'Newextarrow',
-      ],
-      html: ['data', 'href', 'class', 'style', 'cssId'],
-      mhchem: ['ce', 'pu'],
-      newcommand: [
-        'newcommand',
-        'renewcommand',
-        'newenvironment',
-        'renewenvironment',
-        'def',
-        'let',
-      ],
-      unicode: ['unicode', 'U', 'char'],
-      verb: ['verb'],
-    }),
-  },
+  [ConfigurationType.OPTIONS]: options,
   [ConfigurationType.CONFIG]: configAutoload,
   [ConfigurationType.INIT]: initAutoload,
   [ConfigurationType.PRIORITY]: 10,

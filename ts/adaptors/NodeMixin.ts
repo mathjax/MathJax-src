@@ -26,6 +26,8 @@
 import { DOMAdaptor, minWorker } from '../core/DOMAdaptor.js';
 import { userOptions, defaultOptions, OptionList } from '../util/Options.js';
 import { asyncLoad } from '../util/AsyncLoad.js';
+import { Constructor } from '../types/Types.js';
+export { Constructor };
 
 /**
  * A minimal worker thread interface
@@ -37,24 +39,32 @@ export interface WebWorker {
 }
 
 /**
- * A constructor for a given class
- *
- * @template T   The class to construct
- */
-export type Constructor<T> = new (...args: any[]) => T;
-
-/**
  * The type of an Adaptor class
  */
 export type AdaptorConstructor<N, T, D> = Constructor<DOMAdaptor<N, T, D>>;
 
+export type MIXIN_OPTIONS = {
+  badCSS?: boolean; //     getComputedStyles() is not implemented in the DOM
+  badSizes?: boolean; //   element sizes (e.g., ClientWidth, etc.) are not implemented in the DOM
+};
+
 /**
  * The options to the NodeMixin
  */
-/* prettier-ignore */
-export const NodeMixinOptions: OptionList = {
-  badCSS: true,     // getComputedStyles() is not implemented in the DOM
-  badSizes: true,   // element sizes (e.g., ClientWidth, etc.) are not implemented in the DOM
+const NodeMixinOptions: MIXIN_OPTIONS = {
+  badCSS: true, //     getComputedStyles() is not implemented in the DOM
+  badSizes: true, //   element sizes (e.g., ClientWidth, etc.) are not implemented in the DOM
+};
+
+/**
+ * The adaptor option types.
+ */
+export type OPTIONS = {
+  fontSize?: number;
+  fontFamily?: string;
+  cjkCharWidth?: number;
+  unknownCharWidth?: number;
+  unknownCharHeight?: number;
 };
 
 /**
@@ -69,7 +79,7 @@ export const NodeMixinOptions: OptionList = {
  */
 export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
   Base: A,
-  options: typeof NodeMixinOptions = {}
+  options: MIXIN_OPTIONS = {}
 ): A {
   options = userOptions(defaultOptions({}, NodeMixinOptions), options);
 
@@ -77,17 +87,20 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
     /**
      * The default options
      */
-    /* prettier-ignore */
-    public static OPTIONS: OptionList = {
-      ...(options.badCSS ? {
-        fontSize: 16,          // We can't compute the font size, so always use this
-        fontFamily: 'Times',   // We can't compute the font family, so always use this
-      } : {}),
-      ...(options.badSizes ? {
-        cjkCharWidth: 1,       // Width (in em units) of full width characters
-        unknownCharWidth: .6,  // Width (in em units) of unknown (non-full-width) characters
-        unknownCharHeight: .8, // Height (in em units) of unknown characters
-      } : {})
+    public static OPTIONS = {
+      ...(options.badCSS
+        ? {
+            fontSize: 16, //          We can't compute the font size, so always use this
+            fontFamily: 'Times', //   We can't compute the font family, so always use this
+          }
+        : {}),
+      ...(options.badSizes
+        ? {
+            cjkCharWidth: 1, //       Width (in em units) of full width characters
+            unknownCharWidth: 0.6, //  Width (in em units) of unknown (non-full-width) characters
+            unknownCharHeight: 0.8, // Height (in em units) of unknown characters
+          }
+        : {}),
     };
 
     /**
@@ -97,7 +110,7 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
       [
         '[',
         '\u1100-\u115F', // Hangul Jamo
-        '\u2329\u232A', // LEFT-POINTING ANGLE BRACKET, RIGHT-POINTING ANGLE BRACKET
+        '\u2329\u232A', //  LEFT-POINTING ANGLE BRACKET, RIGHT-POINTING ANGLE BRACKET
         '\u2E80-\u303E', // CJK Radicals Supplement ... CJK Symbols and Punctuation
         '\u3040-\u3247', // Hiragana ... Enclosed CJK Letters and Months
         '\u3250-\u4DBF', // Enclosed CJK Letters and Months ... CJK Unified Ideographs Extension A
@@ -124,7 +137,7 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
     /**
      * The options for the instance
      */
-    public options: OptionList;
+    public options: OPTIONS;
 
     /**
      * @param {...any} args Parameters for the mixin class, where the first is

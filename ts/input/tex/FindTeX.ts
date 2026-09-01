@@ -33,6 +33,33 @@ export type EndItem = [string, boolean, RegExp];
 export type Delims = [string, string];
 
 /*****************************************************************/
+
+/**
+ * The FindTeX option types.
+ */
+export type FINDTEX_OPTIONS = {
+  inlineMath: [string, string][]; //    The start/end delimiter pairs for in-line math
+  displayMath: [string, string][]; //   The start/end delimiter pairs for display math
+  processEscapes: boolean; //           True allows \$ to produce a literal dollar sign
+  processEnvironments: boolean; //      True processes \begin{xxx}...\end{xxx} outside math mode
+  processRefs: boolean; //              True processed \ref{...} outside of math mode
+};
+
+/**
+ * The FindTeX option defaults.
+ */
+const options: FINDTEX_OPTIONS = {
+  inlineMath: [['\\(', '\\)']],
+  displayMath: [
+    ['$$', '$$'],
+    ['\\[', '\\]'],
+  ],
+  processEscapes: true,
+  processEnvironments: true,
+  processRefs: true,
+};
+
+/*****************************************************************/
 /*
  *  Implements the FindTeX class (extends AbstractFindMath)
  *
@@ -46,26 +73,9 @@ export type Delims = [string, string];
  */
 export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
   /**
-   * @type {OptionList}
+   * the default options
    */
-  /* prettier-ignore */
-  public static OPTIONS: OptionList = {
-    inlineMath: [              // The start/end delimiter pairs for in-line math
-      //  ['$', '$'],              //  (comment out any you don't want, or add your own, but
-      ['\\(', '\\)']           //  be sure that you don't have an extra comma at the end)
-    ],
-
-    displayMath: [             // The start/end delimiter pairs for display math
-      ['$$', '$$'],            //  (comment out any you don't want, or add your own, but
-      ['\\[', '\\]']           //  be sure that you don't have an extra comma at the end)
-    ],
-
-    processEscapes: true,      // set to true to allow \$ to produce a dollar without
-    //   starting in-line math mode
-    processEnvironments: true, // set to true to process \begin{xxx}...\end{xxx} outside
-    //   of math mode, false to prevent that
-    processRefs: true,         // set to true to process \ref{...} outside of math mode
-  };
+  public static OPTIONS = options;
 
   /**
    * The regular expression for any starting delimiter

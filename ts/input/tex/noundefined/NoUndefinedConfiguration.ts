@@ -44,14 +44,33 @@ function noUndefined(parser: TexParser, name: string) {
   parser.Push(parser.create('node', 'mtext', [], def, textNode));
 }
 
+/**
+ * The [tex]/noundefined option types.
+ */
+export type NOUNDEFINED_OPTIONS = {
+  noundefined: {
+    color: string;
+    background: string;
+    size: string;
+  };
+};
+
+/**
+ * The [tex]/noundefined t option defaults.
+ */
+const options: NOUNDEFINED_OPTIONS = {
+  noundefined: {
+    color: 'red',
+    background: '',
+    size: '',
+  },
+};
+
+/**
+ * The configuration object for the `noundefined` package.
+ */
 export const NoUndefinedConfiguration = Configuration.create('noundefined', {
   [ConfigurationType.FALLBACK]: { [HandlerType.MACRO]: noUndefined },
-  [ConfigurationType.OPTIONS]: {
-    noundefined: {
-      color: 'red',
-      background: '',
-      size: '',
-    },
-  },
+  [ConfigurationType.OPTIONS]: options,
   [ConfigurationType.PRIORITY]: 3,
 });

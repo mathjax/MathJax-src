@@ -21,15 +21,14 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { MathDocument } from '../../core/MathDocument.js';
+//import { MathDocument } from '../../core/MathDocument.js';
 import { StyleJsonSheet } from '../../util/StyleJson.js';
 import { Highlighter } from './Highlighter.js';
 import { SsmlElement, buildSpeech } from '../speech/SpeechUtil.js';
+import type { ExplorerMathDocument } from '../explorer.ts';
 import { SEM } from '../semantic-enrich/strings.js';
 import { MACTION } from '../semantic-enrich/maction.js';
 import { HILITE, MAG } from './strings.js';
-
-export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
 
 export interface Region<T> {
   /**
@@ -105,9 +104,9 @@ export abstract class AbstractRegion<T> implements Region<T> {
 
   /**
    * @class
-   * @param {A11yDocument} document The document the live region is added to.
+   * @param {ExplorerMathDocument} document The document the live region is added to.
    */
-  constructor(public document: A11yDocument) {
+  constructor(public document: ExplorerMathDocument) {
     this.CLASS = this.constructor as typeof AbstractRegion;
     this.AddStyles();
   }
@@ -863,7 +862,6 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     mjx: HTMLElement,
     container: Element
   ) {
-    let [x, y] = [0, 0];
     let top, bot, left, right;
     const g = container.querySelector('g').cloneNode(false);
     for (const child of enclosed) {
@@ -871,7 +869,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
       if (rect?.getAttribute(HILITE.ADDED)) {
         const bbox = rect.getBBox();
         const [X, Y] = this.xy(rect);
-        [x, y] = [X, Y + bbox.y];
+        const [x, y] = [X, Y + bbox.y];
         if (left === undefined || x < left) left = x;
         if (right === undefined || x + bbox.width > right) {
           right = x + bbox.width;

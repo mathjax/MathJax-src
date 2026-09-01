@@ -42,10 +42,29 @@ Configuration.create('text-bboldx', {
   },
 });
 
-//
-// Define the package configuration, including switches for light and always
-// bold bb.
-//
+/**
+ * The option types.
+ */
+export type BBOLDX_OPTIONS = {
+  bboldx: {
+    bfbb: boolean;
+    light: boolean;
+  };
+};
+
+/**
+ * The default options.
+ */
+const options: BBOLDX_OPTIONS = {
+  bboldx: {
+    bfbb: false,
+    light: false,
+  },
+};
+
+/**
+ * The configuration object for the `bboldx` package.
+ */
 export const BboldxConfiguration = Configuration.create('bboldx', {
   [ConfigurationType.HANDLER]: {
     [HandlerType.MACRO]: [
@@ -56,18 +75,13 @@ export const BboldxConfiguration = Configuration.create('bboldx', {
       'bboldx-delimiterBold',
     ],
   },
-  [ConfigurationType.OPTIONS]: {
-    bboldx: {
-      bfbb: false,
-      light: false,
-    },
-  },
-  config(_config, jax) {
+  [ConfigurationType.OPTIONS]: options,
+  [ConfigurationType.CONFIG]: (_config, jax) => {
     const textmacros = jax.parseOptions.packageData.get('textmacros');
     if (textmacros) {
       textmacros.parseOptions.options.textmacros.packages.push('text-bboldx');
       textmacros.textConf.add('text-bboldx', jax, {});
     }
   },
-  priority: 3, // load before base, since we override \mathbb
+  [ConfigurationType.PRIORITY]: 3, // load before base, since we override \mathbb
 });

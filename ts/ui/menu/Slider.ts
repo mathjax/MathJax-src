@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Slider} from './mj-context-menu.js';
+import { Slider } from './mj-context-menu.js';
 
 //
 // Fix slider actions (FIXME: remove when mj-context-menu is merged into MathJax-src repo)
@@ -50,47 +50,47 @@ export class mjSlider extends Slider {
   keydown(event: KeyboardEvent) {
     let value = parseInt(((this as any).input as HTMLInputElement).value);
     switch (event.key) {
-    case 'ArrowLeft':
-    case 'ArrowDown':
-      if (!event.shiftKey) {
+      case 'ArrowLeft':
+      case 'ArrowDown':
+        if (!event.shiftKey) {
+          super.keydown(event);
+          return;
+        }
+      /* @eslint-ignore: no-fallthrough */
+      case '-':
+        value = Math.max(0, value - (event.ctrlKey ? 5 : 1));
+        break;
+
+      case 'ArrowRight':
+      case 'ArrowUp':
+        if (!event.shiftKey) {
+          super.keydown(event);
+          return;
+        }
+      /* @eslint-ignore: no-fallthrough */
+      case '+':
+        value = Math.min(100, value + (event.ctrlKey ? 5 : 1));
+        break;
+
+      case 'PageDown':
+        value = Math.max(0, value - 5);
+        break;
+
+      case 'PageUp':
+        value = Math.max(0, value + 5);
+        break;
+
+      case 'Home':
+        value = 0;
+        break;
+
+      case 'End':
+        value = 100;
+        break;
+
+      default:
         super.keydown(event);
         return;
-      }
-    /* @eslint-ignore: no-fallthrough */
-    case '-':
-      value = Math.max(0, value - (event.ctrlKey ? 5 : 1));
-      break;
-
-    case 'ArrowRight':
-    case 'ArrowUp':
-      if (!event.shiftKey) {
-        super.keydown(event);
-        return;
-      }
-    /* @eslint-ignore: no-fallthrough */
-    case '+':
-      value = Math.min(100, value + (event.ctrlKey ? 5 : 1));
-      break
-
-    case 'PageDown':
-      value = Math.max(0, value - 5);
-      break;
-
-    case 'PageUp':
-      value= Math.max(0, value + 5);
-      break;
-
-    case 'Home':
-      value = 0;
-      break;
-
-    case 'End':
-      value = 100;
-      break;
-
-    default:
-      super.keydown(event);
-      return;
     }
     this.variable.setValue(String(value));
     this.stop(event);

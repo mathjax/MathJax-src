@@ -4,7 +4,9 @@
     "from": "../..",
     "copy": [
       "require.mjs",
-      "json.cjs"
+      "require.d.mts",
+      "json.cjs",
+      "json.d.cts"
     ]
   }
 }

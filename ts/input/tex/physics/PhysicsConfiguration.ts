@@ -27,6 +27,29 @@ import { AutoOpen } from './PhysicsItems.js';
 import './PhysicsMappings.js';
 export { COMPONENT } from './__locales__/Component.js';
 
+/**
+ * The [tex]/physics option types.
+ */
+export type PHYSICS_OPTIONS = {
+  physics: {
+    italicdiff: boolean;
+    arrowdel: boolean;
+  };
+};
+
+/**
+ * The [tex]/physics option defaults.
+ */
+const options: PHYSICS_OPTIONS = {
+  physics: {
+    italicdiff: false,
+    arrowdel: false,
+  },
+};
+
+/**
+ * The configuration object for the `physics` package.
+ */
 export const PhysicsConfiguration = Configuration.create('physics', {
   [ConfigurationType.HANDLER]: {
     macro: [
@@ -46,10 +69,5 @@ export const PhysicsConfiguration = Configuration.create('physics', {
   [ConfigurationType.ITEMS]: {
     [AutoOpen.prototype.kind]: AutoOpen,
   },
-  [ConfigurationType.OPTIONS]: {
-    physics: {
-      italicdiff: false,
-      arrowdel: false,
-    },
-  },
+  [ConfigurationType.OPTIONS]: options,
 });

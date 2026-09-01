@@ -45,6 +45,7 @@ import { CommonMrow } from './Wrappers/mrow.js';
 import { BBox } from '../../util/BBox.js';
 import { LineBBox } from './LineBBox.js';
 import { Linebreaks } from './LinebreakVisitor.js';
+import { LINEBREAKS as LINEBREAK_OPTIONS } from '../common.js';
 import {
   FontData,
   FontDataClass,
@@ -57,6 +58,8 @@ import {
 } from './FontData.js';
 import { Locale } from '../../util/Locale.js';
 import { COMPONENT } from '../../core/__locales__/Component.js';
+
+export { Constructor } from '../../types/Types.js';
 
 /*****************************************************************/
 
@@ -116,10 +119,6 @@ export type StyleData = {
 };
 
 /*********************************************************/
-/**
- * Generic constructor type
- */
-export type Constructor<T> = new (...args: any[]) => T;
 
 /**
  * Generic CommonWrapper constructor
@@ -472,24 +471,17 @@ export class CommonWrapper<
   get linebreaks(): Linebreaks<
     N, T, D,
     CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-    WW, WF, WC, CC, VV, DD, FD, FC> {
+    WW, WF, WC, CC, VV, DD, FD, FC
+  > {
     return this.jax.linebreaks;
   }
 
   /**
    * Easy access to the linebreak options
    *
-   * @returns {{inline: boolean,
-   *   width: string,
-   *   lineleading: number,
-   *   LinebreakVisitor: null}} The linebreak options
+   * @returns {LINEBREAK_OPTIONS}   The linebreak options
    */
-  get linebreakOptions(): {
-    inline: boolean;
-    width: string;
-    lineleading: number;
-    LinebreakVisitor: null;
-  } {
+  get linebreakOptions(): LINEBREAK_OPTIONS {
     return this.jax.options.linebreaks;
   }
 

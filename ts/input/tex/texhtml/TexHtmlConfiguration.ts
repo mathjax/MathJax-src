@@ -85,13 +85,28 @@ export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
 
 new MacroMap('tex-html', { '<': HtmlNodeMethods.TexHTML });
 
+/**
+ * The [tex]/texhtml option types.
+ */
+export type TEXHTML_OPTIONS = {
+  allowTexHTML: boolean;
+};
+
+/**
+ * The [tex]/texhtml option defaults.
+ */
+const options: TEXHTML_OPTIONS = {
+  allowTexHTML: false, // Must turn this on explicitly, since it allows unfiltered HTML insertion.
+};
+
+/**
+ * The configuration object for the `texhtml` package.
+ */
 export const TexHtmlConfiguration = Configuration.create('texhtml', {
   [ConfigurationType.HANDLER]: {
     [HandlerType.CHARACTER]: ['tex-html'],
   },
-  [ConfigurationType.OPTIONS]: {
-    allowTexHTML: false, // Must turn this on explicitly, since it allows unfiltered HTML insertion.
-  },
+  [ConfigurationType.OPTIONS]: options,
   [ConfigurationType.CONFIG]: () => {
     if (HTMLDomStrings) {
       //

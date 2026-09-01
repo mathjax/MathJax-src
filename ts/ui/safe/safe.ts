@@ -24,10 +24,11 @@
 import { Property } from '../../core/Tree/Node.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { MathItem } from '../../core/MathItem.js';
-import { MathDocument } from '../../core/MathDocument.js';
+import { MathDocument, AbstractMathDocument } from '../../core/MathDocument.js';
 import { OptionList, expandable } from '../../util/Options.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { SafeMethods } from './SafeMethods.js';
+import type { OPTIONS, SAFE_LIST, LENGTH_LIST } from './SafeHandler.js';
 
 /**
  * Function type for filtering attributes
@@ -42,6 +43,104 @@ export type FilterFunction<N, T, D> = (
   ...args: any[]
 ) => Property;
 
+const options: OPTIONS['safeOptions'] = {
+  allow: {
+    //
+    //  Values can be "all", "safe", or "none"
+    //
+    URLs: 'safe', // safe are in safeProtocols below
+    classes: 'safe', // safe start with mjx- (can be set by pattern below)
+    cssIDs: 'safe', // safe start with mjx- (can be set by pattern below)
+    styles: 'safe', // safe are in safeStyles below
+  },
+  //
+  // Largest padding/border/margin, etc. in em's
+  //
+  lengthMax: 3,
+  //
+  // Valid range for scriptsizemultiplier
+  //
+  scriptsizemultiplierRange: [0.6, 1],
+  //
+  // Valid range for scriptlevel
+  //
+  scriptlevelRange: [-2, 2],
+  //
+  // Pattern for allowed class names
+  //
+  classPattern: /^mjx-[-a-zA-Z0-9_.]+$/,
+  //
+  // Pattern for allowed ids
+  //
+  idPattern: /^mjx-(?:eqn:.+|[-a-zA-Z0-9_.]+)$/,
+  //
+  // Pattern for data attributes
+  //
+  dataPattern: /^data-mjx-/,
+  //
+  //  Which URL protocols are allowed
+  //
+  safeProtocols: expandable<SAFE_LIST>({
+    http: true,
+    https: true,
+    file: true,
+    javascript: false,
+    data: false,
+  }),
+  //
+  //  Which styles are allowed
+  //
+  safeStyles: expandable<SAFE_LIST>({
+    color: true,
+    backgroundColor: true,
+    border: true,
+    cursor: true,
+    margin: true,
+    padding: true,
+    textShadow: true,
+    fontFamily: true,
+    fontSize: true,
+    fontStyle: true,
+    fontWeight: true,
+    opacity: true,
+    outline: true,
+  }),
+  //
+  //  CSS styles that have Top/Right/Bottom/Left versions
+  //
+  styleParts: expandable<SAFE_LIST>({
+    border: true,
+    padding: true,
+    margin: true,
+    outline: true,
+  }),
+  //
+  //  CSS styles that are lengths needing max/min testing
+  //    A string value means test that style value;
+  //    An array gives [min,max] in em's
+  //    Otherwise use [-lengthMax,lengthMax] from above
+  //
+  styleLengths: expandable<LENGTH_LIST>({
+    borderTop: 'borderTopWidth',
+    borderRight: 'borderRightWidth',
+    borderBottom: 'borderBottomWidth',
+    borderLeft: 'borderLeftWidth',
+    paddingTop: true,
+    paddingRight: true,
+    paddingBottom: true,
+    paddingLeft: true,
+    marginTop: true,
+    marginRight: true,
+    marginBottom: true,
+    marginLeft: true,
+    outlineTop: true,
+    outlineRight: true,
+    outlineBottom: true,
+    outlineLeft: true,
+    fontSize: [0.707, 1.44],
+  }),
+};
+
 /**
  * The Safe object for sanitizing the internal MathML representation of an expression
  *
@@ -53,103 +152,7 @@ export class Safe<N, T, D> {
   /**
    * The options controlling the handling of the safe extension
    */
-  public static OPTIONS: OptionList = {
-    allow: {
-      //
-      //  Values can be "all", "safe", or "none"
-      //
-      URLs: 'safe', // safe are in safeProtocols below
-      classes: 'safe', // safe start with mjx- (can be set by pattern below)
-      cssIDs: 'safe', // safe start with mjx- (can be set by pattern below)
-      styles: 'safe', // safe are in safeStyles below
-    },
-    //
-    // Largest padding/border/margin, etc. in em's
-    //
-    lengthMax: 3,
-    //
-    // Valid range for scriptsizemultiplier
-    //
-    scriptsizemultiplierRange: [0.6, 1],
-    //
-    // Valid range for scriptlevel
-    //
-    scriptlevelRange: [-2, 2],
-    //
-    // Pattern for allowed class names
-    //
-    classPattern: /^mjx-[-a-zA-Z0-9_.]+$/,
-    //
-    // Pattern for allowed ids
-    //
-    idPattern: /^mjx-(?:eqn:.+|[-a-zA-Z0-9_.]+)$/,
-    //
-    // Pattern for data attributes
-    //
-    dataPattern: /^data-mjx-/,
-    //
-    //  Which URL protocols are allowed
-    //
-    safeProtocols: expandable({
-      http: true,
-      https: true,
-      file: true,
-      javascript: false,
-      data: false,
-    }),
-    //
-    //  Which styles are allowed
-    //
-    safeStyles: expandable({
-      color: true,
-      backgroundColor: true,
-      border: true,
-      cursor: true,
-      margin: true,
-      padding: true,
-      textShadow: true,
-      fontFamily: true,
-      fontSize: true,
-      fontStyle: true,
-      fontWeight: true,
-      opacity: true,
-      outline: true,
-    }),
-    //
-    //  CSS styles that have Top/Right/Bottom/Left versions
-    //
-    styleParts: expandable({
-      border: true,
-      padding: true,
-      margin: true,
-      outline: true,
-    }),
-    //
-    //  CSS styles that are lengths needing max/min testing
-    //    A string value means test that style value;
-    //    An array gives [min,max] in em's
-    //    Otherwise use [-lengthMax,lengthMax] from above
-    //
-    styleLengths: expandable({
-      borderTop: 'borderTopWidth',
-      borderRight: 'borderRightWidth',
-      borderBottom: 'borderBottomWidth',
-      borderLeft: 'borderLeftWidth',
-      paddingTop: true,
-      paddingRight: true,
-      paddingBottom: true,
-      paddingLeft: true,
-      marginTop: true,
-      marginRight: true,
-      marginBottom: true,
-      marginLeft: true,
-      outlineTop: true,
-      outlineRight: true,
-      outlineBottom: true,
-      outlineLeft: true,
-      fontSize: [0.707, 1.44],
-    }),
-  };
+  public static OPTIONS = options;
 
   /**
    * The attribute-to-filter-method mapping
@@ -215,7 +218,11 @@ export class Safe<N, T, D> {
     try {
       math.root.walkTree(this.sanitizeNode.bind(this));
     } catch (err) {
-      document.options.compileError(document, math, err);
+      document.options.compileError(
+        document as AbstractMathDocument<N, T, D>,
+        math,
+        err
+      );
     }
   }
 

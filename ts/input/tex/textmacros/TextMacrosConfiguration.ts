@@ -107,9 +107,27 @@ function internalMath(
   ];
 }
 
-//
-//  The textmacros package configuration
-//
+/**
+ * The [tex]/textmacros option types.
+ */
+export type TEXTMACROS_OPTIONS = {
+  textmacros: {
+    packages: string[]; // textmacro packages to load
+  };
+};
+
+/**
+ * The [tex]textmacros option defaults.
+ */
+const options: TEXTMACROS_OPTIONS = {
+  textmacros: {
+    packages: ['text-base'],
+  },
+};
+
+/**
+ * The configuration object for the `textmacros` package.
+ */
 export const TextMacrosConfiguration = Configuration.create('textmacros', {
   [ConfigurationType.PRIORITY]: 1,
   /**
@@ -161,9 +179,5 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
       config.parseOptions.clear();
     },
   ],
-  [ConfigurationType.OPTIONS]: {
-    textmacros: {
-      packages: ['text-base'], // textmacro packages to load
-    },
-  },
+  [ConfigurationType.OPTIONS]: options,
 });

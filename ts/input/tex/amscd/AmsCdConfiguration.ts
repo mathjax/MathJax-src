@@ -25,19 +25,40 @@ import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import './AmsCdMappings.js';
 
+/**
+ * The [tex]/amscd option types.
+ */
+export type AMSCD_OPTIONS = {
+  amscd: {
+    colspace: string;
+    rowspace: string;
+    harrowsize: string;
+    varrowsize: string;
+    hideHorizontalLabels: boolean;
+  };
+};
+
+/**
+ * The [tex]/amscd options defaults.
+ */
+const options: AMSCD_OPTIONS = {
+  amscd: {
+    colspace: '5pt',
+    rowspace: '5pt',
+    harrowsize: '2.75em',
+    varrowsize: '1.75em',
+    hideHorizontalLabels: false,
+  },
+};
+
+/**
+ * The configuration object for the `amscd` package.
+ */
 export const AmsCdConfiguration = Configuration.create('amscd', {
   [ConfigurationType.HANDLER]: {
     [HandlerType.CHARACTER]: ['amscd_special'],
     [HandlerType.MACRO]: ['amscd_macros'],
     [HandlerType.ENVIRONMENT]: ['amscd_environment'],
   },
-  [ConfigurationType.OPTIONS]: {
-    amscd: {
-      colspace: '5pt',
-      rowspace: '5pt',
-      harrowsize: '2.75em',
-      varrowsize: '1.75em',
-      hideHorizontalLabels: false,
-    },
-  },
+  [ConfigurationType.OPTIONS]: options,
 });

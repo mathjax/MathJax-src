@@ -21,7 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { AbstractMathDocument } from '../../core/MathDocument.js';
+import {
+  AbstractMathDocument,
+  RenderActions,
+  DOCUMENT_OPTIONS,
+} from '../../core/MathDocument.js';
 import {
   userOptions,
   separateOptions,
@@ -35,6 +39,7 @@ import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { InputJax } from '../../core/InputJax.js';
 import { STATE, newState, ProtoItem, Location } from '../../core/MathItem.js';
 import { StyleJson } from '../../util/StyleJson.js';
+import { DOM, DOM_TYPES, N, T, D, Constructor } from '../../types/Types.js';
 
 /*****************************************************************/
 /**
@@ -55,6 +60,30 @@ export type HTMLNodeArray<N, T> = [N | T, number][][];
 newState('STYLES', STATE.INSERTED + 1);
 
 /*****************************************************************/
+
+/**
+ * The new HTMLDocument option types.
+ */
+export type OPTIONS<DOM extends DOM_TYPES> = {
+  DomStrings: HTMLDomStrings<N<DOM>, T<DOM>, D<DOM>>; // The DomStrings parser
+};
+
+/**
+ * The HTMLDocument option types.
+ */
+export interface HTMLDOCUMENT_OPTIONS<DOM extends DOM_TYPES>
+  extends OPTIONS<DOM>, DOCUMENT_OPTIONS<DOM> {
+  MathItem: Constructor<HTMLMathItem<N<DOM>, T<DOM>, D<DOM>>>;
+}
+
+/**
+ * The HTMLDocument option defaults.
+ */
+const options: OPTIONS<DOM> = {
+  DomStrings: null, // Use the default DomString parser
+};
+
+/*****************************************************************/
 /**
  *  The HTMLDocument class (extends AbstractMathDocument)
  *
@@ -71,17 +100,21 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   /**
    * The default options for HTMLDocument
    */
-  /* prettier-ignore */
-  public static OPTIONS: OptionList = {
+  public static OPTIONS = {
     ...AbstractMathDocument.OPTIONS,
-    renderActions: expandable({
+    ...options,
+    renderActions: expandable<RenderActions<any, any, any>>({
       ...AbstractMathDocument.OPTIONS.renderActions,
-      styles: [STATE.STYLES, '', 'updateStyleSheet', false]  // update styles on a rerender() call
+      styles: [STATE.STYLES, '', 'updateStyleSheet', false], // update styles on a rerender() call
     }),
-    MathList: HTMLMathList,           // Use the HTMLMathList for MathLists
-    MathItem: HTMLMathItem,           // Use the HTMLMathItem for MathItem
-    DomStrings: null                  // Use the default DomString parser
+    MathList: HTMLMathList, // Use the HTMLMathList for MathLists
+    MathItem: HTMLMathItem, // Use the HTMLMathItem for MathItem
   };
+
+  /**
+   * @override
+   */
+  public options: HTMLDOCUMENT_OPTIONS<DOM<N, T, D>> & { elements?: N[] };
 
   /**
    * Extra styles to be included in the document's stylesheet (added by extensions)
@@ -106,7 +139,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     const [html, dom] = separateOptions(options, HTMLDomStrings.OPTIONS);
     super(document, adaptor, html);
     this.domStrings =
-      this.options['DomStrings'] || new HTMLDomStrings<N, T, D>(dom);
+      this.options.DomStrings || new HTMLDomStrings<N, T, D>(dom);
     this.domStrings.adaptor = adaptor;
     this.styles = [];
   }

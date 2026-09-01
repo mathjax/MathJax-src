@@ -9,4 +9,3 @@ OutputUtil.config('svg', SVG, fontName, DefaultFont);
 export function loadFont(startup, preload) {
   return OutputUtil.loadFont(startup, 'svg', fontName, preload);
 }
-

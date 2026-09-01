@@ -42,8 +42,7 @@ export type DEFPAIR<N, T, D> = Notation.DefPair<SvgMencloseNTD<N, T, D>, N>;
  * The kinds of lines that can be drawn
  */
 export type LineName =
-  | Notation.Side
-  | ('vertical' | 'horizontal' | 'up' | 'down');
+  Notation.Side | ('vertical' | 'horizontal' | 'up' | 'down');
 
 /**
  * [x1,y1, x2,y2] endpoints for a line

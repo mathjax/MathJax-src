@@ -28,6 +28,8 @@ import { MmlFactory } from './MmlTree/MmlFactory.js';
 import { userOptions, defaultOptions, OptionList } from '../util/Options.js';
 import { FunctionList } from '../util/FunctionList.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
+import type { DOM, DOM_TYPES } from '../types/Types.js';
+import type { FilterFunctions, FilterFunctionList } from './FilterFunctions.js';
 
 /*****************************************************************/
 /**
@@ -57,8 +59,8 @@ export interface InputJax<N, T, D> {
   /**
    * Lists of pre- and post-filters to call before and after processing the input
    */
-  preFilters: FunctionList;
-  postFilters: FunctionList;
+  preFilters: FilterFunctions<any, DOM<N, T, D>>;
+  postFilters: FilterFunctions<any, DOM<N, T, D>>;
 
   /**
    * The DOM adaptor for managing HTML elements
@@ -97,8 +99,8 @@ export interface InputJax<N, T, D> {
    *
    * @param {N | string[]} which   The element or array of strings to be searched for math
    * @param {OptionList} options   The options for the search, if any
-   * @returns {ProtoItem[]}         Array of proto math items found (further processed by the
-   *                                handler to produce actual MathItem objects)
+   * @returns {ProtoItem[]}        Array of proto math items found (further processed by the
+   *                               handler to produce actual MathItem objects)
    */
   findMath(which: N | string[], options?: OptionList): ProtoItem<N, T>[];
 
@@ -107,20 +109,40 @@ export interface InputJax<N, T, D> {
    *
    * @param {MathItem} math  The MathItem whose math content is to processed
    * @param {MathDocument} document The MathDocument for this input jax.
-   * @returns {MmlNode}       The resulting internal node tree for the math
+   * @returns {MmlNode}      The resulting internal node tree for the math
    */
   compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>): MmlNode;
 }
+
+/**
+ * The InputJax option types.
+ */
+export type INPUTJAX_OPTIONS<
+  D extends DOM_TYPES = DOM,
+  PRE = any,
+  POST = PRE,
+> = {
+  preFilters: FilterFunctionList<PRE, D>;
+  postFilters: FilterFunctionList<POST, D>;
+};
 
 /*****************************************************************/
 /**
  *  The abstract InputJax class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template N     The HTMLElement node class
+ * @template T     The Text node class
+ * @template D     The Document class
+ * @template PRE   The type of data passed to the pre-filter functions
+ * @template POST  The type of data passed to the post-filter functions
  */
-export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
+export abstract class AbstractInputJax<
+  N,
+  T,
+  D,
+  PRE = any,
+  POST = PRE,
+> implements InputJax<N, T, D> {
   /**
    * The name of the input jax
    */
@@ -129,7 +151,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   /**
    * The default options for the input jax
    */
-  public static OPTIONS: OptionList = {
+  public static OPTIONS: INPUTJAX_OPTIONS = {
     preFilters: [],
     postFilters: [],
   };
@@ -142,12 +164,12 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   /**
    * Filters to run on the TeX string before it is processed
    */
-  public preFilters: FunctionList;
+  public preFilters: FilterFunctions<PRE, DOM<N, T, D>>;
 
   /**
    * Filters to run on the generated MathML after the TeX string is processed
    */
-  public postFilters: FunctionList;
+  public postFilters: FilterFunctions<POST, DOM<N, T, D>>;
 
   /**
    * The DOMAdaptor for the MathDocument for this input jax
@@ -231,13 +253,15 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
    * @param {MathItem} math          The math item that is being processed
    * @param {MathDocument} document  The math document containg the math item
    * @param {any} data               Whatever other data is needed
-   * @returns {any}                   The (possibly modified) data
+   * @returns {any}                  The (possibly modified) data
+   *
+   * @template D  The type of data being passed
    */
-  protected executeFilters(
+  protected executeFilters<DATA = PRE | POST>(
     filters: FunctionList,
     math: MathItem<N, T, D>,
     document: MathDocument<N, T, D>,
-    data: any
+    data: DATA
   ): any {
     const args = { math: math, document: document, data: data };
     filters.execute(args);

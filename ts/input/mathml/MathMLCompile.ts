@@ -38,6 +38,36 @@ import { Locale } from '../../util/Locale.js';
 import { COMPONENT } from './__locales__/Component.js';
 
 /********************************************************************/
+
+type VERIFY_OPTIONS = typeof AbstractMmlNode.verifyDefaults;
+
+/**
+ * The MathMLCompile option types.
+ */
+export type MATHMLCOMPILE_OPTIONS = {
+  MmlFactory: MmlFactory; //            The MmlFactory to use (defaults to a new MmlFactory)
+  allowHtmlInTokenNodes: boolean; //    True if HTML is allowed in token nodes
+  fixMisplacedChildren: boolean; //     True if we want to use heuristics to try to fix
+  //                                      problems with the tree based on HTML not handling
+  //                                       self-closing tags properly
+  verify: VERIFY_OPTIONS; //            Options to pass to verifyTree() controlling MathML verification
+  translateEntities: boolean; //        True means translate entities in text nodes
+};
+
+/**
+ * The MathMLCompile option defaults.
+ */
+const options: MATHMLCOMPILE_OPTIONS = {
+  MmlFactory: null,
+  allowHtmlInTokenNodes: false,
+  fixMisplacedChildren: true,
+  verify: {
+    ...AbstractMmlNode.verifyDefaults,
+  },
+  translateEntities: true,
+};
+
+/********************************************************************/
 /**
  *  The class for performing the MathML DOM node to
  *  internal MmlNode conversion.
@@ -50,18 +80,7 @@ export class MathMLCompile<N, T, D> {
   /**
    *  The default options for this object
    */
-  /* prettier-ignore */
-  public static OPTIONS: OptionList = {
-    MmlFactory: null,                   // The MmlFactory to use (defaults to a new MmlFactory)
-    allowHtmlInTokenNodes: false,       // True if HTML is allowed in token nodes
-    fixMisplacedChildren: true,         // True if we want to use heuristics to try to fix
-                                        //   problems with the tree based on HTML not handling
-                                        //   self-closing tags properly
-    verify: {                           // Options to pass to verifyTree() controlling MathML verification
-      ...AbstractMmlNode.verifyDefaults
-    },
-    translateEntities: true             // True means translate entities in text nodes
-  };
+  public static OPTIONS = options;
 
   /**
    * The DOMAdaptor for the document being processed

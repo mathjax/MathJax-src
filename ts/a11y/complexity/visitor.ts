@@ -44,24 +44,39 @@ import type { SemanticMap } from '../speech/StructureUtil.js';
 /*==========================================================================*/
 
 /**
+ * The complexity visitor option types.
+ */
+export interface COMPLEXITY_VISITOR_OPTIONS {
+  identifyCollapsible: boolean; //   mark elements that should be collapsed
+  makeCollapsible: boolean; //       insert maction to allow collapsing
+  Collapse: typeof Collapse; //      the Collapse class to use
+}
+
+/**
+ * The complexity visitor option defaults.
+ */
+const options: COMPLEXITY_VISITOR_OPTIONS = {
+  identifyCollapsible: true,
+  makeCollapsible: true,
+  Collapse: Collapse,
+};
+
+/*==========================================================================*/
+
+/**
  * A visitor pattern that computes complexities within the MathML tree
  */
 export class ComplexityVisitor extends MmlVisitor {
   /**
    * The options for handling collapsing
    */
-  /* prettier-ignore */
-  public static OPTIONS: OptionList = {
-    identifyCollapsible: true,    // mark elements that should be collapsed
-    makeCollapsible: true,        // insert maction to allow collapsing
-    Collapse: Collapse            // the Collapse class to use
-  };
+  public static OPTIONS = options;
 
   /**
    * Values used to compute complexities
    */
   /* prettier-ignore */
-  public complexity: {[name: string]: number} = {
+  public complexity = {
     text: .5,           // each character of a token element adds this to complexity
     token: .5,          // each token element gets this additional complexity
     child: 1,           // child nodes add this to their parent node's complexity
@@ -91,7 +106,7 @@ export class ComplexityVisitor extends MmlVisitor {
   /**
    * The options for this visitor
    */
-  public options: OptionList;
+  public options: COMPLEXITY_VISITOR_OPTIONS;
 
   /**
    * @override
@@ -99,7 +114,10 @@ export class ComplexityVisitor extends MmlVisitor {
   constructor(factory: MmlFactory, options: OptionList) {
     super(factory);
     const CLASS = this.constructor as typeof ComplexityVisitor;
-    this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
+    this.options = userOptions(
+      defaultOptions({}, CLASS.OPTIONS),
+      options
+    ) as COMPLEXITY_VISITOR_OPTIONS;
     this.collapse = new this.options.Collapse(this);
     this.factory = factory;
   }

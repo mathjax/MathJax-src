@@ -41,20 +41,37 @@ function ChooseFont(parser: TexParser, name: string) {
   );
 }
 
+/**
+ * The dsfont command map.
+ */
 new CommandMap('dsfont', {
   mathds: ChooseFont,
 });
 
-//
-//  Define the package configuration, including switch for sans serif.
-//
+/**
+ * The [tex]/dsfont option types.
+ */
+export type DSFONT_OPTIONS = {
+  dsfont: {
+    sans: boolean;
+  };
+};
+
+/**
+ * The [tex]/dsfonts option defaults.
+ */
+const options: DSFONT_OPTIONS = {
+  dsfont: {
+    sans: false,
+  },
+};
+
+/**
+ * The configuration object for the `dsfont` package.
+ */
 export const DsfontConfiguration = Configuration.create('dsfont', {
   [ConfigurationType.HANDLER]: {
     [HandlerType.MACRO]: ['dsfont'],
   },
-  [ConfigurationType.OPTIONS]: {
-    dsfont: {
-      sans: false,
-    },
-  },
+  [ConfigurationType.OPTIONS]: options,
 });

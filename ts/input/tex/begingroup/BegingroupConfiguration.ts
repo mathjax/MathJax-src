@@ -41,7 +41,31 @@ new CommandMap('begingroup', {
 });
 
 /**
- * Create the begingroup configuration.
+ * The [tex]/begingroup options types.
+ */
+export type BEGINGROUP_OPTIONS = {
+  begingroup: {
+    allowGlobal: string[];
+  };
+};
+
+/**
+ * The [tex]/begingroup option defaults.
+ */
+const options: BEGINGROUP_OPTIONS = {
+  begingroup: {
+    allowGlobal: [
+      'let',
+      'def',
+      'newcommand',
+      'DeclareMathOperator',
+      'Newextarrow',
+    ],
+  },
+};
+
+/**
+ * The configuration object for the `begingroup` package.
  */
 export const BegingroupConfiguration = Configuration.create('begingroup', {
   [ConfigurationType.HANDLER]: {
@@ -55,17 +79,7 @@ export const BegingroupConfiguration = Configuration.create('begingroup', {
       stack: new BegingroupStack(jax.parseOptions),
     });
   },
-  [ConfigurationType.OPTIONS]: {
-    begingroup: {
-      allowGlobal: [
-        'let',
-        'def',
-        'newcommand',
-        'DeclareMathOperator',
-        'Newextarrow',
-      ],
-    },
-  },
+  [ConfigurationType.OPTIONS]: options,
   [ConfigurationType.PREPROCESSORS]: [
     ({ data: parser }) => begingroupStack(parser).remove(),
   ],

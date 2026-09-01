@@ -112,12 +112,19 @@ export class Expandable {}
  *
  * without reporting an error.
  *
- * @param {OptionList} def The options list
- * @returns {OptionList} The augmented options list
+ * @param {T} def The options list
+ * @returns {T} The augmented options list
+ *
+ * @template T  The type of the list
  */
-export function expandable(def: OptionList): OptionList {
+export function expandable<T = OptionList>(def: T): T {
   return Object.assign(Object.create(Expandable.prototype), def);
 }
+
+/**
+ * An expandable list of a given type
+ */
+export type EXPANDABLE_LIST_OF<T> = { [name: string]: T };
 
 /*****************************************************************/
 /**
