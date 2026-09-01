@@ -28,6 +28,7 @@ import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { SpeechMathItem } from '../speech.js';
 import { WorkerHandler } from './WebWorker.js';
 import { SEM } from '../semantic-enrich/strings.js';
+import { localize } from '../speech/__locales__/Component.js';
 
 /**
  * @template N  The HTMLElement node class
@@ -212,6 +213,10 @@ export class GeneratorPool<N, T, D> {
    */
   public getLabel(node: N, _center: string = '', sep: string = ' '): string {
     const adaptor = this.adaptor;
+    if (!this.webworker.ready) {
+      // return document.querySelector('.mjx-selected').textContent;
+      return localize('NoSpeech');
+    }
     return (
       buildLabel(
         adaptor.getAttribute(node, SemAttr.SPEECH_SSML),
@@ -231,6 +236,10 @@ export class GeneratorPool<N, T, D> {
    */
   public getBraille(node: N): string {
     const adaptor = this.adaptor;
+    if (!this.webworker.ready) {
+      // return document.querySelector('.mjx-selected').textContent;
+      return localize('NoBraille');
+    }
     return (
       adaptor.getAttribute(node, 'aria-braillelabel') ||
       adaptor.getAttribute(node, SemAttr.BRAILLE)

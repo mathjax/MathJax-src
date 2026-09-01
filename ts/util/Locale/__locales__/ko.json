@@ -1,1 +1,5 @@
-{}
+{
+  "JsonError": "MathJax(%1): '%2'을(를) 불러올 수 없습니다: %3",
+  "MessageNotFound": "MathJax(Locale): '%2'의 id가 '%1'인 메시지에 대한 지역화된 버전이나 기본 버전이 없습니다",
+  "NoComponent": "MathJax(Locale): 구성 요소 '%1'이(가) 존재하지 않습니다"
+}

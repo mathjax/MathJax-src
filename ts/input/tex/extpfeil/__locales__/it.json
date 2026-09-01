@@ -1,1 +1,5 @@
-{}
+{
+  "NewextarrowArg1": "Il primo argomento di %1 deve essere un nome di sequenza di controllo",
+  "NewextarrowArg2": "Il secondo argomento di %1 deve essere due numeri interi separati da una virgola",
+  "NewextarrowArg3": "Il terzo argomento di %1 deve essere un numero di carattere unicode"
+}

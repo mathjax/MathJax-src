@@ -1,1 +1,13 @@
-{}
+{
+  "CantUseHash2": "Uso illegale di # nel modello di %1",
+  "EnvBadEnd": "\\begin{%1} è terminato con \\end{%2}",
+  "EnvMissingEnd": "\\end{%1} mancante",
+  "IllegalControlSequenceName": "Nome di sequenza di controllo illegale per %1",
+  "IllegalParamNumber": "Numero di parametri illegale specificato in %1",
+  "MismatchUseDef": "L'uso di %1 non corrisponde alla sua definizione",
+  "MissingCS": "%1 deve essere seguito da una sequenza di controllo",
+  "MissingReplacementString": "Manca la stringa di sostituzione per la definizione di %1",
+  "ProtectedMacro": "La sequenza di controllo %1 non può essere ridefinita",
+  "RunawayArgument": "Argomento fuori controllo per %1?",
+  "SequentialParam": "I parametri di %1 devono essere numerati in sequenza"
+}

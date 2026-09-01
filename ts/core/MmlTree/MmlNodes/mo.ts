@@ -346,16 +346,16 @@ export class MmlMo extends AbstractMmlTokenNode {
    */
   public adjustTeXclass(prev: MmlNode): MmlNode {
     const texClass = this.texClass;
-    let prevClass = this.prevClass;
     if (texClass === TEXCLASS.NONE) {
       return prev;
     }
+    let prevClass;
     if (prev) {
       if (
         prev.getProperty('autoOP') &&
         (texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL)
       ) {
-        prevClass = prev.texClass = TEXCLASS.ORD;
+        prev.texClass = TEXCLASS.ORD;
       }
       prevClass = this.prevClass = prev.texClass || TEXCLASS.ORD;
       this.prevLevel = this.attributes.getInherited('scriptlevel') as number;

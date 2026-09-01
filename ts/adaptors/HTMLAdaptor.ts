@@ -641,7 +641,11 @@ export class HTMLAdaptor<
     const file = `${path}/${worker}`;
     const content = `
       self.maps = '${quoted(maps)}';
-      importScripts('${quoted(file)}');
+      try {
+        importScripts('${quoted(file)}');
+      } catch (e) {
+        postMessage({cmd: 'Failed', data: e.message});
+      }
     `;
     const url = URL.createObjectURL(
       new Blob([content], { type: 'text/javascript' })

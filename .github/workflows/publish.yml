@@ -33,8 +33,8 @@ jobs:
       - name: Build MathJax
         run: |
           ./components/bin/version
-          pnpm -s link:src
-          pnpm -s build-all
+          pnpm --silent link:src
+          pnpm --silent build-all
         
       - name: Publish to npmjs
         run: pnpm publish --provenance --no-git-checks

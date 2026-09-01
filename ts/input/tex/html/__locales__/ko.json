@@ -1,1 +1,3 @@
-{}
+{
+  "InvalidHTMLAttr": "잘못된 HTML 속성: %1"
+}

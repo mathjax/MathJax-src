@@ -75,6 +75,12 @@ export default class TexParser {
   private saveI: number = 0;
 
   /**
+   * Set by skipLatex() to tell the next call to updateResult() that LaTeX
+   * sources of the current macro does not produce an Mml node.
+   */
+  private _skipLatex: boolean = false;
+
+  /**
    * @class
    * @param {string} _string The string to parse.
    * @param {EnvList} env The intial environment representing the current parse
@@ -247,6 +253,15 @@ export default class TexParser {
   }
 
   /**
+   * Marks the LaTeX source as skippable, so macros producing no Mml node (e.g.,
+   * \label, \tag, \notag) do not have their source code attached to the
+   * `data-latex` attribute of the most recently created node.
+   */
+  public skipLatex() {
+    this._skipLatex = true;
+  }
+
+  /**
    * @returns {MmlNode} The internal Mathml structure.
    */
   public mml(): MmlNode {
@@ -377,7 +392,7 @@ export default class TexParser {
    * @param {string} _name Name of the current control sequence.
    * @param {string?} def The default value for the optional argument.
    * @param {boolean=} matchBrackets True if indernal brackets must match.
-   * @returns {string} The optional argument.
+   * @returns {string|undefined} The optional argument.
    */
   public GetBrackets(
     _name: string,
@@ -426,7 +441,7 @@ export default class TexParser {
    *
    * @param {string} name Name of the current control sequence.
    * @param {boolean=} braceOK Are braces around the delimiter OK.
-   * @returns {string} The delimiter name.
+   * @returns {string|undefined} The delimiter name.
    */
   public GetDelimiter(name: string, braceOK: boolean = false): string {
     let c = this.GetNext();
@@ -450,7 +465,7 @@ export default class TexParser {
    * Get a dimension (including its units).
    *
    * @param {string} name Name of the current control sequence.
-   * @returns {string} The dimension string.
+   * @returns {string|undefined} The dimension string.
    */
   public GetDimen(name: string): string {
     if (this.GetNext() === '{') {
@@ -478,7 +493,7 @@ export default class TexParser {
    *
    * @param {string} _name Name of the current control sequence.
    * @param {string} token The element until where to parse.
-   * @returns {string} The text between the current position and the given token.
+   * @returns {string|undefined} The text between the current position and the given token.
    */
   public GetUpTo(_name: string, token: string): string {
     while (this.nextIsSpace()) {
@@ -546,7 +561,7 @@ export default class TexParser {
    * Get a delimiter or empty argument
    *
    * @param {string} name Name of the current control sequence.
-   * @returns {string} The delimiter.
+   * @returns {string|undefined} The delimiter.
    */
   public GetDelimiterArg(name: string): string {
     const c = UnitUtil.trimSpaces(this.GetArgument(name));
@@ -608,6 +623,10 @@ export default class TexParser {
    */
   // Currently works without translating environments that generate typesetting.
   private updateResult(input: string, old: number) {
+    if (this._skipLatex) {
+      this._skipLatex = false;
+      return;
+    }
     const node = this.stack.Prev(true) as MmlNode;
     if (!node) {
       return;

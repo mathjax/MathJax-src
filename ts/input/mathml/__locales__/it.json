@@ -1,1 +1,8 @@
-{}
+{
+  "BadNode": "Tipo di nodo sconosciuto '%1'",
+  "BadText": "Nodo di testo imprevisto '%1'",
+  "MathNode": "MathML deve essere formato da un elemento %1, non %2",
+  "MmlError": "Errore nell'elaborazione di MathML",
+  "SaxonNotFound": "#1 non trovato.  Eseguire il comando:\n %2\ne riprovare.",
+  "SingleNode": "MathML deve consistere in un singolo elemento"
+}

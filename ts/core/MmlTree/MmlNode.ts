@@ -1095,15 +1095,15 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
   public walkTree(
     func: (node: MmlNode, data?: any) => boolean | void,
     data?: any,
-    state: TreeWalkerState = { continue: true }
+    $state: TreeWalkerState = { continue: true } // internal state variable
   ) {
     if (func(this, data)) {
-      state.continue = false;
+      $state.continue = false;
       return;
     }
     for (const child of this.childNodes) {
-      if (child instanceof AbstractMmlNode && state.continue) {
-        (child as AbstractMmlNode).walkTree(func, data, state);
+      if (child instanceof AbstractMmlNode && $state.continue) {
+        (child as AbstractMmlNode).walkTree(func, data, $state);
       }
     }
     return data;

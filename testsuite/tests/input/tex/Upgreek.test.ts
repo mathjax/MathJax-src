@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
 import { getTokens, setupTex, tex2mml } from '#helpers';
-import '#js/input/tex/upgreek/UpgreekConfiguration';
+import '#js/input/tex/upgreek/UpgreekConfiguration.js';
 
 beforeEach(() => setupTex(['base', 'upgreek']));
 

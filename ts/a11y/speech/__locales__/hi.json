@@ -1,1 +1,8 @@
-{}
+{
+  "ProsodyError": "प्रोसोडी मिलान में कुछ गड़बड़ी हुई",
+  "SpeechError": "वाक् उत्पादन त्रुटि:",
+  "Worker/Cancelled": "कार्य %1 रद्द किया गया",
+  "Worker/NotStarted": "वर्कर प्रारंभ नहीं किया गया है",
+  "Worker/Started": "वर्कर पहले से ही प्रारंभ है",
+  "Worker/Terminate": "%1 WorkerHandler की समाप्ति द्वारा रद्द किया गया"
+}

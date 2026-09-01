@@ -1,1 +1,8 @@
-{}
+{
+  "BadColorValue": "Ongeldige kleurwaarde",
+  "InvalidDecimalNumber": "Ongeldige desimale getal",
+  "InvalidNumber": "Ongeldige getal",
+  "ModelArg1": "Kleurwaardes vir die %1-model vereis 3 getalle",
+  "ModelArg2": "Kleurwaardes vir die %1-model moet tussen %2 en %3 wees",
+  "UndefinedColorModel": "Kleurmodel '%1' is nie gedefinieer nie"
+}

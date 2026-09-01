@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
 import { getTokens, setupTex, tex2mml } from '#helpers';
-import '#js/input/tex/bboldx/BboldxConfiguration';
-import '#js/input/tex/textmacros/TextMacrosConfiguration';
+import '#js/input/tex/bboldx/BboldxConfiguration.js';
+import '#js/input/tex/textmacros/TextMacrosConfiguration.js';
 
 /**********************************************************************************/
 

@@ -1,1 +1,6 @@
-{}
+{
+  "BadFont": "Il nome del carattere per %1 non può contenere punti e virgola",
+  "BadUnicode": "L'argomento di %1 deve essere un numero",
+  "InvalidAlphanumeric": "Costante alfanumerica non valida per %1",
+  "MissingNumber": "Manca la costante numerica per %1"
+}

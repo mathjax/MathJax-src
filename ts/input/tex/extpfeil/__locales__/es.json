@@ -1,1 +1,5 @@
-{}
+{
+  "NewextarrowArg1": "El primer argumento de %1 debe ser un nombre de secuencia de control",
+  "NewextarrowArg2": "El segundo argumento de %1 debe ser dos enteros separados por una coma",
+  "NewextarrowArg3": "El tercer argumento de %1 debe ser un número de carácter unicode"
+}

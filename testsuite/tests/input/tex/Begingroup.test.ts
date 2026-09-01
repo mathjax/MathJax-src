@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, describe, test, expect } from '@jest/globals';
 import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
-import '#js/input/tex/begingroup/BegingroupConfiguration';
-import '#js/input/tex/newcommand/NewcommandConfiguration';
+import '#js/input/tex/begingroup/BegingroupConfiguration.js';
+import '#js/input/tex/newcommand/NewcommandConfiguration.js';
 
 import { Configuration } from '#js/input/tex/Configuration.js';
 import { CommandMap } from '#js/input/tex/TokenMap.js';

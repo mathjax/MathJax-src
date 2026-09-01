@@ -1,1 +1,6 @@
-{}
+{
+  "BadPackageName": "Argument til %1 er ikke et gyldigt pakkenavn",
+  "BadRequire": "Udvidelsen \"%1\" må ikke indlæses",
+  "IllegalChar": "Ugyldige tegn brugt i \\require-præfiks",
+  "RequireFail": "Udvidelsen \"%1\" kunne ikke indlæses"
+}

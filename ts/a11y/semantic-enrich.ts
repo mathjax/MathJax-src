@@ -231,6 +231,9 @@ export function EnrichedMathItemMixin<
           } else {
             mml = this.adjustSelections();
           }
+          if (!document.processed.isSet('enriched')) {
+            Sre.setupEngine(document.options.sre);
+          }
           const enriched = Sre.toEnriched(mml);
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
           //
@@ -381,7 +384,7 @@ export function EnrichedMathDocumentMixin<
 
     /**
      * Enrich the MathItem class used for this MathDocument, and create the
-     *   temporary MathItem used for enrchment
+     *   temporary MathItem used for enrichment
      *
      * @override
      * @class

@@ -114,17 +114,17 @@ export const NewcommandUtil = {
    * @param {TexParser} parser The calling parser.
    * @param {string} cmd The string starting with the template.
    * @param {string} cs The control sequence of the \def.
-   * @returns {number | string[]} The number of parameters or a string array if
+   * @returns {number | string[] | undefined} The number of parameters or a string array if
    *     there is an optional argument.
    */
   GetTemplate(parser: TexParser, cmd: string, cs: string): number | string[] {
     // @test Def Double Let, Def ReDef, Def Let
-    let c = parser.GetNext();
+    parser.GetNext(); // Move past the first non-whitespace character.
     const params: string[] = [];
     let n = 0;
     let i = parser.i;
     while (parser.i < parser.string.length) {
-      c = parser.GetNext();
+      let c = parser.GetNext();
       if (c === '#') {
         // @test Def ReDef, Def Let, Def Optional Brace
         if (i !== parser.i) {
@@ -175,7 +175,7 @@ export const NewcommandUtil = {
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the calling command.
    * @param {string} param The parameter for the macro.
-   * @returns {string} The parameter.
+   * @returns {string|undefined} The parameter.
    */
   GetParameter(parser: TexParser, name: string, param: string): string {
     if (param == null) {

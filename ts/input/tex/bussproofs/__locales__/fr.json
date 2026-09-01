@@ -1,1 +1,9 @@
-{}
+{
+  "BadProofTree": "Arbre de preuve mal spécifié.",
+  "EnvMissingEnd": "\\end{%1} manquant",
+  "IllegalProofCommand": "Les commandes de preuve ne sont autorisées que dans l'environnement prooftree.",
+  "IllegalUseOfCommand": "L'utilisation de %1 ne correspond pas à sa définition.",
+  "MissingDisplayProof": "%1 manquant pour afficher l'arbre de preuve.",
+  "MissingProofCommand": "%1 manquant dans %2.",
+  "RequiresOutputJax": "L'extension bussproofs nécessite un output jax disposant d'une méthode getBBox()"
+}

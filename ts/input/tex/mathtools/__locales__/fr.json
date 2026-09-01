@@ -1,1 +1,16 @@
-{}
+{
+  "AlreadyDefined": "%1 est déjà défini",
+  "BadWidth": "La largeur de %1 doit être une dimension",
+  "BetweenLines": "%1 doit être seul sur sa ligne",
+  "CommadExists": "La commande %1 est déjà définie",
+  "CommandAtTheBeginingOfLine": "%1 doit se trouver au début de la ligne",
+  "CommandInMultlined": "%1 ne peut apparaître que dans les environnements multline ou multlined",
+  "DuplicateTagForm": "Forme de balise en double : %1",
+  "ForbiddenMathtoolsSet": "%1 est désactivé",
+  "InvalidTagFormDef": "La définition de la forme de balise pour « %1 » doit être un tableau de trois chaînes",
+  "InvalidTagFormID": "Le nom de la forme de balise ne peut pas être vide",
+  "NotANumber": "L'argument de %1 n'est pas un nombre",
+  "NotInAlignment": "%1 ne peut être utilisé que dans des environnements d'alignement",
+  "TagsNotMT": "%1 ne peut être utilisé qu'avec des balises ams ou mathtools",
+  "UndefinedTagForm": "Forme de balise non définie : %1"
+}

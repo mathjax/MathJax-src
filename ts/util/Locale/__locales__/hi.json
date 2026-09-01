@@ -1,1 +1,5 @@
-{}
+{
+  "JsonError": "MathJax(%1): '%2' को लोड नहीं किया जा सका: %3",
+  "MessageNotFound": "MathJax(Locale): '%2' से आईडी '%1' वाले संदेश के लिए कोई स्थानीयकृत या डिफ़ॉल्ट संस्करण नहीं है",
+  "NoComponent": "MathJax(Locale): घटक '%1' मौजूद नहीं है"
+}

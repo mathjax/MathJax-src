@@ -1,1 +1,11 @@
-{}
+{
+  "BadMathStyleFor": "Estilo matemático incorrecto para %1",
+  "CommandAtTheBeginingOfLine": "%1 debe estar al principio de la línea",
+  "CommandNotAllowedInEnv": "%1 no está permitido en el entorno %2",
+  "CommandOnlyAllowedInEnv": "%1 solo está permitido en el entorno %2",
+  "IllegalAlign": "Alineación ilegal especificada en %1",
+  "MultipleCommand": "%1 múltiples",
+  "MultlineRowsOneCol": "Las filas dentro del entorno %1 deben tener exactamente una columna",
+  "PositiveIntegerArg": "El argumento de %1 debe ser un entero positivo",
+  "XalignOverflow": "%1 sobrante en una fila de %2"
+}

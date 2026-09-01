@@ -1,1 +1,5 @@
-{}
+{
+  "ColumnColorNotTop": "%1 moet in die boonste ry of preambule wees",
+  "RowColorNotFirst": "%1 moet aan die begin van 'n ry wees",
+  "UnsupportedTableColor": "Nie-ondersteunde gebruik van %1"
+}

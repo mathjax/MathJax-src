@@ -28,6 +28,7 @@ import { SpeechMathItem } from '../speech.js';
 import { SemAttr } from './SpeechUtil.js';
 import { SEM } from '../semantic-enrich/strings.js';
 import { SPEECH, BRAILLE } from './strings.js';
+import { StyleJsonData } from '../../util/StyleJson.js';
 import { Locale } from '../../util/Locale.js';
 import { localize, COMPONENT } from './__locales__/Component.js';
 
@@ -65,6 +66,19 @@ export class WorkerHandler<N, T, D> {
    * The webworker
    */
   protected worker: minWorker;
+
+  /**
+   * The styles to use for the warning live region
+   */
+  protected liveStyles: StyleJsonData = {
+    display: 'inline-block',
+    position: 'absolute',
+    top: 0,
+    left: '-10px',
+    width: '1px',
+    height: '1px',
+    overflow: 'hidden',
+  };
 
   /**
    * The adaptor to work with typeset nodes.
@@ -504,8 +518,12 @@ export class WorkerHandler<N, T, D> {
    */
   public Terminate(): Promise<any> | void {
     this.debug('Terminating pending tasks');
+    let cmd = '';
     for (const task of this.tasks) {
-      task.reject(localize('Worker/Terminate', task.cmd.data.cmd));
+      task.reject(
+        task.cmd.cmd === cmd ? '' : localize('Worker/Terminate', task.cmd.cmd)
+      );
+      cmd = task.cmd.cmd;
     }
     this.tasks = [];
     this.debug('Terminating worker');
@@ -517,12 +535,21 @@ export class WorkerHandler<N, T, D> {
    * restarted, if desired.
    */
   public async Stop() {
-    if (!this.worker) {
-      Locale.throw(COMPONENT, 'Worker/NotStarted');
+    if (this.worker) {
+      await this.Terminate();
+      this.worker = null;
+      this.ready = false;
     }
-    await this.Terminate();
-    this.worker = null;
-    this.ready = false;
+  }
+
+  public LiveWarn(message: string) {
+    const adaptor = this.adaptor;
+    const live = adaptor.node('mjx-worker-live', {
+      'aria-live': 'assertive',
+      style: this.liveStyles,
+    });
+    adaptor.insert(live, adaptor.firstChild(adaptor.body()));
+    setTimeout(() => adaptor.append(live, adaptor.text(message)), 1000);
   }
 
   /**
@@ -616,6 +643,42 @@ export class WorkerHandler<N, T, D> {
       if (handler.options.debug) {
         console.log('Log:', data);
       }
+    },
+
+    /**
+     * The webworker failed to start up properly, so report an error
+     *
+     * @param {WorkerHandler} handler The active handler for the worker.
+     * @param {Message} data The data received from the worker.
+     */
+    Failed(handler: WorkerHandler<N, T, D>, data: Message) {
+      const { path, worker } = handler.options;
+      Locale.warn(
+        COMPONENT,
+        data.includes(worker) ? 'Worker/Failed' : 'Worker/FailedFrom',
+        data,
+        `${path}/${worker}`
+      );
+      handler.LiveWarn(localize('Worker/Warning'));
+      handler.Stop();
+    },
+
+    /**
+     * A webworker map failed to load, so report an error
+     *
+     * @param {WorkerHandler} handler The active handler for the worker.
+     * @param {Message} data The data received from the worker.
+     */
+    Maps(handler: WorkerHandler<N, T, D>, data: Message) {
+      const { maps } = handler.options;
+      Locale.warn(
+        COMPONENT,
+        data.includes(maps) ? 'Worker/Maps' : 'Worker/MapsFrom',
+        data,
+        maps
+      );
+      handler.LiveWarn(localize('Worker/Warning'));
+      handler.Stop();
     },
   };
 }

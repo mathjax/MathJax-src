@@ -1,8 +1,8 @@
 import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
 import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
-import '#js/input/tex/newcommand/NewcommandConfiguration';
-import '#js/input/tex/ams/AmsConfiguration';
-import '#js/input/tex/colorv2/ColorV2Configuration';
+import '#js/input/tex/newcommand/NewcommandConfiguration.js';
+import '#js/input/tex/ams/AmsConfiguration.js';
+import '#js/input/tex/colorv2/ColorV2Configuration.js';
 
 /**********************************************************************************/
 
@@ -28,6 +28,12 @@ describe('Newcommand', () => {
   it('Newcommand Arg Optional', () => {
     expect(
       tex2mml('\\renewcommand{\\sum}[2][+]{2 #1 3 #2 4}\\sum{+}\\sum[*]{+}')
+    ).toMatchSnapshot();
+  });
+
+  it('Providecommand', () => {
+    expect(
+      tex2mml('\\providecommand{\\a}{A}\\providecommand{\\a}{B}\\a')
     ).toMatchSnapshot();
   });
 

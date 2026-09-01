@@ -1,1 +1,16 @@
-{}
+{
+  "AlreadyDefined": "%1이(가) 이미 정의되어 있습니다",
+  "BadWidth": "%1의 너비는 치수여야 합니다",
+  "BetweenLines": "%1은(는) 자신의 행에 단독으로 있어야 합니다",
+  "CommadExists": "명령 %1이(가) 이미 정의되어 있습니다",
+  "CommandAtTheBeginingOfLine": "%1은(는) 줄의 시작 부분에 있어야 합니다",
+  "CommandInMultlined": "%1은(는) multline 또는 multlined 환경 내에서만 나타날 수 있습니다",
+  "DuplicateTagForm": "중복된 태그 형식: %1",
+  "ForbiddenMathtoolsSet": "%1이(가) 비활성화되었습니다",
+  "InvalidTagFormDef": "\"%1\"에 대한 태그 형식 정의는 세 개의 문자열로 이루어진 배열이어야 합니다",
+  "InvalidTagFormID": "태그 형식 이름은 비워 둘 수 없습니다",
+  "NotANumber": "%1의 인수는 숫자가 아닙니다",
+  "NotInAlignment": "%1은(는) 정렬 환경에서만 사용할 수 있습니다",
+  "TagsNotMT": "%1은(는) ams 또는 mathtools 태그와 함께만 사용할 수 있습니다",
+  "UndefinedTagForm": "정의되지 않은 태그 형식: %1"
+}

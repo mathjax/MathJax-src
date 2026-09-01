@@ -1,1 +1,8 @@
-{}
+{
+  "ProsodyError": "Iets het verkeerd geloop met die prosodie-passing",
+  "SpeechError": "Fout met spraakgenerering:",
+  "Worker/Cancelled": "Taak %1 gekanselleer",
+  "Worker/NotStarted": "Werker is nie begin nie",
+  "Worker/Started": "Werker het reeds begin",
+  "Worker/Terminate": "%1 gekanselleer deur beëindiging van WorkerHandler"
+}

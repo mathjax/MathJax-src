@@ -240,7 +240,7 @@ export class HTMLDomStrings<N, T, D> {
     const cname = this.adaptor.getAttribute(node, 'class') || '';
     const tname = this.adaptor.kind(node) || '';
     const process = this.processHtmlClass.exec(cname);
-    let next = node as N | T;
+    let next;
     if (
       this.adaptor.firstChild(node) &&
       !this.adaptor.getAttribute(node, 'data-MJX') &&

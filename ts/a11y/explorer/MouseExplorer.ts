@@ -115,16 +115,6 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
   protected listening: boolean = false;
 
   /**
-   * The bounding box for the box with data-semantic-structure
-   */
-  protected topBBox: DOMRect;
-
-  /**
-   * The bounding box for the top-level node
-   */
-  protected nodeBBox: DOMRect;
-
-  /**
    * @class
    * @augments {AbstractMouseExplorer<T>}
    *
@@ -148,22 +138,23 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     protected nodeAccess: (node: HTMLElement) => T
   ) {
     super(document, pool, region, node);
-    const top = this.node.querySelector(`[${SEM.STRUCTURE}]`) || this.node;
-    this.topBBox = top.getBoundingClientRect();
-    this.nodeBBox = this.node.getBoundingClientRect();
   }
 
   /**
    * @override
    */
   public MouseOut(event: MouseEvent) {
-    if (!this.inBBox(event.x, event.y, this.topBBox)) {
+    const top =
+      this.node.querySelector('[data-semantic-structure]') || this.node;
+    const topBBox = top.getBoundingClientRect();
+    const nodeBBox = this.node.getBoundingClientRect();
+    if (!this.inBBox(event.x, event.y, topBBox)) {
       this.highlighter.unhighlight();
       this.region.Hide();
       super.MouseOut(event);
       this.current = null;
     }
-    if (!this.inBBox(event.x, event.y, this.nodeBBox)) {
+    if (!this.inBBox(event.x, event.y, nodeBBox)) {
       this.node.removeEventListener('mousemove', this.listener);
       this.listening = false;
     }
@@ -173,7 +164,8 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * @override
    */
   public MouseOver(event: MouseEvent) {
-    if (!this.listening && this.inBBox(event.x, event.y, this.nodeBBox)) {
+    const nodeBBox = this.node.getBoundingClientRect();
+    if (!this.listening && this.inBBox(event.x, event.y, nodeBBox)) {
       super.MouseOver(event);
       this.node.addEventListener('mousemove', this.listener);
       this.listening = true;

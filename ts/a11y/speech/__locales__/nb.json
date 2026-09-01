@@ -1,1 +1,8 @@
-{}
+{
+  "ProsodyError": "Noe gikk galt med prosoditilpasningen",
+  "SpeechError": "Feil ved talegenerering:",
+  "Worker/Cancelled": "Oppgave %1 avbrutt",
+  "Worker/NotStarted": "Worker er ikke startet",
+  "Worker/Started": "Worker er allerede startet",
+  "Worker/Terminate": "%1 avbrutt av avslutning av WorkerHandler"
+}
