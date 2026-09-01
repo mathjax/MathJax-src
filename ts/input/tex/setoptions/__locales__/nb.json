@@ -1,1 +1,8 @@
-{}
+{
+  "InvalidOptionKey": "Ugyldig innstilling \"%1\" for pakken \"%2\"",
+  "InvalidTexOption": "Ugyldig TeX-innstilling \"%1\"",
+  "NotAPackage": "Ikke en definert pakke: %1",
+  "OptionNotSettable": "Innstillingen \"%1\" kan ikke angis for pakken %2",
+  "PackageNotSettable": "Det kan ikke angis innstillinger for pakken \"%1\"",
+  "TeXOptionNotSettable": "Innstillingen \"%1\" kan ikke angis"
+}

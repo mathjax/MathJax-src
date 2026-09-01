@@ -1,1 +1,4 @@
-{}
+{
+  "IllegalGlobal": "%1의 잘못된 사용",
+  "MissingBegingroup": "\\begingroup이 없거나 \\endgroup이 초과되었습니다"
+}

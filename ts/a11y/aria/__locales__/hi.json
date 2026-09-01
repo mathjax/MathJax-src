@@ -1,1 +1,8 @@
-{}
+{
+  "Aria/RoleDescription/MathJax expression": "MathJax अभिव्यक्ति",
+  "Aria/RoleDescription/MathJax": "MathJax",
+  "Aria/RoleDescription/clickable math": "क्लिक करने योग्य गणित",
+  "Aria/RoleDescription/explorable math": "अन्वेषण योग्य गणित",
+  "Aria/RoleDescription/math": "गणित",
+  "Aria/RoleDescription/none": "कोई विवरण नहीं"
+}

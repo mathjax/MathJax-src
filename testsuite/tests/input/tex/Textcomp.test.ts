@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
 import { getTokens, setupTex, tex2mml } from '#helpers';
-import '#js/input/tex/textcomp/TextcompConfiguration';
-import '#js/input/tex/textmacros/TextMacrosConfiguration';
+import '#js/input/tex/textcomp/TextcompConfiguration.js';
+import '#js/input/tex/textmacros/TextMacrosConfiguration.js';
 
 beforeEach(() => setupTex(['base', 'textcomp']));
 

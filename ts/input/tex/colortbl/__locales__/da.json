@@ -1,1 +1,5 @@
-{}
+{
+  "ColumnColorNotTop": "%1 skal være i den øverste række eller præamblen",
+  "RowColorNotFirst": "%1 skal stå i begyndelsen af en række",
+  "UnsupportedTableColor": "Ikke-understøttet brug af %1"
+}

@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
 import { getTokens, setupTex, tex2mml } from '#helpers';
-import '#js/input/tex/cancel/CancelConfiguration';
+import '#js/input/tex/cancel/CancelConfiguration.js';
 
 beforeEach(() => setupTex(['base', 'cancel']));
 

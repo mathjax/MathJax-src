@@ -1,1 +1,4 @@
-{}
+{
+  "IllegalGlobal": "Ús no vàlid de %1",
+  "MissingBegingroup": "Falta \\begingroup o sobra \\endgroup"
+}

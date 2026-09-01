@@ -1,1 +1,13 @@
-{}
+{
+  "CantUseHash2": "Ogiltig användning av # i mallen för %1",
+  "EnvBadEnd": "\\begin{%1} slutade med \\end{%2}",
+  "EnvMissingEnd": "\\end{%1} saknas",
+  "IllegalControlSequenceName": "Ogiltigt kontrollsekvensnamn för %1",
+  "IllegalParamNumber": "Ogiltigt antal parametrar angivet i %1",
+  "MismatchUseDef": "Användningen av %1 stämmer inte överens med dess definition",
+  "MissingCS": "%1 måste följas av en kontrollsekvens",
+  "MissingReplacementString": "Ersättningssträng saknas för definitionen av %1",
+  "ProtectedMacro": "Kontrollsekvensen %1 kan inte omdefinieras",
+  "RunawayArgument": "Skenande argument för %1?",
+  "SequentialParam": "Parametrar för %1 måste numreras i följd"
+}

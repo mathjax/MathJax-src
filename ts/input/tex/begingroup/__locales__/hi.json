@@ -1,1 +1,4 @@
-{}
+{
+  "IllegalGlobal": "%1 का अमान्य उपयोग",
+  "MissingBegingroup": "\\begingroup अनुपस्थित है या अतिरिक्त \\endgroup है"
+}

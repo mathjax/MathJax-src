@@ -1,1 +1,6 @@
-{}
+{
+  "BadPackageName": "El argumento de %1 no es un nombre de paquete válido",
+  "BadRequire": "No se permite cargar la extensión \"%1\"",
+  "IllegalChar": "Se usaron caracteres ilegales en el prefijo \\require",
+  "RequireFail": "No se pudo cargar la extensión \"%1\""
+}

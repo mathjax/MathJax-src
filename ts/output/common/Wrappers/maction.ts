@@ -39,6 +39,7 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMaction } from '../../../core/MmlTree/MmlNodes/maction.js';
 import { TextNode } from '../../../core/MmlTree/MmlNode.js';
 import { STATE } from '../../../core/MathItem.js';
+import { mathjax } from '../../../mathjax.js';
 import { BBox } from '../../../util/BBox.js';
 import { split } from '../../../util/string.js';
 
@@ -377,12 +378,23 @@ export function CommonMactionMixin<
                 math.start.n = math.end.n = 0;
               }
               mml.nextToggleSelection();
-              math.rerender(
-                document,
-                mml.attributes.get('data-maction-id')
-                  ? STATE.ENRICHED
-                  : STATE.RERENDER
-              );
+              if (mml.attributes.get('data-collapse-group')) {
+                const id = mml.attributes.get('id');
+                const selection = mml.attributes.get('selection');
+                math.root.walkTree((node) => {
+                  if (node.attributes.get('data-collapse-id') === id) {
+                    node.attributes.set('selection', selection);
+                  }
+                });
+              }
+              mathjax.handleRetriesFor(() => {
+                math.rerender(
+                  document,
+                  mml.attributes.get('data-maction-id')
+                    ? STATE.ENRICHED
+                    : STATE.RERENDER
+                );
+              });
               event.stopPropagation();
             });
           },

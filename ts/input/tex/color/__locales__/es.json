@@ -1,1 +1,8 @@
-{}
+{
+  "BadColorValue": "Valor de color no válido",
+  "InvalidDecimalNumber": "Número decimal no válido",
+  "InvalidNumber": "Número no válido",
+  "ModelArg1": "Los valores de color del modelo %1 requieren 3 números",
+  "ModelArg2": "Los valores de color del modelo %1 deben estar entre %2 y %3",
+  "UndefinedColorModel": "El modelo de color '%1' no está definido"
+}

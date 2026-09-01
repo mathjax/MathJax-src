@@ -1,1 +1,8 @@
-{}
+{
+  "BadNode": "Ukjend nodetype '%1'",
+  "BadText": "Uventa tekstnode '%1'",
+  "MathNode": "MathML må vere sett saman av eit %1-element, ikkje %2",
+  "MmlError": "Feil ved handsaming av MathML",
+  "SaxonNotFound": "#1 ikkje funnen.  Køyr kommandoen:\n %2\nog prøv igjen.",
+  "SingleNode": "MathML må vere sett saman av eitt einaste element"
+}

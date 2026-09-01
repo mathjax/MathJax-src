@@ -1,1 +1,5 @@
-{}
+{
+  "MhchemBug": "mhchem-fout %1. Rapporteer asseblief.",
+  "MhchemBug2": "mhchem-fout %1. Rapporteer asseblief. (%2)",
+  "MhchemErrorBond": "mhchem-fout. Onbekende bindingstipe (%1)"
+}

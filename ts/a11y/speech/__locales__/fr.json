@@ -1,1 +1,8 @@
-{}
+{
+  "ProsodyError": "Une erreur s'est produite lors de la correspondance de la prosodie",
+  "SpeechError": "Erreur de génération vocale :",
+  "Worker/Cancelled": "Tâche %1 annulée",
+  "Worker/NotStarted": "Le worker n'a pas été démarré",
+  "Worker/Started": "Le worker est déjà démarré",
+  "Worker/Terminate": "%1 annulée par l'arrêt du WorkerHandler"
+}

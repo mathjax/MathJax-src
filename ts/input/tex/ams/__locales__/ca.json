@@ -1,1 +1,11 @@
-{}
+{
+  "BadMathStyleFor": "Estil matemàtic incorrecte per a %1",
+  "CommandAtTheBeginingOfLine": "%1 ha d'anar al principi de la línia",
+  "CommandNotAllowedInEnv": "%1 no està permès a l'entorn %2",
+  "CommandOnlyAllowedInEnv": "%1 només està permès a l'entorn %2",
+  "IllegalAlign": "Alineació il·legal especificada a %1",
+  "MultipleCommand": "%1 múltiples",
+  "MultlineRowsOneCol": "Les files de l'entorn %1 han de tenir exactament una columna",
+  "PositiveIntegerArg": "L'argument de %1 ha de ser un enter positiu",
+  "XalignOverflow": "%1 sobrant en una fila de %2"
+}

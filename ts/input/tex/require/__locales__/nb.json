@@ -1,1 +1,6 @@
-{}
+{
+  "BadPackageName": "Argument til %1 er ikke et gyldig pakkenavn",
+  "BadRequire": "Utvidelsen \"%1\" har ikke tillatelse til å lastes inn",
+  "IllegalChar": "Ugyldige tegn brukt i \\require-prefiks",
+  "RequireFail": "Utvidelsen \"%1\" kunne ikke lastes inn"
+}

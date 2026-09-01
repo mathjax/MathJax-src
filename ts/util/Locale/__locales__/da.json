@@ -1,1 +1,5 @@
-{}
+{
+  "JsonError": "MathJax(%1): kan ikke indlæse '%2': %3",
+  "MessageNotFound": "MathJax(Locale): ingen lokaliseret eller standardversion for meddelelse med id '%1' fra '%2'",
+  "NoComponent": "MathJax(Locale): komponenten '%1' findes ikke"
+}

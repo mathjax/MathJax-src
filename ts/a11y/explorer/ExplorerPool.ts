@@ -26,7 +26,7 @@ import type { ExplorerMathDocument, ExplorerMathItem } from '../explorer.js';
 
 import { Explorer } from './Explorer.js';
 import { SpeechExplorer } from './KeyExplorer.js';
-import * as me from './MouseExplorer.js';
+import { ValueHoverer, ContentHoverer, FlameHoverer } from './MouseExplorer.js';
 import { TreeColorer, FlameColorer } from './TreeExplorer.js';
 
 import { Highlighter, getHighlighter } from './Highlighter.js';
@@ -84,19 +84,14 @@ type ExplorerInit = (
   doc: ExplorerMathDocument,
   pool: ExplorerPool,
   node: HTMLElement,
-  ...rest: any[]
+  item: ExplorerMathItem
 ) => Explorer;
 
 /**
  *  Generation methods for all MathJax explorers available via option settings.
  */
 const allExplorers: { [options: string]: ExplorerInit } = {
-  speech: (
-    doc: ExplorerMathDocument,
-    pool: ExplorerPool,
-    node: HTMLElement,
-    ...rest: any[]
-  ) => {
+  speech: (doc, pool, node, item) => {
     const explorer = SpeechExplorer.create(
       doc,
       pool,
@@ -104,86 +99,43 @@ const allExplorers: { [options: string]: ExplorerInit } = {
       node,
       doc.explorerRegions.brailleRegion,
       doc.explorerRegions.magnifier,
-      rest[0],
-      rest[1]
+      item
     ) as SpeechExplorer;
     explorer.sound = true;
     return explorer;
   },
-  mouseMagnifier: (
-    doc: ExplorerMathDocument,
-    pool: ExplorerPool,
-    node: HTMLElement,
-    ..._rest: any[]
-  ) =>
-    me.ContentHoverer.create(
-      doc,
-      pool,
-      doc.explorerRegions.magnifier,
-      node,
-      (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
-      (x: HTMLElement) => x
-    ),
-  hover: (
-    doc: ExplorerMathDocument,
-    pool: ExplorerPool,
-    node: HTMLElement,
-    ..._rest: any[]
-  ) => me.FlameHoverer.create(doc, pool, null, node),
-  infoType: (
-    doc: ExplorerMathDocument,
-    pool: ExplorerPool,
-    node: HTMLElement,
-    ..._rest: any[]
-  ) =>
-    me.ValueHoverer.create(
+  mouseMagnifier: (doc, pool, node, item) =>
+    ContentHoverer.create(doc, pool, doc.explorerRegions.magnifier, node, item),
+  hover: (doc, pool, node) => FlameHoverer.create(doc, pool, null, node),
+  infoType: (doc, pool, node, item) =>
+    ValueHoverer.create(
       doc,
       pool,
       doc.explorerRegions.tooltip1,
       node,
-      (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
-      (x: HTMLElement) => x.getAttribute('data-semantic-type')
+      item,
+      'data-semantic-type'
     ),
-  infoRole: (
-    doc: ExplorerMathDocument,
-    pool: ExplorerPool,
-    node: HTMLElement,
-    ..._rest: any[]
-  ) =>
-    me.ValueHoverer.create(
+  infoRole: (doc, pool, node, item) =>
+    ValueHoverer.create(
       doc,
       pool,
       doc.explorerRegions.tooltip2,
       node,
-      (x: HTMLElement) => x.hasAttribute('data-semantic-role'),
-      (x: HTMLElement) => x.getAttribute('data-semantic-role')
+      item,
+      'data-semantic-role'
     ),
-  infoPrefix: (
-    doc: ExplorerMathDocument,
-    pool: ExplorerPool,
-    node: HTMLElement,
-    ..._rest: any[]
-  ) =>
-    me.ValueHoverer.create(
+  infoPrefix: (doc, pool, node, item) =>
+    ValueHoverer.create(
       doc,
       pool,
       doc.explorerRegions.tooltip3,
       node,
-      (x: HTMLElement) => x.hasAttribute?.('data-semantic-prefix-none'),
-      (x: HTMLElement) => x.getAttribute?.('data-semantic-prefix-none')
+      item,
+      'data-semantic-prefix-none'
     ),
-  flame: (
-    doc: ExplorerMathDocument,
-    pool: ExplorerPool,
-    node: HTMLElement,
-    ..._rest: any[]
-  ) => FlameColorer.create(doc, pool, null, node),
-  treeColoring: (
-    doc: ExplorerMathDocument,
-    pool: ExplorerPool,
-    node: HTMLElement,
-    ...rest: any[]
-  ) => TreeColorer.create(doc, pool, null, node, ...rest),
+  flame: (doc, pool, node) => FlameColorer.create(doc, pool, null, node),
+  treeColoring: (doc, pool, node) => TreeColorer.create(doc, pool, null, node),
 };
 
 /**
@@ -218,11 +170,6 @@ export class ExplorerPool {
   protected node: HTMLElement;
 
   /**
-   * The corresponding Mathml node as a string.
-   */
-  protected mml: string;
-
-  /**
    * The primary highlighter shared by all explorers.
    */
   private _highlighter: Highlighter;
@@ -254,17 +201,14 @@ export class ExplorerPool {
   /**
    * @param {ExplorerMathDocument} document The target document.
    * @param {HTMLElement} node The node explorers will be attached to.
-   * @param {string} mml The corresponding Mathml node as a string.
    * @param {ExplorerMathItem} item The current math item.
    */
   public init(
     document: ExplorerMathDocument,
     node: HTMLElement,
-    mml: string,
     item: ExplorerMathItem
   ) {
     this.document = document;
-    this.mml = mml;
     this.node = node;
     this.setPrimaryHighlighter();
     for (const key of Object.keys(allExplorers)) {
@@ -272,7 +216,6 @@ export class ExplorerPool {
         this.document,
         this,
         this.node,
-        this.mml,
         item
       );
     }

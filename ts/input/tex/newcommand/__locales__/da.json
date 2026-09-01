@@ -1,1 +1,13 @@
-{}
+{
+  "CantUseHash2": "Ugyldig brug af # i skabelonen for %1",
+  "EnvBadEnd": "\\begin{%1} sluttede med \\end{%2}",
+  "EnvMissingEnd": "\\end{%1} mangler",
+  "IllegalControlSequenceName": "Ugyldigt kontrolsekvensnavn for %1",
+  "IllegalParamNumber": "Ugyldigt antal parametre angivet i %1",
+  "MismatchUseDef": "Brugen af %1 stemmer ikke overens med dens definition",
+  "MissingCS": "%1 skal efterfølges af en kontrolsekvens",
+  "MissingReplacementString": "Erstatningsstreng mangler for definitionen af %1",
+  "ProtectedMacro": "Kontrolsekvensen %1 kan ikke omdefineres",
+  "RunawayArgument": "Løbsk argument til %1?",
+  "SequentialParam": "Parametre til %1 skal nummereres fortløbende"
+}

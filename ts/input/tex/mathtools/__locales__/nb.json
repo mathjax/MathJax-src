@@ -1,1 +1,16 @@
-{}
+{
+  "AlreadyDefined": "%1 er allerede definert",
+  "BadWidth": "Bredden for %1 må være en dimensjon",
+  "BetweenLines": "%1 må stå alene på sin egen rad",
+  "CommadExists": "Kommandoen %1 er allerede definert",
+  "CommandAtTheBeginingOfLine": "%1 må stå i begynnelsen av linjen",
+  "CommandInMultlined": "%1 kan bare forekomme i multline- eller multlined-miljøene",
+  "DuplicateTagForm": "Duplisert etikettform: %1",
+  "ForbiddenMathtoolsSet": "%1 er deaktivert",
+  "InvalidTagFormDef": "Etikettform-definisjonen for \"%1\" må være en matrise av tre strenger",
+  "InvalidTagFormID": "Etikettformnavn kan ikke være tomt",
+  "NotANumber": "Argument til %1 er ikke et tall",
+  "NotInAlignment": "%1 kan bare brukes i justeringsmiljøer",
+  "TagsNotMT": "%1 kan bare brukes med ams- eller mathtools-etiketter",
+  "UndefinedTagForm": "Udefinert etikettform: %1"
+}

@@ -1,1 +1,13 @@
-{}
+{
+  "CantUseHash2": "Ugyldig bruk av # i malen for %1",
+  "EnvBadEnd": "\\begin{%1} slutta med \\end{%2}",
+  "EnvMissingEnd": "\\end{%1} manglar",
+  "IllegalControlSequenceName": "Ugyldig kontrollsekvensnamn for %1",
+  "IllegalParamNumber": "Ugyldig tal på parametrar spesifisert i %1",
+  "MismatchUseDef": "Bruken av %1 samsvarer ikkje med definisjonen",
+  "MissingCS": "%1 må følgjast av ein kontrollsekvens",
+  "MissingReplacementString": "Erstatningsstreng manglar for definisjonen av %1",
+  "ProtectedMacro": "Kontrollsekvensen %1 kan ikkje omdefinerast",
+  "RunawayArgument": "Laust argument for %1?",
+  "SequentialParam": "Parametrar for %1 må nummererast fortløpande"
+}

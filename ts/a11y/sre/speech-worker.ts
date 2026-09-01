@@ -84,8 +84,14 @@ declare const SRE: any;
     if (!global.require) {
       await import(/* webpackIgnore: true */ './require.mjs');
     }
-    global.getMap = (file: string) =>
-      Promise.resolve(JSON.stringify(global.require(file)));
+    global.getMap = (file: string) => {
+      try {
+        return Promise.resolve(JSON.stringify(global.require(file)));
+      } catch (err) {
+        Client('Maps', err.message.split(/\n/)[0]);
+        return {};
+      }
+    };
   } else {
     //
     // For web workers, make global be the self object
@@ -97,7 +103,10 @@ declare const SRE: any;
     global.getMap = (file: string) =>
       fetch(file)
         .then((data) => data.json())
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          Client('Maps', err.message);
+          return {};
+        });
   }
 
   //

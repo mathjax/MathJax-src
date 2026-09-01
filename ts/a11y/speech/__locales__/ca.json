@@ -1,1 +1,8 @@
-{}
+{
+  "ProsodyError": "S'ha produït un error en la correspondència de la prosòdia",
+  "SpeechError": "Error de generació de veu:",
+  "Worker/Cancelled": "Tasca %1 cancel·lada",
+  "Worker/NotStarted": "El worker no s'ha iniciat",
+  "Worker/Started": "El worker ja s'ha iniciat",
+  "Worker/Terminate": "%1 cancel·lada per la finalització del WorkerHandler"
+}

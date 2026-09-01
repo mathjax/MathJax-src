@@ -1,1 +1,4 @@
-{}
+{
+  "InvalidBBoxProperty": "'%1' no parece una color, una dimensión de relleno ni un estilo",
+  "MultipleBBoxProperty": "%1 especificado dos veces en %2"
+}

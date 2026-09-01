@@ -7,7 +7,7 @@ import {
   setupComponents,
   expectTexError,
 } from '#helpers';
-import '#js/input/tex/ams/AmsConfiguration';
+import '#js/input/tex/ams/AmsConfiguration.js';
 
 /**********************************************************************************/
 

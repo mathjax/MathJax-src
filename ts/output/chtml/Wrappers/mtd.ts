@@ -148,6 +148,11 @@ export const ChtmlMtd = (function <N, T, D>(): ChtmlMtdClass<N, T, D> {
       'mjx-mtable > * > mjx-itable > *:last-child > mjx-mtd': {
         'padding-bottom': 0,
       },
+      'mjx-math > * > mjx-mtd': {
+        // for magnifier when table node is not included
+        'padding-top': 0,
+        'padding-bottom': 0,
+      },
       'mjx-tstrut': {
         display: 'inline-block',
         height: '1em',

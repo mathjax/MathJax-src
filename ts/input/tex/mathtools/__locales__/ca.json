@@ -1,1 +1,16 @@
-{}
+{
+  "AlreadyDefined": "%1 ja està definit",
+  "BadWidth": "L'amplada de %1 ha de ser una dimensió",
+  "BetweenLines": "%1 ha d'estar sol a la seva fila",
+  "CommadExists": "L'ordre %1 ja està definida",
+  "CommandAtTheBeginingOfLine": "%1 ha d'anar al principi de la línia",
+  "CommandInMultlined": "%1 només pot aparèixer dins dels entorns multline o multlined",
+  "DuplicateTagForm": "Forma d'etiqueta duplicada: %1",
+  "ForbiddenMathtoolsSet": "%1 està desactivat",
+  "InvalidTagFormDef": "La definició de la forma d'etiqueta per a \"%1\" ha de ser una matriu de tres cadenes",
+  "InvalidTagFormID": "El nom de la forma d'etiqueta no pot estar buit",
+  "NotANumber": "L'argument de %1 no és un nombre",
+  "NotInAlignment": "%1 només es pot utilitzar en entorns d'alineació",
+  "TagsNotMT": "%1 només es pot utilitzar amb etiquetes ams o mathtools",
+  "UndefinedTagForm": "Forma d'etiqueta no definida: %1"
+}

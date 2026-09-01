@@ -1,1 +1,4 @@
-{}
+{
+  "InvalidBBoxProperty": "'%1' lyk nie na 'n kleur, 'n vulafmeting of 'n styl nie",
+  "MultipleBBoxProperty": "%1 twee keer gespesifiseer in %2"
+}

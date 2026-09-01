@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { setupTex, tex2mml } from '#helpers';
-import '#js/input/tex/configmacros/ConfigMacrosConfiguration';
+import '#js/input/tex/configmacros/ConfigMacrosConfiguration.js';
 
 beforeEach(() => {});
 

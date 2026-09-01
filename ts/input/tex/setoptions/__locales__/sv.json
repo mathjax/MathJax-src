@@ -1,1 +1,8 @@
-{}
+{
+  "InvalidOptionKey": "Ogiltigt alternativ \"%1\" för paketet \"%2\"",
+  "InvalidTexOption": "Ogiltigt TeX-alternativ \"%1\"",
+  "NotAPackage": "Inte ett definierat paket: %1",
+  "OptionNotSettable": "Alternativet \"%1\" får inte anges för paketet %2",
+  "PackageNotSettable": "Alternativ kan inte anges för paketet \"%1\"",
+  "TeXOptionNotSettable": "Alternativet \"%1\" får inte anges"
+}

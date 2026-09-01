@@ -1,1 +1,13 @@
-{}
+{
+  "CantUseHash2": "Ongeldige gebruik van # in sjabloon vir %1",
+  "EnvBadEnd": "\\begin{%1} het geëindig met \\end{%2}",
+  "EnvMissingEnd": "\\end{%1} ontbreek",
+  "IllegalControlSequenceName": "Ongeldige kontrolevolgordenaam vir %1",
+  "IllegalParamNumber": "Ongeldige aantal parameters gespesifiseer in %1",
+  "MismatchUseDef": "Gebruik van %1 stem nie ooreen met sy definisie nie",
+  "MissingCS": "%1 moet gevolg word deur 'n kontrolevolgorde",
+  "MissingReplacementString": "Vervangingstring vir definisie van %1 ontbreek",
+  "ProtectedMacro": "Die kontrolevolgorde %1 kan nie geherdefinieer word nie",
+  "RunawayArgument": "Wegholargument vir %1?",
+  "SequentialParam": "Parameters vir %1 moet opeenvolgend genommer word"
+}

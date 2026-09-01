@@ -26,7 +26,6 @@ import { mathjax } from '../../mathjax.js';
 import { OptionList, defaultOptions, userOptions } from '../../util/Options.js';
 import { StyleJson } from '../../util/StyleJson.js';
 import { asyncLoad } from '../../util/AsyncLoad.js';
-import { retryAfter } from '../../util/Retries.js';
 import { Locale } from '../../util/Locale.js';
 import { COMPONENT } from '../../core/__locales__/Component.js';
 import { DIRECTION } from './Direction.js';
@@ -1344,7 +1343,7 @@ export class FontData<
         this.loadDynamicFileSync(delim);
         return this.getDelimiter(n);
       }
-      retryAfter(this.loadDynamicFile(delim));
+      mathjax.retryAfter(this.loadDynamicFile(delim));
       return null;
     }
     return delim as DelimiterData;
@@ -1396,7 +1395,7 @@ export class FontData<
         this.loadDynamicFileSync(char);
         return this.getChar(name, n);
       }
-      retryAfter(this.loadDynamicFile(char));
+      mathjax.retryAfter(this.loadDynamicFile(char));
       return null;
     }
     return char as CharDataArray<C>;

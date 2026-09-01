@@ -1,1 +1,6 @@
-{}
+{
+  "BadFont": "%1의 글꼴 이름에는 세미콜론을 포함할 수 없습니다",
+  "BadUnicode": "%1의 인수는 숫자여야 합니다",
+  "InvalidAlphanumeric": "%1에 대한 잘못된 영숫자 상수",
+  "MissingNumber": "%1에 대한 숫자 상수가 없습니다"
+}

@@ -1,1 +1,5 @@
-{}
+{
+  "MhchemBug": "mhchem बग %1। कृपया रिपोर्ट करें।",
+  "MhchemBug2": "mhchem बग %1। कृपया रिपोर्ट करें। (%2)",
+  "MhchemErrorBond": "mhchem त्रुटि। अज्ञात बंध प्रकार (%1)"
+}

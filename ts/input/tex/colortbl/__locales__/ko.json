@@ -1,1 +1,5 @@
-{}
+{
+  "ColumnColorNotTop": "%1은(는) 첫 번째 행이나 프리앰블에 있어야 합니다",
+  "RowColorNotFirst": "%1은(는) 행의 시작 부분에 있어야 합니다",
+  "UnsupportedTableColor": "%1의 지원되지 않는 사용"
+}

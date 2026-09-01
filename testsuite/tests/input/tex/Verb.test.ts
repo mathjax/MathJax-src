@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, it } from '@jest/globals';
 import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
-import '#js/input/tex/verb/VerbConfiguration';
+import '#js/input/tex/verb/VerbConfiguration.js';
 
 beforeEach(async () => setupTex(['base', 'verb']));
 

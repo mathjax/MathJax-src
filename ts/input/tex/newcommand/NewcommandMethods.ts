@@ -43,14 +43,17 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the calling command.
+   * @param {boolean} provide True for \providecommand (to check if command exists before defining)
    */
-  NewCommand(parser: TexParser, name: string) {
+  NewCommand(parser: TexParser, name: string, provide: boolean = false) {
     // @test Newcommand Simple
     const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const n = NewcommandUtil.GetArgCount(parser, name);
     const opt = parser.GetBrackets(name);
     const def = parser.GetArgument(name);
-    NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [def, n, opt]);
+    if (!provide || (!parser.lookup(HandlerType.MACRO, cs) && !parser.lookup(HandlerType.DELIMITER, '\\' + cs))) {
+      NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [def, n, opt]);
+    }
     parser.Push(parser.itemFactory.create('null'));
   },
 

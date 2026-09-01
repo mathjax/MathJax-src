@@ -95,6 +95,15 @@ export interface Highlighter {
   getMactionNodes(node: HTMLElement): HTMLElement[];
 
   /**
+   * Returns all the maction elements in a collapse group
+   *
+   * @param {HTMLElement} node      The root node for the MathML tree
+   * @param {HTMLElement} maction   The maction element whose group is to be found
+   * @returns {HTMLElement[]}       The nodes in the collapse group
+   */
+  getMactionGroup(node: HTMLElement, maction: HTMLElement): HTMLElement[];
+
+  /**
    * Sets of the color the highlighter is using.
    *
    * @param {NamedColor} background The new background color to use.
@@ -168,7 +177,11 @@ abstract class AbstractHighlighter implements Highlighter {
   public highlightAll(node: HTMLElement) {
     const mactions = this.getMactionNodes(node);
     for (const maction of mactions) {
-      this.highlight([maction]);
+      let parts: HTMLElement[] = maction.hasAttribute('data-collapse-group')
+        ? this.getMactionGroup(node, maction)
+        : [maction];
+      parts = this.encloseNodes([...parts], node);
+      this.highlight(parts);
     }
   }
 
@@ -282,17 +295,26 @@ abstract class AbstractHighlighter implements Highlighter {
   }
 
   /**
-   * Returns the maction sub nodes of a given node.
-   *
-   * @param {HTMLElement} node The root node.
-   * @returns {HTMLElement[]} The list of maction sub nodes.
+   * @override
+   */
+  public abstract isMactionNode(node: Element): boolean;
+
+  /**
+   * @override
    */
   public abstract getMactionNodes(node: HTMLElement): HTMLElement[];
 
   /**
    * @override
    */
-  public abstract isMactionNode(node: Element): boolean;
+  public getMactionGroup(
+    node: HTMLElement,
+    maction: HTMLElement
+  ): HTMLElement[] {
+    return Array.from(
+      node.querySelectorAll(`#${maction.id},[data-collapse-id="${maction.id}"]`)
+    );
+  }
 
   /**
    * Check if a node is already highlighted.
@@ -390,6 +412,7 @@ class SvgHighlighter extends AbstractHighlighter {
       part.getAttribute('transform')
     );
     rect.setAttribute(ATTR.BBOX, 'true');
+    rect.setAttribute(ATTR.ADDED, 'true');
     part.parentNode.insertBefore(rect, part);
     return rect;
   }
@@ -451,7 +474,11 @@ class SvgHighlighter extends AbstractHighlighter {
    * @override
    */
   public getMactionNodes(node: HTMLElement): HTMLElement[] {
-    return Array.from(node.querySelectorAll('[data-mml-node="maction"]'));
+    return Array.from(
+      node.querySelectorAll(
+        '[data-mml-node="maction"][data-collapsible]:not([data-collapse-id])'
+      )
+    );
   }
 }
 
@@ -490,6 +517,8 @@ class ChtmlHighlighter extends AbstractHighlighter {
     enclosure.style.left = x - base.left + 'px';
     enclosure.style.top = y - h - base.top + 'px';
     enclosure.style.position = 'absolute';
+    enclosure.setAttribute(ATTR.BBOX, 'true');
+    enclosure.setAttribute(ATTR.ADDED, 'true');
     node.prepend(enclosure);
     return enclosure;
   }
@@ -505,7 +534,11 @@ class ChtmlHighlighter extends AbstractHighlighter {
    * @override
    */
   public getMactionNodes(node: HTMLElement): HTMLElement[] {
-    return Array.from(node.querySelectorAll('mjx-maction'));
+    return Array.from(
+      node.querySelectorAll(
+        'mjx-maction[data-collapsible]:not([data-collapse-id])'
+      )
+    );
   }
 }
 

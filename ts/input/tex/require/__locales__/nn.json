@@ -1,1 +1,6 @@
-{}
+{
+  "BadPackageName": "Argumentet til %1 er ikkje eit gyldig pakkenamn",
+  "BadRequire": "Utvidinga \"%1\" har ikkje løyve til å lastast inn",
+  "IllegalChar": "Ugyldige teikn brukte i \\require-prefikset",
+  "RequireFail": "Utvidinga \"%1\" kunne ikkje lastast inn"
+}

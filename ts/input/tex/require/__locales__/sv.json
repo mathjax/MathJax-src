@@ -1,1 +1,6 @@
-{}
+{
+  "BadPackageName": "Argumentet till %1 är inte ett giltigt paketnamn",
+  "BadRequire": "Tillägget \"%1\" får inte läsas in",
+  "IllegalChar": "Ogiltiga tecken användes i \\require-prefixet",
+  "RequireFail": "Tillägget \"%1\" kunde inte läsas in"
+}
