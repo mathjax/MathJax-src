@@ -28,9 +28,10 @@ import {
   throwTexErrors,
   throwCompileErrors,
 } from './traps.js';
+import { DOM } from '#js/types/Types.js';
 
 declare const MathJax: any;
-type MATHITEM = MathItem<any, any, any>;
+type MATHITEM = MathItem<DOM>;
 type PackageList = (string | [string, number])[];
 
 Locale.asyncLoad = asyncLoad;
