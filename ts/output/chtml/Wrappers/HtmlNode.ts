@@ -62,13 +62,13 @@ export interface ChtmlHtmlNodeClass<
 /**
  * The ChtmlHtmlNode wrapper class for the MmlHtmlNode class
  */
-export class ChtmlHtmlNode
+export const ChtmlHtmlNode = (function (): ChtmlHtmlNodeClass<DOM> {
   // @ts-expect-error Avoid message about base constructors not having the same type
-  extends ChtmlXmlNode
-  implements ChtmlHtmlNodeNTD<DOM>
-{
-  /**
-   * @override
-   */
-  public static kind = HtmlNode.prototype.kind;
-}
+  return class ChtmlHtmlNode extends ChtmlXmlNode implements ChtmlHtmlNodeNTD<DOM>
+  {
+    /**
+     * @override
+     */
+    public static kind = HtmlNode.prototype.kind;
+  }
+})();

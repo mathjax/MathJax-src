@@ -58,10 +58,12 @@ export interface SvgHtmlNodeClass<
 /**
  * The SvgHtmlNode wrapper class for the MmlHtmlNode class
  */
-// @ts-expect-error Avoid message about base constructors not having the same type
-export class SvgHtmlNode extends SvgXmlNode implements SvgHtmlNodeNTD<DOM> {
-  /**
-   * @override
-   */
-  public static kind = HtmlNode.prototype.kind;
-}
+export const SvgHtmlNode = (function (): SvgHtmlNodeClass<DOM> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgHtmlNode extends SvgXmlNode implements SvgHtmlNodeNTD<DOM> {
+    /**
+     * @override
+     */
+    public static kind = HtmlNode.prototype.kind;
+  }
+})();

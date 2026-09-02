@@ -1,5 +1,6 @@
 import { OutputJax } from '@mathjax/src/mjs/core/OutputJax.js';
 import { Font } from '@mathjax/src/mjs/output/common/FontData.js';
+import { DOM_TYPES } from '@mathjax/src/mjs/types/Types.js';
 
 export function configFont(
   font: string,
@@ -18,9 +19,9 @@ export function configExtensions(
 
 export const OutputUtil: {
 
-  config<N = any, T = any, D = any>(
+  config<DOM extends DOM_TYPES>(
     jax: string,
-    jaxClass: OutputJax<N, T, D>,
+    jaxClass: OutputJax<DOM>,
     defaultFont: Font,
     fontClass: any,
   ): void,
