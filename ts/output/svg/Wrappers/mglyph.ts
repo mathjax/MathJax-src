@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonMglyph,
   CommonMglyphClass,
@@ -40,62 +33,47 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMglyph } from '../../../core/MmlTree/MmlNodes/mglyph.js';
 import { SvgTextNodeNTD } from './TextNode.js';
 import { OptionList } from '../../../util/Options.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMglyph interface for the SVG Mglyph wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMglyphNTD<N, T, D>
+export interface SvgMglyphNTD<DOM extends DOM_TYPES>
   extends
-    SvgWrapper<N, T, D>,
+    SvgWrapper<DOM>,
     CommonMglyph<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMglyphClass interface for the SVG Mglyph wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMglyphClass<N, T, D>
+export interface SvgMglyphClass<DOM extends DOM_TYPES>
   extends
-    SvgWrapperClass<N, T, D>,
+    SvgWrapperClass<DOM>,
     CommonMglyphClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMglyphNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMglyphNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -103,27 +81,19 @@ export interface SvgMglyphClass<N, T, D>
 /**
  * The SvgMglyph wrapper class for the MmlMglyph class
  */
-export const SvgMglyph = (function <N, T, D>(): SvgMglyphClass<N, T, D> {
+export const SvgMglyph = (function (): SvgMglyphClass<DOM> {
   const Base = CommonMglyphMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMglyphClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMglyphClass<DOM>
   >(SvgWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgMglyph extends Base implements SvgMglyphNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMglyph extends Base implements SvgMglyphNTD<DOM> {
     /**
      * @override
      */
@@ -132,10 +102,10 @@ export const SvgMglyph = (function <N, T, D>(): SvgMglyphClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       const svg = this.standardSvgNodes(parents);
       if (this.charWrapper) {
-        (this.charWrapper as SvgTextNodeNTD<N, T, D>).toSVG(svg);
+        (this.charWrapper as SvgTextNodeNTD<DOM>).toSVG(svg);
         return;
       }
       const { src, alt } = this.node.attributes.getList('src', 'alt');
@@ -154,4 +124,4 @@ export const SvgMglyph = (function <N, T, D>(): SvgMglyphClass<N, T, D> {
       this.adaptor.append(svg[0], img);
     }
   };
-})<any, any, any>();
+})();

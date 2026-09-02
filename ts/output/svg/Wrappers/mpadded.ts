@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonMpadded,
   CommonMpaddedClass,
@@ -38,62 +31,47 @@ import {
 } from '../../common/Wrappers/mpadded.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMpadded } from '../../../core/MmlTree/MmlNodes/mpadded.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMpadded interface for the SVG Mpadded wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMpaddedNTD<N, T, D>
+export interface SvgMpaddedNTD<DOM extends DOM_TYPES>
   extends
-    SvgWrapper<N, T, D>,
+    SvgWrapper<DOM>,
     CommonMpadded<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMpaddedClass interface for the SVG Mpadded wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMpaddedClass<N, T, D>
+export interface SvgMpaddedClass<DOM extends DOM_TYPES>
   extends
-    SvgWrapperClass<N, T, D>,
+    SvgWrapperClass<DOM>,
     CommonMpaddedClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMpaddedNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMpaddedNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -101,27 +79,19 @@ export interface SvgMpaddedClass<N, T, D>
 /**
  * The SvgMpadded wrapper class for the MmlMpadded class
  */
-export const SvgMpadded = (function <N, T, D>(): SvgMpaddedClass<N, T, D> {
+export const SvgMpadded = (function (): SvgMpaddedClass<DOM> {
   const Base = CommonMpaddedMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMpaddedClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMpaddedClass<DOM>
   >(SvgWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  //   type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  //   different by typescript)
-  return class SvgMpadded extends Base implements SvgMpaddedaNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMpadded extends Base implements SvgMpaddedaNTD<DOM> {
     /**
      * @override
      */
@@ -130,7 +100,7 @@ export const SvgMpadded = (function <N, T, D>(): SvgMpaddedClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       if (this.toEmbellishedSVG(parents)) return;
       let svg = this.standardSvgNodes(parents);
       const [, , , , , dw, x, y, dx] = this.getDimens();
@@ -144,10 +114,10 @@ export const SvgMpadded = (function <N, T, D>(): SvgMpaddedClass<N, T, D> {
       //   use relative positioning to move the contents
       //
       if (X || y) {
-        svg = [this.adaptor.append(svg[0], this.svg('g')) as N];
+        svg = [this.adaptor.append(svg[0], this.svg('g')) as N<DOM>];
         this.place(X, y, svg[0]);
       }
       this.addChildren(svg);
     }
   };
-})<any, any, any>();
+})();

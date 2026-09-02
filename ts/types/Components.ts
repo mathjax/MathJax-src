@@ -31,9 +31,6 @@ import type {
   EMPTY_COMPONENT,
   INPUTJAX,
   OUTPUTJAX,
-  N,
-  T,
-  D,
 } from './Types.js';
 
 import type { STARTUP_TYPES } from '../components/startup.js';
@@ -187,31 +184,25 @@ export type COMPONENTS<DOM extends DOM_TYPES> = {
   'output/svg': OUTPUTJAX<'svg', SVG_OPTIONS<DOM>, DOM>;
 
   'a11y/semantic-enrich':
-    | DOC_OPTIONS<ENRICH_OPTIONS<DOM>>
-    | DOC_TYPE<EnrichedMathDocument<N<DOM>, T<DOM>, D<DOM>>>;
-  'a11y/assistive-mml':
-    | DOC_OPTIONS<ASSISTIVEMML_OPTIONS>
-    | DOC_TYPE<AssistiveMmlMathDocument<N<DOM>, T<DOM>, D<DOM>>>;
+    DOC_OPTIONS<ENRICH_OPTIONS<DOM>> | DOC_TYPE<EnrichedMathDocument<DOM>>;
+  'a11y/assisitive-mml':
+    DOC_OPTIONS<ASSISTIVEMML_OPTIONS> | DOC_TYPE<AssistiveMmlMathDocument<DOM>>;
   'a11y/complexity':
     | 'a11y/semantic-enrich'
     | DOC_OPTIONS<COMPLEXITY_OPTIONS>
-    | DOC_TYPE<ComplexityMathDocument<N<DOM>, T<DOM>, D<DOM>>>;
+    | DOC_TYPE<ComplexityMathDocument<DOM>>;
   'a11y/speech':
     | 'a11y/semantic-enrich'
     | DOC_OPTIONS<SPEECH_OPTIONS<DOM>>
-    | DOC_TYPE<SpeechMathDocument<N<DOM>, T<DOM>, D<DOM>>>;
+    | DOC_TYPE<SpeechMathDocument<DOM>>;
   'a11y/explorer':
     | 'a11y/speech'
     | DOC_OPTIONS<EXPLORER_OPTIONS>
     | DOC_TYPE<ExplorerMathDocument>;
 
   'ui/menu': DOC_OPTIONS<MENU_OPTIONS> | DOC_TYPE<MenuMathDocument>;
-  'ui/lazy':
-    | DOC_OPTIONS<LAZY_OPTIONS<DOM>>
-    | DOC_TYPE<LazyMathDocument<N<DOM>, T<DOM>, D<DOM>>>;
-  'ui/safe':
-    | DOC_OPTIONS<SAFE_OPTIONS>
-    | DOC_TYPE<SafeMathDocument<N<DOM>, T<DOM>, D<DOM>>>;
+  'ui/lazy': DOC_OPTIONS<LAZY_OPTIONS<DOM>> | DOC_TYPE<LazyMathDocument<DOM>>;
+  'ui/safe': DOC_OPTIONS<SAFE_OPTIONS> | DOC_TYPE<SafeMathDocument<DOM>>;
   'ui/no-dark-mode': EMPTY_COMPONENT<'ui/no-dark-mode'>;
 
   'adaptors/liteDOM': EMPTY_COMPONENT<'adaptors/liteDOM'>;

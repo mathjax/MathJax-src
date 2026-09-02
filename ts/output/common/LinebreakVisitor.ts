@@ -22,15 +22,8 @@
  */
 
 import { AbstractVisitor } from '../../core/Tree/Visitor.js';
-import { CommonOutputJax } from '../common.js';
+import { CommonOutputJax, COMMON_FONT } from '../common.js';
 import { CommonWrapperFactory } from './WrapperFactory.js';
-import {
-  FontData,
-  FontDataClass,
-  DelimiterData,
-  VariantData,
-  CharOptions,
-} from './FontData.js';
 import { CommonWrapper, CommonWrapperClass } from './Wrapper.js';
 import { CommonMo } from './Wrappers/mo.js';
 import { CommonMspace } from './Wrappers/mspace.js';
@@ -46,6 +39,7 @@ import { LineBBox } from './LineBBox.js';
 import { TEXCLASS } from '../../core/MmlTree/MmlNode.js';
 import { OPTABLE } from '../../core/MmlTree/OperatorDictionary.js';
 import { MmlNode, TextNode } from '../../core/MmlTree/MmlNode.js';
+import { DOM_TYPES } from '../../types/Types.js';
 
 /************************************************************************************/
 
@@ -69,17 +63,16 @@ export type BreakData<WW> = [[WW, IndexData], number, number, number, number];
 /**
  * The data used for a line-breaking operation
  */
-/* prettier-ignore */
 export interface StateData<WW> {
-  breaks: Set<[WW, IndexData]>;  // The breakpoints to use and the break index (for mtext)
-  potential: BreakData<WW>[];    // The list of best breakpoints so far
-  width: number;                 // The maximum width for the lines
-  w: number;                     // The accumulated width since the last best breakpoint
-  prevWidth: number;             // The width of the previous line
-  prevBreak: BreakData<WW>;      // The most recent breakpoint used
-  depth: number;                 // The nesting depth of the active node
-  mathWidth: number;             // The full width of the unbroken math
-  mathLeft: number;              // The amount of width left after the most recent break
+  breaks: Set<[WW, IndexData]>; //  The breakpoints to use and the break index (for mtext)
+  potential: BreakData<WW>[]; //    The list of best breakpoints so far
+  width: number; //                 The maximum width for the lines
+  w: number; //                     The accumulated width since the last best breakpoint
+  prevWidth: number; //             The width of the previous line
+  prevBreak: BreakData<WW>; //      The most recent breakpoint used
+  depth: number; //                 The nesting depth of the active node
+  mathWidth: number; //             The full width of the unbroken math
+  mathLeft: number; //              The amount of width left after the most recent break
 }
 
 /************************************************************************************/
@@ -87,32 +80,19 @@ export interface StateData<WW> {
 /**
  * A do-nothing linebreaker for use when automatic linebreaks are not requested
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export class Linebreaks<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
 > extends AbstractVisitor<WW> {
   /**
    * Break a line to the given width
@@ -129,33 +109,20 @@ export class Linebreaks<
  */
 
 /**
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export class LinebreakVisitor<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-> extends Linebreaks<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+> extends Linebreaks<DOM, FONT, JX, WW, WF, WC> {
   /**
    * Penalty functions for the various linebreak values
    */
@@ -173,7 +140,7 @@ export class LinebreakVisitor<
   protected FACTORS: {
     [key: string]: (
       p: number,
-      mo?: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+      mo?: CommonMo<DOM, FONT, JX, WW, WF, WC>
     ) => number;
   } = {
     //
@@ -249,10 +216,7 @@ export class LinebreakVisitor<
     // Adjust for mspace width
     //
     space: (p, node) => {
-      /* prettier-ignore */
-      const mspace = node as any as CommonMspace<
-        N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-      >;
+      const mspace = node as any as CommonMspace<DOM, FONT, JX, WW, WF, WC>;
       if (!mspace.canBreak) return NOBREAK;
       const w = mspace.getBBox().w;
       return w < 0 ? NOBREAK : w < 1 ? p : p - 100 * (w + 4);
@@ -528,10 +492,7 @@ export class LinebreakVisitor<
    * @param {number} _i    The line within that node to break
    */
   public visitMoNode(wrapper: WW, _i: number) {
-    /* prettier-ignore */
-    const mo = wrapper as any as CommonMo<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-    >;
+    const mo = wrapper as any as CommonMo<DOM, FONT, JX, WW, WF, WC>;
     const bbox = LineBBox.from(
       mo.getOuterBBox(),
       mo.linebreakOptions.lineleading
@@ -567,9 +528,7 @@ export class LinebreakVisitor<
    * @param {CommonMo} mo    The mo whose penalty is to be computed
    * @returns {number}        The computed penalty
    */
-  protected moPenalty(
-    mo: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
-  ): number {
+  protected moPenalty(mo: CommonMo<DOM, FONT, JX, WW, WF, WC>): number {
     const { linebreak, fence, form } = mo.node.attributes.getList(
       'linebreak',
       'fence',
@@ -600,7 +559,7 @@ export class LinebreakVisitor<
    * @returns {MmlNode | null} The core mo if it exists
    */
   protected getPrevious(
-    mo: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+    mo: CommonMo<DOM, FONT, JX, WW, WF, WC>
   ): MmlNode | null {
     let child = mo.node;
     let parent = child.parent;
@@ -623,10 +582,7 @@ export class LinebreakVisitor<
    */
   public visitMspaceNode(wrapper: WW, i: number) {
     const bbox = wrapper.getLineBBox(i);
-    /* prettier-ignore */
-    const mspace = wrapper as any as CommonMspace<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-    >;
+    const mspace = wrapper as any as CommonMspace<DOM, FONT, JX, WW, WF, WC>;
     if (mspace.canBreak) {
       const penalty = this.mspacePenalty(mspace);
       bbox.getIndentData(wrapper.node);
@@ -647,7 +603,7 @@ export class LinebreakVisitor<
    * @returns {number}               The computed penalty
    */
   protected mspacePenalty(
-    mspace: CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+    mspace: CommonMspace<DOM, FONT, JX, WW, WF, WC>
   ): number {
     const linebreak = mspace.node.attributes.get('linebreak');
     const FACTORS = this.FACTORS;
@@ -671,10 +627,7 @@ export class LinebreakVisitor<
       this.visitDefault(wrapper, i);
       return;
     }
-    /* prettier-ignore */
-    const mtext = wrapper as any as CommonMtext<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-    >;
+    const mtext = wrapper as any as CommonMtext<DOM, FONT, JX, WW, WF, WC>;
     mtext.clearBreakPoints();
     const space = mtext.textWidth(' ');
     const bbox = wrapper.getBBox();
@@ -755,10 +708,7 @@ export class LinebreakVisitor<
    * @param {number} i     The line within that node to break
    */
   public visitMfracNode(wrapper: WW, i: number) {
-    /* prettier-ignore */
-    const mfrac = wrapper as any as CommonMfrac<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-    >;
+    const mfrac = wrapper as any as CommonMfrac<DOM, FONT, JX, WW, WF, WC>;
     if (
       !mfrac.node.attributes.get('bevelled') &&
       mfrac.getOuterBBox().w > this.state.width
@@ -777,10 +727,7 @@ export class LinebreakVisitor<
    */
   public visitMsqrtNode(wrapper: WW, i: number) {
     if (wrapper.getOuterBBox().w > this.state.width) {
-      /* prettier-ignore */
-      const msqrt = wrapper as any as CommonMsqrt<
-        N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-      >;
+      const msqrt = wrapper as any as CommonMsqrt<DOM, FONT, JX, WW, WF, WC>;
       const base = msqrt.childNodes[msqrt.base];
       this.breakToWidth(base, this.state.width - msqrt.rootWidth());
       msqrt.getStretchedSurd();
@@ -804,10 +751,7 @@ export class LinebreakVisitor<
    */
   public visitMsubNode(wrapper: WW, i: number) {
     this.visitDefault(wrapper, i);
-    /* prettier-ignore */
-    const msub = wrapper as any as CommonMsub<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-    >;
+    const msub = wrapper as any as CommonMsub<DOM, FONT, JX, WW, WF, WC>;
     const x = msub.getOffset()[0];
     const sbox = msub.scriptChild.getOuterBBox();
     const [L, R] = this.getBorderLR(wrapper);
@@ -823,10 +767,7 @@ export class LinebreakVisitor<
    */
   public visitMsupNode(wrapper: WW, i: number) {
     this.visitDefault(wrapper, i);
-    /* prettier-ignore */
-    const msup = wrapper as any as CommonMsup<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-    >;
+    const msup = wrapper as any as CommonMsup<DOM, FONT, JX, WW, WF, WC>;
     const x = msup.getOffset()[0];
     const sbox = msup.scriptChild.getOuterBBox();
     const [L, R] = this.getBorderLR(wrapper);
@@ -842,10 +783,7 @@ export class LinebreakVisitor<
    */
   public visitMsubsupNode(wrapper: WW, i: number) {
     this.visitDefault(wrapper, i);
-    /* prettier-ignore */
-    const msubsup = wrapper as any as CommonMsubsup<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-    >;
+    const msubsup = wrapper as any as CommonMsubsup<DOM, FONT, JX, WW, WF, WC>;
     const subbox = msubsup.subChild.getOuterBBox();
     const supbox = msubsup.supChild.getOuterBBox();
     const x = msubsup.getAdjustedIc();
@@ -862,9 +800,7 @@ export class LinebreakVisitor<
    */
   public visitMmultiscriptsNode(wrapper: WW, i: number) {
     /* prettier-ignore */
-    const mmultiscripts = wrapper as any as CommonMmultiscripts<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-    >;
+    const mmultiscripts = wrapper as any as CommonMmultiscripts< DOM, FONT, JX, WW, WF, WC>;
     const data = mmultiscripts.scriptData;
     if (data.numPrescripts) {
       const w = Math.max(
@@ -896,10 +832,7 @@ export class LinebreakVisitor<
    * @param {number} i     The line within that node to break
    */
   public visitMfencedNode(wrapper: WW, i: number) {
-    /* prettier-ignore */
-    const mfenced = wrapper as any as CommonMfenced<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-    >;
+    const mfenced = wrapper as any as CommonMfenced<DOM, FONT, JX, WW, WF, WC>;
     const bbox = wrapper.getLineBBox(i);
     const [L, R] = this.getBorderLR(wrapper);
     if (i === 0) {
@@ -918,10 +851,7 @@ export class LinebreakVisitor<
    * @param {number} i     The line within that node to break
    */
   public visitMactionNode(wrapper: WW, i: number) {
-    /* prettier-ignore */
-    const maction = wrapper as any as CommonMaction<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-    >;
+    const maction = wrapper as any as CommonMaction<DOM, FONT, JX, WW, WF, WC>;
     const bbox = wrapper.getLineBBox(i);
     const [L, R] = this.getBorderLR(wrapper);
     if (i === 0) {

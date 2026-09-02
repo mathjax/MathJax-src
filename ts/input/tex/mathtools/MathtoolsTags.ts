@@ -22,7 +22,7 @@
 
 import { texError } from '../TexError.js';
 import { ParserConfiguration } from '../Configuration.js';
-import { TeX } from '../../tex.js';
+import { TEX } from '../../tex.js';
 import { AbstractTags, TagsFactory } from '../Tags.js';
 
 import { COMPONENT } from './__locales__/Component.js';
@@ -30,10 +30,9 @@ import { COMPONENT } from './__locales__/Component.js';
 /**
  * The type for the Mathtools tags (including their data).
  */
-/* prettier-ignore */
 export type MathtoolsTags = AbstractTags & {
-  mtFormats: Map<string, [string, string, string]>;  // name -> [left, right, format]
-  mtCurrent: [string, string, string];               // [left, right, format]
+  mtFormats: Map<string, [string, string, string]>; //  name -> [left, right, format]
+  mtCurrent: [string, string, string]; //               [left, right, format]
 };
 
 /**
@@ -46,12 +45,9 @@ let tagID = 0;
  * that handles the formats created by the \newtagform macro.
  *
  * @param {ParserConfiguration} config   The current configuration.
- * @param {TeX} jax                      The TeX input jax
+ * @param {TEX} jax                      The TeX input jax
  */
-export function MathtoolsTagFormat(
-  config: ParserConfiguration,
-  jax: TeX<any, any, any>
-) {
+export function MathtoolsTagFormat(config: ParserConfiguration, jax: TEX) {
   /**
    * If the tag format is being added by one of the other extensions,
    *   as is done for the 'ams' tags, make sure it is defined so we can create it.

@@ -26,7 +26,7 @@ import { LegacyAsciiMath } from './asciimath/legacy.js';
 import { separateOptions, OptionList } from '../util/Options.js';
 import { MathDocument } from '../core/MathDocument.js';
 import { MathItem } from '../core/MathItem.js';
-import { DOM, DOM_TYPES, N, T, D } from '../types/Types.js';
+import { DOM, DOM_TYPES } from '../types/Types.js';
 
 import { FindAsciiMath } from './asciimath/FindAsciiMath.js';
 
@@ -38,7 +38,7 @@ import { FindAsciiMath } from './asciimath/FindAsciiMath.js';
 export interface ASCIIMATH_OPTIONS<
   DOM extends DOM_TYPES,
 > extends INPUTJAX_OPTIONS<DOM, null> {
-  FindAsciiMath: FindAsciiMath<N<DOM>, T<DOM>, D<DOM>>;
+  FindAsciiMath: FindAsciiMath<DOM>;
 }
 
 /**
@@ -53,11 +53,9 @@ const options: ASCIIMATH_OPTIONS<DOM> = {
 /**
  *  Implements the AsciiMath class (extends AbstractInputJax)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
+export class AsciiMath<DOM extends DOM_TYPES> extends AbstractInputJax<DOM> {
   /**
    * The name of the input jax
    */
@@ -71,7 +69,7 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
   /**
    * The FindMath object used to search for AsciiMath in the document
    */
-  protected findAsciiMath: FindAsciiMath<N, T, D>;
+  protected findAsciiMath: FindAsciiMath<DOM>;
 
   /**
    * @override
@@ -91,7 +89,7 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
    *
    * @override
    */
-  public compile(math: MathItem<N, T, D>, _document: MathDocument<N, T, D>) {
+  public compile(math: MathItem<DOM>, _document: MathDocument<DOM>) {
     return LegacyAsciiMath.Compile(math.math, math.display);
   }
 

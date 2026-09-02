@@ -30,6 +30,7 @@ import NodeUtil from './NodeUtil.js';
 import { TexConstant } from './TexConstants.js';
 import { Locale } from '../../util/Locale.js';
 import { COMPONENT } from './__locales__/Component.js';
+import { DOM } from '../../types/Types.js';
 
 /**
  *  Simple class for label objects.
@@ -207,13 +208,13 @@ export interface Tags {
    *
    * @param {MathItem} math   The MathItem for the current equation
    */
-  startEquation(math: MathItem<any, any, any>): void;
+  startEquation(math: MathItem<DOM>): void;
 
   /**
    * Move equation-specific labels and ids to global ones,
    * save the counter, and mark the MathItem for redos
    */
-  finishEquation(math: MathItem<any, any, any>): void;
+  finishEquation(math: MathItem<DOM>): void;
 
   /**
    * Finalizes tag creation.
@@ -487,7 +488,7 @@ export class AbstractTags implements Tags {
   /**
    * @override
    */
-  public startEquation(math: MathItem<any, any, any>) {
+  public startEquation(math: MathItem<DOM>) {
     this.history = [];
     this.stack = [];
     this.clearTag();
@@ -506,7 +507,7 @@ export class AbstractTags implements Tags {
   /**
    * @override
    */
-  public finishEquation(math: MathItem<any, any, any>) {
+  public finishEquation(math: MathItem<DOM>) {
     if (this.redo) {
       math.inputData.recompile = {
         state: math.state(),

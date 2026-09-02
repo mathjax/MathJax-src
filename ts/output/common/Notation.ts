@@ -23,6 +23,8 @@
 
 import { CommonWrapper } from './Wrapper.js';
 import { CommonMenclose } from './Wrappers/menclose.js';
+import { DOM } from '../../types/Types.js';
+import { COMMON_FONT as FONT } from '../common.js';
 
 /*****************************************************************/
 
@@ -41,15 +43,12 @@ export const SOLID = THICKNESS + 'em solid'; // a solid border
  * Shorthand for CommonMenclose
  */
 /* prettier-ignore */
-export type Menclose =
-  CommonMenclose<any, any, any, any, any, any, any, any, any, any, any, any, any>;
+export type Menclose = CommonMenclose<DOM, FONT, any, any, any, any, any>;
 
 /**
  * Shorthand for CommonWrapper
  */
-/* prettier-ignore */
-export type AnyWrapper =
-  CommonWrapper<any, any, any, any, any, any, any, any, any, any, any, any>;
+export type AnyWrapper = CommonWrapper<DOM, FONT, any, any, any, any>;
 
 /**
  * Top, right, bottom, left padding data
@@ -59,7 +58,8 @@ export type PaddingData = [number, number, number, number];
 /**
  * The functions used for notation definitions
  *
- * @template N  The DOM node class
+ * @template W   The menclose wrapper class
+ * @template N   The DOM node class
  */
 export type Renderer<W extends AnyWrapper, N> = (node: W, child: N) => void;
 export type BBoxExtender<W extends AnyWrapper> = (node: W) => PaddingData;
@@ -72,14 +72,13 @@ export type Initializer<W extends AnyWrapper> = (node: W) => void;
  * @template W  The menclose wrapper class
  * @template N  The DOM node class
  */
-/* prettier-ignore */
 export type NotationDef<W extends AnyWrapper, N> = {
-  renderer: Renderer<W, N>;  // renders the DOM nodes for the notation
-  bbox: BBoxExtender<W>;     // gives the offsets to the child bounding box: [top, right, bottom, left]
-  border?: BBoxBorder<W>;    // gives the amount of the bbox offset that is due to borders on the child
-  renderChild?: boolean;     // true if the notation is used to render the child directly (e.g., radical)
-  init?: Initializer<W>;     // function to be called during wrapper construction
-  remove?: string;           // list of notations that are suppressed by this one
+  renderer: Renderer<W, N>; //   Renders the DOM nodes for the notation
+  bbox: BBoxExtender<W>; //      Gives the offsets to the child bounding box: [top, right, bottom, left]
+  border?: BBoxBorder<W>; //     Gives the amount of the bbox offset that is due to borders on the child
+  renderChild?: boolean; //      True if the notation is used to render the child directly (e.g., radical)
+  init?: Initializer<W>; //      Function to be called during wrapper construction
+  remove?: string; //            List of notations that are suppressed by this one
 };
 
 /**
@@ -147,7 +146,7 @@ export const arrowHead = (node: Menclose): number => {
  * @param {PaddingData} TRBL The arrow head data
  * @returns {PaddingData} The adjusted arrow head
  */
-export const arrowBBoxHD = (node: Menclose, TRBL: PaddingData) => {
+export const arrowBBoxHD = (node: Menclose, TRBL: PaddingData): PaddingData => {
   if (node.childNodes[0]) {
     const { h, d } = node.childNodes[0].getBBox();
     TRBL[0] = TRBL[2] = Math.max(
@@ -165,7 +164,7 @@ export const arrowBBoxHD = (node: Menclose, TRBL: PaddingData) => {
  * @param {PaddingData} TRBL The arrow head data
  * @returns {PaddingData} The adjusted arrow head
  */
-export const arrowBBoxW = (node: Menclose, TRBL: PaddingData) => {
+export const arrowBBoxW = (node: Menclose, TRBL: PaddingData): PaddingData => {
   if (node.childNodes[0]) {
     const { w } = node.childNodes[0].getBBox();
     TRBL[1] = TRBL[3] = Math.max(0, node.thickness * node.arrowhead.y - w / 2);

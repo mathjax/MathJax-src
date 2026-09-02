@@ -31,17 +31,14 @@ import { LiteWindow } from './lite/Window.js';
 import { LiteParser } from './lite/Parser.js';
 import { Styles } from '../util/Styles.js';
 import { OptionList } from '../util/Options.js';
+import { LITE_DOM } from '../types/dom/lite.js';
 
 /************************************************************/
 
 /**
  * Implements a lightweight DOMAdaptor on liteweight HTML elements
  */
-export class LiteBase extends AbstractDOMAdaptor<
-  LiteElement,
-  LiteText,
-  LiteDocument
-> {
+export class LiteBase extends AbstractDOMAdaptor<LITE_DOM> {
   /**
    * The document in which the HTML nodes will be created
    */
@@ -711,12 +708,9 @@ export class LiteBase extends AbstractDOMAdaptor<
 /**
  * The LiteAdaptor class (add in the NodeMixin methods and options)
  */
-export class LiteAdaptor extends NodeMixin<
-  LiteElement,
-  LiteText,
-  LiteDocument,
-  Constructor<LiteBase>
->(LiteBase) {}
+export class LiteAdaptor extends NodeMixin<LITE_DOM, Constructor<LiteBase>>(
+  LiteBase
+) {}
 
 /************************************************************/
 /**

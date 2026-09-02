@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonMfrac,
   CommonMfracClass,
@@ -39,62 +32,47 @@ import {
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMfrac } from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import { SvgMoNTD } from './mo.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMfrac interface for the SVG Mfrac wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMfracNTD<N, T, D>
+export interface SvgMfracNTD<DOM extends DOM_TYPES>
   extends
-    SvgWrapper<N, T, D>,
+    SvgWrapper<DOM>,
     CommonMfrac<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMfracClass interface for the SVG Mfrac wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMfracClass<N, T, D>
+export interface SvgMfracClass<DOM extends DOM_TYPES>
   extends
-    SvgWrapperClass<N, T, D>,
+    SvgWrapperClass<DOM>,
     CommonMfracClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMfracNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMfracNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -102,27 +80,19 @@ export interface SvgMfracClass<N, T, D>
 /**
  * The SvgMfrac wrapper class for the MmlMfrac class
  */
-export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
+export const SvgMfrac = (function (): SvgMfracClass<DOM> {
   const Base = CommonMfracMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMfracClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMfracClass<DOM>
   >(SvgWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgMfrac extends Base implements SvgMfracNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMfrac extends Base implements SvgMfracNTD<DOM> {
     /**
      * @override
      */
@@ -131,14 +101,14 @@ export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
     /**
      * An mo element used to render bevelled fractions
      */
-    protected bevel: SvgMoNTD<N, T, D>;
+    protected bevel: SvgMoNTD<DOM>;
 
     /************************************************/
 
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       if (this.toEmbellishedSVG(parents)) return;
       this.standardSvgNodes(parents);
       const { linethickness, bevelled } = this.node.attributes.getList(
@@ -260,4 +230,4 @@ export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
       );
     }
   };
-})<any, any, any>();
+})();

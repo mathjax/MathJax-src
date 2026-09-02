@@ -31,14 +31,7 @@ import {
   Constructor,
 } from '../Wrapper.js';
 import { CommonWrapperFactory } from '../WrapperFactory.js';
-import {
-  CharOptions,
-  VariantData,
-  DelimiterData,
-  FontData,
-  FontDataClass,
-} from '../FontData.js';
-import { CommonOutputJax } from '../../common.js';
+import { CommonOutputJax, COMMON_FONT } from '../../common.js';
 import { CommonMunderover } from './munderover.js';
 import { CommonMo } from './mo.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
@@ -48,38 +41,27 @@ import { BBox } from '../../../util/BBox.js';
 import { LineBBox } from '../LineBBox.js';
 import { DIRECTION } from '../FontData.js';
 import { SEM } from '../../../a11y/semantic-enrich/strings.js';
+import { DOM_TYPES } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The CommonScriptbase interface
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export interface CommonScriptbase<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+> extends CommonWrapper<DOM, FONT, JX, WW, WF, WC> {
   /**
    * The core mi or mo of the base (or the base itself if there isn't one)
    */
@@ -163,7 +145,7 @@ export interface CommonScriptbase<
    *
    * @param {WW} fence    The potential fence
    * @param {string} id   The fencepointer id
-   * @returns {WW}         The original fence the scripts belong to
+   * @returns {WW}        The original fence the scripts belong to
    */
   getBaseFence(fence: WW, id: string): WW;
 
@@ -184,7 +166,7 @@ export interface CommonScriptbase<
 
   /**
    * @returns {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of
-   *                    a single unstretched character
+   *                     a single unstretched character
    */
   isCharBase(): boolean;
 
@@ -195,7 +177,7 @@ export interface CommonScriptbase<
 
   /**
    * @param {WW} script   The script node to check for being a line
-   * @returns {boolean}    True if the script is U+2015
+   * @returns {boolean}   True if the script is U+2015
    */
   isLineAccent(script: WW): boolean;
 
@@ -251,7 +233,7 @@ export interface CommonScriptbase<
    *
    * @param {BBox} basebox  The bounding box of the base
    * @param {BBox} overbox  The bounding box of the overscript
-   * @returns {number[]}     The separation between their boxes, and the offset of the overscript
+   * @returns {number[]}    The separation between their boxes, and the offset of the overscript
    */
   getOverKU(basebox: BBox, overbox: BBox): number[];
 
@@ -260,21 +242,21 @@ export interface CommonScriptbase<
    *
    * @param {BBox} basebox   The bounding box of the base
    * @param {BBox} underbox  The bounding box of the underscript
-   * @returns {number[]}      The separation between their boxes, and the offset of the underscript
+   * @returns {number[]}     The separation between their boxes, and the offset of the underscript
    */
   getUnderKV(basebox: BBox, underbox: BBox): number[];
 
   /**
    * @param {BBox[]} boxes     The bounding boxes whose offsets are to be computed
    * @param {number[]=} delta  The initial x offsets of the boxes
-   * @returns {number[]}        The actual offsets needed to center the boxes in the stack
+   * @returns {number[]}       The actual offsets needed to center the boxes in the stack
    */
   getDeltaW(boxes: BBox[], delta?: number[]): number[];
 
   /**
    * @param {WW} script         The child that is above or below the base
    * @param {boolean=} noskew   Whether to ignore the skew amount
-   * @returns {number}           The offset for under and over
+   * @returns {number}          The offset for under and over
    */
   getDelta(script: WW, noskew?: boolean): number;
 
@@ -288,7 +270,7 @@ export interface CommonScriptbase<
    * Add the scripts into the given bounding box for msub and msup (overridden by msubsup)
    *
    * @param {BBox} bbox   The bounding box to augment
-   * @returns {BBox}       The modified bounding box
+   * @returns {BBox}      The modified bounding box
    */
   appendScripts(bbox: BBox): BBox;
 }
@@ -296,33 +278,21 @@ export interface CommonScriptbase<
 /**
  * The CommonScriptbaseClass interface
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export interface CommonScriptbaseClass<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+> extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC> {
   /**
    * Set to true for munderover/munder/mover/msup (Appendix G 13)
    */
@@ -332,35 +302,23 @@ export interface CommonScriptbaseClass<
 /**
  *  Shorthand for the CommonScriptbase constructor
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  *
- * @template B   The mixin interface being created
+ * @template B     The mixin interface being created
  */
 export type CommonScriptbaseConstructor<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-> = Constructor<CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+> = Constructor<CommonScriptbase<DOM, FONT, JX, WW, WF, WC>>;
 
 /*****************************************************************/
 /**
@@ -369,41 +327,28 @@ export type CommonScriptbaseConstructor<
  *
  * @param {CommonWrapperConstructor} Base The constructor class to extend
  * @returns {B} The mixin constructor
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
  *
- * @template B   The mixin interface to create
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
+ *
+ * @template B     The mixin interface to create
  */
 export function CommonScriptbaseMixin<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
->(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
-): B {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+  B extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+>(Base: CommonWrapperConstructor<DOM, FONT, JX, WW, WF, WC>): B {
   return class CommonScriptbaseMixin
     extends Base
-    implements CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+    implements CommonScriptbase<DOM, FONT, JX, WW, WF, WC>
   {
     /**
      * Set to false for msubsup/msub (Appendix G 13)
@@ -493,11 +438,8 @@ export function CommonScriptbaseMixin<
             node.isKind('mphantom') ||
             node.isKind('semantics'))) ||
           (node.isKind('munderover') &&
-            /* prettier-ignore */
-            (
-              core as any as
-              CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
-            ).isMathAccent))
+            (core as any as CommonMunderover<DOM, FONT, JX, WW, WF, WC>)
+              .isMathAccent))
       ) {
         this.setBaseAccentsFor(core);
         core = core.childNodes[0];
@@ -604,9 +546,7 @@ export function CommonScriptbaseMixin<
       } else if (this.node.isKind('munder')) {
         this.isLineBelow = this.isLineAccent(this.scriptChild);
       } else {
-        /* prettier-ignore */
-        const mml = this as any as CommonMunderover<
-          N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+        const mml = this as any as CommonMunderover<DOM, FONT, JX, WW, WF, WC>;
         this.isLineAbove = this.isLineAccent(mml.overChild);
         this.isLineBelow = this.isLineAccent(mml.underChild);
       }
@@ -651,9 +591,7 @@ export function CommonScriptbaseMixin<
       const largeop = !!this.baseCore.node.attributes.get('largeop');
       const sized = !!(
         this.baseCore.node.isKind('mo') &&
-        /* prettier-ignore */
-        (this.baseCore as any as
-         CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).size
+        (this.baseCore as any as CommonMo<DOM, FONT, JX, WW, WF, WC>).size
       );
       const scale = this.baseScale;
       return this.baseIsChar && !largeop && !sized && scale === 1 ? 0 : n;
@@ -877,13 +815,8 @@ export function CommonScriptbaseMixin<
       this.baseRemoveIc =
         !this.isLineAbove &&
         !this.isLineBelow &&
-        (!(
-          /* prettier-ignore */
-          (this.constructor as CommonScriptbaseClass<
-            N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-          >)
-          .useIC
-        ) ||
+        (!(this.constructor as CommonScriptbaseClass<DOM, FONT, JX, WW, WF, WC>)
+          .useIC ||
           this.isMathAccent);
     }
 

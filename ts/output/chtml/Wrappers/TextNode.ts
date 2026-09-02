@@ -21,17 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlCharData,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
+import { ChtmlCharData } from '../FontData.js';
 import {
   CommonTextNode,
   CommonTextNodeClass,
@@ -40,98 +33,67 @@ import {
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { TextNode } from '../../../core/MmlTree/MmlNode.js';
 import { StyleJson } from '../../../util/StyleJson.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlTextNode interface for the CHTML TextNode wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlTextNodeNTD<N, T, D>
+export interface ChtmlTextNodeNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonTextNode<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {}
 
 /**
  * The ChtmlTextNodeClass interface for the CHTML TextNode wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlTextNodeClass<N, T, D>
+export interface ChtmlTextNodeClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonTextNodeClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlTextNodeNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlTextNodeNTD<DOM>;
 }
 
 /*****************************************************************/
 
 /**
  * The ChtmlTextNode wrapper class for the MmlTextNode class
- *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  */
-export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
-  N,
-  T,
-  D
-> {
+export const ChtmlTextNode = (function (): ChtmlTextNodeClass<DOM> {
   const Base = CommonTextNodeMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlTextNodeClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlTextNodeClass<DOM>
   >(ChtmlWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class ChtmlTextNode extends Base implements ChtmlTextNodeNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class ChtmlTextNode extends Base implements ChtmlTextNodeNTD<DOM> {
     /**
      * The TextNode wrapper
      */
@@ -160,7 +122,7 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
+    public toCHTML(parents: N<DOM>[]) {
       this.markUsed();
       const parent = parents[0];
       const adaptor = this.adaptor;
@@ -193,7 +155,7 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
               )
             );
             if (i < m - 1 || bbox.oc) {
-              adaptor.setAttribute(node as N, 'noic', 'true');
+              adaptor.setAttribute(node as N<DOM>, 'noic', 'true');
             }
             if (H) {
               //
@@ -202,7 +164,7 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
               //  the parent element).  Only fixes the issue within a given
               //  MathML node, but that is useful for \text{} in particular.
               //
-              adaptor.setStyle(node as N, 'padding-top', H);
+              adaptor.setStyle(node as N<DOM>, 'padding-top', H);
             }
             this.font.charUsage.add([variant, n]);
           }
@@ -219,11 +181,11 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
      * @param {N} parent         The parent node where the text is being added
      * @returns {string}          The new value for utext
      */
-    protected addUtext(utext: string, variant: string, parent: N): string {
+    protected addUtext(utext: string, variant: string, parent: N<DOM>): string {
       if (utext) {
         this.adaptor.append(parent, this.jax.unknownText(utext, variant));
       }
       return '';
     }
   };
-})<any, any, any>();
+})();

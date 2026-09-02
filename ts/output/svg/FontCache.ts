@@ -22,17 +22,16 @@
  */
 
 import { SVG } from '../svg.js';
+import { DOM_TYPES, N } from '../../types/Types.js';
 
 /**
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class FontCache<N, T, D> {
+export class FontCache<DOM extends DOM_TYPES> {
   /**
    * The SVG jax that owns this cache
    */
-  protected jax: SVG<N, T, D>;
+  protected jax: SVG<DOM>;
 
   /**
    * The cache of font character IDs to their paths
@@ -42,7 +41,7 @@ export class FontCache<N, T, D> {
   /**
    * The SVG <defs> element for storing the cache
    */
-  protected defs: N = null;
+  protected defs: N<DOM> = null;
 
   /**
    * A string to use to make per-equation cache IDs unique
@@ -57,7 +56,7 @@ export class FontCache<N, T, D> {
   /**
    * @param {SVG} jax  The SVG jax owning this font cache
    */
-  constructor(jax: SVG<N, T, D>) {
+  constructor(jax: SVG<DOM>) {
     this.jax = jax;
   }
 
@@ -116,7 +115,7 @@ export class FontCache<N, T, D> {
    *
    * @returns {N} The definitions
    */
-  public getCache(): N {
+  public getCache(): N<DOM> {
     return this.defs;
   }
 }

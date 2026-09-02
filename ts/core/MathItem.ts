@@ -27,6 +27,7 @@ import { OptionList } from '../util/Options.js';
 import { MmlNode } from './MmlTree/MmlNode.js';
 import { Locale } from '../util/Locale.js';
 import { COMPONENT } from './__locales__/Component.js';
+import { DOM_TYPES, N, T } from '../types/Types.js';
 
 /*****************************************************************/
 /**
@@ -35,14 +36,13 @@ import { COMPONENT } from './__locales__/Component.js';
  *  an index into a string array, the character position within
  *  the string, and the delimiter at that location).
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
+ * @template DOM   The DOM element types
  */
-export type Location<N, T> = {
+export type Location<DOM extends DOM_TYPES> = {
   i?: number;
   n?: number;
   delim?: string;
-  node?: N | T;
+  node?: N<DOM> | T<DOM>;
 };
 
 /*****************************************************************/
@@ -67,11 +67,9 @@ export type Metrics = {
  *  internal format), its typeset version, its bounding box,
  *  and so on.
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM element types
  */
-export interface MathItem<N, T, D> {
+export interface MathItem<DOM extends DOM_TYPES> {
   /**
    * The string representing the expression to be processed
    */
@@ -80,7 +78,7 @@ export interface MathItem<N, T, D> {
   /**
    * The input jax used to process the math
    */
-  inputJax: InputJax<N, T, D>;
+  inputJax: InputJax<DOM>;
 
   /**
    * Whether the math is in display mode or inline mode
@@ -96,8 +94,8 @@ export interface MathItem<N, T, D> {
    * The start and ending locations in the document of
    *   this expression
    */
-  start: Location<N, T>;
-  end: Location<N, T>;
+  start: Location<DOM>;
+  end: Location<DOM>;
 
   /**
    * The internal format for this expression (once compiled)
@@ -107,7 +105,7 @@ export interface MathItem<N, T, D> {
   /**
    * The typeset version of the expression (once typeset)
    */
-  typesetRoot: N;
+  typesetRoot: N<DOM>;
 
   /**
    * The metric information at the location of the math
@@ -126,7 +124,7 @@ export interface MathItem<N, T, D> {
    *
    * @param {MathDocument} document  The MathDocument in which the math resides
    */
-  render(document: MathDocument<N, T, D>): void;
+  render(document: MathDocument<DOM>): void;
 
   /**
    * Rerenders an already rendered item and inserts it into the document
@@ -134,7 +132,7 @@ export interface MathItem<N, T, D> {
    * @param {MathDocument} document  The MathDocument in which the math resides
    * @param {number=} start          The state to start rerendering at (default = RERENDER)
    */
-  rerender(document: MathDocument<N, T, D>, start?: number): void;
+  rerender(document: MathDocument<DOM>, start?: number): void;
 
   /**
    * Converts the expression by calling the render actions until the state matches the end state
@@ -143,28 +141,28 @@ export interface MathItem<N, T, D> {
    * @param {number=} end            The state to end rerendering at (default = LAST)
    * @returns {MmlNode | N}          The typesetRoot or root node of the converted MathItem
    */
-  convert(document: MathDocument<N, T, D>, end?: number): MmlNode | N;
+  convert(document: MathDocument<DOM>, end?: number): MmlNode | N<DOM>;
 
   /**
    * Converts the expression into the internal format by calling the input jax
    *
    * @param {MathDocument} document  The MathDocument in which the math resides
    */
-  compile(document: MathDocument<N, T, D>): void;
+  compile(document: MathDocument<DOM>): void;
 
   /**
    * Converts the internal format to the typeset version by calling the output jax
    *
    * @param {MathDocument} document  The MathDocument in which the math resides
    */
-  typeset(document: MathDocument<N, T, D>): void;
+  typeset(document: MathDocument<DOM>): void;
 
   /**
    * Inserts the typeset version in place of the original form in the document
    *
    * @param {MathDocument} document  The MathDocument in which the math resides
    */
-  updateDocument(document: MathDocument<N, T, D>): void;
+  updateDocument(document: MathDocument<DOM>): void;
 
   /**
    * Removes the typeset version from the document, optionally replacing the original
@@ -219,18 +217,16 @@ export interface MathItem<N, T, D> {
  *  MathItem later (e.g., when the position within a string array
  *  is translated back into the actual node location in the DOM).
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
+ * @template DOM   The DOM element types
  */
-/* prettier-ignore */
-export type ProtoItem<N, T> = {
-  math: string;            // The math expression itself
-  start: Location<N, T>;   // The starting location of the math
-  end: Location<N, T>;     // The ending location of the math
-  open?: string;           // The opening delimiter
-  close?: string;          // The closing delimiter
-  n?: number;              // The index of the string in which this math is found
-  display: boolean;        // True means display mode, false is inline mode
+export type ProtoItem<DOM extends DOM_TYPES> = {
+  math: string; //            The math expression itself
+  start: Location<DOM>; //    The starting location of the math
+  end: Location<DOM>; //      The ending location of the math
+  open?: string; //           The opening delimiter
+  close?: string; //          The closing delimiter
+  n?: number; //              The index of the string in which this math is found
+  display: boolean; //        True means display mode, false is inline mode
 };
 
 /**
@@ -244,10 +240,10 @@ export type ProtoItem<N, T> = {
  * @param {number} end    The ending location of the math
  * @param {boolean} display True means display mode, false is inline mode
  * @returns {ProtoItem<N, T>} The proto math item
- * @template N   The HTMLElement node class
- * @template T   The Text node class
+ *
+ * @template DOM   The DOM element types
  */
-export function protoItem<N, T>(
+export function protoItem<DOM extends DOM_TYPES>(
   open: string,
   math: string,
   close: string,
@@ -255,8 +251,8 @@ export function protoItem<N, T>(
   start: number,
   end: number,
   display: boolean = null
-): ProtoItem<N, T> {
-  const item: ProtoItem<N, T> = {
+): ProtoItem<DOM> {
+  const item: ProtoItem<DOM> = {
     open: open,
     math: math,
     close: close,
@@ -272,11 +268,11 @@ export function protoItem<N, T>(
 /**
  *  Implements the MathItem class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM element types
  */
-export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
+export abstract class AbstractMathItem<
+  DOM extends DOM_TYPES,
+> implements MathItem<DOM> {
   /**
    * The source text for the math (e.g., TeX string)
    */
@@ -286,7 +282,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
    * The input jax associated with this item
    */
 
-  public inputJax: InputJax<N, T, D>;
+  public inputJax: InputJax<DOM>;
 
   /**
    * True when this math is in display mode
@@ -296,11 +292,11 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   /**
    * Reference to the beginning of the math in the document
    */
-  public start: Location<N, T>;
+  public start: Location<DOM>;
   /**
    * Reference to the end of the math in the document
    */
-  public end: Location<N, T>;
+  public end: Location<DOM>;
 
   /**
    * The compiled internal MathML (result of InputJax)
@@ -309,7 +305,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   /**
    * The typeset result (result of OutputJax)
    */
-  public typesetRoot: N = null;
+  public typesetRoot: N<DOM> = null;
 
   /**
    * The metric information about the surrounding environment
@@ -348,10 +344,10 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
    */
   constructor(
     math: string,
-    jax: InputJax<N, T, D>,
+    jax: InputJax<DOM>,
     display: boolean = true,
-    start: Location<N, T> = { i: 0, n: 0, delim: '' },
-    end: Location<N, T> = { i: 0, n: 0, delim: '' }
+    start: Location<DOM> = { i: 0, n: 0, delim: '' },
+    end: Location<DOM> = { i: 0, n: 0, delim: '' }
   ) {
     this.math = math;
     this.inputJax = jax;
@@ -368,17 +364,14 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   /**
    * @override
    */
-  public render(document: MathDocument<N, T, D>) {
+  public render(document: MathDocument<DOM>) {
     document.renderActions.renderMath(this, document);
   }
 
   /**
    * @override
    */
-  public rerender(
-    document: MathDocument<N, T, D>,
-    start: number = STATE.RERENDER
-  ) {
+  public rerender(document: MathDocument<DOM>, start: number = STATE.RERENDER) {
     if (this.state() >= start) {
       this.state(start - 1);
     }
@@ -389,16 +382,16 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
    * @override
    */
   public convert(
-    document: MathDocument<N, T, D>,
+    document: MathDocument<DOM>,
     end: number = STATE.LAST
-  ): MmlNode | N {
+  ): MmlNode | N<DOM> {
     return document.renderActions.renderConvert(this, document, end);
   }
 
   /**
    * @override
    */
-  public compile(document: MathDocument<N, T, D>) {
+  public compile(document: MathDocument<DOM>) {
     if (this.state() < STATE.COMPILED) {
       this.root = this.inputJax.compile(this, document);
       this.state(STATE.COMPILED);
@@ -408,7 +401,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   /**
    * @override
    */
-  public typeset(document: MathDocument<N, T, D>) {
+  public typeset(document: MathDocument<DOM>) {
     if (this.state() < STATE.TYPESET) {
       this.typesetRoot = document.outputJax[
         this.isEscaped ? 'escaped' : 'typeset'
@@ -420,7 +413,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   /**
    * @override
    */
-  public updateDocument(_document: MathDocument<N, T, D>) {}
+  public updateDocument(_document: MathDocument<DOM>) {}
 
   /**
    * @override

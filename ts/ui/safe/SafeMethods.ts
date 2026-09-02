@@ -23,23 +23,25 @@
 
 import { length2em } from '../../util/lengths.js';
 import { Safe, FilterFunction } from './safe.js';
+import { DOM, DOM_TYPES, N } from '../../types/Types.js';
 
 /**
  * The default attribute-filtering functions
  */
-export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
+export const SafeMethods: { [name: string]: FilterFunction<DOM> } = {
   /**
    * Filter HREF URL's
    *
-   * @param {Safe<N,T,D>} safe  The Safe object being used
-   * @param {string} url        The URL being tested
-   * @returns {string|null}     The URL if OK and null if not
+   * @param {Safe} safe       The Safe object being used
+   * @param {string} url      The URL being tested
+   * @returns {string|null}   The URL if OK and null if not
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterURL<N, T, D>(safe: Safe<N, T, D>, url: string): string | null {
+  filterURL<DOM extends DOM_TYPES>(
+    safe: Safe<DOM>,
+    url: string
+  ): string | null {
     const protocol = (url.match(/^\s*([a-z\n\r]+):/i) || [null, ''])[1]
       .replace(/[\n\r]/g, '')
       .toLowerCase();
@@ -53,15 +55,16 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   /**
    * Filter a class list
    *
-   * @param {Safe<N,T,D>} safe  The Safe object being used
+   * @param {Safe} safe         The Safe object being used
    * @param {string} list       The class list being tested
    * @returns {string|null}     The class list if OK and null if not
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterClassList<N, T, D>(safe: Safe<N, T, D>, list: string): string | null {
+  filterClassList<DOM extends DOM_TYPES>(
+    safe: Safe<DOM>,
+    list: string
+  ): string | null {
     const classes = list.trim().replace(/\s\s+/g, ' ').split(/ /);
     return classes
       .map((name) => this.filterClass(safe, name) || '')
@@ -73,15 +76,16 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   /**
    * Filter a class name
    *
-   * @param {Safe<N,T,D>} safe  The Safe object being used
+   * @param {Safe} safe         The Safe object being used
    * @param {string} CLASS      The class being tested
-   * @returns {string|null}      The class if OK and null if not
+   * @returns {string|null}     The class if OK and null if not
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterClass<N, T, D>(safe: Safe<N, T, D>, CLASS: string): string | null {
+  filterClass<DOM extends DOM_TYPES>(
+    safe: Safe<DOM>,
+    CLASS: string
+  ): string | null {
     const allow = safe.allow.classes;
     return allow === 'all' ||
       (allow === 'safe' && CLASS.match(safe.options.classPattern))
@@ -92,15 +96,13 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   /**
    * Filter ids
    *
-   * @param {Safe<N,T,D>} safe  The Safe object being used
+   * @param {Safe} safe         The Safe object being used
    * @param {string} id         The id being tested
    * @returns {string|null}     The id if OK and null if not
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterID<N, T, D>(safe: Safe<N, T, D>, id: string): string | null {
+  filterID<DOM extends DOM_TYPES>(safe: Safe<DOM>, id: string): string | null {
     const allow = safe.allow.cssIDs;
     return allow === 'all' ||
       (allow === 'safe' && id.match(safe.options.idPattern))
@@ -111,15 +113,13 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   /**
    * Filter style strings
    *
-   * @param {Safe<N,T,D>} safe  The Safe object being used
+   * @param {Safe} safe         The Safe object being used
    * @param {string} styles     The style string being tested
    * @returns {string}          The sanitized style string
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterStyles<N, T, D>(safe: Safe<N, T, D>, styles: string): string {
+  filterStyles<DOM extends DOM_TYPES>(safe: Safe<DOM>, styles: string): string {
     if (safe.allow.styles === 'all') return styles;
     if (safe.allow.styles !== 'safe') return null;
     const adaptor = safe.adaptor;
@@ -163,19 +163,17 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   /**
    * Filter an individual name:value style pair
    *
-   * @param {Safe<N,T,D>} safe  The Safe object being used
+   * @param {Safe} safe         The Safe object being used
    * @param {string} style      The style name being tested
    * @param {N} div             The temp DIV node containing the style object to be tested
    * @returns {string|null}     The sanitized style string or null if invalid
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterStyle<N, T, D>(
-    safe: Safe<N, T, D>,
+  filterStyle<DOM extends DOM_TYPES>(
+    safe: Safe<DOM>,
     style: string,
-    div: N
+    div: N<DOM>
   ): string | null {
     const value = safe.adaptor.getStyle(div, style);
     if (
@@ -197,21 +195,19 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   /**
    * Filter a style's value, handling compound values (e.g., borders that have widths as well as styles and colors)
    *
-   * @param {Safe<N,T,D>} safe  The Safe object being used
+   * @param {Safe} safe         The Safe object being used
    * @param {string} style      The style name being tested
    * @param {string} value      The value of the style to test
    * @param {N} div             The temp DIV node containing the style object to be tested
    * @returns {string|null}     The sanitized style string or null if invalid
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterStyleValue<N, T, D>(
-    safe: Safe<N, T, D>,
+  filterStyleValue<DOM extends DOM_TYPES>(
+    safe: Safe<DOM>,
     style: string,
     value: string,
-    div: N
+    div: N<DOM>
   ): string | null {
     const name = safe.options.styleLengths[style];
     if (!name) {
@@ -235,17 +231,15 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   /**
    * Filter a length value
    *
-   * @param {Safe<N,T,D>} safe  The Safe object being used
+   * @param {Safe} safe         The Safe object being used
    * @param {string} style      The style name being tested
    * @param {string} value      The value of the style to test
    * @returns {string|null}     The sanitized length value
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterStyleLength<N, T, D>(
-    safe: Safe<N, T, D>,
+  filterStyleLength<DOM extends DOM_TYPES>(
+    safe: Safe<DOM>,
     style: string,
     value: string
   ): string | null {
@@ -263,30 +257,32 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   /**
    * Filter a font size
    *
-   * @param {Safe<N,T,D>} safe  The Safe object being used
+   * @param {Safe} safe         The Safe object being used
    * @param {string} size       The font size to test
    * @returns {string|null}     The sanitized style string or null if invalid
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterFontSize<N, T, D>(safe: Safe<N, T, D>, size: string): string | null {
+  filterFontSize<DOM extends DOM_TYPES>(
+    safe: Safe<DOM>,
+    size: string
+  ): string | null {
     return this.filterStyleLength(safe, 'fontSize', size);
   },
 
   /**
    * Filter scriptsizemultiplier
    *
-   * @param {Safe<N,T,D>} safe  The Safe object being used
+   * @param {Safe} safe         The Safe object being used
    * @param {string} size       The script size multiplier to test
    * @returns {string}          The sanitized size
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterSizeMultiplier<N, T, D>(safe: Safe<N, T, D>, size: string): string {
+  filterSizeMultiplier<DOM extends DOM_TYPES>(
+    safe: Safe<DOM>,
+    size: string
+  ): string {
     const [m, M] = safe.options.scriptsizemultiplierRange || [
       -Infinity,
       Infinity,
@@ -297,16 +293,14 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   /**
    *  Filter scriptLevel
    *
-   * @param {Safe<N,T,D>} safe  The Safe object being used
+   * @param {Safe} safe         The Safe object being used
    * @param {string} level      The scriptlevel to test
    * @returns {string|null}     The sanitized scriptlevel or null
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterScriptLevel<N, T, D>(
-    safe: Safe<N, T, D>,
+  filterScriptLevel<DOM extends DOM_TYPES>(
+    safe: Safe<DOM>,
     level: string
   ): string | null {
     const [m, M] = safe.options.scriptlevelRange || [-Infinity, Infinity];
@@ -316,17 +310,15 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   /**
    * Filter a data-* attribute
    *
-   * @param {Safe<N,T,D>} safe  The Safe object being used
+   * @param {Safe} safe         The Safe object being used
    * @param {string} value      The attribute's value
    * @param {string} id         The attribute's id (e.g., data-mjx-variant)
    * @returns {number|null}     The sanitized value or null
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterData<N, T, D>(
-    safe: Safe<N, T, D>,
+  filterData<DOM extends DOM_TYPES>(
+    safe: Safe<DOM>,
     value: string,
     id: string
   ): string | null {
@@ -336,17 +328,15 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   /**
    * Filter an on* attribute (don't allow them)
    *
-   * @param {Safe<N,T,D>} _safe  The Safe object being used
+   * @param {Safe} _safe         The Safe object being used
    * @param {string} _value      The attribute's value
    * @param {string} _id         The attribute's id (e.g., data-mjx-variant)
    * @returns {string|null}      The sanitized value or null
    *
-   * @template N  The HTMLElement node class
-   * @template T  The Text node class
-   * @template D  The Document class
+   * @template DOM  The DOM node types
    */
-  filterListeners<N, T, D>(
-    _safe: Safe<N, T, D>,
+  filterListeners<DOM extends DOM_TYPES>(
+    _safe: Safe<DOM>,
     _value: string,
     _id: string
   ): string | null {

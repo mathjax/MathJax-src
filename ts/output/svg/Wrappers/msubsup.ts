@@ -22,16 +22,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonMsub,
   CommonMsubClass,
@@ -54,62 +47,47 @@ import {
   MmlMsub,
   MmlMsup,
 } from '../../../core/MmlTree/MmlNodes/msubsup.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMsub interface for the SVG Msub wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMsubNTD<N, T, D>
+export interface SvgMsubNTD<DOM extends DOM_TYPES>
   extends
-    SvgScriptbaseNTD<N, T, D>,
+    SvgScriptbaseNTD<DOM>,
     CommonMsub<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMsubClass interface for the SVG Msub wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMsubClass<N, T, D>
+export interface SvgMsubClass<DOM extends DOM_TYPES>
   extends
-    SvgScriptbaseClass<N, T, D>,
+    SvgScriptbaseClass<DOM>,
     CommonMsubClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMsubNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMsubNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -117,89 +95,65 @@ export interface SvgMsubClass<N, T, D>
 /**
  * The SvgMsub wrapper class for the MmlMsub class
  */
-export const SvgMsub = (function <N, T, D>(): SvgMsubClass<N, T, D> {
+export const SvgMsub = (function (): SvgMsubClass<DOM> {
   const Base = CommonMsubMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMsubClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMsubClass<DOM>
   >(SvgScriptbase);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  //   type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  //   different by typescript)
-  return class SvgMsub extends Base implements SvgMsubNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMsub extends Base implements SvgMsubNTD<DOM> {
     /**
      * @override
      */
     public static kind = MmlMsub.prototype.kind;
   };
-})<any, any, any>();
+})();
 
 /*****************************************************************/
 /**
  * The SvgMsup interface for the SVG Msup wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMsupNTD<N, T, D>
+export interface SvgMsupNTD<DOM extends DOM_TYPES>
   extends
-    SvgScriptbaseNTD<N, T, D>,
+    SvgScriptbaseNTD<DOM>,
     CommonMsup<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMsupClass interface for the SVG Msup wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMsupClass<N, T, D>
+export interface SvgMsupClass<DOM extends DOM_TYPES>
   extends
-    SvgScriptbaseClass<N, T, D>,
+    SvgScriptbaseClass<DOM>,
     CommonMsupClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMsupNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMsupNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -207,89 +161,65 @@ export interface SvgMsupClass<N, T, D>
 /**
  * The SvgMsup wrapper class for the MmlMsup class
  */
-export const SvgMsup = (function <N, T, D>(): SvgMsupClass<N, T, D> {
+export const SvgMsup = (function (): SvgMsupClass<DOM> {
   const Base = CommonMsupMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMsupClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMsupClass<DOM>
   >(SvgScriptbase);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgMsup extends Base implements SvgMsupNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMsup extends Base implements SvgMsupNTD<DOM> {
     /**
      * @override
      */
     public static kind = MmlMsup.prototype.kind;
   };
-})<any, any, any>();
+})();
 
 /*****************************************************************/
 /**
  * The SvgMglyph interface for the SVG Msubsup wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMsubsupNTD<N, T, D>
+export interface SvgMsubsupNTD<DOM extends DOM_TYPES>
   extends
-    SvgScriptbaseNTD<N, T, D>,
+    SvgScriptbaseNTD<DOM>,
     CommonMsubsup<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMsubsupClass interface for the SVG Msubsup wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMsubsupClass<N, T, D>
+export interface SvgMsubsupClass<DOM extends DOM_TYPES>
   extends
-    SvgScriptbaseClass<N, T, D>,
+    SvgScriptbaseClass<DOM>,
     CommonMsubsupClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMsubsupNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMsubsupNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -297,27 +227,19 @@ export interface SvgMsubsupClass<N, T, D>
 /**
  * The SvgMsubsup wrapper class for the MmlMsubsup class
  */
-export const SvgMsubsup = (function <N, T, D>(): SvgMsubsupClass<N, T, D> {
+export const SvgMsubsup = (function (): SvgMsubsupClass<DOM> {
   const Base = CommonMsubsupMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMsubsupClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMsubsupClass<DOM>
   >(SvgScriptbase);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgMsubsup extends Base implements SvgMsubsupNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMsubsup extends Base implements SvgMsubsupNTD<DOM> {
     /**
      * @override
      */
@@ -326,7 +248,7 @@ export const SvgMsubsup = (function <N, T, D>(): SvgMsubsupClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       if (this.toEmbellishedSVG(parents)) return;
       const svg = this.standardSvgNodes(parents);
       const [base, sup, sub] = [this.baseChild, this.supChild, this.subChild];
@@ -344,4 +266,4 @@ export const SvgMsubsup = (function <N, T, D>(): SvgMsubsupClass<N, T, D> {
       sup.place(w + x, u);
     }
   };
-})<any, any, any>();
+})();

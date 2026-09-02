@@ -50,6 +50,7 @@ import { MmlVisitor } from './MmlVisitor.js';
 import { MenuMathDocument } from './MenuHandler.js';
 import * as MenuUtil from './MenuUtil.js';
 import { locales } from './locales.js';
+import { HTML_DOM } from '../../types/dom/html.js';
 
 import { Parser, Rule, CssStyles, Submenu } from './mj-context-menu.js';
 
@@ -72,10 +73,10 @@ const XMLDECLARATION = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>';
 
 /*==========================================================================*/
 
-export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
+export type HTMLMATHITEM = MathItem<HTML_DOM>;
 
 export type JaxList = {
-  [name: string]: OutputJax<HTMLElement, Text, Document>;
+  [name: string]: OutputJax<HTML_DOM>;
 };
 
 type A11Y = Partial<A11Y_OPTIONS['a11y']>;
@@ -251,7 +252,7 @@ export class Menu {
   /**
    * A MathML serializer that has options corresponding to the menu settings
    */
-  public MmlVisitor = new MmlVisitor<HTMLElement, Text, Document>();
+  public MmlVisitor = new MmlVisitor<HTML_DOM>();
 
   /**
    * The MathDocument in which we are working
@@ -1120,8 +1121,8 @@ export class Menu {
    * @returns {OutputJax<HTMLElement, Text, Document>}        The adjusted output jax.
    */
   protected applyRendererOptions(
-    output: OutputJax<HTMLElement, Text, Document>
-  ): OutputJax<HTMLElement, Text, Document> {
+    output: OutputJax<HTML_DOM>
+  ): OutputJax<HTML_DOM> {
     const settings = this.settings;
     const options = output.options;
     options.scale = settings.scale;
@@ -1610,7 +1611,7 @@ export class Menu {
     cache: 'local' | 'global' | 'none',
     breaks: boolean
   ): Promise<string> {
-    const jax = this.jax.SVG as SVG<HTMLElement, Text, Document>;
+    const jax = this.jax.SVG as SVG<HTML_DOM>;
     const div = jax.html('div');
     if (cache === 'global') {
       jax.options.fontCache = 'local';

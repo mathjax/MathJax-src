@@ -28,7 +28,7 @@ import { CommandMap } from '../TokenMap.js';
 import NodeUtil from '../NodeUtil.js';
 import { expandable, EXPANDABLE_LIST_OF } from '../../../util/Options.js';
 import { ParserConfiguration } from '../Configuration.js';
-import { TeX } from '../../tex.js';
+import { TEX } from '../../tex.js';
 import ParseOptions from '../ParseOptions.js';
 import { NewcommandConfig } from '../newcommand/NewcommandConfiguration.js';
 import { NewcommandTables } from '../newcommand/NewcommandUtil.js';
@@ -48,9 +48,9 @@ export { COMPONENT } from './__locales__/Component.js';
  * Add any pre-defined paired delimiters, and subclass the configured tag format.
  *
  * @param {ParserConfiguration} config   The current configuration.
- * @param {TeX} jax                      The TeX input jax
+ * @param {TEX} jax                      The TeX input jax
  */
-function configMathtools(config: ParserConfiguration, jax: TeX<any, any, any>) {
+function configMathtools(config: ParserConfiguration, jax: TEX) {
   NewcommandConfig(config, jax);
   const parser = jax.parseOptions;
   const pairedDelims = parser.options.mathtools.pairedDelimiters;

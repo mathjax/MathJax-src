@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
 import {
   CommonMaction,
   CommonMactionClass,
@@ -43,62 +36,47 @@ import { TooltipData } from '../../common/Wrappers/maction.js';
 import { TextNode } from '../../../core/MmlTree/MmlNode.js';
 import { StyleJson } from '../../../util/StyleJson.js';
 import { MACTION } from '../../../a11y/semantic-enrich/maction.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlMaction interface for the CHTML Maction wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlMactionNTD<N, T, D>
+export interface ChtmlMactionNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonMaction<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {}
 
 /**
  * The ChtmlMactionClass interface for the CHTML Maction wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlMactionClass<N, T, D>
+export interface ChtmlMactionClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonMactionClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlMactionNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlMactionNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -106,27 +84,19 @@ export interface ChtmlMactionClass<N, T, D>
 /**
  * The ChtmlMaction wrapper class for the MmlMaction class
  */
-export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
+export const ChtmlMaction = (function (): ChtmlMactionClass<DOM> {
   const Base = CommonMactionMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlMactionClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlMactionClass<DOM>
   >(ChtmlWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class ChtmlMaction extends Base implements ChtmlMactionNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class ChtmlMaction extends Base implements ChtmlMactionNTD<DOM> {
     /**
      * @override
      */
@@ -230,8 +200,8 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
                     },
                     [node.html('mjx-tip')]
                   )
-                ) as N;
-                tip.toCHTML([adaptor.firstChild(tool) as N]);
+                ) as N<DOM>;
+                tip.toCHTML([adaptor.firstChild(tool) as N<DOM>]);
                 //
                 // Set up the event handlers to display and remove the tooltip
                 //
@@ -268,19 +238,13 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
         ],
       ],
     ] as ActionDef<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass,
-      ChtmlMactionNTD<N, T, D>
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>,
+      ChtmlMactionNTD<DOM>
     >[]);
 
     /*************************************************************/
@@ -288,7 +252,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
+    public toCHTML(parents: N<DOM>[]) {
       if (this.toEmbellishedCHTML(parents)) return;
       const chtml = this.standardChtmlNodes(parents);
       const child = this.selected;
@@ -296,4 +260,4 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
       this.action(this, this.data);
     }
   };
-})<any, any, any>();
+})();

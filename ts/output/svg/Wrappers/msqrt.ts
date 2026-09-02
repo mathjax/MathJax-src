@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonMsqrt,
   CommonMsqrtClass,
@@ -40,31 +33,24 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMsqrt } from '../../../core/MmlTree/MmlNodes/msqrt.js';
 import { SvgMoNTD } from './mo.js';
 import { BBox } from '../../../util/BBox.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMsqrt interface for the SVG Msqrt wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMsqrtNTD<N, T, D>
+export interface SvgMsqrtNTD<DOM extends DOM_TYPES>
   extends
-    SvgWrapper<N, T, D>,
+    SvgWrapper<DOM>,
     CommonMsqrt<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   /**
    * Indent due to root
@@ -75,64 +61,44 @@ export interface SvgMsqrtNTD<N, T, D>
 /**
  * The SvgMsqrtClass interface for the SVG Msqrt wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMsqrtClass<N, T, D>
+export interface SvgMsqrtClass<DOM extends DOM_TYPES>
   extends
-    SvgWrapperClass<N, T, D>,
+    SvgWrapperClass<DOM>,
     CommonMsqrtClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMsqrtNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMsqrtNTD<DOM>;
 }
 
 /*****************************************************************/
 
 /**
  * The SvgMsqrt wrapper for the MmlMsqrt class
- *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  */
-export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
+export const SvgMsqrt = (function (): SvgMsqrtClass<DOM> {
   const Base = CommonMsqrtMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMsqrtClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMsqrtClass<DOM>
   >(SvgWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgMsqrt extends Base implements SvgMsqrtNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMsqrt extends Base implements SvgMsqrtNTD<DOM> {
     /**
      * @override
      */
@@ -153,8 +119,8 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
      * @returns {number}          The offset required by the root
      */
     protected addRoot(
-      _ROOT: N[],
-      _root: SvgWrapper<N, T, D>,
+      _ROOT: N<DOM>[],
+      _root: SvgWrapper<DOM>,
       _sbox: BBox,
       _H: number
     ): number {
@@ -166,8 +132,8 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
-      const surd = this.surd as SvgMoNTD<N, T, D>;
+    public toSVG(parents: N<DOM>[]) {
+      const surd = this.surd as SvgMoNTD<DOM>;
       const base = this.childNodes[this.base];
       const root = this.root ? this.childNodes[this.root] : null;
       //
@@ -184,7 +150,7 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
       const SVG = this.standardSvgNodes(parents);
       surd.toSVG(SVG);
       const dx = this.addRoot(SVG, root, sbox, H);
-      const BASE = this.adaptor.append(SVG[0], this.svg('g')) as N;
+      const BASE = this.adaptor.append(SVG[0], this.svg('g')) as N<DOM>;
       base.toSVG([BASE]);
       //
       //  Place the children
@@ -202,4 +168,4 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
       );
     }
   };
-})<any, any, any>();
+})();

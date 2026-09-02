@@ -22,16 +22,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   SvgMsub,
   SvgMsubClass,
@@ -60,62 +53,47 @@ import {
   MmlMunder,
   MmlMover,
 } from '../../../core/MmlTree/MmlNodes/munderover.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMunder interface for the SVG Munder wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM Node types
  */
-export interface SvgMunderNTD<N, T, D>
+export interface SvgMunderNTD<DOM extends DOM_TYPES>
   extends
-    SvgMsubNTD<N, T, D>,
+    SvgMsubNTD<DOM>,
     CommonMunder<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMunderClass interface for the SVG Munder wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM Node types
  */
-export interface SvgMunderClass<N, T, D>
+export interface SvgMunderClass<DOM extends DOM_TYPES>
   extends
-    SvgMsubClass<N, T, D>,
+    SvgMsubClass<DOM>,
     CommonMunderClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMunderNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMunderNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -123,27 +101,19 @@ export interface SvgMunderClass<N, T, D>
 /**
  * The SvgMunder wrapper class for the MmlMunder class
  */
-export const SvgMunder = (function <N, T, D>(): SvgMunderClass<N, T, D> {
+export const SvgMunder = (function (): SvgMunderClass<DOM> {
   const Base = CommonMunderMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMunderClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMunderClass<DOM>
   >(SvgMsub);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  //   type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  //   different by typescript)
-  return class SvgMunder extends Base implements SvgMunderNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMunder extends Base implements SvgMunderNTD<DOM> {
     /**
      * @override
      */
@@ -152,7 +122,7 @@ export const SvgMunder = (function <N, T, D>(): SvgMunderClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       if (this.toEmbellishedSVG(parents)) return;
       if (this.hasMovableLimits()) {
         super.toSVG(parents);
@@ -176,7 +146,7 @@ export const SvgMunder = (function <N, T, D>(): SvgMunderClass<N, T, D> {
       script.place(sx, v);
     }
   };
-})<any, any, any>();
+})();
 
 /*****************************************************************/
 /*****************************************************************/
@@ -184,57 +154,41 @@ export const SvgMunder = (function <N, T, D>(): SvgMunderClass<N, T, D> {
 /**
  * The SvgMover interface for the SVG Mover wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM Node types
  */
-export interface SvgMoverNTD<N, T, D>
+export interface SvgMoverNTD<DOM extends DOM_TYPES>
   extends
-    SvgMsupNTD<N, T, D>,
+    SvgMsupNTD<DOM>,
     CommonMover<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMoverClass interface for the SVG Mover wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM Node types
  */
-export interface SvgMoverClass<N, T, D>
+export interface SvgMoverClass<DOM extends DOM_TYPES>
   extends
-    SvgMsupClass<N, T, D>,
+    SvgMsupClass<DOM>,
     CommonMoverClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMoverNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMoverNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -242,27 +196,19 @@ export interface SvgMoverClass<N, T, D>
 /**
  * The SvgMover wrapper class for the MmlMover class
  */
-export const SvgMover = (function <N, T, D>(): SvgMoverClass<N, T, D> {
+export const SvgMover = (function (): SvgMoverClass<DOM> {
   const Base = CommonMoverMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMoverClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMoverClass<DOM>
   >(SvgMsup);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgMover extends Base implements SvgMoverNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMover extends Base implements SvgMoverNTD<DOM> {
     /**
      * @override
      */
@@ -271,7 +217,7 @@ export const SvgMover = (function <N, T, D>(): SvgMoverClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       if (this.toEmbellishedSVG(parents)) return;
       if (this.hasMovableLimits()) {
         super.toSVG(parents);
@@ -292,7 +238,7 @@ export const SvgMover = (function <N, T, D>(): SvgMoverClass<N, T, D> {
       script.place(sx, u);
     }
   };
-})<any, any, any>();
+})();
 
 /*****************************************************************/
 /*****************************************************************/
@@ -300,57 +246,41 @@ export const SvgMover = (function <N, T, D>(): SvgMoverClass<N, T, D> {
 /**
  * The SvgMunderover interface for the SVG Munderover wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM Node types
  */
-export interface SvgMunderoverNTD<N, T, D>
+export interface SvgMunderoverNTD<DOM extends DOM_TYPES>
   extends
-    SvgMsubsupNTD<N, T, D>,
+    SvgMsubsupNTD<DOM>,
     CommonMunderover<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMunderoverClass interface for the SVG Munderover wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM Node types
  */
-export interface SvgMunderoverClass<N, T, D>
+export interface SvgMunderoverClass<DOM extends DOM_TYPES>
   extends
-    SvgMsubsupClass<N, T, D>,
+    SvgMsubsupClass<DOM>,
     CommonMunderoverClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMunderoverNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMunderoverNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -358,31 +288,19 @@ export interface SvgMunderoverClass<N, T, D>
 /**
  * The SvgMunderover wrapper class for the MmlMunderover class
  */
-export const SvgMunderover = (function <N, T, D>(): SvgMunderoverClass<
-  N,
-  T,
-  D
-> {
+export const SvgMunderover = (function (): SvgMunderoverClass<DOM> {
   const Base = CommonMunderoverMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMunderoverClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMunderoverClass<DOM>
   >(SvgMsubsup);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  //   type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  //   different by typescript)
-  return class SvgMunderover extends Base implements SvgMunderoverNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMunderover extends Base implements SvgMunderoverNTD<DOM> {
     /**
      * @override
      */
@@ -391,7 +309,7 @@ export const SvgMunderover = (function <N, T, D>(): SvgMunderoverClass<
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       if (this.toEmbellishedSVG(parents)) return;
       if (this.hasMovableLimits()) {
         super.toSVG(parents);
@@ -427,4 +345,4 @@ export const SvgMunderover = (function <N, T, D>(): SvgMunderoverClass<
       over.place(ox, u);
     }
   };
-})<any, any, any>();
+})();

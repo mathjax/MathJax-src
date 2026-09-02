@@ -33,8 +33,10 @@ import { MathDocument } from '../../../core/MathDocument.js';
 import { Locale } from '../../../util/Locale.js';
 import { COMPONENT } from './__locales__/Component.js';
 
-type MATHITEM = MathItem<any, any, any>;
-type MATHDOCUMENT = MathDocument<any, any, any>;
+import { DOM } from '../../../types/Types.js';
+
+type MATHITEM = MathItem<DOM>;
+type MATHDOCUMENT = MathDocument<DOM>;
 
 type FilterData = {
   math: MATHITEM;

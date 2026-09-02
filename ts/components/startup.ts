@@ -46,9 +46,7 @@ import { OptionList, OPTIONS } from '../util/Options.js';
 import { context } from '../util/context.js';
 import { Locale } from '../util/Locale.js';
 import { COMPONENT } from '../core/__locales__/Component.js';
-import { DOM, DOM_TYPES, N, T, D, OPTIONAL } from '../types/Types.js';
-
-import { TeX } from '../input/tex.js';
+import { DOM as ANY_DOM, DOM_TYPES, N, OPTIONAL } from '../types/Types.js';
 
 /**
  * The option types for the startup component.
@@ -72,48 +70,31 @@ export type STARTUP_OPTIONS = {
 /**
  * Generic types for the standard MathJax objects
  */
-export type MATHDOCUMENT<DD extends DOM_TYPES = DOM> = MathDocument<
-  N<DD>,
-  T<DD>,
-  D<DD>
-> & {
-  menu?: { loadingPromise: Promise<void> };
-  options: { elements?: N<DD>[] };
-};
-export type HANDLER<DD extends DOM_TYPES = DOM> = Handler<N<DD>, T<DD>, D<DD>>;
-export type DOMADAPTOR<DD extends DOM_TYPES = DOM> = DOMAdaptor<
-  N<DD>,
-  T<DD>,
-  D<DD>
->;
-export type INPUTJAX<DD extends DOM_TYPES = DOM> = InputJax<
-  N<DD>,
-  T<DD>,
-  D<DD>
->;
-export type OUTPUTJAX<DD extends DOM_TYPES = DOM> = OutputJax<
-  N<DD>,
-  T<DD>,
-  D<DD>
->;
+export type MATHDOCUMENT<DOM extends DOM_TYPES = ANY_DOM> =
+  MathDocument<DOM> & {
+    menu?: { loadingPromise: Promise<void> };
+    options: { elements?: N<DOM>[] };
+  };
+export type HANDLER<DOM extends DOM_TYPES = ANY_DOM> = Handler<DOM>;
+export type DOMADAPTOR<DOM extends DOM_TYPES = ANY_DOM> = DOMAdaptor<DOM>;
+export type INPUTJAX<DOM extends DOM_TYPES = ANY_DOM> = InputJax<DOM>;
+export type OUTPUTJAX<DOM extends DOM_TYPES = ANY_DOM> = OutputJax<DOM>;
 /* prettier-ignore */
-export type COMMONJAX<DD extends DOM_TYPES = DOM> =
-  CommonOutputJax<N<DD>, T<DD>, D<DD>, any, any, any, any, any, any, any, any>;
-export type TEX<DD extends DOM_TYPES = DOM> = TeX<N<DD>, T<DD>, D<DD>>;
+export type COMMONJAX<DOM extends DOM_TYPES = ANY_DOM> = CommonOutputJax<DOM, any, any, any, any, any>;
 
 /**
  * Array of InputJax also with keys using name of jax
  */
-export type JAXARRAY<DD extends DOM_TYPES = DOM> = INPUTJAX<DD>[] & {
-  [name: string]: INPUTJAX<DD>;
+export type JAXARRAY<DOM extends DOM_TYPES = ANY_DOM> = INPUTJAX<DOM>[] & {
+  [name: string]: INPUTJAX<DOM>;
 };
 
 /**
  * A function to extend a handler class
  */
-export type HandlerExtension<DD extends DOM_TYPES = DOM> = (
-  handler: HANDLER<DD>
-) => HANDLER<DD>;
+export type HandlerExtension<DOM extends DOM_TYPES = ANY_DOM> = (
+  handler: HANDLER<DOM>
+) => HANDLER<DOM>;
 
 /**
  * The startup object types.
@@ -602,7 +583,7 @@ export abstract class Startup {
    * @param {any=} root        The Document to use as the root document (or null to use the configured document)
    * @returns {MathDocument}   The MathDocument with the configured input and output jax
    */
-  public static getDocument(root: any = null): MathDocument<any, any, any> {
+  public static getDocument(root: any = null): MathDocument<ANY_DOM> {
     return Startup.mathjax.document(root || CONFIG.document, {
       ...MathJax.config.options,
       InputJax: Startup.input,
@@ -655,7 +636,7 @@ export interface MathJaxConfig extends MJConfig {
  */
 export interface MathJaxObject extends MJObject {
   config: MathJaxConfig;
-  startup: STARTUP<DOM>;
+  startup: STARTUP<ANY_DOM>;
   [name: string]: any; // Needed for the methods created by the startup module
 }
 

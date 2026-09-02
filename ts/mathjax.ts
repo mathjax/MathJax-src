@@ -28,6 +28,7 @@ import { OptionList } from './util/Options.js';
 import { MathDocument } from './core/MathDocument.js';
 import { context } from './util/context.js';
 import { json } from '#root/json.js';
+import { DOM } from './types/Types.js';
 
 /*****************************************************************/
 /**
@@ -47,7 +48,7 @@ export const mathjax = {
   /**
    *  The list of registers document handlers
    */
-  handlers: new HandlerList<any, any, any>(),
+  handlers: new HandlerList<DOM>(),
 
   /**
    * Creates a MathDocument using a registered handler that knows how to handl it
@@ -56,10 +57,7 @@ export const mathjax = {
    * @param {OptionList} options   The options to use for the document (e.g., input and output jax)
    * @returns {MathDocument}       The MathDocument to handle the document
    */
-  document: function (
-    document: any,
-    options: OptionList
-  ): MathDocument<any, any, any> {
+  document: function (document: any, options: OptionList): MathDocument<DOM> {
     return mathjax.handlers.document(document, options);
   },
 

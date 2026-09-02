@@ -22,6 +22,7 @@
  */
 
 import { SvgMencloseNTD } from './Wrappers/menclose.js';
+import { DOM, DOM_TYPES, N } from '../../types/Types.js';
 import * as Notation from '../common/Notation.js';
 export * from '../common/Notation.js';
 
@@ -30,13 +31,19 @@ export * from '../common/Notation.js';
 /**
  * Shorthand for Svgmenclose
  */
-export type Menclose = SvgMencloseNTD<any, any, any>;
+export type Menclose = SvgMencloseNTD<DOM>;
 
 /*
  * Shorthands for common types
  */
-export type RENDERER<N, T, D> = Notation.Renderer<SvgMencloseNTD<N, T, D>, N>;
-export type DEFPAIR<N, T, D> = Notation.DefPair<SvgMencloseNTD<N, T, D>, N>;
+export type RENDERER<DOM extends DOM_TYPES> = Notation.Renderer<
+  SvgMencloseNTD<DOM>,
+  N<DOM>
+>;
+export type DEFPAIR<DOM extends DOM_TYPES> = Notation.DefPair<
+  SvgMencloseNTD<DOM>,
+  N<DOM>
+>;
 
 /**
  * The kinds of lines that can be drawn
@@ -118,10 +125,10 @@ export const lineOffset = function (
  * @param {string} offset  The direction to offset
  * @returns {RENDERER}     The renderer function for the given line
  */
-export const RenderLine = function <N, T, D>(
+export const RenderLine = function <DOM extends DOM_TYPES>(
   line: LineName,
   offset: string = ''
-): RENDERER<N, T, D> {
+): RENDERER<DOM> {
   return (node, _child) => {
     const L = node.line(lineData(node, line, offset));
     node.adaptor.append(node.dom[0], L);
@@ -132,28 +139,28 @@ export const RenderLine = function <N, T, D>(
 
 /**
  * @param {Notation.Side} side   The kind of line (side, diagonal, etc.)
- * @returns {DEFPAIR}      The notation definition for the notation having a line on the given side
+ * @returns {DEFPAIR}            The notation definition for the notation having a line on the given side
  */
-export const Border = function <N, T, D>(
+export const Border = function <DOM extends DOM_TYPES>(
   side: Notation.Side
-): DEFPAIR<N, T, D> {
-  return Notation.CommonBorder<SvgMencloseNTD<N, T, D>, N>((node, _child) => {
+): DEFPAIR<DOM> {
+  return Notation.CommonBorder<SvgMencloseNTD<DOM>, N<DOM>>((node, _child) => {
     node.adaptor.append(node.dom[0], node.line(lineData(node, side)));
   })(side);
 };
 
 /**
- * @param {string} name    The name of the notation to define
+ * @param {string} name           The name of the notation to define
  * @param {Notation.Side} side1   The first side to get a border
  * @param {Notation.Side} side2   The second side to get a border
- * @returns {DEFPAIR}       The notation definition for the notation having lines on two sides
+ * @returns {DEFPAIR}             The notation definition for the notation having lines on two sides
  */
-export const Border2 = function <N, T, D>(
+export const Border2 = function <DOM extends DOM_TYPES>(
   name: string,
   side1: Notation.Side,
   side2: Notation.Side
-): DEFPAIR<N, T, D> {
-  return Notation.CommonBorder2<SvgMencloseNTD<N, T, D>, N>((node, _child) => {
+): DEFPAIR<DOM> {
+  return Notation.CommonBorder2<SvgMencloseNTD<DOM>, N<DOM>>((node, _child) => {
     node.adaptor.append(node.dom[0], node.line(lineData(node, side1)));
     node.adaptor.append(node.dom[0], node.line(lineData(node, side2)));
   })(name, side1, side2);
@@ -165,10 +172,10 @@ export const Border2 = function <N, T, D>(
  * @param {LineName} name  The name of the diagonal strike to define
  * @returns {DEFPAIR}       The notation definition for the diagonal strike
  */
-export const DiagonalStrike = function <N, T, D>(
+export const DiagonalStrike = function <DOM extends DOM_TYPES>(
   name: LineName
-): DEFPAIR<N, T, D> {
-  return Notation.CommonDiagonalStrike<SvgMencloseNTD<N, T, D>, N>(
+): DEFPAIR<DOM> {
+  return Notation.CommonDiagonalStrike<SvgMencloseNTD<DOM>, N<DOM>>(
     (_cname: string) => (node, _child) => {
       node.adaptor.append(node.dom[0], node.line(lineData(node, name)));
     }
@@ -181,10 +188,10 @@ export const DiagonalStrike = function <N, T, D>(
  * @param {string} name   The name of the diagonal arrow to define
  * @returns {DEFPAIR}      The notation definition for the diagonal arrow
  */
-export const DiagonalArrow = function <N, T, D>(
+export const DiagonalArrow = function <DOM extends DOM_TYPES>(
   name: string
-): DEFPAIR<N, T, D> {
-  return Notation.CommonDiagonalArrow<SvgMencloseNTD<N, T, D>, N>(
+): DEFPAIR<DOM> {
+  return Notation.CommonDiagonalArrow<SvgMencloseNTD<DOM>, N<DOM>>(
     (node, arrow) => {
       node.adaptor.append(node.dom[0], arrow);
     }
@@ -195,8 +202,10 @@ export const DiagonalArrow = function <N, T, D>(
  * @param {string} name   The name of the horizontal or vertical arrow to define
  * @returns {DEFPAIR}      The notation definition for the arrow
  */
-export const Arrow = function <N, T, D>(name: string): DEFPAIR<N, T, D> {
-  return Notation.CommonArrow<SvgMencloseNTD<N, T, D>, N>((node, arrow) => {
+export const Arrow = function <DOM extends DOM_TYPES>(
+  name: string
+): DEFPAIR<DOM> {
+  return Notation.CommonArrow<SvgMencloseNTD<DOM>, N<DOM>>((node, arrow) => {
     node.adaptor.append(node.dom[0], arrow);
   })(name);
 };

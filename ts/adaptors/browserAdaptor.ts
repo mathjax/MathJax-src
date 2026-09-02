@@ -22,6 +22,7 @@
  */
 
 import { HTMLAdaptor } from './HTMLAdaptor.js';
+import { HTML_DOM } from '../types/dom/html.js';
 
 //
 //  Let Typescript know about these
@@ -43,6 +44,6 @@ declare global {
  *
  * @returns {HTMLAdaptor}  The newly created adaptor
  */
-export function browserAdaptor(): HTMLAdaptor<HTMLElement, Text, Document> {
-  return new HTMLAdaptor<HTMLElement, Text, Document>(window);
+export function browserAdaptor(): HTMLAdaptor<HTML_DOM> {
+  return new HTMLAdaptor<HTML_DOM>(window);
 }

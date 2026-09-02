@@ -28,16 +28,15 @@ import {
 } from './MathDocument.js';
 import { OptionList } from '../util/Options.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
+import { DOM_TYPES } from '../types/Types.js';
 
 /*****************************************************************/
 /**
  *  The Handler interface
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface Handler<N, T, D> {
+export interface Handler<DOM extends DOM_TYPES> {
   /**
    * The name of the handler class
    */
@@ -46,7 +45,7 @@ export interface Handler<N, T, D> {
   /**
    * The DOM Adaptor to use for managing HTML elements
    */
-  adaptor: DOMAdaptor<N, T, D>;
+  adaptor: DOMAdaptor<DOM>;
 
   /**
    * The priority for the handler when handlers are polled
@@ -58,12 +57,12 @@ export interface Handler<N, T, D> {
    * The class implementing the MathDocument for this handler
    *   (so it can be subclassed by extensions as needed)
    */
-  documentClass: MathDocumentConstructor<AbstractMathDocument<N, T, D>>;
+  documentClass: MathDocumentConstructor<AbstractMathDocument<DOM>, DOM>;
 
   /**
    * Checks to see if the handler can process a given document
    *
-   * @param {any} document  The document to be processed (string, window, etc.)
+   * @param {any} document   The document to be processed (string, window, etc.)
    * @returns {boolean}      True if this handler can process the given document
    */
   handlesDocument(document: any): boolean;
@@ -71,32 +70,32 @@ export interface Handler<N, T, D> {
   /**
    * Creates a MathDocument for the given handler
    *
-   * @param {any} document        The document to be handled
-   * @param {OptionList} options  The options for the handling of the document
+   * @param {any} document         The document to be handled
+   * @param {OptionList} options   The options for the handling of the document
    * @returns {MathDocument}       The MathDocument object that manages the processing
    */
-  create(document: any, options: OptionList): MathDocument<N, T, D>;
+  create(document: any, options: OptionList): MathDocument<DOM>;
 }
 
 /*****************************************************************/
 /**
  *  The default MathDocument class (subclasses use their own)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-class DefaultMathDocument<N, T, D> extends AbstractMathDocument<N, T, D> {}
+class DefaultMathDocument<
+  DOM extends DOM_TYPES,
+> extends AbstractMathDocument<DOM> {}
 
 /*****************************************************************/
 /**
  *  The Handler interface
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
+export abstract class AbstractHandler<
+  DOM extends DOM_TYPES,
+> implements Handler<DOM> {
   /**
    * The name of this class
    */
@@ -105,7 +104,7 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
   /**
    * The DOM Adaptor to use for managing HTML elements
    */
-  public adaptor: DOMAdaptor<N, T, D>;
+  public adaptor: DOMAdaptor<DOM>;
 
   /**
    * The priority for this handler
@@ -116,8 +115,10 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
    * The class implementing the MathDocument for this handler
    *   (so it can be subclassed by extensions as needed)
    */
-  public documentClass: MathDocumentConstructor<AbstractMathDocument<N, T, D>> =
-    DefaultMathDocument;
+  public documentClass = DefaultMathDocument as MathDocumentConstructor<
+    AbstractMathDocument<DOM>,
+    DOM
+  >;
 
   /**
    * @param {DOMAdaptor} adaptor The DOM adaptor
@@ -125,7 +126,7 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
    *
    * @class
    */
-  constructor(adaptor: DOMAdaptor<N, T, D>, priority: number = 5) {
+  constructor(adaptor: DOMAdaptor<DOM>, priority: number = 5) {
     this.adaptor = adaptor;
     this.priority = priority;
   }
@@ -152,6 +153,6 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
       document,
       this.adaptor,
       options
-    ) as MathDocument<N, T, D>;
+    ) as MathDocument<DOM>;
   }
 }

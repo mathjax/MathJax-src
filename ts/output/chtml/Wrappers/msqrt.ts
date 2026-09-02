@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
 import {
   CommonMsqrt,
   CommonMsqrtClass,
@@ -41,62 +34,47 @@ import { ChtmlMoNTD } from './mo.js';
 import { BBox } from '../../../util/BBox.js';
 import { MmlMsqrt } from '../../../core/MmlTree/MmlNodes/msqrt.js';
 import { StyleJson } from '../../../util/StyleJson.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlMsqrt interface for the CHTML Msqrt wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlMsqrtNTD<N, T, D>
+export interface ChtmlMsqrtNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonMsqrt<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {}
 
 /**
  * The ChtmlMsqrtClass interface for the CHTML Msqrt wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlMsqrtClass<N, T, D>
+export interface ChtmlMsqrtClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonMsqrtClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlMsqrtNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlMsqrtNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -104,31 +82,21 @@ export interface ChtmlMsqrtClass<N, T, D>
 /**
  * The ChtmlMsqrt wrapper class for the MmlMsqrt class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
+export const ChtmlMsqrt = (function (): ChtmlMsqrtClass<DOM> {
   const Base = CommonMsqrtMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlMsqrtClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlMsqrtClass<DOM>
   >(ChtmlWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class ChtmlMsqrt extends Base implements ChtmlMsqrtNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class ChtmlMsqrt extends Base implements ChtmlMsqrtNTD<DOM> {
     /**
      * @override
      */
@@ -164,8 +132,8 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
-      const surd = this.surd as ChtmlMoNTD<N, T, D>;
+    public toCHTML(parents: N<DOM>[]) {
+      const surd = this.surd as ChtmlMoNTD<DOM>;
       const base = this.childNodes[this.base];
       //
       //  Get the parameters for the spacing of the parts
@@ -182,7 +150,7 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
       const CHTML = this.standardChtmlNodes(parents);
       let SURD, BASE, ROOT, root;
       if (this.root != null) {
-        ROOT = adaptor.append(CHTML[0], this.html('mjx-root')) as N;
+        ROOT = adaptor.append(CHTML[0], this.html('mjx-root')) as N<DOM>;
         root = this.childNodes[this.root];
       }
       const SQRT = adaptor.append(
@@ -191,7 +159,7 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
           (SURD = this.html('mjx-surd')),
           (BASE = this.html('mjx-box', { style: { paddingTop: this.em(q) } })),
         ])
-      ) as N;
+      ) as N<DOM>;
       if (t !== 0.06) {
         adaptor.setStyle(
           BASE,
@@ -224,10 +192,10 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
      * @param {number} _H           The height of the root as a whole
      */
     protected addRoot(
-      _ROOT: N,
-      _root: ChtmlWrapper<N, T, D>,
+      _ROOT: N<DOM>,
+      _root: ChtmlWrapper<DOM>,
       _sbox: BBox,
       _H: number
     ) {}
   };
-})<any, any, any>();
+})();

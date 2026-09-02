@@ -26,18 +26,16 @@ import { MathDocument } from './MathDocument.js';
 import { MathItem } from './MathItem.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
 import { FunctionList } from '../util/FunctionList.js';
-import type { DOM, DOM_TYPES } from '../types/Types.js';
+import type { DOM, DOM_TYPES, N } from '../types/Types.js';
 import type { FilterFunctions, FilterFunctionList } from './FilterFunctions.js';
 
 /*****************************************************************/
 /**
  *  The OutputJax interface
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface OutputJax<N, T, D> {
+export interface OutputJax<DOM extends DOM_TYPES> {
   /**
    * The name of this output jax class
    */
@@ -61,12 +59,12 @@ export interface OutputJax<N, T, D> {
   /**
    * The DOM adaptor for managing HTML elements
    */
-  adaptor: DOMAdaptor<N, T, D>;
+  adaptor: DOMAdaptor<DOM>;
 
   /**
    * @param {DOMAdaptor} adaptor The adaptor to use in this jax
    */
-  setAdaptor(adaptor: DOMAdaptor<N, T, D>): void;
+  setAdaptor(adaptor: DOMAdaptor<DOM>): void;
 
   /**
    * Do any initialization that depends on the document being set up
@@ -85,39 +83,39 @@ export interface OutputJax<N, T, D> {
    *
    * @param {MathItem} math          The MathItem to be typeset
    * @param {MathDocument} document  The MathDocument in which the typesetting should occur
-   * @returns {N}                     The DOM tree for the typeset math
+   * @returns {N}                    The DOM tree for the typeset math
    */
-  typeset(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
+  typeset(math: MathItem<DOM>, document?: MathDocument<DOM>): N<DOM>;
 
   /**
    * Handle an escaped character (e.g., \$ from the TeX input jax preventing it from being a delimiter)
    *
    * @param {MathItem} math          The MathItem to be escaped
    * @param {MathDocument} document  The MathDocument in which the math occurs
-   * @returns {N}                     The DOM tree for the escaped item
+   * @returns {N}                    The DOM tree for the escaped item
    */
-  escaped(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
+  escaped(math: MathItem<DOM>, document?: MathDocument<DOM>): N<DOM>;
 
   /**
    * Get the metric information for all math in the given document
    *
    * @param {MathDocument} document  The MathDocument being processed
    */
-  getMetrics(document: MathDocument<N, T, D>): void;
+  getMetrics(document: MathDocument<DOM>): void;
 
   /**
    * Produce the stylesheet needed for this output jax
    *
    * @param {MathDocument} document  The MathDocument being processed
    */
-  styleSheet(document: MathDocument<N, T, D>): N;
+  styleSheet(document: MathDocument<DOM>): N<DOM>;
 
   /**
    * Produce any page-specific elements needed for this output jax
    *
    * @param {MathDocument} document  The MathDocument being processed
    */
-  pageElements(document: MathDocument<N, T, D>): N;
+  pageElements(document: MathDocument<DOM>): N<DOM>;
 }
 
 /**
@@ -136,11 +134,11 @@ export type OUTPUTJAX_OPTIONS<
 /**
  *  The OutputJax abstract class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
+export abstract class AbstractOutputJax<
+  DOM extends DOM_TYPES,
+> implements OutputJax<DOM> {
   /**
    * The name for the output jax
    */
@@ -162,17 +160,17 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
   /**
    * Filters to run before the output is processed
    */
-  public preFilters: FilterFunctions<N, DOM<N, T, D>>;
+  public preFilters: FilterFunctions<N<DOM>, DOM>;
 
   /**
    * Filters to run after the output is processed
    */
-  public postFilters: FilterFunctions<N, DOM<N, T, D>>;
+  public postFilters: FilterFunctions<N<DOM>, DOM>;
 
   /**
    * The MathDocument's DOMAdaptor
    */
-  public adaptor: DOMAdaptor<N, T, D> = null; // set by the handler
+  public adaptor: DOMAdaptor<DOM> = null; // set by the handler
 
   /**
    * @param {OptionList} options  The options for this instance
@@ -194,7 +192,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
   /**
    * @override
    */
-  public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
+  public setAdaptor(adaptor: DOMAdaptor<DOM>) {
     this.adaptor = adaptor;
   }
 
@@ -212,35 +210,35 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
    * @override
    */
   public abstract typeset(
-    math: MathItem<N, T, D>,
-    document?: MathDocument<N, T, D>
-  ): N;
+    math: MathItem<DOM>,
+    document?: MathDocument<DOM>
+  ): N<DOM>;
 
   /**
    * @override
    */
   public abstract escaped(
-    math: MathItem<N, T, D>,
-    document?: MathDocument<N, T, D>
-  ): N;
+    math: MathItem<DOM>,
+    document?: MathDocument<DOM>
+  ): N<DOM>;
 
   /**
    * @override
    */
-  public getMetrics(_document: MathDocument<N, T, D>) {}
+  public getMetrics(_document: MathDocument<DOM>) {}
 
   /**
    * @override
    */
-  public styleSheet(_document: MathDocument<N, T, D>) {
-    return null as N;
+  public styleSheet(_document: MathDocument<DOM>) {
+    return null as N<DOM>;
   }
 
   /**
    * @override
    */
-  public pageElements(_document: MathDocument<N, T, D>) {
-    return null as N;
+  public pageElements(_document: MathDocument<DOM>) {
+    return null as N<DOM>;
   }
 
   /**
@@ -251,12 +249,12 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
    * @param {MathItem} math          The math item that is being processed
    * @param {MathDocument} document  The math document contaiing the math item
    * @param {any} data               Whatever other data is needed
-   * @returns {any}                   The (possibly modified) data
+   * @returns {any}                  The (possibly modified) data
    */
   protected executeFilters(
     filters: FunctionList,
-    math: MathItem<N, T, D>,
-    document: MathDocument<N, T, D>,
+    math: MathItem<DOM>,
+    document: MathDocument<DOM>,
     data: any
   ): any {
     const args = { math, document, data };

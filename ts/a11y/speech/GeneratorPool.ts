@@ -28,15 +28,14 @@ import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { SpeechMathItem } from '../speech.js';
 import { WorkerHandler } from './WebWorker.js';
 import { SEM } from '../semantic-enrich/strings.js';
+import { DOM_TYPES, N } from '../../types/Types.js';
 import { localize } from '../speech/__locales__/Component.js';
 
 /**
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class GeneratorPool<N, T, D> {
-  private webworker: WorkerHandler<N, T, D>;
+export class GeneratorPool<DOM extends DOM_TYPES> {
+  private webworker: WorkerHandler<DOM>;
   private _element: Element;
 
   set element(element: Element) {
@@ -55,7 +54,7 @@ export class GeneratorPool<N, T, D> {
   /**
    * The adaptor to work with typeset nodes.
    */
-  public adaptor: DOMAdaptor<N, T, D> = null;
+  public adaptor: DOMAdaptor<DOM> = null;
 
   /**
    *  The current speech setting for Sre
@@ -91,8 +90,8 @@ export class GeneratorPool<N, T, D> {
    */
   public init(
     options: OptionList,
-    adaptor: DOMAdaptor<N, T, D>,
-    webworker: WorkerHandler<N, T, D>
+    adaptor: DOMAdaptor<DOM>,
+    webworker: WorkerHandler<DOM>
   ) {
     this.options = options;
     if (this._init) return;
@@ -117,13 +116,13 @@ export class GeneratorPool<N, T, D> {
    * @param {SpeechMathItem} item   The SpeechMathItem to add speech to
    * @returns {Promise<void>}       The promise that resolves when the command is complete
    */
-  public Speech(item: SpeechMathItem<N, T, D>): Promise<void> {
+  public Speech(item: SpeechMathItem<DOM>): Promise<void> {
     const mml = item.outputData.mml;
     const options = Object.assign({}, this.options, { modality: 'speech' });
     return (this.promise = this.webworker.Speech(mml, options, item));
   }
 
-  public SpeechFor(item: SpeechMathItem<N, T, D>, mml: string): Promise<any> {
+  public SpeechFor(item: SpeechMathItem<DOM>, mml: string): Promise<any> {
     const options = Object.assign({}, this.options, { modality: 'speech' });
     return this.webworker.speechFor(mml, options, item);
   }
@@ -133,7 +132,7 @@ export class GeneratorPool<N, T, D> {
    *
    * @param {SpeechMathItem} item   The SpeechMathItem whose task is to be cancelled
    */
-  public cancel(item: SpeechMathItem<N, T, D>) {
+  public cancel(item: SpeechMathItem<DOM>) {
     this.webworker?.Cancel(item);
   }
 
@@ -146,7 +145,7 @@ export class GeneratorPool<N, T, D> {
    * @param {LiveRegion} brailleRegion   The braille region.
    */
   public updateRegions(
-    node: N,
+    node: N<DOM>,
     speechRegion: LiveRegion,
     brailleRegion: LiveRegion
   ) {
@@ -160,7 +159,7 @@ export class GeneratorPool<N, T, D> {
    * @param {N} node         The root node of the expression.
    * @returns {OptionList}   The relevant SRE options.
    */
-  private getOptions(node: N): OptionList {
+  private getOptions(node: N<DOM>): OptionList {
     return {
       locale: this.adaptor.getAttribute(node, SEM.LOCALE) ?? '',
       domain: this.adaptor.getAttribute(node, SEM.DOMAIN) ?? '',
@@ -175,7 +174,7 @@ export class GeneratorPool<N, T, D> {
    * @param {SpeechMathItem} item   The SpeechMathItem whose rule set is changing
    * @returns {Promise<void>}       A promise that resolves when the command completes
    */
-  public nextRules(item: SpeechMathItem<N, T, D>): Promise<void> {
+  public nextRules(item: SpeechMathItem<DOM>): Promise<void> {
     const options = this.getOptions(item.typesetRoot);
     this.update(options);
     return (this.promise = this.webworker.nextRules(
@@ -192,7 +191,7 @@ export class GeneratorPool<N, T, D> {
    * @param {SpeechMathItem} item   The SpeechMathItem whose preferences are changing
    * @returns {Promise<void>}       A promise that resolves when the command completes
    */
-  public nextStyle(node: N, item: SpeechMathItem<N, T, D>): Promise<void> {
+  public nextStyle(node: N<DOM>, item: SpeechMathItem<DOM>): Promise<void> {
     const options = this.getOptions(item.typesetRoot);
     this.update(options);
     return (this.promise = this.webworker.nextStyle(
@@ -211,7 +210,11 @@ export class GeneratorPool<N, T, D> {
    * @param {string=} sep       The speech separator. Defaults to space.
    * @returns {string}          The assembled label.
    */
-  public getLabel(node: N, _center: string = '', sep: string = ' '): string {
+  public getLabel(
+    node: N<DOM>,
+    _center: string = '',
+    sep: string = ' '
+  ): string {
     const adaptor = this.adaptor;
     if (!this.webworker.ready) {
       // return document.querySelector('.mjx-selected').textContent;
@@ -234,7 +237,7 @@ export class GeneratorPool<N, T, D> {
    * @param {N} node            The typeset node.
    * @returns {string}          The assembled label.
    */
-  public getBraille(node: N): string {
+  public getBraille(node: N<DOM>): string {
     const adaptor = this.adaptor;
     if (!this.webworker.ready) {
       // return document.querySelector('.mjx-selected').textContent;
@@ -276,7 +279,7 @@ export class GeneratorPool<N, T, D> {
    * @returns {Promise<void>} The promise that resolves when the command is complete
    */
   public getRelevantPreferences(
-    item: SpeechMathItem<N, T, D>,
+    item: SpeechMathItem<DOM>,
     semantic: string,
     prefs: Map<number, string>,
     counter: number

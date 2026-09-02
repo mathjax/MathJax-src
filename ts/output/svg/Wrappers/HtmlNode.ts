@@ -26,30 +26,31 @@ import { SvgWrapperFactory } from '../WrapperFactory.js';
 import { SvgXmlNode, SvgXmlNodeNTD, SvgXmlNodeClass } from './semantics.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { HtmlNode } from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
+import { DOM, DOM_TYPES } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgHtmlNode interface for the SVG HtmlNode wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgHtmlNodeNTD<N, T, D> extends SvgXmlNodeNTD<N, T, D> {}
+export interface SvgHtmlNodeNTD<
+  DOM extends DOM_TYPES,
+> extends SvgXmlNodeNTD<DOM> {}
 
 /**
  * The SvgHtmlNodeClass interface for the SVG HtmlNode wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgHtmlNodeClass<N, T, D> extends SvgXmlNodeClass<N, T, D> {
+export interface SvgHtmlNodeClass<
+  DOM extends DOM_TYPES,
+> extends SvgXmlNodeClass<DOM> {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgHtmlNodeNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgHtmlNodeNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -57,17 +58,12 @@ export interface SvgHtmlNodeClass<N, T, D> extends SvgXmlNodeClass<N, T, D> {
 /**
  * The SvgHtmlNode wrapper class for the MmlHtmlNode class
  */
-export const SvgHtmlNode = (function <N, T, D>(): SvgHtmlNodeClass<N, T, D> {
-  return class SvgHtmlNode
-    // @ts-expect-error Avoid message about SvgXmlNode constructors not having
-    // the same type (they should both be SvgWrapper<N, T, D>, but are thought
-    // of as different by typescript)
-    extends SvgXmlNode
-    implements SvgHtmlNodeNTD<N, T, D>
-  {
+export const SvgHtmlNode = (function (): SvgHtmlNodeClass<DOM> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgHtmlNode extends SvgXmlNode implements SvgHtmlNodeNTD<DOM> {
     /**
      * @override
      */
     public static kind = HtmlNode.prototype.kind;
-  };
-})<any, any, any>();
+  }
+})();

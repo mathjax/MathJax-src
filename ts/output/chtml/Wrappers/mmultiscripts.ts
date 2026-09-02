@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
 import {
   CommonMmultiscripts,
   CommonMmultiscriptsClass,
@@ -42,100 +35,69 @@ import { MmlMmultiscripts } from '../../../core/MmlTree/MmlNodes/mmultiscripts.j
 import { BBox } from '../../../util/BBox.js';
 import { StyleJson } from '../../../util/StyleJson.js';
 import { split } from '../../../util/string.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlMmultiscripts interface for the CHTML Mmultiscripts wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM types
  */
-export interface ChtmlMmultiscriptsNTD<N, T, D>
+export interface ChtmlMmultiscriptsNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlMsubsupNTD<N, T, D>,
+    ChtmlMsubsupNTD<DOM>,
     CommonMmultiscripts<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {}
 
 /**
  * The ChtmlMmultiscriptsClass interface for the CHTML Mmultiscripts wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM types
  */
-export interface ChtmlMmultiscriptsClass<N, T, D>
+export interface ChtmlMmultiscriptsClass<DOM extends DOM_TYPES>
   extends
-    ChtmlMsubsupClass<N, T, D>,
+    ChtmlMsubsupClass<DOM>,
     CommonMmultiscriptsClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlMmultiscriptsNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlMmultiscriptsNTD<DOM>;
 }
 
 /*****************************************************************/
 
 /**
  * The ChtmlMmultiscripts wrapper class for the MmlMmultiscripts class
- *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  */
-export const ChtmlMmultiscripts = (function <
-  N,
-  T,
-  D,
->(): ChtmlMmultiscriptsClass<N, T, D> {
+export const ChtmlMmultiscripts = (function (): ChtmlMmultiscriptsClass<DOM> {
   const Base = CommonMmultiscriptsMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlMmultiscriptsClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlMmultiscriptsClass<DOM>
   >(ChtmlMsubsup);
 
   return class ChtmlMmultiscripts
-    // @ts-expect-error Avoid message about base constructors not having the
-    // same type (they should both be ChtmlWrapper<N, T, D>, but are thought of
-    // as different by typescript)
+    // @ts-expect-error Avoid message about base constructors not having the same type
     extends Base
-    implements ChtmlMmultiscriptsNTD<N, T, D>
+    implements ChtmlMmultiscriptsNTD<DOM>
   {
     /**
      * @override
@@ -180,7 +142,7 @@ export const ChtmlMmultiscripts = (function <
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
+    public toCHTML(parents: N<DOM>[]) {
       if (this.toEmbellishedCHTML(parents)) return;
       const chtml = this.standardChtmlNodes(parents);
       const data = this.scriptData;
@@ -244,7 +206,7 @@ export const ChtmlMmultiscripts = (function <
      * @returns {N}             The script table for these scripts
      */
     protected addScripts(
-      dom: N,
+      dom: N<DOM>,
       u: number,
       v: number,
       isPre: boolean,
@@ -252,7 +214,7 @@ export const ChtmlMmultiscripts = (function <
       sup: BBox,
       i: number,
       n: number
-    ): N {
+    ): N<DOM> {
       const adaptor = this.adaptor;
       const q = u - sup.d + (v - sub.h); // separation of scripts
       const U = u < 0 && v === 0 ? sub.h + u : u; // vertical offset of table
@@ -265,16 +227,16 @@ export const ChtmlMmultiscripts = (function <
       const m = i + 2 * n;
       while (i < m) {
         this.childNodes[i++].toCHTML([
-          adaptor.append(subRow, this.html('mjx-cell')) as N,
+          adaptor.append(subRow, this.html('mjx-cell')) as N<DOM>,
         ]);
         this.childNodes[i++].toCHTML([
-          adaptor.append(supRow, this.html('mjx-cell')) as N,
+          adaptor.append(supRow, this.html('mjx-cell')) as N<DOM>,
         ]);
       }
       return adaptor.append(
         dom,
         this.html(name, tabledef, [supRow, sepRow, subRow])
-      ) as N;
+      ) as N<DOM>;
     }
   };
-})<any, any, any>();
+})();

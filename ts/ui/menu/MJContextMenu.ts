@@ -26,6 +26,7 @@ import { OptionList } from '../../util/Options.js';
 import { JaxList } from './Menu.js';
 import { localize } from './__locales__/Component.js';
 import { ExplorerMathItem } from '../../a11y/explorer.js';
+import { HTML_DOM } from '../../types/dom/html.js';
 
 import {
   ContextMenu,
@@ -82,7 +83,7 @@ export class MJContextMenu extends ContextMenu {
   /**
    * The MathItem that has posted the menu
    */
-  public mathItem: MathItem<HTMLElement, Text, Document> = null;
+  public mathItem: MathItem<HTML_DOM> = null;
 
   /**
    * Records the mathItem's nofocus value when a SelectInfo dialog is opened

@@ -26,7 +26,7 @@ import { CommandMap } from '../TokenMap.js';
 import { Configuration, ParserConfiguration } from '../Configuration.js';
 import { ColorMethods } from './ColorMethods.js';
 import { ColorModel } from './ColorUtil.js';
-import { TeX } from '../../tex.js';
+import { TEX } from '../../tex.js';
 export { COMPONENT } from './__locales__/Component.js';
 
 /**
@@ -44,12 +44,9 @@ new CommandMap('color', {
  * Config method for Color package.
  *
  * @param {Configuration} _config  The current configuration.
- * @param {TeX} jax                The TeX jax having that configuration
+ * @param {TEX} jax                The TeX jax having that configuration
  */
-const config = function (
-  _config: ParserConfiguration,
-  jax: TeX<any, any, any>
-) {
+const config = function (_config: ParserConfiguration, jax: TEX) {
   jax.parseOptions.packageData.set('color', { model: new ColorModel() });
 };
 

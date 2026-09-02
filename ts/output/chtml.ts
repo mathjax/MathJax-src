@@ -42,33 +42,48 @@ import { Usage } from './chtml/Usage.js';
 import * as LENGTHS from '../util/lengths.js';
 import { unicodeChars } from '../util/string.js';
 import { DefaultFont } from './chtml/DefaultFont.js';
-import { DOM, DOM_TYPES, N, T, D } from '../types/Types.js';
+import { DOM_TYPES, N } from '../types/Types.js';
 
 /*****************************************************************/
 
 /**
+ * The CHTML font types.
+ */
+export type CHTML_FONT = {
+  CC: ChtmlCharOptions;
+  VV: ChtmlVariantData;
+  DD: ChtmlDelimiterData;
+  FD: ChtmlFontData;
+  FC: ChtmlFontDataClass;
+};
+
+/**
  * The CHTML option types.
  */
-export interface CHTML_OPTIONS<DOM extends DOM_TYPES> extends COMMON_OPTIONS<
-  DOM,
-  ChtmlWrapper<N<DOM>, T<DOM>, D<DOM>>,
-  ChtmlWrapperFactory<N<DOM>, T<DOM>, D<DOM>>,
-  ChtmlWrapperClass<N<DOM>, T<DOM>, D<DOM>>,
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass
-> {
+export type OPTIONS = {
   adaptiveCSS: boolean; //       true means only produce CSS that is used in the processed equations
   matchFontHeight: boolean; //   true to match ex-height of surrounding font
-}
+};
+
+/**
+ * The CHTML OutputJax option types.
+ */
+export interface CHTML_OPTIONS<DOM extends DOM_TYPES>
+  extends
+    OPTIONS,
+    COMMON_OPTIONS<
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
+    > {}
 
 /**
  * The CHTML option defaults.
  */
-const options: CHTML_OPTIONS<DOM> = {
-  ...CommonOutputJax.OPTIONS,
+const options: OPTIONS = {
   adaptiveCSS: true,
   matchFontHeight: true,
 };
@@ -77,32 +92,15 @@ const options: CHTML_OPTIONS<DOM> = {
 /**
  *  Implements the CHTML class (extends AbstractOutputJax)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class CHTML<N, T, D> extends CommonOutputJax<
-  //
-  // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
-  //
-  N,
-  T,
-  D,
-  //
-  // The Wrapper type and its Factory and Class (these need to know N, T, and D)
-  //
-  ChtmlWrapper<N, T, D>,
-  ChtmlWrapperFactory<N, T, D>,
-  ChtmlWrapperClass<N, T, D>,
-  //
-  // These are font-related objects that depend on the output jax; e,g. the character options
-  //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
-  //
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass
+export class CHTML<DOM extends DOM_TYPES> extends CommonOutputJax<
+  DOM,
+  CHTML_FONT,
+  CHTML<DOM>,
+  ChtmlWrapper<DOM>,
+  ChtmlWrapperFactory<DOM>,
+  ChtmlWrapperClass<DOM>
 > {
   /**
    * The name of this output jax
@@ -112,12 +110,15 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   /**
    * @override
    */
-  public options: CHTML_OPTIONS<DOM<N, T, D>>;
+  public options: CHTML_OPTIONS<DOM>;
 
   /**
    * @override
    */
-  public static OPTIONS = options;
+  public static OPTIONS = {
+    ...CommonOutputJax.OPTIONS,
+    ...options,
+  };
 
   /**
    *  The default styles for CommonHTML
@@ -234,7 +235,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   /**
    * The CHTML stylesheet, once it is constructed
    */
-  public chtmlStyles: N = null;
+  public chtmlStyles: N<DOM> = null;
 
   /**
    * @override
@@ -263,7 +264,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   /**
    * @override
    */
-  public escaped(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
+  public escaped(math: MathItem<DOM>, html: MathDocument<DOM>) {
     this.setDocument(html);
     return this.html('span', {}, [this.text(math.math)]);
   }
@@ -271,7 +272,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   /**
    * @override
    */
-  public styleSheet(html: MathDocument<N, T, D>) {
+  public styleSheet(html: MathDocument<DOM>) {
     if (this.chtmlStyles) {
       const styles = new StyleJsonSheet();
       if (this.options.adaptiveCSS) {
@@ -352,7 +353,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
    * @param {ChtmlWrapper} wrapper   The MML node wrapper whose HTML is to be produced
    * @param {N} parent     The HTML node to contain the HTML
    */
-  public processMath(wrapper: ChtmlWrapper<N, T, D>, parent: N) {
+  public processMath(wrapper: ChtmlWrapper<DOM>, parent: N<DOM>) {
     wrapper.toCHTML([parent]);
   }
 
@@ -413,7 +414,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
    * @override
    */
 
-  public measureTextNode(textNode: N) {
+  public measureTextNode(textNode: N<DOM>) {
     const adaptor = this.adaptor;
     const text = adaptor.clone(textNode);
     //

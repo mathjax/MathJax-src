@@ -57,8 +57,9 @@ import { SvgMglyph } from './Wrappers/mglyph.js';
 import { SvgTeXAtom } from './Wrappers/TeXAtom.js';
 import { SvgTextNode } from './Wrappers/TextNode.js';
 import { SvgHtmlNode } from './Wrappers/HtmlNode.js';
+import { DOM } from '../../types/Types.js';
 
-export const SvgWrappers: { [kind: string]: SvgWrapperClass<any, any, any> } = {
+export const SvgWrappers: { [kind: string]: SvgWrapperClass<DOM> } = {
   [SvgMath.kind]: SvgMath,
   [SvgMrow.kind]: SvgMrow,
   [SvgInferredMrow.kind]: SvgInferredMrow,

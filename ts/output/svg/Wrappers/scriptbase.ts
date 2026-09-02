@@ -24,78 +24,56 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonScriptbase,
   CommonScriptbaseClass,
   CommonScriptbaseMixin,
 } from '../../common/Wrappers/scriptbase.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgScriptbase interface for the SVG msub/msup/msubsup/munder/mover/munderover wrappers
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgScriptbaseNTD<N, T, D>
+export interface SvgScriptbaseNTD<DOM extends DOM_TYPES>
   extends
-    SvgWrapper<N, T, D>,
+    SvgWrapper<DOM>,
     CommonScriptbase<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgScriptbaseClass interface for the SVG msub/msup/msubsup/munder/mover/munderover wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgScriptbaseClass<N, T, D>
+export interface SvgScriptbaseClass<DOM extends DOM_TYPES>
   extends
-    SvgWrapperClass<N, T, D>,
+    SvgWrapperClass<DOM>,
     CommonScriptbaseClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgScriptbaseNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgScriptbaseNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -103,31 +81,19 @@ export interface SvgScriptbaseClass<N, T, D>
 /**
  * The SvgScriptbase wrapper class for the msub/msup/msubsup/munder/mover/munderover class
  */
-export const SvgScriptbase = (function <N, T, D>(): SvgScriptbaseClass<
-  N,
-  T,
-  D
-> {
+export const SvgScriptbase = (function (): SvgScriptbaseClass<DOM> {
   const Base = CommonScriptbaseMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgScriptbaseClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgScriptbaseClass<DOM>
   >(SvgWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgScriptbase extends Base implements SvgScriptbaseNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgScriptbase extends Base implements SvgScriptbaseNTD<DOM> {
     /**
      * @override
      */
@@ -139,7 +105,7 @@ export const SvgScriptbase = (function <N, T, D>(): SvgScriptbaseClass<
      *
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       if (this.toEmbellishedSVG(parents)) return;
       const svg = this.standardSvgNodes(parents);
       const w = this.getBaseWidth();
@@ -150,4 +116,4 @@ export const SvgScriptbase = (function <N, T, D>(): SvgScriptbaseClass<
       this.scriptChild.place(w + x, v);
     }
   };
-})<any, any, any>();
+})();

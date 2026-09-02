@@ -25,21 +25,18 @@ import { HTMLAdaptor } from './HTMLAdaptor.js';
 import { NodeMixin, MIXIN_OPTIONS, Constructor } from './NodeMixin.js';
 import { Locale } from '../util/Locale.js';
 import { COMPONENT } from './linkedom/__locales__/Component.js';
+import { HTML_DOM } from '../types/dom/html.js';
 
 /**
  * The constructor for an HTMLAdaptor
  */
-export type HTMLAdaptorConstructor = Constructor<
-  HTMLAdaptor<HTMLElement, Text, Document>
->;
+export type HTMLAdaptorConstructor = Constructor<HTMLAdaptor<HTML_DOM>>;
 
 /**
  * The LinkedomAdaptor class
  */
 export class LinkedomAdaptor extends NodeMixin<
-  HTMLElement,
-  Text,
-  Document,
+  HTML_DOM,
   HTMLAdaptorConstructor
 >(HTMLAdaptor) {
   /**

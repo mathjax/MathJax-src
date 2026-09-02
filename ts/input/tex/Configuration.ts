@@ -28,7 +28,7 @@ import { TagsClass } from './Tags.js';
 import { userOptions, defaultOptions, OptionList } from '../../util/Options.js';
 import { SubHandlers } from './MapHandler.js';
 import { FunctionList } from '../../util/FunctionList.js';
-import { TeX } from '../tex.js';
+import { TEX } from '../tex.js';
 import { PrioritizedList } from '../../util/PrioritizedList.js';
 import { TagsFactory } from './Tags.js';
 import { Locale } from '../../util/Locale.js';
@@ -41,10 +41,7 @@ export type Processor<T> = [T, number];
 export type ProtoProcessor<T> = Processor<T> | T;
 type ProcessorMethod = (data: any) => void;
 export type ProcessorList = Processor<ProcessorMethod>[];
-export type ConfigMethod = (
-  c: ParserConfiguration,
-  j: TeX<any, any, any>
-) => void;
+export type ConfigMethod = (c: ParserConfiguration, j: TEX) => void;
 export type InitMethod = (c: ParserConfiguration) => void;
 
 export class Configuration {
@@ -379,9 +376,9 @@ export class ParserConfiguration {
   /**
    * Init method for when the jax is ready
    *
-   * @param {TeX} jax The TeX jax for this configuration
+   * @param {TEX} jax The TeX jax for this configuration
    */
-  public config(jax: TeX<any, any, any>) {
+  public config(jax: TEX) {
     this.configMethod.execute(this, jax);
     for (const config of this.configurations) {
       this.addFilters(jax, config.item);
@@ -409,10 +406,10 @@ export class ParserConfiguration {
    * Sets items, nodes and runs configuration method explicitly.
    *
    * @param {string} name            The name of the package to add
-   * @param {TeX} jax                The TeX jax where it is being registered
+   * @param {TEX} jax                The TeX jax where it is being registered
    * @param {OptionList=} options    The options for the configuration.
    */
-  public add(name: string, jax: TeX<any, any, any>, options: OptionList = {}) {
+  public add(name: string, jax: TEX, options: OptionList = {}) {
     const config = this.getPackage(name);
     this.append(config);
     this.configurations.add(config, config.priority);
@@ -472,10 +469,10 @@ export class ParserConfiguration {
   /**
    * Adds pre- and postprocessor as filters to the jax.
    *
-   * @param {TeX} jax The TeX Jax.
+   * @param {TEX} jax The TeX Jax.
    * @param {Configuration} config The configuration whose processors are added.
    */
-  private addFilters(jax: TeX<any, any, any>, config: Configuration) {
+  private addFilters(jax: TEX, config: Configuration) {
     for (const [pre, priority] of config.preprocessors) {
       jax.preFilters.add(pre, priority);
     }

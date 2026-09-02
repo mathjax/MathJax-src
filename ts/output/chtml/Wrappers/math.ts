@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
 import {
   CommonMath,
   CommonMathClass,
@@ -40,62 +33,47 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMath } from '../../../core/MmlTree/MmlNodes/math.js';
 import { StyleJson } from '../../../util/StyleJson.js';
 import { BBox } from '../../../util/BBox.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlMath interface for the CHTML Math wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export interface ChtmlMathNTD<N, T, D>
+export interface ChtmlMathNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonMath<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {}
 
 /**
  * The ChtmlMathClass interface for the CHTML Math wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export interface ChtmlMathClass<N, T, D>
+export interface ChtmlMathClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonMathClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlMathNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlMathNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -103,30 +81,20 @@ export interface ChtmlMathClass<N, T, D>
 /**
  * The ChtmlMath wrapper class for the MmlMath class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM  The DOM node types
  */
-export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
+export const ChtmlMath = (function (): ChtmlMathClass<DOM> {
   const Base = CommonMathMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlMathClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlMathClass<DOM>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  return class ChtmlMath extends Base implements ChtmlMathNTD<N, T, D> {
+  return class ChtmlMath extends Base implements ChtmlMathNTD<DOM> {
     /**
      * @override
      */
@@ -191,7 +159,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
      *
      * @param {N} parent     The HTML node to contain the HTML
      */
-    protected handleDisplay(parent: N) {
+    protected handleDisplay(parent: N<DOM>) {
       const adaptor = this.adaptor;
       const [align, shift] = this.getAlignShift();
       if (align !== 'center') {
@@ -222,7 +190,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
      *
      * @param {N} parent     The HTML node to contain the HTML
      */
-    protected handleInline(parent: N) {
+    protected handleInline(parent: N<DOM>) {
       //
       // Transfer right margin to container (for things like $x\hskip -2em y$)
       //
@@ -240,7 +208,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
+    public toCHTML(parents: N<DOM>[]) {
       super.toCHTML(parents);
       const adaptor = this.adaptor;
       const display = this.node.attributes.get('display') === 'block';
@@ -278,4 +246,4 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       }
     }
   };
-})<any, any, any>();
+})();

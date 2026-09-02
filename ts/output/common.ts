@@ -46,7 +46,7 @@ import { StyleList, Styles } from '../util/Styles.js';
 import { StyleJson, StyleJsonSheet } from '../util/StyleJson.js';
 import { BBox } from '../util/BBox.js';
 import { SEM } from '../a11y/semantic-enrich/strings.js';
-import { DOM, DOM_TYPES, N, T, D, EMPTY } from '../types/Types.js';
+import { DOM, DOM_TYPES, N, T, EMPTY } from '../types/Types.js';
 
 /*****************************************************************/
 
@@ -58,8 +58,8 @@ export interface ExtendedMetrics extends Metrics {
  * Maps linking a node to the test node it contains,
  *  and a map linking a node to the metrics within that node.
  */
-export type MetricMap<N> = Map<N, ExtendedMetrics>;
-type MetricDomMap<N> = Map<N, N>;
+export type MetricMap<DOM extends DOM_TYPES> = Map<N<DOM>, ExtendedMetrics>;
+type MetricDomMap<DOM extends DOM_TYPES> = Map<N<DOM>, N<DOM>>;
 
 /**
  * Maps for unknown characters
@@ -73,79 +73,70 @@ export const FONTPATH = '@mathjax/%%FONT%%-font';
 /*****************************************************************/
 
 /**
+ * The font data for the common classes.
+ */
+export type COMMON_FONT = {
+  CC: CharOptions;
+  VV: VariantData<COMMON_FONT['CC']>;
+  DD: DelimiterData;
+  FD: FontData<COMMON_FONT['CC'], COMMON_FONT['VV'], COMMON_FONT['DD']>;
+  FC: FontDataClass<COMMON_FONT['CC'], COMMON_FONT['VV'], COMMON_FONT['DD']>;
+};
+
+/*****************************************************************/
+
+/**
  * The option types for linebreaking.
  */
-/* prettier-ignore */
 export type LINEBREAKS = {
-  inline: boolean;             // true for browser-based breaking of inline equations
-  width: string;               // a fixed size or a percentage of the container width
-  lineleading: number;         // the default lineleading in em units
-  LinebreakVisitor:            // The LinebreakVisitor to use
-  typeof LinebreakVisitor;
+  inline: boolean; //             true for browser-based breaking of inline equations
+  width: string; //               a fixed size or a percentage of the container width
+  lineleading: number; //         the default lineleading in em units
+  LinebreakVisitor: typeof LinebreakVisitor; // The LinebreakVisitor to use
 };
 
 /**
  * The option types for the common output jax.
  */
-/* prettier-ignore */
 export interface COMMON_OPTIONS<
   DOM extends DOM_TYPES,
-  WW extends CommonWrapper<
-    N<DOM>, T<DOM>, D<DOM>,
-    CommonOutputJax<N<DOM>, T<DOM>, D<DOM>, WW, WF, WC, CC, VV, DD, FD, FC>,
-    WW, WF, WC, CC, VV, DD, FD, FC
-  >,
-  WF extends CommonWrapperFactory<
-    N<DOM>, T<DOM>, D<DOM>,
-    CommonOutputJax<N<DOM>, T<DOM>, D<DOM>, WW, WF, WC, CC, VV, DD, FD, FC>,
-    WW, WF, WC, CC, VV, DD, FD, FC
-  >,
-  WC extends CommonWrapperClass<
-    N<DOM>, T<DOM>, D<DOM>,
-    CommonOutputJax<N<DOM>, T<DOM>, D<DOM>, WW, WF, WC, CC, VV, DD, FD, FC>,
-    WW, WF, WC, CC, VV, DD, FD, FC
-  >,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
 > extends OUTPUTJAX_OPTIONS {
-  scale: number;                 // global scaling factor for all expressions
-  minScale: number;              // smallest scaling factor to use
-  mtextInheritFont: boolean;     // true to make mtext elements use surrounding font
-  merrorInheritFont: boolean;    // true to make merror text use surrounding font
-  mtextFont: string;             // font to use for mtext, if not inheriting (empty means use MathJax fonts)
-  merrorFont: string;            // font to use for merror, if not inheriting (empty means use MathJax fonts)
-  mathmlSpacing: boolean;        // true for MathML spacing rules, false for TeX rules
-  skipAttributes: EMPTY;         // RFDa and other attributes NOT to copy to the output
-  exFactor: number;              // default size of ex in em units
-  displayAlign:                  // default for indentalign when set to 'auto'
-    'left' | 'center' | 'right' | 'auto';
-  displayIndent: string;         // default for indentshift when set to 'auto'
-  displayOverflow:               // default for how to handle wide expressions
+  scale: number; //                 Global scaling factor for all expressions
+  minScale: number; //              Smallest scaling factor to use
+  mtextInheritFont: boolean; //     True to make mtext elements use surrounding font
+  merrorInheritFont: boolean; //    True to make merror text use surrounding font
+  mtextFont: string; //             Font to use for mtext, if not inheriting (empty means use MathJax fonts)
+  merrorFont: string; //            Font to use for merror, if not inheriting (empty means use MathJax fonts)
+  mathmlSpacing: boolean; //        True for MathML spacing rules, false for TeX rules
+  skipAttributes: EMPTY; //         RFDa and other attributes NOT to copy to the output
+  exFactor: number; //              Default size of ex in em units
+  //                                Default for indentalign when set to 'auto'
+  displayAlign: 'left' | 'center' | 'right' | 'auto';
+  displayIndent: string; //         Default for indentshift when set to 'auto'
+  //                                Default for how to handle wide expressions
+  displayOverflow:
     'overflow' | 'scroll' | 'scale' | 'truncate' | 'elide' | 'linebreak';
-  linebreaks: LINEBREAKS;        // the line-breaking options
-  font: string;                  // the font component to load
-  fontExtensions: string[];      // the font extensions to load
-  htmlHDW:                       // How to handle data-mjx-hdw attributes
-    'auto' | 'use' | 'force' | 'ignore';
-  wrapperFactory:                // The wrapper factory to use
-    CommonWrapperFactory<
-      N<DOM>, T<DOM>, D<DOM>,
-      CommonOutputJax<N<DOM>, T<DOM>, D<DOM>, WW, WF, WC, CC, VV, DD, FD, FC>,
-      WW, WF, WC, CC, VV, DD, FD, FC
-    >,
-  fontData:                      // The FontData object to use
-    FontData<CC, VV, DD> | typeof FontData;
-  fontPath: string;              // The path to the font definitions
-  styleJson: StyleJsonSheet;     // The StyleJsonSheet object to use
+  linebreaks: LINEBREAKS; //        The line-breaking options
+  font: string; //                  The font component to load
+  fontExtensions: string[]; //      The font extensions to load
+  //                                How to handle data-mjx-hdw attributes
+  htmlHDW: 'auto' | 'use' | 'force' | 'ignore';
+  wrapperFactory: WF; //            The wrapper factory to use
+  //                                The FontData object to use
+  fontData: FONT['FC'] | typeof FontData;
+  fontPath: string; //              The path to the font definitions
+  styleJson: StyleJsonSheet; //     The StyleJsonSheet object to use
 }
 
 /**
  * The default options.
  */
-const options: COMMON_OPTIONS<any, any, any, any, any, any, any, any, any> = {
+const options: COMMON_OPTIONS<DOM, COMMON_FONT, any, any, any, any> = {
   ...AbstractOutputJax.OPTIONS,
   scale: 1,
   minScale: 0.5,
@@ -179,47 +170,16 @@ const options: COMMON_OPTIONS<any, any, any, any, any, any, any, any, any> = {
 /**
  *  The CommonOutputJax class on which the CHTML and SVG jax are built
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM ...
  */
 export abstract class CommonOutputJax<
-  N,
-  T,
-  D,
-  /* prettier-ignore */
-  WW extends CommonWrapper<
-    N, T, D,
-    CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-    WW, WF, WC, CC, VV, DD, FD, FC
-  >,
-  /* prettier-ignore */
-  WF extends CommonWrapperFactory<
-    N, T, D,
-    CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-    WW, WF, WC, CC, VV, DD, FD, FC
-  >,
-  /* prettier-ignore */
-  WC extends CommonWrapperClass<
-    N, T, D,
-    CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-    WW, WF, WC, CC, VV, DD, FD, FC
-  >,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-> extends AbstractOutputJax<N, T, D> {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+> extends AbstractOutputJax<DOM> {
   /**
    * The name of this output jax
    */
@@ -265,11 +225,7 @@ export abstract class CommonOutputJax<
   /**
    * The font to use for generic extensions
    */
-  public static genericFont: FontDataClass<
-    CharOptions,
-    VariantData<CharOptions>,
-    DelimiterData
-  >;
+  public static genericFont: COMMON_FONT['FC'];
 
   /**
    * Used for collecting styles needed for the output jax
@@ -279,17 +235,17 @@ export abstract class CommonOutputJax<
   /**
    * The MathDocument for the math we find
    */
-  public document: MathDocument<N, T, D>;
+  public document: MathDocument<DOM>;
 
   /**
    * the MathItem currently being processed
    */
-  public math: MathItem<N, T, D>;
+  public math: MathItem<DOM>;
 
   /**
    * The container element for the math
    */
-  public container: N;
+  public container: N<DOM>;
 
   /**
    * The top-level table, if any
@@ -304,7 +260,7 @@ export abstract class CommonOutputJax<
   /**
    * The data for the font in use
    */
-  public font: FD;
+  public font: FONT['FD'];
 
   /**
    * The wrapper factory for the MathML nodes
@@ -314,12 +270,7 @@ export abstract class CommonOutputJax<
   /**
    * The linebreak visitor to use for automatic linebreaks
    */
-  /* prettier-ignore */
-  public linebreaks: Linebreaks<
-    N, T, D,
-    CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-    WW, WF, WC, CC, VV, DD, FD, FC
-  >;
+  public linebreaks: Linebreaks<DOM, FONT, JX, WW, WF, WC>;
 
   /**
    * @returns {boolean} True when in-line breaks need to be forced (e.g., for
@@ -344,12 +295,12 @@ export abstract class CommonOutputJax<
   /**
    * Node used to test for in-line metric data
    */
-  public testInline: N;
+  public testInline: N<DOM>;
 
   /**
    * Node used to test for display metric data
    */
-  public testDisplay: N;
+  public testDisplay: N<DOM>;
 
   /**
    * Cache of unknonw character bounding boxes for this element
@@ -359,7 +310,7 @@ export abstract class CommonOutputJax<
   /**
    * @override
    */
-  public options: COMMON_OPTIONS<DOM<N, T, D>, WW, WF, WC, CC, VV, DD, FD, FC>;
+  public options: COMMON_OPTIONS<DOM, FONT, JX, WW, WF, WC>;
 
   /*****************************************************************/
 
@@ -369,13 +320,13 @@ export abstract class CommonOutputJax<
    *
    * @param {OptionList} options                   The configuration options
    * @param {CommonWrapperFactory} defaultFactory  The default wrapper factory class
-   * @param {FC} defaultFont                       The default FontData constructor
+   * @param {FONT['FC']} defaultFont               The default FontData constructor
    * @class
    */
   constructor(
     options: OptionList = {},
     defaultFactory: typeof CommonWrapperFactory = null,
-    defaultFont: FC = null
+    defaultFont: FONT['FC'] = null
   ) {
     const [fontClass, font] =
       options.fontData instanceof FontData
@@ -388,18 +339,14 @@ export abstract class CommonOutputJax<
     super(jaxOptions);
     this.factory =
       (this.options.wrapperFactory as any) ||
-      /* prettier-ignore */
-      new defaultFactory<
-        N, T, D,
-        CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-        WW, WF, WC, CC, VV, DD, FD, FC
-      >();
-    this.factory.jax = this;
+      new defaultFactory<DOM, FONT, JX, WW, WF, WC>();
+    this.factory.jax = this as any as JX;
     this.styleJson = this.options.styleJson || new StyleJsonSheet();
     this.font = font || new fontClass(fontOptions);
     this.font.setOptions({ mathmlSpacing: this.options.mathmlSpacing });
-    /* prettier-ignore */
-    (this.constructor as typeof CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>).genericFont = fontClass;
+    (
+      this.constructor as typeof CommonOutputJax<DOM, FONT, JX, WW, WF, WC>
+    ).genericFont = fontClass;
     this.unknownCache = new Map();
     const linebreaks = (this.options.linebreaks.LinebreakVisitor ||
       LinebreakVisitor) as typeof Linebreaks;
@@ -409,7 +356,7 @@ export abstract class CommonOutputJax<
   /**
    * @override
    */
-  public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
+  public setAdaptor(adaptor: DOMAdaptor<DOM>) {
     super.setAdaptor(adaptor);
     //
     //  Set the htmlHDW option based on the adaptor's ability to measure nodes
@@ -427,7 +374,7 @@ export abstract class CommonOutputJax<
    * @returns {string[]}                New CSS rules needed for the font
    */
   public addExtension(
-    font: FontExtensionData<CC, DD>,
+    font: FontExtensionData<FONT['CC'], FONT['DD']>,
     prefix: string = ''
   ): string[] {
     return this.font.addExtension(font, prefix);
@@ -443,11 +390,11 @@ export abstract class CommonOutputJax<
    *
    * @override
    */
-  public typeset(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
+  public typeset(math: MathItem<DOM>, html: MathDocument<DOM>) {
     /* prettier-ignore */
-    const CLASS = (this.constructor as typeof CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>);
+    const CLASS = this.constructor as typeof CommonOutputJax<DOM, FONT, JX, WW, WF, WC>;
     const generic = CLASS.genericFont;
-    CLASS.genericFont = this.font.constructor as FontDataClass<CC, VV, DD>;
+    CLASS.genericFont = this.font.constructor as FONT['FC'];
     this.setDocument(html);
     const node = this.createNode();
     try {
@@ -459,9 +406,9 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * @returns {N}  The container DOM node for the typeset math
+   * @returns {N<DOM>}  The container DOM node for the typeset math
    */
-  protected createNode(): N {
+  protected createNode(): N<DOM> {
     const jax = (this.constructor as typeof CommonOutputJax).NAME;
     return this.html('mjx-container', {
       class: 'MathJax',
@@ -471,10 +418,10 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * @param {N} node         The container whose scale is to be set
+   * @param {N<DOM>} node    The container whose scale is to be set
    * @param {WW} wrapper     The wrapper for the math element being scaled
    */
-  protected setScale(node: N, wrapper: WW) {
+  protected setScale(node: N<DOM>, wrapper: WW) {
     let scale = this.getInitialScale() * this.options.scale;
     if (
       wrapper.node.attributes.get('overflow') === 'scale' &&
@@ -510,13 +457,13 @@ export abstract class CommonOutputJax<
    * Execute the post-filters
    *
    * @param {MathItem} math      The math item to convert
-   * @param {N} node             The contaier to place the result into
+   * @param {N<DOM>} node        The contaier to place the result into
    * @param {MathDocument} html  The document containing the math
    */
   public toDOM(
-    math: MathItem<N, T, D>,
-    node: N,
-    html: MathDocument<N, T, D> = null
+    math: MathItem<DOM>,
+    node: N<DOM>,
+    html: MathDocument<DOM> = null
   ) {
     this.setDocument(html);
     this.math = math;
@@ -564,9 +511,9 @@ export abstract class CommonOutputJax<
    * This is the actual typesetting function supplied by the subclass
    *
    * @param {WW} wrapper   The wrapped intenral MathML node of the root math element to process
-   * @param {N} node       The container node where the math is to be typeset
+   * @param {N<DOM>} node  The container node where the math is to be typeset
    */
-  public abstract processMath(wrapper: WW, node: N): void;
+  public abstract processMath(wrapper: WW, node: N<DOM>): void;
 
   /*****************************************************************/
 
@@ -575,7 +522,7 @@ export abstract class CommonOutputJax<
    * @param {MathDocument} html  The MathDocument for the math
    * @returns {BBox}             The bounding box
    */
-  public getBBox(math: MathItem<N, T, D>, html: MathDocument<N, T, D>): BBox {
+  public getBBox(math: MathItem<DOM>, html: MathDocument<DOM>): BBox {
     this.setDocument(html);
     this.math = math;
     math.root.setTeXclass(null);
@@ -693,7 +640,7 @@ export abstract class CommonOutputJax<
    * @param {MmlNode} node        The parent node to mark
    * @param {MmlNode} child       The child node to mark
    * @param {MmlNode} mo          The core mo to mark
-   * @returns {boolean}            The modified marked variable
+   * @returns {boolean}           The modified marked variable
    */
   protected markInlineBreak(
     marked: boolean,
@@ -744,7 +691,7 @@ export abstract class CommonOutputJax<
   /**
    * @override
    */
-  public getMetrics(html: MathDocument<N, T, D>) {
+  public getMetrics(html: MathDocument<DOM>) {
     this.setDocument(html);
     const adaptor = this.adaptor;
     const maps = this.getMetricMaps(html);
@@ -766,11 +713,11 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * @param {N} node            The container node whose metrics are to be measured
+   * @param {N<DOM>} node       The container node whose metrics are to be measured
    * @param {boolean} display   True if the metrics are for displayed math
-   * @returns {Metrics}          Object containing em, ex, containerWidth, etc.
+   * @returns {Metrics}         Object containing em, ex, containerWidth, etc.
    */
-  public getMetricsFor(node: N, display: boolean): ExtendedMetrics {
+  public getMetricsFor(node: N<DOM>, display: boolean): ExtendedMetrics {
     const getFamily =
       this.options.mtextInheritFont || this.options.merrorInheritFont;
     const test = this.getTestElement(node, display);
@@ -783,13 +730,13 @@ export abstract class CommonOutputJax<
    * Get a MetricMap for the math list
    *
    * @param {MathDocument} html  The math document whose math list is to be processed.
-   * @returns {MetricMap[]}       The node-to-metrics maps for all the containers that have math
+   * @returns {MetricMap[]}      The node-to-metrics maps for all the containers that have math
    */
-  protected getMetricMaps(html: MathDocument<N, T, D>): MetricMap<N>[] {
+  protected getMetricMaps(html: MathDocument<DOM>): MetricMap<DOM>[] {
     const adaptor = this.adaptor;
     const domMaps = [
-      new Map() as MetricDomMap<N>,
-      new Map() as MetricDomMap<N>,
+      new Map() as MetricDomMap<DOM>,
+      new Map() as MetricDomMap<DOM>,
     ];
     //
     // Add the test elements all at once (so only one reflow)
@@ -812,7 +759,7 @@ export abstract class CommonOutputJax<
     //
     const getFamily =
       this.options.mtextInheritFont || this.options.merrorInheritFont;
-    const maps = [new Map() as MetricMap<N>, new Map() as MetricMap<N>];
+    const maps = [new Map() as MetricMap<DOM>, new Map() as MetricMap<DOM>];
     for (const i of maps.keys()) {
       for (const node of domMaps[i].keys()) {
         maps[i].set(node, this.measureMetrics(domMaps[i].get(node), getFamily));
@@ -830,11 +777,11 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * @param {N} node    The math element to be measured
-   * @param {boolean} display Is the element in display math?
-   * @returns {N}        The test elements that were added
+   * @param {N<DOM>} node       The math element to be measured
+   * @param {boolean} display   Is the element in display math?
+   * @returns {N<DOM>}          The test elements that were added
    */
-  protected getTestElement(node: N, display: boolean): N {
+  protected getTestElement(node: N<DOM>, display: boolean): N<DOM> {
     const adaptor = this.adaptor;
     if (!this.testInline) {
       this.testInline = this.html(
@@ -885,38 +832,38 @@ export abstract class CommonOutputJax<
       adaptor.setStyle(this.testDisplay, 'display', 'table');
       adaptor.setStyle(this.testDisplay, 'margin-right', '');
       adaptor.setStyle(
-        adaptor.firstChild(this.testDisplay) as N,
+        adaptor.firstChild(this.testDisplay) as N<DOM>,
         'display',
         'none'
       );
-      const right = adaptor.lastChild(this.testDisplay) as N;
+      const right = adaptor.lastChild(this.testDisplay) as N<DOM>;
       adaptor.setStyle(right, 'display', 'table-cell');
       adaptor.setStyle(right, 'width', '10000em');
       adaptor.setStyle(right, 'float', '');
     }
     return adaptor.append(
       node,
-      adaptor.clone(display ? this.testDisplay : this.testInline) as N
-    ) as N;
+      adaptor.clone(display ? this.testDisplay : this.testInline) as N<DOM>
+    ) as N<DOM>;
   }
 
   /**
-   * @param {N} node              The test node to measure
+   * @param {N<DOM>} node         The test node to measure
    * @param {boolean} getFamily   True if font family of surroundings is to be determined
-   * @returns {ExtendedMetrics}    The metric data for the given node
+   * @returns {ExtendedMetrics}   The metric data for the given node
    */
-  protected measureMetrics(node: N, getFamily: boolean): ExtendedMetrics {
+  protected measureMetrics(node: N<DOM>, getFamily: boolean): ExtendedMetrics {
     const adaptor = this.adaptor;
     const family = getFamily ? adaptor.fontFamily(node) : '';
     const em = adaptor.fontSize(node);
-    const [w, h] = adaptor.nodeSize(adaptor.childNode(node, 1) as N);
+    const [w, h] = adaptor.nodeSize(adaptor.childNode(node, 1) as N<DOM>);
     const ex = w ? h / 60 : em * this.options.exFactor;
     const containerWidth = !w
       ? 1000000
       : adaptor.getStyle(node, 'display') === 'table'
-        ? adaptor.nodeSize(adaptor.lastChild(node) as N)[0] - 1
-        : adaptor.nodeBBox(adaptor.lastChild(node) as N).left -
-          adaptor.nodeBBox(adaptor.firstChild(node) as N).left -
+        ? adaptor.nodeSize(adaptor.lastChild(node) as N<DOM>)[0] - 1
+        : adaptor.nodeBBox(adaptor.lastChild(node) as N<DOM>).left -
+          adaptor.nodeBBox(adaptor.firstChild(node) as N<DOM>).left -
           2;
     const scale = Math.max(
       this.options.minScale,
@@ -932,7 +879,7 @@ export abstract class CommonOutputJax<
   /**
    * @override
    */
-  public styleSheet(html: MathDocument<N, T, D>) {
+  public styleSheet(html: MathDocument<DOM>) {
     this.setDocument(html);
     //
     // Start with the common styles
@@ -960,7 +907,7 @@ export abstract class CommonOutputJax<
     const sheet = this.html('style', { id: 'MJX-styles' }, [
       this.text('\n' + this.styleJson.cssText + '\n'),
     ]);
-    return sheet as N;
+    return sheet as N<DOM>;
   }
 
   /**
@@ -987,10 +934,7 @@ export abstract class CommonOutputJax<
     CLASS: typeof CommonWrapper,
     styles: StyleJsonSheet
   ) {
-    CLASS.addStyles<CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>>(
-      styles,
-      this
-    );
+    CLASS.addStyles<CommonOutputJax<DOM, FONT, JX, WW, WF, WC>>(styles, this);
   }
 
   /**
@@ -1005,7 +949,7 @@ export abstract class CommonOutputJax<
   /**
    * @param {MathDocument} html  The document to be used
    */
-  protected setDocument(html: MathDocument<N, T, D>) {
+  protected setDocument(html: MathDocument<DOM>) {
     if (html) {
       this.document = html;
       this.adaptor.document = html.document;
@@ -1017,30 +961,30 @@ export abstract class CommonOutputJax<
    * @param {OptionList} def   The properties to set on the HTML node
    * @param {(N|T)[]} content  Array of child nodes to set for the HTML node
    * @param {string} ns        The namespace for the element
-   * @returns {N}               The newly created DOM tree
+   * @returns {N<DOM>}         The newly created DOM tree
    */
   public html(
     type: string,
     def: OptionList = {},
-    content: (N | T)[] = [],
+    content: (N<DOM> | T<DOM>)[] = [],
     ns?: string
-  ): N {
+  ): N<DOM> {
     return this.adaptor.node(type, def, content, ns);
   }
 
   /**
    * @param {string} text  The text string for which to make a text node
    *
-   * @returns {T}  A text node with the given text
+   * @returns {T<DOM>}  A text node with the given text
    */
-  public text(text: string): T {
+  public text(text: string): T<DOM> {
     return this.adaptor.text(text);
   }
 
   /**
    * @param {number} m    A number to be shown with a fixed number of digits
    * @param {number=} n   The number of digits to use
-   * @returns {string}     The formatted number
+   * @returns {string}    The formatted number
    */
   public fixed(m: number, n: number = 3): string {
     if (Math.abs(m) < 0.0006) {
@@ -1060,9 +1004,9 @@ export abstract class CommonOutputJax<
    *
    * @param {string} text        The text to be displayed
    * @param {string} variant     The name of the variant for the text
-   * @returns {N}                 The text element containing the text
+   * @returns {N<DOM>}           The text element containing the text
    */
-  public abstract unknownText(text: string, variant: string): N;
+  public abstract unknownText(text: string, variant: string): N<DOM>;
 
   /**
    * Measure text from a specific font, or that isn't in the MathJax font
@@ -1070,7 +1014,7 @@ export abstract class CommonOutputJax<
    * @param {string} text        The text to measure
    * @param {string} variant     The variant for the text
    * @param {CssFontData} font   The family, italic, and bold data for explicit fonts
-   * @returns {UnknownBBox}       The width, height, and depth of the text (in ems)
+   * @returns {UnknownBBox}      The width, height, and depth of the text (in ems)
    */
   public measureText(
     text: string,
@@ -1089,14 +1033,14 @@ export abstract class CommonOutputJax<
    * Get the size of a text node, caching the result, and using
    *   a cached result, if there is one.
    *
-   * @param {N} text             The text element to measure
+   * @param {N<DOM>} text        The text element to measure
    * @param {string} chars       The string contained in the text node
    * @param {string} variant     The variant for the text
    * @param {CssFontData} font   The family, italic, and bold data for explicit fonts
-   * @returns {UnknownBBox}       The width, height and depth for the text
+   * @returns {UnknownBBox}      The width, height and depth for the text
    */
   public measureTextNodeWithCache(
-    text: N,
+    text: N<DOM>,
     chars: string,
     variant: string,
     font: CssFontData = ['', false, false]
@@ -1121,15 +1065,15 @@ export abstract class CommonOutputJax<
    * Measure the width of a text element by placing it in the page
    *  and looking up its size (fake the height and depth, since we can't measure that)
    *
-   * @param {N} text            The text element to measure
-   * @returns {UnknownBBox}      The width, height and depth for the text (in ems)
+   * @param {N<DOM>} text     The text element to measure
+   * @returns {UnknownBBox}   The width, height and depth for the text (in ems)
    */
-  public abstract measureTextNode(text: N): UnknownBBox;
+  public abstract measureTextNode(text: N<DOM>): UnknownBBox;
 
   /**
    * @param {CssFontData} font   The family, style, and weight for the given font
    * @param {StyleList} styles   The style object to add the font data to
-   * @returns {StyleList}         The modified (or initialized) style object
+   * @returns {StyleList}        The modified (or initialized) style object
    */
   public cssFontStyles(font: CssFontData, styles: StyleList = {}): StyleList {
     const [family, italic, bold] = font;
@@ -1141,7 +1085,7 @@ export abstract class CommonOutputJax<
 
   /**
    * @param {Styles} styles   The style object to query
-   * @returns {CssFontData}    The family, italic, and boolean values
+   * @returns {CssFontData}   The family, italic, and boolean values
    */
   public getFontData(styles: Styles): CssFontData {
     if (!styles) {

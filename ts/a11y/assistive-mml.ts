@@ -34,7 +34,7 @@ import { MmlNode } from '../core/MmlTree/MmlNode.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { expandable } from '../util/Options.js';
 import { StyleJson } from '../util/StyleJson.js';
-import { DOM, DOM_TYPES, N, T, D, Constructor } from '../types/Types.js';
+import { DOM_TYPES, N, Constructor } from '../types/Types.js';
 
 /*==========================================================================*/
 
@@ -60,46 +60,38 @@ newState('ASSISTIVEMML', 153);
 /**
  * The functions added to MathItem for assistive MathML
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface AssistiveMmlMathItem<N, T, D> extends AbstractMathItem<
-  N,
-  T,
-  D
-> {
+export interface AssistiveMmlMathItem<
+  DOM extends DOM_TYPES,
+> extends AbstractMathItem<DOM> {
   /**
    * @param {MathDocument} document  The document where assistive MathML is being added
    * @param {boolean} force          True to force assistive MathML even if enableAssistiveMml is false
    */
-  assistiveMml(document: MathDocument<N, T, D>, force?: boolean): void;
+  assistiveMml(document: MathDocument<DOM>, force?: boolean): void;
 }
 
 /**
  * The mixin for adding assistive MathML to MathItems
  *
- * @param {B} BaseMathItem      The MathItem class to be extended
+ * @param {B} BaseMathItem          The MathItem class to be extended
  * @returns {AssistiveMmlMathItem}  The augmented MathItem class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template B  The MathItem class to extend
+ * @template DOM   The DOM node types
+ * @template B     The MathItem class to extend
  */
 export function AssistiveMmlMathItemMixin<
-  N,
-  T,
-  D,
-  B extends Constructor<AbstractMathItem<N, T, D>>,
->(BaseMathItem: B): Constructor<AssistiveMmlMathItem<N, T, D>> & B {
+  DOM extends DOM_TYPES,
+  B extends Constructor<AbstractMathItem<DOM>>,
+>(BaseMathItem: B): Constructor<AssistiveMmlMathItem<DOM>> & B {
   return class extends BaseMathItem {
     /**
      * @param {MathDocument} document   The MathDocument for the MathItem
      * @param {boolean} force           True to force assistive MathML evenif enableAssistiveMml is false
      */
     public assistiveMml(
-      document: AssistiveMmlMathDocument<N, T, D>,
+      document: AssistiveMmlMathDocument<DOM>,
       force: boolean = false
     ) {
       if (this.state() >= STATE.ASSISTIVEMML) return;
@@ -133,7 +125,7 @@ export function AssistiveMmlMathItemMixin<
         // Hide the typeset math from assistive technology and append the MathML that is visually
         //   hidden from other users
         //
-        for (const child of adaptor.childNodes(this.typesetRoot) as N[]) {
+        for (const child of adaptor.childNodes(this.typesetRoot) as N<DOM>[]) {
           adaptor.setAttribute(child, 'aria-hidden', 'true');
         }
         adaptor.setStyle(this.typesetRoot, 'position', 'relative');
@@ -158,7 +150,7 @@ export type OPTIONS = {
  */
 export interface ASSISTIVEMML_OPTIONS<DOM extends DOM_TYPES>
   extends OPTIONS, DOCUMENT_OPTIONS<DOM> {
-  MathItem: Constructor<AssistiveMmlMathItem<N<DOM>, T<DOM>, D<DOM>>>;
+  MathItem: Constructor<AssistiveMmlMathItem<DOM>>;
 }
 
 /**
@@ -173,23 +165,19 @@ const options: OPTIONS = {
 /**
  * The functions added to MathDocument for assistive MathML
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface AssistiveMmlMathDocument<N, T, D> extends AbstractMathDocument<
-  N,
-  T,
-  D
-> {
+export interface AssistiveMmlMathDocument<
+  DOM extends DOM_TYPES,
+> extends AbstractMathDocument<DOM> {
   /**
    * @override
    */
-  options: ASSISTIVEMML_OPTIONS<DOM<N, T, D>>;
+  options: ASSISTIVEMML_OPTIONS<DOM>;
 
   /**
    * @param {MmlNode} node   The node to be serializes
-   * @returns {string}        The serialization of the node
+   * @returns {string}       The serialization of the node
    */
   toMML: (node: MmlNode) => string;
 
@@ -204,26 +192,18 @@ export interface AssistiveMmlMathDocument<N, T, D> extends AbstractMathDocument<
 /**
  * The mixin for adding assistive MathML to MathDocuments
  *
- * @param {B} BaseDocument         The MathDocument class to be extended
+ * @param {B} BaseDocument              The MathDocument class to be extended
  * @returns {AssistiveMmlMathDocument}  The Assistive MathML MathDocument class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template B  The MathDocument class to extend
+ * @template DOM   The DOM node types
+ * @template B     The MathDocument class to extend
  */
 export function AssistiveMmlMathDocumentMixin<
-  N,
-  T,
-  D,
-  B extends MathDocumentConstructor<
-    AbstractMathDocument<N, T, D>,
-    DOM<N, T, D>
-  >,
+  DOM extends DOM_TYPES,
+  B extends MathDocumentConstructor<AbstractMathDocument<DOM>, DOM>,
 >(
   BaseDocument: B
-): MathDocumentConstructor<AssistiveMmlMathDocument<N, T, D>, DOM<N, T, D>> &
-  B {
+): MathDocumentConstructor<AssistiveMmlMathDocument<DOM>, DOM> {
   return class BaseClass extends BaseDocument {
     /**
      * @override
@@ -234,13 +214,13 @@ export function AssistiveMmlMathDocumentMixin<
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         assistiveMml: [STATE.ASSISTIVEMML],
-      }) as RenderActions<N, T, D>,
+      }) as RenderActions<DOM>,
     };
 
     /**
      * @override
      */
-    options: ASSISTIVEMML_OPTIONS<DOM<N, T, D>>;
+    options: ASSISTIVEMML_OPTIONS<DOM>;
 
     /**
      * styles needed for the hidden MathML
@@ -295,10 +275,8 @@ export function AssistiveMmlMathDocumentMixin<
       }
       this.visitor = new LimitedMmlVisitor(this.mmlFactory);
       this.options.MathItem = AssistiveMmlMathItemMixin<
-        N,
-        T,
-        D,
-        Constructor<AbstractMathItem<N, T, D>>
+        DOM,
+        Constructor<AbstractMathItem<DOM>>
       >(this.options.MathItem);
       if ('addStyles' in this) {
         (this as any).addStyles(CLASS.assistiveStyles);
@@ -307,7 +285,7 @@ export function AssistiveMmlMathDocumentMixin<
 
     /**
      * @param {MmlNode} node   The node to be serializes
-     * @returns {string}        The serialization of the node
+     * @returns {string}       The serialization of the node
      */
     public toMML(node: MmlNode): string {
       return this.visitor.visitTree(node);
@@ -316,12 +294,12 @@ export function AssistiveMmlMathDocumentMixin<
     /**
      * Add assistive MathML to the MathItems in this MathDocument
      *
-     * @returns {AssistiveMmlMathDocument<N, T, D>} The assistive mml document.
+     * @returns {AssistiveMmlMathDocument<DOM>} The assistive mml document.
      */
     public assistiveMml(): this {
       if (!this.processed.isSet('assistive-mml')) {
         for (const math of this.math) {
-          (math as AssistiveMmlMathItem<N, T, D>).assistiveMml(this);
+          (math as AssistiveMmlMathItem<DOM>).assistiveMml(this);
         }
         this.processed.set('assistive-mml');
       }
@@ -347,20 +325,16 @@ export function AssistiveMmlMathDocumentMixin<
  * Add assitive MathML support a Handler instance
  *
  * @param {Handler} handler   The Handler instance to enhance
- * @returns {Handler}          The handler that was modified (for purposes of chainging extensions)
+ * @returns {Handler}         The handler that was modified (for purposes of chainging extensions)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export function AssistiveMmlHandler<N, T, D>(
-  handler: Handler<N, T, D>
-): Handler<N, T, D> {
+export function AssistiveMmlHandler<DOM extends DOM_TYPES>(
+  handler: Handler<DOM>
+): Handler<DOM> {
   handler.documentClass = AssistiveMmlMathDocumentMixin<
-    N,
-    T,
-    D,
-    MathDocumentConstructor<AbstractMathDocument<N, T, D>, DOM<N, T, D>>
+    DOM,
+    MathDocumentConstructor<AbstractMathDocument<DOM>, DOM>
   >(handler.documentClass);
   return handler;
 }

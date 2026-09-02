@@ -24,21 +24,20 @@
 import { mathjax } from '../mathjax.js';
 import { HTMLHandler } from './html/HTMLHandler.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
+import { DOM_TYPES } from '../types/Types.js';
 
 /**
  * Create the HTML handler object and register it with MathJax.
  *
- * @param {DOMAdaptor<N,T,D>} adaptor  The DOM adaptor to use with HTML
- * @returns {HTMLHandler}               The newly created handler
+ * @param {DOMAdaptor} adaptor   The DOM adaptor to use with HTML
+ * @returns {HTMLHandler}        The newly created handler
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export function RegisterHTMLHandler<N, T, D>(
-  adaptor: DOMAdaptor<N, T, D>
-): HTMLHandler<N, T, D> {
-  const handler = new HTMLHandler<N, T, D>(adaptor);
+export function RegisterHTMLHandler<DOM extends DOM_TYPES>(
+  adaptor: DOMAdaptor<DOM>
+): HTMLHandler<DOM> {
+  const handler = new HTMLHandler<DOM>(adaptor);
   mathjax.handlers.register(handler);
   return handler;
 }

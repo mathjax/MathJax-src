@@ -38,7 +38,7 @@ import * as LENGTHS from '../../util/lengths.js';
 import { Styles } from '../../util/Styles.js';
 import { StyleJson, StyleJsonSheet } from '../../util/StyleJson.js';
 import { OptionList, lookup } from '../../util/Options.js';
-import { CommonOutputJax } from '../common.js';
+import { CommonOutputJax, COMMON_FONT } from '../common.js';
 import { CommonWrapperFactory } from './WrapperFactory.js';
 import { CommonMo } from './Wrappers/mo.js';
 import { CommonMrow } from './Wrappers/mrow.js';
@@ -46,16 +46,8 @@ import { BBox } from '../../util/BBox.js';
 import { LineBBox } from './LineBBox.js';
 import { Linebreaks } from './LinebreakVisitor.js';
 import { LINEBREAKS as LINEBREAK_OPTIONS } from '../common.js';
-import {
-  FontData,
-  FontDataClass,
-  DelimiterData,
-  VariantData,
-  CharOptions,
-  CharDataArray,
-  DIRECTION,
-  NOSTRETCH,
-} from './FontData.js';
+import { CharDataArray, DIRECTION, NOSTRETCH } from './FontData.js';
+import { DOM_TYPES, N, T, NT } from '../../types/Types.js';
 import { Locale } from '../../util/Locale.js';
 import { COMPONENT } from '../../core/__locales__/Component.js';
 
@@ -123,68 +115,43 @@ export type StyleData = {
 /**
  * Generic CommonWrapper constructor
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export type CommonWrapperConstructor<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
   /* prettier-ignore */
-  CW extends CommonWrapper<
-    N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-  > = CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>
+    = CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
 > = new (factory: WF, node: MmlNode, parent?: WW) => CW;
 
 /*********************************************************/
 /**
  *  The CommonWrapper class interface
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export interface CommonWrapperClass<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
 > extends WrapperClass<MmlNode, MmlNodeClass, WW> {
   /**
    * The wrapper kind
@@ -240,32 +207,20 @@ export interface CommonWrapperClass<
 /**
  * The base CommonWrapper class
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export class CommonWrapper<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
 > extends AbstractWrapper<MmlNode, MmlNodeClass, WW> {
   /**
    * The wrapper kind
@@ -375,7 +330,7 @@ export class CommonWrapper<
   /**
    * The DOM tree generated for this wrapper
    */
-  public dom: N[] = null;
+  public dom: N<DOM>[] = null;
 
   /**
    * Styles that must be handled directly by the wrappers (mostly having to do with fonts)
@@ -419,12 +374,12 @@ export class CommonWrapper<
   /**
    * Delimiter data for stretching this node (NOSTRETCH means not yet determined)
    */
-  public stretch: DD = NOSTRETCH as DD;
+  public stretch: FONT['DD'] = NOSTRETCH;
 
   /**
    * Easy access to the font parameters
    */
-  public font: FD = null;
+  public font: FONT['FD'] = null;
 
   /**
    * Easy access to the output jax for this node
@@ -440,7 +395,7 @@ export class CommonWrapper<
    *
    * @returns {DOMAdaptor} The DOMAdaptor object
    */
-  get adaptor(): DOMAdaptor<N, T, D> {
+  get adaptor(): DOMAdaptor<DOM> {
     return this.factory.jax.adaptor;
   }
 
@@ -467,12 +422,7 @@ export class CommonWrapper<
    *
    * @returns {Linebreaks} The linebreak visitor
    */
-  /* prettier-ignore */
-  get linebreaks(): Linebreaks<
-    N, T, D,
-    CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-    WW, WF, WC, CC, VV, DD, FD, FC
-  > {
+  get linebreaks(): Linebreaks<DOM, FONT, JX, WW, WF, WC> {
     return this.jax.linebreaks;
   }
 
@@ -503,9 +453,7 @@ export class CommonWrapper<
         ? this.coreMO().embellishedBreakCount
         : node.arity < 0 &&
             !node.linebreakContainer &&
-            /* prettier-ignore */
-            (this.childNodes[0] as any as
-              CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>)
+            (this.childNodes[0] as any as CommonMrow<DOM, FONT, JX, WW, WF, WC>)
               .isStack
           ? this.childNodes[0].breakCount
           : 0;
@@ -1143,11 +1091,10 @@ export class CommonWrapper<
   /**
    * @returns {CommonMo}   The wrapper for this node's core <mo> node
    */
-  public coreMO(): CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+  public coreMO(): CommonMo<DOM, FONT, JX, WW, WF, WC> {
     /* prettier-ignore */
-    return this.jax.nodeMap.get(this.node.coreMO()) as any as CommonMo<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-    >;
+    return this.jax.nodeMap.get(this.node.coreMO()) as
+      any as CommonMo<DOM, FONT, JX, WW, WF, WC>;
   }
 
   /**
@@ -1196,7 +1143,7 @@ export class CommonWrapper<
    * @returns {boolean}         Whether the node can stretch in that direction
    */
   public canStretch(direction: string): boolean {
-    this.stretch = NOSTRETCH as DD;
+    this.stretch = NOSTRETCH;
     if (this.node.isEmbellished) {
       const core = this.core();
       if (core && core.node !== this.node) {
@@ -1393,7 +1340,9 @@ export class CommonWrapper<
       //    the Math Alphabet mapping for this character.
       //  Otherwise use the original code point, n.
       //
-      chars = chars.map((n) => (map[n] as CharDataArray<CC>)?.[3]?.smp || n);
+      chars = chars.map(
+        (n) => (map[n] as CharDataArray<FONT['CC']>)?.[3]?.smp || n
+      );
     }
     return chars;
   }
@@ -1441,9 +1390,7 @@ export class CommonWrapper<
    * @param {string} text   The text for the wrapped element
    * @returns {CommonMo}    The wrapped MmlMo node
    */
-  protected createMo(
-    text: string
-  ): CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+  protected createMo(text: string): CommonMo<DOM, FONT, JX, WW, WF, WC> {
     const mmlFactory = (this.node as AbstractMmlNode).factory;
     const textNode = (mmlFactory.create('text') as TextNode).setText(text);
     const mml = mmlFactory.create('mo', { stretchy: true }, [textNode]);
@@ -1451,7 +1398,7 @@ export class CommonWrapper<
     mml.parent = this.node.parent;
     const node = this.wrap(mml);
     node.parent = this as any as WW;
-    return node as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    return node as any as CommonMo<DOM, FONT, JX, WW, WF, WC>;
   }
 
   /**
@@ -1459,12 +1406,15 @@ export class CommonWrapper<
    * @param {number} n         The number of the character to look up
    * @returns {CharDataArray}  The full CharData object, with CharOptions guaranteed to be defined
    */
-  protected getVariantChar(variant: string, n: number): CharDataArray<CC> {
+  protected getVariantChar(
+    variant: string,
+    n: number
+  ): CharDataArray<FONT['CC']> {
     const char = this.font.getChar(variant, n) || [0, 0, 0, { unknown: true }];
     if (char.length === 3) {
       (char as any)[3] = {};
     }
-    return char as [number, number, number, CC];
+    return char as [number, number, number, FONT['CC']];
   }
 
   /*******************************************************************/
@@ -1478,7 +1428,11 @@ export class CommonWrapper<
    * @param {(N|T)[]} content  The child nodes for the created HTML node
    * @returns {N}              The generated HTML tree
    */
-  public html(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
+  public html(
+    type: string,
+    def: OptionList = {},
+    content: NT<DOM>[] = []
+  ): N<DOM> {
     return this.jax.html(type, def, content);
   }
 
@@ -1486,7 +1440,7 @@ export class CommonWrapper<
    * @param {string} text  The text from which to create an HTML text node
    * @returns {T}          The generated text node with the given text
    */
-  public text(text: string): T {
+  public text(text: string): T<DOM> {
     return this.jax.text(text);
   }
 }

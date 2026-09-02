@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
 import {
   CommonMroot,
   CommonMrootClass,
@@ -40,62 +33,47 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { ChtmlMsqrt, ChtmlMsqrtClass, ChtmlMsqrtNTD } from './msqrt.js';
 import { BBox } from '../../../util/BBox.js';
 import { MmlMroot } from '../../../core/MmlTree/MmlNodes/mroot.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlMroot interface for the CHTML Mroot wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlMrootNTD<N, T, D>
+export interface ChtmlMrootNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlMsqrtNTD<N, T, D>,
+    ChtmlMsqrtNTD<DOM>,
     CommonMroot<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {}
 
 /**
  * The ChtmlMrootClass interface for the CHTML Mroot wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlMrootClass<N, T, D>
+export interface ChtmlMrootClass<DOM extends DOM_TYPES>
   extends
-    ChtmlMsqrtClass<N, T, D>,
+    ChtmlMsqrtClass<DOM>,
     CommonMrootClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlMrootNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlMrootNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -103,27 +81,19 @@ export interface ChtmlMrootClass<N, T, D>
 /**
  * The ChtmlMroot wrapper class for the MmlMroot class
  */
-export const ChtmlMroot = (function <N, T, D>(): ChtmlMrootClass<N, T, D> {
+export const ChtmlMroot = (function (): ChtmlMrootClass<DOM> {
   const Base = CommonMrootMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlMrootClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlMrootClass<DOM>
   >(ChtmlMsqrt);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class ChtmlMroot extends Base implements ChtmlMrootNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class ChtmlMroot extends Base implements ChtmlMrootNTD<DOM> {
     /**
      * @override
      */
@@ -133,8 +103,8 @@ export const ChtmlMroot = (function <N, T, D>(): ChtmlMrootClass<N, T, D> {
      * @override
      */
     protected addRoot(
-      ROOT: N,
-      root: ChtmlWrapper<N, T, D>,
+      ROOT: N<DOM>,
+      root: ChtmlWrapper<DOM>,
       sbox: BBox,
       H: number
     ) {
@@ -145,11 +115,11 @@ export const ChtmlMroot = (function <N, T, D>(): ChtmlMrootClass<N, T, D> {
       adaptor.setStyle(ROOT, 'width', this.em(x));
       if (dx) {
         adaptor.setStyle(
-          adaptor.firstChild(ROOT) as N,
+          adaptor.firstChild(ROOT) as N<DOM>,
           'paddingLeft',
           this.em(dx)
         );
       }
     }
   };
-})<any, any, any>();
+})();

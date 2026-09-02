@@ -21,6 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import { DOM } from '../../types/Types.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from './Wrapper.js';
 import { ChtmlMath } from './Wrappers/math.js';
 import { ChtmlMi } from './Wrappers/mi.js';
@@ -59,7 +60,7 @@ import { ChtmlTextNode } from './Wrappers/TextNode.js';
 import { ChtmlHtmlNode } from './Wrappers/HtmlNode.js';
 
 export const ChtmlWrappers: {
-  [kind: string]: ChtmlWrapperClass<any, any, any>;
+  [kind: string]: ChtmlWrapperClass<DOM>;
 } = {
   [ChtmlMath.kind]: ChtmlMath,
   [ChtmlMrow.kind]: ChtmlMrow,

@@ -26,17 +26,16 @@ import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { PropertyList } from '../../core/Tree/Node.js';
 import { SerializedMmlVisitor } from '../../core/MmlTree/SerializedMmlVisitor.js';
 import { OptionList, userOptions } from '../../util/Options.js';
+import { DOM_TYPES } from '../../types/Types.js';
 
 /*==========================================================================*/
 
 /**
  * The visitor to serialize MathML
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
+export class MmlVisitor<DOM extends DOM_TYPES> extends SerializedMmlVisitor {
   /**
    * The options controlling the serialization
    */
@@ -50,7 +49,7 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
   /**
    * The MathItem currently being processed
    */
-  public mathItem: MathItem<N, T, D> = null;
+  public mathItem: MathItem<DOM> = null;
 
   /**
    * @param {MmlNode} node         The internal MathML node to serialize
@@ -60,7 +59,7 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
    */
   public visitTree(
     node: MmlNode,
-    math: MathItem<N, T, D> = null,
+    math: MathItem<DOM> = null,
     options: OptionList = {}
   ) {
     this.mathItem = math;

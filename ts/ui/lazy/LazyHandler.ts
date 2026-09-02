@@ -33,11 +33,10 @@ import {
 } from '../../handlers/html/HTMLDocument.js';
 import { HTMLMathItem } from '../../handlers/html/HTMLMathItem.js';
 import { HTMLHandler } from '../../handlers/html/HTMLHandler.js';
-// import { EnrichedMathItem } from '../../a11y/semantic-enrich.js';
 import { SpeechMathItem } from '../../a11y/speech.js';
 import { expandable } from '../../util/Options.js';
 import { StyleJson } from '../../util/StyleJson.js';
-import { DOM, DOM_TYPES, N, T, D, Constructor } from '../../types/Types.js';
+import { DOM, DOM_TYPES, N, Constructor } from '../../types/Types.js';
 
 /**
  * Add the needed function to the window object.
@@ -59,8 +58,10 @@ export type LazySet = Set<string>;
 
 /**
  * The data to map expression marker IDs back to their MathItem.
+ *
+ * @template DOM   The DOM node types
  */
-export class LazyList<N, T, D> {
+export class LazyList<DOM extends DOM_TYPES> {
   /**
    * The next ID to use
    */
@@ -69,15 +70,15 @@ export class LazyList<N, T, D> {
   /**
    * The map from IDs to MathItems
    */
-  protected items: Map<string, LazyMathItem<N, T, D>> = new Map();
+  protected items: Map<string, LazyMathItem<DOM>> = new Map();
 
   /**
    * Add a MathItem to the list and return its ID
    *
    * @param {LazyMathItem} math   The item to add
-   * @returns {string}             The id for the newly added item
+   * @returns {string}            The id for the newly added item
    */
-  public add(math: LazyMathItem<N, T, D>): string {
+  public add(math: LazyMathItem<DOM>): string {
     const id = String(this.id++);
     this.items.set(id, math);
     return id;
@@ -86,10 +87,10 @@ export class LazyList<N, T, D> {
   /**
    * Get the MathItem with the given ID
    *
-   * @param {string} id       The ID of the MathItem to get
+   * @param {string} id        The ID of the MathItem to get
    * @returns {LazyMathItem}   The MathItem having that ID (if any)
    */
-  public get(id: string): LazyMathItem<N, T, D> {
+  public get(id: string): LazyMathItem<DOM> {
     return this.items.get(id);
   }
 
@@ -113,17 +114,17 @@ newState('LAZYALWAYS', STATE.FINDMATH + 3);
  */
 export const LAZYID = 'data-mjx-lazy';
 
-export type HTMLSpeechItem<N, T, D> = HTMLMathItem<N, T, D> &
-  SpeechMathItem<N, T, D>;
+export type HTMLSpeechItem<DOM extends DOM_TYPES> = HTMLMathItem<DOM> &
+  SpeechMathItem<DOM>;
 
 /**
  * The properties added to MathItem for lazy typesetting
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface LazyMathItem<N, T, D> extends HTMLSpeechItem<N, T, D> {
+export interface LazyMathItem<
+  DOM extends DOM_TYPES,
+> extends HTMLSpeechItem<DOM> {
   /**
    * True when the MathItem needs to be lazy compiled
    */
@@ -137,7 +138,7 @@ export interface LazyMathItem<N, T, D> extends HTMLSpeechItem<N, T, D> {
   /**
    * The DOM node used to mark the location of the math to be lazy typeset
    */
-  lazyMarker: N;
+  lazyMarker: N<DOM>;
 
   /**
    * True if this item is a TeX MathItem
@@ -148,20 +149,16 @@ export interface LazyMathItem<N, T, D> extends HTMLSpeechItem<N, T, D> {
 /**
  * The mixin for adding lazy typesetting to MathItems
  *
- * @param {B} BaseMathItem      The MathItem class to be extended
- * @returns {LazyMathItem}  The augmented MathItem class
+ * @param {B} BaseMathItem   The MathItem class to be extended
+ * @returns {LazyMathItem}   The augmented MathItem class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template B  The MathItem class to extend
+ * @template DOM   The DOM node types
+ * @template B     The MathItem class to extend
  */
 export function LazyMathItemMixin<
-  N,
-  T,
-  D,
-  B extends Constructor<HTMLSpeechItem<N, T, D>>,
->(BaseMathItem: B): Constructor<LazyMathItem<N, T, D>> & B {
+  DOM extends DOM_TYPES,
+  B extends Constructor<HTMLSpeechItem<DOM>>,
+>(BaseMathItem: B): Constructor<LazyMathItem<DOM>> & B {
   return class extends BaseMathItem {
     /**
      * True when this item should be skipped during compilation
@@ -179,7 +176,7 @@ export function LazyMathItemMixin<
     /**
      * The marker DOM node for this item.
      */
-    public lazyMarker: N;
+    public lazyMarker: N<DOM>;
 
     /**
      * True if this is a TeX expression.
@@ -209,7 +206,7 @@ export function LazyMathItemMixin<
      *
      * @override
      */
-    public compile(document: LazyMathDocument<N, T, D>) {
+    public compile(document: LazyMathDocument<DOM>) {
       if (!this.lazyCompile) {
         super.compile(document);
         return;
@@ -238,7 +235,7 @@ export function LazyMathItemMixin<
      *
      * @override
      */
-    public typeset(document: LazyMathDocument<N, T, D>) {
+    public typeset(document: LazyMathDocument<DOM>) {
       if (!this.lazyTypeset) {
         super.typeset(document);
         return;
@@ -262,7 +259,7 @@ export function LazyMathItemMixin<
      *
      * @override
      */
-    public updateDocument(document: LazyMathDocument<N, T, D>) {
+    public updateDocument(document: LazyMathDocument<DOM>) {
       super.updateDocument(document);
       if (this.lazyTypeset) {
         document.lazyObserver.observe(this.lazyMarker as any as Element);
@@ -274,7 +271,7 @@ export function LazyMathItemMixin<
      *
      * @override
      */
-    public attachSpeech = (document: LazyMathDocument<N, T, D>) => {
+    public attachSpeech = (document: LazyMathDocument<DOM>) => {
       if (this.state() >= STATE.ATTACHSPEECH) return;
       if (!this.lazyTypeset) {
         super.attachSpeech?.(document);
@@ -299,7 +296,7 @@ export type OPTIONS<DOM extends DOM_TYPES> = {
  */
 export interface LAZY_OPTIONS<DOM extends DOM_TYPES>
   extends OPTIONS<DOM>, HTMLDOCUMENT_OPTIONS<DOM> {
-  MathItem: Constructor<LazyMathItem<N<DOM>, T<DOM>, D<DOM>>>;
+  MathItem: Constructor<LazyMathItem<DOM>>;
 }
 
 /**
@@ -315,15 +312,15 @@ const options: OPTIONS<DOM> = {
 /**
  * The properties added to MathDocument for lazy typesetting
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface LazyMathDocument<N, T, D> extends HTMLDocument<N, T, D> {
+export interface LazyMathDocument<
+  DOM extends DOM_TYPES,
+> extends HTMLDocument<DOM> {
   /**
    * @override
    */
-  options: LAZY_OPTIONS<DOM<N, T, D>>;
+  options: LAZY_OPTIONS<DOM>;
 
   /**
    * The Intersection Observer used to track the appearance of the expression markers
@@ -333,12 +330,12 @@ export interface LazyMathDocument<N, T, D> extends HTMLDocument<N, T, D> {
   /**
    * The mapping of markers to MathItems
    */
-  lazyList: LazyList<N, T, D>;
+  lazyList: LazyList<DOM>;
 
   /**
    * The containers whose contents should always be typeset
    */
-  lazyAlwaysContainers: N[];
+  lazyAlwaysContainers: N<DOM>[];
 
   /**
    * A function that will typeset all the remaining expressions (e.g., for printing)
@@ -354,22 +351,16 @@ export interface LazyMathDocument<N, T, D> extends HTMLDocument<N, T, D> {
 /**
  * The mixin for adding lazy typesetting to MathDocuments
  *
- * @param {B} BaseDocument        The MathDocument class to be extended
- * @returns {LazyMathDocument}     The Lazy MathDocument class
+ * @param {B} BaseDocument       The MathDocument class to be extended
+ * @returns {LazyMathDocument}   The Lazy MathDocument class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template B  The MathDocument class to extend
+ * @template DOM   The DOM node types
+ * @template B     The MathDocument class to extend
  */
 export function LazyMathDocumentMixin<
-  N,
-  T,
-  D,
-  B extends MathDocumentConstructor<HTMLDocument<N, T, D>, DOM<N, T, D>>,
->(
-  BaseDocument: B
-): MathDocumentConstructor<HTMLDocument<N, T, D>, DOM<N, T, D>> & B {
+  DOM extends DOM_TYPES,
+  B extends MathDocumentConstructor<HTMLDocument<DOM>, DOM>,
+>(BaseDocument: B): MathDocumentConstructor<HTMLDocument<DOM>, DOM> & B {
   return class BaseClass extends BaseDocument {
     /**
      * @override
@@ -377,7 +368,7 @@ export function LazyMathDocumentMixin<
     public static OPTIONS = {
       ...BaseDocument.OPTIONS,
       ...options,
-      renderActions: expandable<RenderActions<any, any, any>>({
+      renderActions: expandable<RenderActions<DOM>>({
         ...BaseDocument.OPTIONS.renderActions,
         lazyAlways: [STATE.LAZYALWAYS, 'lazyAlways', '', false],
       }),
@@ -386,7 +377,7 @@ export function LazyMathDocumentMixin<
     /**
      * @override
      */
-    public options: LAZY_OPTIONS<DOM<N, T, D>>;
+    public options: LAZY_OPTIONS<DOM>;
 
     /**
      * The Intersection Observer used to track the appearance of the expression markers
@@ -396,12 +387,12 @@ export function LazyMathDocumentMixin<
     /**
      * The mapping of markers to MathItems
      */
-    public lazyList: LazyList<N, T, D>;
+    public lazyList: LazyList<DOM>;
 
     /**
      * The containers whose contents should always be typeset
      */
-    public lazyAlwaysContainers: N[] = null;
+    public lazyAlwaysContainers: N<DOM>[] = null;
 
     /**
      * Index of last container where math was found in lazyAlwaysContainers
@@ -459,10 +450,8 @@ export function LazyMathDocumentMixin<
       //  Use the LazyMathItem for math items
       //
       this.options.MathItem = LazyMathItemMixin<
-        N,
-        T,
-        D,
-        Constructor<HTMLMathItem<N, T, D> & SpeechMathItem<N, T, D>>
+        DOM,
+        Constructor<HTMLMathItem<DOM> & SpeechMathItem<DOM>>
       >(this.options.MathItem);
       //
       //  Allocate a process bit for lazyAlways
@@ -478,7 +467,7 @@ export function LazyMathDocumentMixin<
         this.lazyObserve.bind(this),
         { rootMargin: this.options.lazyMargin }
       );
-      this.lazyList = new LazyList<N, T, D>();
+      this.lazyList = new LazyList<DOM>();
       const callback = this.lazyHandleSet.bind(this);
       this.lazyProcessSet =
         window && window.requestIdleCallback
@@ -507,7 +496,7 @@ export function LazyMathDocumentMixin<
       if (!this.lazyAlwaysContainers || this.processed.isSet('lazyAlways'))
         return;
       for (const item of this.math) {
-        const math = item as LazyMathItem<N, T, D>;
+        const math = item as LazyMathItem<DOM>;
         if (math.lazyTypeset && this.lazyIsAlways(math)) {
           math.lazyCompile = math.lazyTypeset = false;
         }
@@ -520,10 +509,10 @@ export function LazyMathDocumentMixin<
      *  (start looking using the last container where math was found,
      *   in case the next math is in the same container).
      *
-     * @param {LazyMathItem<N,T,D>} math   The MathItem to test
-     * @returns {boolean}   True if one of the document's containers holds the MathItem
+     * @param {LazyMathItem<DOM>} math   The MathItem to test
+     * @returns {boolean}                True if one of the document's containers holds the MathItem
      */
-    protected lazyIsAlways(math: LazyMathItem<N, T, D>): boolean {
+    protected lazyIsAlways(math: LazyMathItem<DOM>): boolean {
       if (math.state() < STATE.LAZYALWAYS) {
         math.state(STATE.LAZYALWAYS);
         const node = math.start.node;
@@ -566,7 +555,7 @@ export function LazyMathDocumentMixin<
       // Loop through all the math...
       //
       for (const item of this.math) {
-        const math = item as LazyMathItem<N, T, D>;
+        const math = item as LazyMathItem<DOM>;
         //
         // If it is not lazy compile or typeset, skip it.
         //
@@ -638,7 +627,10 @@ export function LazyMathDocumentMixin<
      */
     protected lazyObserve(entries: IntersectionObserverEntry[]) {
       for (const entry of entries) {
-        const id = this.adaptor.getAttribute(entry.target as any as N, LAZYID);
+        const id = this.adaptor.getAttribute(
+          entry.target as any as N<DOM>,
+          LAZYID
+        );
         const math = this.lazyList.get(id);
         if (!math) continue;
         if (!entry.isIntersecting) {
@@ -680,7 +672,7 @@ export function LazyMathDocumentMixin<
      *
      * @param {LazySet} set    The set of math items to update
      * @param {number} state   The state needed for the items
-     * @returns {number}        The updated state based on the items
+     * @returns {number}       The updated state based on the items
      */
     protected resetStates(set: LazySet, state: number): number {
       for (const id of set.values()) {
@@ -706,14 +698,14 @@ export function LazyMathDocumentMixin<
      * Mark any TeX items (earlier than the ones in the set) to be compiled.
      *
      * @param {LazySet} set   The set of items that are newly visible
-     * @returns {boolean}      True if there are TeX items to be typeset
+     * @returns {boolean}     True if there are TeX items to be typeset
      */
     protected compileEarlierItems(set: LazySet): boolean {
       const math = this.earliestTex(set);
       if (!math) return false;
       let compile = false;
       for (const item of this.math) {
-        const earlier = item as LazyMathItem<N, T, D>;
+        const earlier = item as LazyMathItem<DOM>;
         if (earlier === math || !earlier?.lazyCompile || !earlier.lazyTex) {
           break;
         }
@@ -730,10 +722,10 @@ export function LazyMathDocumentMixin<
     /**
      * Find the earliest TeX math item in the set, if any.
      *
-     * @param {LazySet} set     The set of newly visble math items
+     * @param {LazySet} set      The set of newly visble math items
      * @returns {LazyMathItem}   The earliest TeX math item in the set, if any
      */
-    protected earliestTex(set: LazySet): LazyMathItem<N, T, D> {
+    protected earliestTex(set: LazySet): LazyMathItem<DOM> {
       let min: number = null;
       let minMath = null;
       for (const id of set.values()) {
@@ -752,12 +744,10 @@ export function LazyMathDocumentMixin<
      *
      * @override
      */
-    public clearMathItemsWithin(containers: ContainerList<N>) {
-      const items = super.clearMathItemsWithin(containers) as LazyMathItem<
-        N,
-        T,
-        D
-      >[];
+    public clearMathItemsWithin(containers: ContainerList<DOM>) {
+      const items = super.clearMathItemsWithin(
+        containers
+      ) as LazyMathItem<DOM>[];
       for (const math of items) {
         const marker = math.lazyMarker;
         if (marker) {
@@ -795,25 +785,21 @@ export function LazyMathDocumentMixin<
  * Add lazy typesetting support to a Handler instance
  *
  * @param {HTMLHandler} handler   The Handler instance to enhance
- * @returns {HTMLHandler}          The handler that was modified (for purposes of chaining extensions)
+ * @returns {HTMLHandler}         The handler that was modified (for purposes of chaining extensions)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export function LazyHandler<N, T, D>(
-  handler: HTMLHandler<N, T, D>
-): HTMLHandler<N, T, D> {
+export function LazyHandler<DOM extends DOM_TYPES>(
+  handler: HTMLHandler<DOM>
+): HTMLHandler<DOM> {
   //
   // Only update the document class if we can handle IntersectionObservers
   //
   if (typeof IntersectionObserver !== 'undefined') {
     handler.documentClass = LazyMathDocumentMixin<
-      N,
-      T,
-      D,
-      MathDocumentConstructor<HTMLDocument<N, T, D>>
-    >(handler.documentClass) as typeof HTMLDocument;
+      DOM,
+      MathDocumentConstructor<HTMLDocument<DOM>, DOM>
+    >(handler.documentClass as any);
   }
   return handler;
 }

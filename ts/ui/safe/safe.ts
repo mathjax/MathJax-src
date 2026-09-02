@@ -29,20 +29,22 @@ import { OptionList, expandable } from '../../util/Options.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { SafeMethods } from './SafeMethods.js';
 import type { OPTIONS, SAFE_LIST, LENGTH_LIST } from './SafeHandler.js';
+import type { DOM_TYPES } from '../../types/Types.js';
 
 /**
  * Function type for filtering attributes
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export type FilterFunction<N, T, D> = (
-  safe: Safe<N, T, D>,
+export type FilterFunction<DOM extends DOM_TYPES> = (
+  safe: Safe<DOM>,
   value: Property,
   ...args: any[]
 ) => Property;
 
+/**
+ * The default options for the safe extension
+ */
 const options: OPTIONS['safeOptions'] = {
   allow: {
     //
@@ -144,11 +146,9 @@ const options: OPTIONS['safeOptions'] = {
 /**
  * The Safe object for sanitizing the internal MathML representation of an expression
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class Safe<N, T, D> {
+export class Safe<DOM extends DOM_TYPES> {
   /**
    * The options controlling the handling of the safe extension
    */
@@ -189,20 +189,20 @@ export class Safe<N, T, D> {
   /**
    * The DOM adaptor from the document
    */
-  public adaptor: DOMAdaptor<N, T, D>;
+  public adaptor: DOMAdaptor<DOM>;
 
   /**
    * The methods for filtering the MathML attributes
    */
-  public filterMethods: { [name: string]: FilterFunction<N, T, D> } = {
+  public filterMethods: { [name: string]: FilterFunction<DOM> } = {
     ...SafeMethods,
   };
 
   /**
-   * @param {MathDocument<N,T,D>} document  The MathDocument we are sanitizing
-   * @param {OptionList} options            The safeOptions from the document
+   * @param {MathDocument} document   The MathDocument we are sanitizing
+   * @param {OptionList} options      The safeOptions from the document
    */
-  constructor(document: MathDocument<N, T, D>, options: OptionList) {
+  constructor(document: MathDocument<DOM>, options: OptionList) {
     this.adaptor = document.adaptor;
     this.options = options;
     this.allow = this.options.allow;
@@ -211,15 +211,15 @@ export class Safe<N, T, D> {
   /**
    * Sanitize a MathItem's root MathML tree
    *
-   * @param {MathItem<N,T,D>} math           The MathItem to sanitize
-   * @param {MathDocument<N,T,D>} document   The MathDocument in which it lives
+   * @param {MathItem} math           The MathItem to sanitize
+   * @param {MathDocument} document   The MathDocument in which it lives
    */
-  public sanitize(math: MathItem<N, T, D>, document: MathDocument<N, T, D>) {
+  public sanitize(math: MathItem<DOM>, document: MathDocument<DOM>) {
     try {
       math.root.walkTree(this.sanitizeNode.bind(this));
     } catch (err) {
       document.options.compileError(
-        document as AbstractMathDocument<N, T, D>,
+        document as AbstractMathDocument<DOM>,
         math,
         err
       );
@@ -256,8 +256,8 @@ export class Safe<N, T, D> {
   /**
    * Sanitize a MathML input attribute
    *
-   * @param {string} id      The name of the attribute
-   * @param {string} value   The value of the attribute
+   * @param {string} id       The name of the attribute
+   * @param {string} value    The value of the attribute
    * @returns {string|null}   The sanitized value
    */
   public mmlAttribute(id: string, value: string): string | null {
@@ -283,7 +283,7 @@ export class Safe<N, T, D> {
    * Sanitize a list of class names
    *
    * @param {string[]} list   The list of class names
-   * @returns {string[]}       The sanitized list
+   * @returns {string[]}      The sanitized list
    */
   public mmlClassList(list: string[]): string[] {
     return list

@@ -84,10 +84,10 @@ export interface WrapperClass<
   W extends Wrapper<N, C, W>,
 > {
   /**
-   * @param {WrapperFactory} factory  The factory used to create more wrappers
-   * @param {N} node  The node to be wrapped
-   * @param {any[]} args  Any additional arguments needed when creating the wrapper
-   * @returns {W}  The wrapped node
+   * @param {WrapperFactory} factory   The factory used to create more wrappers
+   * @param {N} node                   The node to be wrapped
+   * @param {any[]} args               Any additional arguments needed when creating the wrapper
+   * @returns {W}                      The wrapped node
    */
   new (
     factory: WrapperFactory<N, C, W, WrapperClass<N, C, W>>,

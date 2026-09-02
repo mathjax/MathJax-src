@@ -37,18 +37,22 @@ import {
 } from './semantic-enrich.js';
 import { ComplexityVisitor } from './complexity/visitor.js';
 import { selectOptionsFromKeys, expandable } from '../util/Options.js';
-import { DOM, DOM_TYPES, N, T, D, Constructor } from '../types/Types.js';
+import { DOM_TYPES, Constructor } from '../types/Types.js';
 
 /**
  * Shorthands for constructors
  */
-export type EMItemC<N, T, D> = Constructor<EnrichedMathItem<N, T, D>>;
-export type CMItemC<N, T, D> = Constructor<ComplexityMathItem<N, T, D>>;
-export type EMDocC<N, T, D> = MathDocumentConstructor<
-  EnrichedMathDocument<N, T, D>,
-  DOM<N, T, D>
+export type EMItemC<DOM extends DOM_TYPES> = Constructor<EnrichedMathItem<DOM>>;
+export type CMItemC<DOM extends DOM_TYPES> = Constructor<
+  ComplexityMathItem<DOM>
 >;
-export type CMDocC<N, T, D> = Constructor<ComplexityMathDocument<N, T, D>>;
+export type EMDocC<DOM extends DOM_TYPES> = MathDocumentConstructor<
+  EnrichedMathDocument<DOM>,
+  DOM
+>;
+export type CMDocC<DOM extends DOM_TYPES> = Constructor<
+  ComplexityMathDocument<DOM>
+>;
 
 /*==========================================================================*/
 
@@ -60,11 +64,11 @@ newState('COMPLEXITY', 40);
 /**
  * The functions added to MathItem for complexity
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ComplexityMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
+export interface ComplexityMathItem<
+  DOM extends DOM_TYPES,
+> extends EnrichedMathItem<DOM> {
   /**
    * The starting collapse ID for this expression
    */
@@ -74,25 +78,26 @@ export interface ComplexityMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
    * @param {ComplexityMathDocument} document   The MathDocument for the MathItem
    * @param {boolean} force                     True to force the computation even if enableComplexity is false
    */
-  complexity(document: ComplexityMathDocument<N, T, D>, force?: boolean): void;
+  complexity(document: ComplexityMathDocument<DOM>, force?: boolean): void;
 }
 
 /**
  * The mixin for adding complexity to MathItems
  *
- * @param {B} BaseMathItem       The MathItem class to be extended
- * @param {(math: ComplexityMathItem<N,T,D>) => void} computeComplexity Method of complexity computation.
- * @returns {ComplexityMathItem}  The complexity MathItem class
+ * @param {B} BaseMathItem                                         The MathItem class to be extended
+ * @param {(math: ComplexityMathItem) => void} computeComplexity   Method of complexity computation.
+ * @returns {ComplexityMathItem}                                   The complexity MathItem class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template B  The MathItem class to extend
+ * @template DOM   The DOM node types
+ * @template B     The MathItem class to extend
  */
-export function ComplexityMathItemMixin<N, T, D, B extends EMItemC<N, T, D>>(
+export function ComplexityMathItemMixin<
+  DOM extends DOM_TYPES,
+  B extends EMItemC<DOM>,
+>(
   BaseMathItem: B,
-  computeComplexity: (math: ComplexityMathItem<N, T, D>) => void
-): CMItemC<N, T, D> & B {
+  computeComplexity: (math: ComplexityMathItem<DOM>) => void
+): CMItemC<DOM> & B {
   return class extends BaseMathItem {
     /**
      * The starting collapse ID for this expression
@@ -104,7 +109,7 @@ export function ComplexityMathItemMixin<N, T, D, B extends EMItemC<N, T, D>>(
      * @param {boolean} force                     True to force the computation even if enableComplexity is false
      */
     public complexity(
-      document: ComplexityMathDocument<N, T, D>,
+      document: ComplexityMathDocument<DOM>,
       force: boolean = false
     ) {
       if (this.state() >= STATE.COMPLEXITY) return;
@@ -132,7 +137,7 @@ export type OPTIONS = {
  */
 export interface COMPLEXITY_OPTIONS<DOM extends DOM_TYPES>
   extends OPTIONS, ENRICH_OPTIONS<DOM> {
-  MathItem: Constructor<ComplexityMathItem<N<DOM>, T<DOM>, D<DOM>>>;
+  MathItem: Constructor<ComplexityMathItem<DOM>>;
 }
 
 /**
@@ -148,19 +153,15 @@ const options: OPTIONS = {
 /**
  * The functions added to MathDocument for complexity
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ComplexityMathDocument<N, T, D> extends EnrichedMathDocument<
-  N,
-  T,
-  D
-> {
+export interface ComplexityMathDocument<
+  DOM extends DOM_TYPES,
+> extends EnrichedMathDocument<DOM> {
   /**
    * @override
    */
-  options: COMPLEXITY_OPTIONS<DOM<N, T, D>>;
+  options: COMPLEXITY_OPTIONS<DOM>;
 
   /**
    * Perform complexity computations on the MathItems in the MathDocument
@@ -173,17 +174,16 @@ export interface ComplexityMathDocument<N, T, D> extends EnrichedMathDocument<
 /**
  * The mixin for adding complexity to MathDocuments
  *
- * @param {B} BaseDocument     The MathDocument class to be extended
- * @returns {EnrichedMathDocument}  The enriched MathDocument class
+ * @param {B} BaseDocument           The MathDocument class to be extended
+ * @returns {EnrichedMathDocument}   The enriched MathDocument class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template B  The MathDocument class to extend
+ * @template DOM   The DOM node types
+ * @template B     The MathDocument class to extend
  */
-export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
-  BaseDocument: B
-): CMDocC<N, T, D> & B {
+export function ComplexityMathDocumentMixin<
+  DOM extends DOM_TYPES,
+  B extends EMDocC<DOM>,
+>(BaseDocument: B): CMDocC<DOM> & B {
   return class extends BaseDocument {
     /**
      * The options for this type of document
@@ -192,7 +192,7 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
       ...BaseDocument.OPTIONS,
       ...ComplexityVisitor.OPTIONS,
       ...options,
-      renderActions: expandable<RenderActions<N, T, D>>({
+      renderActions: expandable<RenderActions<DOM>>({
         ...BaseDocument.OPTIONS.renderActions,
         complexity: [STATE.COMPLEXITY],
       }),
@@ -201,7 +201,7 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
     /**
      * @override
      */
-    public options: COMPLEXITY_OPTIONS<DOM<N, T, D>>;
+    public options: COMPLEXITY_OPTIONS<DOM>;
 
     /**
      * The visitor that computes complexities
@@ -228,7 +228,7 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
         this.mmlFactory,
         visitorOptions
       );
-      const computeComplexity = (math: ComplexityMathItem<N, T, D>) => {
+      const computeComplexity = (math: ComplexityMathItem<DOM>) => {
         math.parseSemanticNodes();
         math.initialID = this.complexityVisitor.visitTree(
           math.root,
@@ -236,12 +236,10 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
           math.semanticNodes
         );
       };
-      this.options.MathItem = ComplexityMathItemMixin<
-        N,
-        T,
-        D,
-        EMItemC<N, T, D>
-      >(this.options.MathItem, computeComplexity);
+      this.options.MathItem = ComplexityMathItemMixin<DOM, EMItemC<DOM>>(
+        this.options.MathItem,
+        computeComplexity
+      );
     }
 
     /**
@@ -253,7 +251,7 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
       if (!this.processed.isSet('complexity')) {
         if (this.options.enableComplexity) {
           for (const math of this.math) {
-            (math as ComplexityMathItem<N, T, D>).complexity(this);
+            (math as ComplexityMathItem<DOM>).complexity(this);
           }
         }
         this.processed.set('complexity');
@@ -283,19 +281,17 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
  * @param {MathML} MmlJax     The MathML input jax to use for reading the enriched MathML
  * @returns {Handler}          The handler that was modified (for purposes of chainging extensions)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export function ComplexityHandler<N, T, D>(
-  handler: Handler<N, T, D>,
-  MmlJax: MathML<N, T, D> = null
-): Handler<N, T, D> {
+export function ComplexityHandler<DOM extends DOM_TYPES>(
+  handler: Handler<DOM>,
+  MmlJax: MathML<DOM> = null
+): Handler<DOM> {
   if (!handler.documentClass.prototype.enrich && MmlJax) {
     handler = EnrichHandler(handler, MmlJax);
   }
-  handler.documentClass = ComplexityMathDocumentMixin<N, T, D, EMDocC<N, T, D>>(
-    handler.documentClass as any
+  handler.documentClass = ComplexityMathDocumentMixin<DOM, EMDocC<DOM>>(
+    handler.documentClass as EMDocC<DOM>
   );
   return handler;
 }

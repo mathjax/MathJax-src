@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { SVG } from '../../svg.js';
+import { SVG, SVG_FONT } from '../../svg.js';
 import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
-import {
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass,
-} from '../FontData.js';
 import {
   CommonMrow,
   CommonMrowClass,
@@ -44,94 +37,67 @@ import {
   MmlInferredMrow,
 } from '../../../core/MmlTree/MmlNodes/mrow.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The SvgMrow interface for the SVG Mrow wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMrowNTD<N, T, D>
+export interface SvgMrowNTD<DOM extends DOM_TYPES>
   extends
-    SvgWrapper<N, T, D>,
+    SvgWrapper<DOM>,
     CommonMrow<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgMrowClass interface for the SVG Mrow wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgMrowClass<N, T, D>
+export interface SvgMrowClass<DOM extends DOM_TYPES>
   extends
-    SvgWrapperClass<N, T, D>,
+    SvgWrapperClass<DOM>,
     CommonMrowClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapperFactory<N, T, D>,
+    factory: SvgWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgMrowNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgMrowNTD<DOM>;
 }
 
 /*****************************************************************/
 
 /**
  * The SvgMrow wrapper for the MmlMrow type
- *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  */
-export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
+export const SvgMrow = (function (): SvgMrowClass<DOM> {
   const Base = CommonMrowMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgMrowClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgMrowClass<DOM>
   >(SvgWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class SvgMrow extends Base implements SvgMrowNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgMrow extends Base implements SvgMrowNTD<DOM> {
     /**
      * @override
      */
@@ -146,7 +112,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parents: N[]) {
+    public toSVG(parents: N<DOM>[]) {
       this.getBBox();
       const n = (this.linebreakCount = this.isStack ? 0 : this.breakCount);
       parents =
@@ -163,12 +129,12 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
      * @param {N[]} parents  The HTML nodes in which to place the lines
      * @returns {N[]} The augmented nodes array
      */
-    protected getSvgNodes(parents: N[]) {
+    protected getSvgNodes(parents: N<DOM>[]): N<DOM>[] {
       if (this.dh) {
         const g = this.svg('g', {
           transform: `translate(0 ${this.fixed(this.dh)})`,
         });
-        parents = [this.adaptor.append(parents[0], g) as N];
+        parents = [this.adaptor.append(parents[0], g) as N<DOM>];
       }
       this.dom = parents;
       return parents;
@@ -177,7 +143,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
     /**
      * @param {N[]} parents  The HTML nodes in which to place the lines
      */
-    protected placeLines(parents: N[]) {
+    protected placeLines(parents: N<DOM>[]) {
       const lines = this.lineBBox;
       const display = this.jax.math.display;
       let y = this.dh;
@@ -194,7 +160,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
     /**
      * @override
      */
-    protected createSvgNodes(parents: N[]): N[] {
+    protected createSvgNodes(parents: N<DOM>[]): N<DOM>[] {
       const n = this.linebreakCount;
       if (!n) return super.createSvgNodes(parents);
       //
@@ -204,22 +170,22 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
       const def = this.node.isInferred
         ? { 'data-mjx-linestack': true }
         : { 'data-mml-node': this.node.kind };
-      this.dom = [adaptor.append(parents[0], this.svg('g', def)) as N];
+      this.dom = [adaptor.append(parents[0], this.svg('g', def)) as N<DOM>];
       //
       // Add an href anchor, if needed, and insert the linestack/mrow
       //
       this.dom = [
-        adaptor.append(this.handleHref(parents)[0], this.dom[0]) as N,
+        adaptor.append(this.handleHref(parents)[0], this.dom[0]) as N<DOM>,
       ];
       //
       //  Add the line boxes
       //
-      const svg = Array(n) as N[];
+      const svg = Array(n) as N<DOM>[];
       for (let i = 0; i <= n; i++) {
         svg[i] = adaptor.append(
           this.dom[0],
           this.svg('g', { 'data-mjx-linebox': true, 'data-mjx-lineno': i })
-        ) as N;
+        ) as N<DOM>;
       }
       //
       //  Return the line boxes as the parent nodes for their contents
@@ -230,7 +196,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
     /**
      * @override
      */
-    public addChildren(parents: N[]) {
+    public addChildren(parents: N<DOM>[]) {
       let x = 0;
       let i = 0;
       const isEmbellished = this.node.isEmbellished;
@@ -260,7 +226,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
       }
     }
   };
-})<any, any, any>();
+})();
 
 /*****************************************************************/
 /*****************************************************************/
@@ -268,57 +234,41 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
 /**
  * The SvgInferredMrow interface for the SVG InferredMrow wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgInferredMrowNTD<N, T, D>
+export interface SvgInferredMrowNTD<DOM extends DOM_TYPES>
   extends
-    SvgMrowNTD<N, T, D>,
+    SvgMrowNTD<DOM>,
     CommonInferredMrow<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {}
 
 /**
  * The SvgInferredMrowClass interface for the SVG InferredMrow wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface SvgInferredMrowClass<N, T, D>
+export interface SvgInferredMrowClass<DOM extends DOM_TYPES>
   extends
-    SvgMrowClass<N, T, D>,
+    SvgMrowClass<DOM>,
     CommonInferredMrowClass<
-      N,
-      T,
-      D,
-      SVG<N, T, D>,
-      SvgWrapper<N, T, D>,
-      SvgWrapperFactory<N, T, D>,
-      SvgWrapperClass<N, T, D>,
-      SvgCharOptions,
-      SvgVariantData,
-      SvgDelimiterData,
-      SvgFontData,
-      SvgFontDataClass
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
     > {
   new (
-    factory: SvgWrapper<N, T, D>,
+    factory: SvgWrapper<DOM>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
-  ): SvgInferredMrowNTD<N, T, D>;
+    parent?: SvgWrapper<DOM>
+  ): SvgInferredMrowNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -326,38 +276,22 @@ export interface SvgInferredMrowClass<N, T, D>
 /**
  * The SvgInferredMrow wrapper for the MmlInferredMrow class
  */
-export const SvgInferredMrow = (function <N, T, D>(): SvgInferredMrowClass<
-  N,
-  T,
-  D
-> {
+export const SvgInferredMrow = (function (): SvgInferredMrowClass<DOM> {
   const Base = CommonInferredMrowMixin<
-    N,
-    T,
-    D,
-    SVG<N, T, D>,
-    SvgWrapper<N, T, D>,
-    SvgWrapperFactory<N, T, D>,
-    SvgWrapperClass<N, T, D>,
-    SvgCharOptions,
-    SvgVariantData,
-    SvgDelimiterData,
-    SvgFontData,
-    SvgFontDataClass,
-    SvgInferredMrowClass<N, T, D>
+    DOM,
+    SVG_FONT,
+    SVG<DOM>,
+    SvgWrapper<DOM>,
+    SvgWrapperFactory<DOM>,
+    SvgWrapperClass<DOM>,
+    SvgInferredMrowClass<DOM>
   >(SvgMrow);
 
-  return class SvgInferredMrowNTD
-    // @ts-expect-error Avoid message about base constructors not having the
-    // same type (they should both be SvgWrapper<N, T, D>, but are thought of as
-    // different by typescript)
-    extends Base
-    // @ts-expect-error Avoid messages of use of typeof
-    implements SvgInferredMrow<N, T, D>
-  {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class SvgInferredMrowNTD extends Base implements SvgInferredMrow<DOM> {
     /**
      * The inferred-mrow wrapper
      */
     public static kind = MmlInferredMrow.prototype.kind;
   };
-})<any, any, any>();
+})();

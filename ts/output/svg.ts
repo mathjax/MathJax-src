@@ -40,7 +40,7 @@ import { unicodeChars } from '../util/string.js';
 import * as LENGTHS from '../util/lengths.js';
 import { SPACE } from './common/Wrapper.js';
 import { DefaultFont } from './svg/DefaultFont.js';
-import { DOM, DOM_TYPES, N, T, D } from '../types/Types.js';
+import { DOM_TYPES, N, NT } from '../types/Types.js';
 
 export const SVGNS = 'http://www.w3.org/2000/svg';
 export const XLINKNS = 'http://www.w3.org/1999/xlink';
@@ -48,30 +48,42 @@ export const XLINKNS = 'http://www.w3.org/1999/xlink';
 /*****************************************************************/
 
 /**
- * The SVG option types.
+ * The CHTML font types.
  */
-export interface SVG_OPTIONS<DOM extends DOM_TYPES> extends COMMON_OPTIONS<
-  DOM,
-  SvgWrapper<N<DOM>, T<DOM>, D<DOM>>,
-  SvgWrapperFactory<N<DOM>, T<DOM>, D<DOM>>,
-  SvgWrapperClass<N<DOM>, T<DOM>, D<DOM>>,
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass
-> {
+export type SVG_FONT = {
+  CC: SvgCharOptions;
+  VV: SvgVariantData;
+  DD: SvgDelimiterData;
+  FD: SvgFontData;
+  FC: SvgFontDataClass;
+};
+
+export type OPTIONS = {
   blacker: number; //                          Stroke-width to use for SVG character paths (in thousands of an em)
   fontCache: 'local' | 'global' | 'none'; //   The type of character cache to use
   localID: string; //                          ID to use for local font cache (for single equation processing)
   useXlink: boolean; //                        true to include xlink namespace for <use> hrefs, false to not
-}
+};
+
+/**
+ * The SVG option types.
+ */
+export interface SVG_OPTIONS<DOM extends DOM_TYPES>
+  extends
+    OPTIONS,
+    COMMON_OPTIONS<
+      DOM,
+      SVG_FONT,
+      SVG<DOM>,
+      SvgWrapper<DOM>,
+      SvgWrapperFactory<DOM>,
+      SvgWrapperClass<DOM>
+    > {}
 
 /**
  * The svg option defaults.
  */
-const options: SVG_OPTIONS<DOM> = {
-  ...CommonOutputJax.OPTIONS,
+const options: OPTIONS = {
   blacker: 3,
   fontCache: 'local',
   localID: null,
@@ -82,32 +94,15 @@ const options: SVG_OPTIONS<DOM> = {
 /**
  *  Implements the SVG class (extends AbstractOutputJax)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class SVG<N, T, D> extends CommonOutputJax<
-  //
-  // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
-  //
-  N,
-  T,
-  D,
-  //
-  // The Wrapper type and its Factory and Class (these need to know N, T, and D)
-  //
-  SvgWrapper<N, T, D>,
-  SvgWrapperFactory<N, T, D>,
-  SvgWrapperClass<N, T, D>,
-  //
-  // These are font-related objects that depend on the output jax; e,g. the character options
-  //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
-  //
-  SvgCharOptions,
-  SvgVariantData,
-  SvgDelimiterData,
-  SvgFontData,
-  SvgFontDataClass
+export class SVG<DOM extends DOM_TYPES> extends CommonOutputJax<
+  DOM,
+  SVG_FONT,
+  SVG<DOM>,
+  SvgWrapper<DOM>,
+  SvgWrapperFactory<DOM>,
+  SvgWrapperClass<DOM>
 > {
   /**
    * The name of the output jax
@@ -117,8 +112,10 @@ export class SVG<N, T, D> extends CommonOutputJax<
   /**
    * @override
    */
-  /* prettier-ignore */
-  public static OPTIONS = options;
+  public static OPTIONS = {
+    ...CommonOutputJax.OPTIONS,
+    ...options,
+  };
 
   /**
    *  The default styles for SVG
@@ -178,7 +175,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
   /**
    * Stores the information about the cached character glyphs
    */
-  public fontCache: FontCache<N, T, D>;
+  public fontCache: FontCache<DOM>;
 
   /**
    * Minimum width for tables with labels,
@@ -192,12 +189,12 @@ export class SVG<N, T, D> extends CommonOutputJax<
   /**
    * The SVG stylesheet, once it is constructed
    */
-  public svgStyles: N = null;
+  public svgStyles: N<DOM> = null;
 
   /**
    * @override
    */
-  public options: SVG_OPTIONS<DOM<N, T, D>> & { matchFontHeight: boolean };
+  public options: SVG_OPTIONS<DOM> & { matchFontHeight: boolean };
 
   /**
    * @override
@@ -236,7 +233,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
   /**
    * @override
    */
-  public escaped(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
+  public escaped(math: MathItem<DOM>, html: MathDocument<DOM>) {
     this.setDocument(html);
     return this.html('span', {}, [this.text(math.math)]);
   }
@@ -244,7 +241,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
   /**
    * @override
    */
-  public styleSheet(html: MathDocument<N, T, D>) {
+  public styleSheet(html: MathDocument<DOM>) {
     if (this.svgStyles) {
       return this.svgStyles; // stylesheet is already added to the document
     }
@@ -268,7 +265,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
   /**
    * @override
    */
-  public pageElements(html: MathDocument<N, T, D>) {
+  public pageElements(html: MathDocument<DOM>) {
     if (this.options.fontCache === 'global' && !this.findCache(html)) {
       return this.svg(
         'svg',
@@ -280,7 +277,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
         [this.fontCache.getCache()]
       );
     }
-    return null as N;
+    return null as N<DOM>;
   }
 
   /**
@@ -289,7 +286,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * @param {MathDocument} html   The document to search
    * @returns {boolean}            True if a font cache already exists in the page
    */
-  protected findCache(html: MathDocument<N, T, D>): boolean {
+  protected findCache(html: MathDocument<DOM>): boolean {
     const adaptor = this.adaptor;
     const svgs = adaptor.tags(adaptor.body(html.document), 'svg');
     for (let i = svgs.length - 1; i >= 0; i--) {
@@ -308,10 +305,10 @@ export class SVG<N, T, D> extends CommonOutputJax<
   }
 
   /**
-   * @param {SvgWrapper<N, T, D>} wrapper   The MML node wrapper whose SVG is to be produced
-   * @param {N} parent                      The HTML node to contain the SVG
+   * @param {SvgWrapper<DOM>} wrapper   The MML node wrapper whose SVG is to be produced
+   * @param {N} parent                  The HTML node to contain the SVG
    */
-  public processMath(wrapper: SvgWrapper<N, T, D>, parent: N) {
+  public processMath(wrapper: SvgWrapper<DOM>, parent: N<DOM>) {
     //
     // Cache the container (tooltips process into separate containers)
     //
@@ -335,9 +332,9 @@ export class SVG<N, T, D> extends CommonOutputJax<
 
   /**
    * @param {SvgWrapper} wrapper   The wrapped math to process
-   * @returns {[N, N]}              The svg and g nodes for the math
+   * @returns {[N, N]}             The svg and g nodes for the math
    */
-  protected createRoot(wrapper: SvgWrapper<N, T, D>): [N, N] {
+  protected createRoot(wrapper: SvgWrapper<DOM>): [N<DOM>, N<DOM>] {
     const { w, h, d, pwidth } = wrapper.getOuterBBox();
     const [svg, g] = this.createSVG(h, d, w);
     if (pwidth) {
@@ -370,9 +367,9 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * @param {number} h   The height of the SVG to create
    * @param {number} d   The depth of the SVG to create
    * @param {number} w   The width of the SVG to create
-   * @returns {[N, N]}      The svg element and its initial g child
+   * @returns {[N, N]}   The svg element and its initial g child
    */
-  protected createSVG(h: number, d: number, w: number): [N, N] {
+  protected createSVG(h: number, d: number, w: number): [N<DOM>, N<DOM>] {
     const px = this.math.metrics.em / 1000;
     const W = Math.max(w, px); // make sure we are at least one px wide (needed for e.g. \llap)
     const H = Math.max(h + d, px); // make sure we are at least one px tall (needed for e.g., \smash)
@@ -384,7 +381,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
       fill: 'currentColor',
       'stroke-width': 0,
       transform: 'scale(1,-1)',
-    }) as N;
+    }) as N<DOM>;
     //
     //  The svg element with its viewBox, size and alignment
     //
@@ -409,7 +406,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
         },
         [g]
       )
-    ) as N;
+    ) as N<DOM>;
     if (W === 0.001) {
       adaptor.setAttribute(svg, 'preserveAspectRatio', 'xMidYMid slice');
       if (w < 0) {
@@ -430,7 +427,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * @param {N} svg                The main svg element for the typeet math
    * @param {N} g                  The group in which the math is typeset
    */
-  protected typesetSvg(wrapper: SvgWrapper<N, T, D>, svg: N, g: N) {
+  protected typesetSvg(wrapper: SvgWrapper<DOM>, svg: N<DOM>, g: N<DOM>) {
     const adaptor = this.adaptor;
     //
     //  Typeset the math and add minWidth (from mtables), or set the alignment and indentation
@@ -458,7 +455,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * @param {string} align  The alignment for the node
    * @param {number} shift  The indent (positive or negative) for the node
    */
-  protected setIndent(svg: N, align: string, shift: number) {
+  protected setIndent(svg: N<DOM>, align: string, shift: number) {
     if (align === 'center' || align === 'left') {
       this.adaptor.setStyle(svg, 'margin-left', this.ex(shift));
     }
@@ -468,19 +465,25 @@ export class SVG<N, T, D> extends CommonOutputJax<
   }
 
   /**
-   * @param {SvgWrapper<N,T,D>} wrapper   The MML node wrapper whose SVG gets inline breaks
-   * @param {N} svg                       The SVG node that is breaking
-   * @param {N} g                         The group in which the math is typeset
+   * @param {SvgWrapper<DOM>} wrapper   The MML node wrapper whose SVG gets inline breaks
+   * @param {N} svg                     The SVG node that is breaking
+   * @param {N} g                       The group in which the math is typeset
    */
-  protected handleInlineBreaks(wrapper: SvgWrapper<N, T, D>, svg: N, g: N) {
+  protected handleInlineBreaks(
+    wrapper: SvgWrapper<DOM>,
+    svg: N<DOM>,
+    g: N<DOM>
+  ) {
     const n = wrapper.childNodes[0].breakCount;
     if (!n) return;
     //
     // Find the math element and the lines that it contains
     //
     const adaptor = this.adaptor;
-    const math = adaptor.firstChild(g) as N;
-    const lines = adaptor.childNodes(adaptor.firstChild(math) as N) as N[];
+    const math = adaptor.firstChild(g) as N<DOM>;
+    const lines = adaptor.childNodes(
+      adaptor.firstChild(math) as N<DOM>
+    ) as N<DOM>[];
     const lineBBox = wrapper.childNodes[0].lineBBox;
     //
     // Remove content from original SVG other than <defs>, if any
@@ -495,7 +498,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
       const [mml, mo] = wrapper.childNodes[0].getBreakNode(line);
       const { scale } = mml.getBBox();
       const [nsvg, ng] = this.createSVG(h * scale, d * scale, w * scale);
-      const nmath = adaptor.append(ng, adaptor.clone(math, false)) as N;
+      const nmath = adaptor.append(ng, adaptor.clone(math, false)) as N<DOM>;
       for (const child of adaptor.childNodes(lines[i])) {
         adaptor.append(nmath, child);
       }
@@ -527,7 +530,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
     //
     if (adaptor.childNodes(svg).length) {
       adaptor.append(
-        adaptor.firstChild(adaptor.parent(svg)) as N,
+        adaptor.firstChild(adaptor.parent(svg)) as N<DOM>,
         adaptor.firstChild(svg)
       );
     }
@@ -539,7 +542,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * @param {number} dimen     The size of the break
    * @param {boolean} forced   Whether the break is forced or not
    */
-  protected addInlineBreak(nsvg: N, dimen: number, forced: boolean) {
+  protected addInlineBreak(nsvg: N<DOM>, dimen: number, forced: boolean) {
     const adaptor = this.adaptor;
     const space = LENGTHS.em(dimen);
     if (!forced) {
@@ -563,7 +566,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
   }
 
   /**
-   * @param {number} m  A number to be shown in ex
+   * @param {number} m   A number to be shown in ex
    * @returns {string}   The number with units of ex
    */
   public ex(m: number): string {
@@ -576,23 +579,23 @@ export class SVG<N, T, D> extends CommonOutputJax<
   /**
    * @param {string} kind             The kind of node to create
    * @param {OptionList} properties   The properties to set for the element
-   * @param {(N|T)[]} children            The child nodes for this node
-   * @returns {N}                      The newly created node in the SVG namespace
+   * @param {NT[]} children           The child nodes for this node
+   * @returns {N}                     The newly created node in the SVG namespace
    */
   public svg(
     kind: string,
     properties: OptionList = {},
-    children: (N | T)[] = []
-  ): N {
+    children: NT<DOM>[] = []
+  ): N<DOM> {
     return this.html(kind, properties, children, SVGNS);
   }
 
   /**
    * @param {string} text      The text to be displayed
    * @param {string} variant   The name of the variant for the text
-   * @returns {N}               The text element containing the text
+   * @returns {N}              The text element containing the text
    */
-  public unknownText(text: string, variant: string): N {
+  public unknownText(text: string, variant: string): N<DOM> {
     const metrics = this.math.metrics;
     const scale = (this.font.params.x_height / metrics.ex) * metrics.em * 1000;
     const svg = this.svg(
@@ -625,10 +628,10 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * Measure the width of a text element by placing it in the page
    *  and looking up its size (fake the height and depth, since we can't measure that)
    *
-   * @param {N} text         The text element to measure
-   * @returns {object}        The width, height and depth for the text
+   * @param {N} text     The text element to measure
+   * @returns {object}   The width, height and depth for the text
    */
-  public measureTextNode(text: N): UnknownBBox {
+  public measureTextNode(text: N<DOM>): UnknownBBox {
     const adaptor = this.adaptor;
     text = adaptor.clone(text);
     adaptor.removeAttribute(text, 'transform');

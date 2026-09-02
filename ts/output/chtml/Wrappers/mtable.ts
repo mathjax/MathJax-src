@@ -21,16 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CHTML } from '../../chtml.js';
+import { CHTML, CHTML_FONT } from '../../chtml.js';
 import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
 import { ChtmlWrapperFactory } from '../WrapperFactory.js';
-import {
-  ChtmlCharOptions,
-  ChtmlVariantData,
-  ChtmlDelimiterData,
-  ChtmlFontData,
-  ChtmlFontDataClass,
-} from '../FontData.js';
 import {
   CommonMtable,
   CommonMtableClass,
@@ -42,73 +35,58 @@ import { ChtmlMtrNTD } from './mtr.js';
 import { StyleJson } from '../../../util/StyleJson.js';
 import { isPercent } from '../../../util/string.js';
 import { OptionList } from '../../../util/Options.js';
+import { DOM, DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The ChtmlMtable interface for the CHTML Mtable wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlMtableNTD<N, T, D>
+export interface ChtmlMtableNTD<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapper<N, T, D>,
+    ChtmlWrapper<DOM>,
     CommonMtable<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass,
-      ChtmlMtrNTD<N, T, D>
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>,
+      ChtmlMtrNTD<DOM>
     > {
   /**
    * The column for labels
    */
-  labels: N;
+  labels: N<DOM>;
 
   /**
    * The inner table DOM node
    */
-  itable: N;
+  itable: N<DOM>;
 }
 
 /**
  * The ChtmlMtableClass interface for the CHTML Mtable wrapper
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export interface ChtmlMtableClass<N, T, D>
+export interface ChtmlMtableClass<DOM extends DOM_TYPES>
   extends
-    ChtmlWrapperClass<N, T, D>,
+    ChtmlWrapperClass<DOM>,
     CommonMtableClass<
-      N,
-      T,
-      D,
-      CHTML<N, T, D>,
-      ChtmlWrapper<N, T, D>,
-      ChtmlWrapperFactory<N, T, D>,
-      ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions,
-      ChtmlVariantData,
-      ChtmlDelimiterData,
-      ChtmlFontData,
-      ChtmlFontDataClass
+      DOM,
+      CHTML_FONT,
+      CHTML<DOM>,
+      ChtmlWrapper<DOM>,
+      ChtmlWrapperFactory<DOM>,
+      ChtmlWrapperClass<DOM>
     > {
   new (
-    factory: ChtmlWrapperFactory<N, T, D>,
+    factory: ChtmlWrapperFactory<DOM>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
-  ): ChtmlMtableNTD<N, T, D>;
+    parent?: ChtmlWrapper<DOM>
+  ): ChtmlMtableNTD<DOM>;
 }
 
 /*****************************************************************/
@@ -116,28 +94,20 @@ export interface ChtmlMtableClass<N, T, D>
 /**
  * The ChtmlMtable wrapper class for the MmlMtable class
  */
-export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
+export const ChtmlMtable = (function (): ChtmlMtableClass<DOM> {
   const Base = CommonMtableMixin<
-    N,
-    T,
-    D,
-    CHTML<N, T, D>,
-    ChtmlWrapper<N, T, D>,
-    ChtmlWrapperFactory<N, T, D>,
-    ChtmlWrapperClass<N, T, D>,
-    ChtmlCharOptions,
-    ChtmlVariantData,
-    ChtmlDelimiterData,
-    ChtmlFontData,
-    ChtmlFontDataClass,
-    ChtmlMtrNTD<N, T, D>,
-    ChtmlMtableClass<N, T, D>
+    DOM,
+    CHTML_FONT,
+    CHTML<DOM>,
+    ChtmlWrapper<DOM>,
+    ChtmlWrapperFactory<DOM>,
+    ChtmlWrapperClass<DOM>,
+    ChtmlMtrNTD<DOM>,
+    ChtmlMtableClass<DOM>
   >(ChtmlWrapper);
 
-  // @ts-expect-error Avoid message about base constructors not having the same
-  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
-  // different by typescript)
-  return class ChtmlMtable extends Base implements ChtmlMtableNTD<N, T, D> {
+  // @ts-expect-error Avoid message about base constructors not having the same type
+  return class ChtmlMtable extends Base implements ChtmlMtableNTD<DOM> {
     /**
      * @override
      */
@@ -212,12 +182,12 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     /**
      * @override
      */
-    public labels: N;
+    public labels: N<DOM>;
 
     /**
      * @override
      */
-    public itable: N;
+    public itable: N<DOM>;
 
     /******************************************************************/
 
@@ -225,9 +195,9 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      * @override
      */
     constructor(
-      factory: ChtmlWrapperFactory<N, T, D>,
+      factory: ChtmlWrapperFactory<DOM>,
       node: MmlNode,
-      parent: ChtmlWrapper<N, T, D> = null
+      parent: ChtmlWrapper<DOM> = null
     ) {
       super(factory, node, parent);
       this.itable = this.html('mjx-itable');
@@ -248,7 +218,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parents: N[]) {
+    public toCHTML(parents: N<DOM>[]) {
       //
       //  Create the rows inside an mjx-itable (which will be used to center the table on the math axis)
       //
@@ -297,7 +267,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      */
     protected padRows() {
       const adaptor = this.adaptor;
-      for (const row of adaptor.childNodes(this.itable) as N[]) {
+      for (const row of adaptor.childNodes(this.itable) as N<DOM>[]) {
         while (adaptor.childNodes(row).length < this.numCols) {
           adaptor.append(row, this.html('mjx-mtd', { extra: true }));
         }
@@ -339,7 +309,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
           //
           const styleNode = cell
             ? cell.dom[0]
-            : (this.adaptor.childNodes(row.dom[0])[i] as N);
+            : (this.adaptor.childNodes(row.dom[0])[i] as N<DOM>);
           if ((i > 1 && lspace !== '0.4em') || (lspace !== '0' && i === 1)) {
             this.adaptor.setStyle(styleNode, 'paddingLeft', lspace);
           }
@@ -361,7 +331,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       const lines = this.getColumnAttributes('columnlines');
       for (const row of this.childNodes) {
         let i = 0;
-        const cells = this.adaptor.childNodes(row.dom[0]).slice(1) as N[];
+        const cells = this.adaptor.childNodes(row.dom[0]).slice(1) as N<DOM>[];
         for (const cell of cells) {
           const line = lines[i++];
           if (line === 'none') continue;
@@ -376,7 +346,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     protected handleColumnWidths() {
       for (const row of this.childNodes) {
         let i = 0;
-        for (const cell of this.adaptor.childNodes(row.dom[0]) as N[]) {
+        for (const cell of this.adaptor.childNodes(row.dom[0]) as N<DOM>[]) {
           const w = this.cWidths[i++];
           if (w !== null) {
             const width = typeof w === 'number' ? this.em(w) : w;
@@ -445,7 +415,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       for (const row of this.childNodes.slice(1)) {
         const line = lines[i++];
         if (line === 'none') continue;
-        for (const cell of this.adaptor.childNodes(row.dom[0]) as N[]) {
+        for (const cell of this.adaptor.childNodes(row.dom[0]) as N<DOM>[]) {
           this.adaptor.setStyle(cell, 'borderTop', '.07em ' + line);
         }
       }
@@ -484,7 +454,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      * @param {ChtmlWrapper} row   The row whose height is to be set
      * @param {number} HD          The height to be set for the row
      */
-    protected setRowHeight(row: ChtmlWrapper<N, T, D>, HD: number) {
+    protected setRowHeight(row: ChtmlWrapper<DOM>, HD: number) {
       this.adaptor.setStyle(row.dom[0], 'height', this.em(HD));
     }
 
@@ -496,11 +466,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      * @param {number} HD          The total height+depth for the row
      * @param {number} D           The new depth for the row
      */
-    protected setRowBaseline(
-      row: ChtmlWrapper<N, T, D>,
-      HD: number,
-      D: number
-    ) {
+    protected setRowBaseline(row: ChtmlWrapper<DOM>, HD: number, D: number) {
       const ralign = row.node.attributes.get('rowalign') as string;
       //
       //  Loop through the cells and set the strut height and depth.
@@ -521,7 +487,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      * @returns {boolean}           True if no other cells in this row need to be processed
      */
     protected setCellBaseline(
-      cell: ChtmlWrapper<N, T, D>,
+      cell: ChtmlWrapper<DOM>,
       ralign: string,
       HD: number,
       D: number
@@ -529,7 +495,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       const calign = cell.node.attributes.get('rowalign');
       if (calign === 'baseline' || calign === 'axis') {
         const adaptor = this.adaptor;
-        const child = adaptor.lastChild(cell.dom[0]) as N;
+        const child = adaptor.lastChild(cell.dom[0]) as N<DOM>;
         adaptor.setStyle(child, 'height', this.em(HD));
         adaptor.setStyle(child, 'verticalAlign', this.em(-D));
         const row = cell.parent;
@@ -573,7 +539,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
         if (W === 'auto') return;
         W = this.em(this.length2em(W) + 2 * this.fLine);
       }
-      const table = adaptor.firstChild(dom) as N;
+      const table = adaptor.firstChild(dom) as N<DOM>;
       adaptor.setStyle(table, 'width', W);
       adaptor.setStyle(table, 'minWidth', this.em(w));
       if (L || R) {
@@ -646,7 +612,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       //  Handle indentation
       //
       if (shift) {
-        const table = adaptor.firstChild(this.dom[0]) as N;
+        const table = adaptor.firstChild(this.dom[0]) as N<DOM>;
         this.setIndent(table, align, shift);
       }
       //
@@ -717,7 +683,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       //    and line thickness for each non-labeled row.
       //
       let h = this.fLine;
-      let current = adaptor.firstChild(this.labels) as N;
+      let current = adaptor.firstChild(this.labels) as N<DOM>;
       for (let i = 0; i < this.numRows; i++) {
         const row = this.childNodes[i];
         if (row.node.isKind('mlabeledtr')) {
@@ -732,7 +698,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
             'height',
             this.em((equal ? HD : H[i] + D[i]) + space[i] + space[i + 1])
           );
-          current = adaptor.next(current) as N;
+          current = adaptor.next(current) as N<DOM>;
           h = this.rLines[i];
         } else {
           h +=
@@ -744,4 +710,4 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       }
     }
   };
-})<any, any, any>();
+})();

@@ -47,7 +47,7 @@ import { MACTION } from './semantic-enrich/maction.js';
 import { StructureUtil, SemanticMap } from './speech/StructureUtil.js';
 import { Locale } from '../util/Locale.js';
 import { COMPONENT } from './semantic-enrich/__locales__/Component.js';
-import { DOM, DOM_TYPES, N, T, D, Constructor } from '../types/Types.js';
+import { DOM, DOM_TYPES, Constructor } from '../types/Types.js';
 
 /*==========================================================================*/
 
@@ -58,10 +58,10 @@ newState('ENRICHED', STATE.COMPILED + 10);
 
 /*==========================================================================*/
 
-export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
+export class enrichVisitor<DOM extends DOM_TYPES> extends SerializedMmlVisitor {
   protected mactionId: number;
 
-  public visitTree(node: MmlNode, math?: MathItem<N, T, D>) {
+  public visitTree(node: MmlNode, math?: MathItem<DOM>) {
     this.mactionId = 0;
     const mml = super.visitTree(node);
     if (this.mactionId) {
@@ -104,11 +104,11 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
 /**
  * The functions added to MathItem for enrichment
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM Node types
  */
-export interface EnrichedMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
+export interface EnrichedMathItem<
+  DOM extends DOM_TYPES,
+> extends AbstractMathItem<DOM> {
   /**
    * Maps semantic ids to extra nodes outside the DOM subtree.
    */
@@ -122,18 +122,18 @@ export interface EnrichedMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
   /**
    * The serialization visitor
    */
-  toMathML: (node: MmlNode, math: MathItem<N, T, D>) => string;
+  toMathML: (node: MmlNode, math: MathItem<DOM>) => string;
 
   /**
    * @param {MathDocument} document  The document where enrichment is occurring
    * @param {boolean} force          True to force the enrichment even if not enabled
    */
-  enrich(document: MathDocument<N, T, D>, force?: boolean): void;
+  enrich(document: MathDocument<DOM>, force?: boolean): void;
 
   /**
    * @param {MathDocument} document   The MathDocument for the MathItem
    */
-  unEnrich(document: MathDocument<N, T, D>): void;
+  unEnrich(document: MathDocument<DOM>): void;
 
   /**
    * @param {string} mml  The MathML string to enrich
@@ -150,21 +150,17 @@ export interface EnrichedMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
  * @param {Function} toMathML  The function to serialize the internal MathML
  * @returns {EnrichedMathItem}  The enriched MathItem class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template B  The MathItem class to extend
+ * @template DOM   The DOM Node types
+ * @template B     The MathItem class to extend
  */
 export function EnrichedMathItemMixin<
-  N,
-  T,
-  D,
-  B extends Constructor<AbstractMathItem<N, T, D>>,
+  DOM extends DOM_TYPES,
+  B extends Constructor<AbstractMathItem<DOM>>,
 >(
   BaseMathItem: B,
-  MmlJax: MathML<N, T, D>,
-  toMathML: (node: MmlNode, math: MathItem<N, T, D>) => string
-): Constructor<EnrichedMathItem<N, T, D>> & B {
+  MmlJax: MathML<DOM>,
+  toMathML: (node: MmlNode, math: MathItem<DOM>) => string
+): Constructor<EnrichedMathItem<DOM>> & B {
   return class extends BaseMathItem {
     /**
      *  The MathML serializer
@@ -215,10 +211,7 @@ export function EnrichedMathItemMixin<
      * @param {EnrichedMathDocument} document   The MathDocument for the MathItem
      * @param {boolean} force                   True to force the enrichment even if not enabled
      */
-    public enrich(
-      document: EnrichedMathDocument<N, T, D>,
-      force: boolean = false
-    ) {
+    public enrich(document: EnrichedMathDocument<DOM>, force: boolean = false) {
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
         this.semanticNodes = null;
@@ -265,7 +258,7 @@ export function EnrichedMathItemMixin<
     /**
      * @param {MathDocument} document   The MathDocument for the MathItem
      */
-    public unEnrich(document: MathDocument<N, T, D>) {
+    public unEnrich(document: MathDocument<DOM>) {
       const mml = this.inputData.originalMml;
       if (!mml) return;
       const math = new document.options.MathItem('', MmlJax);
@@ -334,8 +327,8 @@ const SRE_options: SRE_OPTIONS = {
 export interface OPTIONS<DOM extends DOM_TYPES> {
   enableEnrichment: boolean;
   enrichError: (
-    doc: EnrichedMathDocument<N<DOM>, T<DOM>, D<DOM>>,
-    math: EnrichedMathItem<N<DOM>, T<DOM>, D<DOM>>,
+    doc: EnrichedMathDocument<DOM>,
+    math: EnrichedMathItem<DOM>,
     err: Error
   ) => void;
   sre: SRE_OPTIONS;
@@ -346,7 +339,7 @@ export interface OPTIONS<DOM extends DOM_TYPES> {
  */
 export interface ENRICH_OPTIONS<DOM extends DOM_TYPES>
   extends OPTIONS<DOM>, DOCUMENT_OPTIONS<DOM> {
-  MathItem: Constructor<EnrichedMathItem<N<DOM>, T<DOM>, D<DOM>>>;
+  MathItem: Constructor<EnrichedMathItem<DOM>>;
 }
 
 /**
@@ -363,19 +356,15 @@ const options: OPTIONS<DOM> = {
 /**
  * The functions added to MathDocument for enrichment
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM Node types
  */
-export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<
-  N,
-  T,
-  D
-> {
+export interface EnrichedMathDocument<
+  DOM extends DOM_TYPES,
+> extends AbstractMathDocument<DOM> {
   /**
    * @override
    */
-  options: ENRICH_OPTIONS<DOM<N, T, D>>;
+  options: ENRICH_OPTIONS<DOM>;
 
   /**
    * Perform enrichment on the MathItems in the MathDocument
@@ -390,8 +379,8 @@ export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<
    * @param {Error} err                  The error being processed
    */
   enrichError(
-    doc: EnrichedMathDocument<N, T, D>,
-    math: EnrichedMathItem<N, T, D>,
+    doc: EnrichedMathDocument<DOM>,
+    math: EnrichedMathItem<DOM>,
     err: Error
   ): void;
 }
@@ -403,23 +392,16 @@ export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<
  * @param {MathML} MmlJax          The MathML input jax used to convert the enriched MathML
  * @returns {EnrichedMathDocument}  The enriched MathDocument class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template B  The MathDocument class to extend
+ * @template DOM   The DOM Node types
+ * @template B     The MathDocument class to extend
  */
 export function EnrichedMathDocumentMixin<
-  N,
-  T,
-  D,
-  B extends MathDocumentConstructor<
-    AbstractMathDocument<N, T, D>,
-    DOM<N, T, D>
-  >,
+  DOM extends DOM_TYPES,
+  B extends MathDocumentConstructor<AbstractMathDocument<DOM>, DOM>,
 >(
   BaseDocument: B,
-  MmlJax: MathML<N, T, D>
-): MathDocumentConstructor<EnrichedMathDocument<N, T, D>, DOM<N, T, D>> & B {
+  MmlJax: MathML<DOM>
+): MathDocumentConstructor<EnrichedMathDocument<DOM>, DOM> {
   return class extends BaseDocument {
     /**
      * @override
@@ -427,7 +409,7 @@ export function EnrichedMathDocumentMixin<
     public static OPTIONS = {
       ...BaseDocument.OPTIONS,
       ...options,
-      renderActions: expandable<RenderActions<N, T, D>>({
+      renderActions: expandable<RenderActions<DOM>>({
         ...BaseDocument.OPTIONS.renderActions,
         enrich: [STATE.ENRICHED],
       }),
@@ -436,7 +418,7 @@ export function EnrichedMathDocumentMixin<
     /**
      * @override
      */
-    public options: ENRICH_OPTIONS<DOM<N, T, D>>;
+    public options: ENRICH_OPTIONS<DOM>;
 
     /**
      * Enrich the MathItem class used for this MathDocument, and create the
@@ -453,14 +435,12 @@ export function EnrichedMathDocumentMixin<
       if (!ProcessBits.has('enriched')) {
         ProcessBits.allocate('enriched');
       }
-      const visitor = new enrichVisitor<N, T, D>(this.mmlFactory);
-      const toMathML = (node: MmlNode, math: MathItem<N, T, D>) =>
+      const visitor = new enrichVisitor<DOM>(this.mmlFactory);
+      const toMathML = (node: MmlNode, math: MathItem<DOM>) =>
         visitor.visitTree(node, math);
       this.options.MathItem = EnrichedMathItemMixin<
-        N,
-        T,
-        D,
-        Constructor<AbstractMathItem<N, T, D>>
+        DOM,
+        Constructor<AbstractMathItem<DOM>>
       >(this.options.MathItem, MmlJax, toMathML);
     }
 
@@ -474,7 +454,7 @@ export function EnrichedMathDocumentMixin<
         if (this.options.enableEnrichment) {
           Sre.setupEngine(this.options.sre as any);
           for (const math of this.math) {
-            (math as EnrichedMathItem<N, T, D>).enrich(this);
+            (math as EnrichedMathItem<DOM>).enrich(this);
           }
         }
         this.processed.set('enriched');
@@ -486,8 +466,8 @@ export function EnrichedMathDocumentMixin<
      * @override
      */
     public enrichError(
-      _doc: EnrichedMathDocument<N, T, D>,
-      _math: EnrichedMathItem<N, T, D>,
+      _doc: EnrichedMathDocument<DOM>,
+      _math: EnrichedMathItem<DOM>,
       err: Error
     ) {
       console.warn(Locale.message(COMPONENT, 'EnrichError'), err);
@@ -502,7 +482,7 @@ export function EnrichedMathDocumentMixin<
         this.processed.clear('enriched');
         if (state >= STATE.COMPILED) {
           for (const item of this.math) {
-            (item as EnrichedMathItem<N, T, D>).unEnrich(this);
+            (item as EnrichedMathItem<DOM>).unEnrich(this);
           }
         }
       }
@@ -520,20 +500,16 @@ export function EnrichedMathDocumentMixin<
  * @param {MathML} MmlJax     The MathML input jax to use for reading the enriched MathML
  * @returns {Handler}          The handler that was modified (for purposes of chainging extensions)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM Node types
  */
-export function EnrichHandler<N, T, D>(
-  handler: Handler<N, T, D>,
-  MmlJax: MathML<N, T, D>
-): Handler<N, T, D> {
+export function EnrichHandler<DOM extends DOM_TYPES>(
+  handler: Handler<DOM>,
+  MmlJax: MathML<DOM>
+): Handler<DOM> {
   MmlJax.setAdaptor(handler.adaptor);
   handler.documentClass = EnrichedMathDocumentMixin<
-    N,
-    T,
-    D,
-    MathDocumentConstructor<AbstractMathDocument<N, T, D>, DOM<N, T, D>>
+    DOM,
+    MathDocumentConstructor<AbstractMathDocument<DOM>, DOM>
   >(handler.documentClass, MmlJax);
   return handler;
 }

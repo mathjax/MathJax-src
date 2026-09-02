@@ -29,26 +29,21 @@ import {
   expandable,
 } from '../../util/Options.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
-import { DOM, DOM_TYPES, N, T, D } from '../../types/Types.js';
-
+import { DOM, DOM_TYPES, N, T, NT } from '../../types/Types.js';
 /**
  * List of consecutive text nodes and their text lengths
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
+ * @template DOM   The DOM node types
  */
-export type HTMLNodeList<N, T> = [N | T, number][];
+export type HTMLNodeList<DOM extends DOM_TYPES> = [NT<DOM>, number][];
 
 /**
  * The data for HTML to be allowed in TeX expressions
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document node class
+ * @template DOM   The DOM node types
  */
-export type HTMLTagData<N, T, D> =
-  | string
-  | ((node: N, adaptor: DOMAdaptor<N, T, D>) => string);
+export type HTMLTagData<DOM extends DOM_TYPES> =
+  string | ((node: N<DOM>, adaptor: DOMAdaptor<DOM>) => string);
 
 /*****************************************************************/
 
@@ -62,26 +57,36 @@ export type HTMLDOMSTRINGS_OPTIONS<DOM extends DOM_TYPES> = {
   // Tags to be included in the text (and what text to replace them
   // with).
   //
-  includeHtmlTags: {[tag: string]: HTMLTagData<N<DOM>, T<DOM>, D<DOM>>};
+  includeHtmlTags: { [tag: string]: HTMLTagData<DOM> };
   //
   // The class name of elements whose contents should NOT be processed
   // by tex2jax.  Note that this is used as a regular expression, so
   // be sure to quote any regexp special characters.
   //
-  ignoreHtmlClass: string,
+  ignoreHtmlClass: string;
   //
   // The class name of elements whose contents SHOULD be processed
   // when they appear inside ones that are ignored.  Note that this is
   // used as a regular expression, so be sure to quote any regexp
   // special characters.
   //
-  processHtmlClass: string,
+  processHtmlClass: string;
 };
 
 const options: HTMLDOMSTRINGS_OPTIONS<DOM> = {
-  skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code',
-                 'math', 'select', 'option', 'mjx-container'],
-  includeHtmlTags: expandable({br: '\n', wbr: '', '#comment': ''}),
+  skipHtmlTags: [
+    'script',
+    'noscript',
+    'style',
+    'textarea',
+    'pre',
+    'code',
+    'math',
+    'select',
+    'option',
+    'mjx-container',
+  ],
+  includeHtmlTags: expandable({ br: '\n', wbr: '', '#comment': '' }),
   ignoreHtmlClass: 'mathjax_ignore',
   processHtmlClass: 'mathjax_process',
 };
@@ -92,11 +97,9 @@ const options: HTMLDOMSTRINGS_OPTIONS<DOM> = {
  *
  *  A class for extracting the text from DOM trees
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
+ * @template DOM   The DOM node types
  */
-export class HTMLDomStrings<N, T, D> {
+export class HTMLDomStrings<DOM extends DOM_TYPES> {
   /**
    * The default options for string processing
    */
@@ -120,18 +123,18 @@ export class HTMLDomStrings<N, T, D> {
   /**
    * The list of nodes and lengths for the string being constructed
    */
-  protected snodes: HTMLNodeList<N, T>;
+  protected snodes: HTMLNodeList<DOM>;
 
   /**
    * The list of node lists corresponding to the strings in this.strings
    */
-  protected nodes: HTMLNodeList<N, T>[];
+  protected nodes: HTMLNodeList<DOM>[];
 
   /**
    * The container nodes that are currently being traversed, and whether their
    *  contents are being ignored or not
    */
-  protected stack: [N | T, boolean][];
+  protected stack: [NT<DOM>, boolean][];
 
   /**
    * Regular expression for the tags to be skipped
@@ -150,11 +153,10 @@ export class HTMLDomStrings<N, T, D> {
   /**
    * The DOM Adaptor to managing HTML elements
    */
-  public adaptor: DOMAdaptor<N, T, D>;
+  public adaptor: DOMAdaptor<DOM>;
 
   /**
    * @param {OptionList} options  The user-supplied options
-   * @class
    */
   constructor(options: OptionList = null) {
     const CLASS = this.constructor as typeof HTMLDomStrings;
@@ -204,12 +206,12 @@ export class HTMLDomStrings<N, T, D> {
    * Add more text to the current string, and record the
    * node and its position in the string.
    *
-   * @param {N|T} node        The node to be pushed
+   * @param {N|T} node      The node to be pushed
    * @param {string} text   The text to be added (it may not be the actual text
    *                         of the node, if it is one of the nodes that gets
    *                         translated to text, like <br> to a newline).
    */
-  protected extendString(node: N | T, text: string) {
+  protected extendString(node: NT<DOM>, text: string) {
     this.snodes.push([node, text.length]);
     this.string += text;
   }
@@ -217,11 +219,11 @@ export class HTMLDomStrings<N, T, D> {
   /**
    * Handle a #text node (add its text to the current string)
    *
-   * @param {T} node          The Text node to process
-   * @param {boolean} ignore  Whether we are currently ignoring content
-   * @returns {N | T}          The next element to process
+   * @param {T} node           The Text node to process
+   * @param {boolean} ignore   Whether we are currently ignoring content
+   * @returns {NT<DOM>}        The next element to process
    */
-  protected handleText(node: T, ignore: boolean): N | T {
+  protected handleText(node: T<DOM>, ignore: boolean): NT<DOM> {
     if (!ignore) {
       this.extendString(node, this.adaptor.value(node));
     }
@@ -231,11 +233,11 @@ export class HTMLDomStrings<N, T, D> {
   /**
    * Handle a BR, WBR, or #comment element (or others in the includeHtmlTags object).
    *
-   * @param {N} node          The node to process
-   * @param {boolean} ignore  Whether we are currently ignoring content
-   * @returns {N | T}          The next element to process
+   * @param {N} node           The node to process
+   * @param {boolean} ignore   Whether we are currently ignoring content
+   * @returns {NT<DOM>}        The next element to process
    */
-  protected handleTag(node: N, ignore: boolean): N | T {
+  protected handleTag(node: N<DOM>, ignore: boolean): NT<DOM> {
     if (!ignore) {
       const text = this.options['includeHtmlTags'][this.adaptor.kind(node)];
       if (text instanceof Function) {
@@ -261,9 +263,9 @@ export class HTMLDomStrings<N, T, D> {
    *
    * @param {N} node               The node to process
    * @param {boolean} ignore       Whether we are currently ignoring content
-   * @returns {[N|T, boolean]}      The next element to process and whether to ignore its content
+   * @returns {[N|T, boolean]}     The next element to process and whether to ignore its content
    */
-  protected handleContainer(node: N, ignore: boolean): [N | T, boolean] {
+  protected handleContainer(node: N<DOM>, ignore: boolean): [NT<DOM>, boolean] {
     this.pushString();
     const cname = this.adaptor.getAttribute(node, 'class') || '';
     const tname = this.adaptor.kind(node) || '';
@@ -290,9 +292,9 @@ export class HTMLDomStrings<N, T, D> {
    *
    * @param {N} node           The node to process
    * @param {boolean} _ignore  Whether we are currently ignoring content
-   * @returns {N|T}             The next element to process
+   * @returns {N|T}            The next element to process
    */
-  protected handleOther(node: N, _ignore: boolean): N | T {
+  protected handleOther(node: N<DOM>, _ignore: boolean): NT<DOM> {
     this.pushString();
     return this.adaptor.next(node);
   }
@@ -312,10 +314,10 @@ export class HTMLDomStrings<N, T, D> {
    *   Clear the internal values (so the memory can be freed)
    *   Return the strings and node lists
    *
-   * @param {N} node                       The node to search
+   * @param {N|T} node                      The node to search
    * @returns {[string[], HTMLNodeList[]]}  The array of strings and their associated lists of nodes
    */
-  public find(node: N | T): [string[], HTMLNodeList<N, T>[]] {
+  public find(node: NT<DOM>): [string[], HTMLNodeList<DOM>[]] {
     this.init();
     const stop = this.adaptor.next(node);
     let ignore = false;
@@ -324,13 +326,13 @@ export class HTMLDomStrings<N, T, D> {
     while (node && node !== stop) {
       const kind = this.adaptor.kind(node);
       if (kind === '#text') {
-        node = this.handleText(node as T, ignore);
+        node = this.handleText(node as T<DOM>, ignore);
       } else if (Object.hasOwn(include, kind)) {
-        node = this.handleTag(node as N, ignore);
+        node = this.handleTag(node as N<DOM>, ignore);
       } else if (kind) {
-        [node, ignore] = this.handleContainer(node as N, ignore);
+        [node, ignore] = this.handleContainer(node as N<DOM>, ignore);
       } else {
-        node = this.handleOther(node as N, ignore);
+        node = this.handleOther(node as N<DOM>, ignore);
       }
       if (!node && this.stack.length) {
         this.pushString();
@@ -341,7 +343,7 @@ export class HTMLDomStrings<N, T, D> {
     this.pushString();
     const result = [this.strings, this.nodes] as [
       string[],
-      HTMLNodeList<N, T>[],
+      HTMLNodeList<DOM>[],
     ];
     this.init(); // free up memory
     return result;

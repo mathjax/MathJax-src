@@ -27,7 +27,7 @@ import {
   ConfigurationHandler,
   ParserConfiguration,
 } from '../Configuration.js';
-import { TeX } from '../../tex.js';
+import { TEX } from '../../tex.js';
 import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
 import { texError } from '../TexError.js';
@@ -149,12 +149,9 @@ function SetOptions(parser: TexParser, name: string) {
  *   its options, if any.
  *
  * @param {ParserConfiguration} _config The current configuration.
- * @param {TeX} jax                     The active tex input jax.
+ * @param {TEX} jax                     The active tex input jax.
  */
-function setoptionsConfig(
-  _config: ParserConfiguration,
-  jax: TeX<any, any, any>
-) {
+function setoptionsConfig(_config: ParserConfiguration, jax: TEX) {
   const setOptionsMap = new CommandMap('setoptions', {
     setOptions: SetOptions,
   });

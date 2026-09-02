@@ -27,62 +27,44 @@ import {
   CommonWrapperConstructor,
 } from '../Wrapper.js';
 import { CommonWrapperFactory } from '../WrapperFactory.js';
-import {
-  CharOptions,
-  VariantData,
-  DelimiterData,
-  FontData,
-  FontDataClass,
-} from '../FontData.js';
-import { CommonOutputJax } from '../../common.js';
+import { CommonOutputJax, COMMON_FONT } from '../../common.js';
 import { CommonMsqrt } from './msqrt.js';
 import * as Notation from '../Notation.js';
 import { BBox } from '../../../util/BBox.js';
 import { MmlNode, AbstractMmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { split } from '../../../util/string.js';
+import { DOM_TYPES, N } from '../../../types/Types.js';
 
 /*****************************************************************/
 /**
  * The CommonMenclose interface
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  *
  * @template S   The msqrt wrapper type
  */
 export interface CommonMenclose<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-  S extends CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+  S extends CommonMsqrt<DOM, FONT, JX, WW, WF, WC>,
+> extends CommonWrapper<DOM, FONT, JX, WW, WF, WC> {
   /**
    * The notations active on this menclose, if any
    */
-  notations: Notation.List<WW, N>;
+  notations: Notation.List<WW, N<DOM>>;
   /**
    * The notation to use for the child, if any
    */
-  renderChild: Notation.Renderer<WW, N>;
+  renderChild: Notation.Renderer<WW, N<DOM>>;
 
   /**
    * A fake msqrt for radial notation (if used)
@@ -177,7 +159,7 @@ export interface CommonMenclose<
     double: boolean,
     offset?: string,
     trans?: number
-  ): N;
+  ): N<DOM>;
 
   /**
    * Get the angle and width of a diagonal arrow, plus the x and y extension
@@ -214,37 +196,25 @@ export interface CommonMenclose<
 /**
  * The CommonMenclose class interface
  *
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
  */
 export interface CommonMencloseClass<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+> extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC> {
   /**
    *  The definitions of the various notations
    */
-  notations: Notation.DefList<WW, N>;
+  notations: Notation.DefList<WW, N<DOM>>;
 }
 
 /*****************************************************************/
@@ -253,53 +223,40 @@ export interface CommonMencloseClass<
  *
  * @param {CommonWrapperConstructor} Base The constructor class to extend
  * @returns {B} The mixin constructor
- * @template N   The DOM node type
- * @template T   The DOM text node type
- * @template D   The DOM document type
- * @template JX  The OutputJax type
- * @template WW  The Wrapper type
- * @template WF  The WrapperFactory type
- * @template WC  The WrapperClass type
- * @template CC  The CharOptions type
- * @template VV  The VariantData type
- * @template DD  The DelimiterData type
- * @template FD  The FontData type
- * @template FC  The FontDataClass type
  *
- * @template S   The msqrt wrapper class
- * @template B   The mixin interface to create
+ * @template DOM   The DOM node types
+ * @template FONT  The font data types
+ * @template JX    The OutputJax type
+ * @template WW    The Wrapper type
+ * @template WF    The WrapperFactory type
+ * @template WC    The WrapperClass type
+ *
+ * @template S     The msqrt wrapper class
+ * @template B     The mixin interface to create
  */
 export function CommonMencloseMixin<
-  N,
-  T,
-  D,
-  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  CC extends CharOptions,
-  VV extends VariantData<CC>,
-  DD extends DelimiterData,
-  FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>,
-  S extends CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
->(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
-): B {
+  DOM extends DOM_TYPES,
+  FONT extends COMMON_FONT,
+  JX extends CommonOutputJax<DOM, FONT, JX, WW, WF, WC>,
+  WW extends CommonWrapper<DOM, FONT, JX, WW, WF, WC>,
+  WF extends CommonWrapperFactory<DOM, FONT, JX, WW, WF, WC>,
+  WC extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+  S extends CommonMsqrt<DOM, FONT, JX, WW, WF, WC>,
+  B extends CommonWrapperClass<DOM, FONT, JX, WW, WF, WC>,
+>(Base: CommonWrapperConstructor<DOM, FONT, JX, WW, WF, WC>): B {
   return class CommonMencloseMixin
     extends Base
-    implements CommonMenclose<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, S>
+    implements CommonMenclose<DOM, FONT, JX, WW, WF, WC, S>
   {
     /**
      * @override
      */
-    public notations: Notation.List<WW, N> = {};
+    public notations: Notation.List<WW, N<DOM>> = {};
 
     /**
      * @override
      */
-    public renderChild: Notation.Renderer<WW, N> = null;
+    public renderChild: Notation.Renderer<WW, N<DOM>> = null;
 
     /**
      * @override
@@ -356,11 +313,8 @@ export function CommonMencloseMixin<
      * @override
      */
     public getNotations() {
-      /* prettier-ignore */
       const Notations = (
-        this.constructor as CommonMencloseClass<
-          N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
-        >
+        this.constructor as CommonMencloseClass<DOM, FONT, JX, WW, WF, WC>
       ).notations;
       for (const name of split(
         this.node.attributes.get('notation') as string
@@ -468,8 +422,8 @@ export function CommonMencloseMixin<
       _double: boolean,
       _offset: string = '',
       _dist: number = 0
-    ): N {
-      return null as N;
+    ): N<DOM> {
+      return null as N<DOM>;
     }
 
     /**
