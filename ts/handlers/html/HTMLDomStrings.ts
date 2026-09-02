@@ -250,8 +250,8 @@ export class HTMLDomStrings<N, T, D> {
   /**
    * Handle an arbitrary DOM node:
    *   Check the class to see if it matches the processHtmlClass regex
-   *   If the node has a child and is not marked as created by MathJax (data-MJX)
-   *       and either it is marked as restarting processing or is not a tag to be skipped, then
+   *   If the node has a child and either it is marked as restarting processing
+   *       or is not a tag to be skipped, then
    *     Save the next node (if there is one) and whether we are currently ignoring content
    *     Move to the first child node
    *     Update whether we are ignoring content
@@ -271,7 +271,6 @@ export class HTMLDomStrings<N, T, D> {
     let next;
     if (
       this.adaptor.firstChild(node) &&
-      !this.adaptor.getAttribute(node, 'data-MJX') &&
       (process || !this.skipHtmlTags.exec(tname))
     ) {
       if (this.adaptor.next(node)) {
