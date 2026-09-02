@@ -153,6 +153,19 @@ export class MathML<N, T, D> extends AbstractInputJax<
   }
 
   /**
+   * Set the filter functions for the Safe extension in the MathCompile class.
+   *
+   * @param {(string, string) => string} filterAttribute     The function to filter attributes
+   * @param {(list: string[]) => string[]} filterClassList   The function to filter classes
+   */
+  public setFilters(
+    filterAttribute: (name: string, value: string) => string,
+    filterClassList: (list: string[]) => string[],
+  ) : void {
+    this.mathml.setFilters(filterAttribute, filterClassList);
+  }
+
+  /**
    * Don't process strings (process nodes)
    *
    * @override
