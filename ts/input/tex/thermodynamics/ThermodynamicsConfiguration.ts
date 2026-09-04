@@ -24,10 +24,50 @@
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import './ThermodynamicsMappings.js';
+//import { ThermodynamicsSetPartialDelimiters} from './ThermodynamicsMethods.js';
 
 export const ThermodynamicsConfiguration = Configuration.create('thermodynamics', {
   [ConfigurationType.HANDLER]: {
-//    [HandlerType.CHARACTER]: ['Thermodynamics-characters'],
     [HandlerType.MACRO]: ['Thermodynamics-macros'],
+    [HandlerType.ENVIRONMENT]: ['Thermodynamics-environments'],
+  },
+  [ConfigurationType.OPTIONS]: {
+    thermodynamics: {
+//      'intensive-plain' : true,
+//      'extensive-plain' : false,
+//      'extensive-superscript' : false,
+//      'intensive-lowercase' : false,
+//      thermolongpm : true,
+//      thermoshortpm : false,
+      Partialdelimiters : {
+        open: '(',
+        close: ')',
+        emptyclose: ')',
+      },
+      parentheses : () => {
+        this.Partialdelimiters.open='(';
+        this.Partialdelimiters.close=')';
+        this.Partialdelimiters.emptyclose=')';
+      },
+//      brackets : false,
+//      bar : false,
+//      'plain-derivatives' : false,
+//      'subscripts' : true,
+//      'nosubscripts' : false,
+//      'moles-index' : true,
+//      'moles-range' : false,
+//      'Bejan' : false,
+//      'CBK' : false,
+//      'ElliottLira' : false,
+//      'KlotzRosenberg' : false,
+//      'Koretsky' : false,
+//      'ModellReid' : false,
+//      'MSBB' : false,
+//      'Prausnitz' : false,
+//      'Sandler' : false,
+//      'SVNAS' : false,
+//      'TesterModell' : false,
+//      'Thompson' : false,
+    },
   },
 });

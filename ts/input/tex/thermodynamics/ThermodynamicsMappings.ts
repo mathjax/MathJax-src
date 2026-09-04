@@ -21,8 +21,9 @@
  * @author kaiserkarl31@yahoo.com (Karl D. Hammond)
  */
 
+import ParseMethods from '../ParseMethods.js';
 import ThermodynamicsMethods from './ThermodynamicsMethods.js';
-import { CommandMap } from '../TokenMap.js';
+import { CommandMap,EnvironmentMap } from '../TokenMap.js';
 
 /**
  * Macros for the thermodynamics package
@@ -35,9 +36,9 @@ new CommandMap ('Thermodynamics-macros', {
   GibbsSymbol: [ThermodynamicsMethods.Macro, 'G'],
   HelmholtzSymbol: [ThermodynamicsMethods.Macro, 'A'],
   InternalEnergySymbol: [ThermodynamicsMethods.Macro, 'U'],
-  CompressibilitySymbol: [ThermodynamicsMethods.Macro, '\\kappa'],
-  ExpansivitySymbol: [ThermodynamicsMethods.Macro, '\\alpha'],
-  HeatCapacitySymbol: [ThermodynamicsMethods.Macro, 'C'],
+  compressibilitysymbol: [ThermodynamicsMethods.Macro, '\\kappa'],
+  expansivitysymbol: [ThermodynamicsMethods.Macro, '\\alpha'],
+  heatcapacitysymbol: [ThermodynamicsMethods.Macro, 'C'],
   dbar: [ThermodynamicsMethods.Macro, '\u0111'],
   ncomponents: [ThermodynamicsMethods.Macro, 'C'],
   extensive: [ThermodynamicsMethods.Macro,
@@ -58,6 +59,7 @@ new CommandMap ('Thermodynamics-macros', {
   Et: [ThermodynamicsMethods.Macro, '\\extensive{\\TotalEnergySymbol}'],
   Em: [ThermodynamicsMethods.Macro, '\\intensive{\\TotalEnergySymbol}'],
   Es: [ThermodynamicsMethods.Macro, '\\specific{\\TotalEnergySymbol}'],
+  Epm: [ThermodynamicsMethods.Macro, '\\partialmolar{\\TotalEnergySymbol}'],
   Ft: [ThermodynamicsMethods.Macro, '\\extensive{\\HelmholtzSymbol}'],
   Fm: [ThermodynamicsMethods.Macro, '\\intensive{\\HelmholtzSymbol}'],
   Fs: [ThermodynamicsMethods.Macro, '\\specific{\\HelmholtzSymbol}'],
@@ -141,35 +143,37 @@ new CommandMap ('Thermodynamics-macros', {
   Wm: [ThermodynamicsMethods.Macro, '\\intensive{W}'],
   Ws: [ThermodynamicsMethods.Macro, '\\specific{W}'],
   cP: [ThermodynamicsMethods.SubscriptedSymbol,
-        '\\intensive{\\HeatCapacitySymbol}', 'P'],
+        '\\intensive{\\heatcapacitysymbol}', 'P'],
   cPt: [ThermodynamicsMethods.SubscriptedSymbol,
-        '\\extensive{\\HeatCapacitySymbol}', 'P'],
+        '\\extensive{\\heatcapacitysymbol}', 'P'],
   cPs: [ThermodynamicsMethods.SubscriptedSymbol,
-        '\\specific{\\HeatCapacitySymbol}', 'P'],
+        '\\specific{\\heatcapacitysymbol}', 'P'],
   cPpm: [ThermodynamicsMethods.PartialMolarSubscripted,
-        '\\intensive{\\HeatCapacitySymbol}', 'P'],
+        '\\intensive{\\heatcapacitysymbol}', 'P'],
+  cVpm: [ThermodynamicsMethods.PartialMolarSubscripted,
+        '\\intensive{\\heatcapacitysymbol}', 'V'],
   cV: [ThermodynamicsMethods.SubscriptedSymbol,
-        '\\intensive{\\HeatCapacitySymbol}', 'V'],
+        '\\intensive{\\heatcapacitysymbol}', 'V'],
   cVt: [ThermodynamicsMethods.SubscriptedSymbol,
-        '\\extensive{\\HeatCapacitySymbol}', 'V'],
+        '\\extensive{\\heatcapacitysymbol}', 'V'],
   cVs: [ThermodynamicsMethods.SubscriptedSymbol,
-        '\\specifc{\\HeatCapacitySymbol}', 'V'],
+        '\\specifc{\\heatcapacitysymbol}', 'V'],
   kappaT: [ThermodynamicsMethods.SubscriptedSymbol,
-        '\\CompressibilitySymbol', 'T'],
+        '\\compressibilitysymbol', 'T'],
   kappaS: [ThermodynamicsMethods.SubscriptedSymbol,
-        '\\CompressibilitySymbol', 'S'],
+        '\\compressibilitysymbol', 'S'],
   alphaP: [ThermodynamicsMethods.SubscriptedSymbol,
-        '\\ExpansivitySymbol', 'P'],
+        '\\expansivitysymbol', 'P'],
   alphaS: [ThermodynamicsMethods.SubscriptedSymbol,
-        '\\ExpansivitySymbol', 'S'],
+        '\\expansivitysymbol', 'S'],
   muJT: [ThermodynamicsMethods.SubscriptedSymbol,
         '\\mu', '\\text{JT}'],
   fpure: [ThermodynamicsMethods.Macro, 'f'],
   fmix: [ThermodynamicsMethods.Macro, '\\hat f'],
   phipure: [ThermodynamicsMethods.Macro, '\\phi'],
   phimix: [ThermodynamicsMethods.Macro, '\\hat\\phi'],
-  actrel: [ThermodynamicsMethods.Macro, 'a'],
   actabs: [ThermodynamicsMethods.Macro, '\\lambda'],
+  actrel: [ThermodynamicsMethods.Macro, 'a'],
   muit: [ThermodynamicsMethods.Macro, '\\mu'],
   gammait: [ThermodynamicsMethods.Macro, '\\gamma'],
   gammarat: [ThermodynamicsMethods.Macro, '\\gamma^*'],
@@ -177,22 +181,27 @@ new CommandMap ('Thermodynamics-macros', {
   Henryrat: [ThermodynamicsMethods.Macro, 'h'],
   Henrymol: [ThermodynamicsMethods.Macro, '\\mathcal{H}'],
   sat: [ThermodynamicsMethods.Macro, '\\text{sat}'],
+  fsat: [ThermodynamicsMethods.Macro, 'f^{\\sat}'],
   Psat: [ThermodynamicsMethods.Macro, 'P^{\\sat}'],
   Pvap: [ThermodynamicsMethods.Macro, 'P^{\\sat}'],
-  fsat: [ThermodynamicsMethods.Macro, 'f^{\\sat}'],
   phisat: [ThermodynamicsMethods.Macro, '\\phi^{\\sat}'],
   std: [ThermodynamicsMethods.Macro, '\\circ'],
-  Pstd: [ThermodynamicsMethods.Macro, 'P^{\\std}'],
   Cstd: [ThermodynamicsMethods.Macro, 'C^{\\std}'],
   fstd: [ThermodynamicsMethods.Macro, 'f^{\\std}'],
+  Pstd: [ThermodynamicsMethods.Macro, 'P^{\\std}'],
   mustd: [ThermodynamicsMethods.Macro, '\\mu^{\\std}'],
-  mix: [ThermodynamicsMethods.Macro, '\\text{mix}'],
-  Deltaf: [ThermodynamicsMethods.ChangeonSomething, "f"],
-  Deltamix: [ThermodynamicsMethods.ChangeonSomething, "\\mix"],
-  Deltarxn: [ThermodynamicsMethods.ChangeonSomething, "\\text{rxn}"],
-  Deltafus: [ThermodynamicsMethods.ChangeonSomething, null, "\\text{fus}"],
-  Deltasub: [ThermodynamicsMethods.ChangeonSomething, null, "\\text{sub}"],
-  Deltavap: [ThermodynamicsMethods.ChangeonSomething, null, "\\text{vap}"],
+  mixing: [ThermodynamicsMethods.Macro, '\\text{mix}'],
+  formation: [ThermodynamicsMethods.Macro, 'f'],
+  fusion: [ThermodynamicsMethods.Macro, '\\text{fusion}'],
+  reaction: [ThermodynamicsMethods.Macro, '\\text{rxn}'],
+  sublimation: [ThermodynamicsMethods.Macro, '\\text{sublimation}'],
+  vaporization: [ThermodynamicsMethods.Macro, '\\text{vaporization}'],
+  Deltaf: [ThermodynamicsMethods.ChangeonSomething, "\\formation"],
+  Deltamix: [ThermodynamicsMethods.ChangeonSomething, "\\mixing"],
+  Deltarxn: [ThermodynamicsMethods.ChangeonSomething, "\\reaction"],
+  Deltafus: [ThermodynamicsMethods.ChangeonSomething, null, "\\fusion"],
+  Deltasub: [ThermodynamicsMethods.ChangeonSomething, null, "\\sublimation"],
+  Deltavap: [ThermodynamicsMethods.ChangeonSomething, null, "\\vaporization"],
   xrxn: [ThermodynamicsMethods.Macro, "\\xi"],
   Partial: ThermodynamicsMethods.Partial,
   PartialSecond: ThermodynamicsMethods.PartialSecond,
@@ -203,20 +212,27 @@ new CommandMap ('Thermodynamics-macros', {
     '\\left(\\partial^2 #1/\\partial #2^2\\right)_{#3}', 3],
   PartialMixSecondinline: [ThermodynamicsMethods.Macro,
     '\\left(\\partial^2 #1/\\partial #2 \\partial #3\\right)_{#4}', 4],
-  PartialBigg: ThermodynamicsMethods.PartialBigg,
-  PartialSecondBigg: ThermodynamicsMethods.PartialSecondBigg,
-  PartialMixSecondBigg: ThermodynamicsMethods.PartialMixSecondBigg,
-  Partialbigg: ThermodynamicsMethods.Partialbigg,
-  PartialSecondbigg: ThermodynamicsMethods.PartialSecondbigg,
-  PartialMixSecondbigg: ThermodynamicsMethods.PartialMixSecondbigg,
+  PartialBigg: [ThermodynamicsMethods.Partial, '\\Biggl', '\\Biggr'],
+  PartialSecondBigg: [ThermodynamicsMethods.PartialSecond,
+    '\\Biggl', '\\Biggr'],
+  PartialMixSecondBigg: [ThermodynamicsMethods.PartialMixSecond,
+    '\\Biggl', '\\Biggr'],
+  Partialbigg: [ThermodynamicsMethods.Partial,
+    '\\biggl', '\\biggr'],
+  PartialSecondbigg: [ThermodynamicsMethods.PartialSecond,
+    '\\biggl', '\\biggr'],
+  PartialMixSecondbigg: [ThermodynamicsMethods.PartialMixSecond,
+    '\\biggl', '\\biggr'],
   Partialinlinetext: [ThermodynamicsMethods.Macro,
     '(\\partial #1/\\partial #2)_{#3}', 3],
   PartialSecondinlinetext: [ThermodynamicsMethods.Macro,
     '(\\partial^2 #1/\\partial #2^2)_{#3}', 3],
   PartialMixSecondinlinetext: [ThermodynamicsMethods.Macro,
     '(\\partial^2 #1/\\partial #2 \\partial #3)_{#4}', 4],
-  // allbut
-  // allbutlastand
+  // FIXME: we could reprogram these to *check* instead of forcing the user?
+  allbut: [ThermodynamicsMethods.Macro, '{#3}_{#1 \\neq #2}', 3, 'j'],
+  allbutlastand: [ThermodynamicsMethods.Macro,
+    '{#3}_{#1 \\neq #2,\\ncomponents}', 3, 'j'],
   allNs: [ThermodynamicsMethods.Macro, '\\vec{\\Nt}'],
   allNsbut: [ThermodynamicsMethods.Macro, '\\Nt_{#1\\neq #2}', 2, 'j'],
   allmus: [ThermodynamicsMethods.Macro, '\\vec{\\mu}'],
@@ -226,13 +242,14 @@ new CommandMap ('Thermodynamics-macros', {
     'x_{#1\\neq #2,\\ncomponents}', 2, 'j'],
   allYs: [ThermodynamicsMethods.Macro, '\\vec{y}'],
   allYsbut: [ThermodynamicsMethods.Macro,
-    'y_{#1\\neq #2,\\ncomponents}', 2, '[k]'],
+    'y_{#1\\neq #2,\\ncomponents}', 2, 'j'],
   allMs: [ThermodynamicsMethods.Macro, '\\vec{m}'],
   allMsbut: [ThermodynamicsMethods.Macro, 'm_{#1\\neq #2}', 2, 'j'],
   allWs: [ThermodynamicsMethods.Macro, '\\vec{w}'],
   allWsbut: [ThermodynamicsMethods.Macro,
     'w_{#1\\neq #2,\\ncomponents}', 2, 'j'],
-  // Jacobian
+  Jacobian: [ThermodynamicsMethods.Macro,
+    '\\frac{\\partial(#1)}{\\partial(#2)}', 2],
   // Jacobiandet
   sumall: [ThermodynamicsMethods.Macro, "\\sum_{#2=1}^{\\ncomponents}", 2],
   sumallbutlast: [ThermodynamicsMethods.Macro,
@@ -244,3 +261,22 @@ new CommandMap ('Thermodynamics-macros', {
   Epot: [ThermodynamicsMethods.Macro, 'E'],
 });
 
+/**
+ * Environments for the thermodynamics package
+ */
+new EnvironmentMap('Thermodynamics-environments', ParseMethods.environment, {
+  thermointensiveplain: null,
+//  thermoextensiveplain:
+//  thermoextensivesuperscript:
+//  thermointensivelowercase:
+//  thermolongpm:
+//  thermoshortpm:
+//  thermoparentheses: [ThermodynamicsMethods.SetPartialDelimiters, "(", ')', ')'],
+//  thermobrackets: [ThermodynamicsMethods.SetPartialDelimiters, "[", ']', ']'],
+//  thermobraces:
+//  thermobar:
+//  thermoplain:
+//  thermosubscripts:
+//  thermoNOsubscripts:
+//  thermomolesrange:
+});

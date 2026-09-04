@@ -26,7 +26,46 @@ import { ParseMethod } from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
 import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 
+var PartialOpen = '(';
+var PartialClose = ')';
+var PartialEmptyClose = ')';
+
+export function SetPartialDelimiters
+  (open: string, close: string, emptyclose: string) {
+    PartialOpen = open;
+    PartialClose = close;
+    PartialEmptyClose = emptyclose;
+}
+
 export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
+
+  OldSetPartialDelimiters (parser: TexParser) {
+
+    if ( parser.options.thermodynamics.parentheses ) {
+      PartialOpen = '(';
+      PartialClose = '(';
+      PartialEmptyClose = '(';
+      parser.options.thermodynamics.parentheses = false;
+    }
+    if ( parser.options.thermodynamics.brackets ) {
+      PartialOpen = '[';
+      PartialClose = '[';
+      PartialEmptyClose = '[';
+      parser.options.thermodynamics.brackets = false;
+    }
+    if ( parser.options.thermodynamics.bar ) {
+      PartialOpen = '.';
+      PartialClose = '|';
+      PartialEmptyClose = '.';
+      parser.options.thermodynamics.bar = false;
+    }
+/*    if ( parser.options.thermodynamics.'plain-derivatives' ) {
+      PartialOpen = '.';
+      PartialClose = '.';
+      PartialEmptyClose = '.';
+      parser.options.thermodynamics.'plain-derivatives' = false;
+    }*/
+  },
 
   // Partial molar quantities
   // cases to consider:
@@ -78,110 +117,63 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
     ThermodynamicsMethods.PartialMolar (parser, name, symbol)
   },
 
-  Partial (parser: TexParser) {
-    const star = parser.GetStar() ? '*' : '';
-    if ( star == '*' )
-      BaseMethods.Macro (parser, 'Partial',
-        '\\left(\\frac{\\partial #1}{\\partial #2}\\right)_{#3}\\mkern-12mu',
-        3);
+  Partial (parser: TexParser, name: string, begin='\\left', end='\\right') {
+    const star = parser.GetStar();
+    const arg1 = parser.GetArgument(name);
+    const arg2 = parser.GetArgument(name);
+    const arg3 = parser.GetArgument(name);
+
+    var kerning = '';
+    if ( star )
+      kerning = '\\mkern-12mu';
+    if ( arg3 == '' )
+      BaseMethods.Macro (parser, name, begin + PartialOpen
+        + '\\frac{\\partial ' + arg1 + '}{\\partial ' + arg2 + '}'
+        + end + PartialEmptyClose + kerning);
     else
-      BaseMethods.Macro (parser, 'Partial*',
-        '\\left(\\frac{\\partial #1}{\\partial #2}\\right)_{#3}', 3);
+      BaseMethods.Macro (parser, name, begin + PartialOpen
+        + '\\frac{\\partial ' + arg1 + '}{\\partial ' + arg2 + '}'
+        + end + PartialClose + '_{' + arg3 + '}' + kerning);
   },
 
-  PartialSecond (parser: TexParser) {
-    const star = parser.GetStar() ? '*' : '';
-    if ( star == '*' )
-      BaseMethods.Macro (parser, 'PartialSecond',
-        '\\left(\\frac{\\partial^2 #1}{\\partial #2^2}\\right)_{#3}\\mkern-12mu',
-        3);
+  PartialSecond (parser: TexParser, name: string,
+        begin='\\left', end='\\right') {
+    const star = parser.GetStar();
+    const arg1 = parser.GetArgument(name);
+    const arg2 = parser.GetArgument(name);
+    const arg3 = parser.GetArgument(name);
+    var kerning = '';
+    if ( star )
+      kerning = '\\mkern-12mu';
+    if ( arg3 == '' )
+      BaseMethods.Macro (parser, name, begin + PartialOpen
+        + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2 + '^2}'
+        + end + PartialEmptyClose + kerning);
     else
-      BaseMethods.Macro (parser, 'PartialSecond*',
-        '\\left(\\frac{\\partial^2 #1}{\\partial #2^2}\\right)_{#3}', 3);
+      BaseMethods.Macro (parser, name, begin + PartialOpen
+        + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2 + '^2}'
+        + end + PartialClose + '_{' + arg3 + '}' + kerning);
   },
 
-  PartialMixSecond (parser: TexParser) {
-    const star = parser.GetStar() ? '*' : '';
-    if ( star == '*' )
-      BaseMethods.Macro (parser, 'PartialMixSecond',
-        '\\left(\\frac{\\partial^2 #1}' +
-                     '{\\partial #2\\partial #3}\\right)_{#4}\\mkern-12mu', 4);
+  PartialMixSecond (parser: TexParser, name: string,
+        begin='\\left', end='\\right') {
+    const star = parser.GetStar();
+    const arg1 = parser.GetArgument(name);
+    const arg2 = parser.GetArgument(name);
+    const arg3 = parser.GetArgument(name);
+    const arg4 = parser.GetArgument(name);
+    var kerning = '';
+    if ( star )
+      kerning = '\\mkern-12mu';
+    if ( arg4 == '' )
+      BaseMethods.Macro (parser, name, begin + PartialOpen
+        + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2
+        + '\\partial ' + arg3 + '}' + end + PartialEmptyClose + kerning);
     else
-      BaseMethods.Macro (parser, 'PartialMixSecond*',
-        '\\left(\\frac{\\partial^2 #1}' +
-                     '{\\partial #2\\partial #3}\\right)_{#4}', 4);
-  },
-
-  PartialBigg (parser: TexParser) {
-    const star = parser.GetStar() ? '*' : '';
-    if ( star == '*' )
-      BaseMethods.Macro (parser, 'PartialBigg',
-        '\\Biggl(\\frac{\\partial #1}{\\partial #2}\\Biggr)_{#3}\\mkern-12mu',
-        3);
-    else
-      BaseMethods.Macro (parser, 'PartialBigg*',
-        '\\Biggl(\\frac{\\partial #1}{\\partial #2}\\Biggr)_{#3}', 3);
-  },
-
-  PartialSecondBigg (parser: TexParser) {
-    const star = parser.GetStar() ? '*' : '';
-    if ( star == '*' )
-      BaseMethods.Macro (parser, 'PartialSecondBigg',
-        '\\Biggl(\\frac{\\partial^2 #1}' +
-                      '{\\partial #2^2}\\Biggr)_{#3}\\mkern-12mu',
-        3);
-    else
-      BaseMethods.Macro (parser, 'PartialSecondBigg*',
-        '\\Biggl(\\frac{\\partial^2 #1}' +
-                      '{\\partial #2^2}\\Biggr)_{#3}', 3);
-  },
-
-  PartialMixSecondBigg (parser: TexParser) {
-    const star = parser.GetStar() ? '*' : '';
-    if ( star == '*' )
-      BaseMethods.Macro (parser, 'PartialMixSecondBigg',
-        '\\Biggl(\\frac{\\partial^2 #1}' +
-                     '{\\partial #2\\partial #3}\\Biggr)_{#4}\\mkern-12mu', 4);
-    else
-      BaseMethods.Macro (parser, 'PartialMixSecondBigg*',
-        '\\Biggl(\\frac{\\partial^2 #1}' +
-                     '{\\partial #2\\partial #3}\\Biggr)_{#4}', 4);
-  },
-
-  Partialbigg (parser: TexParser) {
-    const star = parser.GetStar() ? '*' : '';
-    if ( star == '*' )
-      BaseMethods.Macro (parser, 'Partialbigg',
-        '\\biggl(\\frac{\\partial #1}{\\partial #2}\\biggr)_{#3}\\mkern-12mu',
-        3);
-    else
-      BaseMethods.Macro (parser, 'Partialbigg*',
-        '\\biggl(\\frac{\\partial #1}{\\partial #2}\\biggr)_{#3}', 3);
-  },
-
-  PartialSecondbigg (parser: TexParser) {
-    const star = parser.GetStar() ? '*' : '';
-    if ( star == '*' )
-      BaseMethods.Macro (parser, 'PartialSecondbigg',
-        '\\biggl(\\frac{\\partial^2 #1}' +
-                      '{\\partial #2^2}\\biggr)_{#3}\\mkern-12mu',
-        3);
-    else
-      BaseMethods.Macro (parser, 'PartialSecondbigg*',
-        '\\biggl(\\frac{\\partial^2 #1}' +
-                      '{\\partial #2^2}\\biggr)_{#3}', 3);
-  },
-
-  PartialMixSecondbigg (parser: TexParser) {
-    const star = parser.GetStar() ? '*' : '';
-    if ( star == '*' )
-      BaseMethods.Macro (parser, 'PartialMixSecondbigg',
-        '\\biggl(\\frac{\\partial^2 #1}' +
-                   '{\\partial #2\\partial #3}\\Biggr)_{#4}\\mkern-12mu', 4);
-    else
-      BaseMethods.Macro (parser, 'PartialMixSecondbigg*',
-        '\\biggl(\\frac{\\partial^2 #1}' +
-                  '{\\partial #2\\partial #3}\\biggr)_{#4}', 4);
+      BaseMethods.Macro (parser, name, begin + PartialOpen
+        + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2
+        + '\\partial ' + arg3 + '}' + end + PartialClose
+        + '_{' + arg4 + '}' + kerning);
   },
 
   NewExtensiveProperty (parser: TexParser, name: string) {
@@ -407,7 +399,6 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
         supers = superscript + ',' + supers;
     }
     // Print symbol with non-null superscripts and subscripts
-console.log('DEBUG: symbol is ', symbol, '; subs is ', subs, '; supers is ', supers);
     if ( subs == '' && supers == '' )
       // will this EVER happen? (it is an implied check that BOTH are not null)
       BaseMethods.Macro (parser, 'ChangeonSomething', '\\Delta ' + symbol);
