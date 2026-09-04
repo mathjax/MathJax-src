@@ -122,7 +122,7 @@ export function setupTex(
   Locale.setLocale();
   const html = new HTMLDocument('', adaptor, { InputJax: tex });
   convert = (expr: string, display: boolean) =>
-    toMathML(html.convert(expr, { display: display, end: STATE.CONVERT }));
+    toMathML(html.convert(expr, { display: display, end: STATE.CONVERT }) as MmlNode);
 }
 
 /**
@@ -235,7 +235,7 @@ export function setupTexWithOutput(
   const visitor = new SerializedMmlVisitor();
   const toMathML = (node: MmlNode) => visitor.visitTree(node);
   convert = (expr: string, display: boolean) =>
-    toMathML(html.convert(expr, { display: display, end: STATE.CONVERT }));
+    toMathML(html.convert(expr, { display: display, end: STATE.CONVERT }) as MmlNode);
 }
 
 /*********************************************************************/

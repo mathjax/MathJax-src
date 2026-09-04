@@ -24,33 +24,43 @@
 import { mathjax } from '../../mathjax.js';
 
 import { STATE, newState } from '../../core/MathItem.js';
-import { MathDocumentConstructor } from '../../core/MathDocument.js';
-import { Handler } from '../../core/Handler.js';
 import {
+  MathDocumentConstructor,
+  RenderActions,
+} from '../../core/MathDocument.js';
+import { Handler } from '../../core/Handler.js';
+import type {
   ComplexityMathDocument,
   ComplexityMathItem,
+  COMPLEXITY_OPTIONS,
 } from '../../a11y/complexity.js';
-import {
+import type {
   AssistiveMmlMathDocument,
   AssistiveMmlMathItem,
+  ASSISTIVEMML_OPTIONS,
 } from '../../a11y/assistive-mml.js';
-import { SpeechMathDocument } from '../../a11y/speech.js';
+import type {
+  SpeechMathDocument,
+  SpeechMathItem,
+  SPEECH_OPTIONS,
+} from '../../a11y/speech.js';
+import type { EXPLORER_OPTIONS } from '../../a11y/explorer.ts';
 import { expandable } from '../../util/Options.js';
+import { DOM, Constructor } from '../../types/Types.js';
+import { HTML_DOM } from '../../types/dom/html.js';
 
-import { Menu } from './Menu.js';
+import { Menu, OPTIONS as SETTINGS } from './Menu.js';
 import '../../a11y/speech/SpeechMenu.js';
 
 /*==========================================================================*/
 
 /**
- * Generic constructor for Mixins
- */
-export type Constructor<T> = new (...args: any[]) => T;
-
-/**
  * Generic A11Y MathItem type
  */
-export type A11yMathItem = ComplexityMathItem<HTMLElement, Text, Document> &
+/* prettier-ignore */
+export type A11yMathItem =
+  SpeechMathItem<HTMLElement, Text, Document> &
+  ComplexityMathItem<HTMLElement, Text, Document> &
   AssistiveMmlMathItem<HTMLElement, Text, Document>;
 
 /**
@@ -63,18 +73,19 @@ export type A11yMathItemConstructor = {
 /**
  * Generic A11Y MathDocument type
  */
-export type A11yMathDocument = ComplexityMathDocument<
-  HTMLElement,
-  Text,
-  Document
-> &
+/* prettier-ignore */
+export type A11yMathDocument =
+  ComplexityMathDocument<HTMLElement, Text, Document> &
   SpeechMathDocument<HTMLElement, Text, Document> &
   AssistiveMmlMathDocument<HTMLElement, Text, Document>;
 
 /**
  * Constructor for base document for MenuMathDocument
  */
-export type A11yDocumentConstructor = MathDocumentConstructor<A11yMathDocument>;
+export type A11yDocumentConstructor = MathDocumentConstructor<
+  A11yMathDocument,
+  DOM<HTMLElement, Text, Document>
+>;
 
 /*==========================================================================*/
 
@@ -86,11 +97,7 @@ newState('CONTEXT_MENU', 170);
 /**
  * The new function for MathItem that adds the context menu
  */
-export interface MenuMathItem extends ComplexityMathItem<
-  HTMLElement,
-  Text,
-  Document
-> {
+export interface MenuMathItem extends A11yMathItem {
   /**
    * @param {MenuMathDocument} document   The document where the menu is being added
    * @param {boolean} force               True if menu should be added even if enableMenu is false
@@ -151,12 +158,69 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
 /*==========================================================================*/
 
 /**
+ * The ui/menu option types.
+ */
+export type OPTIONS = {
+  //
+  //  These options are from the a11y extensions, which may not be loaded
+  //    initially, and so would cause "undefined option" error messages
+  //    if a user tries to configure them.  So we include them here.
+  //    They are overridden by the options from the extensions when
+  //    those are loaded (via ...BaseDocument.OPTIONS).
+  //
+  enableEnrichment: boolean;
+  enableComplexity: boolean;
+  enableSpeech: boolean;
+  enableBraille: boolean;
+  enableExplorer: boolean;
+  enableExplorerHelp: boolean;
+  enrichError: SPEECH_OPTIONS<HTML_DOM>['enrichError'];
+  //
+  enableMenu: true;
+  menuOptions: SETTINGS;
+  MenuClass: typeof Menu;
+};
+
+/**
+ * The MenuMathDocument option types.
+ */
+export interface MENU_OPTIONS
+  extends
+    OPTIONS,
+    COMPLEXITY_OPTIONS<HTML_DOM>,
+    Omit<EXPLORER_OPTIONS, 'MathItem'>,
+    ASSISTIVEMML_OPTIONS<HTML_DOM> {
+  MathItem: Constructor<A11yMathItem>;
+}
+
+/**
+ * The ui/menu option defaults.
+ */
+const options: OPTIONS = {
+  enableEnrichment: true,
+  enableComplexity: true,
+  enableSpeech: true,
+  enableBraille: true,
+  enableExplorer: true,
+  enableExplorerHelp: true,
+  enrichError: (doc: MenuMathDocument, math: MenuMathItem, err: Error) =>
+    doc.enrichError(doc, math, err),
+  enableMenu: true,
+  menuOptions: Menu.OPTIONS,
+  MenuClass: Menu,
+};
+
+/*==========================================================================*/
+
+/**
  * The properties needed in the MathDocument for context menus
  */
-export interface MenuMathDocument
-  extends
-    ComplexityMathDocument<HTMLElement, Text, Document>,
-    SpeechMathDocument<HTMLElement, Text, Document> {
+export interface MenuMathDocument extends A11yMathDocument {
+  /**
+   * @override
+   */
+  options: MENU_OPTIONS;
+
   /**
    * The menu associated with this document
    */
@@ -167,7 +231,7 @@ export interface MenuMathDocument
    *
    * @returns {MenuMathDocument}   The MathDocument (so calls can be chained)
    */
-  addMenu(): MenuMathDocument;
+  addMenu(): this;
 
   /**
    * Checks if there are files being loaded by the menu, and cancels the typesetting if so.
@@ -193,40 +257,31 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
      * @override
      */
     public static OPTIONS = {
-      //
-      //  These options are from the a11y extensions, which may not be loaded
-      //    initially, and so would cause "undefined option" error messages
-      //    if a user tries to configure them.  So we include them here.
-      //    They are overridden by the options from the extensions when
-      //    those are loaded (via ...BaseDocument.OPTIONS).
-      //
-      enableEnrichment: true,
-      enableComplexity: true,
-      enableSpeech: true,
-      enableBraille: true,
-      enableExplorer: true,
-      enableExplorerHelp: true,
-      enrichSpeech: 'none',
-      enrichError: (doc: MenuMathDocument, math: MenuMathItem, err: Error) =>
-        doc.enrichError(doc, math, err),
+      ...options,
       ...BaseDocument.OPTIONS,
-      MenuClass: Menu,
-      menuOptions: Menu.OPTIONS,
-      enableMenu: true,
-      sre: BaseDocument.OPTIONS.sre || expandable({}),
-      a11y: BaseDocument.OPTIONS.a11y || expandable({}),
-      renderActions: expandable({
+      sre:
+        (BaseDocument.OPTIONS as SPEECH_OPTIONS<HTML_DOM>).sre ||
+        expandable({}),
+      a11y:
+        (BaseDocument.OPTIONS as SPEECH_OPTIONS<HTML_DOM>).a11y ||
+        expandable({}),
+      renderActions: expandable<RenderActions<HTMLElement, Text, Document>>({
         ...BaseDocument.OPTIONS.renderActions,
         addMenu: [STATE.CONTEXT_MENU],
         getMenus: [STATE.INSERTED + 5, false],
         checkLoading: [
           STATE.UNPROCESSED + 1,
           (doc: MenuMathDocument) => doc.checkLoading(),
-          '',
+          null,
           false,
         ],
       }),
     };
+
+    /**
+     * @override
+     */
+    options: MENU_OPTIONS;
 
     /**
      * The menu associated with this document
@@ -265,7 +320,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
      *
      * @returns {MenuMathDocument}   The MathDocument (so calls can be chained)
      */
-    public addMenu(): MenuMathDocument {
+    public addMenu(): this {
       if (!this.processed.isSet('context-menu')) {
         for (const math of this.math) {
           (math as MenuMathItem).addMenu(this);
@@ -303,7 +358,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
      *
      * @returns {MenuMathDocument}   The MathDocument (so calls can be chained)
      */
-    public _checkLoading(): MenuMathDocument {
+    public _checkLoading(): this {
       if (this.menu.isLoading) {
         mathjax.retryAfter(
           this.menu.loadingPromise.catch((err) => console.warn(err))

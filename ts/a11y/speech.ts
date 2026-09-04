@@ -22,26 +22,25 @@
  */
 
 import { Handler } from '../core/Handler.js';
-import { MathDocument, MathDocumentConstructor } from '../core/MathDocument.js';
+import {
+  MathDocument,
+  MathDocumentConstructor,
+  RenderActions,
+} from '../core/MathDocument.js';
 import {
   EnrichedMathItem,
   EnrichedMathDocument,
   EnrichHandler,
+  ENRICH_OPTIONS,
 } from './semantic-enrich.js';
 import { STATE, newState } from '../core/MathItem.js';
 import { MathML } from '../input/mathml.js';
-import { OptionList, expandable } from '../util/Options.js';
+import { expandable } from '../util/Options.js';
 import { GeneratorPool } from './speech/GeneratorPool.js';
 import { WorkerHandler } from './speech/WebWorker.js';
 import { sreRoot } from '#root/sre-root.js';
 import { localize } from './speech/__locales__/Component.js';
-
-/*==========================================================================*/
-
-/**
- * Generic constructor for Mixins
- */
-export type Constructor<T> = new (...args: any[]) => T;
+import { DOM, DOM_TYPES, N, T, D, Constructor } from '../types/Types.js';
 
 /*==========================================================================*/
 
@@ -164,6 +163,65 @@ export function SpeechMathItemMixin<
 /*==========================================================================*/
 
 /**
+ * The speech A11Y option types.
+ */
+export type A11Y_SPEECH_OPTIONS = {
+  speech: boolean;
+  braille: boolean;
+};
+
+/**
+ * The speech option types.
+ */
+export type OPTIONS<DOM extends DOM_TYPES> = {
+  enableSpeech: boolean;
+  enableBraille: boolean;
+  speechError: (
+    doc: SpeechMathDocument<N<DOM>, T<DOM>, D<DOM>>,
+    math: SpeechMathItem<N<DOM>, T<DOM>, D<DOM>>,
+    err: string
+  ) => void;
+  worker: {
+    path: string;
+    maps: string;
+    worker: string;
+    debug: boolean;
+  };
+};
+
+/**
+ * The A11Y option object.
+ */
+export type A11Y_OPTIONS = {
+  a11y: A11Y_SPEECH_OPTIONS;
+};
+
+/**
+ * The SpeechMathDocument option types.
+ */
+export interface SPEECH_OPTIONS<DOM extends DOM_TYPES>
+  extends OPTIONS<DOM>, A11Y_OPTIONS, ENRICH_OPTIONS<DOM> {
+  MathItem: Constructor<SpeechMathItem<N<DOM>, T<DOM>, D<DOM>>>;
+}
+
+/**
+ * The speech option defaults.
+ */
+const options: OPTIONS<DOM> = {
+  enableSpeech: true,
+  enableBraille: true,
+  speechError: (doc, math, err) => doc.speechError(doc, math, err),
+  worker: {
+    path: sreRoot(),
+    maps: sreRoot().replace(/[cm]js\/a11y\/sre$/, 'bundle/sre/mathmaps'),
+    worker: 'speech-worker.js',
+    debug: false,
+  },
+};
+
+/*==========================================================================*/
+
+/**
  * The functions added to MathDocument for enrichment
  *
  * @template N  The HTMLElement node class
@@ -176,6 +234,11 @@ export interface SpeechMathDocument<N, T, D> extends EnrichedMathDocument<
   D
 > {
   /**
+   * @override
+   */
+  options: SPEECH_OPTIONS<DOM<N, T, D>>;
+
+  /**
    * The webworker handler for the document
    */
   webworker: WorkerHandler<N, T, D>;
@@ -185,7 +248,7 @@ export interface SpeechMathDocument<N, T, D> extends EnrichedMathDocument<
    *
    * @returns {SpeechMathDocument}   The MathDocument (so calls can be chained)
    */
-  attachSpeech(): SpeechMathDocument<N, T, D>;
+  attachSpeech(): this;
 
   /**
    * @param {SpeechMathDocument} doc   The MathDocument for the error
@@ -219,38 +282,34 @@ export function SpeechMathDocumentMixin<
   N,
   T,
   D,
-  B extends MathDocumentConstructor<EnrichedMathDocument<N, T, D>>,
+  B extends MathDocumentConstructor<
+    EnrichedMathDocument<N, T, D>,
+    DOM<N, T, D>
+  >,
 >(
   EnrichedMathDocument: B
-): MathDocumentConstructor<SpeechMathDocument<N, T, D>> & B {
+): MathDocumentConstructor<SpeechMathDocument<N, T, D>, DOM<N, T, D>> & B {
   return class extends EnrichedMathDocument {
     /**
      * @override
      */
-    public static OPTIONS: OptionList = {
+    public static OPTIONS = {
       ...EnrichedMathDocument.OPTIONS,
-      enableSpeech: true,
-      enableBraille: true,
-      speechError: (
-        doc: SpeechMathDocument<N, T, D>,
-        math: SpeechMathItem<N, T, D>,
-        err: string
-      ) => doc.speechError(doc, math, err),
-      renderActions: expandable({
+      ...options,
+      renderActions: expandable<RenderActions<N, T, D>>({
         ...EnrichedMathDocument.OPTIONS.renderActions,
         attachSpeech: [STATE.ATTACHSPEECH],
       }),
-      worker: {
-        path: sreRoot(),
-        maps: sreRoot().replace(/[cm]js\/a11y\/sre$/, 'bundle/sre/mathmaps'),
-        worker: 'speech-worker.js',
-        debug: false,
-      },
-      a11y: expandable({
-        speech: true, //    // switch on speech output
-        braille: true, //   // switch on Braille output
+      a11y: expandable<A11Y_SPEECH_OPTIONS>({
+        speech: true,
+        braille: true,
       }),
     };
+
+    /**
+     * @override
+     */
+    public options: SPEECH_OPTIONS<DOM<N, T, D>>;
 
     /**
      * The webworker handler for the document
@@ -293,7 +352,7 @@ export function SpeechMathDocumentMixin<
      *
      * @returns {SpeechMathDocument} The object for chaining.
      */
-    public attachSpeech(): SpeechMathDocument<N, T, D> {
+    public attachSpeech(): this {
       if (!this.processed.isSet('attach-speech')) {
         const options = this.options;
         if (

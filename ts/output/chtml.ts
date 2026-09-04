@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CommonOutputJax } from './common.js';
-import { CommonWrapper as _CommonWrapper } from './common/Wrapper.js';
+import { CommonOutputJax, COMMON_OPTIONS } from './common.js';
+import { CommonWrapper } from './common/Wrapper.js';
 import { StyleList } from '../util/Styles.js';
 import { StyleJson, StyleJsonSheet } from '../util/StyleJson.js';
 import { OptionList } from '../util/Options.js';
@@ -42,6 +42,36 @@ import { Usage } from './chtml/Usage.js';
 import * as LENGTHS from '../util/lengths.js';
 import { unicodeChars } from '../util/string.js';
 import { DefaultFont } from './chtml/DefaultFont.js';
+import { DOM, DOM_TYPES, N, T, D } from '../types/Types.js';
+
+/*****************************************************************/
+
+/**
+ * The CHTML option types.
+ */
+export interface CHTML_OPTIONS<DOM extends DOM_TYPES> extends COMMON_OPTIONS<
+  DOM,
+  ChtmlWrapper<N<DOM>, T<DOM>, D<DOM>>,
+  ChtmlWrapperFactory<N<DOM>, T<DOM>, D<DOM>>,
+  ChtmlWrapperClass<N<DOM>, T<DOM>, D<DOM>>,
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass
+> {
+  adaptiveCSS: boolean; //       true means only produce CSS that is used in the processed equations
+  matchFontHeight: boolean; //   true to match ex-height of surrounding font
+}
+
+/**
+ * The CHTML option defaults.
+ */
+const options: CHTML_OPTIONS<DOM> = {
+  ...CommonOutputJax.OPTIONS,
+  adaptiveCSS: true,
+  matchFontHeight: true,
+};
 
 /*****************************************************************/
 /**
@@ -82,11 +112,12 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   /**
    * @override
    */
-  public static OPTIONS: OptionList = {
-    ...CommonOutputJax.OPTIONS,
-    adaptiveCSS: true, // true means only produce CSS that is used in the processed equations
-    matchFontHeight: true, // true to match ex-height of surrounding font
-  };
+  public options: CHTML_OPTIONS<DOM<N, T, D>>;
+
+  /**
+   * @override
+   */
+  public static OPTIONS = options;
 
   /**
    *  The default styles for CommonHTML
@@ -278,7 +309,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
     for (const kind of this.wrapperUsage.update()) {
       const wrapper = this.factory.getNodeClass(
         kind
-      ) as any as typeof _CommonWrapper;
+      ) as any as typeof CommonWrapper;
       if (wrapper) {
         this.addClassStyles(wrapper, styles);
       }
@@ -289,7 +320,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
    * @override
    */
   protected addClassStyles(
-    wrapper: typeof _CommonWrapper,
+    wrapper: typeof CommonWrapper,
     styles: StyleJsonSheet
   ) {
     const CLASS = wrapper as typeof ChtmlWrapper;

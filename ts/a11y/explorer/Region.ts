@@ -21,12 +21,14 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { MathDocument } from '../../core/MathDocument.js';
+//import { MathDocument } from '../../core/MathDocument.js';
 import { StyleJsonSheet } from '../../util/StyleJson.js';
 import { Highlighter } from './Highlighter.js';
 import { SsmlElement, buildSpeech } from '../speech/SpeechUtil.js';
-
-export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
+import type { ExplorerMathDocument } from '../explorer.ts';
+import { SEM } from '../semantic-enrich/strings.js';
+import { MACTION } from '../semantic-enrich/maction.js';
+import { HILITE, MAG } from './strings.js';
 
 export interface Region<T> {
   /**
@@ -102,9 +104,9 @@ export abstract class AbstractRegion<T> implements Region<T> {
 
   /**
    * @class
-   * @param {A11yDocument} document The document the live region is added to.
+   * @param {ExplorerMathDocument} document The document the live region is added to.
    */
-  constructor(public document: A11yDocument) {
+  constructor(public document: ExplorerMathDocument) {
     this.CLASS = this.constructor as typeof AbstractRegion;
     this.AddStyles();
   }
@@ -204,14 +206,12 @@ export abstract class AbstractRegion<T> implements Region<T> {
       this.CLASS.className + '_Show'
     );
     // Get all the shown regions (one is this element!) and append at bottom.
-    for (let i = 0, region; (region = regions[i]); i++) {
-      if (region !== this.div) {
-        baseBottom = Math.max(
-          region.getBoundingClientRect().bottom,
-          baseBottom
-        );
-        baseLeft = Math.min(region.getBoundingClientRect().left, baseLeft);
+    for (const region of Array.from(regions)) {
+      if (region == this.div) {
+        break;
       }
+      baseBottom = Math.max(region.getBoundingClientRect().bottom, baseBottom);
+      baseLeft = Math.min(region.getBoundingClientRect().left, baseLeft);
     }
 
     const bot = (baseBottom ? baseBottom : rect.bottom + 10) + window.scrollY;
@@ -415,28 +415,28 @@ export class LiveRegion extends StringRegion {
     //
     // Primary highlighting colors
     //
-    'mjx-container [data-sre-highlight-1]:not([data-mjx-collapsed], rect)': {
+    [`mjx-container [${HILITE.PREFIX}1]:not([${MACTION.COLLAPSED}], rect)`]: {
       color: 'var(--mjx-fg1-color) ! important', //                   // CHTML
       fill: 'var(--mjx-fg1-color) ! important', //                    // SVG
     },
     [[
-      'mjx-container:not([data-mjx-clone-container])',
-      '[data-sre-highlight-1]:not([data-sre-enclosed], rect)',
+      `mjx-container:not([${MAG.CONTAINER}])`,
+      `[${HILITE.PREFIX}1]:not([${HILITE.ENCLOSED}], rect)`,
     ].join(' ')]: {
       'background-color': 'var(--mjx-bg1-color) ! important', //      // CHTML
     },
-    'mjx-container rect[data-sre-highlight-1]:not([data-sre-enclosed])': {
+    [`mjx-container rect[${HILITE.PREFIX}1]:not([${HILITE.ENCLOSED}])`]: {
       fill: 'var(--mjx-bg1-color) ! important', //                    // SVG
     },
     //
     // Secondary highlighting colors
     //
-    'mjx-container [data-sre-highlight-2]': {
+    [`mjx-container [${HILITE.PREFIX}2]`]: {
       color: 'var(--mjx-fg2-color) ! important', //                   // CHTML
       'background-color': 'var(--mjx-bg2-color) ! important', //      // CHTML
       fill: 'var(--mjx-fg2-color) ! important', //                    // SVG
     },
-    'mjx-container rect[data-sre-highlight-2]': {
+    [`mjx-container rect[${HILITE.PREFIX}2]`]: {
       fill: 'var(--mjx-bg2-color) ! important', //                    // SVG
     },
   });
@@ -652,9 +652,7 @@ export class SpeechRegion extends LiveRegion {
    */
   private highlightNode(id: string, init: boolean = false) {
     this.highlighter.unhighlight();
-    const nodes = Array.from(
-      this.node.querySelectorAll(`[data-semantic-id="${id}"]`)
-    );
+    const nodes = Array.from(this.node.querySelectorAll(`[${SEM.ID}="${id}"]`));
     if (!this.clear || init) {
       this.highlighter.highlight(nodes as HTMLElement[]);
     }
@@ -707,10 +705,10 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
         border: '1px solid #7C7C7C',
       },
     },
-    'mjx-container[data-mjx-clone-container]': {
+    [`mjx-container[${MAG.CONTAINER}]`]: {
       padding: '2px ! important',
     },
-    'mjx-container[data-mjx-clone-container][display] > mjx-math': {
+    [`mjx-container[${MAG.CONTAINER}][display] > mjx-math`]: {
       'text-align': 'center',
     },
     'mjx-math > mjx-mlabeledtr': {
@@ -730,7 +728,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    */
   protected position(node: HTMLElement) {
     const prev = node.previousSibling as HTMLElement;
-    if (prev?.getAttribute('data-sre-highlighter-added')) {
+    if (prev?.getAttribute(HILITE.ADDED)) {
       node = prev;
     }
     const nodeRect = node.getBoundingClientRect();
@@ -786,7 +784,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     if (!this.div) return;
     this.Clear();
     const mjx = this.cloneNode(node);
-    const selected = mjx.querySelector('[data-mjx-clone]') as HTMLElement;
+    const selected = mjx.querySelector(`[${MAG.CLONE}]`) as HTMLElement;
     this.inner.style.backgroundColor = node.style.backgroundColor;
     if (selected) {
       selected.style.backgroundColor = '';
@@ -805,7 +803,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    */
   protected cloneNode(node: HTMLElement): HTMLElement {
     let mjx = node.cloneNode(true) as HTMLElement;
-    mjx.setAttribute('data-mjx-clone', 'true');
+    mjx.setAttribute(MAG.CLONE, 'true');
     if (mjx.nodeName !== 'MJX-CONTAINER') {
       if (mjx.nodeName !== 'g') {
         mjx.style.marginLeft = mjx.style.marginRight = '0';
@@ -826,7 +824,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
       mjx.style.margin = '0';
       mjx.style.minWidth = '';
     }
-    mjx.setAttribute('data-mjx-clone-container', 'true');
+    mjx.setAttribute(MAG.CONTAINER, 'true');
     return mjx;
   }
 
@@ -838,7 +836,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   protected chtmlClone(node: Element, enclosed: Element[], mjx: HTMLElement) {
     const included = new Set<string>();
     for (const child of enclosed) {
-      const id = child.getAttribute('data-semantic-id');
+      const id = child.getAttribute(SEM.ID);
       if (included.has(id)) {
         mjx.appendChild(document.createElement('br'));
       }
@@ -846,7 +844,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
       const clone = mjx.appendChild(child.cloneNode(true)) as HTMLElement;
       clone.classList.remove('mjx-selected');
       if (child === node) {
-        clone.setAttribute('data-mjx-clone', 'true');
+        clone.setAttribute(MAG.CLONE, 'true');
         clone.removeAttribute('space');
       }
     }
@@ -864,15 +862,14 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     mjx: HTMLElement,
     container: Element
   ) {
-    let [x, y] = [0, 0];
     let top, bot, left, right;
     const g = container.querySelector('g').cloneNode(false);
     for (const child of enclosed) {
       const rect = child.previousSibling as SVGRectElement;
-      if (rect?.getAttribute('data-sre-highlighter-added')) {
+      if (rect?.getAttribute(HILITE.ADDED)) {
         const bbox = rect.getBBox();
         const [X, Y] = this.xy(rect);
-        [x, y] = [X, Y + bbox.y];
+        const [x, y] = [X, Y + bbox.y];
         if (left === undefined || x < left) left = x;
         if (right === undefined || x + bbox.width > right) {
           right = x + bbox.width;
@@ -888,7 +885,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
       const clone = g.appendChild(child.cloneNode(true)) as HTMLElement;
       clone.classList.remove('mjx-selected');
       if (child === node) {
-        clone.setAttribute('data-mjx-clone', 'true');
+        clone.setAttribute(MAG.CLONE, 'true');
       }
       const [cx, cy] = this.xy(child);
       clone.setAttribute('transform', `translate(${cx}, ${cy})`);
@@ -905,10 +902,8 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     ) {
       mjx.innerHTML = '';
       mjx.appendChild(container.cloneNode(true).firstChild);
-      mjx
-        .querySelector('.mjx-selected')
-        ?.setAttribute('data-mjx-clone', 'true');
-      mjx.querySelector('[data-sre-highlighter-added]')?.remove();
+      mjx.querySelector('.mjx-selected')?.setAttribute(MAG.CLONE, 'true');
+      mjx.querySelector(`[${HILITE.ADDED}]`)?.remove();
       return;
     }
     //

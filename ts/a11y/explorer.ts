@@ -24,24 +24,33 @@
 import { Handler } from '../core/Handler.js';
 import { MathML } from '../input/mathml.js';
 import { STATE, newState } from '../core/MathItem.js';
-import { SpeechMathItem, SpeechMathDocument, SpeechHandler } from './speech.js';
-import { MathDocumentConstructor } from '../core/MathDocument.js';
-import { OptionList, expandable } from '../util/Options.js';
+import { SRE_OPTIONS, ENRICH_OPTIONS } from './semantic-enrich.js';
+import {
+  SpeechMathItem,
+  SpeechMathDocument,
+  SpeechHandler,
+  A11Y_OPTIONS as SPEECH_A11Y_OPTIONS,
+  SPEECH_OPTIONS,
+} from './speech.js';
+import {
+  MathDocumentConstructor,
+  RenderActions,
+} from '../core/MathDocument.js';
+import { expandable, OptionList } from '../util/Options.js';
 import { hasWindow } from '../util/context.js';
 import { StyleJson } from '../util/StyleJson.js';
 import { context } from '../util/context.js';
+import { Constructor } from '../types/Types.js';
+import { HTML_DOM } from '../types/dom/html.js';
+import { SEM } from './semantic-enrich/strings.js';
 
+import { SAVED_HREF } from './explorer/strings.js';
 import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
 
 import * as Sre from './sre.js';
 import * as Aria from './aria/__locales__/Component.js';
 
 const isUnix = context.os === 'Unix';
-
-/**
- * Generic constructor for Mixins
- */
-export type Constructor<T> = new (...args: any[]) => T;
 
 /**
  * Shorthands for types with HTMLElement, Text, and Document instead of generics
@@ -95,10 +104,10 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
   refocus: string;
 
   /**
-   * @param {HTMLDocument} document  The document where the Explorer is being added
-   * @param {boolean} force          True to force the explorer even if enableExplorer is false
+   * @param {ExplorerMathDocument} document  The document where the Explorer is being added
+   * @param {boolean} force                  True to force the explorer even if enableExplorer is false
    */
-  explorable(document: HTMLDOCUMENT, force?: boolean): void;
+  explorable(document: ExplorerMathDocument, force?: boolean): void;
 
   /**
    * @param {ExplorerMathDocument} document  The explorer document being used
@@ -293,15 +302,13 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      * @returns {HTMLElement[]}   All the nodes for the given id
      */
     public getSplitNodes(node: HTMLElement): HTMLElement[] {
-      const id = node.getAttribute('data-semantic-id');
+      const id = node.getAttribute(SEM.ID);
       if (!id) {
         return [node];
       }
       const nodes = (this.semanticNodes.get(id) ?? [id])
         .map((nid: string) =>
-          Array.from(
-            this.typesetRoot.querySelectorAll(`[data-semantic-id="${nid}"]`)
-          )
+          Array.from(this.typesetRoot.querySelectorAll(`[${SEM.ID}="${nid}"]`))
         )
         .flat() as HTMLElement[];
       return nodes;
@@ -310,9 +317,126 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
 }
 
 /**
+ * The pre-defined colors.
+ */
+export type COLOR =
+  'Black' | 'White' | 'Blue' | 'Red' | 'Green' | 'Yellow' | 'Cyan' | 'Magenta';
+
+/**
+ * The explorer's A11Y option types.
+ */
+export type A11Y_EXPLORER_OPTIONS = {
+  align: 'top' | 'bottom' | 'center'; // placement of magnified expression
+  backgroundColor: COLOR; //        color for background of selected sub-expression
+  backgroundOpacity: number; //     opacity for background of selected sub-expression
+  flame: boolean; //                color collapsible sub-expressions
+  foregroundColor: COLOR; //        color to use for text of selected sub-expression
+  foregroundOpacity: number; //     opacity for text of selected sub-expression
+  highlight: 'None' | 'Hover' | 'Flame'; //  type of highlighting for collapsible sub-expressions
+  hover: boolean; //                show collapsible sub-expression on mouse hovering
+  infoPrefix: boolean; //           show speech prefixes on mouse hovering
+  infoRole: boolean; //             show semantic role on mouse hovering
+  infoType: boolean; //             show semantic type on mouse hovering
+  keyMagnifier: boolean; //         switch on magnification via key exploration
+  magnification: 'None' | 'Keyboard' | 'Mouse'; // type of magnification
+  magnify: string; //               percentage of magnification of zoomed expressions
+  mouseMagnifier: boolean; //       switch on magnification via mouse hovering
+  subtitles: boolean; //            show speech as a subtitle
+  treeColoring: boolean; //         tree color expression
+  viewBraille: boolean; //          display Braille output as subtitles
+  voicing: boolean; //              switch on/off speech output
+  brailleSpeech: boolean; //        use aria-label for Braille
+  brailleCombine: boolean; //       combine Braille with speech output
+  speechRules: string; //           the speech domain and style string
+  help: boolean; //                 include "press h for help" messages on focus
+  roleDescription: string; //       the role description to use for math expressions
+  inTabOrder: boolean; //           true if expression gets tabindex = 0
+  tabSelects: 'all' | 'last'; //    'all' for whole expression, 'last' for last explored node
+};
+
+/**
+ * The explorer's A11Y option defaults.
+ */
+const a11y_options: A11Y_EXPLORER_OPTIONS = {
+  align: 'top',
+  backgroundColor: 'Blue',
+  backgroundOpacity: 20,
+  flame: false,
+  foregroundColor: 'Black',
+  foregroundOpacity: 100,
+  highlight: 'None',
+  hover: false,
+  infoPrefix: false,
+  infoRole: false,
+  infoType: false,
+  keyMagnifier: false,
+  magnification: 'None',
+  magnify: '400%',
+  mouseMagnifier: false,
+  subtitles: false,
+  treeColoring: false,
+  viewBraille: false,
+  voicing: false,
+  brailleSpeech: false,
+  brailleCombine: false,
+  speechRules: 'clearspeak-default',
+  help: true,
+  roleDescription: 'math',
+  inTabOrder: true,
+  tabSelects: 'all',
+};
+
+/**
+ * The explorer document's A11Y option types.
+ */
+export type A11Y_OPTIONS = {
+  a11y: A11Y_EXPLORER_OPTIONS & SPEECH_A11Y_OPTIONS['a11y'];
+};
+
+/**
+ * The explorer option types.
+ */
+export type OPTIONS = {
+  enableExplorer: boolean;
+  enableExplorerHelp: boolean;
+  keepRegions: boolean; // debugging option to not remove explorer regions
+};
+
+/**
+ * The ExplorerMathDocument option types.
+ */
+export interface EXPLORER_OPTIONS
+  extends
+    OPTIONS,
+    A11Y_OPTIONS,
+    Omit<SPEECH_OPTIONS<HTML_DOM>, 'a11y'>,
+    ENRICH_OPTIONS<HTML_DOM> {
+  MathItem: Constructor<ExplorerMathItem> & {
+    ariaRole: string;
+    roleDescription: string;
+    none: string;
+    brailleNone: string;
+  };
+}
+
+/**
+ * The explorer option defaults.
+ */
+const options: OPTIONS = {
+  enableExplorer: hasWindow, //  only activate in interactive contexts
+  enableExplorerHelp: true, //   help dialog is enabled
+  keepRegions: false, //         don't debug
+};
+
+/**
  * The functions added to MathDocument for the Explorer
  */
 export interface ExplorerMathDocument extends HTMLDOCUMENT {
+  /**
+   * @override
+   */
+  options: EXPLORER_OPTIONS;
+
   /**
    * The info icon for the selected expression
    */
@@ -336,9 +460,9 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
   /**
    * Add the Explorer to the MathItems in the MathDocument
    *
-   * @returns {HTMLDocument}   The MathDocument (so calls can be chained)
+   * @returns {ExplorerMathDocument}   The MathDocument (so calls can be chained)
    */
-  explorable(): HTMLDOCUMENT;
+  explorable(): this;
 }
 
 /**
@@ -350,54 +474,36 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
  * @template B  The MathItem class to extend
  */
 export function ExplorerMathDocumentMixin<
-  B extends MathDocumentConstructor<HTMLDOCUMENT>,
->(BaseDocument: B): MathDocumentConstructor<ExplorerMathDocument> & B {
+  B extends MathDocumentConstructor<HTMLDOCUMENT, HTML_DOM>,
+>(
+  BaseDocument: B
+): MathDocumentConstructor<ExplorerMathDocument, HTML_DOM> & B {
   return class BaseClass extends BaseDocument {
     /**
      * @override
      */
     /* prettier-ignore */
-    public static OPTIONS: OptionList = {
+    public static OPTIONS = {
       ...BaseDocument.OPTIONS,
-      enableExplorer: hasWindow,           // only activate in interactive contexts
-      enableExplorerHelp: true,            // help dialog is enabled
-      renderActions: expandable({
+      ...options,
+      renderActions: expandable<RenderActions<HTMLElement, Text, Document>>({
         ...BaseDocument.OPTIONS.renderActions,
         explorable: [STATE.EXPLORER]
       }),
-      sre: expandable({
-        ...BaseDocument.OPTIONS.sre,
+      sre: expandable<SRE_OPTIONS>({
+       ...(BaseDocument.OPTIONS as SPEECH_OPTIONS<HTML_DOM>).sre,
         speech: 'none',                    // None as speech is explicitly computed
       }),
-      a11y: {
-        ...BaseDocument.OPTIONS.a11y,
-        align: 'top',                      // placement of magnified expression
-        backgroundColor: 'Blue',           // color for background of selected sub-expression
-        backgroundOpacity: 20,             // opacity for background of selected sub-expression
-        flame: false,                      // color collapsible sub-expressions
-        foregroundColor: 'Black',          // color to use for text of selected sub-expression
-        foregroundOpacity: 100,            // opacity for text of selected sub-expression
-        highlight: 'None',                 // type of highlighting for collapsible sub-expressions
-        hover: false,                      // show collapsible sub-expression on mouse hovering
-        infoPrefix: false,                 // show speech prefixes on mouse hovering
-        infoRole: false,                   // show semantic role on mouse hovering
-        infoType: false,                   // show semantic type on mouse hovering
-        keyMagnifier: false,               // switch on magnification via key exploration
-        magnification: 'None',             // type of magnification
-        magnify: '400%',                   // percentage of magnification of zoomed expressions
-        mouseMagnifier: false,             // switch on magnification via mouse hovering
-        subtitles: false,                  // show speech as a subtitle
-        treeColoring: false,               // tree color expression
-        viewBraille: false,                // display Braille output as subtitles
-        voicing: false,                    // switch on speech output
-        brailleSpeech: false,              // use aria-label for Braille
-        brailleCombine: false,             // combine Braille with speech output
-        help: true,                        // include "press h for help" messages on focus
-        roleDescription: 'math',           // the role description to use for math expressions
-        inTabOrder: true,                  // true if expressin get tabindex = 0
-        tabSelects: 'all',                 // 'all' for whole expression, 'last' for last explored node
-      }
+      a11y: expandable<A11Y_OPTIONS['a11y']>({
+        ...(BaseDocument.OPTIONS as SPEECH_OPTIONS<HTML_DOM>).a11y,
+        ...a11y_options,
+      }),
     };
+
+    /**
+     * @override
+     */
+    public options: EXPLORER_OPTIONS;
 
     /**
      * Styles to add for speech
@@ -422,11 +528,11 @@ export function ExplorerMathDocumentMixin<
         outline: '2px solid black',
       },
 
-      'mjx-container a[data-mjx-href]': {
+      [`mjx-container a[${SAVED_HREF}]`]: {
         color: 'LinkText',
         cursor: 'pointer',
       },
-      'mjx-container a[data-mjx-href].mjx-visited': {
+      [`mjx-container a[${SAVED_HREF}].mjx-visited`]: {
         color: 'VisitedText',
       },
 
@@ -530,7 +636,7 @@ export function ExplorerMathDocumentMixin<
       const mathItem = (options.MathItem = ExplorerMathItemMixin(
         options.MathItem
       ));
-      mathItem.roleDescription = options.roleDescription;
+      mathItem.roleDescription = options.a11y.roleDescription;
       this.explorerRegions = new RegionPool(this);
       if ('addStyles' in this) {
         (this as any).addStyles(
@@ -573,7 +679,7 @@ export function ExplorerMathDocumentMixin<
      *
      * @returns {ExplorerMathDocument}   The MathDocument (so calls can be chained)
      */
-    public explorable(): ExplorerMathDocument {
+    public explorable(): this {
       if (!this.processed.isSet('explorer')) {
         if (this.options.enableExplorer) {
           for (const math of this.math) {
@@ -638,21 +744,21 @@ export function ExplorerHandler(
 /**
  * Sets a list of a11y options for a given document.
  *
- * @param {HTMLDOCUMENT} document The current document.
- * @param {{[key: string]: any}} options Association list for a11y option value pairs.
+ * @param {ExplorerMathDocument} document The current document.
+ * @param {OptionList} options Association list for a11y option value pairs.
  */
 export function setA11yOptions(
-  document: HTMLDOCUMENT,
-  options: { [key: string]: any }
+  document: ExplorerMathDocument,
+  options: OptionList
 ) {
   // TODO (volker): This needs to be replace by the engine feature vector.
   // Minus rule sets etc. Breaking change in SRE.
-  const sreOptions = Sre.engineSetup() as { [name: string]: string };
+  const sreOptions = Sre.engineSetup();
   for (const key in options) {
-    if (document.options.a11y[key] !== undefined) {
+    if (Object.hasOwn(document.options.a11y, key)) {
       setA11yOption(document, key, options[key]);
-    } else if (sreOptions[key] !== undefined) {
-      document.options.sre[key] = options[key];
+    } else if (Object.hasOwn(sreOptions, key)) {
+      (document.options.sre as any)[key] = options[key];
     }
   }
   if (options.roleDescription) {
@@ -667,20 +773,20 @@ export function setA11yOptions(
 /**
  * Sets a single a11y option for a menu name.
  *
- * @param {HTMLDOCUMENT} document The current document.
+ * @param {ExplorerMathDocument} document The current document.
  * @param {string} option The option name in the menu.
- * @param {string|boolean} value The new value.
+ * @param {string|number|boolean} value The new value.
  */
 export function setA11yOption(
-  document: HTMLDOCUMENT,
+  document: ExplorerMathDocument,
   option: string,
-  value: string | boolean
+  value: string | number | boolean
 ) {
   switch (option) {
     case 'speechRules': {
       const [domain, style] = (value as string).split('-');
-      document.options.sre.domain = domain;
-      document.options.sre.style = style;
+      document.options.sre.domain = domain as any;
+      document.options.sre.style = style as any;
       break;
     }
     case 'magnification':
@@ -722,9 +828,9 @@ export function setA11yOption(
       }
       break;
     case 'locale':
-      document.options.sre.locale = value;
+      document.options.sre.locale = value as string;
       break;
     default:
-      document.options.a11y[option] = value;
+      (document.options.a11y as any)[option] = value;
   }
 }

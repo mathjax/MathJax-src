@@ -23,7 +23,7 @@
 
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration, ParserConfiguration } from '../Configuration.js';
-import { expandable } from '../../../util/Options.js';
+import { expandable, EXPANDABLE_LIST_OF } from '../../../util/Options.js';
 import { CommandMap, EnvironmentMap, MacroMap } from '../TokenMap.js';
 import ParseMethods from '../ParseMethods.js';
 import { Macro } from '../Token.js';
@@ -151,7 +151,32 @@ function configEnvironments(jax: TEX) {
 }
 
 /**
- * The configuration object for configmacros
+ * The definition types for macros, environments, and active characters.
+ */
+export type MACRO_DEF = string | [string, number?, (string | string[])?];
+export type ENVIRONMENT_DEF = [string, string, number?, string?];
+export type ACTIVE_DEF = string | [string, number];
+
+/**
+ * The [tex]/configmacros option types.
+ */
+export type CONFIGMACROS_OPTIONS = {
+  active: EXPANDABLE_LIST_OF<ACTIVE_DEF>;
+  macros: EXPANDABLE_LIST_OF<MACRO_DEF>;
+  environments: EXPANDABLE_LIST_OF<ENVIRONMENT_DEF>;
+};
+
+/**
+ * The [tex]/configmacros option defaults.
+ */
+const options: CONFIGMACROS_OPTIONS = {
+  active: expandable({}),
+  macros: expandable({}),
+  environments: expandable({}),
+};
+
+/**
+ * The configuration object for the `configmacros` package.
  */
 export const ConfigMacrosConfiguration = Configuration.create('configmacros', {
   [ConfigurationType.INIT]: configmacrosInit,
@@ -159,9 +184,5 @@ export const ConfigMacrosConfiguration = Configuration.create('configmacros', {
   [ConfigurationType.ITEMS]: {
     [BeginEnvItem.prototype.kind]: BeginEnvItem,
   },
-  [ConfigurationType.OPTIONS]: {
-    active: expandable({}),
-    macros: expandable({}),
-    environments: expandable({}),
-  },
+  [ConfigurationType.OPTIONS]: options,
 });

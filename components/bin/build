@@ -309,6 +309,7 @@ function processGlobal() {
   );
   makeDir('');
   fs.writeFileSync(path.join(LIB, COMPONENT + '.js'), lines.join('\n') + '\n');
+  fs.writeFileSync(path.join(LIB, COMPONENT + '.d.ts'), 'export {};\n');
 }
 
 /**

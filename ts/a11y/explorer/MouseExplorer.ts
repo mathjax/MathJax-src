@@ -21,8 +21,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import type { ExplorerMathDocument } from '../explorer.js';
 import {
-  A11yDocument,
   DummyRegion,
   Region,
   HoverRegion,
@@ -31,6 +31,8 @@ import {
 import { Explorer, AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
 import type { ExplorerMathItem } from '../explorer.js';
+import { SEM } from '../semantic-enrich/strings.js';
+import { MACTION } from '../semantic-enrich/maction.js';
 import '../sre.js';
 
 /**
@@ -116,7 +118,7 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * @class
    * @augments {AbstractMouseExplorer<T>}
    *
-   * @param {A11yDocument} document The current document.
+   * @param {ExplorerMathDocument} document The current document.
    * @param {ExplorerPool} pool The explorer pool.
    * @param {Region<T>} region A region to display results.
    * @param {HTMLElement} node The node on which the explorer works.
@@ -127,7 +129,7 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    *    that is passed to the region.
    */
   protected constructor(
-    public document: A11yDocument,
+    public document: ExplorerMathDocument,
     public pool: ExplorerPool,
     public region: Region<T>,
     protected node: HTMLElement,
@@ -216,7 +218,7 @@ export class ValueHoverer extends Hoverer<string> {
    * @override
    */
   protected constructor(
-    document: A11yDocument,
+    document: ExplorerMathDocument,
     pool: ExplorerPool,
     region: ToolTip,
     node: HTMLElement,
@@ -246,7 +248,7 @@ export class ContentHoverer extends Hoverer<HTMLElement> {
    * @override
    */
   protected constructor(
-    document: A11yDocument,
+    document: ExplorerMathDocument,
     pool: ExplorerPool,
     region: HoverRegion,
     node: HTMLElement,
@@ -258,7 +260,7 @@ export class ContentHoverer extends Hoverer<HTMLElement> {
       region,
       node,
       item,
-      (x) => x.hasAttribute?.('data-semantic-id'),
+      (x) => x.hasAttribute?.(SEM.ID),
       (x) => x
     );
   }
@@ -275,7 +277,7 @@ export class FlameHoverer extends Hoverer<void> {
    * @override
    */
   protected constructor(
-    document: A11yDocument,
+    document: ExplorerMathDocument,
     pool: ExplorerPool,
     _ignore: any,
     node: HTMLElement,
@@ -287,17 +289,17 @@ export class FlameHoverer extends Hoverer<void> {
       new DummyRegion(document),
       node,
       item,
-      (x) => x.hasAttribute('data-collapsible'),
+      (x) => x.hasAttribute(MACTION.COLLAPSIBLE),
       () => {}
     );
   }
 
   display(node: HTMLElement) {
-    const id = node.getAttribute('data-collapse-id');
+    const id = node.getAttribute(MACTION.GROUPID);
     if (id) {
       node = this.node.querySelector(`#${id}`);
     }
-    let parts: HTMLElement[] = node.hasAttribute('data-collapse-group')
+    let parts: HTMLElement[] = node.hasAttribute(MACTION.GROUP)
       ? this.highlighter.getMactionGroup(this.node, node)
       : [node];
     parts = this.highlighter.encloseNodes([...parts], this.node);

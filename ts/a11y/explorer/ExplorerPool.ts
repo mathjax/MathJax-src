@@ -23,6 +23,7 @@
 
 import { LiveRegion, SpeechRegion, ToolTip, HoverRegion } from './Region.js';
 import type { ExplorerMathDocument, ExplorerMathItem } from '../explorer.js';
+import { SEM } from '../semantic-enrich/strings.js';
 
 import { Explorer } from './Explorer.js';
 import { SpeechExplorer } from './KeyExplorer.js';
@@ -114,7 +115,7 @@ const allExplorers: { [options: string]: ExplorerInit } = {
       doc.explorerRegions.tooltip1,
       node,
       item,
-      'data-semantic-type'
+      SEM.TYPE
     ),
   infoRole: (doc, pool, node, item) =>
     ValueHoverer.create(
@@ -123,7 +124,7 @@ const allExplorers: { [options: string]: ExplorerInit } = {
       doc.explorerRegions.tooltip2,
       node,
       item,
-      'data-semantic-role'
+      SEM.ROLE
     ),
   infoPrefix: (doc, pool, node, item) =>
     ValueHoverer.create(
@@ -132,7 +133,7 @@ const allExplorers: { [options: string]: ExplorerInit } = {
       doc.explorerRegions.tooltip3,
       node,
       item,
-      'data-semantic-prefix-none'
+      SEM.PREFIX_NONE
     ),
   flame: (doc, pool, node) => FlameColorer.create(doc, pool, null, node),
   treeColoring: (doc, pool, node) => TreeColorer.create(doc, pool, null, node),
@@ -235,16 +236,14 @@ export class ExplorerPool {
   public attach() {
     this.attached = [];
     const keyExplorers = [];
-    const a11y = this.document.options.a11y;
+    const a11y = this.document.options.a11y as {
+      [name: string]: string | number | boolean;
+    };
     for (const [key, explorer] of Object.entries(this.explorers)) {
       if (explorer instanceof SpeechExplorer) {
         explorer.stoppable = false;
         keyExplorers.unshift(explorer);
-        if (
-          this.speechExplorerKeys.some(
-            (exKey) => this.document.options.a11y[exKey]
-          )
-        ) {
+        if (this.speechExplorerKeys.some((exKey) => a11y[exKey])) {
           explorer.Attach();
           this.attached.push(key);
         } else {

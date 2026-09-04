@@ -21,8 +21,10 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { A11yDocument, Region } from './Region.js';
-import { Highlighter, ATTR } from './Highlighter.js';
+import type { ExplorerMathDocument } from '../explorer.js';
+import { Region } from './Region.js';
+import { Highlighter } from './Highlighter.js';
+import { HILITE } from './strings.js';
 
 import type { ExplorerPool } from './ExplorerPool.js';
 
@@ -153,7 +155,7 @@ export class AbstractExplorer<T> implements Explorer {
   /**
    * Creator pattern for explorers.
    *
-   * @param {A11yDocument} document The current document.
+   * @param {ExplorerMathDocument} document The current document.
    * @param {ExplorerPool} pool The explorer pool.
    * @param {Region<T>} region A region to display results.
    * @param {HTMLElement} node The node on which the explorer works.
@@ -163,7 +165,7 @@ export class AbstractExplorer<T> implements Explorer {
    * @template T
    */
   public static create<T>(
-    document: A11yDocument,
+    document: ExplorerMathDocument,
     pool: ExplorerPool,
     region: Region<T>,
     node: HTMLElement,
@@ -175,14 +177,14 @@ export class AbstractExplorer<T> implements Explorer {
 
   /**
    * @class
-   * @param {A11yDocument} document The current document.
+   * @param {ExplorerMathDocument} document The current document.
    * @param {ExplorerPool} pool The explorer pool.
    * @param {Region<T>} region A region to display results.
    * @param {HTMLElement} node The node on which the explorer works.
    * @param {any[]} _rest Remaining information.
    */
   protected constructor(
-    public document: A11yDocument,
+    public document: ExplorerMathDocument,
     public pool: ExplorerPool,
     public region: Region<T>,
     protected node: HTMLElement,
@@ -329,7 +331,7 @@ export class AbstractExplorer<T> implements Explorer {
         //
         if (
           child.nodeName.charAt(0) === '#' ||
-          child.hasAttribute?.(ATTR.ADDED)
+          child.hasAttribute?.(HILITE.ADDED)
         ) {
           continue;
         }

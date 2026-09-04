@@ -24,27 +24,33 @@
 import { PrioritizedList, PrioritizedListItem } from './PrioritizedList.js';
 
 export type AnyFunction = (...args: unknown[]) => unknown;
-export type AnyFunctionDef = AnyFunction | [AnyFunction, number];
-export type AnyFunctionList = AnyFunctionDef[];
+export type AnyFunctionDef<F extends AnyFunction = AnyFunction> =
+  F | [F, number];
+export type AnyFunctionList<F extends AnyFunction = AnyFunction> =
+  AnyFunctionDef<F>[];
 
 /*****************************************************************/
 /**
  *  The FunctionListItem interface (extends PrioritizedListItem<Function>)
  */
 
-export interface FunctionListItem extends PrioritizedListItem<AnyFunction> {}
+export interface FunctionListItem<
+  F extends AnyFunction = AnyFunction,
+> extends PrioritizedListItem<F> {}
 
 /*****************************************************************/
 /**
  *  Implements the FunctionList class (extends PrioritizedList<Function>)
  */
 
-export class FunctionList extends PrioritizedList<AnyFunction> {
+export class FunctionList<
+  F extends AnyFunction = AnyFunction,
+> extends PrioritizedList<F> {
   /**
    * @override
    * @param {AnyFunctionList} list   The initial list of functions to add
    */
-  constructor(list: AnyFunctionList = null) {
+  constructor(list: AnyFunctionList<F> = null) {
     super();
     if (list) {
       this.addList(list);
@@ -56,7 +62,7 @@ export class FunctionList extends PrioritizedList<AnyFunction> {
    *
    * @param {AnyFunctionList} list   The list of functions to add
    */
-  public addList(list: AnyFunctionList) {
+  public addList(list: AnyFunctionList<F>) {
     for (const item of list) {
       if (Array.isArray(item)) {
         this.add(item[0], item[1]);

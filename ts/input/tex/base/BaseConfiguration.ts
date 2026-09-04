@@ -152,9 +152,37 @@ function filterNonscript({ data }: { data: ParseOptions }) {
 export class BaseTags extends AbstractTags {}
 
 /**
- * The base configuration.
- *
- * @type {Configuration}
+ * The base option types.
+ */
+export type BASE_OPTIONS = {
+  maxMacros: number; //             Maximum number of macro substitutions to process allowed
+  digits: string; //                Backward compatibility // FIXME: remove in a later version
+  numberPattern: RegExp; //         Pattern for a number
+  initialDigit: RegExp; //          Pattern for initial digit or decimal point for a number
+  identifierPattern: RegExp; //     Pattern for multiLetterIdentifiers in \mathrm, etc.
+  initialLetter: RegExp; //         Pattern for initial letter in identifiers
+  baseURL: string; //               The base URL for additional loads
+};
+
+/**
+ * The base option defaults.
+ */
+const options: BASE_OPTIONS = {
+  maxMacros: 1000, //              // Maximum number of macro substitutions to process allowed
+  digits: '', //                   // backward compatibility // FIXME: remove in a later version
+  numberPattern: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
+  initialDigit: /[0-9.,]/, //      // pattern for initial digit or decimal point for a number
+  identifierPattern: /^[a-zA-Z]+/, // pattern for multiLetterIdentifiers in \mathrm, etc.
+  initialLetter: /[a-zA-Z]/, //    // pettern for initial letter in identifiers
+  baseURL:
+    !context.document ||
+    context.document.getElementsByTagName('base').length === 0
+      ? ''
+      : String(context.document.location).replace(/#.*$/, ''),
+};
+
+/**
+ * The configuration for the `base` package.
  */
 export const BaseConfiguration: Configuration = Configuration.create('base', {
   [ConfigurationType.CONFIG]: function (config, jax) {
@@ -217,19 +245,7 @@ export const BaseConfiguration: Configuration = Configuration.create('base', {
     [bitem.EquationItem.prototype.kind]: bitem.EquationItem,
     [bitem.MstyleItem.prototype.kind]: bitem.MstyleItem,
   },
-  [ConfigurationType.OPTIONS]: {
-    maxMacros: 1000, //              // Maximum number of macro substitutions to process allowed
-    digits: '', //                   // backward compatibility // FIXME: remove in a later version
-    numberPattern: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    initialDigit: /[0-9.,]/, //      // pattern for initial digit or decimal point for a number
-    identifierPattern: /^[a-zA-Z]+/, // pattern for multiLetterIdentifiers in \mathrm, etc.
-    initialLetter: /[a-zA-Z]/, //    // pettern for initial letter in identifiers
-    baseURL:
-      !context.document ||
-      context.document.getElementsByTagName('base').length === 0
-        ? ''
-        : String(context.document.location).replace(/#.*$/, ''),
-  },
+  [ConfigurationType.OPTIONS]: options,
   [ConfigurationType.TAGS]: {
     base: BaseTags,
   },

@@ -655,28 +655,44 @@ const tagsMapping = new Map<string, TagsClass>([
 
 let defaultTags = 'none';
 
+/**
+ * The TagsFactory option types.
+ */
+export type TAGS_OPTIONS = {
+  // Tagging style, used to be autonumber in v2.
+  tags: string;
+  // This specifies the side on which \tag{} macros will place the tags.
+  tagSide: 'left' | 'right';
+  // This is the amount of indentation (from right or left) for the tags.
+  tagIndent: string;
+  // Determines whether element ID's use \label name rather than equation number
+  // MJ puts in an equation prefix: mjx-eqn
+  // When true it uses the label name XXX as mjx-eqn:XXX
+  // If false it uses the actual number N that is displayed: mjx-eqn:N
+  useLabelIds: boolean;
+  // Set to true in order to prevent error messages for duplicate label ids
+  ignoreDuplicateLabels: boolean;
+  // The rowalign value to use for tag cells.
+  tagAlign: 'top' | 'bottom' | 'center' | 'baseline' | 'axis';
+};
+
+/**
+ * The TagsFactory option defaults.
+ */
+const options: TAGS_OPTIONS = {
+  tags: defaultTags,
+  tagSide: 'right',
+  tagIndent: '0.8em',
+  useLabelIds: true,
+  ignoreDuplicateLabels: false,
+  tagAlign: 'baseline',
+};
+
 export const TagsFactory = {
   /**
    * The default options for tagging
    */
-  OPTIONS: {
-    // Tagging style, used to be autonumber in v2.
-    tags: defaultTags,
-    // This specifies the side on which \tag{} macros will place the tags.
-    // Set to 'left' to place on the left-hand side.
-    tagSide: 'right',
-    // This is the amount of indentation (from right or left) for the tags.
-    tagIndent: '0.8em',
-    // make element ID's use \label name rather than equation number
-    // MJ puts in an equation prefix: mjx-eqn
-    // When true it uses the label name XXX as mjx-eqn:XXX
-    // If false it uses the actual number N that is displayed: mjx-eqn:N
-    useLabelIds: true,
-    // Set to true in order to prevent error messages for duplicate label ids
-    ignoreDuplicateLabels: false,
-    // The rowalign value to use for tag cells.
-    tagAlign: 'baseline',
-  },
+  OPTIONS: options,
 
   /**
    * Add a tagging object.

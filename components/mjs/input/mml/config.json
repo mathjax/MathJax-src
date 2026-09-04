@@ -3,7 +3,8 @@
     "component": "input/mml",
     "targets": [
       "input/mathml.ts",
-      "input/mathml"
+      "input/mathml",
+      "input/mathml/__locales__"
     ],
     "excludeSubdirs": true
   },

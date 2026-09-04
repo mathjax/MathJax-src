@@ -23,25 +23,21 @@
  */
 
 import { Handler } from '../core/Handler.js';
-import { MathDocumentConstructor } from '../core/MathDocument.js';
+import {
+  MathDocumentConstructor,
+  RenderActions,
+} from '../core/MathDocument.js';
 import { STATE, newState } from '../core/MathItem.js';
 import { MathML } from '../input/mathml.js';
 import {
   EnrichHandler,
   EnrichedMathItem,
   EnrichedMathDocument,
+  ENRICH_OPTIONS,
 } from './semantic-enrich.js';
 import { ComplexityVisitor } from './complexity/visitor.js';
-import {
-  OptionList,
-  selectOptionsFromKeys,
-  expandable,
-} from '../util/Options.js';
-
-/**
- * Generic constructor for Mixins
- */
-export type Constructor<T> = new (...args: any[]) => T;
+import { selectOptionsFromKeys, expandable } from '../util/Options.js';
+import { DOM, DOM_TYPES, N, T, D, Constructor } from '../types/Types.js';
 
 /**
  * Shorthands for constructors
@@ -49,7 +45,8 @@ export type Constructor<T> = new (...args: any[]) => T;
 export type EMItemC<N, T, D> = Constructor<EnrichedMathItem<N, T, D>>;
 export type CMItemC<N, T, D> = Constructor<ComplexityMathItem<N, T, D>>;
 export type EMDocC<N, T, D> = MathDocumentConstructor<
-  EnrichedMathDocument<N, T, D>
+  EnrichedMathDocument<N, T, D>,
+  DOM<N, T, D>
 >;
 export type CMDocC<N, T, D> = Constructor<ComplexityMathDocument<N, T, D>>;
 
@@ -123,6 +120,32 @@ export function ComplexityMathItemMixin<N, T, D, B extends EMItemC<N, T, D>>(
 /*==========================================================================*/
 
 /**
+ * The copmlexity option types.
+ */
+export type OPTIONS = {
+  enableComplexity: boolean;
+  ComplexityVisitor: typeof ComplexityVisitor;
+};
+
+/**
+ * The ComplexityMathDocument option types.
+ */
+export interface COMPLEXITY_OPTIONS<DOM extends DOM_TYPES>
+  extends OPTIONS, ENRICH_OPTIONS<DOM> {
+  MathItem: Constructor<ComplexityMathItem<N<DOM>, T<DOM>, D<DOM>>>;
+}
+
+/**
+ * The complexity option defaults.
+ */
+const options: OPTIONS = {
+  enableComplexity: true,
+  ComplexityVisitor: ComplexityVisitor,
+};
+
+/*==========================================================================*/
+
+/**
  * The functions added to MathDocument for complexity
  *
  * @template N  The HTMLElement node class
@@ -135,11 +158,16 @@ export interface ComplexityMathDocument<N, T, D> extends EnrichedMathDocument<
   D
 > {
   /**
+   * @override
+   */
+  options: COMPLEXITY_OPTIONS<DOM<N, T, D>>;
+
+  /**
    * Perform complexity computations on the MathItems in the MathDocument
    *
    * @returns {ComplexityMathDocument}   The MathDocument (so calls can be chained)
    */
-  complexity(): ComplexityMathDocument<N, T, D>;
+  complexity(): this;
 }
 
 /**
@@ -160,16 +188,20 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
     /**
      * The options for this type of document
      */
-    public static OPTIONS: OptionList = {
+    public static OPTIONS = {
       ...BaseDocument.OPTIONS,
       ...ComplexityVisitor.OPTIONS,
-      enableComplexity: true,
-      ComplexityVisitor: ComplexityVisitor,
-      renderActions: expandable({
+      ...options,
+      renderActions: expandable<RenderActions<N, T, D>>({
         ...BaseDocument.OPTIONS.renderActions,
         complexity: [STATE.COMPLEXITY],
       }),
     };
+
+    /**
+     * @override
+     */
+    public options: COMPLEXITY_OPTIONS<DOM<N, T, D>>;
 
     /**
      * The visitor that computes complexities
@@ -217,7 +249,7 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
      *
      * @returns {ComplexityMathDocument} The object for chaining.
      */
-    public complexity(): ComplexityMathDocument<N, T, D> {
+    public complexity(): this {
       if (!this.processed.isSet('complexity')) {
         if (this.options.enableComplexity) {
           for (const math of this.math) {

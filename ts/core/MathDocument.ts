@@ -38,6 +38,7 @@ import { BitField, BitFieldClass } from '../util/BitField.js';
 import { PrioritizedList } from '../util/PrioritizedList.js';
 import { localize } from './__locales__/Component.js';
 import { mathjax } from '../mathjax.js';
+import { DOM, DOM_TYPES, N, T, D, Constructor } from '../types/Types.js';
 
 /*****************************************************************/
 
@@ -388,7 +389,7 @@ export interface MathDocument<N, T, D> {
   /**
    * The options for the document
    */
-  options: OptionList;
+  options: DOCUMENT_OPTIONS<DOM<N, T, D>>;
 
   /**
    * The list of MathItems found in this page
@@ -443,14 +444,14 @@ export interface MathDocument<N, T, D> {
    *
    * @returns {MathDocument}    The math document instance
    */
-  render(): MathDocument<N, T, D>;
+  render(): this;
 
   /**
    * Perform the renderActions on the document with retry handling
    *
    * @returns {Promise<MathDocument>}   A promise that resolves when the render is complete
    */
-  renderPromise(): Promise<MathDocument<N, T, D>>;
+  renderPromise(): Promise<this>;
 
   /**
    * Rerender the MathItems on the page
@@ -458,7 +459,7 @@ export interface MathDocument<N, T, D> {
    * @param {number} start      The state to start rerendering at
    * @returns {MathDocument}    The math document instance
    */
-  rerender(start?: number): MathDocument<N, T, D>;
+  rerender(start?: number): this;
 
   /**
    * Rerender the MathItems on the page
@@ -466,7 +467,7 @@ export interface MathDocument<N, T, D> {
    * @param {number} start              The state to start rerendering at
    * @returns {Promise<MathDocument>}   A promise that resolves when the rerender is complete
    */
-  rerenderPromise(start?: number): Promise<MathDocument<N, T, D>>;
+  rerenderPromise(start?: number): Promise<this>;
 
   /**
    * Convert a math string to the document's output format
@@ -514,35 +515,35 @@ export interface MathDocument<N, T, D> {
    * @param {OptionList} options  The options for locating the math
    * @returns {MathDocument}      The math document instance
    */
-  findMath(options?: OptionList): MathDocument<N, T, D>;
+  findMath(options?: OptionList): this;
 
   /**
    * Calls the input jax to process the MathItems in the MathList
    *
    * @returns {MathDocument}  The math document instance
    */
-  compile(): MathDocument<N, T, D> | Promise<void>;
+  compile(): this | Promise<void>;
 
   /**
    * Gets the metric information for the MathItems
    *
    * @returns {MathDocument}  The math document instance
    */
-  getMetrics(): MathDocument<N, T, D>;
+  getMetrics(): this;
 
   /**
    * Calls the output jax to process the compiled math in the MathList
    *
    * @returns {MathDocument}  The math document instance
    */
-  typeset(): MathDocument<N, T, D> | Promise<void>;
+  typeset(): this | Promise<void>;
 
   /**
    * Updates the document to include the typeset math
    *
    * @returns {MathDocument}  The math document instance
    */
-  updateDocument(): MathDocument<N, T, D>;
+  updateDocument(): this;
 
   /**
    * Removes the typeset math from the document
@@ -551,7 +552,7 @@ export interface MathDocument<N, T, D> {
    *                            back into the document as well
    * @returns {MathDocument}    The math document instance
    */
-  removeFromDocument(restore?: boolean): MathDocument<N, T, D>;
+  removeFromDocument(restore?: boolean): this;
 
   /**
    * Set the state of the document (allowing you to roll back
@@ -562,7 +563,7 @@ export interface MathDocument<N, T, D> {
    *                            back into the document during the rollback
    * @returns {MathDocument}    The math document instance
    */
-  state(state: number, restore?: boolean): MathDocument<N, T, D>;
+  state(state: number, restore?: boolean): this;
 
   /**
    * Clear the processed values so that the document can be reprocessed
@@ -570,7 +571,7 @@ export interface MathDocument<N, T, D> {
    * @param {ResetList} options   The things to be reset
    * @returns {MathDocument}       The math document instance
    */
-  reset(options?: ResetList): MathDocument<N, T, D>;
+  reset(options?: ResetList): this;
 
   /**
    * Reset the processed values and clear the MathList (so that new math
@@ -578,7 +579,7 @@ export interface MathDocument<N, T, D> {
    *
    * @returns {MathDocument}  The math document instance
    */
-  clear(): MathDocument<N, T, D>;
+  clear(): this;
 
   /**
    * Indicate that the MathDocument is no longer needed.
@@ -591,7 +592,7 @@ export interface MathDocument<N, T, D> {
    * @param {MathList} list   The MathList to be merged into this document's list
    * @returns {MathDocument}   The math document instance
    */
-  concat(list: MathList<N, T, D>): MathDocument<N, T, D>;
+  concat(list: MathList<N, T, D>): this;
 
   /**
    * Clear the typeset MathItems that are within the given container
@@ -675,6 +676,54 @@ class DefaultMathList<N, T, D> extends AbstractMathList<N, T, D> {}
 class DefaultMathItem<N, T, D> extends AbstractMathItem<N, T, D> {}
 
 /*****************************************************************/
+
+/**
+ * The MathDocument option types.
+ */
+export type DOCUMENT_OPTIONS<DOM extends DOM_TYPES> = {
+  OutputJax: OutputJax<N<DOM>, T<DOM>, D<DOM>>; // instance of an OutputJax for the document
+  InputJax:
+    InputJax<N<DOM>, T<DOM>, D<DOM>> | InputJax<N<DOM>, T<DOM>, D<DOM>>[]; // instance of an InputJax or an array of them
+  MmlFactory: MmlFactory; // instance of a MmlFactory for this document
+  MathList: Constructor<MathList<N<DOM>, T<DOM>, D<DOM>>>; // constructor for a MathList to use for the document
+  MathItem: Constructor<AbstractMathItem<N<DOM>, T<DOM>, D<DOM>>>; // constructor for a MathItem to use for the MathList
+  compileError: (
+    doc: AbstractMathDocument<N<DOM>, T<DOM>, D<DOM>>,
+    math: MathItem<N<DOM>, T<DOM>, D<DOM>>,
+    err: Error
+  ) => void;
+  typesetError: (
+    doc: AbstractMathDocument<N<DOM>, T<DOM>, D<DOM>>,
+    math: MathItem<N<DOM>, T<DOM>, D<DOM>>,
+    err: Error
+  ) => void;
+  renderActions: RenderActions<N<DOM>, T<DOM>, D<DOM>>;
+};
+
+/**
+ * The MathDocument default options.
+ */
+const options: DOCUMENT_OPTIONS<DOM> = {
+  OutputJax: null,
+  InputJax: null,
+  MmlFactory: null,
+  MathList: DefaultMathList,
+  MathItem: DefaultMathItem,
+  compileError(doc, math, err) {
+    doc.compileError(math, err);
+  },
+  typesetError(doc, math, err) {
+    doc.typesetError(math, err);
+  },
+  renderActions: expandable({
+    find: [STATE.FINDMATH, 'findMath', '', false],
+    compile: [STATE.COMPILED, 'compileAction', 'compile'],
+    metrics: [STATE.METRICS, 'getMetrics', '', false],
+    typeset: [STATE.TYPESET, 'typesetAction', 'typeset'],
+    update: [STATE.INSERTED, 'updateDocument', false],
+  }),
+};
+
 /**
  *  Implements the abstract MathDocument class
  *
@@ -695,34 +744,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * The default options for the document
    */
-  public static OPTIONS: OptionList = {
-    OutputJax: null, // instance of an OutputJax for the document
-    InputJax: null, // instance of an InputJax or an array of them
-    MmlFactory: null, // instance of a MmlFactory for this document
-    MathList: DefaultMathList, // constructor for a MathList to use for the document
-    MathItem: DefaultMathItem, // constructor for a MathItem to use for the MathList
-    compileError: (
-      doc: AbstractMathDocument<any, any, any>,
-      math: MathItem<any, any, any>,
-      err: Error
-    ) => {
-      doc.compileError(math, err);
-    },
-    typesetError: (
-      doc: AbstractMathDocument<any, any, any>,
-      math: MathItem<any, any, any>,
-      err: Error
-    ) => {
-      doc.typesetError(math, err);
-    },
-    renderActions: expandable({
-      find: [STATE.FINDMATH, 'findMath', '', false],
-      compile: [STATE.COMPILED, 'compileAction', 'compile'],
-      metrics: [STATE.METRICS, 'getMetrics', '', false],
-      typeset: [STATE.TYPESET, 'typesetAction', 'typeset'],
-      update: [STATE.INSERTED, 'updateDocument', false],
-    }) as RenderActions<any, any, any>,
-  };
+  public static OPTIONS = options;
 
   /**
    * A bit-field for the actions that have been processed
@@ -742,7 +764,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * The actual options for this document (with user-supplied ones merged in)
    */
-  public options: OptionList;
+  public options: DOCUMENT_OPTIONS<DOM<N, T, D>>;
 
   /**
    * The list of MathItems for this document
@@ -800,17 +822,17 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   constructor(document: D, adaptor: DOMAdaptor<N, T, D>, options: OptionList) {
     const CLASS = this.constructor as typeof AbstractMathDocument;
     this.document = document;
-    this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
-    this.math = new (this.options['MathList'] || DefaultMathList)();
-    this.renderActions = RenderList.create<N, T, D>(
-      this.options['renderActions']
-    );
+    this.options = userOptions(
+      defaultOptions({}, CLASS.OPTIONS),
+      options
+    ) as DOCUMENT_OPTIONS<DOM>;
+    this.math = new (this.options.MathList ?? DefaultMathList)();
+    this.renderActions = RenderList.create<N, T, D>(this.options.renderActions);
     this._actionPromises = [];
     this._readyPromise = Promise.resolve();
     this.processed = new AbstractMathDocument.ProcessBits();
-    this.outputJax =
-      this.options['OutputJax'] || new DefaultOutputJax<N, T, D>();
-    let inputJax = this.options['InputJax'] || [new DefaultInputJax<N, T, D>()];
+    this.outputJax = this.options.OutputJax ?? new DefaultOutputJax<N, T, D>();
+    let inputJax = this.options.InputJax ?? [new DefaultInputJax<N, T, D>()];
     if (!Array.isArray(inputJax)) {
       inputJax = [inputJax];
     }
@@ -824,7 +846,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
     //
     // Pass the MmlFactory to the jax
     //
-    this.mmlFactory = this.options['MmlFactory'] || new MmlFactory();
+    this.mmlFactory = this.options.MmlFactory || new MmlFactory();
     this.inputJax.map((jax) => jax.setMmlFactory(this.mmlFactory));
     //
     // Do any initialization that requires adaptors or factories
@@ -854,7 +876,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public removeRenderAction(id: string) {
+  public removeRenderAction(id: string): void {
     const action = this.renderActions.findID(id);
     if (action) {
       this.renderActions.remove(action);
@@ -873,7 +895,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public renderPromise() {
+  public renderPromise(): Promise<this> {
     return this.whenReady(() =>
       mathjax.handleRetriesFor(async () => {
         this.render();
@@ -887,7 +909,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public rerender(start: number = STATE.RERENDER) {
+  public rerender(start: number = STATE.RERENDER): this {
     this.state(start - 1);
     this.render();
     return this;
@@ -896,7 +918,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public rerenderPromise(start: number = STATE.RERENDER) {
+  public rerenderPromise(start: number = STATE.RERENDER): Promise<this> {
     return this.whenReady(() =>
       mathjax.handleRetriesFor(async () => {
         this.rerender(start);
@@ -910,7 +932,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public convert(math: string, options: OptionList = {}) {
+  public convert(math: string, options: OptionList = {}): MmlNode | N {
     let { format, display, end, ex, em, containerWidth, scale, family } =
       userOptions(
         {
@@ -952,7 +974,10 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public convertPromise(math: string, options: OptionList = {}) {
+  public convertPromise(
+    math: string,
+    options: OptionList = {}
+  ): Promise<MmlNode | N> {
     return this.whenReady(() =>
       mathjax.handleRetriesFor(async () => {
         const node = this.convert(math, options);
@@ -1005,28 +1030,28 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public actionPromises() {
+  public actionPromises(): Promise<void[]> {
     return Promise.all(this._actionPromises);
   }
 
   /**
    * @override
    */
-  public clearPromises() {
+  public clearPromises(): void {
     this._actionPromises = [];
   }
 
   /**
    * @override
    */
-  public savePromise(promise: Promise<any>) {
+  public savePromise(promise: Promise<any>): void {
     this._actionPromises.push(promise);
   }
 
   /**
    * @override
    */
-  public findMath(_options: OptionList = null) {
+  public findMath(_options: OptionList = null): this {
     this.processed.set('findMath');
     return this;
   }
@@ -1034,7 +1059,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public compile() {
+  public compile(): this | Promise<void> {
     return this.compileAction(false);
   }
 
@@ -1050,7 +1075,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
     action: boolean = true,
     item: MathListItem<N, T, D> = this.math.first(),
     recompile: MathItem<N, T, D>[] = []
-  ): MathDocument<N, T, D> | Promise<void> {
+  ): this | Promise<void> {
     if (this.processed.isSet('compile')) return this;
     while (!item.isEnd) {
       const math = item.data as MathItem<N, T, D>;
@@ -1109,15 +1134,15 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @param {MathItem} math   The item to compile
    */
-  protected compileMath(math: MathItem<N, T, D>) {
+  protected compileMath(math: MathItem<N, T, D>): void {
     try {
       math.compile(this);
     } catch (err) {
       if (err.retry) {
         throw err;
       }
-      this.options['compileError'](this, math, err);
-      math.inputData['error'] = err;
+      this.options.compileError(this, math, err);
+      math.inputData.error = err;
     }
   }
 
@@ -1127,7 +1152,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    * @param {MathItem} math  The MathItem producing the error
    * @param {Error} err      The Error object for the error
    */
-  public compileError(math: MathItem<N, T, D>, err: Error) {
+  public compileError(math: MathItem<N, T, D>, err: Error): void {
     math.root = this.mmlFactory.create('math', null, [
       this.mmlFactory.create(
         'merror',
@@ -1150,7 +1175,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public typeset() {
+  public typeset(): this | Promise<void> {
     return this.typesetAction(false);
   }
 
@@ -1164,7 +1189,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   protected typesetAction(
     action: boolean = true,
     item: MathListItem<N, T, D> = this.math.first()
-  ): AbstractMathDocument<N, T, D> | Promise<void> {
+  ): this | Promise<void> {
     if (this.processed.isSet('typeset')) return this;
     while (!item.isEnd) {
       const math = item.data as MathItem<N, T, D>;
@@ -1177,8 +1202,8 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
           }
           throw err;
         }
-        this.options['typesetError'](this, math, err);
-        math.outputData['error'] = err;
+        this.options.typesetError(this, math, err);
+        math.outputData.error = err;
       }
       item = item.next;
     }
@@ -1192,7 +1217,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
    * @param {MathItem} math  The MathItem producing the error
    * @param {Error} err      The Error object for the error
    */
-  public typesetError(math: MathItem<N, T, D>, err: Error) {
+  public typesetError(math: MathItem<N, T, D>, err: Error): void {
     math.typesetRoot = this.adaptor.node(
       'mjx-container',
       {
@@ -1230,7 +1255,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public getMetrics() {
+  public getMetrics(): this {
     if (!this.processed.isSet('getMetrics')) {
       this.outputJax.getMetrics(this);
       this.processed.set('getMetrics');
@@ -1241,7 +1266,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public updateDocument() {
+  public updateDocument(): this {
     if (!this.processed.isSet('updateDocument')) {
       for (const math of this.math.reversed()) {
         math.updateDocument(this);
@@ -1254,14 +1279,14 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public removeFromDocument(_restore: boolean = false) {
+  public removeFromDocument(_restore: boolean = false): this {
     return this;
   }
 
   /**
    * @override
    */
-  public state(state: number, restore: boolean = false) {
+  public state(state: number, restore: boolean = false): this {
     for (const math of this.math) {
       math.state(state, restore);
     }
@@ -1284,7 +1309,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public reset(options: ResetList = { processed: true }) {
+  public reset(options: ResetList = { processed: true }): this {
     options = userOptions(Object.assign({}, resetOptions), options);
     if (options.all) {
       Object.assign(options, resetAllOptions);
@@ -1304,7 +1329,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public clear() {
+  public clear(): this {
     this.reset();
     this.math.clear();
     return this;
@@ -1313,14 +1338,14 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public done() {
+  public done(): Promise<void> {
     return Promise.resolve();
   }
 
   /**
    * @override
    */
-  public concat(list: MathList<N, T, D>) {
+  public concat(list: MathList<N, T, D>): this {
     this.math.merge(list);
     return this;
   }
@@ -1328,7 +1353,9 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public clearMathItemsWithin(containers: ContainerList<N>) {
+  public clearMathItemsWithin(
+    containers: ContainerList<N>
+  ): MathItem<N, T, D>[] {
     const items = this.getMathItemsWithin(containers);
     for (const item of items.slice(0).reverse()) {
       item.clear();
@@ -1340,7 +1367,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
   /**
    * @override
    */
-  public getMathItemsWithin(elements: ContainerList<N>) {
+  public getMathItemsWithin(elements: ContainerList<N>): MathItem<N, T, D>[] {
     if (!Array.isArray(elements)) {
       elements = [elements];
     }
@@ -1362,13 +1389,15 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<
 /**
  * The constructor type for a MathDocument
  *
- * @template D    The MathDocument type this constructor is for
+ * @template DOC   The MathDocument type this constructor is for
+ * @template DD    The DOM types in use
  */
 export interface MathDocumentConstructor<
-  D extends MathDocument<any, any, any>,
+  DOC extends MathDocument<N<DD>, T<DD>, D<DD>>,
+  DD extends DOM_TYPES = DOM,
 > {
   KIND: string;
-  OPTIONS: OptionList;
+  OPTIONS: DOCUMENT_OPTIONS<DD>;
   ProcessBits: typeof BitField;
-  new (...args: any[]): D;
+  new (...args: any[]): DOC;
 }

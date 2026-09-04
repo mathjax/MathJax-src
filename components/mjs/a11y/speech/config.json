@@ -2,7 +2,10 @@
   "build": {
     "component": "a11y/speech",
     "targets": ["a11y/speech.ts", "a11y/speech"],
-    "exclude": ["a11y/speech/SpeechMenu.ts"]
+    "exclude": [
+      "a11y/speech/SpeechMenu.ts",
+      "a11y/speech/strings.ts"
+    ]
   },
   "copy": {
     "to": "[bundle]/a11y/speech",

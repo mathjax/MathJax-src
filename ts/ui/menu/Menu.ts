@@ -33,8 +33,10 @@ import {
   userOptions,
   defaultOptions,
   expandable,
+  EXPANDABLE_LIST_OF,
 } from '../../util/Options.js';
-import { ExplorerMathItem } from '../../a11y/explorer.js';
+import { ExplorerMathItem, A11Y_OPTIONS } from '../../a11y/explorer.js';
+import { SRE_OPTIONS } from '../../a11y/semantic-enrich.js';
 import { InfoDialog } from '../dialog/InfoDialog.js';
 import { CopyDialog } from '../dialog/CopyDialog.js';
 
@@ -70,60 +72,96 @@ const XMLDECLARATION = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>';
 
 /*==========================================================================*/
 
-/**
- * The various values that are stored in the menu
- */
-export interface MenuSettings {
+export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
+
+export type JaxList = {
+  [name: string]: OutputJax<HTMLElement, Text, Document>;
+};
+
+type A11Y = Partial<A11Y_OPTIONS['a11y']>;
+
+type RENDERER = 'CHTML' | 'SVG';
+type OVERFLOW =
+  'Overflow' | 'Scroll' | 'Linebreak' | 'Scale' | 'Truncate' | 'Elide';
+type ANNOTATION_DEFS = EXPANDABLE_LIST_OF<string[]>;
+
+export type SETTINGS = {
   showSRE: boolean;
   showTex: boolean;
   texHints: boolean;
   semantics: boolean;
   zoom: string;
   zscale: string;
-  renderer: string;
+  renderer: RENDERER;
+  locale: string;
   alt: boolean;
   cmd: boolean;
   ctrl: boolean;
   shift: boolean;
-  scale: string;
-  overflow: string;
+  scale: number;
+  overflow: OVERFLOW;
   breakInline: boolean;
   autocollapse: boolean;
   collapsible: boolean;
   enrich: boolean;
   assistiveMml: boolean;
-  // A11y settings
-  backgroundColor: string;
-  backgroundOpacity: string;
-  braille: boolean;
-  brailleCode: string;
-  brailleSpeech: boolean;
-  brailleCombine: boolean;
-  foregroundColor: string;
-  foregroundOpacity: string;
-  highlight: string;
-  infoPrefix: boolean;
-  infoRole: boolean;
-  infoType: boolean;
-  inTabOrder: boolean;
-  locale: string;
-  magnification: string;
-  magnify: string;
-  speech: boolean;
-  speechRules: string;
-  subtitles: boolean;
-  treeColoring: boolean;
-  viewBraille: boolean;
-  voicing: boolean;
-  help: boolean;
-  roleDescription: string;
-  tabSelects: string;
-}
+  brailleCode: SRE_OPTIONS['braille'];
+};
 
-export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
+/**
+ * The various values that are stored in the menu
+ */
+export interface MenuSettings extends SETTINGS, A11Y {}
 
-export type JaxList = {
-  [name: string]: OutputJax<HTMLElement, Text, Document>;
+export type OPTIONS = {
+  settings: MenuSettings;
+  jax: JaxList;
+  annotationTypes: ANNOTATION_DEFS;
+};
+
+const options: Omit<OPTIONS, 'settings'> & { settings: SETTINGS & A11Y } = {
+  settings: {
+    showSRE: false,
+    showTex: false,
+    texHints: true,
+    semantics: false,
+    zoom: 'NoZoom',
+    zscale: '200%',
+    renderer: 'CHTML',
+    locale: Locale.default,
+    alt: true,
+    cmd: false,
+    ctrl: false,
+    shift: false,
+    scale: 1,
+    overflow: 'Scroll',
+    breakInline: true,
+    autocollapse: false,
+    collapsible: false,
+    enrich: true,
+    assistiveMml: false,
+    speech: true,
+    braille: true,
+    brailleCode: 'nemeth',
+    brailleSpeech: false,
+    brailleCombine: false,
+    speechRules: 'clearspeak-default',
+    roleDescription: 'math',
+    inTabOrder: true,
+    tabSelects: 'all',
+    help: true,
+  },
+  jax: {
+    CHTML: null,
+    SVG: null,
+  },
+  annotationTypes: expandable({
+    TeX: ['TeX', 'LaTeX', 'application/x-tex'],
+    StarMath: ['StarMath 5.0'],
+    Maple: ['Maple'],
+    ContentMathML: ['MathML-Content', 'application/mathml-content+xml'],
+    OpenMath: ['OpenMath'],
+  }),
 };
 
 /*==========================================================================*/
@@ -146,50 +184,7 @@ export class Menu {
    * The options for the menu, including the default settings, the various output jax
    * and the list of annotation types and their encodings
    */
-  public static OPTIONS: OptionList = {
-    settings: {
-      showSRE: false,
-      showTex: false,
-      texHints: true,
-      semantics: false,
-      zoom: 'NoZoom',
-      zscale: '200%',
-      renderer: 'CHTML',
-      locale: Locale.default,
-      alt: true,
-      cmd: false,
-      ctrl: false,
-      shift: false,
-      scale: 1,
-      overflow: 'Scroll',
-      breakInline: true,
-      autocollapse: false,
-      collapsible: false,
-      enrich: true,
-      assistiveMml: false,
-      speech: true,
-      braille: true,
-      brailleCode: 'nemeth',
-      brailleSpeech: false,
-      brailleCombine: false,
-      speechRules: 'clearspeak-default',
-      roleDescription: 'math',
-      inTabOrder: true,
-      tabSelects: 'all',
-      help: true,
-    },
-    jax: {
-      CHTML: null,
-      SVG: null,
-    },
-    annotationTypes: expandable({
-      TeX: ['TeX', 'LaTeX', 'application/x-tex'],
-      StarMath: ['StarMath 5.0'],
-      Maple: ['Maple'],
-      ContentMathML: ['MathML-Content', 'application/mathml-content+xml'],
-      OpenMath: ['OpenMath'],
-    }),
-  };
+  public static OPTIONS = options;
 
   /**
    * The CSS to include in SVG images
@@ -564,7 +559,7 @@ export class Menu {
     this.jax = this.options.jax;
     const jax = this.document.outputJax;
     this.jax[jax.name] = jax;
-    this.settings.renderer = jax.name;
+    this.settings.renderer = jax.name as RENDERER;
     this.settings.scale = jax.options.scale;
     if (jax.options.displayOverflow) {
       this.settings.overflow =
@@ -599,8 +594,8 @@ export class Menu {
         this.variable<boolean>('semantics'),
         this.variable<string>('zoom'),
         this.variable<string>('zscale'),
-        this.variable<string>('renderer', (jax) => this.setRenderer(jax)),
-        this.variable<string>('overflow', (overflow) =>
+        this.variable<RENDERER>('renderer', (jax) => this.setRenderer(jax)),
+        this.variable<OVERFLOW>('overflow', (overflow) =>
           this.setOverflow(overflow)
         ),
         this.variable<boolean>('breakInline', (breaks) =>
@@ -610,7 +605,7 @@ export class Menu {
         this.variable<boolean>('cmd'),
         this.variable<boolean>('ctrl'),
         this.variable<boolean>('shift'),
-        this.variable<string>('scale', (scale) => this.setScale(scale)),
+        this.variable<number>('scale', (scale) => this.setScale(scale)),
         this.a11yVar<boolean>('speech', (speech) => this.setSpeech(speech)),
         this.a11yVar<boolean>('braille', (braille) => this.setBraille(braille)),
         this.variable<string>('brailleCode', (code) =>
@@ -644,9 +639,10 @@ export class Menu {
         this.a11yVar<boolean>('help'),
         this.a11yVar<string>('locale', (locale) => this.setLocale(locale)),
         this.variable<string>('speechRules', (value) => {
+          const sre = this.document.options.sre;
           const [domain, style] = value.split('-');
-          this.document.options.sre.domain = domain;
-          this.document.options.sre.style = style;
+          sre.domain = domain as typeof sre.domain;
+          sre.style = style as typeof sre.style;
           this.rerender(STATE.COMPILED);
         }),
         this.a11yVar<string>('magnification'),
@@ -1015,14 +1011,15 @@ export class Menu {
    * Get the the value of an a11y option
    *
    * @param {string} option   The name of the ptions to get
-   * @returns {any}            The value of the option
+   * @returns {any}           The value of the option
    */
   protected getA11y(option: string): any {
     if (MathJax._?.a11y?.explorer) {
-      if (this.document.options.a11y[option] !== undefined) {
-        return this.document.options.a11y[option];
+      const options = this.document.options as any;
+      if (options.a11y[option] !== undefined) {
+        return options.a11y[option];
       }
-      return this.document.options.sre[option];
+      return options.sre[option];
     }
   }
 
@@ -1038,8 +1035,8 @@ export class Menu {
     this.enableAccessibilityItems('Speech', this.settings.speech);
     this.enableAccessibilityItems('Braille', this.settings.braille);
     this.setAccessibilityMenus();
-    const renderer =
-      this.settings.renderer.replace(/[^a-zA-Z0-9]/g, '') || 'CHTML';
+    const renderer = (this.settings.renderer.replace(/[^a-zA-Z0-9]/g, '') ||
+      'CHTML') as RENDERER;
     (Menu._loadingPromise || Promise.resolve()).then(() => {
       const settings = this.settings;
       this.applyRendererOptions(this.document.outputJax);
@@ -1076,8 +1073,8 @@ export class Menu {
   /**
    * @param {string} scale   The new scaling value
    */
-  protected setScale(scale: string) {
-    this.document.outputJax.options.scale = parseFloat(scale);
+  protected setScale(scale: number) {
+    this.document.outputJax.options.scale = scale;
     if (!Menu.loading && this.initialized) {
       this.document.rerenderPromise();
     }
@@ -1086,12 +1083,15 @@ export class Menu {
   /**
    * If the jax is already on record, just use it, otherwise load the new one
    *
-   * @param {string} jax         The name of the jax to switch to
+   * @param {RENDERER} jax       The name of the jax to switch to
    * @param {boolean} rerender   True if the document should be rerendered
-   * @returns {Promise}           A promise that is resolved when the renderer is set
+   * @returns {Promise}          A promise that is resolved when the renderer is set
    *                               and rerendering complete
    */
-  protected setRenderer(jax: string, rerender: boolean = true): Promise<void> {
+  protected setRenderer(
+    jax: RENDERER,
+    rerender: boolean = true
+  ): Promise<void> {
     if (Object.hasOwn(this.jax, jax) && this.jax[jax]) {
       this.applyRendererOptions(this.jax[jax]);
       return this.setOutputJax(jax, rerender);
@@ -1124,7 +1124,7 @@ export class Menu {
   ): OutputJax<HTMLElement, Text, Document> {
     const settings = this.settings;
     const options = output.options;
-    options.scale = parseFloat(settings.scale);
+    options.scale = settings.scale;
     options.displayOverflow = settings.overflow.toLowerCase();
     if (options.linebreaks) {
       options.linebreaks.inline = settings.breakInline;
@@ -1138,7 +1138,7 @@ export class Menu {
    *
    * @param {string} jax         The name of the jax to switch to
    * @param {boolean} rerender   True if the document should be rerendered
-   * @returns {Promise}           A promise that is resolved when the renderer is set
+   * @returns {Promise}          A promise that is resolved when the renderer is set
    *                               and rerendering complete
    */
   protected setOutputJax(jax: string, rerender: boolean = true): Promise<void> {
@@ -1155,14 +1155,14 @@ export class Menu {
    *
    * @returns {Promise} The promise combining all loading promises
    */
-  protected loadRequiredExtensions(): Promise<string[]> {
+  protected loadRequiredExtensions(): Promise<any[]> {
     const jax = this.document.outputJax.name.toLowerCase();
-    const promises = [];
+    const paths = [];
     for (const path of this.requiredExtensions) {
-      promises.push(MathJax.loader.load(`[${path}]/${jax}`));
+      paths.push(`[${path}]/${jax}`);
     }
     this.requiredExtensions = [];
-    return Promise.all(promises);
+    return MathJax.loader.load(...paths);
   }
 
   /**
@@ -1224,7 +1224,7 @@ export class Menu {
         enable;
     if (!enable) {
       this.settings.collapsible = false;
-      this.document.options.enableCollapsible = false;
+      this.document.options.enableComplexity = false;
     }
   }
 
@@ -1272,10 +1272,11 @@ export class Menu {
   }
 
   /**
-   * @param {string} code  The Braille code format (nemeth or euro)
+   * @param {string} code   The Braille code format (nemeth or euro)
    */
   protected setBrailleCode(code: string) {
-    this.document.options.sre.braille = code;
+    const sre = this.document.options.sre;
+    sre.braille = code as typeof sre.braille;
     this.rerender(STATE.COMPILED);
   }
 
@@ -1306,7 +1307,7 @@ export class Menu {
   }
 
   /**
-   * @param {string} locale  The speech locale
+   * @param {string} locale   The speech locale
    */
   protected setLocale(locale: string) {
     this.document.options.sre.locale = locale;
@@ -1381,10 +1382,14 @@ export class Menu {
   protected setColor(type: string, name: string, opacity?: string) {
     const a11y = this.document.options.a11y;
     if (!name) {
-      name = a11y[type === 'fg' ? 'foregroundColor' : 'backgroundColor'];
+      name = a11y[
+        type === 'fg' ? 'foregroundColor' : 'backgroundColor'
+      ] as string;
     }
     if (!opacity) {
-      opacity = a11y[type === 'fg' ? 'foregroundOpacity' : 'backgroundOpacity'];
+      opacity = String(
+        a11y[type === 'fg' ? 'foregroundOpacity' : 'backgroundOpacity']
+      );
     }
     MathJax._.a11y.explorer.Region.LiveRegion.setColor(
       type,
@@ -1398,9 +1403,7 @@ export class Menu {
    * Request the scaling value from the user and save it in the settings
    */
   protected scaleAllMath() {
-    const scale = (parseFloat(this.settings.scale) * 100)
-      .toFixed(1)
-      .replace(/.0$/, '');
+    const scale = (this.settings.scale * 100).toFixed(1).replace(/.0$/, '');
     const percent = prompt(localize('Scale/Prompt'), scale + '%');
     if (this.current) {
       const speech = (this.menu.mathItem as ExplorerMathItem).explorers.speech;
@@ -1411,7 +1414,7 @@ export class Menu {
       if (percent.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
         const scale = parseFloat(percent) / 100;
         if (scale) {
-          this.menu.pool.lookup('scale').setValue(String(scale));
+          this.menu.pool.lookup('scale').setValue(scale as any);
         } else {
           alert(localize('Scale/NonZero'));
         }
@@ -1429,7 +1432,7 @@ export class Menu {
       const pool = this.menu.pool;
       const settings = this.defaultSettings;
       for (const name of Object.keys(settings) as (keyof MenuSettings)[]) {
-        const variable = pool.lookup(name);
+        const variable = pool.lookup(name as string);
         if (variable) {
           if (variable.getValue() !== settings[name]) {
             variable.setValue(settings[name] as string | boolean);
@@ -1451,7 +1454,7 @@ export class Menu {
   /**
    * Check if a component is loading, and restart if it is
    *
-   * @param {string} name        The name of the component to check if it is loading
+   * @param {string} name   The name of the component to check if it is loading
    */
   public checkComponent(name: string) {
     const promise = Menu.loadingPromises.get(name);
@@ -1463,8 +1466,8 @@ export class Menu {
   /**
    * Attempt to load a component and perform a callback when done
    *
-   * @param {string} name The name of the component to load
-   * @param {() => void} callback The callback for after loading
+   * @param {string} name           The name of the component to load
+   * @param {() => void} callback   The callback for after loading
    */
   protected loadComponent(name: string, callback: () => void) {
     if (Menu.loadingPromises.has(name)) return;
@@ -1604,7 +1607,7 @@ export class Menu {
    */
   protected async typesetSVG(
     math: HTMLMATHITEM,
-    cache: string,
+    cache: 'local' | 'global' | 'none',
     breaks: boolean
   ): Promise<string> {
     const jax = this.jax.SVG as SVG<HTMLElement, Text, Document>;
@@ -1629,7 +1632,7 @@ export class Menu {
 
   /**
    * @param {string} svg   The serialzied SVG to adjust
-   * @returns {string} The adjusted SVG string
+   * @returns {string}     The adjusted SVG string
    */
   protected formatSvg(svg: string): string {
     //
@@ -1672,7 +1675,7 @@ export class Menu {
     // Remove unwanted attributes
     //
     if (!this.settings.showSRE) {
-      svg = svg.replace(/ (?:data-semantic-.*?|data-speech-node)=".*?"/g, '');
+      svg = svg.replace(/ (?:data-semantic-.*?|data-collapse-.*?|data-speech-node)=".*?"/g, '');
     }
     if (!this.settings.showTex) {
       svg = svg.replace(/ data-latex(?:-item)?=".*?"/g, '');
@@ -1849,13 +1852,13 @@ export class Menu {
   /**
    * Create JSON for a variable controlling a menu setting
    *
-   * @param {keyof MenuSettings} name   The setting for which to make a variable
-   * @param {(value: T) => void} action Optional function to perform after setting the value
-   * @returns {object}                  The JSON for the variable
+   * @param {keyof MenuSettings} name     The setting for which to make a variable
+   * @param {(value: T) => void} action   Optional function to perform after setting the value
+   * @returns {object}                    The JSON for the variable
    *
    * @template T    The type of variable being defined
    */
-  public variable<T extends string | boolean>(
+  public variable<T extends string | number | boolean>(
     name: keyof MenuSettings,
     action?: (value: T) => void
   ): object {
@@ -1888,7 +1891,7 @@ export class Menu {
   ): object {
     return {
       name: name,
-      getter: () => this.getA11y(name),
+      getter: () => this.getA11y(name as string),
       setter: (value: T) => {
         (this.settings as any)[name] = value;
         this.setA11y({ [name]: value });
@@ -2023,8 +2026,8 @@ export class Menu {
   /**
    * Create JSON for a label item
    *
-   * @param {string} id           The id for the item
-   * @returns {object}            The JSON for the label item
+   * @param {string} id   The id for the item
+   * @returns {object}    The JSON for the label item
    */
   public label(id: string): object {
     const content = localize(id);
@@ -2034,7 +2037,7 @@ export class Menu {
   /**
    * Create JSON for a menu rule
    *
-   * @returns {object}            The JSON for the rule item
+   * @returns {object}    The JSON for the rule item
    */
   public rule(): object {
     return { type: 'rule' };
@@ -2043,11 +2046,11 @@ export class Menu {
   /**
    * Create JSON for a slider
    *
-   * @param {string} variable     The (pool) variable to attach to this slider
-   * @returns {object}            The JSON for the slider item
+   * @param {string} variable   The (pool) variable to attach to this slider
+   * @returns {object}          The JSON for the slider item
    */
   public slider(variable: string): object {
-    return {type: 'slider', variable, content: ' '};
+    return { type: 'slider', variable, content: ' ' };
   }
 
   /*======================================================================*/

@@ -33,6 +33,22 @@ export type EndItem = [string, boolean, RegExp];
 export type Delims = [string, string];
 
 /*****************************************************************/
+
+/**
+ * The FindAsciiMath option types.
+ */
+export type FINDASCIIMATH_OPTIONS = {
+  delimiters: [string, string][]; // The start/end delimiter pairs for asciimath code
+};
+
+/**
+ * The FindAsciiMath option defaults.
+ */
+const options: FINDASCIIMATH_OPTIONS = {
+  delimiters: [['`', '`']],
+};
+
+/*****************************************************************/
 /**
  *  Implements the FindAsciiMath class (extends AbstractFindMath)
  *
@@ -46,9 +62,7 @@ export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
   /**
    * @override
    */
-  public static OPTIONS: OptionList = {
-    delimiters: [['`', '`']], // The start/end delimiter pairs for asciimath code
-  };
+  public static OPTIONS = options;
 
   /**
    * The regular expression for any starting delimiter

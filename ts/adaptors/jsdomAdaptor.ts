@@ -22,8 +22,7 @@
  */
 
 import { HTMLAdaptor } from './HTMLAdaptor.js';
-import { NodeMixin, Constructor } from './NodeMixin.js';
-import { OptionList } from '../util/Options.js';
+import { NodeMixin, MIXIN_OPTIONS, Constructor } from './NodeMixin.js';
 
 /**
  * The constructor for an HTMLAdaptor
@@ -45,13 +44,13 @@ export class JsdomAdaptor extends NodeMixin<
 /**
  * Function for creating an HTML adaptor using jsdom
  *
- * @param {any} JSDOM          The jsdom object to use for this adaptor
- * @param {OptionList} options The options for the adaptor
- * @returns {HTMLAdaptor}      The newly created adaptor
+ * @param {any} JSDOM               The jsdom object to use for this adaptor
+ * @param {MIXIN_OPTIONS} options   The options for the adaptor
+ * @returns {HTMLAdaptor}           The newly created adaptor
  */
 export function jsdomAdaptor(
   JSDOM: any,
-  options: OptionList = null
+  options: MIXIN_OPTIONS = null
 ): JsdomAdaptor {
   return new JsdomAdaptor(new JSDOM().window, options);
 }

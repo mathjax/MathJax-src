@@ -33,6 +33,7 @@ import {
   GLOBAL as global,
 } from './global.js';
 
+import { mathjax } from '../mathjax.js';
 import { MathDocument } from '../core/MathDocument.js';
 import { MmlNode } from '../core/MmlTree/MmlNode.js';
 import { Handler } from '../core/Handler.js';
@@ -45,93 +46,109 @@ import { OptionList, OPTIONS } from '../util/Options.js';
 import { context } from '../util/context.js';
 import { Locale } from '../util/Locale.js';
 import { COMPONENT } from '../core/__locales__/Component.js';
+import { DOM, DOM_TYPES, N, T, D, OPTIONAL } from '../types/Types.js';
 
 import { TeX } from '../input/tex.js';
 
 /**
- * Update the configuration structure to include the startup configuration
+ * The option types for the startup component.
  */
-/* prettier-ignore */
-export interface MathJaxConfig extends MJConfig {
-  startup?: {
-    input?: string[];        // The names of the input jax to use
-    output?: string;         // The name for the output jax to use
-    handler?: string;        // The handler to register
-    adaptor?: string;        // The name for the DOM adaptor to use
-    document?: any;          // The document (or fragment or string) to work in
-    elements?: any[];        // The elements to typeset (default is document body)
-    typeset?: boolean;       // Perform initial typeset?
-    ready?: () => void;      // Function to perform when components are ready
-    pageReady?: () => void;  // Function to perform when page is ready
-    invalidOption?: 'fatal' | 'warn'; // Do invalid options produce a warning, or throw an error?
-    optionError?: (message: string, key: string) => void,  // Function to report invalid options
-    loadAllFontFiles: false; // true means force all dynamic font files to load initially
-    [name: string]: any;     // Other configuration blocks
-  };
-}
+export type STARTUP_OPTIONS = {
+  input: string[]; //           The names of the input jax to use
+  output: string; //            The name for the output jax to use
+  handler: string; //           The handler to register
+  adaptor: string; //           The name for the DOM adaptor to use
+  document: any; //             The document (or fragment or string) to work in
+  elements: any[]; //           The elements to typeset (default is document body)
+  typeset: boolean; //          Perform initial typeset?
+  ready: () => void; //         Function to perform when components are ready
+  pageReady: () => void; //     Function to perform when page is ready
+  invalidOption?: 'fatal' | 'warn'; // Do invalid options produce a warning, or throw an error?
+  optionError?: (message: string, key: string) => void; // Function to report invalid options
+  loadAllFontFiles: boolean; // true means force all dynamic font files to load initially
+  polyfillHasOwn: boolean; //   Can be removed with ES2024 implementation of Object.hasown
+};
 
 /**
  * Generic types for the standard MathJax objects
  */
-export type MATHDOCUMENT = MathDocument<any, any, any> & {
+export type MATHDOCUMENT<DD extends DOM_TYPES = DOM> = MathDocument<
+  N<DD>,
+  T<DD>,
+  D<DD>
+> & {
   menu?: { loadingPromise: Promise<void> };
+  options: { elements?: N<DD>[] };
 };
-export type HANDLER = Handler<any, any, any>;
-export type DOMADAPTOR = DOMAdaptor<any, any, any>;
-export type INPUTJAX = InputJax<any, any, any>;
-export type OUTPUTJAX = OutputJax<any, any, any>;
+export type HANDLER<DD extends DOM_TYPES = DOM> = Handler<N<DD>, T<DD>, D<DD>>;
+export type DOMADAPTOR<DD extends DOM_TYPES = DOM> = DOMAdaptor<
+  N<DD>,
+  T<DD>,
+  D<DD>
+>;
+export type INPUTJAX<DD extends DOM_TYPES = DOM> = InputJax<
+  N<DD>,
+  T<DD>,
+  D<DD>
+>;
+export type OUTPUTJAX<DD extends DOM_TYPES = DOM> = OutputJax<
+  N<DD>,
+  T<DD>,
+  D<DD>
+>;
 /* prettier-ignore */
-export type COMMONJAX =
-  CommonOutputJax<any, any, any, any, any, any, any, any, any, any, any>;
-export type TEX = TeX<any, any, any>;
+export type COMMONJAX<DD extends DOM_TYPES = DOM> =
+  CommonOutputJax<N<DD>, T<DD>, D<DD>, any, any, any, any, any, any, any, any>;
+export type TEX<DD extends DOM_TYPES = DOM> = TeX<N<DD>, T<DD>, D<DD>>;
 
 /**
  * Array of InputJax also with keys using name of jax
  */
-export type JAXARRAY = INPUTJAX[] & { [name: string]: INPUTJAX };
+export type JAXARRAY<DD extends DOM_TYPES = DOM> = INPUTJAX<DD>[] & {
+  [name: string]: INPUTJAX<DD>;
+};
 
 /**
  * A function to extend a handler class
  */
-export type HandlerExtension = (handler: HANDLER) => HANDLER;
+export type HandlerExtension<DD extends DOM_TYPES = DOM> = (
+  handler: HANDLER<DD>
+) => HANDLER<DD>;
 
 /**
- * Update the MathJax object to inclide the startup information
+ * The startup object types.
  */
-export interface MathJaxObject extends MJObject {
-  config: MathJaxConfig;
-  startup: {
-    constructors: { [name: string]: any };
-    input: JAXARRAY;
-    output: OUTPUTJAX;
-    handler: HANDLER;
-    adaptor: DOMADAPTOR;
-    elements: any[];
-    document: MATHDOCUMENT;
-    promise: Promise<any>;
-    registerConstructor(name: string, constructor: any): void;
-    useHandler(name: string, force?: boolean): void;
-    useAdaptor(name: string, force?: boolean): void;
-    useOutput(name: string, force?: boolean): void;
-    useInput(name: string, force?: boolean): void;
-    extendHandler(extend: HandlerExtension): void;
-    toMML(node: MmlNode): string;
-    defaultReady(): void;
-    defaultPageReady(): Promise<void>;
-    defaultOptionError(message: string, key: string): void;
-    setLocale(): Promise<void>;
-    getComponents(): void;
-    makeMethods(): void;
-    makeTypesetMethods(): void;
-    makeOutputMethods(iname: string, oname: string, input: INPUTJAX): void;
-    makeMmlMethods(name: string, input: INPUTJAX): void;
-    makeResetMethod(name: string, input: INPUTJAX): void;
-    getInputJax(): JAXARRAY;
-    getOutputJax(): OUTPUTJAX;
-    getAdaptor(): DOMADAPTOR;
-    getHandler(): HANDLER;
-  };
-  [name: string]: any; // Needed for the methods created by the startup module
+export interface STARTUP<DOM extends DOM_TYPES> {
+  mathjax: typeof mathjax;
+  constructors: { [name: string]: any };
+  input: JAXARRAY<DOM>;
+  output: OUTPUTJAX<DOM>;
+  handler: HANDLER<DOM>;
+  adaptor: DOMADAPTOR<DOM>;
+  elements: any[];
+  document: MATHDOCUMENT<DOM>;
+  promise: Promise<any>;
+  registerConstructor(name: string, constructor: any): void;
+  useHandler(name: string, force?: boolean): void;
+  useAdaptor(name: string, force?: boolean): void;
+  useOutput(name: string, force?: boolean): void;
+  useInput(name: string, force?: boolean): void;
+  extendHandler(extend: HandlerExtension): void;
+  toMML(node: MmlNode): string;
+  defaultReady(): void;
+  defaultPageReady(): Promise<void>;
+  defaultOptionError(message: string, key: string): void;
+  setLocale(): Promise<void>;
+  getComponents(): void;
+  makeMethods(): void;
+  makeTypesetMethods(): void;
+  makeOutputMethods(iname: string, oname: string, input: INPUTJAX<DOM>): void;
+  makeMmlMethods(name: string, input: INPUTJAX<DOM>): void;
+  makeResetMethod(name: string, input: INPUTJAX<DOM>): void;
+  getInputJax(): JAXARRAY<DOM>;
+  getOutputJax(): OUTPUTJAX<DOM>;
+  getAdaptor(): DOMADAPTOR<DOM>;
+  getHandler(): HANDLER<DOM>;
 }
 
 /**
@@ -272,7 +289,7 @@ export abstract class Startup {
    *                             included an array of input jax
    */
   public static useInput(name: string, force: boolean = false) {
-    if (!inputSpecified || force) {
+    if (CONFIG.input.length === 0 || force) {
       CONFIG.input.push(name);
     }
   }
@@ -365,7 +382,7 @@ export abstract class Startup {
   public static getComponents() {
     Startup.visitor =
       new MathJax._.core.MmlTree.SerializedMmlVisitor.SerializedMmlVisitor();
-    Startup.mathjax = MathJax._.mathjax.mathjax;
+    Startup.mathjax = mathjax;
     Startup.input = Startup.getInputJax();
     Startup.output = Startup.getOutputJax();
     Startup.adaptor = Startup.getAdaptor();
@@ -595,6 +612,54 @@ export abstract class Startup {
 }
 
 /**
+ * The startup option defaults.
+ */
+const options: STARTUP_OPTIONS = {
+  input: [],
+  output: '',
+  handler: null,
+  adaptor: null,
+  document: context.document || '',
+  elements: null,
+  typeset: true,
+  ready: Startup.defaultReady.bind(Startup),
+  pageReady: Startup.defaultPageReady.bind(Startup),
+  loadAllFontFiles: false,
+  polyfillHasOwn: true, // Can be removed with ES2024 implementation of Object.hasown
+};
+
+/**
+ * The startup type defintion
+ */
+export type STARTUP_TYPES<DOM extends DOM_TYPES> = {
+  component: { startup: true };
+  config: {
+    startup: STARTUP_OPTIONS;
+  };
+  properties: {
+    startup: STARTUP<DOM>;
+    done: () => void;
+    whenReady: (action: () => any) => Promise<any>;
+  };
+};
+
+/**
+ * Update the configuration structure to include the startup configuration
+ */
+export interface MathJaxConfig extends MJConfig {
+  startup?: OPTIONAL<STARTUP_OPTIONS>;
+}
+
+/**
+ * Update the MathJax object to inclide the startup information
+ */
+export interface MathJaxObject extends MJObject {
+  config: MathJaxConfig;
+  startup: STARTUP<DOM>;
+  [name: string]: any; // Needed for the methods created by the startup module
+}
+
+/**
  * Export the global MathJax object for convenience
  */
 export const MathJax = MJGlobal as MathJaxObject;
@@ -605,18 +670,7 @@ export const MathJax = MJGlobal as MathJaxObject;
  *   set the method for handling invalid options, if provided.
  */
 if (typeof MathJax._.startup === 'undefined') {
-  combineDefaults(MathJax.config, 'startup', {
-    input: [],
-    output: '',
-    handler: null,
-    adaptor: null,
-    document: context.document || '',
-    elements: null,
-    typeset: true,
-    ready: Startup.defaultReady.bind(Startup),
-    pageReady: Startup.defaultPageReady.bind(Startup),
-    polyfillHasOwn: true, // Can be removed with ES2024 implementation of Object.hasown
-  });
+  combineDefaults(MathJax.config, 'startup', options) as STARTUP_OPTIONS;
   combineWithMathJax({
     startup: Startup,
     options: {},
@@ -634,8 +688,3 @@ if (typeof MathJax._.startup === 'undefined') {
  * Export the startup configuration for convenience
  */
 export const CONFIG = MathJax.config.startup;
-
-/*
- * Tells if the user configuration included input jax or not
- */
-const inputSpecified = CONFIG.input.length !== 0;

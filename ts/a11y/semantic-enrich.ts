@@ -26,6 +26,8 @@ import {
   MathDocument,
   AbstractMathDocument,
   MathDocumentConstructor,
+  RenderActions,
+  DOCUMENT_OPTIONS,
 } from '../core/MathDocument.js';
 import {
   MathItem,
@@ -37,18 +39,15 @@ import { MmlNode } from '../core/MmlTree/MmlNode.js';
 import { HtmlNode } from '../core/MmlTree/MmlNodes/HtmlNode.js';
 import { MathML } from '../input/mathml.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
-import { OptionList, expandable } from '../util/Options.js';
+import { expandable } from '../util/Options.js';
 import * as Sre from './sre.js';
+import { SEM } from './semantic-enrich/strings.js';
+import { SPEECH } from './speech/strings.js';
+import { MACTION } from './semantic-enrich/maction.js';
 import { StructureUtil, SemanticMap } from './speech/StructureUtil.js';
 import { Locale } from '../util/Locale.js';
 import { COMPONENT } from './semantic-enrich/__locales__/Component.js';
-
-/*==========================================================================*/
-
-/**
- * Generic constructor for Mixins
- */
-export type Constructor<T> = new (...args: any[]) => T;
+import { DOM, DOM_TYPES, N, T, D, Constructor } from '../types/Types.js';
 
 /*==========================================================================*/
 
@@ -87,10 +86,10 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
       // Add maction id and make sure selection is the next attribute
       //
       attributes =
-        ` data-maction-id="${id}" selection="${node.attributes.get('selection')}"` +
+        ` ${MACTION.ID}="${id}" selection="${node.attributes.get('selection')}"` +
         attributes
           .replace(/ selection="\d+"/, '')
-          .replace(/ data-maction-id="\d+"/, '');
+          .replace(` ${MACTION.ID}="\\d+"`, '');
     }
     return (
       `${space}<maction${attributes}>` +
@@ -109,7 +108,7 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
+export interface EnrichedMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
   /**
    * Maps semantic ids to extra nodes outside the DOM subtree.
    */
@@ -213,10 +212,13 @@ export function EnrichedMathItemMixin<
     }
 
     /**
-     * @param {MathDocument} document   The MathDocument for the MathItem
-     * @param {boolean} force           True to force the enrichment even if not enabled
+     * @param {EnrichedMathDocument} document   The MathDocument for the MathItem
+     * @param {boolean} force                   True to force the enrichment even if not enabled
      */
-    public enrich(document: MathDocument<N, T, D>, force: boolean = false) {
+    public enrich(
+      document: EnrichedMathDocument<N, T, D>,
+      force: boolean = false
+    ) {
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
         this.semanticNodes = null;
@@ -229,7 +231,7 @@ export function EnrichedMathItemMixin<
             mml = this.adjustSelections();
           }
           if (!document.processed.isSet('enriched')) {
-            Sre.setupEngine(document.options.sre);
+            Sre.setupEngine(document.options.sre as any);
           }
           const enriched = Sre.toEnriched(mml);
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
@@ -239,8 +241,8 @@ export function EnrichedMathItemMixin<
           // SRE is updated to do this itself.
           //
           math.math = math.math
-            .replace(/ role="treeitem"/g, ' data-speech-node="true"')
-            .replace(/ aria-level/g, ' data-semantic-level-number')
+            .replace(/ role="treeitem"/g, ` ${SPEECH.NODE}="true"`)
+            .replace(/ aria-level/g, ` ${SEM.LEVEL_NUMBER}`)
             .replace(/ aria-(?:posinset|owns|setsize)=".*?"/g, '');
           math.display = this.display;
           math.compile(document);
@@ -285,17 +287,76 @@ export function EnrichedMathItemMixin<
       const maction = [] as MmlNode[];
       this.root.walkTree((node: MmlNode) => {
         if (node.isKind('maction')) {
-          maction[node.attributes.get('data-maction-id') as number] = node;
+          maction[node.attributes.get(MACTION.ID) as number] = node;
         }
       });
       return mml.replace(
-        /(data-maction-id="(\d+)" selection=)"\d+"/g,
+        new RegExp(`(${MACTION.ID}="(\\d+)" selection=)"\\d+"`, 'g'),
         (_match: string, prefix: string, id: number) =>
           `${prefix}"${maction[id].attributes.get('selection')}"`
       );
     }
   };
 }
+
+/*==========================================================================*/
+
+/**
+ * The SRE option types.
+ */
+export interface SRE_OPTIONS {
+  speech: 'none' | 'shallow' | 'deep'; //   The level os speech to include
+  locale: string; //                        switch the locale
+  domain: 'clearspeak' | 'mathspeak'; //    speech rules domain
+  style: 'default' | 'brief' | 'sbrief'; // speech rules style
+  braille: 'nemeth' | 'ueb' | 'euro'; //    TODO: Dummy switch for braille
+  structure: boolean; //                    Generates full aria structure
+  aria: boolean; //                         Generates ARIA attributes
+  rate?: string; //                         The speaking rate
+}
+
+/**
+ * The SRE option defaults.
+ */
+const SRE_options: SRE_OPTIONS = {
+  speech: 'none',
+  locale: Locale.default,
+  domain: 'clearspeak',
+  style: 'default',
+  braille: 'nemeth',
+  structure: true,
+  aria: true,
+};
+
+/**
+ * The semantic-enrich option types.
+ */
+export interface OPTIONS<DOM extends DOM_TYPES> {
+  enableEnrichment: boolean;
+  enrichError: (
+    doc: EnrichedMathDocument<N<DOM>, T<DOM>, D<DOM>>,
+    math: EnrichedMathItem<N<DOM>, T<DOM>, D<DOM>>,
+    err: Error
+  ) => void;
+  sre: SRE_OPTIONS;
+}
+
+/**
+ * The semantic0enrich option defaults.
+ */
+export interface ENRICH_OPTIONS<DOM extends DOM_TYPES>
+  extends OPTIONS<DOM>, DOCUMENT_OPTIONS<DOM> {
+  MathItem: Constructor<EnrichedMathItem<N<DOM>, T<DOM>, D<DOM>>>;
+}
+
+/**
+ * The default options.
+ */
+const options: OPTIONS<DOM> = {
+  enableEnrichment: true,
+  enrichError: (doc, math, err) => doc.enrichError(doc, math, err),
+  sre: expandable(SRE_options) as SRE_OPTIONS,
+};
 
 /*==========================================================================*/
 
@@ -312,11 +373,16 @@ export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<
   D
 > {
   /**
+   * @override
+   */
+  options: ENRICH_OPTIONS<DOM<N, T, D>>;
+
+  /**
    * Perform enrichment on the MathItems in the MathDocument
    *
    * @returns {EnrichedMathDocument}   The MathDocument (so calls can be chained)
    */
-  enrich(): EnrichedMathDocument<N, T, D>;
+  enrich(): this;
 
   /**
    * @param {EnrichedMathDocument} doc   The MathDocument for the error
@@ -346,38 +412,31 @@ export function EnrichedMathDocumentMixin<
   N,
   T,
   D,
-  B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>,
+  B extends MathDocumentConstructor<
+    AbstractMathDocument<N, T, D>,
+    DOM<N, T, D>
+  >,
 >(
   BaseDocument: B,
   MmlJax: MathML<N, T, D>
-): MathDocumentConstructor<EnrichedMathDocument<N, T, D>> & B {
+): MathDocumentConstructor<EnrichedMathDocument<N, T, D>, DOM<N, T, D>> & B {
   return class extends BaseDocument {
     /**
      * @override
      */
-    public static OPTIONS: OptionList = {
+    public static OPTIONS = {
       ...BaseDocument.OPTIONS,
-      enableEnrichment: true,
-      enrichError: (
-        doc: EnrichedMathDocument<N, T, D>,
-        math: EnrichedMathItem<N, T, D>,
-        err: Error
-      ) => doc.enrichError(doc, math, err),
-      renderActions: expandable({
+      ...options,
+      renderActions: expandable<RenderActions<N, T, D>>({
         ...BaseDocument.OPTIONS.renderActions,
         enrich: [STATE.ENRICHED],
       }),
-      /* prettier-ignore */
-      sre: expandable({
-        speech: 'none',                    // by default no speech is included
-        locale: Locale.default,            // switch the locale
-        domain: 'clearspeak',              // speech rules domain
-        style: 'default',                  // speech rules style
-        braille: 'nemeth',                 // TODO: Dummy switch for braille
-        structure: true,                   // Generates full aria structure
-        aria: true,
-      }),
     };
+
+    /**
+     * @override
+     */
+    public options: ENRICH_OPTIONS<DOM<N, T, D>>;
 
     /**
      * Enrich the MathItem class used for this MathDocument, and create the
@@ -410,10 +469,10 @@ export function EnrichedMathDocumentMixin<
      *
      * @returns {EnrichedMathDocument} The object for chaining.
      */
-    public enrich(): EnrichedMathDocument<N, T, D> {
+    public enrich(): this {
       if (!this.processed.isSet('enriched')) {
         if (this.options.enableEnrichment) {
-          Sre.setupEngine(this.options.sre);
+          Sre.setupEngine(this.options.sre as any);
           for (const math of this.math) {
             (math as EnrichedMathItem<N, T, D>).enrich(this);
           }
@@ -474,7 +533,7 @@ export function EnrichHandler<N, T, D>(
     N,
     T,
     D,
-    MathDocumentConstructor<AbstractMathDocument<N, T, D>>
+    MathDocumentConstructor<AbstractMathDocument<N, T, D>, DOM<N, T, D>>
   >(handler.documentClass, MmlJax);
   return handler;
 }

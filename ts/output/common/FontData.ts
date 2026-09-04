@@ -59,8 +59,7 @@ export interface CharOptions {
  *   [height, depth, width, {italic-correction, skew, options}]
  */
 export type CharDataArray<C extends CharOptions> =
-  | [number, number, number]
-  | [number, number, number, C];
+  [number, number, number] | [number, number, number, C];
 
 /**
  * Data about a character or a dynamic file object
@@ -369,6 +368,23 @@ export function mergeOptions(
 }
 
 /****************************************************************************/
+
+/**
+ * The FontData option types.
+ */
+export type FONTDATA_OPTIONS = {
+  unknownFamily: string; //    family to use with unknown character
+  dynamicPrefix: string; //    Location of dynamically loaded files
+};
+
+/**
+ * The FontData option defaults.
+ */
+const options: FONTDATA_OPTIONS = {
+  unknownFamily: 'serif', // Should use 'monospace' with LiteAdaptor
+  dynamicPrefix: '.',
+};
+
 /**
  *  The FontData class (for storing character bounding box data by variant,
  *                      and the stretchy delimiter data).
@@ -385,11 +401,7 @@ export class FontData<
   /**
    * Options for the font
    */
-  /* prettier-ignore */
-  public static OPTIONS: OptionList = {
-    unknownFamily: 'serif',     // Should use 'monospace' with LiteAdaptor
-    dynamicPrefix: '.',         // Location of dynamically loaded files
-  };
+  public static OPTIONS = options;
 
   /**
    * The name of the output jax this font data is for (used by extensions)
@@ -676,7 +688,7 @@ export class FontData<
   /**
    * The font options
    */
-  protected options: OptionList;
+  protected options: FONTDATA_OPTIONS;
 
   /**
    * The actual variant information for this font
@@ -921,7 +933,10 @@ export class FontData<
    */
   constructor(options: OptionList = null) {
     const CLASS = this.CLASS;
-    this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
+    this.options = userOptions(
+      defaultOptions({}, CLASS.OPTIONS),
+      options
+    ) as FONTDATA_OPTIONS;
     this.params = { ...CLASS.defaultParams };
     this.sizeVariants = [...CLASS.defaultSizeVariants];
     this.stretchVariants = [...CLASS.defaultStretchVariants];
@@ -1251,8 +1266,13 @@ export class FontData<
       dynamic.promise = asyncLoad(this.dynamicFileName(dynamic)).catch(
         (err) => {
           dynamic.failed = true;
-          Locale.warn(COMPONENT, 'FontData/CantLoad', dynamic.file, err.message);
-          return dynamic.promise = Promise.resolve();
+          Locale.warn(
+            COMPONENT,
+            'FontData/CantLoad',
+            dynamic.file,
+            err.message
+          );
+          return (dynamic.promise = Promise.resolve());
         }
       );
     }

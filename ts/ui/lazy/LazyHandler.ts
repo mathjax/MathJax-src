@@ -24,14 +24,20 @@
 import {
   MathDocumentConstructor,
   ContainerList,
+  RenderActions,
 } from '../../core/MathDocument.js';
-import { MathItem, STATE, newState } from '../../core/MathItem.js';
-import { HTMLDocument } from '../../handlers/html/HTMLDocument.js';
+import { STATE, newState } from '../../core/MathItem.js';
+import {
+  HTMLDocument,
+  HTMLDOCUMENT_OPTIONS,
+} from '../../handlers/html/HTMLDocument.js';
+import { HTMLMathItem } from '../../handlers/html/HTMLMathItem.js';
 import { HTMLHandler } from '../../handlers/html/HTMLHandler.js';
 // import { EnrichedMathItem } from '../../a11y/semantic-enrich.js';
 import { SpeechMathItem } from '../../a11y/speech.js';
-import { OptionList } from '../../util/Options.js';
+import { expandable } from '../../util/Options.js';
 import { StyleJson } from '../../util/StyleJson.js';
+import { DOM, DOM_TYPES, N, T, D, Constructor } from '../../types/Types.js';
 
 /**
  * Add the needed function to the window object.
@@ -43,11 +49,6 @@ declare const window: {
     addListener: (handler: (event: Event) => void) => void;
   };
 };
-
-/**
- * Generic constructor for Mixins
- */
-export type Constructor<T> = new (...args: any[]) => T;
 
 /**
  * A set of lazy MathItems
@@ -112,6 +113,9 @@ newState('LAZYALWAYS', STATE.FINDMATH + 3);
  */
 export const LAZYID = 'data-mjx-lazy';
 
+export type HTMLSpeechItem<N, T, D> = HTMLMathItem<N, T, D> &
+  SpeechMathItem<N, T, D>;
+
 /**
  * The properties added to MathItem for lazy typesetting
  *
@@ -119,7 +123,7 @@ export const LAZYID = 'data-mjx-lazy';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface LazyMathItem<N, T, D> extends MathItem<N, T, D> {
+export interface LazyMathItem<N, T, D> extends HTMLSpeechItem<N, T, D> {
   /**
    * True when the MathItem needs to be lazy compiled
    */
@@ -156,7 +160,7 @@ export function LazyMathItemMixin<
   N,
   T,
   D,
-  B extends Constructor<SpeechMathItem<N, T, D>>,
+  B extends Constructor<HTMLSpeechItem<N, T, D>>,
 >(BaseMathItem: B): Constructor<LazyMathItem<N, T, D>> & B {
   return class extends BaseMathItem {
     /**
@@ -283,6 +287,32 @@ export function LazyMathItemMixin<
 /*==========================================================================*/
 
 /**
+ * The ui/lazy option types.
+ */
+export type OPTIONS<DOM extends DOM_TYPES> = {
+  lazyMargin: string; //     The size of the observer margin
+  lazyAlwaysTypeset: N<DOM>;
+};
+
+/**
+ * The LazyMathDocument option types.
+ */
+export interface LAZY_OPTIONS<DOM extends DOM_TYPES>
+  extends OPTIONS<DOM>, HTMLDOCUMENT_OPTIONS<DOM> {
+  MathItem: Constructor<LazyMathItem<N<DOM>, T<DOM>, D<DOM>>>;
+}
+
+/**
+ * The ui/lazy option defaults.
+ */
+const options: OPTIONS<DOM> = {
+  lazyMargin: '500px',
+  lazyAlwaysTypeset: null,
+};
+
+/*==========================================================================*/
+
+/**
  * The properties added to MathDocument for lazy typesetting
  *
  * @template N  The HTMLElement node class
@@ -290,6 +320,11 @@ export function LazyMathItemMixin<
  * @template D  The Document class
  */
 export interface LazyMathDocument<N, T, D> extends HTMLDocument<N, T, D> {
+  /**
+   * @override
+   */
+  options: LAZY_OPTIONS<DOM<N, T, D>>;
+
   /**
    * The Intersection Observer used to track the appearance of the expression markers
    */
@@ -331,21 +366,27 @@ export function LazyMathDocumentMixin<
   N,
   T,
   D,
-  B extends MathDocumentConstructor<HTMLDocument<N, T, D>>,
->(BaseDocument: B): MathDocumentConstructor<HTMLDocument<N, T, D>> & B {
+  B extends MathDocumentConstructor<HTMLDocument<N, T, D>, DOM<N, T, D>>,
+>(
+  BaseDocument: B
+): MathDocumentConstructor<HTMLDocument<N, T, D>, DOM<N, T, D>> & B {
   return class BaseClass extends BaseDocument {
     /**
      * @override
      */
-    public static OPTIONS: OptionList = {
+    public static OPTIONS = {
       ...BaseDocument.OPTIONS,
-      lazyMargin: '500px',
-      lazyAlwaysTypeset: null,
-      renderActions: {
+      ...options,
+      renderActions: expandable<RenderActions<any, any, any>>({
         ...BaseDocument.OPTIONS.renderActions,
         lazyAlways: [STATE.LAZYALWAYS, 'lazyAlways', '', false],
-      },
+      }),
     };
+
+    /**
+     * @override
+     */
+    public options: LAZY_OPTIONS<DOM<N, T, D>>;
 
     /**
      * The Intersection Observer used to track the appearance of the expression markers
@@ -421,7 +462,7 @@ export function LazyMathDocumentMixin<
         N,
         T,
         D,
-        Constructor<SpeechMathItem<N, T, D>>
+        Constructor<HTMLMathItem<N, T, D> & SpeechMathItem<N, T, D>>
       >(this.options.MathItem);
       //
       //  Allocate a process bit for lazyAlways

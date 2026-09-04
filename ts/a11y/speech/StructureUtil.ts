@@ -1,4 +1,5 @@
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
+import { SEM } from '../semantic-enrich/strings.js';
 
 /**********************************************************************/
 /*
@@ -55,7 +56,7 @@ export class StructureUtil {
     id: string = '',
     map: ParentMap = new Map()
   ): ParentMap {
-    const nid = node.attributes.get('data-semantic-id') as string;
+    const nid = node.attributes.get(SEM.ID) as string;
     if (nid) {
       map.set(nid, id);
     }
@@ -76,7 +77,7 @@ export class StructureUtil {
   public static semanticNodes(root: MmlNode): SemanticMap {
     let sexp = '';
     root.walkTree((node) => {
-      sexp = node.attributes?.get('data-semantic-structure') as string;
+      sexp = node.attributes?.get(SEM.STRUCTURE) as string;
       return !!sexp;
     });
     const tree = this.parse(this.tokenize(sexp));

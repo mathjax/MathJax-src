@@ -66,7 +66,7 @@ export const GLOBAL = (() => {
 })() as any as Window & { MathJax: MathJaxObject | MathJaxConfig };
 
 /**
- * @param {any} x     An item to test if it is an object
+ * @param {any} x      An item to test if it is an object
  * @returns {boolean}  True if the item is a non-null object
  */
 export function isObject(x: any): boolean {
@@ -80,7 +80,7 @@ export function isObject(x: any): boolean {
  * @param {any} dst         The destination config object (to be merged into)
  * @param {any} src         The source configuration object (to replace default values in dst}
  * @param {boolean} check   True when combining into MathJax._ to avoid setting a property with a getter
- * @returns {any}            The resulting (modified) config object
+ * @returns {any}           The resulting (modified) config object
  */
 export function combineConfig(dst: any, src: any, check: boolean = false): any {
   for (const id of Object.keys(src)) {
@@ -109,7 +109,7 @@ export function combineConfig(dst: any, src: any, check: boolean = false): any {
  * @param {any} dst      The destination config object (to be merged into)
  * @param {string} name  The id of the configuration block to modify (created if doesn't exist)
  * @param {any} src      The source configuration object (to replace default values in dst}
- * @returns {any}         The resulting (modified) config object
+ * @returns {any}        The resulting (modified) config object
  */
 export function combineDefaults(dst: any, name: string, src: any): any {
   if (!dst[name]) {
@@ -129,8 +129,8 @@ export function combineDefaults(dst: any, name: string, src: any): any {
 /**
  * Combine configuration or data with the existing MathJax object
  *
- * @param {any} config   The data to be merged into the MathJax object
- * @returns {MathJaxObject} The combined configuration object
+ * @param {any} config       The data to be merged into the MathJax object
+ * @returns {MathJaxObject}  The combined configuration object
  */
 export function combineWithMathJax(config: any): MathJaxObject {
   return combineConfig(MathJax, config);

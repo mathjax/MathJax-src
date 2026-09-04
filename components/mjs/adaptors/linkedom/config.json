@@ -1,7 +1,10 @@
 {
   "build": {
     "component": "adaptors/linkedom",
-    "targets": ["adaptors/linkedomAdaptor.ts"]
+    "targets": [
+      "adaptors/linkedomAdaptor.ts",
+      "adaptors/linkedom"
+    ]
   },
   "copy": {
     "to": "[bundle]/adaptors/linkedom",

@@ -723,7 +723,7 @@ export class LiteAdaptor extends NodeMixin<
  * The function to call to obtain a LiteAdaptor
  *
  * @param {OptionList} options  The options for the adaptor
- * @returns {LiteAdaptor}        The newly created adaptor
+ * @returns {LiteAdaptor}       The newly created adaptor
  */
 export function liteAdaptor(options: OptionList = null): LiteAdaptor {
   return new LiteAdaptor(null, options);

@@ -25,9 +25,22 @@
 import { MathItem } from '../../../core/MathItem.js';
 import { MathDocument } from '../../../core/MathDocument.js';
 import { Handler } from '../../../core/Handler.js';
-import { OptionList } from '../../../util/Options.js';
 import { createTransform } from './mml3-node.js';
 import { MathML } from '../../mathml.js';
+
+/**
+ * The mml/mml3 option types.
+ */
+export type MML3_OPTIONS = {
+  enableMml3: boolean;
+};
+
+/**
+ * The mml/mml3 option defaults.
+ */
+const options: MML3_OPTIONS = {
+  enableMml3: true,
+};
 
 /**
  * The data for a MathML prefilter.
@@ -38,7 +51,7 @@ import { MathML } from '../../mathml.js';
  */
 export type FILTERDATA<N, T, D> = {
   math: MathItem<N, T, D>;
-  document: MathDocument<N, T, D>;
+  document: MathDocument<N, T, D> & { options: MML3_OPTIONS };
   data: N;
 };
 
@@ -114,9 +127,9 @@ export function Mml3Handler<N, T, D>(
     /**
      * @override
      */
-    public static OPTIONS: OptionList = {
+    public static OPTIONS = {
       ...handler.documentClass.OPTIONS,
-      enableMml3: true,
+      ...options,
     };
 
     /**

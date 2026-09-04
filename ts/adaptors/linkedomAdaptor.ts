@@ -22,8 +22,7 @@
  */
 
 import { HTMLAdaptor } from './HTMLAdaptor.js';
-import { NodeMixin, Constructor } from './NodeMixin.js';
-import { OptionList } from '../util/Options.js';
+import { NodeMixin, MIXIN_OPTIONS, Constructor } from './NodeMixin.js';
 import { Locale } from '../util/Locale.js';
 import { COMPONENT } from './linkedom/__locales__/Component.js';
 
@@ -68,13 +67,13 @@ export class LinkedomAdaptor extends NodeMixin<
 /**
  * Function for creating an HTML adaptor using linkedom
  *
- * @param {any} parseHTML       The linkedom HTML parser to use for this adaptor
- * @param {OptionList} options  The options for the adaptor
- * @returns {LinkedomAdaptor}   The newly created adaptor
+ * @param {any} parseHTML          The linkedom HTML parser to use for this adaptor
+ * @param {MIXIN_OPTIONS} options  The options for the adaptor
+ * @returns {LinkedomAdaptor}      The newly created adaptor
  */
 export function linkedomAdaptor(
   parseHTML: any,
-  options: OptionList = null
+  options: MIXIN_OPTIONS = null
 ): LinkedomAdaptor {
   const window = parseHTML('<html></html>');
   //
