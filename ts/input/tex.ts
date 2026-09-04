@@ -59,6 +59,10 @@ export interface TEX_OPTIONS<DOM extends DOM_TYPES> extends INPUTJAX_OPTIONS<
   maxTemplateSubtitutions: number;
   // math-style to use for Latin and Greek letters
   mathStyle: 'TeX' | 'ISO' | 'French' | 'upright';
+  // true to handle comments as earlier v4 versions (not properly processed in arguments)
+  legacyComments: boolean,
+  // true to handle spaces in macro as earlier v4 versions (not collapsed)
+  legacyMacroTemplates: boolean,
   formatError: (jax: TeX<N<DOM>, T<DOM>, D<DOM>>, err: TexError) => MmlNode;
 }
 
@@ -72,6 +76,8 @@ const options: TEX_OPTIONS<DOM> = {
   maxBuffer: 5 * 1024,
   maxTemplateSubtitutions: 10000,
   mathStyle: 'TeX',
+  legacyComments: false,
+  legacyMacroTemplates: false,
   formatError: (jax: TeX<N<DOM>, T<DOM>, D<DOM>>, err: TexError) =>
     jax.formatError(err),
 };

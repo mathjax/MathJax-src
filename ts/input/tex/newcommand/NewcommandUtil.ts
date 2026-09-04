@@ -46,7 +46,48 @@ export enum NewcommandTables {
  */
 export const NewcommandPriority = -100;
 
+const tokenPattern = String.raw`\\[a-zA-Z]+\s*|\\.|[\n\s]+|%.*?(?:\n\s*|$)|.`;
+
 export const NewcommandUtil = {
+  tokenPattern,
+  tokenMatch: new RegExp(`^(?:${tokenPattern})`, 'u'),
+  tokenTemplate: new RegExp(`^(?:#[1-9]?|${tokenPattern})`, 'u'),
+
+  /**
+   * Convert a latex string into template tokens.
+   *
+   * @param {string} text The string to be tokenized
+   * @param {boolean} legacy True if legacy spacing is to be used.
+   * @returns {string[]|void} The array of tokens from the string
+   */
+  tokenize(text: string, legacy: boolean): string[] | void {
+    if (text === undefined) return;
+    const tokens: string[] = [];
+    text = text.replace(/^\s+/, '');
+    while (text) {
+      const token = text.match(NewcommandUtil.tokenMatch)[0];
+      text = text.slice(token.length);
+      tokens.push(NewcommandUtil.trimToken(token, legacy));
+    }
+    return tokens;
+  },
+
+  /**
+   * Collapse spaces and newlines into a single space.
+   *
+   * @param {string} token The token whose spaces are to be collapsed.
+   * @param {boolean} legacy True if legacy spacing is to be used.
+   * @returns {string} The trimmed token.
+   */
+  trimToken(token: string, legacy: boolean): string {
+    return legacy
+      ? token
+      : token
+          .replace(/\n+/g, ' ')
+          .replace(/(.)\s+$/, '$1')
+          .replace(/\s$/, ' ');
+  },
+
   /**
    * Get the next CS name or give an error.
    *
@@ -62,7 +103,7 @@ export const NewcommandUtil = {
       texError(COMPONENT, 'MissingCS', cmd);
     }
     const cs = UnitUtil.trimSpaces(parser.GetArgument(cmd)).substring(1);
-    this.checkProtectedMacros(parser, cs);
+    NewcommandUtil.checkProtectedMacros(parser, cs);
     return cs;
   },
 
@@ -83,7 +124,7 @@ export const NewcommandUtil = {
       // @test Illegal CS
       texError(COMPONENT, 'IllegalControlSequenceName', name);
     }
-    this.checkProtectedMacros(parser, cs);
+    NewcommandUtil.checkProtectedMacros(parser, cs);
     return cs;
   },
 
@@ -114,56 +155,51 @@ export const NewcommandUtil = {
    * @param {TexParser} parser The calling parser.
    * @param {string} cmd The string starting with the template.
    * @param {string} cs The control sequence of the \def.
-   * @returns {number | string[] | undefined} The number of parameters or a string array if
-   *     there is an optional argument.
+   * @returns {number | (string | string[])[] | undefined} The number of parameters or a string array
+   *   of the tokens that delimit the arguments.
    */
-  GetTemplate(parser: TexParser, cmd: string, cs: string): number | string[] {
-    // @test Def Double Let, Def ReDef, Def Let
-    parser.GetNext(); // Move past the first non-whitespace character.
-    const params: string[] = [];
+  GetTemplate(
+    parser: TexParser,
+    cmd: string,
+    cs: string
+  ): number | (string | string[])[] {
+    const { legacyComments, legacyMacroTemplates } =
+      parser.configuration.options;
+    parser.GetNext(); // Move past whitespace characters
+    const params: string[][] = [];
+    let arg: string[] = [];
     let n = 0;
-    let i = parser.i;
     while (parser.i < parser.string.length) {
-      let c = parser.GetNext();
-      if (c === '#') {
-        // @test Def ReDef, Def Let, Def Optional Brace
-        if (i !== parser.i) {
-          // @test Def Let, Def Optional Brace
-          // parser.i >= i!
-          params[n] = parser.string.substring(i, parser.i);
+      let token = parser.string
+        .slice(parser.i)
+        .match(NewcommandUtil.tokenTemplate)[0];
+      parser.i += token.length;
+      if (token.charAt(0) === '%') {
+        if (!legacyComments) continue;
+        parser.i -= token.length - 1;
+        token = '%';
+      }
+      if (token === '{') {
+        parser.i--;
+        if (arg.length && arg.join('') !== ' ') {
+          params.push(arg);
         }
-        c = parser.string.charAt(++parser.i);
-        if (!c.match(/^[1-9]$/)) {
+        return params.length ? [String(n), ...params] : n;
+      }
+      if (token.charAt(0) === '#') {
+        if (token === '#') {
           // @test Illegal Hash
           texError(COMPONENT, 'CantUseHash2', cs);
         }
-        if (parseInt(c) !== ++n) {
+        if (parseInt(token.charAt(1)) !== ++n) {
           // @test No Sequence
           texError(COMPONENT, 'SequentialParam', cs);
         }
-        i = parser.i + 1;
-      } else if (c === '{') {
-        // @test Def Double Let, Def ReDef, Def Let
-        if (i !== parser.i) {
-          // @test Optional Brace Error
-          // parser.i >= i!
-          params[n] = parser.string.substring(i, parser.i);
-          if (
-            params[n].replace(/^ +/, '') === '' &&
-            params.slice(0, n).join('') === ''
-          ) {
-            return n;
-          }
-        }
-        if (params.length > 0) {
-          // @test Def Let, Def Optional Brace
-          return [n.toString()].concat(params);
-        } else {
-          // @test Def Double Let, Def ReDef
-          return n;
-        }
+        params.push(arg.length ? arg : undefined);
+        arg = [];
+        continue;
       }
-      parser.i++;
+      arg.push(NewcommandUtil.trimToken(token, legacyMacroTemplates));
     }
     // @test No Replacement
     texError(COMPONENT, 'MissingReplacementString', cmd);
@@ -174,80 +210,56 @@ export const NewcommandUtil = {
    *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the calling command.
-   * @param {string} param The parameter for the macro.
+   * @param {string[]} tokens The tokens that end the argument.
+   * @param {boolean} initial True when this is the initial token list with no parameter
    * @returns {string|undefined} The parameter.
    */
-  GetParameter(parser: TexParser, name: string, param: string): string {
-    if (param == null) {
+  GetParameter(
+    parser: TexParser,
+    name: string,
+    tokens: string[],
+    initial: boolean = false
+  ): string {
+    if (!tokens) {
       // @test Def Let, Def Optional Brace, Def Options CS
       return parser.GetArgument(name);
     }
-    let i = parser.i;
-    let j = 0;
+    const { legacyComments, legacyMacroTemplates } =
+      parser.configuration.options;
+    let t = 0;
+    const i = parser.i;
     let hasBraces = false;
+    const arg = [];
     while (parser.i < parser.string.length) {
-      const c = parser.string.charAt(parser.i);
-      // @test Def Let, Def Optional Brace, Def Options CS
-      if (c === '{') {
-        // @test Def Optional Brace, Def Options CS
+      let token = parser.string
+        .slice(parser.i)
+        .match(NewcommandUtil.tokenMatch)[0];
+      parser.i += token.length;
+      if (token.charAt(0) === '%') {
+        if (!legacyComments) continue;
+        parser.i -= token.length - 1;
+        token = '%';
+      }
+      if (NewcommandUtil.trimToken(token, legacyMacroTemplates) === tokens[t]) {
+        if (++t < tokens.length) continue;
+        return (hasBraces ? arg.slice(1, -1) : arg).join('');
+      }
+      if (t) {
+        arg.push(...tokens.slice(0, t));
+        t = 0;
+      }
+      if (token === '{') {
+        parser.i--;
         hasBraces = parser.i === i;
-        parser.GetArgument(name);
-        j = parser.i - i;
-      } else if (this.MatchParam(parser, param)) {
-        // @test Def Let, Def Optional Brace, Def Options CS
-        if (hasBraces) {
-          // @test Def Optional Brace
-          i++;
-          j -= 2;
-        }
-        return parser.string.substring(i, i + j);
-      } else if (c === '\\') {
-        // @test Def Options CS
-        parser.i++;
-        j++;
-        hasBraces = false;
-        const match = parser.string.substring(parser.i).match(/[a-z]+|./i);
-        if (match) {
-          // @test Def Options CS
-          parser.i += match[0].length;
-          j = parser.i - i;
-        }
+        arg.push('{', parser.GetArgument(name), '}');
       } else {
-        // @test Def Let
-        parser.i++;
-        j++;
         hasBraces = false;
+        arg.push(token);
       }
     }
+    if (initial) return null;
     // @test Runaway Argument
     texError(COMPONENT, 'RunawayArgument', name);
-  },
-
-  /**
-   * Check if a template is at the current location.
-   * (The match must be exact, with no spacing differences. TeX is
-   * a little more forgiving than this about spaces after macro names)
-   *
-   * @param {TexParser} parser The calling parser.
-   * @param {string} param Tries to match an optional parameter.
-   * @returns {number} The number of optional parameters, either 0 or 1.
-   */
-  MatchParam(parser: TexParser, param: string): number {
-    // @test Def Let, Def Optional Brace, Def Options CS
-    if (parser.string.substring(parser.i, parser.i + param.length) !== param) {
-      // @test Def Let, Def Options CS
-      return 0;
-    }
-    if (
-      param.match(/\\[a-z]+$/i) &&
-      parser.string.charAt(parser.i + param.length).match(/[a-z]/i)
-    ) {
-      // @test (missing)
-      return 0;
-    }
-    // @test Def Let, Def Optional Brace, Def Options CS
-    parser.i += param.length;
-    return 1;
   },
 
   /**
@@ -298,7 +310,7 @@ export const NewcommandUtil = {
    */
   addDelimiter(parser: TexParser, cs: string, char: string, attr: Attributes) {
     const name = cs.substring(1);
-    this.checkProtectedMacros(parser, name);
+    NewcommandUtil.checkProtectedMacros(parser, name);
     const [macros, delims] = NewcommandUtil.checkGlobal<Token>(
       parser,
       [name, cs],
@@ -328,13 +340,13 @@ export const NewcommandUtil = {
     attr: Args[],
     token: string = ''
   ) {
-    this.checkProtectedMacros(parser, cs);
+    NewcommandUtil.checkProtectedMacros(parser, cs);
     const macros = NewcommandUtil.checkGlobal<Macro>(
       parser,
       [cs],
       [NewcommandTables.NEW_COMMAND]
     )[0];
-    this.undefineDelimiter(parser, '\\' + cs);
+    NewcommandUtil.undefineDelimiter(parser, '\\' + cs);
     macros.add(cs, new Macro(token ? token : cs, func, attr));
     delete parser.stack.env.isGlobal;
   },
@@ -384,7 +396,7 @@ export const NewcommandUtil = {
       // handler.
       //
       macros.add(cs, new Macro(cs, () => SubHandler.FALLBACK, []));
-      this.undefineDelimiter(parser, '\\' + cs);
+      NewcommandUtil.undefineDelimiter(parser, '\\' + cs);
     }
     delete parser.stack.env.isGlobal;
   },

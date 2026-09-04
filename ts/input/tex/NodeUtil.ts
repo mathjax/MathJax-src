@@ -30,7 +30,6 @@ import {
 } from '../../core/MmlTree/MmlNode.js';
 import { MmlMo } from '../../core/MmlTree/MmlNodes/mo.js';
 import { Property, PropertyList } from '../../core/Tree/Node.js';
-import { Args } from './Types.js';
 import { OperatorDef } from '../../core/MmlTree/OperatorDictionary.js';
 import { TexConstant } from './TexConstants.js';
 
@@ -122,9 +121,9 @@ const NodeUtil = {
    *
    * @param {MmlNode} node The node.
    * @param {string} attribute An attribute.
-   * @param {Args} value The attribute value.
+   * @param {Property} value The attribute value.
    */
-  setAttribute(node: MmlNode, attribute: string, value: Args) {
+  setAttribute(node: MmlNode, attribute: string, value: Property) {
     node.attributes.set(attribute, value);
   },
 
@@ -133,9 +132,9 @@ const NodeUtil = {
    *
    * @param {MmlNode} node The node.
    * @param {string} property The property.
-   * @param {Args} value The property value.
+   * @param {Property} value The property value.
    */
-  setProperty(node: MmlNode, property: string, value: Args) {
+  setProperty(node: MmlNode, property: string, value: Property) {
     node.setProperty(property, value);
   },
 

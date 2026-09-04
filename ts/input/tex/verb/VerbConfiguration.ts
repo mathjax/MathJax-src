@@ -41,22 +41,23 @@ const VerbMethods: { [key: string]: ParseMethod } = {
    * @param {string} name The name of the calling macro.
    */
   Verb(parser: TexParser, name: string) {
-    const c = parser.GetNext();
-    const start = ++parser.i;
+    const c = parser.GetNext(false);
     if (c === '') {
       texError(TEX_COMPONENT, 'MissingArgFor', name);
     }
-    while (
-      parser.i < parser.string.length &&
-      parser.string.charAt(parser.i) !== c
-    ) {
-      parser.i++;
-    }
-    if (parser.i === parser.string.length) {
+    parser.i += c.length;
+    const start = parser.i;
+    let C;
+    do {
+      C = parser.GetNext(false);
+      parser.i += C.length;
+    } while (C && C !== c);
+    if (!C) {
       texError(COMPONENT, 'NoClosingDelim', parser.currentCS);
     }
-    const text = parser.string.slice(start, parser.i).replace(/ /g, '\u00A0');
-    parser.i++;
+    const text = parser.string
+      .slice(start, parser.i - c.length)
+      .replace(/ /g, '\u00A0');
     parser.Push(
       parser.create(
         'token',

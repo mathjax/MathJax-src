@@ -25,7 +25,7 @@ import { StackItem } from './StackItem.js';
 import { Token } from './Token.js';
 import TexParser from './TexParser.js';
 
-export type Args = boolean | number | string | null;
+export type Args = boolean | number | string | string[] | null;
 
 export type Attributes = Record<string, Args>;
 

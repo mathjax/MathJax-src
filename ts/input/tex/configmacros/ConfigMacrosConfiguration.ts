@@ -28,6 +28,7 @@ import { CommandMap, EnvironmentMap, MacroMap } from '../TokenMap.js';
 import ParseMethods from '../ParseMethods.js';
 import { Macro } from '../Token.js';
 import NewcommandMethods from '../newcommand/NewcommandMethods.js';
+import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 import { BeginEnvItem } from '../newcommand/NewcommandItems.js';
 import { TeX } from '../../tex.js';
 
@@ -91,13 +92,18 @@ function configmacrosConfig(_config: ParserConfiguration, jax: TEX) {
 function setMacros(name: string, map: string, jax: TEX) {
   const handler = jax.parseOptions.handlers.retrieve(map) as CommandMap;
   const macros = jax.parseOptions.options[name];
+  const legacy = jax.parseOptions.options.legacyMacroTemplates;
   for (const cs of Object.keys(macros)) {
     const def = typeof macros[cs] === 'string' ? [macros[cs]] : macros[cs];
     const macro = Array.isArray(def[2])
       ? new Macro(
           cs,
           NewcommandMethods.MacroWithTemplate,
-          def.slice(0, 2).concat(def[2])
+          def
+            .slice(0, 2)
+            .concat(
+              def[2].map((param) => NewcommandUtil.tokenize(param, legacy))
+            )
         )
       : new Macro(cs, NewcommandMethods.Macro, def);
     handler.add(cs, macro);

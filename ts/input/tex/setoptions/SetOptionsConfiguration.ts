@@ -131,7 +131,9 @@ export const SetOptionsUtil = {
  */
 function SetOptions(parser: TexParser, name: string) {
   const extension = parser.GetBrackets(name) || 'tex';
-  const options = ParseUtil.keyvalOptions(parser.GetArgument(name));
+  const options = ParseUtil.keyvalOptions(
+    parser.GetArgument(name, false, false)
+  );
   const config = parser.options.setoptions;
   if (!config.filterPackage(parser, extension)) return;
   for (const key of Object.keys(options)) {
