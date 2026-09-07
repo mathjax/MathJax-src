@@ -38,6 +38,7 @@ export const ThermodynamicsConfiguration = Configuration.create('thermodynamics'
       braces : false,
       bar : false,
       'plain-derivatives' : false,
+      'extensive-style' : 'intensive-plain',
 //      'intensive-plain' : true,
 //      'extensive-plain' : false,
 //      'extensive-superscript' : false,

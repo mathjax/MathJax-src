@@ -84,6 +84,48 @@ function CheckForChangeInDelimiterOptions (parser: TexParser)
 
 export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
 
+  ExtensiveProperty (parser: TexParser, name: string) {
+    switch (parser.options.thermodynamics['extensive-style']) {
+      case 'intensive-plain' :
+        ThermodynamicsMethods.Macro (parser, name,
+          "{\\mkern1mu\\underline{\\mkern-1mu #1\\mkern-4mu}\\mkern4mu}", 1);
+        break;
+      case 'extensive-plain' :
+      case 'intensive-lowercase' :
+        ThermodynamicsMethods.Macro (parser, name, '#1', 1);
+        break;
+      case 'extensive-superscript' :
+        let arg = parser.GetArgument(name);
+        ThermodynamicsMethods.SuperscriptedSymbol (parser, name, arg, 't');
+        break;
+      default :
+        throw new TexError('BadExtensiveStyle',
+          'Invalid value of extensive-style option');
+    }
+  },
+
+  IntensiveProperty (parser: TexParser, name: string) {
+    switch (parser.options.thermodynamics['extensive-style']) {
+      case 'extensive-plain' :
+        ThermodynamicsMethods.Macro (parser, name,
+          "{\\mkern1mu\\underline{\\mkern-1mu #1\\mkern-4mu}\\mkern4mu}", 1);
+        break;
+      case 'intensive-plain' :
+      case 'extensive-superscript' :
+        ThermodynamicsMethods.Macro (parser, name, '#1', 1);
+        break;
+      case 'intensive-lowercase' :
+        // FIXME need a better way to handle this case
+        let arg = parser.GetArgument(name);
+        ThermodynamicsMethods.Macro (parser, name, arg.toLowerCase());
+        break;
+      default :
+        throw new TexError('InvalidOption', 'Thermodynamics error: "' + 
+          parser.options.thermodynamics['extensive-style']
+          + 'is not a valid symbol style');
+    }
+  },
+
   // Partial molar quantities
   // cases to consider:
   // (1) Mpm{i}
@@ -128,7 +170,7 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
     {
       if ( parser.options.thermodynamics['longpm'] )
         // \mkern2mu\overline{\mkern-2mu{symbol_subs^supers}\mkern-1mu}\mkern1mu
-        ThermodynamicsMethods.Macro (parser, 'PartialMolar',
+        ThermodynamicsMethods.Macro (parser, name,
           '\\mkern2mu\\overline{\\mkern-2mu{'
             + symbol + '}_{' + subs + '}^{' + supers
             + '}\\mkern-1mu}\\mkern1mu');
@@ -561,27 +603,21 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
 
   // EIS = extensive, intensive, specific
   LocallyChangeEISappearance (parser: TexParser, begin: StackItem,
-        extensive: string, intensive: string, specific: string) {
+        value: string) {
     let name: string = begin.getName();
     let endstr: string = '\\end{' + name + '}';
     let istop: number = parser.string.indexOf(endstr);
     let rest: string = parser.string.slice(istop);
+    let oldvalue: string = parser.options.thermodynamics['extensive-style'];
     // set EIS to values given
     parser.Push(begin);
-    parser.string = '\\let\\oldextensive\\extensive'
-        + '\\let\\oldintensive\\intensive'
-        + '\\let\\oldspecific\\specific'
-        + '\\renewcommand{\\extensive}[1]{' + extensive + '}'
-        + '\\renewcommand{\\intensive}[1]{' + intensive + '}'
-        + '\\renewcommand{\\specific}[1]{' + specific + '}'
-        + parser.string.substring(parser.i, istop);
+    parser.options.thermodynamics['extensive-style'] = value;
+    parser.string = parser.string.substring(parser.i, istop);
     parser.i = 0;
     parser.Parse();
     // change them back and set the rest of the string to be parsed
-    parser.string = '\\let\\extensive\\oldextensive'
-        + '\\let\\intensive\\oldintensive'
-        + '\\let\\specific\\oldspecific'
-        + rest;
+    parser.options.thermodynamics['extensive-style'] = oldvalue;
+    parser.string = rest;
     parser.i = 0;
   },
 
