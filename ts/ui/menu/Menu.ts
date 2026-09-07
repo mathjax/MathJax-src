@@ -1675,7 +1675,10 @@ export class Menu {
     // Remove unwanted attributes
     //
     if (!this.settings.showSRE) {
-      svg = svg.replace(/ (?:data-semantic-.*?|data-collapse-.*?|data-speech-node)=".*?"/g, '');
+      svg = svg.replace(
+        / (?:data-semantic-.*?|data-collapse-.*?|data-speech-node)=".*?"/g,
+        ''
+      );
     }
     if (!this.settings.showTex) {
       svg = svg.replace(/ data-latex(?:-item)?=".*?"/g, '');
