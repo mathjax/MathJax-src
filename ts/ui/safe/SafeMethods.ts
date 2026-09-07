@@ -319,7 +319,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} value      The attribute's value
    * @param {string} id         The attribute's id (e.g., data-mjx-variant)
-   * @returns {number|null}     The sanitized value or null
+   * @returns {string|null}     The sanitized value or null
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class

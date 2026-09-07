@@ -67,7 +67,12 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
       if (!isLegalAttributeName(key)) {
         texError(COMPONENT, 'InvalidHTMLAttr', `data-${key}`);
       }
-      NodeUtil.setAttribute(arg, `data-${key}`, data[key]);
+      const safe = parser.configuration.packageData.get('safe');
+      const id = `data-${key}`;
+      const value = safe ? safe.filterMethods.filterData(safe, data[key], id) : data[key];
+      if (value) {
+        NodeUtil.setAttribute(arg, id, value);
+      }
     }
     parser.Push(arg);
   },
