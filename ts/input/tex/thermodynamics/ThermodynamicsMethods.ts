@@ -418,7 +418,7 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
           arg = parser.GetArgument(name); // '^'
           supers = parser.GetArgument(name); // the superscript argument
         }
-      break;
+        break;
       case '^' :
         supers = parser.GetArgument(name);
         // "peek" at next argument to see whether it's _
@@ -427,7 +427,7 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
           arg = parser.GetArgument(name); // '_'
           subs = parser.GetArgument(name); // the subscript argument
         }
-      break;
+        break;
       default :
         subs = arg;
         console.log('WARNING: found neither superscript nor subscript for partial molar quantity; arg is "' + arg + '"');
@@ -629,6 +629,43 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
         ThermodynamicsMethods.Macro (parser, name,
           symbol + '_1,\\dotsc,[' + symbol + '_' + index + '],\\dotsc,'
           + symbol + '_{\\ncomponents}');
+    }
+  },
+
+  AllThingsExceptLastAnd (parser: TexParser, name: string, symbol: string) {
+    // check if the user changed the default options
+    if ( parser.options.thermodynamics['moles-range'] )
+    {
+      parser.options.thermodynamics['moles-range'] = false;
+      parser.options.thermodynamics['moles-index'] = false;
+    }
+    let otherindex = parser.GetBrackets(name);
+    let index = parser.GetArgument(name);
+    if ( otherindex == undefined ) otherindex = 'j';
+    if ( parser.options.thermodynamics['moles-index'] ) {
+      if ( index == 'j' && otherindex == 'j' )
+        ThermodynamicsMethods.Macro (parser, name, symbol + '_{k \\neq '
+            + index + ',\\ncomponents}');
+      else if ( index == '\\ncomponents' )
+        ThermodynamicsMethods.Macro (parser, name, symbol + '_{k \\neq '
+            + index + '}');
+      else
+        ThermodynamicsMethods.Macro (parser, name, symbol + '_{k \\neq '
+            + index + ',\\ncomponents}');
+    } else {
+      if ( index == '1' )
+        ThermodynamicsMethods.Macro (parser, name,
+          symbol + '_2,\\dotsc,' + symbol + '_{\\ncomponents-1}');
+      else if ( index == '\\ncomponents' )
+        ThermodynamicsMethods.Macro (parser, name,
+          symbol + '_1,\\dotsc,' + symbol + '_{\\ncomponents-1}');
+      else if ( index.split(' ').join('') == '\\ncomponents-1' )
+        ThermodynamicsMethods.Macro (parser, name,
+          symbol + '_1,\\dotsc,' + symbol + '_{\\ncomponents-2}');
+      else
+        ThermodynamicsMethods.Macro (parser, name,
+          symbol + '_1,\\dotsc,[' + symbol + '_' + index + '],\\dotsc,'
+          + symbol + '_{\\ncomponents-1}');
     }
   },
 
