@@ -25,47 +25,64 @@ import TexParser from '../TexParser.js';
 import { ParseMethod } from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
 import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
+import { StackItem } from '../StackItem.js';
+import TexError from '../TexError.js';
 
-var PartialOpen = '(';
-var PartialClose = ')';
-var PartialEmptyClose = ')';
+let PartialOpen = '(';
+let PartialClose = ')';
+let PartialEmptyClose = ')';
+let localdelimiterchange = false;
 
-export function SetPartialDelimiters
-  (open: string, close: string, emptyclose: string) {
-    PartialOpen = open;
-    PartialClose = close;
-    PartialEmptyClose = emptyclose;
-}
+function CheckForChangeInDelimiterOptions (parser: TexParser)
+{
+  let delimiteroptions =
+      ['parentheses','brackets','braces','bar','plain-derivatives'];
 
-export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
-
-  OldSetPartialDelimiters (parser: TexParser) {
-
-    if ( parser.options.thermodynamics.parentheses ) {
+  if ( localdelimiterchange )
+    {} // we do nothing if we are inside an environment that changes delimiters
+  else if ( parser.options.thermodynamics['parentheses'] )
+  {
+      for ( let opt of delimiteroptions )
+        parser.options.thermodynamics[opt] = false;
       PartialOpen = '(';
-      PartialClose = '(';
-      PartialEmptyClose = '(';
-      parser.options.thermodynamics.parentheses = false;
-    }
-    if ( parser.options.thermodynamics.brackets ) {
+      PartialClose = ')';
+      PartialEmptyClose = ')';
+  }
+  else if ( parser.options.thermodynamics['brackets'] )
+  {
+      for ( let opt of delimiteroptions )
+        parser.options.thermodynamics[opt] = false;
       PartialOpen = '[';
-      PartialClose = '[';
-      PartialEmptyClose = '[';
-      parser.options.thermodynamics.brackets = false;
-    }
-    if ( parser.options.thermodynamics.bar ) {
+      PartialClose = ']';
+      PartialEmptyClose = ']';
+  }
+  else if ( parser.options.thermodynamics['braces'] )
+  {
+      for ( let opt of delimiteroptions )
+        parser.options.thermodynamics[opt] = false;
+      PartialOpen = '\\{';
+      PartialClose = '\\}';
+      PartialEmptyClose = '\\}';
+  }
+  else if ( parser.options.thermodynamics['bar'] )
+  {
+      for ( let opt of delimiteroptions )
+        parser.options.thermodynamics[opt] = false;
       PartialOpen = '.';
-      PartialClose = '|';
+      PartialClose = '\\rvert';
       PartialEmptyClose = '.';
-      parser.options.thermodynamics.bar = false;
-    }
-/*    if ( parser.options.thermodynamics.'plain-derivatives' ) {
+  }
+  else if ( parser.options.thermodynamics['plain-derivatives'] )
+  {
+      for ( let opt of delimiteroptions )
+        parser.options.thermodynamics[opt] = false;
       PartialOpen = '.';
       PartialClose = '.';
       PartialEmptyClose = '.';
-      parser.options.thermodynamics.'plain-derivatives' = false;
-    }*/
-  },
+  }
+}
+
+export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
 
   // Partial molar quantities
   // cases to consider:
@@ -75,9 +92,18 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
   // (4) Mpm_i^S
   // (5) Mpm_i
   PartialMolar (parser: TexParser, name: string, symbol: string) {
-    var supers = parser.GetBrackets(name);
-    var subs;
-    var arg = parser.GetArgument(name, true);
+    let supers = parser.GetBrackets(name);
+    let subs = null;
+
+    // Check for updated shortpm options
+    if ( parser.options.thermodynamics['shortpm'] )
+    {
+      // shortpm is always false unless the user changed it recently
+      parser.options.thermodynamics['longpm'] = false;
+      parser.options.thermodynamics['shortpm'] = false;
+    }
+
+    let arg = parser.GetArgument(name, true);
     if ( arg == '_' ) {
       subs = parser.GetArgument(name);
       // "peek" at next argument to see whether it's ^
@@ -100,21 +126,93 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
         subs = '';
     if ( typeof supers !== "undefined" )
     {
-      // \mkern2mu\overline{\mkern-2mu{symbol_subs^supers}\mkern-1mu}\mkern1mu
-      BaseMethods.Macro (parser, 'PartialMolar',
-        '\\mkern2mu\\overline{\\mkern-2mu{'
-          + symbol + '}_{' + subs + '}^{' + supers + '}\\mkern-1mu}\\mkern1mu');
+      if ( parser.options.thermodynamics['longpm'] )
+        // \mkern2mu\overline{\mkern-2mu{symbol_subs^supers}\mkern-1mu}\mkern1mu
+        ThermodynamicsMethods.Macro (parser, 'PartialMolar',
+          '\\mkern2mu\\overline{\\mkern-2mu{'
+            + symbol + '}_{' + subs + '}^{' + supers
+            + '}\\mkern-1mu}\\mkern1mu');
+      else
+        ThermodynamicsMethods.Macro (parser, name,
+          '\\mkern2mu\\overline{\\mkern-2mu{'
+            + symbol + '\\mkern-1mu}\\mkern1mu'
+            + '}_{' + subs + '}^{' + supers + '}');
     } else {
-      // \mkern2mu\overline{\mkern-2mu{symbol_subs}\mkern-1mu}\mkern1mu
-      BaseMethods.Macro (parser, 'PartialMolar',
-        '\\mkern2mu\\overline{\\mkern-2mu{'
-          + symbol + '_' + subs + '}\\mkern-1mu}\\mkern1mu');
+      if ( parser.options.thermodynamics['longpm'] )
+        // \mkern2mu\overline{\mkern-2mu{symbol_subs}\mkern-1mu}\mkern1mu
+        ThermodynamicsMethods.Macro (parser, name,
+          '\\mkern2mu\\overline{\\mkern-2mu{'
+            + symbol + '_{' + subs + '}}\\mkern-1mu}\\mkern1mu');
+      else
+{
+        ThermodynamicsMethods.Macro (parser, name,
+          '\\mkern2mu\\overline{\\mkern-2mu{'
+            + symbol + '\\mkern-1mu}}\\mkern1mu' + '_{' + subs + '}');
+}
     }
   },
 
   PartialMolarMacro (parser: TexParser, name: string) {
-    var symbol = parser.GetArgument(name);
+    let symbol: string = parser.GetArgument(name);
     ThermodynamicsMethods.PartialMolar (parser, name, symbol)
+  },
+
+  LocalShortPm (parser: TexParser, begin: StackItem) {
+    let oldvalue: boolean = parser.options.thermodynamics['longpm'];
+    let name: string = begin.getName();
+    let endstr: string = '\\end{' + name + '}';
+    let istop: number = parser.string.indexOf(endstr);
+    let rest: string = parser.string.slice(istop);
+    parser.options.thermodynamics['longpm'] = false;
+    parser.Push(begin);
+    parser.string = parser.string.substring(parser.i, istop);
+    parser.i = 0;
+    parser.Parse();
+    parser.options.thermodynamics['longpm'] = oldvalue;
+    parser.string = rest;
+    parser.i = 0;
+  },
+
+  LocalLongPm (parser: TexParser, begin: StackItem) {
+    let oldvalue = parser.options.thermodynamics['longpm'];
+    let name: string = begin.getName();
+    let endstr: string = '\\end{' + name + '}';
+    let istop: number = parser.string.indexOf(endstr);
+    let rest: string = parser.string.slice(istop);
+    parser.options.thermodynamics['longpm'] = true;
+    parser.Push(begin);
+    parser.string = parser.string.substring(parser.i, istop);
+    parser.i = 0;
+    parser.Parse();
+    parser.options.thermodynamics['longpm'] = oldvalue;
+    parser.string = rest;
+    parser.i = 0;
+  },
+
+  // Implements alternative delimiters for \Partial and friends
+  LocallyChangeDelimiters (parser: TexParser, begin: StackItem,
+        open: string, close: string, emptyclose: string) {
+    let oldPartialOpen = PartialOpen;
+    let oldPartialClose = PartialClose;
+    let oldPartialEmptyClose = PartialEmptyClose;
+    let name: string = begin.getName();
+    let endstr: string = '\\end{' + name + '}';
+    let istop: number = parser.string.indexOf(endstr);
+    let rest: string = parser.string.slice(istop);
+    localdelimiterchange = true;
+    parser.Push(begin);
+    PartialOpen = open;
+    PartialClose = close;
+    PartialEmptyClose = emptyclose;
+    parser.string = parser.string.substring(parser.i, istop);
+    parser.i = 0;
+    parser.Parse();
+    parser.string = rest;
+    parser.i = 0;
+    PartialOpen = oldPartialOpen;
+    PartialClose = oldPartialClose;
+    PartialEmptyClose = oldPartialEmptyClose;
+    localdelimiterchange = false;
   },
 
   Partial (parser: TexParser, name: string, begin='\\left', end='\\right') {
@@ -122,55 +220,62 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
     const arg1 = parser.GetArgument(name);
     const arg2 = parser.GetArgument(name);
     const arg3 = parser.GetArgument(name);
+    CheckForChangeInDelimiterOptions (parser);
 
-    var kerning = '';
+    let kerning = '';
     if ( star )
       kerning = '\\mkern-12mu';
     if ( arg3 == '' )
-      BaseMethods.Macro (parser, name, begin + PartialOpen
+      ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
         + '\\frac{\\partial ' + arg1 + '}{\\partial ' + arg2 + '}'
         + end + PartialEmptyClose + kerning);
     else
-      BaseMethods.Macro (parser, name, begin + PartialOpen
+      ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
         + '\\frac{\\partial ' + arg1 + '}{\\partial ' + arg2 + '}'
         + end + PartialClose + '_{' + arg3 + '}' + kerning);
   },
 
   PartialSecond (parser: TexParser, name: string,
-        begin='\\left', end='\\right') {
+        begin='\\left', end='\\right')
+  {
     const star = parser.GetStar();
     const arg1 = parser.GetArgument(name);
     const arg2 = parser.GetArgument(name);
     const arg3 = parser.GetArgument(name);
-    var kerning = '';
+    let kerning = '';
+    CheckForChangeInDelimiterOptions (parser);
+
     if ( star )
       kerning = '\\mkern-12mu';
     if ( arg3 == '' )
-      BaseMethods.Macro (parser, name, begin + PartialOpen
+      ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
         + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2 + '^2}'
         + end + PartialEmptyClose + kerning);
     else
-      BaseMethods.Macro (parser, name, begin + PartialOpen
+      ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
         + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2 + '^2}'
         + end + PartialClose + '_{' + arg3 + '}' + kerning);
   },
 
   PartialMixSecond (parser: TexParser, name: string,
-        begin='\\left', end='\\right') {
+        begin='\\left', end='\\right')
+  {
     const star = parser.GetStar();
     const arg1 = parser.GetArgument(name);
     const arg2 = parser.GetArgument(name);
     const arg3 = parser.GetArgument(name);
     const arg4 = parser.GetArgument(name);
-    var kerning = '';
+    let kerning = '';
+    CheckForChangeInDelimiterOptions (parser);
+
     if ( star )
       kerning = '\\mkern-12mu';
     if ( arg4 == '' )
-      BaseMethods.Macro (parser, name, begin + PartialOpen
+      ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
         + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2
         + '\\partial ' + arg3 + '}' + end + PartialEmptyClose + kerning);
     else
-      BaseMethods.Macro (parser, name, begin + PartialOpen
+      ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
         + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2
         + '\\partial ' + arg3 + '}' + end + PartialClose
         + '_{' + arg4 + '}' + kerning);
@@ -180,11 +285,11 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
     const csbase = parser.GetArgument(name);
     const symbol = parser.GetArgument(name);
     NewcommandUtil.addMacro (parser, csbase + 't',
-      BaseMethods.Macro, ["\\extensive{" + symbol + "}"]);
+      ThermodynamicsMethods.Macro, ["\\extensive{" + symbol + "}"]);
     NewcommandUtil.addMacro (parser, csbase + 'm',
-      BaseMethods.Macro, ["\\intensive{" + symbol + "}"]);
+      ThermodynamicsMethods.Macro, ["\\intensive{" + symbol + "}"]);
     NewcommandUtil.addMacro (parser, csbase + 's',
-      BaseMethods.Macro, ["\\specific{" + symbol + "}"]);
+      ThermodynamicsMethods.Macro, ["\\specific{" + symbol + "}"]);
   },
 
   NewPartialMolarProperty (parser: TexParser, name: string) {
@@ -198,121 +303,150 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
     const csbase = parser.GetArgument(name);
     const symbol = parser.GetArgument(name);
     NewcommandUtil.addMacro (parser, csbase + 'Et',
-      BaseMethods.Macro, ["\\extensive{" + symbol + "}^\\excess"]);
-    NewcommandUtil.addMacro (parser, csbase + 'Em',
-      BaseMethods.Macro, ["\\intensive{" + symbol + "}^\\excess"]);
+      ThermodynamicsMethods.Macro, ["\\extensive{" + symbol + "}^\\excess"]);
+    NewcommandUtil.addMacro (parser, csbase + 'E',
+      ThermodynamicsMethods.Macro, ["\\intensive{" + symbol + "}^\\excess"]);
     NewcommandUtil.addMacro (parser, csbase + 'Es',
-      BaseMethods.Macro, ["\\specific{" + symbol + "}^\\excess"]);
+      ThermodynamicsMethods.Macro, ["\\specific{" + symbol + "}^\\excess"]);
+    NewcommandUtil.addMacro (parser, csbase + 'Epm',
+      ThermodynamicsMethods.PartialMolarSuperscripted, [symbol,'\\excess']);
   },
 
   NewResidualProperty (parser: TexParser, name: string) {
     const csbase = parser.GetArgument(name);
     const symbol = parser.GetArgument(name);
     NewcommandUtil.addMacro (parser, csbase + 'Rt',
-      BaseMethods.Macro, ["\\extensive{" + symbol + "}^\\residual"]);
-    NewcommandUtil.addMacro (parser, csbase + 'Rm',
-      BaseMethods.Macro, ["\\intensive{" + symbol + "}^\\residual"]);
+      ThermodynamicsMethods.Macro, ["\\extensive{" + symbol + "}^\\residual"]);
+    NewcommandUtil.addMacro (parser, csbase + 'R',
+      ThermodynamicsMethods.Macro, ["\\intensive{" + symbol + "}^\\residual"]);
     NewcommandUtil.addMacro (parser, csbase + 'Rs',
-      BaseMethods.Macro, ["\\specific{" + symbol + "}^\\residual"]);
+      ThermodynamicsMethods.Macro, ["\\specific{" + symbol + "}^\\residual"]);
+    NewcommandUtil.addMacro (parser, csbase + 'Rpm',
+      ThermodynamicsMethods.PartialMolarSuperscripted, [symbol,'\\residual']);
   },
 
   NewThermodynamicProperty (parser: TexParser, name: string) {
     const csbase = parser.GetArgument(name);
     const symbol = parser.GetArgument(name);
     NewcommandUtil.addMacro (parser, csbase + 't',
-      BaseMethods.Macro, ["\\extensive{" + symbol + "}"]);
+      ThermodynamicsMethods.Macro, ["\\extensive{" + symbol + "}"]);
     NewcommandUtil.addMacro (parser, csbase + 'm',
-      BaseMethods.Macro, ["\\intensive{" + symbol + "}"]);
+      ThermodynamicsMethods.Macro, ["\\intensive{" + symbol + "}"]);
     NewcommandUtil.addMacro (parser, csbase + 's',
-      BaseMethods.Macro, ["\\specific{" + symbol + "}"]);
+      ThermodynamicsMethods.Macro, ["\\specific{" + symbol + "}"]);
     NewcommandUtil.addMacro (parser, csbase + 'pm',
         ThermodynamicsMethods.PartialMolar, [symbol]);
     NewcommandUtil.addMacro (parser, csbase + 'Et',
-      BaseMethods.Macro, ["\\extensive{" + symbol + "}^\\excess"]);
-    NewcommandUtil.addMacro (parser, csbase + 'Em',
-      BaseMethods.Macro, ["\\intensive{" + symbol + "}^\\excess"]);
+      ThermodynamicsMethods.Macro, ["\\extensive{" + symbol + "}^\\excess"]);
+    NewcommandUtil.addMacro (parser, csbase + 'E',
+      ThermodynamicsMethods.Macro, ["\\intensive{" + symbol + "}^\\excess"]);
     NewcommandUtil.addMacro (parser, csbase + 'Es',
-      BaseMethods.Macro, ["\\specific{" + symbol + "}^\\excess"]);
+      ThermodynamicsMethods.Macro, ["\\specific{" + symbol + "}^\\excess"]);
+    NewcommandUtil.addMacro (parser, csbase + 'Epm',
+      ThermodynamicsMethods.PartialMolarSuperscripted, [symbol,'\\excess']);
     NewcommandUtil.addMacro (parser, csbase + 'Rt',
-      BaseMethods.Macro, ["\\extensive{" + symbol + "}^\\residual"]);
-    NewcommandUtil.addMacro (parser, csbase + 'Rm',
-      BaseMethods.Macro, ["\\intensive{" + symbol + "}^\\residual"]);
+      ThermodynamicsMethods.Macro, ["\\extensive{" + symbol + "}^\\residual"]);
+    NewcommandUtil.addMacro (parser, csbase + 'R',
+      ThermodynamicsMethods.Macro, ["\\intensive{" + symbol + "}^\\residual"]);
     NewcommandUtil.addMacro (parser, csbase + 'Rs',
-      BaseMethods.Macro, ["\\specific{" + symbol + "}^\\residual"]);
+      ThermodynamicsMethods.Macro, ["\\specific{" + symbol + "}^\\residual"]);
+    NewcommandUtil.addMacro (parser, csbase + 'Rpm',
+      ThermodynamicsMethods.PartialMolarSuperscripted, [symbol,'\\residual']);
   },
 
   SubscriptedSymbol (parser: TexParser, name: string,
         symbol: string, subscript: string) {
-    var arg = parser.GetArgument(name, true);
+    let arg = parser.GetArgument(name, true);
     switch ( arg ) {
       case '_' :
         arg = parser.GetArgument(name);
-        BaseMethods.Macro (parser, 'SubscriptedSymbol',
+        ThermodynamicsMethods.Macro (parser, name,
           symbol + '_{' + subscript + ',' + arg + '}');
         break;
+      case '^' :
+        let supers = parser.GetArgument(name);
+        // peek at next char
+        const nextchar = parser.string.charAt(parser.i)
+        if ( nextchar == '_' )
+        {
+          let subs = parser.GetArgument(name);
+          subs = parser.GetArgument(name);
+          ThermodynamicsMethods.Macro (parser, name,
+            symbol + '^{' + supers + '}_{' + subscript + ',' + subs + '}');
+        }
+        break;
       case null :
-        BaseMethods.Macro (parser, 'SubscriptedSymbol',
+        ThermodynamicsMethods.Macro (parser, name,
           symbol + '_{' + subscript + '}');
         break;
       default :
-        BaseMethods.Macro (parser, 'SubscriptedSymbol',
+        ThermodynamicsMethods.Macro (parser, 'SubscriptedSymbol',
           symbol + '_{' + subscript + '}' + arg);
     }
   },
 
   SuperscriptedSymbol (parser: TexParser, name: string,
         symbol: string, superscript: string) {
-    var arg = parser.GetArgument(name, true);
+    let arg = parser.GetArgument(name, true);
     switch ( arg ) {
       case '^' :
         arg = parser.GetArgument(name);
-        BaseMethods.Macro (parser, 'SuperscriptedSymbol',
+        ThermodynamicsMethods.Macro (parser, name,
           symbol + '^{' + superscript + ',' + arg + '}');
         break;
       case null :
-        BaseMethods.Macro (parser, 'SubscriptedSymbol',
+        ThermodynamicsMethods.Macro (parser, name,
           symbol + '^{' + superscript + '}');
         break;
       default :
-        BaseMethods.Macro (parser, 'SubscriptedSymbol',
+        ThermodynamicsMethods.Macro (parser, name,
           symbol + '^{' + superscript + '}' + arg);
     }
   },
 
   PartialMolarSubscripted (parser: TexParser, name: string, symbol: string,
         subscript: string) {
-    var supers = parser.GetBrackets(name);
-    var subs;
-    var arg = parser.GetArgument(name, true);
-    if ( arg == '_' ) {
-      subs = parser.GetArgument(name);
-      // "peek" at next argument to see whether it's ^
-      const nextchar = parser.string.charAt(parser.i)
-      if ( nextchar == '^' ) {
-        arg = parser.GetArgument(name); // '^'
-        supers = parser.GetArgument(name); // the superscript argument
-      }
-    } else if ( arg == '^' ) {
-      supers = parser.GetArgument(name);
-      // "peek" at next argument to see whether it's _
-      const nextchar = parser.string.charAt(parser.i)
-      if ( nextchar == '_' ) {
-        arg = parser.GetArgument(name); // '_'
-        subs = parser.GetArgument(name); // the subscript argument
-      }
+    let supers = parser.GetBrackets(name);
+    let subs = null;
+    let arg = parser.GetArgument(name, true);
+    switch (arg) {
+      case '_' :
+        subs = parser.GetArgument(name);
+        // "peek" at next argument to see whether it's ^
+        const nextchar = parser.string.charAt(parser.i)
+        if ( nextchar == '^' ) {
+          arg = parser.GetArgument(name); // '^'
+          supers = parser.GetArgument(name); // the superscript argument
+        }
+      break;
+      case '^' :
+        supers = parser.GetArgument(name);
+        // "peek" at next argument to see whether it's _
+        const nextc = parser.string.charAt(parser.i)
+        if ( nextc == '_' ) {
+          arg = parser.GetArgument(name); // '_'
+          subs = parser.GetArgument(name); // the subscript argument
+        }
+      break;
+      default :
+        subs = arg;
+        console.log('WARNING: found neither superscript nor subscript for partial molar quantity; arg is "' + arg + '"');
     }
-    else subs = arg;
     if ( subs == null )
-        subs = '';
+    {
+      //subs = '';
+      throw new TexError('NoSubscript', 'ERROR: found neither'
+        + ' superscript nor subscript for partial molar quantity');
+    }
     if ( typeof supers !== "undefined" )
     {
       // \mkern2mu\overline{\mkern-2mu{symbol_{subscript,subs}^supers}\mkern-1mu}\mkern1mu
-      BaseMethods.Macro (parser, 'PartialMolarSubscripted',
+      ThermodynamicsMethods.Macro (parser, name,
         '\\mkern2mu\\overline{\\mkern-2mu{' + symbol + '}_{' + subscript
             + ',' + subs + '}^{' + supers + '}\\mkern-1mu}\\mkern1mu');
     } else {
       // \mkern2mu\overline{\mkern-2mu{symbol_{subscript,subs}}\mkern-1mu}\mkern1mu
-      BaseMethods.Macro (parser, 'PartialMolarSubscripted',
+      ThermodynamicsMethods.Macro (parser, name,
         '\\mkern2mu\\overline{\\mkern-2mu{' + symbol + '}_{' + subscript
             + ',' + subs + '}\\mkern-1mu}\\mkern1mu');
     }
@@ -320,9 +454,9 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
 
   PartialMolarSuperscripted (parser: TexParser, name: string, symbol: string,
         superscript: string) {
-    var supers = parser.GetBrackets(name);
-    var subs;
-    var arg = parser.GetArgument(name, true);
+    let supers = parser.GetBrackets(name);
+    let subs;
+    let arg = parser.GetArgument(name, true);
     if ( arg == '_' ) {
       subs = parser.GetArgument(name);
       // "peek" at next argument to see whether it's ^
@@ -345,13 +479,24 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
         subs = '';
     if ( typeof supers !== "undefined" )
     {
-      BaseMethods.Macro (parser, 'PartialMolarSubscripted',
-        '\\mkern2mu\\overline{\\mkern-2mu{' + symbol + '}_{' + subs + '}^{'
-        + superscript + ',' + supers + '}\\mkern-1mu}\\mkern1mu');
+      if ( parser.options.thermodynamics['longpm'] )
+        ThermodynamicsMethods.Macro (parser, name,
+          '\\mkern2mu\\overline{\\mkern-2mu{' + symbol + '}_{' + subs + '}^{'
+          + superscript + ',' + supers + '}\\mkern-1mu}\\mkern1mu');
+      else
+        ThermodynamicsMethods.Macro (parser, name,
+          '\\mkern2mu\\overline{\\mkern-2mu{' + symbol
+          + '}\\mkern-1mu}\\mkern1mu' + '}_{' + subs + '}^{'
+          + superscript + ',' + supers);
     } else {
-      BaseMethods.Macro (parser, 'PartialMolarSubscripted',
-        '\\mkern2mu\\overline{\\mkern-2mu{' + symbol + '}_{'
-            + subs + '}^{' + superscript + '}\\mkern-1mu}\\mkern1mu');
+      if ( parser.options.thermodynamics['longpm'] )
+        ThermodynamicsMethods.Macro (parser, name,
+          '\\mkern2mu\\overline{\\mkern-2mu{' + symbol + '}_{'
+              + subs + '}^{' + superscript + '}\\mkern-1mu}\\mkern1mu');
+      else
+        ThermodynamicsMethods.Macro (parser, name,
+          '\\mkern2mu\\overline{\\mkern-2mu{' + symbol
+            + '\\mkern-1mu}\\mkern1mu}_{' + subs + '}^{' + superscript + '}');
     }
   },
 
@@ -359,9 +504,9 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
       subscript = null, superscript = null) {
     const symbol = parser.GetArgument(name);
     const nextchar = parser.string.charAt(parser.i);
-    var nextnextchar = null;
-    var subs = '';
-    var supers = '';
+    let nextnextchar = null;
+    let subs = '';
+    let supers = '';
     // look for subscripts or superscripts
     switch ( nextchar ) {
       case '_' :
@@ -401,16 +546,122 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
     // Print symbol with non-null superscripts and subscripts
     if ( subs == '' && supers == '' )
       // will this EVER happen? (it is an implied check that BOTH are not null)
-      BaseMethods.Macro (parser, 'ChangeonSomething', '\\Delta ' + symbol);
+      ThermodynamicsMethods.Macro (parser, 'ChangeonSomething', '\\Delta '
+        + symbol);
     else if ( subs == '' )
-      BaseMethods.Macro (parser, 'ChangeonSomething', '\\Delta ' + symbol
-        + '^{' + supers + '}');
+      ThermodynamicsMethods.Macro (parser, 'ChangeonSomething', '\\Delta '
+        + symbol + '^{' + supers + '}');
     else if ( supers == '' )
-      BaseMethods.Macro (parser, 'ChangeonSomething', '\\Delta ' + symbol
-        + '_{' + subs + '}');
+      ThermodynamicsMethods.Macro (parser, 'ChangeonSomething', '\\Delta '
+        + symbol + '_{' + subs + '}');
     else
-      BaseMethods.Macro (parser, 'ChangeonSomething', '\\Delta ' + symbol
-        + '_{' + subs + '}^{' + supers + '}');
+      ThermodynamicsMethods.Macro (parser, 'ChangeonSomething', '\\Delta '
+        + symbol + '_{' + subs + '}^{' + supers + '}');
+  },
+
+  // EIS = extensive, intensive, specific
+  LocallyChangeEISappearance (parser: TexParser, begin: StackItem,
+        extensive: string, intensive: string, specific: string) {
+    let name: string = begin.getName();
+    let endstr: string = '\\end{' + name + '}';
+    let istop: number = parser.string.indexOf(endstr);
+    let rest: string = parser.string.slice(istop);
+    // set EIS to values given
+    parser.Push(begin);
+    parser.string = '\\let\\oldextensive\\extensive'
+        + '\\let\\oldintensive\\intensive'
+        + '\\let\\oldspecific\\specific'
+        + '\\renewcommand{\\extensive}[1]{' + extensive + '}'
+        + '\\renewcommand{\\intensive}[1]{' + intensive + '}'
+        + '\\renewcommand{\\specific}[1]{' + specific + '}'
+        + parser.string.substring(parser.i, istop);
+    parser.i = 0;
+    parser.Parse();
+    // change them back and set the rest of the string to be parsed
+    parser.string = '\\let\\extensive\\oldextensive'
+        + '\\let\\intensive\\oldintensive'
+        + '\\let\\specific\\oldspecific'
+        + rest;
+    parser.i = 0;
+  },
+
+  AllThings (parser: TexParser, name: string, symbol: string) {
+    // check if the user changed the default options
+    if ( parser.options.thermodynamics['moles-range'] )
+    {
+      parser.options.thermodynamics['moles-range'] = false;
+      parser.options.thermodynamics['moles-index'] = false;
+    }
+    if ( parser.options.thermodynamics['moles-index'] )
+      ThermodynamicsMethods.Macro (parser, name, '\\vec{' + symbol + '}');
+    else
+      ThermodynamicsMethods.Macro (parser, name,
+        symbol + '_1,\\dotsc,' + symbol + '_{\\ncomponents}');
+  },
+
+  // FIXME this needs to recognize the *arguments* here (duh...)
+  AllThingsExcept (parser: TexParser, name: string, symbol: string) {
+    // check if the user changed the default options
+    if ( parser.options.thermodynamics['moles-range'] )
+    {
+      parser.options.thermodynamics['moles-range'] = false;
+      parser.options.thermodynamics['moles-index'] = false;
+    }
+
+    let otherindex = parser.GetBrackets(name);
+    let index = parser.GetArgument(name);
+    if ( otherindex == undefined ) otherindex = 'j';
+    if ( parser.options.thermodynamics['moles-index'] ) {
+      if ( index == 'j' && otherindex == 'j' )
+        ThermodynamicsMethods.Macro (parser, name, symbol + '_{k \\neq '
+            + index + '}');
+      else
+        ThermodynamicsMethods.Macro (parser, name, symbol + '_{' + otherindex
+          + ' \\neq ' + index + '}');
+    } else {
+      if ( index == '1' )
+        ThermodynamicsMethods.Macro (parser, name,
+          symbol + '_2,\\dotsc,' + symbol + '_{\\ncomponents}');
+      else if ( index == '\\ncomponents' )
+        ThermodynamicsMethods.Macro (parser, name,
+          symbol + '_1,\\dotsc,' + symbol + '_{\\ncomponents-1}');
+      else
+        ThermodynamicsMethods.Macro (parser, name,
+          symbol + '_1,\\dotsc,[' + symbol + '_' + index + '],\\dotsc,'
+          + symbol + '_{\\ncomponents}');
+    }
+  },
+
+  LocalMolesIndex (parser: TexParser, begin: StackItem) {
+    let oldvalue: boolean = parser.options.thermodynamics['moles-index'];
+    let name: string = begin.getName();
+    let endstr: string = '\\end{' + name + '}';
+    let istop: number = parser.string.indexOf(endstr);
+    let rest: string = parser.string.slice(istop);
+    parser.options.thermodynamics['moles-index'] = true;
+    parser.Push(begin);
+    parser.string = parser.string.substring(parser.i, istop);
+    parser.i = 0;
+    parser.Parse();
+    parser.options.thermodynamics['moles-index'] = oldvalue;
+    parser.string = rest;
+    parser.i = 0;
+  },
+
+  LocalMolesRange (parser: TexParser, begin: StackItem) {
+    let oldvalue: boolean = parser.options.thermodynamics['moles-index'];
+    let name: string = begin.getName();
+    let endstr: string = '\\end{' + name + '}';
+    let istop: number = parser.string.indexOf(endstr);
+    let rest: string = parser.string.slice(istop);
+    parser.options.thermodynamics['moles-index'] = false;
+    parser.Push(begin);
+    parser.string = parser.string.substring(parser.i, istop);
+    parser.i = 0;
+    parser.Parse();
+    parser.options.thermodynamics['moles-index'] = oldvalue;
+    parser.string = rest;
+    parser.i = 0;
   },
 
   Macro: BaseMethods.Macro,

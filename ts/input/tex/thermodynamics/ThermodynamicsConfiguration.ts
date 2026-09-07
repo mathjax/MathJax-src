@@ -24,38 +24,30 @@
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import './ThermodynamicsMappings.js';
-//import { ThermodynamicsSetPartialDelimiters} from './ThermodynamicsMethods.js';
 
 export const ThermodynamicsConfiguration = Configuration.create('thermodynamics', {
   [ConfigurationType.HANDLER]: {
     [HandlerType.MACRO]: ['Thermodynamics-macros'],
     [HandlerType.ENVIRONMENT]: ['Thermodynamics-environments'],
   },
+
   [ConfigurationType.OPTIONS]: {
     thermodynamics: {
+      parentheses : false, // these are only true after they've been changed
+      brackets : false,
+      braces : false,
+      bar : false,
+      'plain-derivatives' : false,
 //      'intensive-plain' : true,
 //      'extensive-plain' : false,
 //      'extensive-superscript' : false,
 //      'intensive-lowercase' : false,
-//      thermolongpm : true,
-//      thermoshortpm : false,
-      Partialdelimiters : {
-        open: '(',
-        close: ')',
-        emptyclose: ')',
-      },
-      parentheses : () => {
-        this.Partialdelimiters.open='(';
-        this.Partialdelimiters.close=')';
-        this.Partialdelimiters.emptyclose=')';
-      },
-//      brackets : false,
-//      bar : false,
-//      'plain-derivatives' : false,
+      longpm : true,
+      shortpm : false,
 //      'subscripts' : true,
 //      'nosubscripts' : false,
-//      'moles-index' : true,
-//      'moles-range' : false,
+      'moles-index' : true,
+      'moles-range' : false, // only true right after it has been changed
 //      'Bejan' : false,
 //      'CBK' : false,
 //      'ElliottLira' : false,
