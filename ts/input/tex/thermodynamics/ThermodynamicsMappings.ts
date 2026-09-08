@@ -26,10 +26,6 @@ import ThermodynamicsMethods from './ThermodynamicsMethods.js';
 import { CommandMap,EnvironmentMap } from '../TokenMap.js';
 
 /**
- * Characters for the thermodynamics package
- */
-
-/**
  * Macros for the thermodynamics package
  */
 new CommandMap ('Thermodynamics-macros', {
@@ -48,7 +44,7 @@ new CommandMap ('Thermodynamics-macros', {
   expansivitysymbol: [ThermodynamicsMethods.Macro, '\\alpha'],
   extensive: ThermodynamicsMethods.ExtensiveProperty,
   intensive: ThermodynamicsMethods.IntensiveProperty,
-  specific: [ThermodynamicsMethods.Macro, "\\hat{#1}", 1],
+  specific: ThermodynamicsMethods.SpecificProperty,
   // FIXME these are here to implement intensive-lowercase, but...
   //       there really needs to be a better way to do this!
   areasymbol: [ThermodynamicsMethods.Macro, 'a'],
@@ -327,10 +323,8 @@ new CommandMap ('Thermodynamics-macros', {
     '(\\partial^2 #1/\\partial #2^2)_{#3}', 3],
   PartialMixSecondinlinetext: [ThermodynamicsMethods.Macro,
     '(\\partial^2 #1/\\partial #2 \\partial #3)_{#4}', 4],
-// TODO is it possible to implement these? probably not?
-//  allbut: [ThermodynamicsMethods.Macro, '{#3}_{#1 \\neq #2}', 3, 'j'],
-//  allbutlastand: [ThermodynamicsMethods.Macro,
-//    '{#3}_{#1 \\neq #2,\\ncomponents}', 3, 'j'],
+  allbut: [ThermodynamicsMethods.AllThingsExcept, null],
+  allbutlastand: [ThermodynamicsMethods.AllThingsExceptLastAnd, null],
   allNs: [ThermodynamicsMethods.AllThings, '\\Nt'],
   allNsbut: [ThermodynamicsMethods.AllThingsExcept, '\\Nt'],
   allmus: [ThermodynamicsMethods.AllThings, '\\mu'],
@@ -345,7 +339,7 @@ new CommandMap ('Thermodynamics-macros', {
   allWsbut: [ThermodynamicsMethods.AllThingsExcept, 'w'],
   Jacobian: [ThermodynamicsMethods.Macro,
     '\\frac{\\partial(#1)}{\\partial(#2)}', 2],
-  // Jacobiandet
+  Jacobiandet: ThermodynamicsMethods.JacobianDeterminant,
   sumall: [ThermodynamicsMethods.Macro, "\\sum_{#2=1}^{\\ncomponents}", 2],
   sumallbutlast: [ThermodynamicsMethods.Macro,
     "\\sum_{#2=1}^{\\ncomponents-1}", 2],
@@ -375,9 +369,8 @@ new EnvironmentMap('Thermodynamics-environments', ParseMethods.environment, {
   thermoplain: [ThermodynamicsMethods.LocallyChangeDelimiters, null, '.', '.', '.'],
   thermolongpm: [ThermodynamicsMethods.LocalLongPm, null],
   thermoshortpm: [ThermodynamicsMethods.LocalShortPm, null],
-// TODO
-//  thermosubscripts:
-//  thermoNOsubscripts:
+  thermosubscripts: [ThermodynamicsMethods.LocalSubscripts, null],
+  thermoNOsubscripts: [ThermodynamicsMethods.LocalNoSubscripts, null],
   thermomolesindex: [ThermodynamicsMethods.LocalMolesIndex, null],
   thermomolesrange: [ThermodynamicsMethods.LocalMolesRange, null],
 });
