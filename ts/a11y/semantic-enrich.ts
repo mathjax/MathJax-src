@@ -447,6 +447,7 @@ export function EnrichedMathDocumentMixin<
      */
     constructor(...args: any[]) {
       super(...args);
+      this.options.sre.locale = Locale.current;
       MmlJax.setMmlFactory(this.mmlFactory);
       const ProcessBits = (this.constructor as typeof AbstractMathDocument)
         .ProcessBits;

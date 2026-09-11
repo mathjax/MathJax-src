@@ -14,16 +14,18 @@ if (MathJax.startup) {
 if (MathJax.loader) {
   const config = MathJax.config.loader;
   const {mathjax} = MathJax._.mathjax;
-  mathjax.asyncLoad = (name) => {
-    if (name.match(/\.json$/)) {
+  if (!mathjax.asyncLoad) {
+    mathjax.asyncLoad = (name) => {
+      if (name.match(/\.json$/)) {
       name = Package.resolvePath(name);
-      return (config.json || mathjax.json)(name).then((data) => data.default ?? data);
-    }
-    return name.substring(0, 5) === 'node:'
-      ? config.require(name)
-      : MathJax.loader.load(name).then(result => result[0]);
-  };
-  mathjax.json = mathjax.context.window
-    ? (file) => fetch(file).then((data) => data.json())
-    : (file) => import( /* webpackIgnore: true */ file, {with: {type: 'json'}});
+        return (config.json || mathjax.json)(name).then((data) => data.default ?? data);
+      }
+      return name.substring(0, 5) === 'node:'
+        ? config.require(name)
+        : MathJax.loader.load(name).then(result => result[0]);
+    };
+    mathjax.json = mathjax.context.window
+      ? (file) => fetch(file).then((data) => data.json())
+      : (file) => import( /* webpackIgnore: true */ file, {with: {type: 'json'}});
+  }
 }

@@ -1,0 +1,15 @@
+{
+  "copy": {
+    "to": "[bundle]/main",
+    "from": ".",
+    "copy": [
+      "node.cjs",
+      "node.d.cts",
+      "node.d.ts"
+    ]
+  },
+  "webpack": {
+    "name": "main/node",
+    "noDTS": true
+  }
+}

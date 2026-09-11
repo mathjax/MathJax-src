@@ -1,0 +1,13 @@
+{
+  "copy": {
+    "to": "[bundle]/main",
+    "from": ".",
+    "copy": [
+      "browser.d.ts"
+    ]
+  },
+  "webpack": {
+    "name": "main/browser",
+    "noDTS": true
+  }
+}

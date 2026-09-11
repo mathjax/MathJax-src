@@ -1270,7 +1270,7 @@ export class FontData<
             COMPONENT,
             'FontData/CantLoad',
             dynamic.file,
-            err.message
+            err.message ?? err
           );
           return (dynamic.promise = Promise.resolve());
         }
