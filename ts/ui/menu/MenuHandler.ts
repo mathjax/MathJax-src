@@ -176,7 +176,7 @@ export type OPTIONS = {
   enableExplorerHelp: boolean;
   enrichError: SPEECH_OPTIONS<HTML_DOM>['enrichError'];
   //
-  enableMenu: true;
+  enableMenu: boolean;
   menuOptions: SETTINGS;
   MenuClass: typeof Menu;
 };
