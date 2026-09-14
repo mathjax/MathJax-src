@@ -27,10 +27,13 @@ combineDefaults(MathJax.config.loader, 'source', compatibility);
 export function startup(ready) {
   let locale = MathJax.config.locale ?? Locale.current;
   try { locale = localStorage.getItem('MathJax-locale') ?? locale; } catch (_err) {}
+  const load = CONFIG.load;
+  CONFIG.load = [];
   return Locale.setLocale(locale)
-               .then(() => Loader.load(...CONFIG.load))
+               .then(() => Loader.load(...load))
                .then(() => (ready || function () {})())
                .then(() => CONFIG.ready())
+               .then(() => CONFIG.load = load)
                .catch((error) => CONFIG.failed(error))
                .catch((error) => MathJax.startup.promiseReject(error));
 }
