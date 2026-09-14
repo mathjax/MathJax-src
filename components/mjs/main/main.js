@@ -5,5 +5,5 @@ import { init as browserInit, makeInit } from './browser/browser.js';
 
 MathJax.init = hasWindow ? browserInit : makeInit(setup, adaptor);
 
-export { MathJax };
+export default MathJax;
 export const init = MathJax.init;
