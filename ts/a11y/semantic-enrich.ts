@@ -320,7 +320,7 @@ export interface SRE_OPTIONS {
  */
 const SRE_options: SRE_OPTIONS = {
   speech: 'none',
-  locale: Locale.default,
+  locale: Locale.current,
   domain: 'clearspeak',
   style: 'default',
   braille: 'nemeth',
@@ -447,7 +447,6 @@ export function EnrichedMathDocumentMixin<
      */
     constructor(...args: any[]) {
       super(...args);
-      this.options.sre.locale = Locale.current;
       MmlJax.setMmlFactory(this.mmlFactory);
       const ProcessBits = (this.constructor as typeof AbstractMathDocument)
         .ProcessBits;

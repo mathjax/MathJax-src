@@ -85,10 +85,10 @@ export class Locale {
     prefix: string = component
   ) {
     if (!this.locations[component]) {
-      this.locations[component] = [
-        `${this.isComponent ? component : prefix}/__locales__`,
-        new Set(),
-      ];
+      if (this.isComponent) {
+        prefix = (component.charAt(0) === '[' ? '' : '[mathjax]/') + component;
+      }
+      this.locations[component] = [`${prefix}/__locales__`, new Set()];
     }
   }
 
