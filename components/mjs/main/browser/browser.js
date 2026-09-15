@@ -33,5 +33,5 @@ export function makeInit(nodeSetup = null, adaptor = '') {
   }
 };
 
+export const init = MathJax.init = makeInit();
 export default MathJax;
-export const init = makeInit();

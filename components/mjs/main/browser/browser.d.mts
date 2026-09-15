@@ -10,7 +10,7 @@ import type { MathJaxObject } from '@mathjax/src/mjs/components/startup.js';
 
 export function init<
   T extends COMPONENT_LIST<ADAPTOR_DOM<A>> = 'startup',
-  A extends ADAPTOR_LIST = 'liteDOM'
+  A extends ADAPTOR_LIST = 'browser'
 >(
   config: MATHJAX_CONFIG<T, A>,
   component?: MATHJAX_COMPONENTS<T, A>

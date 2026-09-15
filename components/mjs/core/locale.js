@@ -1,5 +1,6 @@
 import {Locale} from '#js/util/Locale.js';
 
 Locale.isComponent = true;
-Locale.locations.locale[0] = '[mathjax]/locale/__locales__';
-Locale.locations.core[0] = '[mathjax]/core/__locales__';
+for (const location of Object.values(Locale.locations)) {
+  location[0].replace(/^(?:\.\.\/)*ts\//, '[mathjax]/');
+}

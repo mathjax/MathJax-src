@@ -3,8 +3,10 @@
     "to": "[bundle]/main",
     "from": ".",
     "copy": [
-      "node.cjs",
-      "node.d.cts",
+      "data.cjs",
+      "data.d.cts",
+      "node.mjs",
+      "node.d.mts",
       "node.d.ts"
     ]
   },

@@ -6,7 +6,7 @@ import { resolvePath } from '#js/util/AsyncLoad.js';
 
 export async function setup() {
   const CONFIG = MathJax.config.loader;
-  const { REQUIRE, path, source } = await import(/* webpackIgnore: true */ './node.cjs');
+  const { REQUIRE, path, source } = await import(/* webpackIgnore: true */ './data.cjs');
   //
   // If the path was not able to be determined, try to find the mathjax packages
   // and use those if found.  The user can still override it.

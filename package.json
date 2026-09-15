@@ -25,20 +25,29 @@
   "type": "module",
   "main": "components/mjs/node-main/node-main.js",
   "exports": {
-    ".": "./bundle/main/main.js",
-    "./node": "./bundle/main/node.js",
-    "./browser": "./bundle/main/browser.js",
+    ".": {
+      "import": "./bundle/main/main.mjs",
+      "require": "./bundle/main/main.js"
+    },
+    "./node": {
+      "import": "./bundle/main/node.mjs",
+      "require": "./bundle/main/node.js"
+    },
+    "./browser": {
+      "import": "./bundle/main/browser.mjs",
+      "require": "./bundle/main/browser.js"
+    },
     "./source": {
       "import": "./components/mjs/main/main.js",
-      "require": "./components/cjs/main/main.js"
+      "require": "./components/cjs/main/main.cjs"
     },
     "./node/source": {
       "import": "./components/mjs/main/node/node.js",
-      "require": "./components/cjs/main/node/node.js"
+      "require": "./components/cjs/main/node/node.cjs"
     },
     "./browser/source": {
       "import": "./components/mjs/main/browser/browser.js",
-      "require": "./components/cjs/main/browser/browser.js"
+      "require": "./components/cjs/main/browser/browser.cjs"
     },
     "./js/*": {
       "import": "./mjs/*",

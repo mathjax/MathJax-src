@@ -3,6 +3,7 @@
     "to": "[bundle]/main",
     "from": ".",
     "copy": [
+      "main.mjs",
       "main.d.ts"
     ]
   },

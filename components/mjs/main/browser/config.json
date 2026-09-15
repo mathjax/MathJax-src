@@ -3,6 +3,8 @@
     "to": "[bundle]/main",
     "from": ".",
     "copy": [
+      "browser.mjs",
+      "browser.d.mts",
       "browser.d.ts"
     ]
   },
