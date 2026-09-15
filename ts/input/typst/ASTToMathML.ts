@@ -352,7 +352,7 @@ function renderFunctionCall(
     if (arg.kind === 'str') {
       return mtext(arg.value);
     }
-    return xml('mtext', nodeToPlainText(arg));
+    return mtext(nodeToPlainText(arg));
   }
 
   if (name === 'op' && args.length >= 1) {
@@ -519,6 +519,7 @@ export function nodeToMathML(
     case 'mathShorthand':
       return classifyCharacter(String(node.character));
 
+    case 'space':
     case 'mathAlignPoint':
       return '';
 
