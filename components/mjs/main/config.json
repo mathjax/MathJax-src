@@ -4,6 +4,7 @@
     "from": ".",
     "copy": [
       "main.mjs",
+      "main.d.mts",
       "main.d.ts"
     ]
   },
