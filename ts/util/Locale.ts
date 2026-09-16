@@ -258,6 +258,7 @@ export class Locale {
   public static async setLocale(
     locale: string = this.current
   ): Promise<void[]> {
+    if (locale === '') return Promise.resolve([]);
     if (!this.syncLoad && !this.asyncLoad) {
       const { mathjax } = await import('../mathjax.js');
       if (mathjax.asyncIsSynchronous) {
