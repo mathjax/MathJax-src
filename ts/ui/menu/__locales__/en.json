@@ -93,6 +93,7 @@
   "Title/Annotation": "MathJax Annotation Text",
   "Title/Braille": "MathJax Braille Text",
   "Title/Error": "MathJax Error Message",
+  "Title/Menu": "MathJax Contextual Menu",
   "Title/Mml": "MathJax MathML Expression",
   "Title/Source": "MathJax Original Source",
   "Title/Speech": "MathJax Speech Text",
