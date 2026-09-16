@@ -85,10 +85,10 @@ export class Locale {
     prefix: string = component
   ) {
     if (!this.locations[component]) {
-      this.locations[component] = [
-        `${this.isComponent ? component : prefix}/__locales__`,
-        new Set(),
-      ];
+      if (this.isComponent) {
+        prefix = (component.charAt(0) === '[' ? '' : '[mathjax]/') + component;
+      }
+      this.locations[component] = [`${prefix}/__locales__`, new Set()];
     }
   }
 
@@ -258,6 +258,7 @@ export class Locale {
   public static async setLocale(
     locale: string = this.current
   ): Promise<void[]> {
+    if (locale === '') return Promise.resolve([]);
     if (!this.syncLoad && !this.asyncLoad) {
       const { mathjax } = await import('../mathjax.js');
       if (mathjax.asyncIsSynchronous) {

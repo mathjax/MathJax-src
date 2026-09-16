@@ -27,4 +27,4 @@ import { context } from '../../util/context.js';
 
 export const json = context.window
   ? (file: string) => fetch(file).then((data) => data.json())
-  : (file: string) => require(file);
+  : (file: string) => require(/* webpackIgnore: true */ file);
