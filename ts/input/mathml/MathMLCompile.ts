@@ -91,10 +91,16 @@ export class MathMLCompile<N, T, D> {
    *  The instance of the MmlFactory object and
    */
   public factory: MmlFactory;
+
   /**
    *  The options (the defaults with the user options merged in)
    */
   public options: OptionList;
+
+  /**
+   * True where the dir attribute is used in the expression
+   */
+  protected bidi: boolean;
 
   /**
    *  Merge the user options into the defaults, and save them
@@ -117,14 +123,18 @@ export class MathMLCompile<N, T, D> {
   /**
    * Convert a MathML DOM tree to internal MmlNodes
    *
-   * @param {N} node     The <math> node to convert to MmlNodes
+   * @param {N} node      The <math> node to convert to MmlNodes
    * @returns {MmlNode}   The MmlNode at the root of the converted tree
    */
   public compile(node: N): MmlNode {
+    this.bidi = false;
     const mml = this.makeNode(node);
     mml.verifyTree(this.options['verify']);
     mml.setInheritedAttributes({}, false, 0, false);
     mml.walkTree(this.markMrows);
+    if (this.bidi) {
+      mml.setProperty('bidi', true);
+    }
     return mml;
   }
 
@@ -134,7 +144,7 @@ export class MathMLCompile<N, T, D> {
    *
    *  FIXME: we should use data-* attributes rather than classes for these
    *
-   * @param {N} node     The node to convert to an MmlNode
+   * @param {N} node      The node to convert to an MmlNode
    * @returns {MmlNode}   The converted MmlNode
    */
   public makeNode(node: N): MmlNode {
@@ -167,7 +177,7 @@ export class MathMLCompile<N, T, D> {
    * @param {N} node           The original DOM node that is being transcribed
    * @param {string} texClass  The texClass specified on the node, if any
    * @param {boolean} limits   True if fixed limits are to be used
-   * @returns {MmlNode}         The final MmlNode tree
+   * @returns {MmlNode}        The final MmlNode tree
    */
   protected createMml(
     type: string,
@@ -195,7 +205,7 @@ export class MathMLCompile<N, T, D> {
    *
    * @param {string} type   The type of node being requested
    * @param {N} node        The HTML node used to create it.
-   * @returns {MmlNode}      The HtmlNode holding the node (or null)
+   * @returns {MmlNode}     The HtmlNode holding the node (or null)
    */
   protected unknownNode(type: string, node: N): MmlNode {
     if (
@@ -214,8 +224,8 @@ export class MathMLCompile<N, T, D> {
   /**
    * Copy the attributes from a MathML node to an MmlNode.
    *
-   * @param {MmlNode} mml       The MmlNode to which attributes will be added
-   * @param {N} node  The MathML node whose attributes to copy
+   * @param {MmlNode} mml   The MmlNode to which attributes will be added
+   * @param {N} node        The MathML node whose attributes to copy
    */
   protected addAttributes(mml: MmlNode, node: N) {
     let ignoreVariant = false;
@@ -261,6 +271,9 @@ export class MathMLCompile<N, T, D> {
           mml.attributes.set(name, val === 'true');
         } else if (!ignoreVariant || name !== 'mathvariant') {
           mml.attributes.set(name, value);
+          if (name === 'dir') {
+            this.bidi = true;
+          }
         }
       }
     }
@@ -271,7 +284,7 @@ export class MathMLCompile<N, T, D> {
    *
    * @param {string} _name  The name of an attribute to filter
    * @param {string} value  The value to filter
-   * @returns {string} The filtered value.
+   * @returns {string}      The filtered value.
    */
   protected filterAttribute(_name: string, value: string): string {
     return value;
@@ -356,8 +369,8 @@ export class MathMLCompile<N, T, D> {
   /**
    * Check for special MJX values in the class and process them
    *
-   * @param {MmlNode} mml       The MmlNode to be modified according to the class markers
-   * @param {N} node  The MathML node whose class is to be processed
+   * @param {MmlNode} mml   The MmlNode to be modified according to the class markers
+   * @param {N} node        The MathML node whose class is to be processed
    */
   protected checkClass(mml: MmlNode, node: N) {
     const classList = [];
@@ -384,7 +397,7 @@ export class MathMLCompile<N, T, D> {
    * Fix the old incorrect spelling of calligraphic.
    *
    * @param {string} variant  The mathvariant name
-   * @returns {string}         The corrected variant
+   * @returns {string}        The corrected variant
    */
   protected fixCalligraphic(variant: string): string {
     return variant.replace(/caligraphic/, 'calligraphic');
@@ -418,7 +431,7 @@ export class MathMLCompile<N, T, D> {
   }
 
   /**
-   * @param {string} text  The text to have spacing normalized
+   * @param {string} text   The text to have spacing normalized
    * @returns {string}      The trimmed text
    */
   protected normalizeSpace(text: string): string {

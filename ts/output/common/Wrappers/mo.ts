@@ -289,6 +289,11 @@ export function CommonMoMixin<
     public multChar: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
 
     /**
+     * The stretchy character to use (could be reversed).
+     */
+    public stretchC: number;
+
+    /**
      * @override
      */
     get breakCount() {
@@ -384,7 +389,7 @@ export function CommonMoMixin<
       //  delimiter data again if we have already stretched it
       //  (in case a fixed size set the delim.c).  See #3457.
       //
-      const C = this.getText().codePointAt(0);
+      const C = this.stretchC;
       let delim = this.stretch;
       if (this.size) {
         this.stretch = delim = this.font.getDelimiter(C) as DD;
@@ -668,7 +673,12 @@ export function CommonMoMixin<
       if (!attributes.get('stretchy')) return false;
       const c = this.getText();
       if (Array.from(c).length !== 1) return false;
-      const delim = this.font.getDelimiter(c.codePointAt(0));
+      let C = c.codePointAt(0);
+      if (this.node.getProperty('reverse')) {
+        C = this.mirrored(C);
+      }
+      this.stretchC = C;
+      const delim = this.font.getDelimiter(C);
       this.stretch = (
         delim && delim.dir === direction ? delim : NOSTRETCH
       ) as DD;
@@ -703,6 +713,7 @@ export function CommonMoMixin<
       if (primes) {
         return unicodeChars(primes);
       }
+      chars = super.remapChars(chars);
       if (chars.length === 1) {
         const parent = (this.node as MmlMo).coreParent().parent;
         const isAccent = this.isAccent && !parent.isKind('mrow');

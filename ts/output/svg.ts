@@ -152,6 +152,17 @@ export class SVG<N, T, D> extends CommonOutputJax<
         stroke: '#C8C8C8',
       },
     },
+
+    'mjx-container[jax="SVG"] [data-mjx-reverse]': {
+      transform: 'scalex(-1)',
+      'transform-origin': 'center',
+      'transform-box': 'content-box',
+    },
+    '[data-mjx-mirror] > use': {
+      transform: 'scalex(-1)',
+      'transform-origin': 'center',
+      'transform-box': 'content-box',
+    },
   };
 
   /**

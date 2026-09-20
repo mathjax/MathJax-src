@@ -25,7 +25,6 @@ import TexParser from '../TexParser.js';
 import { ParseMethod } from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
 import { ParseUtil } from '../ParseUtil.js';
-import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { texError } from '../TexError.js';
 
 import { COMPONENT } from './__locales__/Component.js';
@@ -60,7 +59,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
    */
   Data(parser: TexParser, name: string) {
     const dataset = parser.GetArgument(name);
-    const arg = GetArgumentMML(parser, name);
+    const arg = parser.GetArgumentMML(parser, name);
     const data = ParseUtil.keyvalOptions(dataset);
     for (const key in data) {
       // remove illegal attribute names
@@ -80,7 +79,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
    */
   Href(parser: TexParser, name: string) {
     const url = GetArgumentWithPercent(parser, name);
-    const arg = GetArgumentMML(parser, name);
+    const arg = parser.GetArgumentMML(parser, name);
     NodeUtil.setAttribute(arg, 'href', url);
     parser.Push(arg);
   },
@@ -93,7 +92,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
    */
   Class(parser: TexParser, name: string) {
     let CLASS = GetArgumentWithPercent(parser, name);
-    const arg = GetArgumentMML(parser, name);
+    const arg = parser.GetArgumentMML(parser, name);
     const oldClass = NodeUtil.getAttribute(arg, 'class');
     if (oldClass) {
       CLASS = oldClass + ' ' + CLASS;
@@ -110,7 +109,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
    */
   Style(parser: TexParser, name: string) {
     let style = GetArgumentWithPercent(parser, name);
-    const arg = GetArgumentMML(parser, name);
+    const arg = parser.GetArgumentMML(parser, name);
     // check that it looks like a style string
     let oldStyle = NodeUtil.getAttribute(arg, 'style') as string;
     if (oldStyle) {
@@ -131,30 +130,10 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
    */
   Id(parser: TexParser, name: string) {
     const ID = parser.GetArgument(name, false, false);
-    const arg = GetArgumentMML(parser, name);
+    const arg = parser.GetArgumentMML(parser, name);
     NodeUtil.setAttribute(arg, 'id', ID);
     parser.Push(arg);
   },
-};
-
-/**
- * Parses the math argument of the above commands and returns it as single
- * node (in an mrow if necessary). The HTML attributes are then
- * attached to this element.
- *
- * @param {TexParser} parser The calling parser.
- * @param {string} name The calling macro name.
- * @returns {MmlNode} The math node.
- */
-const GetArgumentMML = function (parser: TexParser, name: string): MmlNode {
-  const arg = parser.ParseArg(name);
-  if (!NodeUtil.isInferred(arg)) {
-    return arg;
-  }
-  const mrow = parser.create('node', 'mrow');
-  NodeUtil.copyChildren(arg, mrow);
-  NodeUtil.copyAttributes(arg, mrow);
-  return mrow;
 };
 
 /**

@@ -215,6 +215,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     this.handleBorder();
     this.handleColor();
     this.handleAttributes();
+    this.handleBidi();
     return svg;
   }
 
@@ -526,6 +527,20 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     }
   }
 
+  /**
+   * Handle reversing bi-diretional expressions when needed
+   */
+  protected handleBidi() {
+    if (!this.node.getProperty('reverse')) return;
+    const adaptor = this.adaptor;
+    for (const i in this.dom) {
+      this.dom[i] = adaptor.append(
+        this.dom[i],
+        this.svg('g', { 'data-mjx-reverse': true })
+      ) as N;
+    }
+  }
+
   /*******************************************************************/
 
   /**
@@ -534,6 +549,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {N} element  The element to be placed
    */
   public place(x: number, y: number, element: N = null) {
+    const adaptor = this.adaptor;
     if (!element) {
       x += this.dx * this.bbox.rscale;
     }
@@ -542,9 +558,12 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       element = this.dom[0]; // FIXME:  DOM tree
       y = this.handleId(y);
     }
+    if (adaptor.getAttribute(element, 'data-mjx-reverse')) {
+      element = adaptor.parent(element);
+    }
     const translate = `translate(${this.fixed(x)},${this.fixed(y)})`;
-    const transform = this.adaptor.getAttribute(element, 'transform') || '';
-    this.adaptor.setAttribute(
+    const transform = adaptor.getAttribute(element, 'transform') || '';
+    adaptor.setAttribute(
       element,
       'transform',
       translate + (transform ? ' ' + transform : '')
@@ -615,16 +634,16 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   }
 
   /**
-   * @param {number} n        The character number
+   * @param {number} c        The character number
    * @param {number} x        The x-position of the character
    * @param {number} y        The y-position of the character
    * @param {N} parent        The container for the character
    * @param {string} variant  The variant to use for the character
    * @param {boolean} buffer  True to collect unknown characters into one text element
-   * @returns {number}         The width of the character
+   * @returns {number}        The width of the character
    */
   public placeChar(
-    n: number,
+    c: number,
     x: number,
     y: number,
     parent: N,
@@ -634,6 +653,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     if (variant === null) {
       variant = this.variant;
     }
+    const [n, mirror] = c < 0 ? [-c, true] : [c, false];
     const C = n.toString(16).toUpperCase();
     const [, , w, data] = this.getVariantChar(variant, n);
     if (data.unknown) {
@@ -644,10 +664,14 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     if ('p' in data) {
       x += dx;
       const path = data.p ? 'M' + data.p + 'Z' : '';
+      const node = this.charNode(variant, C, path);
       this.place(
         x,
         y,
-        this.adaptor.append(parent, this.charNode(variant, C, path)) as N
+        this.adaptor.append(
+          parent,
+          mirror ? this.svg('g', { 'data-mjx-mirror': true }, [node]) : node
+        ) as N
       );
       return w + dx;
     }
@@ -691,7 +715,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {string} variant    The name of the variant being used
    * @param {string} C          The hex string for the character code
    * @param {string} path       The data from the character
-   * @returns {N}                The <path> or <use> node for the glyph
+   * @returns {N}               The <path> or <use> node for the glyph
    */
   protected charNode(variant: string, C: string, path: string): N {
     const cache = this.jax.options.fontCache;
@@ -703,7 +727,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * @param {string} C          The hex string for the character code
    * @param {string} path       The data from the character
-   * @returns {N}                The <path> for the glyph
+   * @returns {N}               The <path> for the glyph
    */
   protected pathNode(C: string, path: string): N {
     return this.svg('path', { 'data-c': C, d: path });
@@ -713,7 +737,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {string} variant    The name of the variant being used
    * @param {string} C          The hex string for the character code
    * @param {string} path       The data from the character
-   * @returns {N}                The <use> node for the glyph
+   * @returns {N}               The <use> node for the glyph
    */
   protected useNode(variant: string, C: string, path: string): N {
     const use = this.svg('use', { 'data-c': C });
@@ -765,7 +789,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {string} type      The tag name of the HTML node to be created
    * @param {OptionList} def   The properties to set for the created node
    * @param {(N|T)[]} content  The child nodes for the created HTML node
-   * @returns {N}               The generated HTML tree
+   * @returns {N}              The generated HTML tree
    */
   public html(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
     return this.jax.html(type, def, content);
@@ -775,7 +799,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {string} type      The tag name of the svg node to be created
    * @param {OptionList} def   The properties to set for the created node
    * @param {(N|T)[]} content  The child nodes for the created SVG node
-   * @returns {N}               The generated SVG tree
+   * @returns {N}              The generated SVG tree
    */
   public svg(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
     return this.jax.svg(type, def, content);
@@ -784,7 +808,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * @param {number} x   The dimension to display
    * @param {number=} n  The number of digits to display
-   * @returns {string}    The dimension with the given number of digits (minus trailing zeros)
+   * @returns {string}   The dimension with the given number of digits (minus trailing zeros)
    */
   public fixed(x: number, n: number = 1): string {
     return this.jax.fixed(x * 1000, n);
