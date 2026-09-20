@@ -231,35 +231,34 @@ export function CommonMtextMixin<
     /**
      * @override
      */
-    protected getVariant() {
+    protected getStyles() {
+      super.getStyles();
       const options = this.jax.options;
       const data = this.jax.math.outputData;
-      //
-      //  If the font is to be inherited from the surrounding text, check the mathvariant
-      //  and see if it allows for inheritance. If so, set the variant appropriately,
-      //  otherwise get the usual variant.
-      //
-      const merror =
-        (!!data.merrorFamily || !!options.merrorFont) &&
-        this.node.Parent.isKind('merror');
-      if (!!data.mtextFamily || !!options.mtextFont || merror) {
-        const variant = this.node.attributes.get('mathvariant') as string;
-        const font =
-          (this.constructor as any).INHERITFONTS[variant] ||
-          this.jax.font.getCssFont(variant);
-        const family =
-          font[0] ||
-          (merror
-            ? data.merrorFamily || options.merrorFont
-            : data.mtextFamily || options.mtextFont);
-        this.variant = this.explicitVariant(
-          family,
-          font[2] ? 'bold' : '',
-          font[1] ? 'italic' : ''
-        );
+      const font =
+        (this.node.Parent.isKind('merror')
+          ? (data.merrorFamily ?? options.merrorFont)
+          : '') ||
+        (data.mtextFamily ?? options.mtextFont);
+      if (
+        !font ||
+        this.removedStyles?.fontFamily ||
+        this.node.attributes.getExplicit('fontfamily')
+      ) {
         return;
       }
-      super.getVariant();
+      this.removedStyles ??= {};
+      this.removedStyles.fontFamily = font;
+      const variant = this.node.attributes.get('mathvariant') as string;
+      const [, italic, bold] =
+        (this.constructor as typeof CommonMtextMixin).INHERITFONTS[variant] ||
+        this.jax.font.getCssFont(variant);
+      if (italic && !this.removedStyles.fontStyle) {
+        this.removedStyles.fontStyle = 'italic';
+      }
+      if (bold && !this.removedStyles.fontWeight) {
+        this.removedStyles.fontWeight = 'bold';
+      }
     }
 
     /**
