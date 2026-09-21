@@ -24,7 +24,8 @@
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { Metrics } from '../../core/MathItem.js';
 import { AbstractWrapper, WrapperClass } from '../../core/Tree/Wrapper.js';
-import { PropertyList } from '../../core/Tree/Node.js';
+import { Property, PropertyList } from '../../core/Tree/Node.js';
+import { defined } from '../../core/MmlTree/Attributes.js';
 import {
   MmlNode,
   MmlNodeClass,
@@ -32,7 +33,6 @@ import {
   AbstractMmlNode,
 } from '../../core/MmlTree/MmlNode.js';
 import { MmlMo } from '../../core/MmlTree/MmlNodes/mo.js';
-import { Property } from '../../core/Tree/Node.js';
 import { unicodeChars } from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
 import { Styles } from '../../util/Styles.js';
@@ -926,20 +926,11 @@ export class CommonWrapper<
         variant = 'normal';
       }
     } else {
-      const values = attributes.getList(
-        'fontfamily',
-        'fontweight',
-        'fontstyle'
-      ) as StringMap;
-      if (this.removedStyles) {
-        const style = this.removedStyles;
-        if (style.fontFamily) values.family = style.fontFamily;
-        if (style.fontWeight) values.weight = style.fontWeight;
-        if (style.fontStyle) values.style = style.fontStyle;
-      }
-      if (values.fontfamily) values.family = values.fontfamily;
-      if (values.fontweight) values.weight = values.fontweight;
-      if (values.fontstyle) values.style = values.fontstyle;
+      const values = defined({
+        family: this.removedStyles?.fontFamily ?? attributes.get('fontfamily'),
+        weight: this.removedStyles?.fontWeight ?? attributes.get('fontweight'),
+        style: this.removedStyles?.fontStyle ?? attributes.get('fontstyle'),
+      }) as StringMap;
       if (values.weight && values.weight.match(/^\d+$/)) {
         values.weight = parseInt(values.weight) > 600 ? 'bold' : 'normal';
       }

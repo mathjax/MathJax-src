@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { Attributes, INHERIT } from './Attributes.js';
+import { Attributes, INHERIT, defined } from './Attributes.js';
 import {
   Property,
   PropertyList,
@@ -33,6 +33,7 @@ import {
 } from '../Tree/Node.js';
 import { MmlFactory } from './MmlFactory.js';
 import { DOMAdaptor } from '../DOMAdaptor.js';
+import { Styles } from '../../util/Styles.js';
 import { Locale } from '../../util/Locale.js';
 import { COMPONENT } from '../__locales__/Component.js';
 
@@ -387,6 +388,12 @@ export abstract class AbstractMmlNode
     scriptminsize: true,
     scriptsizemultiplier: true,
     infixlinebreakstyle: true,
+    //
+    // These three are used to propagate font styles to child nodes
+    //
+    fontfamily: true,
+    fontweight: true,
+    fontstyle: true,
   };
 
   /**
@@ -839,6 +846,21 @@ export abstract class AbstractMmlNode
           indentshiftlast: 'indentshift',
         });
       }
+    }
+    //
+    // Get any font styles
+    //
+    const styles = this.attributes.getExplicit('style') as string;
+    if (styles) {
+      const style = new Styles(styles);
+      attributes = this.addInheritedAttributes(
+        attributes,
+        defined({
+          fontfamily: style.get('font-family'),
+          fontweight: style.get('font-weight'),
+          fontstyle: style.get('font-style'),
+        })
+      );
     }
     this.setChildInheritedAttributes(attributes, display, level, prime);
   }

@@ -23,7 +23,8 @@
 
 import { PropertyList } from '../../Tree/Node.js';
 import { AbstractMmlLayoutNode, AttributeList } from '../MmlNode.js';
-import { INHERIT } from '../Attributes.js';
+import { INHERIT, defined } from '../Attributes.js';
+import { Styles } from '../../../util/Styles.js';
 
 /*****************************************************************/
 /**
@@ -108,6 +109,18 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
       attributes,
       this.attributes.getAllAttributes()
     );
+    const styles = this.attributes.getExplicit('style') as string;
+    if (styles) {
+      const style = new Styles(styles);
+      attributes = this.addInheritedAttributes(
+        attributes,
+        defined({
+          fontfamily: style.get('fontfamily'),
+          fontweight: style.get('fontweight'),
+          fontstyle: style.get('fontstyle'),
+        })
+      );
+    }
     this.childNodes[0].setInheritedAttributes(
       attributes,
       display,
