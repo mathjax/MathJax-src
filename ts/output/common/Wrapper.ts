@@ -223,14 +223,14 @@ export interface CommonWrapperClass<
   ITALICVARIANTS: { [name: string]: StringMap };
 
   /**
-   * The pattern to check for RTL languages.
+   * The patterns to check for RTL, number, symbol, and space groups.
    */
-  rtlRanges: RegExp;
-
-  /**
-   * Pattern to split symbols at the ends of a string from the text in the middle.
-   */
-  remapSplit: RegExp;
+  letterChar: RegExp;
+  spaceChars: RegExp;
+  symChars: RegExp;
+  numChars: RegExp;
+  rtlRange: RegExp;
+  rtlSplit: RegExp;
 
   /**
    * Add any styles for this wrapper class
@@ -1410,15 +1410,23 @@ export class CommonWrapper<
   }
 
   /**
-   * The pattern to check for RTL languages.
+   * The patterns to check for RTL and number groups.
    */
-  public static rtlRanges = rtlRanges;
-
-  /**
-   * Pattern to split symbols at the ends of a string from the text in the middle.
-   */
-  public static remapSplit =
-    /^([\p{P}\p{Sm}\p{Sc}\p{Sk}\p{M}\s]*)(.*?)([\p{P}\p{S}\p{M}\s]*)$/u;
+  public static letterChar = /\p{L}/u;
+  public static spaceChars = /^\s+$/;
+  public static symChars = /[\p{P}\p{Sm}\p{Sc}\p{Sk}\p{M}]/u;
+  public static numChars = RegExp(
+    '[\\p{Sc}%]*(?:\\p{N}(?:[\\p{N}\\p{Sc},./;:%]*[-+])*[\\p{N}\\p{Sc},./;:%]*)*\\p{N}[\\p{Sc}%]*',
+    'u'
+  );
+  public static rtlRange = RegExp(
+    `(?:${rtlRanges.source}\\s+)*${rtlRanges.source}`,
+    'u'
+  );
+  public static rtlSplit = RegExp(
+    `(${this.rtlRange.source}|${this.numChars.source}|${this.symChars.source}+|\\s+)`,
+    'u'
+  );
 
   /**
    * @param {number[]} chars    The array of unicode character numbers to remap
@@ -1426,10 +1434,9 @@ export class CommonWrapper<
    */
   public remapChars(chars: number[]): number[] {
     //
-    // Split the string into LTR and RTL sections.  For each section,
-    // reverse the main text if we are in an RTL section.  If we are
-    // in RTL context, move initial and terminal symbols characters to
-    // the opposite ends of the list.
+    // If the string has no RTL characters, nothing needs to be done.
+    // Otherwsie, split the string into LTR, RTL, number, and space
+    // ranges and call the proper handler for the current direction.
     //
     // (This is not the actual unicode bidi algorithm, which would
     // require much more data to implement, but this should cover
@@ -1437,49 +1444,144 @@ export class CommonWrapper<
     // the mtextInheritFont to true and use <mtext> or \text{} for
     // the content.)
     //
-    const ranges = unicodeString(chars).split(CommonWrapper.rtlRanges);
-    const reversing = this.node.getProperty('reverse-text');
-    if (!reversing) {
-      //
-      // No need to go futehr if no RTL runs
-      //
-      if (ranges.length < 2) {
-        return chars;
-      }
-      //
-      // reverse runs of RTL and numbers by hand.  Not perfect, but helpful.
-      //
-      let i = 2;
-      while (i < ranges.length) {
-        let j = i;
-        while (j < ranges.length - 1 && ranges[j].match(/^[\s\d,.]+$/)) j += 2;
-        if (j > i && j < ranges.length) {
-          ranges.splice(i - 1, j - i + 1, ...ranges.slice(i - 1, j).reverse());
-        }
-        i = j + 2;
-      }
+    const text = unicodeString(chars);
+    if (!text.match(rtlRanges)) {
+      return chars;
     }
-    const blocks: number[] = [];
+    const ranges = text.split(CommonWrapper.rtlSplit);
+    return this.node.getProperty('reverse-text')
+      ? this.remapRTL(ranges)
+      : this.remapLTR(ranges);
+  }
+
+  /**
+   * Processes a sequence of character ranges in the LTR direction.
+   *
+   * @param {string[]} ranges   The LTR/RTL/number/space ranges
+   * @returns {number[]}        The reordered character array
+   */
+  protected remapLTR(ranges: string[]): number[] {
+    const CLASS = this.constructor as typeof CommonWrapper;
     let i = 0;
-    for (const range of reversing ? ranges.reverse() : ranges) {
-      const [, open, text, close] = reversing
-        ? range.match(CommonWrapper.remapSplit)
-        : [null, null, range];
-      chars = unicodeChars(text);
-      if (++i % 2 === 0) {
-        chars.reverse(); // these are the RTL text chunks
+    while (i < ranges.length) {
+      //
+      // Find LTR/space/number sequences that can start with
+      // numbers or letters, and not ending in spaces.  Then combine
+      // into one range.
+      //
+      if (!ranges[i].match(CLASS.spaceChars)) {
+        let j = i + 1;
+        while (j < ranges.length && !ranges[j].match(CLASS.rtlRange)) j += 2;
+        if (j > i && ranges[j - 2]?.match(CLASS.spaceChars)) j -= 2;
+        if (j > i + 1) {
+          ranges.splice(i, j - i, ranges.slice(i, j).join(''));
+        }
       }
-      if (open) {
-        unicodeChars(open)
-          .reverse()
-          .map((c) => chars.push(this.mirrored(c)));
+      i++;
+      //
+      // Find RTL/space/number sequences that start with RTL and end
+      // with RLT or number, then reverse any non-number ranges, then
+      // combine into one range.
+      //
+      if (ranges[i]?.match(CLASS.rtlRange)) {
+        let j = i + 1;
+        while (j < ranges.length && ranges[j] === '') j += 2;
+        while (
+          !ranges[j - 1]?.match(CLASS.rtlRange) &&
+          !ranges[j - 1]?.match(CLASS.numChars)
+        ) {
+          j -= 2;
+        }
+        for (let k = i; k < j; k += 2) {
+          if (!ranges[k].match(CLASS.numChars)) {
+            ranges[k] = unicodeString(
+              unicodeChars(ranges[k])
+                .reverse()
+                .map((c) => this.mirrored(c))
+            );
+          }
+        }
+        ranges.splice(i, j - i, ranges.slice(i, j).reverse().join(''));
       }
-      if (close) {
-        unicodeChars(close).map((c) => chars.unshift(this.mirrored(c)));
-      }
-      blocks.push(...chars);
+      i++;
     }
-    return blocks;
+    return unicodeChars(ranges.join(''));
+  }
+
+  /**
+   * Processes a sequence of character ranges in the RTL direction.
+   *
+   * @param {string[]} ranges   The LTR/RTL/number/space ranges
+   * @returns {number[]}        The reordered character array
+   */
+  protected remapRTL(ranges: string[]): number[] {
+    const CLASS = this.constructor as typeof CommonWrapper;
+    let i = 0;
+    let rtlFound = false;
+    while (i < ranges.length) {
+      //
+      // Find LTR/space/number sequences that start with letters, and
+      // not ending in spaces.  Then combine into one range.  Record
+      // whether we have found RTL yet (in case there are symbol
+      // ranges before the first one).
+      //
+      if (ranges[i].match(CLASS.letterChar)) {
+        let j = i + 1;
+        while (j < ranges.length) {
+          if (ranges[j].match(CLASS.rtlRange)) {
+            rtlFound = true;
+            break;
+          }
+          j += 2;
+        }
+        while (
+          j > i &&
+          !ranges[j - 1]?.match(CLASS.letterChar) &&
+          !ranges[j - 2]?.match(CLASS.numChars)
+        ) {
+          j -= 2;
+        }
+        if (j > i + 1) {
+          ranges.splice(i, j - i, ranges.slice(i, j).join(''));
+        }
+      }
+      i++;
+      //
+      // Find RTL/space/number sequences that don't start or end with
+      // spaces, then reverse any non-number ranges, and finally
+      // combine into one range.
+      //
+      if (i < ranges.length && !ranges[i]?.match(CLASS.spaceChars)) {
+        if (!rtlFound) {
+          if (!ranges[i].match(CLASS.numChars)) {
+            ranges[i] = unicodeString(
+              unicodeChars(ranges[i])
+                .reverse()
+                .map((c) => this.mirrored(c))
+            );
+          }
+        } else {
+          let j = i + 1;
+          while (j < ranges.length - 1 && ranges[j] === '') j += 2;
+          while (ranges[j - 1]?.match(CLASS.spaceChars)) j -= 2;
+          for (let k = i; k < j; k += 2) {
+            if (!ranges[k].match(CLASS.numChars)) {
+              ranges[k] = unicodeString(
+                unicodeChars(ranges[k])
+                  .reverse()
+                  .map((c) => this.mirrored(c))
+              );
+            }
+          }
+          ranges.splice(i, j - i, ranges.slice(i, j).reverse().join(''));
+        }
+      }
+      i++;
+    }
+    //
+    // Reverse the groupings before recombining into a single string
+    //
+    return unicodeChars(ranges.reverse().join(''));
   }
 
   /**
