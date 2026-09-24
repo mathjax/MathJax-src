@@ -148,7 +148,6 @@ export class MJContextMenu extends ContextMenu {
   }
 
   public keydown(event: KeyboardEvent) {
-    console.log(event);
     if (event.key === 'Tab') {
       this.unpost();
     }
