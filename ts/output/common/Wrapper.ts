@@ -25,7 +25,7 @@ import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { Metrics } from '../../core/MathItem.js';
 import { AbstractWrapper, WrapperClass } from '../../core/Tree/Wrapper.js';
 import { Property, PropertyList } from '../../core/Tree/Node.js';
-import { defined } from '../../core/MmlTree/Attributes.js';
+import { INHERIT, defined } from '../../core/MmlTree/Attributes.js';
 import {
   MmlNode,
   MmlNodeClass,
@@ -977,42 +977,41 @@ export class CommonWrapper<
    * Determine the scaling factor to use for this wrapped node, and set the styles for it.
    */
   protected getScale() {
-    let scale = 1;
     const parent = this.parent;
     const pscale = parent ? parent.bbox.scale : 1;
+    const plevel = Math.min(2, parent?.node.attributes.get('scriptlevel') as number || 0);
+    let scale = pscale;
     const attributes = this.node.attributes;
-    const scriptlevel = Math.min(attributes.get('scriptlevel') as number, 2);
-    let fontsize = attributes.get('fontsize');
-    let mathsize =
-      this.node.isToken || this.node.isKind('mstyle')
-        ? attributes.get('mathsize')
-        : attributes.getInherited('mathsize');
+    const scriptlevel = Math.min(2, attributes.get('scriptlevel') as number);
+    const mathsize = attributes.getExplicit('mathsize');
+    const size = (this.node.kind === 'math' || this.node.kind === 'mstyle' ? mathsize : undefined)
+      || attributes.getExplicit('fontsize')
+      || this.node.kind === 'math' ? attributes.get("mathsize") : '1';
     //
     // If scriptsize is non-zero, set scale based on scriptsizemultiplier
     //
-    if (scriptlevel !== 0) {
-      scale = Math.pow(
+    if (scriptlevel !== plevel) {
+      scale *= Math.pow(
         attributes.get('scriptsizemultiplier') as number,
-        scriptlevel
+        scriptlevel - plevel
       );
     }
     //
-    // If there is style="font-size:...", and not fontsize attribute, use that as fontsize
+    // If there is font-size CSS, use that,
     //
-    if (this.removedStyles && this.removedStyles.fontSize && !fontsize) {
-      fontsize = this.removedStyles.fontSize;
+    if (this.removedStyles?.fontSize) {
+      scale *= this.length2em(this.removedStyles.fontSize, 1, 1);
     }
     //
-    // If there is a fontsize and no mathsize attribute, is that
+    //  Incorporate the size, if any
     //
-    if (fontsize && !attributes.hasExplicit('mathsize')) {
-      mathsize = fontsize;
-    }
-    //
-    //  Incorporate the mathsize, if any
-    //
-    if (mathsize !== '1') {
-      scale *= this.length2em(mathsize, 1, 1);
+    if (mathsize && this.node.isToken || this.node.kind === 'mstyle') {
+      const imathsize = attributes.getInherited('mathsize');
+      if (mathsize !== imathsize) {
+        scale *= this.length2em(mathsize, 1, 1) / this.length2em(imathsize, 1, 1);
+      }
+    } else if (size !== '1' && size !== 'normal' && size !== INHERIT) {
+      scale *= this.length2em(size, 1, 1);
     }
     //
     // Use scriptminsize as minimum size for scripts
@@ -1026,7 +1025,7 @@ export class CommonWrapper<
       if (scale < scriptminsize) scale = scriptminsize;
     }
     //
-    // Record the scaling factors and set the element's CSS
+    // Record the scaling factors
     //
     this.bbox.scale = scale;
     this.bbox.rscale = scale / pscale;
@@ -1441,6 +1440,8 @@ export class CommonWrapper<
     mml.inheritAttributesFrom(this.node);
     mml.parent = this.node.parent;
     const node = this.wrap(mml);
+    node.bbox.scale = this.bbox.scale;
+    node.bbox.rscale = 1;
     node.parent = this as any as WW;
     return node as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
   }
