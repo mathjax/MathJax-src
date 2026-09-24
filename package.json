@@ -23,7 +23,7 @@
     "url": "https://github.com/mathjax/Mathjax-src"
   },
   "type": "module",
-  "main": "components/mjs/node-main/node-main.js",
+  "main": "components/mjs/main/main.js",
   "exports": {
     ".": {
       "import": "./bundle/main/main.mjs",
