@@ -28,6 +28,22 @@ import { PropertyList, Property } from '../Tree/Node.js';
  */
 export const INHERIT = '_inherit_';
 
+/**
+ * Return only the properties that are defined and non-empty
+ *
+ * @param {PropertyList} list   The property list to filter
+ * @returns {PropertyList}      The object with undefined and empty keys removed
+ */
+export function defined(list: PropertyList): PropertyList {
+  const def = {} as PropertyList;
+  for (const [key, value] of Object.entries(list)) {
+    if (value !== undefined && value !== '') {
+      def[key] = value;
+    }
+  }
+  return def;
+}
+
 /******************************************************************/
 /**
  * Implements the Attributes class for MmlNodes

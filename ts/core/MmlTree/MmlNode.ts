@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { Attributes, INHERIT } from './Attributes.js';
+import { Attributes, INHERIT, defined } from './Attributes.js';
 import {
   Property,
   PropertyList,
@@ -33,6 +33,7 @@ import {
 } from '../Tree/Node.js';
 import { MmlFactory } from './MmlFactory.js';
 import { DOMAdaptor } from '../DOMAdaptor.js';
+import { Styles } from '../../util/Styles.js';
 import { Locale } from '../../util/Locale.js';
 import { COMPONENT } from '../__locales__/Component.js';
 
@@ -387,6 +388,12 @@ export abstract class AbstractMmlNode
     scriptminsize: true,
     scriptsizemultiplier: true,
     infixlinebreakstyle: true,
+    //
+    // These three are used to propagate font styles to child nodes
+    //
+    fontfamily: true,
+    fontweight: true,
+    fontstyle: true,
   };
 
   /**
@@ -840,6 +847,21 @@ export abstract class AbstractMmlNode
         });
       }
     }
+    //
+    // Get any font styles
+    //
+    const styles = this.attributes.getExplicit('style') as string;
+    if (styles) {
+      const style = new Styles(styles);
+      attributes = this.addInheritedAttributes(
+        attributes,
+        defined({
+          fontfamily: style.get('font-family'),
+          fontweight: style.get('font-weight'),
+          fontstyle: style.get('font-style'),
+        })
+      );
+    }
     this.setChildInheritedAttributes(attributes, display, level, prime);
   }
   /**
@@ -899,10 +921,30 @@ export abstract class AbstractMmlNode
     const attributes = node.attributes;
     const display = attributes.get('displaystyle') as boolean;
     const scriptlevel = attributes.get('scriptlevel') as number;
-    const defaults: AttributeList = !attributes.isSet('mathsize')
-      ? {}
-      : { mathsize: ['math', attributes.get('mathsize')] };
+    let defaults: AttributeList = attributes.isSet('mathsize')
+      ? { mathsize: ['math', attributes.get('mathsize')] }
+      : {};
     const prime = (node.getProperty('texprimestyle') as boolean) || false;
+    //
+    // Get any font styles
+    //
+    defaults = this.addInheritedAttributes(defaults, defined({
+      fontfamily: attributes.getInherited('fontfamily'),
+      fontweight: attributes.getInherited('fontweight'),
+      fontstyle: attributes.getInherited('fontstyle'),
+    }));
+    const styles = attributes.getExplicit('style') as string;
+    if (styles) {
+      const style = new Styles(styles);
+      defaults = this.addInheritedAttributes(
+        defaults,
+        defined({
+          fontfamily: style.get('font-family'),
+          fontweight: style.get('font-weight'),
+          fontstyle: style.get('font-style'),
+        })
+      );
+    }
     this.setInheritedAttributes(defaults, display, scriptlevel, prime);
   }
 
