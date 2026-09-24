@@ -29,6 +29,8 @@ import {
 } from '../../core/MathDocument.js';
 import { Handler } from '../../core/Handler.js';
 import { DOM, DOM_TYPES, Constructor } from '../../types/Types.js';
+import type { MathML } from '../../input/mathml.js';
+import type { TeX } from '../../input/tex.js';
 
 import { Safe } from './safe.js';
 
@@ -140,13 +142,12 @@ export function SafeMathDocumentMixin<
       this.safe = new this.options.SafeClass(this, this.options.safeOptions);
       for (const jax of this.inputJax) {
         if (jax.name.match(/MathML/)) {
-          (jax as any).mathml.filterAttribute = this.safe.mmlAttribute.bind(
-            this.safe
-          );
-          (jax as any).mathml.filterClassList = this.safe.mmlClassList.bind(
-            this.safe
+          (jax as MathML<N, T, D>).setFilters(
+            this.safe.mmlAttribute.bind(this.safe),
+            this.safe.mmlClassList.bind(this.safe)
           );
         } else if (jax.name.match(/TeX/)) {
+          (jax as TeX<N, T, D>).parseOptions.packageData.set('safe', this.safe);
           jax.postFilters.add(this.sanitize.bind(jax), -5.5);
         }
       }
@@ -156,7 +157,7 @@ export function SafeMathDocumentMixin<
      * @param {object} data The argument containing math item and document
      * @param {MathItem<N, T, D>} data.math The math item to sanitize
      * @param {SafeMathDocument<N, T, D>} data.document The document to use for the
-     *     filter (note: this has been bound to the input jax)
+     *     filter (note: `this` has been bound to the input jax)
      */
     protected sanitize(data: {
       math: MathItem<N, T, D>;

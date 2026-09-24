@@ -288,6 +288,20 @@ export class MathMLCompile<N, T, D> {
   }
 
   /**
+   * Set the filter functions for the Safe extension.
+   *
+   * @param {(string, string) => string} filterAttribute     The function to filter attributes
+   * @param {(list: string[]) => string[]} filterClassList   The function to filter classes
+   */
+  public setFilters(
+    filterAttribute: (name: string, value: string) => string,
+    filterClassList: (list: string[]) => string[],
+  ) : void {
+    this.filterAttribute = filterAttribute;
+    this.filterClassList = filterClassList;
+  }
+
+  /**
    * Convert the children of the MathML node and add them to the MmlNode
    *
    * @param {MmlNode} mml  The MmlNode to which children will be added
