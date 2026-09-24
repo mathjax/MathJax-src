@@ -51,8 +51,16 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     const n = NewcommandUtil.GetArgCount(parser, name);
     const opt = parser.GetBrackets(name);
     const def = parser.GetArgument(name);
-    if (!provide || (!parser.lookup(HandlerType.MACRO, cs) && !parser.lookup(HandlerType.DELIMITER, '\\' + cs))) {
-      NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [def, n, opt]);
+    if (
+      !provide ||
+      (!parser.lookup(HandlerType.MACRO, cs) &&
+        !parser.lookup(HandlerType.DELIMITER, '\\' + cs))
+    ) {
+      NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [
+        def,
+        n,
+        opt,
+      ]);
     }
     parser.Push(parser.itemFactory.create('null'));
   },
