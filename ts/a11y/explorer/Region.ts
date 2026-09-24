@@ -115,7 +115,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
    * @returns {string}   The stylesheet ID
    */
   public static get sheetId(): string {
-    return 'MJX-' + this.name + '-styles';
+    return this.className + '-styles';
   }
 
   /**
