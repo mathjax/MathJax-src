@@ -921,10 +921,30 @@ export abstract class AbstractMmlNode
     const attributes = node.attributes;
     const display = attributes.get('displaystyle') as boolean;
     const scriptlevel = attributes.get('scriptlevel') as number;
-    const defaults: AttributeList = !attributes.isSet('mathsize')
-      ? {}
-      : { mathsize: ['math', attributes.get('mathsize')] };
+    let defaults: AttributeList = attributes.isSet('mathsize')
+      ? { mathsize: ['math', attributes.get('mathsize')] }
+      : {};
     const prime = (node.getProperty('texprimestyle') as boolean) || false;
+    //
+    // Get any font styles
+    //
+    defaults = this.addInheritedAttributes(defaults, defined({
+      fontfamily: attributes.getInherited('fontfamily'),
+      fontweight: attributes.getInherited('fontweight'),
+      fontstyle: attributes.getInherited('fontstyle'),
+    }));
+    const styles = attributes.getExplicit('style') as string;
+    if (styles) {
+      const style = new Styles(styles);
+      defaults = this.addInheritedAttributes(
+        defaults,
+        defined({
+          fontfamily: style.get('font-family'),
+          fontweight: style.get('font-weight'),
+          fontstyle: style.get('font-style'),
+        })
+      );
+    }
     this.setInheritedAttributes(defaults, display, scriptlevel, prime);
   }
 
