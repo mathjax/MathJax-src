@@ -33,8 +33,9 @@ import {
 } from '../../core/MmlTree/MmlNode.js';
 import { MmlMo } from '../../core/MmlTree/MmlNodes/mo.js';
 import { Property } from '../../core/Tree/Node.js';
-import { unicodeChars } from '../../util/string.js';
+import { unicodeChars, unicodeString } from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
+import { rtlRanges } from '../../util/string.js';
 import { Styles } from '../../util/Styles.js';
 import { StyleJson, StyleJsonSheet } from '../../util/StyleJson.js';
 import { OptionList, lookup } from '../../util/Options.js';
@@ -220,6 +221,16 @@ export interface CommonWrapperClass<
    * italic from a mathvariant.
    */
   ITALICVARIANTS: { [name: string]: StringMap };
+
+  /**
+   * The patterns to check for RTL, number, symbol, and space groups.
+   */
+  letterChar: RegExp;
+  spaceChars: RegExp;
+  symChars: RegExp;
+  numChars: RegExp;
+  rtlRange: RegExp;
+  rtlSplit: RegExp;
 
   /**
    * Add any styles for this wrapper class
@@ -1399,11 +1410,187 @@ export class CommonWrapper<
   }
 
   /**
+   * The patterns to check for RTL and number groups.
+   */
+  public static letterChar = /\p{L}/u;
+  public static spaceChars = /^\s+$/;
+  public static symChars = /[\p{P}\p{Sm}\p{Sc}\p{Sk}\p{M}]/u;
+  public static numChars = RegExp(
+    '[\\p{Sc}%]*(?:\\p{N}(?:[\\p{N}\\p{Sc},./;:%]*[-+])*[\\p{N}\\p{Sc},./;:%]*)*\\p{N}[\\p{Sc}%]*',
+    'u'
+  );
+  public static rtlRange = RegExp(
+    `(?:${rtlRanges.source}\\s+)*${rtlRanges.source}`,
+    'u'
+  );
+  public static rtlSplit = RegExp(
+    `(${this.rtlRange.source}|${this.numChars.source}|${this.symChars.source}+|\\s+)`,
+    'u'
+  );
+
+  /**
    * @param {number[]} chars    The array of unicode character numbers to remap
    * @returns {number[]}        The converted array
    */
   public remapChars(chars: number[]): number[] {
-    return chars;
+    //
+    // If the string has no RTL characters, nothing needs to be done.
+    // Otherwsie, split the string into LTR, RTL, number, and space
+    // ranges and call the proper handler for the current direction.
+    //
+    // (This is not the actual unicode bidi algorithm, which would
+    // require much more data to implement, but this should cover
+    // most of the practical situations.  For complete support, set
+    // the mtextInheritFont to true and use <mtext> or \text{} for
+    // the content.)
+    //
+    const text = unicodeString(chars);
+    if (!text.match(rtlRanges)) {
+      return chars;
+    }
+    const ranges = text.split(CommonWrapper.rtlSplit);
+    return this.node.getProperty('reverse-text')
+      ? this.remapRTL(ranges)
+      : this.remapLTR(ranges);
+  }
+
+  /**
+   * Processes a sequence of character ranges in the LTR direction.
+   *
+   * @param {string[]} ranges   The LTR/RTL/number/space ranges
+   * @returns {number[]}        The reordered character array
+   */
+  protected remapLTR(ranges: string[]): number[] {
+    const CLASS = this.constructor as typeof CommonWrapper;
+    let i = 0;
+    while (i < ranges.length) {
+      //
+      // Find LTR/space/number sequences that can start with
+      // numbers or letters, and not ending in spaces.  Then combine
+      // into one range.
+      //
+      if (!ranges[i].match(CLASS.spaceChars)) {
+        let j = i + 1;
+        while (j < ranges.length && !ranges[j].match(CLASS.rtlRange)) j += 2;
+        if (j > i && ranges[j - 2]?.match(CLASS.spaceChars)) j -= 2;
+        if (j > i + 1) {
+          ranges.splice(i, j - i, ranges.slice(i, j).join(''));
+        }
+      }
+      i++;
+      //
+      // Find RTL/space/number sequences that start with RTL and end
+      // with RLT or number, then reverse any non-number ranges, then
+      // combine into one range.
+      //
+      if (ranges[i]?.match(CLASS.rtlRange)) {
+        let j = i + 1;
+        while (j < ranges.length && ranges[j] === '') j += 2;
+        while (
+          !ranges[j - 1]?.match(CLASS.rtlRange) &&
+          !ranges[j - 1]?.match(CLASS.numChars)
+        ) {
+          j -= 2;
+        }
+        for (let k = i; k < j; k += 2) {
+          if (!ranges[k].match(CLASS.numChars)) {
+            ranges[k] = unicodeString(
+              unicodeChars(ranges[k])
+                .reverse()
+                .map((c) => this.mirrored(c))
+            );
+          }
+        }
+        ranges.splice(i, j - i, ranges.slice(i, j).reverse().join(''));
+      }
+      i++;
+    }
+    return unicodeChars(ranges.join(''));
+  }
+
+  /**
+   * Processes a sequence of character ranges in the RTL direction.
+   *
+   * @param {string[]} ranges   The LTR/RTL/number/space ranges
+   * @returns {number[]}        The reordered character array
+   */
+  protected remapRTL(ranges: string[]): number[] {
+    const CLASS = this.constructor as typeof CommonWrapper;
+    let i = 0;
+    let rtlFound = false;
+    while (i < ranges.length) {
+      //
+      // Find LTR/space/number sequences that start with letters, and
+      // not ending in spaces.  Then combine into one range.  Record
+      // whether we have found RTL yet (in case there are symbol
+      // ranges before the first one).
+      //
+      if (ranges[i].match(CLASS.letterChar)) {
+        let j = i + 1;
+        while (j < ranges.length) {
+          if (ranges[j].match(CLASS.rtlRange)) {
+            rtlFound = true;
+            break;
+          }
+          j += 2;
+        }
+        while (
+          j > i &&
+          !ranges[j - 1]?.match(CLASS.letterChar) &&
+          !ranges[j - 2]?.match(CLASS.numChars)
+        ) {
+          j -= 2;
+        }
+        if (j > i + 1) {
+          ranges.splice(i, j - i, ranges.slice(i, j).join(''));
+        }
+      }
+      i++;
+      //
+      // Find RTL/space/number sequences that don't start or end with
+      // spaces, then reverse any non-number ranges, and finally
+      // combine into one range.
+      //
+      if (i < ranges.length && !ranges[i]?.match(CLASS.spaceChars)) {
+        if (!rtlFound) {
+          if (!ranges[i].match(CLASS.numChars)) {
+            ranges[i] = unicodeString(
+              unicodeChars(ranges[i])
+                .reverse()
+                .map((c) => this.mirrored(c))
+            );
+          }
+        } else {
+          let j = i + 1;
+          while (j < ranges.length - 1 && ranges[j] === '') j += 2;
+          while (ranges[j - 1]?.match(CLASS.spaceChars)) j -= 2;
+          for (let k = i; k < j; k += 2) {
+            if (!ranges[k].match(CLASS.numChars)) {
+              ranges[k] = unicodeString(
+                unicodeChars(ranges[k])
+                  .reverse()
+                  .map((c) => this.mirrored(c))
+              );
+            }
+          }
+          ranges.splice(i, j - i, ranges.slice(i, j).reverse().join(''));
+        }
+      }
+      i++;
+    }
+    //
+    // Reverse the groupings before recombining into a single string
+    //
+    return unicodeChars(ranges.reverse().join(''));
+  }
+
+  /**
+   * @param {number} n   The character code to be reversed
+   * @returns {number}   The reversed code, or negative code for a char the
+   *                       needs to be mirrored on output, or n if not reversible
+   */
+  protected mirrored(n: number): number {
+    return reverseMap.get(n) ?? (mirrorSet.has(n) ? -n : n);
   }
 
   /**
@@ -1490,3 +1677,583 @@ export class CommonWrapper<
     return this.jax.text(text);
   }
 }
+
+/**
+ * The mapping of characters to reversed characters
+ * from https://www.unicode.org/Public/UNIDATA/BidiMirroring.txt
+ */
+export const reverseMap = new Map<number, number>([
+  [0x0028, 0x0029], // LEFT PARENTHESIS
+  [0x0029, 0x0028], // RIGHT PARENTHESIS
+  [0x003c, 0x003e], // LESS-THAN SIGN
+  [0x003e, 0x003c], // GREATER-THAN SIGN
+  [0x005b, 0x005d], // LEFT SQUARE BRACKET
+  [0x005d, 0x005b], // RIGHT SQUARE BRACKET
+  [0x007b, 0x007d], // LEFT CURLY BRACKET
+  [0x007d, 0x007b], // RIGHT CURLY BRACKET
+  [0x00ab, 0x00bb], // LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
+  [0x00bb, 0x00ab], // RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
+  [0x0f3a, 0x0f3b], // TIBETAN MARK GUG RTAGS GYON
+  [0x0f3b, 0x0f3a], // TIBETAN MARK GUG RTAGS GYAS
+  [0x0f3c, 0x0f3d], // TIBETAN MARK ANG KHANG GYON
+  [0x0f3d, 0x0f3c], // TIBETAN MARK ANG KHANG GYAS
+  [0x169b, 0x169c], // OGHAM FEATHER MARK
+  [0x169c, 0x169b], // OGHAM REVERSED FEATHER MARK
+  [0x2039, 0x203a], // SINGLE LEFT-POINTING ANGLE QUOTATION MARK
+  [0x203a, 0x2039], // SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
+  [0x2045, 0x2046], // LEFT SQUARE BRACKET WITH QUILL
+  [0x2046, 0x2045], // RIGHT SQUARE BRACKET WITH QUILL
+  [0x207d, 0x207e], // SUPERSCRIPT LEFT PARENTHESIS
+  [0x207e, 0x207d], // SUPERSCRIPT RIGHT PARENTHESIS
+  [0x208d, 0x208e], // SUBSCRIPT LEFT PARENTHESIS
+  [0x208e, 0x208d], // SUBSCRIPT RIGHT PARENTHESIS
+  [0x2208, 0x220b], // ELEMENT OF
+  [0x2209, 0x220c], // [BEST FIT] NOT AN ELEMENT OF
+  [0x220a, 0x220d], // SMALL ELEMENT OF
+  [0x220b, 0x2208], // CONTAINS AS MEMBER
+  [0x220c, 0x2209], // [BEST FIT] DOES NOT CONTAIN AS MEMBER
+  [0x220d, 0x220a], // SMALL CONTAINS AS MEMBER
+  [0x2215, 0x29f5], // DIVISION SLASH
+  [0x221d, 0x1db10], // PROPORTIONAL TO
+  [0x221f, 0x2bfe], // RIGHT ANGLE
+  [0x2220, 0x29a3], // ANGLE
+  [0x2221, 0x299b], // MEASURED ANGLE
+  [0x2222, 0x29a0], // SPHERICAL ANGLE
+  [0x2224, 0x2aee], // DOES NOT DIVIDE
+  [0x223c, 0x223d], // TILDE OPERATOR
+  [0x223d, 0x223c], // REVERSED TILDE
+  [0x2243, 0x22cd], // ASYMPTOTICALLY EQUAL TO
+  [0x2245, 0x224c], // APPROXIMATELY EQUAL TO
+  [0x224c, 0x2245], // ALL EQUAL TO
+  [0x2252, 0x2253], // APPROXIMATELY EQUAL TO OR THE IMAGE OF
+  [0x2253, 0x2252], // IMAGE OF OR APPROXIMATELY EQUAL TO
+  [0x2254, 0x2255], // COLON EQUALS
+  [0x2255, 0x2254], // EQUALS COLON
+  [0x2264, 0x2265], // LESS-THAN OR EQUAL TO
+  [0x2265, 0x2264], // GREATER-THAN OR EQUAL TO
+  [0x2266, 0x2267], // LESS-THAN OVER EQUAL TO
+  [0x2267, 0x2266], // GREATER-THAN OVER EQUAL TO
+  [0x2268, 0x2269], // [BEST FIT] LESS-THAN BUT NOT EQUAL TO
+  [0x2269, 0x2268], // [BEST FIT] GREATER-THAN BUT NOT EQUAL TO
+  [0x226a, 0x226b], // MUCH LESS-THAN
+  [0x226b, 0x226a], // MUCH GREATER-THAN
+  [0x226e, 0x226f], // [BEST FIT] NOT LESS-THAN
+  [0x226f, 0x226e], // [BEST FIT] NOT GREATER-THAN
+  [0x2270, 0x2271], // [BEST FIT] NEITHER LESS-THAN NOR EQUAL TO
+  [0x2271, 0x2270], // [BEST FIT] NEITHER GREATER-THAN NOR EQUAL TO
+  [0x2272, 0x2273], // [BEST FIT] LESS-THAN OR EQUIVALENT TO
+  [0x2273, 0x2272], // [BEST FIT] GREATER-THAN OR EQUIVALENT TO
+  [0x2274, 0x2275], // [BEST FIT] NEITHER LESS-THAN NOR EQUIVALENT TO
+  [0x2275, 0x2274], // [BEST FIT] NEITHER GREATER-THAN NOR EQUIVALENT TO
+  [0x2276, 0x2277], // LESS-THAN OR GREATER-THAN
+  [0x2277, 0x2276], // GREATER-THAN OR LESS-THAN
+  [0x2278, 0x2279], // [BEST FIT] NEITHER LESS-THAN NOR GREATER-THAN
+  [0x2279, 0x2278], // [BEST FIT] NEITHER GREATER-THAN NOR LESS-THAN
+  [0x227a, 0x227b], // PRECEDES
+  [0x227b, 0x227a], // SUCCEEDS
+  [0x227c, 0x227d], // PRECEDES OR EQUAL TO
+  [0x227d, 0x227c], // SUCCEEDS OR EQUAL TO
+  [0x227e, 0x227f], // [BEST FIT] PRECEDES OR EQUIVALENT TO
+  [0x227f, 0x227e], // [BEST FIT] SUCCEEDS OR EQUIVALENT TO
+  [0x2280, 0x2281], // [BEST FIT] DOES NOT PRECEDE
+  [0x2281, 0x2280], // [BEST FIT] DOES NOT SUCCEED
+  [0x2282, 0x2283], // SUBSET OF
+  [0x2283, 0x2282], // SUPERSET OF
+  [0x2284, 0x2285], // [BEST FIT] NOT A SUBSET OF
+  [0x2285, 0x2284], // [BEST FIT] NOT A SUPERSET OF
+  [0x2286, 0x2287], // SUBSET OF OR EQUAL TO
+  [0x2287, 0x2286], // SUPERSET OF OR EQUAL TO
+  [0x2288, 0x2289], // [BEST FIT] NEITHER A SUBSET OF NOR EQUAL TO
+  [0x2289, 0x2288], // [BEST FIT] NEITHER A SUPERSET OF NOR EQUAL TO
+  [0x228a, 0x228b], // [BEST FIT] SUBSET OF WITH NOT EQUAL TO
+  [0x228b, 0x228a], // [BEST FIT] SUPERSET OF WITH NOT EQUAL TO
+  [0x228f, 0x2290], // SQUARE IMAGE OF
+  [0x2290, 0x228f], // SQUARE ORIGINAL OF
+  [0x2291, 0x2292], // SQUARE IMAGE OF OR EQUAL TO
+  [0x2292, 0x2291], // SQUARE ORIGINAL OF OR EQUAL TO
+  [0x2298, 0x29b8], // CIRCLED DIVISION SLASH
+  [0x22a2, 0x22a3], // RIGHT TACK
+  [0x22a3, 0x22a2], // LEFT TACK
+  [0x22a6, 0x2ade], // ASSERTION
+  [0x22a8, 0x2ae4], // TRUE
+  [0x22a9, 0x2ae3], // FORCES
+  [0x22ab, 0x2ae5], // DOUBLE VERTICAL BAR DOUBLE RIGHT TURNSTILE
+  [0x22b0, 0x22b1], // PRECEDES UNDER RELATION
+  [0x22b1, 0x22b0], // SUCCEEDS UNDER RELATION
+  [0x22b2, 0x22b3], // NORMAL SUBGROUP OF
+  [0x22b3, 0x22b2], // CONTAINS AS NORMAL SUBGROUP
+  [0x22b4, 0x22b5], // NORMAL SUBGROUP OF OR EQUAL TO
+  [0x22b5, 0x22b4], // CONTAINS AS NORMAL SUBGROUP OR EQUAL TO
+  [0x22b6, 0x22b7], // ORIGINAL OF
+  [0x22b7, 0x22b6], // IMAGE OF
+  [0x22b8, 0x27dc], // MULTIMAP
+  [0x22c9, 0x22ca], // LEFT NORMAL FACTOR SEMIDIRECT PRODUCT
+  [0x22ca, 0x22c9], // RIGHT NORMAL FACTOR SEMIDIRECT PRODUCT
+  [0x22cb, 0x22cc], // LEFT SEMIDIRECT PRODUCT
+  [0x22cc, 0x22cb], // RIGHT SEMIDIRECT PRODUCT
+  [0x22cd, 0x2243], // REVERSED TILDE EQUALS
+  [0x22d0, 0x22d1], // DOUBLE SUBSET
+  [0x22d1, 0x22d0], // DOUBLE SUPERSET
+  [0x22d6, 0x22d7], // LESS-THAN WITH DOT
+  [0x22d7, 0x22d6], // GREATER-THAN WITH DOT
+  [0x22d8, 0x22d9], // VERY MUCH LESS-THAN
+  [0x22d9, 0x22d8], // VERY MUCH GREATER-THAN
+  [0x22da, 0x22db], // LESS-THAN EQUAL TO OR GREATER-THAN
+  [0x22db, 0x22da], // GREATER-THAN EQUAL TO OR LESS-THAN
+  [0x22dc, 0x22dd], // EQUAL TO OR LESS-THAN
+  [0x22dd, 0x22dc], // EQUAL TO OR GREATER-THAN
+  [0x22de, 0x22df], // EQUAL TO OR PRECEDES
+  [0x22df, 0x22de], // EQUAL TO OR SUCCEEDS
+  [0x22e0, 0x22e1], // [BEST FIT] DOES NOT PRECEDE OR EQUAL
+  [0x22e1, 0x22e0], // [BEST FIT] DOES NOT SUCCEED OR EQUAL
+  [0x22e2, 0x22e3], // [BEST FIT] NOT SQUARE IMAGE OF OR EQUAL TO
+  [0x22e3, 0x22e2], // [BEST FIT] NOT SQUARE ORIGINAL OF OR EQUAL TO
+  [0x22e4, 0x22e5], // [BEST FIT] SQUARE IMAGE OF OR NOT EQUAL TO
+  [0x22e5, 0x22e4], // [BEST FIT] SQUARE ORIGINAL OF OR NOT EQUAL TO
+  [0x22e6, 0x22e7], // [BEST FIT] LESS-THAN BUT NOT EQUIVALENT TO
+  [0x22e7, 0x22e6], // [BEST FIT] GREATER-THAN BUT NOT EQUIVALENT TO
+  [0x22e8, 0x22e9], // [BEST FIT] PRECEDES BUT NOT EQUIVALENT TO
+  [0x22e9, 0x22e8], // [BEST FIT] SUCCEEDS BUT NOT EQUIVALENT TO
+  [0x22ea, 0x22eb], // [BEST FIT] NOT NORMAL SUBGROUP OF
+  [0x22eb, 0x22ea], // [BEST FIT] DOES NOT CONTAIN AS NORMAL SUBGROUP
+  [0x22ec, 0x22ed], // [BEST FIT] NOT NORMAL SUBGROUP OF OR EQUAL TO
+  [0x22ed, 0x22ec], // [BEST FIT] DOES NOT CONTAIN AS NORMAL SUBGROUP OR EQUAL
+  [0x22f0, 0x22f1], // UP RIGHT DIAGONAL ELLIPSIS
+  [0x22f1, 0x22f0], // DOWN RIGHT DIAGONAL ELLIPSIS
+  [0x22f2, 0x22fa], // ELEMENT OF WITH LONG HORIZONTAL STROKE
+  [0x22f3, 0x22fb], // ELEMENT OF WITH VERTICAL BAR AT END OF HORIZONTAL STROKE
+  [0x22f4, 0x22fc], // SMALL ELEMENT OF WITH VERTICAL BAR AT END OF HORIZONTAL STROKE
+  [0x22f6, 0x22fd], // ELEMENT OF WITH OVERBAR
+  [0x22f7, 0x22fe], // SMALL ELEMENT OF WITH OVERBAR
+  [0x22fa, 0x22f2], // CONTAINS WITH LONG HORIZONTAL STROKE
+  [0x22fb, 0x22f3], // CONTAINS WITH VERTICAL BAR AT END OF HORIZONTAL STROKE
+  [0x22fc, 0x22f4], // SMALL CONTAINS WITH VERTICAL BAR AT END OF HORIZONTAL STROKE
+  [0x22fd, 0x22f6], // CONTAINS WITH OVERBAR
+  [0x22fe, 0x22f7], // SMALL CONTAINS WITH OVERBAR
+  [0x2308, 0x2309], // LEFT CEILING
+  [0x2309, 0x2308], // RIGHT CEILING
+  [0x230a, 0x230b], // LEFT FLOOR
+  [0x230b, 0x230a], // RIGHT FLOOR
+  [0x2329, 0x232a], // LEFT-POINTING ANGLE BRACKET
+  [0x232a, 0x2329], // RIGHT-POINTING ANGLE BRACKET
+  [0x2768, 0x2769], // MEDIUM LEFT PARENTHESIS ORNAMENT
+  [0x2769, 0x2768], // MEDIUM RIGHT PARENTHESIS ORNAMENT
+  [0x276a, 0x276b], // MEDIUM FLATTENED LEFT PARENTHESIS ORNAMENT
+  [0x276b, 0x276a], // MEDIUM FLATTENED RIGHT PARENTHESIS ORNAMENT
+  [0x276c, 0x276d], // MEDIUM LEFT-POINTING ANGLE BRACKET ORNAMENT
+  [0x276d, 0x276c], // MEDIUM RIGHT-POINTING ANGLE BRACKET ORNAMENT
+  [0x276e, 0x276f], // HEAVY LEFT-POINTING ANGLE QUOTATION MARK ORNAMENT
+  [0x276f, 0x276e], // HEAVY RIGHT-POINTING ANGLE QUOTATION MARK ORNAMENT
+  [0x2770, 0x2771], // HEAVY LEFT-POINTING ANGLE BRACKET ORNAMENT
+  [0x2771, 0x2770], // HEAVY RIGHT-POINTING ANGLE BRACKET ORNAMENT
+  [0x2772, 0x2773], // LIGHT LEFT TORTOISE SHELL BRACKET ORNAMENT
+  [0x2773, 0x2772], // LIGHT RIGHT TORTOISE SHELL BRACKET ORNAMENT
+  [0x2774, 0x2775], // MEDIUM LEFT CURLY BRACKET ORNAMENT
+  [0x2775, 0x2774], // MEDIUM RIGHT CURLY BRACKET ORNAMENT
+  [0x27c3, 0x27c4], // OPEN SUBSET
+  [0x27c4, 0x27c3], // OPEN SUPERSET
+  [0x27c5, 0x27c6], // LEFT S-SHAPED BAG DELIMITER
+  [0x27c6, 0x27c5], // RIGHT S-SHAPED BAG DELIMITER
+  [0x27c8, 0x27c9], // REVERSE SOLIDUS PRECEDING SUBSET
+  [0x27c9, 0x27c8], // SUPERSET PRECEDING SOLIDUS
+  [0x27cb, 0x27cd], // MATHEMATICAL RISING DIAGONAL
+  [0x27cd, 0x27cb], // MATHEMATICAL FALLING DIAGONAL
+  [0x27d5, 0x27d6], // LEFT OUTER JOIN
+  [0x27d6, 0x27d5], // RIGHT OUTER JOIN
+  [0x27dc, 0x22b8], // LEFT MULTIMAP
+  [0x27dd, 0x27de], // LONG RIGHT TACK
+  [0x27de, 0x27dd], // LONG LEFT TACK
+  [0x27e2, 0x27e3], // WHITE CONCAVE-SIDED DIAMOND WITH LEFTWARDS TICK
+  [0x27e3, 0x27e2], // WHITE CONCAVE-SIDED DIAMOND WITH RIGHTWARDS TICK
+  [0x27e4, 0x27e5], // WHITE SQUARE WITH LEFTWARDS TICK
+  [0x27e5, 0x27e4], // WHITE SQUARE WITH RIGHTWARDS TICK
+  [0x27e6, 0x27e7], // MATHEMATICAL LEFT WHITE SQUARE BRACKET
+  [0x27e7, 0x27e6], // MATHEMATICAL RIGHT WHITE SQUARE BRACKET
+  [0x27e8, 0x27e9], // MATHEMATICAL LEFT ANGLE BRACKET
+  [0x27e9, 0x27e8], // MATHEMATICAL RIGHT ANGLE BRACKET
+  [0x27ea, 0x27eb], // MATHEMATICAL LEFT DOUBLE ANGLE BRACKET
+  [0x27eb, 0x27ea], // MATHEMATICAL RIGHT DOUBLE ANGLE BRACKET
+  [0x27ec, 0x27ed], // MATHEMATICAL LEFT WHITE TORTOISE SHELL BRACKET
+  [0x27ed, 0x27ec], // MATHEMATICAL RIGHT WHITE TORTOISE SHELL BRACKET
+  [0x27ee, 0x27ef], // MATHEMATICAL LEFT FLATTENED PARENTHESIS
+  [0x27ef, 0x27ee], // MATHEMATICAL RIGHT FLATTENED PARENTHESIS
+  [0x2983, 0x2984], // LEFT WHITE CURLY BRACKET
+  [0x2984, 0x2983], // RIGHT WHITE CURLY BRACKET
+  [0x2985, 0x2986], // LEFT WHITE PARENTHESIS
+  [0x2986, 0x2985], // RIGHT WHITE PARENTHESIS
+  [0x2987, 0x2988], // Z NOTATION LEFT IMAGE BRACKET
+  [0x2988, 0x2987], // Z NOTATION RIGHT IMAGE BRACKET
+  [0x2989, 0x298a], // Z NOTATION LEFT BINDING BRACKET
+  [0x298a, 0x2989], // Z NOTATION RIGHT BINDING BRACKET
+  [0x298b, 0x298c], // LEFT SQUARE BRACKET WITH UNDERBAR
+  [0x298c, 0x298b], // RIGHT SQUARE BRACKET WITH UNDERBAR
+  [0x298d, 0x2990], // LEFT SQUARE BRACKET WITH TICK IN TOP CORNER
+  [0x298e, 0x298f], // RIGHT SQUARE BRACKET WITH TICK IN BOTTOM CORNER
+  [0x298f, 0x298e], // LEFT SQUARE BRACKET WITH TICK IN BOTTOM CORNER
+  [0x2990, 0x298d], // RIGHT SQUARE BRACKET WITH TICK IN TOP CORNER
+  [0x2991, 0x2992], // LEFT ANGLE BRACKET WITH DOT
+  [0x2992, 0x2991], // RIGHT ANGLE BRACKET WITH DOT
+  [0x2993, 0x2994], // LEFT ARC LESS-THAN BRACKET
+  [0x2994, 0x2993], // RIGHT ARC GREATER-THAN BRACKET
+  [0x2995, 0x2996], // DOUBLE LEFT ARC GREATER-THAN BRACKET
+  [0x2996, 0x2995], // DOUBLE RIGHT ARC LESS-THAN BRACKET
+  [0x2997, 0x2998], // LEFT BLACK TORTOISE SHELL BRACKET
+  [0x2998, 0x2997], // RIGHT BLACK TORTOISE SHELL BRACKET
+  [0x299b, 0x2221], // MEASURED ANGLE OPENING LEFT
+  [0x29a0, 0x2222], // SPHERICAL ANGLE OPENING LEFT
+  [0x29a3, 0x2220], // REVERSED ANGLE
+  [0x29a4, 0x29a5], // ANGLE WITH UNDERBAR
+  [0x29a5, 0x29a4], // REVERSED ANGLE WITH UNDERBAR
+  [0x29a8, 0x29a9], // MEASURED ANGLE WITH OPEN ARM ENDING IN ARROW POINTING UP AND RIGHT
+  [0x29a9, 0x29a8], // MEASURED ANGLE WITH OPEN ARM ENDING IN ARROW POINTING UP AND LEFT
+  [0x29aa, 0x29ab], // MEASURED ANGLE WITH OPEN ARM ENDING IN ARROW POINTING DOWN AND RIGHT
+  [0x29ab, 0x29aa], // MEASURED ANGLE WITH OPEN ARM ENDING IN ARROW POINTING DOWN AND LEFT
+  [0x29ac, 0x29ad], // MEASURED ANGLE WITH OPEN ARM ENDING IN ARROW POINTING RIGHT AND UP
+  [0x29ad, 0x29ac], // MEASURED ANGLE WITH OPEN ARM ENDING IN ARROW POINTING LEFT AND UP
+  [0x29ae, 0x29af], // MEASURED ANGLE WITH OPEN ARM ENDING IN ARROW POINTING RIGHT AND DOWN
+  [0x29af, 0x29ae], // MEASURED ANGLE WITH OPEN ARM ENDING IN ARROW POINTING LEFT AND DOWN
+  [0x29b8, 0x2298], // CIRCLED REVERSE SOLIDUS
+  [0x29c0, 0x29c1], // CIRCLED LESS-THAN
+  [0x29c1, 0x29c0], // CIRCLED GREATER-THAN
+  [0x29c4, 0x29c5], // SQUARED RISING DIAGONAL SLASH
+  [0x29c5, 0x29c4], // SQUARED FALLING DIAGONAL SLASH
+  [0x29cf, 0x29d0], // LEFT TRIANGLE BESIDE VERTICAL BAR
+  [0x29d0, 0x29cf], // VERTICAL BAR BESIDE RIGHT TRIANGLE
+  [0x29d1, 0x29d2], // BOWTIE WITH LEFT HALF BLACK
+  [0x29d2, 0x29d1], // BOWTIE WITH RIGHT HALF BLACK
+  [0x29d4, 0x29d5], // TIMES WITH LEFT HALF BLACK
+  [0x29d5, 0x29d4], // TIMES WITH RIGHT HALF BLACK
+  [0x29d8, 0x29d9], // LEFT WIGGLY FENCE
+  [0x29d9, 0x29d8], // RIGHT WIGGLY FENCE
+  [0x29da, 0x29db], // LEFT DOUBLE WIGGLY FENCE
+  [0x29db, 0x29da], // RIGHT DOUBLE WIGGLY FENCE
+  [0x29e8, 0x29e9], // DOWN-POINTING TRIANGLE WITH LEFT HALF BLACK
+  [0x29e9, 0x29e8], // DOWN-POINTING TRIANGLE WITH RIGHT HALF BLACK
+  [0x29f5, 0x2215], // REVERSE SOLIDUS OPERATOR
+  [0x29f8, 0x29f9], // BIG SOLIDUS
+  [0x29f9, 0x29f8], // BIG REVERSE SOLIDUS
+  [0x29fc, 0x29fd], // LEFT-POINTING CURVED ANGLE BRACKET
+  [0x29fd, 0x29fc], // RIGHT-POINTING CURVED ANGLE BRACKET
+  [0x2a2b, 0x2a2c], // MINUS SIGN WITH FALLING DOTS
+  [0x2a2c, 0x2a2b], // MINUS SIGN WITH RISING DOTS
+  [0x2a2d, 0x2a2e], // PLUS SIGN IN LEFT HALF CIRCLE
+  [0x2a2e, 0x2a2d], // PLUS SIGN IN RIGHT HALF CIRCLE
+  [0x2a34, 0x2a35], // MULTIPLICATION SIGN IN LEFT HALF CIRCLE
+  [0x2a35, 0x2a34], // MULTIPLICATION SIGN IN RIGHT HALF CIRCLE
+  [0x2a3c, 0x2a3d], // INTERIOR PRODUCT
+  [0x2a3d, 0x2a3c], // RIGHTHAND INTERIOR PRODUCT
+  [0x2a64, 0x2a65], // Z NOTATION DOMAIN ANTIRESTRICTION
+  [0x2a65, 0x2a64], // Z NOTATION RANGE ANTIRESTRICTION
+  [0x2a79, 0x2a7a], // LESS-THAN WITH CIRCLE INSIDE
+  [0x2a7a, 0x2a79], // GREATER-THAN WITH CIRCLE INSIDE
+  [0x2a7b, 0x2a7c], // [BEST FIT] LESS-THAN WITH QUESTION MARK ABOVE
+  [0x2a7c, 0x2a7b], // [BEST FIT] GREATER-THAN WITH QUESTION MARK ABOVE
+  [0x2a7d, 0x2a7e], // LESS-THAN OR SLANTED EQUAL TO
+  [0x2a7e, 0x2a7d], // GREATER-THAN OR SLANTED EQUAL TO
+  [0x2a7f, 0x2a80], // LESS-THAN OR SLANTED EQUAL TO WITH DOT INSIDE
+  [0x2a80, 0x2a7f], // GREATER-THAN OR SLANTED EQUAL TO WITH DOT INSIDE
+  [0x2a81, 0x2a82], // LESS-THAN OR SLANTED EQUAL TO WITH DOT ABOVE
+  [0x2a82, 0x2a81], // GREATER-THAN OR SLANTED EQUAL TO WITH DOT ABOVE
+  [0x2a83, 0x2a84], // LESS-THAN OR SLANTED EQUAL TO WITH DOT ABOVE RIGHT
+  [0x2a84, 0x2a83], // GREATER-THAN OR SLANTED EQUAL TO WITH DOT ABOVE LEFT
+  [0x2a85, 0x2a86], // [BEST FIT] LESS-THAN OR APPROXIMATE
+  [0x2a86, 0x2a85], // [BEST FIT] GREATER-THAN OR APPROXIMATE
+  [0x2a87, 0x2a88], // [BEST FIT] LESS-THAN AND SINGLE-LINE NOT EQUAL TO
+  [0x2a88, 0x2a87], // [BEST FIT] GREATER-THAN AND SINGLE-LINE NOT EQUAL TO
+  [0x2a89, 0x2a8a], // [BEST FIT] LESS-THAN AND NOT APPROXIMATE
+  [0x2a8a, 0x2a89], // [BEST FIT] GREATER-THAN AND NOT APPROXIMATE
+  [0x2a8b, 0x2a8c], // LESS-THAN ABOVE DOUBLE-LINE EQUAL ABOVE GREATER-THAN
+  [0x2a8c, 0x2a8b], // GREATER-THAN ABOVE DOUBLE-LINE EQUAL ABOVE LESS-THAN
+  [0x2a8d, 0x2a8e], // [BEST FIT] LESS-THAN ABOVE SIMILAR OR EQUAL
+  [0x2a8e, 0x2a8d], // [BEST FIT] GREATER-THAN ABOVE SIMILAR OR EQUAL
+  [0x2a8f, 0x2a90], // [BEST FIT] LESS-THAN ABOVE SIMILAR ABOVE GREATER-THAN
+  [0x2a90, 0x2a8f], // [BEST FIT] GREATER-THAN ABOVE SIMILAR ABOVE LESS-THAN
+  [0x2a91, 0x2a92], // LESS-THAN ABOVE GREATER-THAN ABOVE DOUBLE-LINE EQUAL
+  [0x2a92, 0x2a91], // GREATER-THAN ABOVE LESS-THAN ABOVE DOUBLE-LINE EQUAL
+  [0x2a93, 0x2a94], // LESS-THAN ABOVE SLANTED EQUAL ABOVE GREATER-THAN ABOVE SLANTED EQUAL
+  [0x2a94, 0x2a93], // GREATER-THAN ABOVE SLANTED EQUAL ABOVE LESS-THAN ABOVE SLANTED EQUAL
+  [0x2a95, 0x2a96], // SLANTED EQUAL TO OR LESS-THAN
+  [0x2a96, 0x2a95], // SLANTED EQUAL TO OR GREATER-THAN
+  [0x2a97, 0x2a98], // SLANTED EQUAL TO OR LESS-THAN WITH DOT INSIDE
+  [0x2a98, 0x2a97], // SLANTED EQUAL TO OR GREATER-THAN WITH DOT INSIDE
+  [0x2a99, 0x2a9a], // DOUBLE-LINE EQUAL TO OR LESS-THAN
+  [0x2a9a, 0x2a99], // DOUBLE-LINE EQUAL TO OR GREATER-THAN
+  [0x2a9b, 0x2a9c], // DOUBLE-LINE SLANTED EQUAL TO OR LESS-THAN
+  [0x2a9c, 0x2a9b], // DOUBLE-LINE SLANTED EQUAL TO OR GREATER-THAN
+  [0x2a9d, 0x2a9e], // [BEST FIT] SIMILAR OR LESS-THAN
+  [0x2a9e, 0x2a9d], // [BEST FIT] SIMILAR OR GREATER-THAN
+  [0x2a9f, 0x2aa0], // [BEST FIT] SIMILAR ABOVE LESS-THAN ABOVE EQUALS SIGN
+  [0x2aa0, 0x2a9f], // [BEST FIT] SIMILAR ABOVE GREATER-THAN ABOVE EQUALS SIGN
+  [0x2aa1, 0x2aa2], // DOUBLE NESTED LESS-THAN
+  [0x2aa2, 0x2aa1], // DOUBLE NESTED GREATER-THAN
+  [0x2aa6, 0x2aa7], // LESS-THAN CLOSED BY CURVE
+  [0x2aa7, 0x2aa6], // GREATER-THAN CLOSED BY CURVE
+  [0x2aa8, 0x2aa9], // LESS-THAN CLOSED BY CURVE ABOVE SLANTED EQUAL
+  [0x2aa9, 0x2aa8], // GREATER-THAN CLOSED BY CURVE ABOVE SLANTED EQUAL
+  [0x2aaa, 0x2aab], // SMALLER THAN
+  [0x2aab, 0x2aaa], // LARGER THAN
+  [0x2aac, 0x2aad], // SMALLER THAN OR EQUAL TO
+  [0x2aad, 0x2aac], // LARGER THAN OR EQUAL TO
+  [0x2aaf, 0x2ab0], // PRECEDES ABOVE SINGLE-LINE EQUALS SIGN
+  [0x2ab0, 0x2aaf], // SUCCEEDS ABOVE SINGLE-LINE EQUALS SIGN
+  [0x2ab1, 0x2ab2], // [BEST FIT] PRECEDES ABOVE SINGLE-LINE NOT EQUAL TO
+  [0x2ab2, 0x2ab1], // [BEST FIT] SUCCEEDS ABOVE SINGLE-LINE NOT EQUAL TO
+  [0x2ab3, 0x2ab4], // PRECEDES ABOVE EQUALS SIGN
+  [0x2ab4, 0x2ab3], // SUCCEEDS ABOVE EQUALS SIGN
+  [0x2ab5, 0x2ab6], // [BEST FIT] PRECEDES ABOVE NOT EQUAL TO
+  [0x2ab6, 0x2ab5], // [BEST FIT] SUCCEEDS ABOVE NOT EQUAL TO
+  [0x2ab7, 0x2ab8], // [BEST FIT] PRECEDES ABOVE ALMOST EQUAL TO
+  [0x2ab8, 0x2ab7], // [BEST FIT] SUCCEEDS ABOVE ALMOST EQUAL TO
+  [0x2ab9, 0x2aba], // [BEST FIT] PRECEDES ABOVE NOT ALMOST EQUAL TO
+  [0x2aba, 0x2ab9], // [BEST FIT] SUCCEEDS ABOVE NOT ALMOST EQUAL TO
+  [0x2abb, 0x2abc], // DOUBLE PRECEDES
+  [0x2abc, 0x2abb], // DOUBLE SUCCEEDS
+  [0x2abd, 0x2abe], // SUBSET WITH DOT
+  [0x2abe, 0x2abd], // SUPERSET WITH DOT
+  [0x2abf, 0x2ac0], // SUBSET WITH PLUS SIGN BELOW
+  [0x2ac0, 0x2abf], // SUPERSET WITH PLUS SIGN BELOW
+  [0x2ac1, 0x2ac2], // SUBSET WITH MULTIPLICATION SIGN BELOW
+  [0x2ac2, 0x2ac1], // SUPERSET WITH MULTIPLICATION SIGN BELOW
+  [0x2ac3, 0x2ac4], // SUBSET OF OR EQUAL TO WITH DOT ABOVE
+  [0x2ac4, 0x2ac3], // SUPERSET OF OR EQUAL TO WITH DOT ABOVE
+  [0x2ac5, 0x2ac6], // SUBSET OF ABOVE EQUALS SIGN
+  [0x2ac6, 0x2ac5], // SUPERSET OF ABOVE EQUALS SIGN
+  [0x2ac7, 0x2ac8], // [BEST FIT] SUBSET OF ABOVE TILDE OPERATOR
+  [0x2ac8, 0x2ac7], // [BEST FIT] SUPERSET OF ABOVE TILDE OPERATOR
+  [0x2ac9, 0x2aca], // [BEST FIT] SUBSET OF ABOVE ALMOST EQUAL TO
+  [0x2aca, 0x2ac9], // [BEST FIT] SUPERSET OF ABOVE ALMOST EQUAL TO
+  [0x2acb, 0x2acc], // [BEST FIT] SUBSET OF ABOVE NOT EQUAL TO
+  [0x2acc, 0x2acb], // [BEST FIT] SUPERSET OF ABOVE NOT EQUAL TO
+  [0x2acd, 0x2ace], // SQUARE LEFT OPEN BOX OPERATOR
+  [0x2ace, 0x2acd], // SQUARE RIGHT OPEN BOX OPERATOR
+  [0x2acf, 0x2ad0], // CLOSED SUBSET
+  [0x2ad0, 0x2acf], // CLOSED SUPERSET
+  [0x2ad1, 0x2ad2], // CLOSED SUBSET OR EQUAL TO
+  [0x2ad2, 0x2ad1], // CLOSED SUPERSET OR EQUAL TO
+  [0x2ad3, 0x2ad4], // SUBSET ABOVE SUPERSET
+  [0x2ad4, 0x2ad3], // SUPERSET ABOVE SUBSET
+  [0x2ad5, 0x2ad6], // SUBSET ABOVE SUBSET
+  [0x2ad6, 0x2ad5], // SUPERSET ABOVE SUPERSET
+  [0x2ade, 0x22a6], // SHORT LEFT TACK
+  [0x2ae3, 0x22a9], // DOUBLE VERTICAL BAR LEFT TURNSTILE
+  [0x2ae4, 0x22a8], // VERTICAL BAR DOUBLE LEFT TURNSTILE
+  [0x2ae5, 0x22ab], // DOUBLE VERTICAL BAR DOUBLE LEFT TURNSTILE
+  [0x2aec, 0x2aed], // DOUBLE STROKE NOT SIGN
+  [0x2aed, 0x2aec], // REVERSED DOUBLE STROKE NOT SIGN
+  [0x2aee, 0x2224], // DOES NOT DIVIDE WITH REVERSED NEGATION SLASH
+  [0x2af7, 0x2af8], // TRIPLE NESTED LESS-THAN
+  [0x2af8, 0x2af7], // TRIPLE NESTED GREATER-THAN
+  [0x2af9, 0x2afa], // DOUBLE-LINE SLANTED LESS-THAN OR EQUAL TO
+  [0x2afa, 0x2af9], // DOUBLE-LINE SLANTED GREATER-THAN OR EQUAL TO
+  [0x2bfe, 0x221f], // REVERSED RIGHT ANGLE
+  [0x2e02, 0x2e03], // LEFT SUBSTITUTION BRACKET
+  [0x2e03, 0x2e02], // RIGHT SUBSTITUTION BRACKET
+  [0x2e04, 0x2e05], // LEFT DOTTED SUBSTITUTION BRACKET
+  [0x2e05, 0x2e04], // RIGHT DOTTED SUBSTITUTION BRACKET
+  [0x2e09, 0x2e0a], // LEFT TRANSPOSITION BRACKET
+  [0x2e0a, 0x2e09], // RIGHT TRANSPOSITION BRACKET
+  [0x2e0c, 0x2e0d], // LEFT RAISED OMISSION BRACKET
+  [0x2e0d, 0x2e0c], // RIGHT RAISED OMISSION BRACKET
+  [0x2e1c, 0x2e1d], // LEFT LOW PARAPHRASE BRACKET
+  [0x2e1d, 0x2e1c], // RIGHT LOW PARAPHRASE BRACKET
+  [0x2e20, 0x2e21], // LEFT VERTICAL BAR WITH QUILL
+  [0x2e21, 0x2e20], // RIGHT VERTICAL BAR WITH QUILL
+  [0x2e22, 0x2e23], // TOP LEFT HALF BRACKET
+  [0x2e23, 0x2e22], // TOP RIGHT HALF BRACKET
+  [0x2e24, 0x2e25], // BOTTOM LEFT HALF BRACKET
+  [0x2e25, 0x2e24], // BOTTOM RIGHT HALF BRACKET
+  [0x2e26, 0x2e27], // LEFT SIDEWAYS U BRACKET
+  [0x2e27, 0x2e26], // RIGHT SIDEWAYS U BRACKET
+  [0x2e28, 0x2e29], // LEFT DOUBLE PARENTHESIS
+  [0x2e29, 0x2e28], // RIGHT DOUBLE PARENTHESIS
+  [0x2e55, 0x2e56], // LEFT SQUARE BRACKET WITH STROKE
+  [0x2e56, 0x2e55], // RIGHT SQUARE BRACKET WITH STROKE
+  [0x2e57, 0x2e58], // LEFT SQUARE BRACKET WITH DOUBLE STROKE
+  [0x2e58, 0x2e57], // RIGHT SQUARE BRACKET WITH DOUBLE STROKE
+  [0x2e59, 0x2e5a], // TOP HALF LEFT PARENTHESIS
+  [0x2e5a, 0x2e59], // TOP HALF RIGHT PARENTHESIS
+  [0x2e5b, 0x2e5c], // BOTTOM HALF LEFT PARENTHESIS
+  [0x2e5c, 0x2e5b], // BOTTOM HALF RIGHT PARENTHESIS
+  [0x2e62, 0x2e63], // LEFT PARENTHESIS WITH MIDDLE RING
+  [0x2e63, 0x2e62], // RIGHT PARENTHESIS WITH MIDDLE RING
+  [0x3008, 0x3009], // LEFT ANGLE BRACKET
+  [0x3009, 0x3008], // RIGHT ANGLE BRACKET
+  [0x300a, 0x300b], // LEFT DOUBLE ANGLE BRACKET
+  [0x300b, 0x300a], // RIGHT DOUBLE ANGLE BRACKET
+  [0x300c, 0x300d], // [BEST FIT] LEFT CORNER BRACKET
+  [0x300d, 0x300c], // [BEST FIT] RIGHT CORNER BRACKET
+  [0x300e, 0x300f], // [BEST FIT] LEFT WHITE CORNER BRACKET
+  [0x300f, 0x300e], // [BEST FIT] RIGHT WHITE CORNER BRACKET
+  [0x3010, 0x3011], // LEFT BLACK LENTICULAR BRACKET
+  [0x3011, 0x3010], // RIGHT BLACK LENTICULAR BRACKET
+  [0x3014, 0x3015], // LEFT TORTOISE SHELL BRACKET
+  [0x3015, 0x3014], // RIGHT TORTOISE SHELL BRACKET
+  [0x3016, 0x3017], // LEFT WHITE LENTICULAR BRACKET
+  [0x3017, 0x3016], // RIGHT WHITE LENTICULAR BRACKET
+  [0x3018, 0x3019], // LEFT WHITE TORTOISE SHELL BRACKET
+  [0x3019, 0x3018], // RIGHT WHITE TORTOISE SHELL BRACKET
+  [0x301a, 0x301b], // LEFT WHITE SQUARE BRACKET
+  [0x301b, 0x301a], // RIGHT WHITE SQUARE BRACKET
+  [0xfe59, 0xfe5a], // SMALL LEFT PARENTHESIS
+  [0xfe5a, 0xfe59], // SMALL RIGHT PARENTHESIS
+  [0xfe5b, 0xfe5c], // SMALL LEFT CURLY BRACKET
+  [0xfe5c, 0xfe5b], // SMALL RIGHT CURLY BRACKET
+  [0xfe5d, 0xfe5e], // SMALL LEFT TORTOISE SHELL BRACKET
+  [0xfe5e, 0xfe5d], // SMALL RIGHT TORTOISE SHELL BRACKET
+  [0xfe64, 0xfe65], // SMALL LESS-THAN SIGN
+  [0xfe65, 0xfe64], // SMALL GREATER-THAN SIGN
+  [0xff08, 0xff09], // FULLWIDTH LEFT PARENTHESIS
+  [0xff09, 0xff08], // FULLWIDTH RIGHT PARENTHESIS
+  [0xff1c, 0xff1e], // FULLWIDTH LESS-THAN SIGN
+  [0xff1e, 0xff1c], // FULLWIDTH GREATER-THAN SIGN
+  [0xff3b, 0xff3d], // FULLWIDTH LEFT SQUARE BRACKET
+  [0xff3d, 0xff3b], // FULLWIDTH RIGHT SQUARE BRACKET
+  [0xff5b, 0xff5d], // FULLWIDTH LEFT CURLY BRACKET
+  [0xff5d, 0xff5b], // FULLWIDTH RIGHT CURLY BRACKET
+  [0xff5f, 0xff60], // FULLWIDTH LEFT WHITE PARENTHESIS
+  [0xff60, 0xff5f], // FULLWIDTH RIGHT WHITE PARENTHESIS
+  [0xff62, 0xff63], // [BEST FIT] HALFWIDTH LEFT CORNER BRACKET
+  [0xff63, 0xff62], // [BEST FIT] HALFWIDTH RIGHT CORNER BRACKET
+  [0x1db10, 0x221d], // CARTESIAN EQUALS SIGN
+  [0x1db03, 0x1db04], // LEIBNIZIAN GREATER-THAN
+  [0x1db04, 0x1db03], // LEIBNIZIAN LESS-THAN
+  [0x1db05, 0x1db06], // LEIBNIZIAN GREATER-THAN WITH SMALL P
+  [0x1db06, 0x1db05], // LEIBNIZIAN LESS-THAN WITH SMALL P
+  [0x1db08, 0x1db09], // INVERTED SQUARE LEFT OPEN BOX OPERATOR
+  [0x1db09, 0x1db08], // INVERTED SQUARE RIGHT OPEN BOX OPERATOR
+]);
+
+/**
+ * The glpyhs that must be mirrored by hand (no available reflected glyph)
+ * from https://www.unicode.org/Public/UNIDATA/BidiMirroring.txt
+ */
+export const mirrorSet = new Set<number>([
+  0x2140, // DOUBLE-STRUCK N-ARY SUMMATION
+  0x2201, // COMPLEMENT
+  0x2202, // PARTIAL DIFFERENTIAL
+  0x2203, // THERE EXISTS
+  0x2204, // THERE DOES NOT EXIST
+  0x2211, // N-ARY SUMMATION
+  0x2216, // SET MINUS
+  0x221a, // SQUARE ROOT
+  0x221b, // CUBE ROOT
+  0x221c, // FOURTH ROOT
+  0x2226, // NOT PARALLEL TO
+  0x222b, // INTEGRAL
+  0x222c, // DOUBLE INTEGRAL
+  0x222d, // TRIPLE INTEGRAL
+  0x222e, // CONTOUR INTEGRAL
+  0x222f, // SURFACE INTEGRAL
+  0x2230, // VOLUME INTEGRAL
+  0x2231, // CLOCKWISE INTEGRAL
+  0x2232, // CLOCKWISE CONTOUR INTEGRAL
+  0x2233, // ANTICLOCKWISE CONTOUR INTEGRAL
+  0x2239, // EXCESS
+  0x223b, // HOMOTHETIC
+  0x223e, // INVERTED LAZY S
+  0x223f, // SINE WAVE
+  0x2240, // WREATH PRODUCT
+  0x2241, // NOT TILDE
+  0x2242, // MINUS TILDE
+  0x2244, // NOT ASYMPTOTICALLY EQUAL TO
+  0x2246, // APPROXIMATELY BUT NOT ACTUALLY EQUAL TO
+  0x2247, // NEITHER APPROXIMATELY NOR ACTUALLY EQUAL TO
+  0x2248, // ALMOST EQUAL TO
+  0x2249, // NOT ALMOST EQUAL TO
+  0x224a, // ALMOST EQUAL OR EQUAL TO
+  0x224b, // TRIPLE TILDE
+  0x225f, // QUESTIONED EQUAL TO
+  0x2260, // NOT EQUAL TO
+  0x2262, // NOT IDENTICAL TO
+  0x226d, // NOT EQUIVALENT TO
+  0x228c, // MULTISET
+  0x22a7, // MODELS
+  0x22aa, // TRIPLE VERTICAL BAR RIGHT TURNSTILE
+  0x22ac, // DOES NOT PROVE
+  0x22ad, // NOT TRUE
+  0x22ae, // DOES NOT FORCE
+  0x22af, // NEGATED DOUBLE VERTICAL BAR DOUBLE RIGHT TURNSTILE
+  0x22be, // RIGHT ANGLE WITH ARC
+  0x22bf, // RIGHT TRIANGLE
+  0x22f5, // ELEMENT OF WITH DOT ABOVE
+  0x22f8, // ELEMENT OF WITH UNDERBAR
+  0x22f9, // ELEMENT OF WITH TWO HORIZONTAL STROKES
+  0x22ff, // Z NOTATION BAG MEMBERSHIP
+  0x2320, // TOP HALF INTEGRAL
+  0x2321, // BOTTOM HALF INTEGRAL
+  0x27c0, // THREE DIMENSIONAL ANGLE
+  0x27cc, // LONG DIVISION
+  0x27d3, // LOWER RIGHT CORNER WITH DOT
+  0x27d4, // UPPER LEFT CORNER WITH DOT
+  0x299c, // RIGHT ANGLE VARIANT WITH SQUARE
+  0x299d, // MEASURED RIGHT ANGLE WITH DOT
+  0x299e, // ANGLE WITH S INSIDE
+  0x299f, // ACUTE ANGLE
+  0x29a2, // TURNED ANGLE
+  0x29a6, // OBLIQUE ANGLE OPENING UP
+  0x29a7, // OBLIQUE ANGLE OPENING DOWN
+  0x29c2, // CIRCLE WITH SMALL CIRCLE TO THE RIGHT
+  0x29c3, // CIRCLE WITH TWO HORIZONTAL STROKES TO THE RIGHT
+  0x29c9, // TWO JOINED SQUARES
+  0x29ce, // RIGHT TRIANGLE ABOVE LEFT TRIANGLE
+  0x29dc, // INCOMPLETE INFINITY
+  0x29e1, // INCREASES AS
+  0x29e3, // EQUALS SIGN AND SLANTED PARALLEL
+  0x29e4, // EQUALS SIGN AND SLANTED PARALLEL WITH TILDE ABOVE
+  0x29e5, // IDENTICAL TO AND SLANTED PARALLEL
+  0x29f4, // RULE-DELAYED
+  0x29f6, // SOLIDUS WITH OVERBAR
+  0x29f7, // REVERSE SOLIDUS WITH HORIZONTAL STROKE
+  0x2a0a, // MODULO TWO SUM
+  0x2a0b, // SUMMATION WITH INTEGRAL
+  0x2a0c, // QUADRUPLE INTEGRAL OPERATOR
+  0x2a0d, // FINITE PART INTEGRAL
+  0x2a0e, // INTEGRAL WITH DOUBLE STROKE
+  0x2a0f, // INTEGRAL AVERAGE WITH SLASH
+  0x2a10, // CIRCULATION FUNCTION
+  0x2a11, // ANTICLOCKWISE INTEGRATION
+  0x2a12, // LINE INTEGRATION WITH RECTANGULAR PATH AROUND POLE
+  0x2a13, // LINE INTEGRATION WITH SEMICIRCULAR PATH AROUND POLE
+  0x2a14, // LINE INTEGRATION NOT INCLUDING THE POLE
+  0x2a15, // INTEGRAL AROUND A POINT OPERATOR
+  0x2a16, // QUATERNION INTEGRAL OPERATOR
+  0x2a17, // INTEGRAL WITH LEFTWARDS ARROW WITH HOOK
+  0x2a18, // INTEGRAL WITH TIMES SIGN
+  0x2a19, // INTEGRAL WITH INTERSECTION
+  0x2a1a, // INTEGRAL WITH UNION
+  0x2a1b, // INTEGRAL WITH OVERBAR
+  0x2a1c, // INTEGRAL WITH UNDERBAR
+  0x2a1e, // LARGE LEFT TRIANGLE OPERATOR
+  0x2a1f, // Z NOTATION SCHEMA COMPOSITION
+  0x2a20, // Z NOTATION SCHEMA PIPING
+  0x2a21, // Z NOTATION SCHEMA PROJECTION
+  0x2a24, // PLUS SIGN WITH TILDE ABOVE
+  0x2a26, // PLUS SIGN WITH TILDE BELOW
+  0x2a29, // MINUS SIGN WITH COMMA ABOVE
+  0x2a3e, // Z NOTATION RELATIONAL COMPOSITION
+  0x2a57, // SLOPING LARGE OR
+  0x2a58, // SLOPING LARGE AND
+  0x2a6a, // TILDE OPERATOR WITH DOT ABOVE
+  0x2a6b, // TILDE OPERATOR WITH RISING DOTS
+  0x2a6c, // SIMILAR MINUS SIMILAR
+  0x2a6d, // CONGRUENT WITH DOT ABOVE
+  0x2a6f, // ALMOST EQUAL TO WITH CIRCUMFLEX ACCENT
+  0x2a70, // APPROXIMATELY EQUAL OR EQUAL TO
+  0x2a73, // EQUALS SIGN ABOVE TILDE OPERATOR
+  0x2a74, // DOUBLE COLON EQUAL
+  0x2aa3, // DOUBLE NESTED LESS-THAN WITH UNDERBAR
+  0x2adc, // FORKING
+  0x2ae2, // VERTICAL BAR TRIPLE RIGHT TURNSTILE
+  0x2ae6, // LONG DASH FROM LEFT MEMBER OF DOUBLE VERTICAL
+  0x2af3, // PARALLEL WITH TILDE OPERATOR
+  0x2afb, // TRIPLE SOLIDUS BINARY RELATION
+  0x2afd, // DOUBLE SOLIDUS OPERATOR
+  0x1d6db, // MATHEMATICAL BOLD PARTIAL DIFFERENTIAL
+  0x1d715, // MATHEMATICAL ITALIC PARTIAL DIFFERENTIAL
+  0x1d74f, // MATHEMATICAL BOLD ITALIC PARTIAL DIFFERENTIAL
+  0x1d789, // MATHEMATICAL SANS-SERIF BOLD PARTIAL DIFFERENTIAL
+  0x1d7c3, // MATHEMATICAL SANS-SERIF BOLD ITALIC PARTIAL DIFFERENTIAL
+  0x1db17, // LEIBNIZIAN COINCIDENCE
+  0x1db18, // INVERTED LAZY S OVER LAZY S
+  0x1db1b, // LEIBNIZIAN DISSIMILARITY
+]);

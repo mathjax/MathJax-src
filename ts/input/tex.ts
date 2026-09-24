@@ -250,6 +250,9 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D, ParseOptions> {
       NodeUtil.setAttribute(node, 'display', 'block');
     }
     this.parseOptions.tags.finishEquation(math);
+    if (math.inputData.bidi) {
+      NodeUtil.setProperty(node, 'bidi', 'true');
+    }
     this.parseOptions.root = node;
     this.executeFilters(this.postFilters, math, document, this.parseOptions);
     //

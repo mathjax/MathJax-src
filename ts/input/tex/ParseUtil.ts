@@ -29,6 +29,7 @@ import NodeUtil from './NodeUtil.js';
 import TexParser from './TexParser.js';
 import { texError } from './TexError.js';
 import { entities } from '../../util/Entities.js';
+import { rtlRanges } from '../../util/string.js';
 import { MmlMunderover } from '../../core/MmlTree/MmlNodes/munderover.js';
 import { UnitUtil } from './UnitUtil.js';
 
@@ -444,7 +445,8 @@ export const ParseUtil = {
       c,
       node,
       match = '',
-      braces = 0;
+      braces = 0,
+      dir = '';
     if (text.match(/\\?[${}\\]|\\\(|\\(?:eq)?ref\s*\{|\\U/)) {
       while (i < text.length) {
         c = text.charAt(i++);
@@ -552,8 +554,14 @@ export const ParseUtil = {
                 c +
                 text.substring(i + arg[0].length);
               i = i - 2 + c.length;
+              if (!dir && c.match(/\p{L}/u)?.[0]) {
+                dir = c;
+              }
             }
           }
+        } else if (!dir) {
+          const c = String.fromCodePoint(text.codePointAt(i - 1));
+          dir ||= c.match(/\p{L}/u)?.[0];
         }
       }
       if (match !== '') {
@@ -564,6 +572,9 @@ export const ParseUtil = {
     if (k < text.length) {
       // @test Interspersed Text, Mbox Mbox
       mml.push(ParseUtil.internalText(parser, text.slice(k), def));
+    }
+    if (dir) {
+      dir = mml.length > 1 && dir.match(rtlRanges) ? 'rtl' : '';
     }
     if (level != null) {
       // @test Label, Fbox, Hbox
@@ -576,6 +587,10 @@ export const ParseUtil = {
     } else if (mml.length > 1) {
       // @test Interspersed Text
       mml = [parser.create('node', 'mrow', mml)];
+    }
+    if (dir) {
+      mml[0].attributes.set('dir', dir);
+      parser.configuration.mathItem.inputData.bidi = true;
     }
     return mml;
   },

@@ -404,6 +404,7 @@ export abstract class CommonOutputJax<
     const linebreaks = (this.options.linebreaks.LinebreakVisitor ||
       LinebreakVisitor) as typeof Linebreaks;
     this.linebreaks = new linebreaks(this.factory);
+    this.preFilters.add(this.filterBidi.bind(this));
   }
 
   /**
@@ -431,6 +432,47 @@ export abstract class CommonOutputJax<
     prefix: string = ''
   ): string[] {
     return this.font.addExtension(font, prefix);
+  }
+
+  /**
+   * Look through the MathML tree for dir attributes and mark the nodes that change direction.
+   *
+   * @param {MathItem} math   The MathItem to filter for dir attributes
+   */
+  protected filterBidi({ math }: { math: MathItem<N, T, D> }) {
+    const attributes = math.root.attributes;
+    if (attributes.get('dir') === 'rtl') {
+      attributes.set('dir', 'rtl'); // make it explicit if default has changed.
+      math.root.setProperty('bidi', true);
+    }
+    if (!math.root.getProperty('bidi')) return;
+    this.checkBidi(math.root, 'ltr');
+  }
+
+  /**
+   * Recursively look for dir attributes in the tree
+   *
+   * @param {MmlNode} node    The node whose tree is to be checked
+   * @param {string} curDir   The current inherited dir value
+   */
+  protected checkBidi(node: MmlNode, curDir: string) {
+    if (node.isToken) {
+      if (curDir === 'rtl') {
+        node.setProperty('reverse', true);
+        node.setProperty('reverse-text', true);
+      } else if (node.attributes.getExplicit('dir') === 'rtl') {
+        node.setProperty('reverse-text', true);
+      }
+      return;
+    }
+    const dir = node.attributes.getExplicit('dir') as string;
+    if (dir && dir !== curDir) {
+      node.setProperty('reverse', true);
+      curDir = dir;
+    }
+    for (const child of node.childNodes) {
+      this.checkBidi(child, curDir);
+    }
   }
 
   /*****************************************************************/

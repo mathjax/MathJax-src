@@ -111,3 +111,10 @@ export function replaceUnicode(text: string): string {
 export function toEntity(c: string): string {
   return `&#x${c.codePointAt(0).toString(16).toUpperCase()};`;
 }
+
+/**
+ * The pattern to check for RTL languages.
+ * (From https://www.unicode.org/Public/UCD/latest/ucd/extracted/DerivedBidiClass.txt)
+ */
+export const rtlRanges =
+  /[\u0590-\u08FF\uFB1D-\uFEFF\u{10800}-\u{10FFF}\u{1E800}-\u{1EFFF}]+/u;

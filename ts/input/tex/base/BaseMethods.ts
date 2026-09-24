@@ -1429,6 +1429,22 @@ const BaseMethods: { [key: string]: ParseMethod } = {
   },
 
   /**
+   * Implements \rtl and \ltr.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   * @param {string} dir         The direction to set.
+   */
+  Dir(parser: TexParser, name: string, dir: string) {
+    const arg = parser.GetArgumentMML(parser, name);
+    NodeUtil.setAttribute(arg, 'dir', dir);
+    if (dir === 'rtl') {
+      parser.configuration.mathItem.inputData.bidi = 'true';
+    }
+    parser.Push(arg);
+  },
+
+  /**
    * Handle \\not.
    *
    * @param {TexParser} parser The calling parser.
