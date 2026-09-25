@@ -14,7 +14,7 @@ jobs:
     name: Build and publish MathJax
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - uses: pnpm/setup@v3
         name: Install pnpm, Node.js and packages
