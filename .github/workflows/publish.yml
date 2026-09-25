@@ -16,15 +16,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
         name: Install pnpm
         with:
-          version: 10
+          version: 12
           run_install: false
 
       - uses: actions/setup-node@v5
         with:
-          node-version: '24'
+          node-version: '26'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install packages
