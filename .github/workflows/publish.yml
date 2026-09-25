@@ -14,21 +14,13 @@ jobs:
     name: Build and publish MathJax
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v6
-        name: Install pnpm
+      - uses: pnpm/setup@v3
+        name: Install pnpm, Node.js and packages
         with:
           version: 12
-          run_install: false
-
-      - uses: actions/setup-node@v5
-        with:
-          node-version: '26'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install packages
-        run: pnpm i
+          runtime: node@26
 
       - name: Build MathJax
         run: |

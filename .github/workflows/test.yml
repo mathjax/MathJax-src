@@ -14,19 +14,15 @@ jobs:
     name: Compile and test MathJax
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v6
-        name: Install pnpm
+      - uses: pnpm/setup@v3
+        name: Install pnpm and Node.js
         with:
           version: 12
-          run_install: false
-
-      - name: Install Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 26
-          cache: 'pnpm'
+          runtime: node@26
+          cache: true
+          install: false
 
       - name: Install packages
         run: |
