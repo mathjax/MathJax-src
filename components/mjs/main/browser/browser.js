@@ -6,6 +6,19 @@ if (hasWindow) {
   window.exports ??= {};
 }
 
+/**
+ * This funciton is called below and by ../main.js in order to create
+ * the needed init() function that is exported for initializing
+ * MathJax and returning the completed MathJax object.  For use in node,
+ * the nodeSetup function is called to do extra setup (like setting the
+ * the asyncLoad function and getting the path to the MathJax files), and
+ * the adaptor will be added to the loading list if one isnt already
+ * inclkuded there.
+ *
+ * @param {() => void} nodeSetup   The function to do extra setup for node
+ * @param {string} adaptor         The adaptor to use for node
+ * @returns {(config} => MathJax}  The init() function for export
+ */
 export function makeInit(nodeSetup = null, adaptor = '') {
   return async function init(config, component = 'startup') {
     Loader.preLoaded('loader', 'core');
