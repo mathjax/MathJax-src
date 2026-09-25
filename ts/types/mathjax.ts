@@ -24,18 +24,24 @@
 import type {
   DOM_TYPES,
   COMPONENT_DEF,
+  COMPONENTS_OF,
   COMBINE,
   TYPES2MJX,
   TYPES2MJX_OBJECT,
   TYPES2MJX_CONFIG,
 } from './Types.js';
-import { COMPONENTS } from './Components.js';
+import type { COMPONENTS, ADAPTORS } from './Components.js';
 
 /**
  * A union of component names, array of names, or explicit component definitions.
  */
 export type COMPONENT_LIST<D extends DOM_TYPES> =
   COMPONENT_DEF | keyof COMPONENTS<D> | (keyof COMPONENTS<D>)[];
+
+/**
+ * The list of adaptor names;
+ */
+export type ADAPTOR_LIST = keyof ADAPTORS;
 
 /**
  * Map component names to their type defintions, leaving explicit definitions as they are.
@@ -59,6 +65,16 @@ export type MJX_TYPES<T extends COMPONENT_LIST<D>, D extends DOM_TYPES> =
 /* prettier-ignore */
 export type MJX_DEF<T extends COMPONENT_LIST<D>, D extends DOM_TYPES> =
   COMBINE<MJX_TYPES<T extends (keyof COMPONENTS<D>)[] ? T[number] : T, D>>;
+
+/**
+ * They components available in the list of component definitions
+ *
+ * @template T   The union of component names, array of names, or definitions.
+ * @template D   The DOM node types to use in the types that need them.
+ */
+/* prettier-ignore */
+export type MJX_COMPONENTS<T extends COMPONENT_LIST<D>, D extends DOM_TYPES> =
+  keyof COMPONENTS_OF<MJX_DEF<T, D>>;
 
 /**
  * The type for the MathJax object based on a collection of component names and DOM element types.
@@ -89,4 +105,49 @@ export type MJX_OBJECT<T extends COMPONENT_LIST<D>, D extends DOM_TYPES> =
  */
 /* prettier-ignore */
 export type MJX_CONFIG<T extends COMPONENT_LIST<D>, D extends DOM_TYPES> =
-  TYPES2MJX_CONFIG<MJX_DEF<T, D>>;
+  TYPES2MJX_CONFIG<MJX_DEF<T, D>, D>;
+
+export type ADAPTOR_DOM<A extends ADAPTOR_LIST> = ADAPTORS[A]['DOM'];
+
+/**
+ * The type for the MathJax object based on a collection of component names and DOM adatpor.
+ * This is for both configuration and after Mathjax is loaded.
+ *
+ * @template T   The union of component names, array of names, or definitions.
+ * @template A   The DOM adaptor to use (default is liteDOM).
+ */
+/* prettier-ignore */
+export type MATHJAX<T extends COMPONENT_LIST<ADAPTOR_DOM<A>>, A extends ADAPTOR_LIST = 'liteDOM'> =
+  MJX<ADAPTORS[A]['component'] | T, ADAPTOR_DOM<A>>;
+
+/**
+ * The type for the completed MathJax object (after MathJax is loaded)
+ * for a given set of components and a DOM adaptor.
+ *
+ * @template T   The union of component names, array of names, or definitions.
+ * @template A   The DOM adaptor to use (default is liteDOM).
+ */
+/* prettier-ignore */
+export type MATHJAX_OBJECT<T extends COMPONENT_LIST<ADAPTOR_DOM<A>>, A extends ADAPTOR_LIST = 'liteDOM'> =
+  MJX_OBJECT<ADAPTORS[A]['component'] | T, ADAPTOR_DOM<A>>;
+
+/**
+ * The type for the MathJax object as a config object (before loading MathJax)
+ * for a given set of components and a DOM adaptor.
+ *
+ * @template T   The union of component names, array of names, or definitions.
+ * @template A   The DOM adaptor to use (default is liteDOM).
+ */
+/* prettier-ignore */
+export type MATHJAX_CONFIG<T extends COMPONENT_LIST<ADAPTOR_DOM<A>>, A extends ADAPTOR_LIST = 'liteDOM'> =
+  MJX_CONFIG<ADAPTORS[A]['component'] | T, ADAPTOR_DOM<A>>;
+
+/**
+ * The components that are configured in the MathJax object.
+ *
+ * @template T   The union of component names, array of names, or definitions.
+ * @template A   The DOM adaptor to use (default is liteDOM).
+ */
+/* prettier-ignore */
+export type MATHJAX_COMPONENTS<T extends COMPONENT_LIST<ADAPTOR_DOM<A>>, A extends ADAPTOR_LIST = 'liteDOM'> =
+  MJX_COMPONENTS<T, ADAPTOR_DOM<A>>;
