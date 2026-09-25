@@ -1439,7 +1439,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const arg = parser.GetArgumentMML(parser, name);
     NodeUtil.setAttribute(arg, 'dir', dir);
     if (dir === 'rtl') {
-      parser.configuration.mathItem.inputData.bidi = 'true';
+      parser.configuration.mathItem.inputData.bidi = true;
     }
     parser.Push(arg);
   },
