@@ -73,6 +73,11 @@ export type JAXLIST = { [jax: string]: true };
 export type COMPONENTLIST = { [name: string]: true };
 
 /**
+ * A list with tex package names as keys
+ */
+export type PACKAGELIST = { [name: string]: true };
+
+/**
  * A component configuration object
  */
 export type COMPONENT_DEF = {
@@ -81,6 +86,7 @@ export type COMPONENT_DEF = {
   input?: JAXLIST;
   output?: JAXLIST;
   component?: COMPONENTLIST;
+  tex_package?: PACKAGELIST;
 };
 
 /**
@@ -184,7 +190,49 @@ export type LOADER<T> =
     : EMPTY;
 
 /**
- * Define document options
+ * Restrict the loader.load array to the components that were specified.
+ *
+ * @template T   The configurtation object
+ * @template C   The components that can be loaded
+ */
+/* prettier-ignore */
+export type LOAD<T, C> =
+  T extends { loader: { load: string[] } }
+    ? Omit<T, 'loader'> & { loader: Omit<T['loader'], 'load'> & { load: C[] } }
+    : T;
+
+/**
+ * Restrict the tex.package array to the packages that were loaded.
+ *
+ * @template T   The configurtation object
+ * @template C   The packages that were loaded
+ */
+/* prettier-ignore */
+export type PACKAGES<T, C> =
+  T extends { tex: { packages: string[] } }
+    ? Omit<T, 'tex'> & { tex: Omit<T['tex'], 'packages'> & { packages: C[] } }
+    : T;
+
+/**
+ * Give a proper type for the argument to ready() and pageRady().
+ *
+ * @template T   The configurtation object
+ * @template M   The MathJax object type to use
+ */
+/* prettier-ignore */
+export type READY<T, M> =
+  T extends { startup: { ready: any, pageReady: any } }
+    ? Omit<T, 'startup'> &
+      {
+        startup: Omit<T['startup'], 'ready' | 'pageReady'> & {
+          ready(mjx: M): void;
+          pageReady(mjx: M): Promise<void>;
+        }
+      }
+    : T;
+
+/**
+ * Define document options.
  *
  * @template C   The options to define
  */
@@ -195,7 +243,7 @@ export type DOC_OPTIONS<C> = {
 };
 
 /**
- * Define the startup document type
+ * Define the startup document type.
  *
  * @template T   The document type to use
  */
@@ -222,9 +270,10 @@ export type EMPTY_COMPONENT<N extends string> = {
  * @template N   The name of the package
  * @template C   The package options
  */
-export type TEX_PACKAGE<N extends string, C> = {
+export type TEX_PACKAGE<N extends string, C = EMPTY> = {
   component: { [name in N as `[tex]/${name}`]: true };
   config: { tex: C };
+  tex_package: { [name in N]: true };
 };
 
 /**
@@ -283,17 +332,29 @@ export type OUTPUTJAX<J extends string, C, DOM extends DOM_TYPES> = {
 
 /**
  * Create the `config` property from the definition's `config` and `component` properties
+ *
+ * @template T   The component configuration object
+ * @template D   The DOM node types
+ * @template R   True if ready functions should be modified, false if not
  */
 /* prettier-ignore */
-export type CONFIG<T extends COMPONENT_DEF> =
-  OPTIONAL<T['config'] & LOADER<T['component']>>;
+export type CONFIG<T extends COMPONENT_DEF, D extends DOM_TYPES, R extends boolean = true> =
+  OPTIONAL<
+    LOAD<
+      PACKAGES<
+        R extends true ? READY<T['config'], TYPES2MJX_OBJECT<T, D, false>> : T['config'],
+        keyof T['tex_package']
+      >,
+      keyof COMPONENTS_OF<T>
+    > & LOADER<T['component']>
+  >;
 
 /**
  * Add types for the MathJax.startup.mathjax.document function so its
  * options are checked, and its output reflects the type of the
  * document created by the loaded components.
  *
- * @template T   The typ eobject to modify
+ * @template T   The type object to modify
  */
 /* prettier-ignore */
 export type ADD_MATHJAX<T> =
@@ -309,6 +370,14 @@ export type ADD_MATHJAX<T> =
     : T;
 
 /**
+ * The (merged) component object (whose keys are the name sof the components)
+ * in the given component definition list.
+ *
+ * @template T   The definitions of the components to include (as DEF1 & ... & DEFn)
+ */
+export type COMPONENTS_OF<T extends COMPONENT_DEF> = T['component'];
+
+/**
  * The type for the MathJax object based on a collection of component definitions.
  * This is for both configuration and after Mathjax is loaded.
  *
@@ -318,8 +387,8 @@ export type ADD_MATHJAX<T> =
 /* prettier-ignore */
 export type TYPES2MJX<T extends COMPONENT_DEF, D extends DOM_TYPES> =
   ADD_MATHJAX<{ version?: string, _?: any } &
-  OPTIONAL<T['properties'] & CONFIG_ARRAYS<CONFIG<T>>> &
-  { config?: CONFIG<T> } &
+  OPTIONAL<T['properties'] & CONFIG_ARRAYS<CONFIG<T, D>>> &
+  { config?: CONFIG<T, D> } &
   CONVERTJAX<T['input'], T['output'], D>>;
 
 /**
@@ -327,19 +396,21 @@ export type TYPES2MJX<T extends COMPONENT_DEF, D extends DOM_TYPES> =
  *
  * @template T   The definitions of the components to include (as DEF1 & ... & DEFn)
  * @template D   The DOM node types to use
+ * @template R   True to adjust ready() and pageReady() parameters
  */
 /* prettier-ignore */
-export type TYPES2MJX_OBJECT<T extends COMPONENT_DEF, D extends DOM_TYPES> =
+export type TYPES2MJX_OBJECT<T extends COMPONENT_DEF, D extends DOM_TYPES, R extends boolean = true> =
   ADD_MATHJAX<{ version: string, _: any } &
   T['properties'] &
-  { config: CONFIG_ARRAYS<CONFIG<T>> } &
+  { config: CONFIG_ARRAYS<CONFIG<T, D, R>> } &
   CONVERTJAX<T['input'], T['output'], D>>;
 
 /**
  * The type for the MathJax object as a config object (before loading MathJax).
  *
  * @template T   The definitions of the components to include (as DEF1 & ... & DEFn)
+ * @template D   The DOM node types to use
  */
-export type TYPES2MJX_CONFIG<T extends COMPONENT_DEF> = CONFIG_ARRAYS<
-  CONFIG<T>
->;
+/* prettier-ignore */
+export type TYPES2MJX_CONFIG<T extends COMPONENT_DEF, D extends DOM_TYPES> =
+  CONFIG_ARRAYS<CONFIG<T, D>>;

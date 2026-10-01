@@ -128,7 +128,7 @@ const options: Omit<OPTIONS, 'settings'> & { settings: SETTINGS & A11Y } = {
     zoom: 'NoZoom',
     zscale: '200%',
     renderer: 'CHTML',
-    locale: Locale.default,
+    locale: Locale.current,
     alt: true,
     cmd: false,
     ctrl: false,

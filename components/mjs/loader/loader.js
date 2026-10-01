@@ -15,7 +15,13 @@ combineDefaults(MathJax.config.loader, 'provides', provides);
 
 let locale = MathJax.config.locale ?? Locale.current;
 try { locale = localStorage.getitem('MathJax-locale') ?? locale; } catch (_err) {}
+if (MathJax.config.options?.sre) {
+  combineDefaults(MathJax.config.options, 'sre', { locale });
+}
+const load = CONFIG.load;
+CONFIG.load = [];
 Locale.setLocale(locale)
-  .then(() => Loader.load(...CONFIG.load))
+  .then(() => Loader.load(...load))
   .then(() => CONFIG.ready())
+  .then(() => CONFIG.load = load)
   .catch((message, name) => CONFIG.failed(message, name));
