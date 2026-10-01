@@ -60,7 +60,7 @@ export class CommonWrapperFactory<
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   CC extends CharOptions,
-  VV extends VariantData<CC>,
+  VV extends VariantData<CC, DD>,
   DD extends DelimiterData,
   FD extends FontData<CC, any, DD>,
   FC extends FontDataClass<CC, VV, DD>,
