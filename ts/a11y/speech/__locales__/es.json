@@ -1,8 +1,14 @@
 {
+  "NoBraille": "Braille not available",
+  "NoSpeech": "Speech not available",
   "ProsodyError": "Se produjo un error en la coincidencia de la prosodia",
   "SpeechError": "Error de generación de voz:",
   "Worker/Cancelled": "Tarea %1 cancelada",
+  "Worker/Failed": "MathJax webworker failed to load: %1",
+  "Worker/FailedFrom": "MathJax webworker failed to load from %2: %1",
+  "Worker/Warning": "Warning: MathJax is not able to generate speech for the mathematics on this page",
+  "Worker/Maps": "MathJax webworker failed to load math map: %1",
+  "Worker/MapsFrom": "MathJax webworker failed to load math map from %2: %1",
   "Worker/NotStarted": "El worker no se ha iniciado",
-  "Worker/Started": "El worker ya está iniciado",
   "Worker/Terminate": "%1 cancelada por la finalización de WorkerHandler"
 }
