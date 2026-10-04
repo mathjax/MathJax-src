@@ -6,7 +6,7 @@
   "Help/Title": "Hilfe zum MathJax Expression Explorer",
   "JumpTo": "Springe zu Zeile %1 und Spalte",
   "Mac/Select": "oder die VoiceOver-Pfeiltasten, um einen Ausdruck auszuwählen",
-  "Mac/Title":  "macOS und iOS mit VoiceOver",
+  "Mac/Title": "macOS und iOS mit VoiceOver",
   "PositionMarked": "Position markiert",
   "Unix/Select": "Orca sollte automatisch in den Fokusmodus wechseln. Ist dies nicht der Fall, kannst du den Fokusmodus mit der Tastenkombination „Orca+a“ ein- oder ausschalten. Beachte außerdem, dass du mit „Orca+Pfeiltasten“ Ausdrücke auch im Durchsichtmodus untersuchen kannst.",
   "Unix/Title": "Unix mit Orca",
