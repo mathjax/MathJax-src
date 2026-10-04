@@ -32,7 +32,7 @@
   "MultipleLabel": "Etiket '%1' meervoudig gedefinieer",
   "MultipleMoveRoot": "Veelvuldige gebruik van %1",
   "NotMathMLToken": "%1 is nie 'n tekenelement nie",
-  "PositiveIntegerArg": "Argument vir %1 moet 'n positiewe heelgetal wees",
+  "PositiveIntegerArg": "Die argument vir %1 moet 'n positiewe heelgetal wees",
   "TooManyAligns": "Te veel belyningskarakters: %1",
   "UndefinedControlSequence": "Ongedefinieerde kontrolevolgorde %1",
   "UnknownAttrForElement": "%1 is nie 'n herkende attribuut vir %2 nie",
