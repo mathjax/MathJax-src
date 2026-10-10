@@ -241,6 +241,9 @@ export interface CommonWrapperClass<
   rtlRange: RegExp;
   rtlSplit: RegExp;
 
+  LTR_TOKENS: TokenList;
+  RTL_TOKENS: TokenList;
+
   /**
    * Add any styles for this wrapper class
    *
@@ -1443,7 +1446,7 @@ export class CommonWrapper<
    * These are powers of 2 so they can be ORed together for testing if
    * a token value is one of several choices.
    */
-  public static LTR_TOKENS = {
+  public static LTR_TOKENS: TokenList = {
     DIR: 16,
 
     PENDING: 0,
@@ -1458,7 +1461,7 @@ export class CommonWrapper<
 
     NO_REVERSE: 1 | 4 | 16 | 64,
   };
-  public static RTL_TOKENS = {
+  public static RTL_TOKENS: TokenList = {
     DIR: 16,
 
     PENDING: 0,
