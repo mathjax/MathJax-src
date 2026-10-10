@@ -22,7 +22,7 @@
  */
 
 export const SEM = {
-  ADDED: 'data-semanitic-added',
+  ADDED: 'data-semantic-added',
   ATTRIBUTES: 'data-semantic-attributes',
   CHILDREN: 'data-semantic-children',
   COLLAPSIBLE: 'data-semantic-collapsible',

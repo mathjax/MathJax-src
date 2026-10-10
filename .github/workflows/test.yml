@@ -14,19 +14,15 @@ jobs:
     name: Compile and test MathJax
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
-        name: Install pnpm
+      - uses: pnpm/setup@v3
+        name: Install pnpm and Node.js
         with:
-          version: 11
-          run_install: false
-
-      - name: Install Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 24
-          cache: 'pnpm'
+          version: 12
+          runtime: node@26
+          cache: true
+          install: false
 
       - name: Install packages
         run: |
@@ -51,7 +47,7 @@ jobs:
         run: pnpm --silent test:gh
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: mathjax/MathJax-src

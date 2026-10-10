@@ -40,8 +40,8 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    * @template D  The Document class
    */
   filterURL<N, T, D>(safe: Safe<N, T, D>, url: string): string | null {
-    const protocol = (url.match(/^\s*([a-z\n\r]+):/i) || [null, ''])[1]
-      .replace(/[\n\r]/g, '')
+    const protocol = (url.match(/^\s*([a-z\t\n\r]+):/i) || [null, ''])[1]
+      .replace(/[\t\n\r]/g, '')
       .toLowerCase();
     const allow = safe.allow.URLs;
     return allow === 'all' ||
@@ -319,7 +319,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} value      The attribute's value
    * @param {string} id         The attribute's id (e.g., data-mjx-variant)
-   * @returns {number|null}     The sanitized value or null
+   * @returns {string|null}     The sanitized value or null
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class

@@ -22,12 +22,7 @@
  */
 
 import type { ExplorerMathDocument } from '../explorer.js';
-import {
-  DummyRegion,
-  Region,
-  HoverRegion,
-  ToolTip,
-} from './Region.js';
+import { DummyRegion, Region, HoverRegion, ToolTip } from './Region.js';
 import { Explorer, AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
 import type { ExplorerMathItem } from '../explorer.js';

@@ -289,7 +289,7 @@ export abstract class Startup {
    *                             included an array of input jax
    */
   public static useInput(name: string, force: boolean = false) {
-    if (CONFIG.input.length === 0 || force) {
+    if (!inputSpecified || force) {
       CONFIG.input.push(name);
     }
   }
@@ -688,3 +688,8 @@ if (typeof MathJax._.startup === 'undefined') {
  * Export the startup configuration for convenience
  */
 export const CONFIG = MathJax.config.startup;
+
+/*
+ * Tells if the user configuration included input jax or not
+ */
+const inputSpecified = CONFIG.input.length !== 0;
