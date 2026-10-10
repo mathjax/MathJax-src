@@ -147,7 +147,19 @@ export class MJContextMenu extends ContextMenu {
     this.nofocus = false;
   }
 
+  public keydown(event: KeyboardEvent) {
+    if (event.key === 'Tab') {
+      this.unpost();
+    }
+    super.keydown(event);
+  }
+
   /*======================================================================*/
+
+  public generateHtml() {
+    super.generateHtml();
+    this.html.setAttribute('aria-label', localize('Title/Menu'));
+  }
 
   /**
    * Find an item in the menu (recursively descending into submenus, if needed)

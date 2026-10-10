@@ -28,7 +28,7 @@ import { Explorer, AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
 import { HILITE, SAVED_HREF } from './strings.js';
 import { SEM } from '../semantic-enrich/strings.js';
-import { SPEECH } from '../speech/strings.js';
+import { SPEECH, BRAILLE } from '../speech/strings.js';
 import { MACTION } from '../semantic-enrich/maction.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, SemAttr } from '../speech/SpeechUtil.js';
@@ -383,7 +383,7 @@ export class SpeechExplorer
       this.Start();
       this.backTab = event.target === this.img;
     } else if (!this.focusSpeech) {
-      this.speak('');  // don't speak initial equation until click event
+      this.speak(''); // don't speak initial equation until click event
     }
     this.clicked = null;
   }
@@ -1206,10 +1206,10 @@ export class SpeechExplorer
     ssml: string[] = null,
     description: string = this.none
   ) {
-    if (!this.node.getAttribute('data-speech-attached') && speech) {
+    if (!this.node.getAttribute(SPEECH.ATTACHED) && speech) {
       speech = localize('Word/Math');
     }
-    if (!this.node.getAttribute('data-braille-attached') && braille) {
+    if (!this.node.getAttribute(BRAILLE.ATTACHED) && braille) {
       braille = localize('Word/Math');
     }
     const oldspeech = this.speech;
