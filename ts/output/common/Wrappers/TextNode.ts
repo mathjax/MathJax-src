@@ -151,12 +151,19 @@ export function CommonTextNodeMixin<
     extends Base
     implements CommonTextNode<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
   {
+    protected charCache: number[] = null;
+
     /**
      * @override
      */
     public remappedText(text: string, variant: string): number[] {
-      const c = this.parent.stretch.c;
-      return c ? [c] : this.parent.remapChars(this.unicodeChars(text, variant));
+      if (!this.charCache) {
+        const c = this.parent.stretch.c;
+        this.charCache = c
+          ? [c]
+          : this.parent.remapChars(this.unicodeChars(text, variant));
+      }
+      return this.charCache;
     }
 
     /******************************************************/

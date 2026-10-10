@@ -412,6 +412,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
             Wx = Math.max(HFUZZ, 2 * options.dx - HFUZZ);
           }
           const n = Math.min(Math.ceil(W / Wx) + 1, 500);
+          if (n < 1) return;
           if (options.cmb) {
             nodes.push(this.html('mjx-spacer'));
             for (let i = 0; i < n; i++) {

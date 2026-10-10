@@ -89,7 +89,7 @@ export function split(x: string): string[] {
 }
 
 /**
- * Replace \U{...} with the specified unicode character and \\ with \
+ * Replace \U{...} with the specified unicode character and a few quoted characters
  *
  * @param {string} text   The string to be scanned for \U{...} and \\
  * @returns {string}      The string with the unicode characters in place of \U{...}
@@ -98,7 +98,7 @@ export function replaceUnicode(text: string): string {
   return text.replace(
     /\\U(?:([0-9A-Fa-f]{4})|\{\s*([0-9A-Fa-f]{1,6})\s*\})|\\./g,
     (m, h1, h2) =>
-      m === '\\\\' ? '\\' : String.fromCodePoint(parseInt(h1 || h2, 16))
+      m.match(/\\[\\{}%]/) ? m.charAt(1) : m.length === 2 ? m : String.fromCodePoint(parseInt(h1 || h2, 16))
   );
 }
 

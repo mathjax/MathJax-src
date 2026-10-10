@@ -86,10 +86,7 @@ export class TextParser extends TexParser {
   ) {
     super(text, env, configuration);
     this.level = level;
-    this.configuration.mathItem =
-      this.configuration.packageData.get(
-        'textmacros'
-      ).texParser.configuration.mathItem;
+    this.configuration.mathItem = this.texParser.configuration.mathItem;
   }
 
   /**
@@ -148,10 +145,8 @@ export class TextParser extends TexParser {
   public saveText() {
     if (this.text) {
       if (!this.dir) {
-        const c = this.text.match(/\p{L}/u)?.[0];
-        if (c) {
-          this.dir = c.match(rtlRanges) ? 'rtl' : 'ltr';
-        }
+        const c = String.fromCodePoint(this.text.codePointAt(0));
+        this.dir = c.match(rtlRanges) ? 'rtl' : 'ltr';
       }
       const mathvariant = this.stack.env.mathvariant;
       const text = ParseUtil.internalText(

@@ -119,6 +119,15 @@ export type StyleData = {
   };
 };
 
+/**
+ * Type for bidi-support
+ */
+type Range = [number[], number] | [Range[], number, number?];
+type TokenList = { [name: string]: number };
+
+const SPACES = (ranges: Range[], n: number, TOKEN: TokenList) =>
+  ranges[n]?.[1] === TOKEN.SPACE ? 1 : 0;
+
 /*********************************************************/
 
 /**
@@ -1414,7 +1423,7 @@ export class CommonWrapper<
    */
   public static letterChar = /\p{L}/u;
   public static spaceChars = /^\s+$/;
-  public static symChars = /[\p{P}\p{Sm}\p{Sc}\p{Sk}\p{M}]/u;
+  public static symChars = /\p{P}|[\p{Sm}\p{Sc}\p{Sk}\p{M}]+/u;
   public static numChars = RegExp(
     '[\\p{Sc}%]*(?:\\p{N}(?:[\\p{N}\\p{Sc},./;:%]*[-+])*[\\p{N}\\p{Sc},./;:%]*)*\\p{N}[\\p{Sc}%]*',
     'u'
@@ -1424,9 +1433,46 @@ export class CommonWrapper<
     'u'
   );
   public static rtlSplit = RegExp(
-    `(${this.rtlRange.source}|${this.numChars.source}|${this.symChars.source}+|\\s+)`,
+    `(${this.rtlRange.source}|${this.numChars.source}|${this.symChars.source}|\\s+)`,
     'u'
   );
+
+  /**
+   * These are the token codes for LTR and RTL directions, with the
+   * only difference being which of LTR and RTL is the highest one.
+   * These are powers of 2 so they can be ORed together for testing if
+   * a token value is one of several choices.
+   */
+  public static LTR_TOKENS = {
+    DIR: 16,
+
+    PENDING: 0,
+    SPACE: 1,
+    SYMBOL: 2,
+    NUMBER: 4,
+    RTL: 8,
+    LTR: 16,
+    LTR_RTL: 8 | 16,
+    GROUP: 32,
+    COMBINED: 64,
+
+    NO_REVERSE: 1 | 4 | 16 | 64,
+  };
+  public static RTL_TOKENS = {
+    DIR: 16,
+
+    PENDING: 0,
+    SPACE: 1,
+    SYMBOL: 2,
+    NUMBER: 4,
+    LTR: 8,
+    RTL: 16,
+    LTR_RTL: 8 | 16,
+    GROUP: 32,
+    COMBINED: 64,
+
+    NO_REVERSE: 1 | 4 | 8 | 64,
+  };
 
   /**
    * @param {number[]} chars    The array of unicode character numbers to remap
@@ -1434,154 +1480,422 @@ export class CommonWrapper<
    */
   public remapChars(chars: number[]): number[] {
     //
-    // If the string has no RTL characters, nothing needs to be done.
-    // Otherwsie, split the string into LTR, RTL, number, and space
-    // ranges and call the proper handler for the current direction.
+    // If the string has no RTL characters and we aren't reversing,
+    // (the usual case) nothing needs to be done.  Otherwsie, tokenize
+    // the text string, process the ranges, and return the
+    // modified character array.
     //
-    // (This is not the actual unicode bidi algorithm, which would
-    // require much more data to implement, but this should cover
-    // most of the practical situations.  For complete support, set
-    // the mtextInheritFont to true and use <mtext> or \text{} for
-    // the content.)
-    //
+    const reverse = !!this.node.getProperty('reverse-text');
     const text = unicodeString(chars);
-    if (!text.match(rtlRanges)) {
+    if (!text.match(rtlRanges) && !reverse) {
       return chars;
     }
-    const ranges = text.split(CommonWrapper.rtlSplit);
-    return this.node.getProperty('reverse-text')
-      ? this.remapRTL(ranges)
-      : this.remapLTR(ranges);
+    const CLASS = this.constructor as typeof CommonWrapper;
+    const TOKEN = reverse ? CLASS.RTL_TOKENS : CLASS.LTR_TOKENS;
+    const ranges = this.remapTokenize(text, TOKEN);
+    return this.remapProcess(ranges[0][0] as Range[], TOKEN)[0][0] as number[];
   }
 
   /**
-   * Processes a sequence of character ranges in the LTR direction.
+   * Cactegorize the component strings according to their token types,
+   * and collect delimited groups into sub-arrays, along with the
+   * maximum of the token types within the group needed to determine the
+   * directionality for the group as a whole.
    *
-   * @param {string[]} ranges   The LTR/RTL/number/space ranges
-   * @returns {number[]}        The reordered character array
+   * @param {string} text       The text string to be tokenized
+   * @param {TokenList} TOKEN   The token values to use (for the `dir` attribute).
+   * @returns {Range[]}         The array of ranges (substrings with token values).
    */
-  protected remapLTR(ranges: string[]): number[] {
+  protected remapTokenize(text: string, TOKEN: TokenList): Range[] {
     const CLASS = this.constructor as typeof CommonWrapper;
-    let i = 0;
-    while (i < ranges.length) {
-      //
-      // Find LTR/space/number sequences that can start with
-      // numbers or letters, and not ending in spaces.  Then combine
-      // into one range.
-      //
-      if (!ranges[i].match(CLASS.spaceChars)) {
-        let j = i + 1;
-        while (j < ranges.length && !ranges[j].match(CLASS.rtlRange)) j += 2;
-        if (j > i && ranges[j - 2]?.match(CLASS.spaceChars)) j -= 2;
-        if (j > i + 1) {
-          ranges.splice(i, j - i, ranges.slice(i, j).join(''));
-        }
+    const ADD = (...range: [string | number[] | Range[], number, number?]) => {
+      if (typeof range[0] === 'string') {
+        range[0] = unicodeChars(range[0] as string);
       }
-      i++;
-      //
-      // Find RTL/space/number sequences that start with RTL and end
-      // with RLT or number, then reverse any non-number ranges, then
-      // combine into one range.
-      //
-      if (ranges[i]?.match(CLASS.rtlRange)) {
-        let j = i + 1;
-        while (j < ranges.length && ranges[j] === '') j += 2;
-        while (
-          !ranges[j - 1]?.match(CLASS.rtlRange) &&
-          !ranges[j - 1]?.match(CLASS.numChars)
-        ) {
-          j -= 2;
-        }
-        for (let k = i; k < j; k += 2) {
-          if (!ranges[k].match(CLASS.numChars)) {
-            ranges[k] = unicodeString(
-              unicodeChars(ranges[k])
-                .reverse()
-                .map((c) => this.mirrored(c))
-            );
-          }
-        }
-        ranges.splice(i, j - i, ranges.slice(i, j).reverse().join(''));
+      ranges.push(range as Range);
+      const type = range[2] ?? range[1];
+      if (type > max) {
+        max = type;
       }
-      i++;
-    }
-    return unicodeChars(ranges.join(''));
-  }
-
-  /**
-   * Processes a sequence of character ranges in the RTL direction.
-   *
-   * @param {string[]} ranges   The LTR/RTL/number/space ranges
-   * @returns {number[]}        The reordered character array
-   */
-  protected remapRTL(ranges: string[]): number[] {
-    const CLASS = this.constructor as typeof CommonWrapper;
-    let i = 0;
-    let rtlFound = false;
-    while (i < ranges.length) {
-      //
-      // Find LTR/space/number sequences that start with letters, and
-      // not ending in spaces.  Then combine into one range.  Record
-      // whether we have found RTL yet (in case there are symbol
-      // ranges before the first one).
-      //
-      if (ranges[i].match(CLASS.letterChar)) {
-        let j = i + 1;
-        while (j < ranges.length) {
-          if (ranges[j].match(CLASS.rtlRange)) {
-            rtlFound = true;
-            break;
+    };
+    const ranges: Range[] = [];
+    const delims = []; // The pending open delimiters
+    const delimI = []; // The indices of the delimiters in the ranges array
+    const delimM = []; // The max values at that point in the ranges
+    let max = 0; //       The maximum token value so far
+    let i = -1;
+    //
+    // Split the string into blocks of RTL letters, numbers, spaces,
+    // and symbols, with the intervening LTR letters in between.
+    //
+    // Then loop through the blocks, assign each its appropriate token
+    // value, and add it to the `ranges` array, keeping track of the
+    // maximum token value used so far.
+    //
+    //
+    // The split() command above breaks the string so that every other
+    // substring is LTR, but possibly empty.  These have even indices.
+    // The others will be RTL runs, numbers (with possible leading or
+    // trailing currency symbols, and possible commas and decimal
+    // points or plus and minus signs within), open or close
+    // delimiters, or runs of other non-letter symbols.
+    //
+    // We use the individual patterns to check for which kind each
+    // block (with an odd index) is, and push the proper token for it.
+    //
+    const blocks = text.split(CLASS.rtlSplit);
+    while (++i < blocks.length) {
+      const block = blocks[i];
+      if (i % 2 === 0) {
+        if (block) {
+          ADD(block, TOKEN.LTR);
+        }
+      } else {
+        if (block.match(CLASS.rtlRange)) {
+          ADD(block, TOKEN.RTL);
+        } else if (block.match(CLASS.numChars)) {
+          ADD(block, TOKEN.NUMBER);
+        } else if (bidiOpen.has(block)) {
+          //
+          // For open delimiters, we keep track of the delimiters so
+          // that we can match them against closing delimiters later,
+          // and store the index of the open delimiter in order to be
+          // able to collect the groups into sub-ranges when they are
+          // closed.  We store the current "max" value so that after a
+          // group is formed we can pick up where we left off, the
+          // maximum is computed for each group separately.  Thus we
+          // set set it to 0 as a group starts.
+          //
+          delimI.push(ranges.length);
+          ADD(block, TOKEN.SYMBOL);
+          delims.push(block);
+          delimM.push(max);
+          max = 0;
+        } else if (bidiClose.has(block)) {
+          //
+          // For close delimiters, we look to see if there is a
+          // matching open delimiter (unmatched open delimiters are
+          // ignored).  When a matching open is found, we add it to
+          // the furrent list, then set "MAX" to include the maximums
+          // of any unmatched open delimiters (since open delims set
+          // "max" to 0, the current "max" value may not include
+          // higher values that were before the unmatched open
+          // delimiter).  We restore "max" to what it was when the
+          // group started, then add the group as a new sub-range
+          // (which also updates "max" to include the group).
+          // Finally, we drop any data from the mateched open
+          // delimiter and any following unmatched ones.
+          //
+          const k = delims.lastIndexOf(bidiClose.get(block));
+          if (k >= 0) {
+            ADD(block, TOKEN.SYMBOL);
+            const MAX = Math.max(...delimM.slice(k + 1), max);
+            max = delimM[k];
+            ADD(ranges.splice(delimI[k]), TOKEN.GROUP, MAX);
+            delimM.splice(k);
+            delimI.splice(k);
+            delims.splice(k);
+          } else {
+            ADD(block, TOKEN.SYMBOL);
           }
-          j += 2;
-        }
-        while (
-          j > i &&
-          !ranges[j - 1]?.match(CLASS.letterChar) &&
-          !ranges[j - 2]?.match(CLASS.numChars)
-        ) {
-          j -= 2;
-        }
-        if (j > i + 1) {
-          ranges.splice(i, j - i, ranges.slice(i, j).join(''));
-        }
-      }
-      i++;
-      //
-      // Find RTL/space/number sequences that don't start or end with
-      // spaces, then reverse any non-number ranges, and finally
-      // combine into one range.
-      //
-      if (i < ranges.length && !ranges[i]?.match(CLASS.spaceChars)) {
-        if (!rtlFound) {
-          if (!ranges[i].match(CLASS.numChars)) {
-            ranges[i] = unicodeString(
-              unicodeChars(ranges[i])
-                .reverse()
-                .map((c) => this.mirrored(c))
-            );
-          }
+        } else if (block.match(CLASS.spaceChars)) {
+          ADD(block, TOKEN.SPACE);
         } else {
-          let j = i + 1;
-          while (j < ranges.length - 1 && ranges[j] === '') j += 2;
-          while (ranges[j - 1]?.match(CLASS.spaceChars)) j -= 2;
-          for (let k = i; k < j; k += 2) {
-            if (!ranges[k].match(CLASS.numChars)) {
-              ranges[k] = unicodeString(
-                unicodeChars(ranges[k])
-                  .reverse()
-                  .map((c) => this.mirrored(c))
-              );
+          ADD(block, TOKEN.SYMBOL);
+        }
+      }
+    }
+    //
+    // We return the final ranges as a group with the proper direction
+    //
+    return [[ranges, TOKEN.GROUP, TOKEN.DIR]];
+  }
+
+  /**
+   * Process the tokenized ranges to put the blocks in the right order
+   * for output that will be generated left to right.  It may be called
+   * recursively to process delimited sub-ranges.  The `ranges` array is modified
+   * so that the final result is a single entry with the character codes in the
+   * needed order.
+   *
+   * @param {Range[]} ranges       The tokenized ranges to process
+   * @param {TokenList} TOKEN      The token values for the main direction (for the `dir` attribute)
+   * @param {number} dir           The direction for the given range as a while
+   * @param {number} mode          The starting direction to use (inherited from outside a sub-group)
+   * @param {number} first         The initial index to start processing (after any initial delimiter and spaces)
+   * @param {number} last          The number of final ranges to skip (any trailing spaces and delimiter)
+   * @param {boolean} afterGroup   True if this group follows a delimited group (and interveneing symbols)
+   * @returns {[Range, number]}    The combined result of processing the ranges, and the mode in effect at the end
+   */
+  protected remapProcess(
+    ranges: Range[],
+    TOKEN: TokenList,
+    dir: number = TOKEN.DIR,
+    mode: number = dir,
+    first: number = SPACES(ranges, 0, TOKEN),
+    last: number = SPACES(ranges, ranges.length - 1, TOKEN),
+    afterGroup: boolean = false
+  ): [Range, number] {
+    let i = first - 1;
+    let start = first; //        The start of the current LTR or RTL range that is being collected
+    let end = start - 1; //      The end of the current LTR or RTL range
+    let max = TOKEN.PENDING; //  The highest token value encountered so far
+    let nextmode: number; //     The mode to use after a delimited group has been added
+
+    //
+    // Loop through the ranges looking for runs that will be collected
+    // as a single RTL or LTR run to be combined as a unit.  Delimited
+    // groups are processed recirsively, taking into account the
+    // preceding and following tokens to set their initial direction
+    // and mode.
+    //
+    while (++i < ranges.length - last) {
+      let type = ranges[i][1]; //  The current token type
+      let combineGroup = false; // True when a group should end the current LTR or RTL group
+
+      if (type === TOKEN.GROUP) {
+        //
+        // For a group, its type is the maximum of the tokens it
+        // contains (stored in its third entry).  This will be used after to group is
+        // processed to combnine it into a larger LTR or RTL run, when appropriate.
+        //
+        type = ranges[i][2];
+        //
+        // We look to see if it is in the interior of an LTR or RTL
+        // run that is opposite to the direction of the ranges as a
+        // whole, and set combineGroup to false if so.
+        //
+        // This can happen if:
+        //   we are not directly following a group (possibly with intervening spaces and symbols), and
+        //   the mode is different from the main direction of the ranges, and
+        //   we have processed an actual LTR or RTL character before this, and
+        //   either
+        //     the group has only spaces, symbols, and numbers, or
+        //     the group has characters that are in the same direction as the current run
+        //
+        // If these conditions aren't met, then the group is not inside a larger run.
+        //
+        combineGroup = true;
+        if (
+          !afterGroup &&
+          mode !== dir &&
+          max >= TOKEN.NUMBER &&
+          (type <= TOKEN.NUMBER || mode === type)
+        ) {
+          const target = TOKEN.LTR_RTL | TOKEN.NUMBER;
+          for (let j = i + 1; j < ranges.length - last; j++) {
+            const next = ranges[j][2] ?? ranges[j][1];
+            if (next & target) {
+              combineGroup = !(next & (mode | TOKEN.NUMBER));
+              break;
             }
           }
-          ranges.splice(i, j - i, ranges.slice(i, j).reverse().join(''));
+        }
+        //
+        // The direction for the group depends on whether the group is
+        // interior to an LTR or RTL run (combineGroup is false), in
+        // which case the group is processed with the direction being
+        // that of the the surrounding run.  Otherewise, if we are
+        // directory following a group (with possible symbols and
+        // spaces in between), or are a group of only symbols and
+        // spaces, or there are only symbols or spaces before the
+        // group, then the group is processed in the primary direction
+        // of the ranges as a whole.  Otherwise, the direction of the
+        // group is the higher of the current mode and the type of the
+        // group (which is the maximum token value within the group).
+        // That is, in an element with DIR="LTR", if a group
+        // containing an LTR character follows an RTL run, it will be
+        // processed in the LTR direction, while if it contains only
+        // symbols, numbers, and RTL characters, it will be processed
+        // in the RTL direction.
+        //
+        const groupDir = combineGroup
+          ? afterGroup || type === TOKEN.SYMBOL || max <= TOKEN.SYMBOL
+            ? dir
+            : Math.max(type, mode)
+          : mode;
+        //
+        // Recursively process the group sub-ranges using the group
+        // direction and the current mode, skipping the intial
+        // delimter and spaces, and the traiing spaces and delimiter
+        // (they will be handled at the end).
+        //
+        // The group's range is replaced by the result of processing
+        // the group (a single combined range), and its final mode is
+        // saved for later.
+        //
+        const group = ranges[i][0] as Range[];
+        [ranges[i], nextmode] = this.remapProcess(
+          group,
+          TOKEN,
+          groupDir,
+          mode,
+          1 + SPACES(group, 1, TOKEN),
+          1 + SPACES(group, group.length - 2, TOKEN),
+          afterGroup
+        );
+      }
+
+      //
+      // Process the current item (either the combined group or a regular type)
+      //
+      if (type === TOKEN.NUMBER) {
+        //
+        // If there hasn't been an actual LTR or RTL character yet, we
+        // start a new run that will get its mode from the next LTR or
+        // RTL character.
+        //
+        // In any case, we extend the current (or new) run to include
+        // this number, and we are no longer following a group if we
+        // were before.
+        //
+        if (max < type) {
+          start = i;
+        }
+        end = i;
+        afterGroup = false;
+      } else if (type & TOKEN.LTR_RTL) {
+        //
+        // For an actual LTR or RTL character, we check if the
+        // character extends a current run of the same type, or is
+        // changing to the other type.
+        //
+        if (type === mode) {
+          //
+          // Extending the current run, if we are at the beginning of
+          // a group (only preceeding symbols and spaces), mark this
+          // as the start of the run (symbols and spaces aren't included).
+          //
+          if (max <= TOKEN.SYMBOL) {
+            start = i;
+          }
+        } else {
+          //
+          // When changing the mode, if there was something in the run
+          // before this (i.e., numbers or letters), then combine the
+          // current run using the current mode.
+          //
+          // Next we determine whether the new mode has already
+          // started at a preceeding number (that would have been at
+          // the beginning of the ranges), or we should start a new
+          // run here.  We don't want to include a number of the
+          // current mode is the same as the direction of the ranges
+          // as a whole, however.  That is, if the direction is RTL
+          // and there is an initial number followed by an RTL letter,
+          // we don't want the number and letter to be swapped as an
+          // RTL run and then reversed again when the whole range be
+          // reversed at the end.
+          //
+          if (max >= TOKEN.NUMBER) {
+            i -= this.remapCombine(ranges, start, end, mode, TOKEN);
+          }
+          if (max !== TOKEN.NUMBER || mode === dir) {
+            start = i;
+          }
+          mode = type;
+        }
+        //
+        // Either way, we mark this as the end of the current run and
+        // are no longer directly following a group.
+        //
+        end = i;
+        afterGroup = false;
+      }
+
+      //
+      // Update the record of the highest token value seen so far.
+      //
+      if (max < type) {
+        max = type;
+      }
+
+      //
+      // If we have just added a group that is the end of a run (not
+      // internal to one), then combine that run into a single range
+      // that includes the group.  Update the start to be after the
+      // combined run, with the end making a non-run, and restart the
+      // maximum token value record.  Mark that we are after a group
+      // (as the direction for groups following groups is different),
+      // and set the mode to the final mode of the group that just
+      // ended.
+      //
+      if (combineGroup) {
+        i -= this.remapCombine(ranges, start, end, mode, TOKEN);
+        start = i + 1;
+        end = i;
+        max = TOKEN.PENDING;
+        afterGroup = true;
+        mode = nextmode;
+      }
+    }
+
+    //
+    // After the loop through the ranges is complete, combine any
+    // final run that is in effect, then combine the complete
+    // remaining ranges into a single range using the direction for
+    // the ranges as a whole.  Return that combined range and the
+    // final mode that was in place so that it can be propagated to
+    // the ranges that follow a recursively processed delimited group.
+    //
+    if (mode !== dir) {
+      this.remapCombine(ranges, start, end, mode, TOKEN);
+    }
+    this.remapCombine(ranges, 0, ranges.length - 1, dir, TOKEN);
+    return [ranges[0], mode] as [Range, number];
+  }
+
+  /**
+   * Combine a run of LTR or RTL ranges into a single combined range.
+   *
+   * @param {Range[]} ranges   The ranges object to modify
+   * @param {number} start     The index of the start of the run to combine
+   * @param {number} end       The index of the last entry to combine
+   * @param {number} mode      The direction to use when combining (LTR or RTL)
+   * @param {TokenList} TOKEN  The list of token values to use.
+   * @returns {number}         The number of entries that have been removed.
+   */
+  protected remapCombine(
+    ranges: Range[],
+    start: number,
+    end: number,
+    mode: number,
+    TOKEN: TokenList
+  ): number {
+    if (start > end || (mode !== TOKEN.RTL && start === end)) {
+      return 0;
+    }
+    end = Math.min(end + 1, ranges.length); // end is now one past the end of the run
+    const reverse = mode === TOKEN.RTL;
+    if (reverse) {
+      //
+      // To reverse a range, we first need to reverse any RTL
+      // character runs, reverse any delimiters, and mirror any mirrorable symbols
+      //
+      for (let k = start; k < end; k++) {
+        if (!(ranges[k][1] & TOKEN.NO_REVERSE)) {
+          ranges[k] = [
+            (ranges[k][0] as number[]).reverse().map((c) => this.mirrored(c)),
+            ranges[k][1],
+          ];
         }
       }
-      i++;
     }
     //
-    // Reverse the groupings before recombining into a single string
+    // Slice out the range to be combined, and extract just the
+    // character arrays.  Reverse the collection of character arrays,
+    // if needed, then flatten the array of arrays to obtain a single
+    // array of just the characters in the proper order, and make that
+    // into a range with COMBINED token type that replaces the range
+    // in the ranges array.  Finally, return the number of entries
+    // removed from the ranges array, so that we can adjust the index
+    // in the loop that processes the ranges.
     //
-    return unicodeChars(ranges.reverse().join(''));
+    const range = ranges.slice(start, end).map(([s]) => s);
+    ranges.splice(start, end - start, [
+      (reverse ? range.reverse() : range).flat() as number[],
+      TOKEN.COMBINED,
+    ]);
+    return end - start - 1;
   }
 
   /**
@@ -1714,7 +2028,7 @@ export const reverseMap = new Map<number, number>([
   [0x220c, 0x2209], // [BEST FIT] DOES NOT CONTAIN AS MEMBER
   [0x220d, 0x220a], // SMALL CONTAINS AS MEMBER
   [0x2215, 0x29f5], // DIVISION SLASH
-  [0x221d, 0x1db10], // PROPORTIONAL TO
+  //  [0x221d, 0x1db10], // PROPORTIONAL TO
   [0x221f, 0x2bfe], // RIGHT ANGLE
   [0x2220, 0x29a3], // ANGLE
   [0x2221, 0x299b], // MEASURED ANGLE
@@ -2257,3 +2571,77 @@ export const mirrorSet = new Set<number>([
   0x1db18, // INVERTED LAZY S OVER LAZY S
   0x1db1b, // LEIBNIZIAN DISSIMILARITY
 ]);
+
+/**
+ * The open bracket => close bracket map.
+ * from https://www.unicode.org/Public/UNIDATA/BidiBrackets.txt
+ */
+export const bidiClose = new Map([
+  ['\u0029', '\u0028'], // RIGHT PARENTHESIS
+  ['\u005D', '\u005B'], // RIGHT SQUARE BRACKET
+  ['\u007D', '\u007B'], // RIGHT CURLY BRACKET
+  ['\u0F3B', '\u0F3A'], // TIBETAN MARK GUG RTAGS GYAS
+  ['\u0F3D', '\u0F3C'], // TIBETAN MARK ANG KHANG GYAS
+  ['\u169C', '\u169B'], // OGHAM REVERSED FEATHER MARK
+  ['\u2046', '\u2045'], // RIGHT SQUARE BRACKET WITH QUILL
+  ['\u207E', '\u207D'], // SUPERSCRIPT RIGHT PARENTHESIS
+  ['\u208E', '\u208D'], // SUBSCRIPT RIGHT PARENTHESIS
+  ['\u2309', '\u2308'], // RIGHT CEILING
+  ['\u230B', '\u230A'], // RIGHT FLOOR
+  ['\u232A', '\u2329'], // RIGHT-POINTING ANGLE BRACKET
+  ['\u2769', '\u2768'], // MEDIUM RIGHT PARENTHESIS ORNAMENT
+  ['\u276B', '\u276A'], // MEDIUM FLATTENED RIGHT PARENTHESIS ORNAMENT
+  ['\u276D', '\u276C'], // MEDIUM RIGHT-POINTING ANGLE BRACKET ORNAMENT
+  ['\u276F', '\u276E'], // HEAVY RIGHT-POINTING ANGLE QUOTATION MARK ORNAMENT
+  ['\u2771', '\u2770'], // HEAVY RIGHT-POINTING ANGLE BRACKET ORNAMENT
+  ['\u2773', '\u2772'], // LIGHT RIGHT TORTOISE SHELL BRACKET ORNAMENT
+  ['\u2775', '\u2774'], // MEDIUM RIGHT CURLY BRACKET ORNAMENT
+  ['\u27C6', '\u27C5'], // RIGHT S-SHAPED BAG DELIMITER
+  ['\u27E7', '\u27E6'], // MATHEMATICAL RIGHT WHITE SQUARE BRACKET
+  ['\u27E9', '\u27E8'], // MATHEMATICAL RIGHT ANGLE BRACKET
+  ['\u27EB', '\u27EA'], // MATHEMATICAL RIGHT DOUBLE ANGLE BRACKET
+  ['\u27ED', '\u27EC'], // MATHEMATICAL RIGHT WHITE TORTOISE SHELL BRACKET
+  ['\u27EF', '\u27EE'], // MATHEMATICAL RIGHT FLATTENED PARENTHESIS
+  ['\u2984', '\u2983'], // RIGHT WHITE CURLY BRACKET
+  ['\u2986', '\u2985'], // RIGHT WHITE PARENTHESIS
+  ['\u2988', '\u2987'], // Z NOTATION RIGHT IMAGE BRACKET
+  ['\u298A', '\u2989'], // Z NOTATION RIGHT BINDING BRACKET
+  ['\u298C', '\u298B'], // RIGHT SQUARE BRACKET WITH UNDERBAR
+  ['\u298E', '\u298F'], // RIGHT SQUARE BRACKET WITH TICK IN BOTTOM CORNER
+  ['\u2990', '\u298D'], // RIGHT SQUARE BRACKET WITH TICK IN TOP CORNER
+  ['\u2992', '\u2991'], // RIGHT ANGLE BRACKET WITH DOT
+  ['\u2994', '\u2993'], // RIGHT ARC GREATER-THAN BRACKET
+  ['\u2996', '\u2995'], // DOUBLE RIGHT ARC LESS-THAN BRACKET
+  ['\u2998', '\u2997'], // RIGHT BLACK TORTOISE SHELL BRACKET
+  ['\u29D9', '\u29D8'], // RIGHT WIGGLY FENCE
+  ['\u29DB', '\u29DA'], // RIGHT DOUBLE WIGGLY FENCE
+  ['\u29FD', '\u29FC'], // RIGHT-POINTING CURVED ANGLE BRACKET
+  ['\u2E23', '\u2E22'], // TOP RIGHT HALF BRACKET
+  ['\u2E25', '\u2E24'], // BOTTOM RIGHT HALF BRACKET
+  ['\u2E27', '\u2E26'], // RIGHT SIDEWAYS U BRACKET
+  ['\u2E29', '\u2E28'], // RIGHT DOUBLE PARENTHESIS
+  ['\u2E56', '\u2E55'], // RIGHT SQUARE BRACKET WITH STROKE
+  ['\u2E58', '\u2E57'], // RIGHT SQUARE BRACKET WITH DOUBLE STROKE
+  ['\u2E5A', '\u2E59'], // TOP HALF RIGHT PARENTHESIS
+  ['\u2E5C', '\u2E5B'], // BOTTOM HALF RIGHT PARENTHESIS
+  ['\u2E63', '\u2E62'], // RIGHT PARENTHESIS WITH MIDDLE RING
+  ['\u3009', '\u3008'], // RIGHT ANGLE BRACKET
+  ['\u300B', '\u300A'], // RIGHT DOUBLE ANGLE BRACKET
+  ['\u300D', '\u300C'], // RIGHT CORNER BRACKET
+  ['\u300F', '\u300E'], // RIGHT WHITE CORNER BRACKET
+  ['\u3011', '\u3010'], // RIGHT BLACK LENTICULAR BRACKET
+  ['\u3015', '\u3014'], // RIGHT TORTOISE SHELL BRACKET
+  ['\u3017', '\u3016'], // RIGHT WHITE LENTICULAR BRACKET
+  ['\u3019', '\u3018'], // RIGHT WHITE TORTOISE SHELL BRACKET
+  ['\u301B', '\u301A'], // RIGHT WHITE SQUARE BRACKET
+  ['\uFE5A', '\uFE59'], // SMALL RIGHT PARENTHESIS
+  ['\uFE5C', '\uFE5B'], // SMALL RIGHT CURLY BRACKET
+  ['\uFE5E', '\uFE5D'], // SMALL RIGHT TORTOISE SHELL BRACKET
+  ['\uFF09', '\uFF08'], // FULLWIDTH RIGHT PARENTHESIS
+  ['\uFF3D', '\uFF3B'], // FULLWIDTH RIGHT SQUARE BRACKET
+  ['\uFF5D', '\uFF5B'], // FULLWIDTH RIGHT CURLY BRACKET
+  ['\uFF60', '\uFF5F'], // FULLWIDTH RIGHT WHITE PARENTHESIS
+  ['\uFF63', '\uFF62'], // HALFWIDTH RIGHT CORNER BRACKET
+]);
+
+export const bidiOpen = new Set(bidiClose.values());
