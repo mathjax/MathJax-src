@@ -309,4 +309,5 @@ export const TextMacrosMethods = {
   Phantom: BaseMethods.Phantom,
   Smash: BaseMethods.Smash,
   MmlToken: BaseMethods.MmlToken,
+  Dir: BaseMethods.Dir,
 };

@@ -31,6 +31,7 @@ import { texError } from './TexError.js';
 import { MmlNode, AbstractMmlNode } from '../../core/MmlTree/MmlNode.js';
 import { ParseInput, ParseResult } from './Types.js';
 import ParseOptions from './ParseOptions.js';
+import NodeUtil from './NodeUtil.js';
 import { BaseItem, StackItem, EnvList } from './StackItem.js';
 import { Token } from './Token.js';
 import { OptionList } from '../../util/Options.js';
@@ -624,6 +625,25 @@ export default class TexParser {
     }
     // @test MissingOrUnrecognizedDelim
     texError(COMPONENT, 'MissingOrUnrecognizedDelim', this.currentCS);
+  }
+
+  /**
+   * Parses the math argument of the above commands and returns it as single
+   * node (in an mrow if necessary).
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The calling macro name.
+   * @returns {MmlNode}          The math node.
+   */
+  GetArgumentMML(parser: TexParser, name: string): MmlNode {
+    const arg = parser.ParseArg(name);
+    if (!arg.isInferred) {
+      return arg;
+    }
+    const mrow = parser.create('node', 'mrow');
+    NodeUtil.copyChildren(arg, mrow);
+    NodeUtil.copyAttributes(arg, mrow);
+    return mrow;
   }
 
   /**

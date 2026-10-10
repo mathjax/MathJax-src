@@ -149,14 +149,23 @@ export const SvgTextNode = (function <N, T, D>(): SvgTextNodeClass<N, T, D> {
       const adaptor = this.adaptor;
       const variant = this.parent.variant;
       const text = (this.node as TextNode).getText();
+      const reverse = this.parent.node.getProperty('reverse');
       if (text.length === 0) return;
       if (variant === '-explicitFont') {
-        this.dom = [
-          adaptor.append(parents[0], this.jax.unknownText(text, variant)) as N,
-        ];
+        const node = this.jax.unknownText(text, variant);
+        if (this.parent.node.getProperty('reverse-text')) {
+          const w = this.getBBox().w;
+          adaptor.setStyle(node, 'direction', 'rtl');
+          adaptor.setStyle(
+            node,
+            'transform',
+            `scale(1,-1) translatex(${this.fixed(w)}px)`
+          );
+        }
+        this.dom = [adaptor.append(parents[0], node) as N];
       } else {
         const chars = this.remappedText(text, variant);
-        if (this.parent.childNodes.length > 1) {
+        if (this.parent.childNodes.length > 1 && !reverse) {
           parents = this.dom = [
             adaptor.append(
               parents[0],

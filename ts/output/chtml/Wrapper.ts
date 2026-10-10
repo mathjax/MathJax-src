@@ -209,6 +209,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
     this.handleColor();
     this.handleSpace();
     this.handleAttributes();
+    this.handleBidi();
     this.handlePWidth();
     return chtml;
   }
@@ -415,6 +416,17 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
         adaptor.setAttribute(dom, 'inline-breaks', 'true')
       );
     }
+  }
+
+  /**
+   * Handle reversing bi-diretional expressions when needed
+   */
+  protected handleBidi() {
+    if (!this.node.getProperty('reverse')) return;
+    const adaptor = this.adaptor;
+    this.dom.forEach((dom) =>
+      adaptor.setAttribute(dom, 'data-mjx-reverse', 'true')
+    );
   }
 
   /**

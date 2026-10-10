@@ -169,4 +169,7 @@ new CommandMap('text-macros', {
   smash: TextMacrosMethods.Smash,
 
   mmlToken: TextMacrosMethods.MmlToken,
+
+  rtl: [TextMacrosMethods.Dir, 'rtl'],
+  ltr: [TextMacrosMethods.Dir, 'ltr'],
 });
