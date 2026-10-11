@@ -268,9 +268,9 @@ export function CommonMsqrtMixin<
       const p = this.node.attributes.get('displaystyle')
         ? this.font.params.x_height
         : t;
-      const { h, d } = this.childNodes[this.base].getOuterBBox();
-      this.surdH = h + d + t + s + p / 4;
-      this.surd.getStretchedVariant([this.surdH - d, d], true);
+      const { h, d, rscale } = this.childNodes[this.base].getOuterBBox();
+      this.surdH = rscale * (h + d) + t + s + p / 4;
+      this.surd.getStretchedVariant([this.surdH - d * rscale, d * rscale], true);
     }
 
     /*************************************************************/
@@ -293,11 +293,11 @@ export function CommonMsqrtMixin<
     public computeBBox(bbox: BBox, recompute: boolean = false) {
       bbox.empty();
       const surdbox = this.surd.getBBox();
-      const basebox = new BBox(this.childNodes[this.base].getOuterBBox());
+      const basebox = this.childNodes[this.base].getOuterBBox().copy();
       const q = this.getPQ(surdbox)[1];
       const t = this.font.params.rule_thickness;
       const s = this.font.params.surd_height;
-      const H = basebox.h + q + t;
+      const H = basebox.h * basebox.rscale + q + t;
       const [x] = this.getRootDimens(surdbox, H);
       bbox.h = H + s;
       this.combineRootBBox(bbox, surdbox, H);

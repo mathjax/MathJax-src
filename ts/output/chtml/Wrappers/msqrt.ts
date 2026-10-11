@@ -174,7 +174,7 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
       const bbox = base.getOuterBBox();
       const [, q] = this.getPQ(sbox);
       const t = this.font.params.surd_height;
-      const H = bbox.h + q + t;
+      const H = bbox.h * bbox.rscale + q + t;
       const adaptor = this.adaptor;
       //
       //  Create the HTML structure for the root
