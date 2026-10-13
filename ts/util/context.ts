@@ -42,7 +42,7 @@ export const context = {
   document: hasWindow ? window.document : null,
   os: (() => {
     if (hasWindow && window.navigator) {
-      const app = window.navigator.appVersion;
+      const app = window.navigator.appVersion ?? '';
       const osNames = [
         ['Win', 'Windows'],
         ['Mac', 'MacOS'],
@@ -54,7 +54,7 @@ export const context = {
           return os;
         }
       }
-      if (window.navigator.userAgent.includes('Android')) {
+      if (window.navigator.userAgent?.includes('Android')) {
         return 'Unix';
       }
     } else if (typeof process !== 'undefined') {
