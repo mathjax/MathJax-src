@@ -86,6 +86,7 @@ export function combineConfig(dst: any, src: any, check: boolean = false): any {
   for (const id of Object.keys(src)) {
     if (
       id === '__esModule' ||
+      id === '__proto__' ||
       dst[id] === src[id] ||
       src[id] === null ||
       src[id] === undefined
