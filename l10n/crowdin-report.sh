@@ -44,7 +44,7 @@ set -euo pipefail
 PROJECT_ID="${CROWDIN_PROJECT_ID:-}"
 TOKEN="${CROWDIN_PERSONAL_TOKEN:-}"
 
-BASE_REF="origin/develop"
+BASE_REF="${1:-origin/develop}"
 
 API_BASE="${CROWDIN_API_BASE:-https://api.crowdin.com/api/v2}"
 
@@ -209,6 +209,10 @@ if [[ "${#EN_FILES[@]}" -eq 0 ]]; then
 fi
 
 echo "Found ${#EN_FILES[@]} English source file(s) in Crowdin."
+
+# Debug: Check raw Crowdin files JSON
+echo "DEBUG: Raw CROWDIN_FILES_JSON first element:" >&2
+jq '.[0]' "$CROWDIN_FILES_JSON" >&2
 
 ###############################################################################
 # Build language mapping
