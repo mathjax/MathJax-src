@@ -1541,7 +1541,12 @@ export class SpeechExplorer
     let next;
     do {
       next = this.getNode(owns[++i]);
-    } while (next && !next.hasAttribute(SPEECH.NODE));
+    } while (
+      next &&
+      (!next.hasAttribute(SPEECH.NODE) ||
+        !next.hasAttribute(SemAttr.SPEECH) ||
+        next.getAttribute(SemAttr.SPEECH) === this.none)
+    );
     return next;
   }
 
@@ -1560,7 +1565,12 @@ export class SpeechExplorer
     let prev;
     do {
       prev = this.getNode(owns[--i]);
-    } while (prev && !prev.hasAttribute(SPEECH.NODE));
+    } while (
+      prev &&
+      (!prev.hasAttribute(SPEECH.NODE) ||
+        !prev.hasAttribute(SemAttr.SPEECH) ||
+        prev.getAttribute(SemAttr.SPEECH) === this.none)
+    );
     return prev;
   }
 
