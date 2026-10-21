@@ -21,7 +21,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-//import { MathDocument } from '../../core/MathDocument.js';
 import { StyleJsonSheet } from '../../util/StyleJson.js';
 import { Highlighter } from './Highlighter.js';
 import { SsmlElement, buildSpeech } from '../speech/SpeechUtil.js';
@@ -279,6 +278,9 @@ export class StringRegion extends AbstractRegion<string> {
       this.AddElement();
     }
     if (this.inner) {
+      if (speech === this.document.options.MathItem.none) {
+        speech = '';
+      }
       this.inner.textContent = '';
       this.inner.textContent = speech || '\u00a0';
     }

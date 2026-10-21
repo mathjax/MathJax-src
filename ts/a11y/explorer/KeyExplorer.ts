@@ -1541,7 +1541,7 @@ export class SpeechExplorer
     let next;
     do {
       next = this.getNode(owns[++i]);
-    } while (next && !next.hasAttribute(SPEECH.NODE));
+    } while (this.emptySpeech(next));
     return next;
   }
 
@@ -1560,8 +1560,21 @@ export class SpeechExplorer
     let prev;
     do {
       prev = this.getNode(owns[--i]);
-    } while (prev && !prev.hasAttribute(SPEECH.NODE));
+    } while (this.emptySpeech(prev));
     return prev;
+  }
+
+  /**
+   * @param {HTMLElement} node   The node to test for empty speech
+   * @returns {boolean}          True of the node exists but doesn't have speech
+   */
+  protected emptySpeech(node: HTMLElement): boolean {
+    return (
+      !!node &&
+      (!node.hasAttribute(SPEECH.NODE) ||
+        !node.hasAttribute(SemAttr.SPEECH) ||
+        node.getAttribute(SemAttr.SPEECH) === this.none)
+    );
   }
 
   /**
