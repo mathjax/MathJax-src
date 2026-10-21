@@ -979,14 +979,20 @@ export class CommonWrapper<
   protected getScale() {
     const parent = this.parent;
     const pscale = parent ? parent.bbox.scale : 1;
-    const plevel = Math.min(2, parent?.node.attributes.get('scriptlevel') as number || 0);
+    const plevel = Math.min(
+      2,
+      (parent?.node.attributes.get('scriptlevel') as number) || 0
+    );
     let scale = pscale;
     const attributes = this.node.attributes;
     const scriptlevel = Math.min(2, attributes.get('scriptlevel') as number);
     const mathsize = attributes.getExplicit('mathsize');
-    const size = (this.node.kind === 'math' || this.node.kind === 'mstyle' ? mathsize : undefined)
-      || attributes.getExplicit('fontsize')
-      || this.node.kind === 'math' ? attributes.get("mathsize") : '1';
+    const size =
+      (this.node.kind === 'math' || this.node.kind === 'mstyle'
+        ? mathsize
+        : undefined) ||
+      attributes.getExplicit('fontsize') ||
+      (this.node.kind === 'math' ? attributes.get('mathsize') : '1');
     //
     // If scriptsize is non-zero, set scale based on scriptsizemultiplier
     //
@@ -997,7 +1003,7 @@ export class CommonWrapper<
       );
     }
     //
-    // If there is font-size CSS, use that,
+    // If there is font-size CSS, use that
     //
     if (this.removedStyles?.fontSize) {
       scale *= this.length2em(this.removedStyles.fontSize, 1, 1);
@@ -1005,10 +1011,11 @@ export class CommonWrapper<
     //
     //  Incorporate the size, if any
     //
-    if (mathsize && this.node.isToken || this.node.kind === 'mstyle') {
+    if (mathsize && (this.node.isToken || this.node.kind === 'mstyle')) {
       const imathsize = attributes.getInherited('mathsize');
       if (mathsize !== imathsize) {
-        scale *= this.length2em(mathsize, 1, 1) / this.length2em(imathsize, 1, 1);
+        scale *=
+          this.length2em(mathsize, 1, 1) / this.length2em(imathsize, 1, 1);
       }
     } else if (size !== '1' && size !== 'normal' && size !== INHERIT) {
       scale *= this.length2em(size, 1, 1);
