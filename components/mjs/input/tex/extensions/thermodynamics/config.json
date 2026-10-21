@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/thermodynamics",
+    "component": "input/tex/extensions/thermodynamics",
+    "targets": ["input/tex/thermodynamics"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/thermodynamics",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}
