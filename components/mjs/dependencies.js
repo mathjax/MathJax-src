@@ -42,6 +42,7 @@ export const dependencies = {
   '[tex]/dsfont': ['input/tex-base'],
   '[tex]/empheq': ['input/tex-base', '[tex]/ams'],
   '[tex]/enclose': ['input/tex-base'],
+  '[tex]/esdiff': ['input/tex-base'],
   '[tex]/extpfeil': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],
   '[tex]/gensymb': ['input/tex-base'],
   '[tex]/html': ['input/tex-base'],
