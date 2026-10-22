@@ -1,0 +1,20 @@
+{
+  "build": {
+    "id": "[tex]/esdiff",
+    "component": "input/tex/extensions/esdiff",
+    "targets": ["input/tex/esdiff"]
+  },
+  "copy": {
+    "to": "[bundle]/input/tex/extensions/esdiff",
+    "from": "[ts]/input/tex/esdiff",
+    "copy": ["__locales__"],
+    "excludes": ["__locales__/Component.ts", "__locales__/preload.cts"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/esdiff",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

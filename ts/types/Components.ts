@@ -155,6 +155,7 @@ export type COMPONENTS<DOM extends DOM_TYPES> = {
   '[tex]/dsfont': TEX_PACKAGE<'dsfont', DSFONT_OPTIONS>;
   '[tex]/empheq': EMPTY_COMPONENT<'[tex]/empheq'>;
   '[tex]/enclose': EMPTY_COMPONENT<'[tex]/enclose'>;
+  '[tex]/esdiff': EMPTY_COMPONENT<'[tex]/esdiff'>;
   '[tex]/extpfeil': EMPTY_COMPONENT<'[tex]/extpfeil'>;
   '[tex]/fontsizev3': EMPTY_COMPONENT<'[tex]/fontsizev3'>;
   '[tex]/gensymb': EMPTY_COMPONENT<'[tex]/gensymb'>;
