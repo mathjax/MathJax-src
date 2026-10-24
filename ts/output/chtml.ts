@@ -219,6 +219,15 @@ export class CHTML<N, T, D> extends CommonOutputJax<
     'mjx-mphantom': {
       visibility: 'hidden',
     },
+
+    'mjx-container[jax="CHTML"] [data-mjx-reverse]': {
+      transform: 'scalex(-1)',
+      'transform-origin': 'center',
+    },
+    'mjx-mirror': {
+      display: 'inline-block',
+      transform: 'scalex(-1)',
+    },
   };
 
   /**

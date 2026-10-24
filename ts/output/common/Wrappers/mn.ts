@@ -148,6 +148,7 @@ export function CommonMnMixin<
       //
       //  Convert a leading hyphen to a minus
       //
+      chars = super.remapChars(chars);
       if (chars.length) {
         const text = this.font.getRemappedChar('mn', chars[0]);
         if (text) {

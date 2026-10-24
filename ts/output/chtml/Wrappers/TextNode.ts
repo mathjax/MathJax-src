@@ -169,14 +169,19 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
       if (text.length === 0) return;
       const bbox = this.getBBox();
       if (variant === '-explicitFont') {
-        adaptor.append(parent, this.jax.unknownText(text, variant, bbox.w));
+        const node = this.jax.unknownText(text, variant, bbox.w);
+        if (this.parent.node.getProperty('reverse-text')) {
+          adaptor.setAttribute(node, 'dir', 'rtl');
+        }
+        adaptor.append(parent, node);
       } else {
         let utext = '';
         const chars = this.remappedText(text, variant);
         const H = chars.length > 1 ? this.em(this.parent.getBBox().h) : '';
         const m = chars.length;
         for (let i = 0; i < m; i++) {
-          const n = chars[i];
+          const [n, mirror] =
+            chars[i] < 0 ? [-chars[i], true] : [chars[i], false];
           const data = (this.getVariantChar(variant, n) as ChtmlCharData)[3];
           if (data.unknown) {
             utext += String.fromCodePoint(n);
@@ -184,13 +189,14 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
             utext = this.addUtext(utext, variant, parent);
             const font =
               data.ff || (data.f ? `${this.font.cssFontPrefix}-${data.f}` : '');
+            const c = this.html(
+              'mjx-c',
+              { class: this.char(n) + (font ? ' ' + font : '') },
+              [this.text(data.c || String.fromCodePoint(n))]
+            );
             const node = adaptor.append(
               parent,
-              this.html(
-                'mjx-c',
-                { class: this.char(n) + (font ? ' ' + font : '') },
-                [this.text(data.c || String.fromCodePoint(n))]
-              )
+              mirror ? this.html('mjx-mirror', {}, [c]) : c
             );
             if (i < m - 1 || bbox.oc) {
               adaptor.setAttribute(node as N, 'noic', 'true');
@@ -217,7 +223,7 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
      * @param {string} utext     The text to add
      * @param {string} variant   The mathvariant for the text
      * @param {N} parent         The parent node where the text is being added
-     * @returns {string}          The new value for utext
+     * @returns {string}         The new value for utext
      */
     protected addUtext(utext: string, variant: string, parent: N): string {
       if (utext) {
