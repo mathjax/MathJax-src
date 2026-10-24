@@ -58,6 +58,11 @@ export class WorkerHandler<N, T, D> {
   public ready: boolean = false;
 
   /**
+   * True if the worker has been stopped
+   */
+  public stopped: boolean = false;
+
+  /**
    * The task queue
    */
   private tasks: Task<N, T, D>[] = [];
@@ -98,10 +103,16 @@ export class WorkerHandler<N, T, D> {
     if (this.ready) {
       Locale.throw(COMPONENT, 'Worker/Started');
     }
+    this.stopped = false;
     this.worker = await this.adaptor.createWorker(
       this.Listener.bind(this),
       this.options
     );
+    this.worker.onerror = (err) => {
+      this.Commands.Failed(this, {
+        error: err.message ?? localize('Worker/Error'),
+      });
+    };
   }
 
   /**
@@ -146,6 +157,9 @@ export class WorkerHandler<N, T, D> {
     msg: ClientCommand,
     item?: SpeechMathItem<N, T, D>
   ): Promise<any> {
+    if (this.stopped) {
+      return Promise.reject(localize('Worker/Stopped'));
+    }
     const promise = new Promise((resolve, reject) => {
       this.tasks.push(new Task(msg, item, resolve, reject));
     });
@@ -540,6 +554,7 @@ export class WorkerHandler<N, T, D> {
       this.worker = null;
       this.ready = false;
     }
+    this.stopped = true;
   }
 
   public LiveWarn(message: string) {
@@ -655,8 +670,8 @@ export class WorkerHandler<N, T, D> {
       const { path, worker } = handler.options;
       Locale.warn(
         COMPONENT,
-        data.includes(worker) ? 'Worker/Failed' : 'Worker/FailedFrom',
-        data,
+        data.error.includes(worker) ? 'Worker/Failed' : 'Worker/FailedFrom',
+        data.error,
         `${path}/${worker}`
       );
       handler.LiveWarn(localize('Worker/Warning'));

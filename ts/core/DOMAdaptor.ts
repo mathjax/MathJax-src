@@ -48,6 +48,7 @@ export interface minWorker {
   addEventListener(kind: string, listener: (event: Event) => void): void;
   postMessage(msg: any): void;
   terminate(): Promise<any> | void;
+  onerror: (this: any, err: ErrorEvent) => any;
 }
 
 /*****************************************************************/
