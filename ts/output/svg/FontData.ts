@@ -53,7 +53,10 @@ export type SvgCharData = CharDataArray<SvgCharOptions>;
 /**
  * The extra data needed for a Variant in SVG output
  */
-export interface SvgVariantData extends VariantData<SvgCharOptions> {
+export interface SvgVariantData extends VariantData<
+  SvgCharOptions,
+  SvgDelimiterData
+> {
   cacheID: string;
 }
 
