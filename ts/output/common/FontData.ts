@@ -780,7 +780,7 @@ export class FontData<
   /**
    * @param {CharMap} font   The font to check
    * @param {number} n       The character to get options for
-   * @returns {CharOptions}   The options for the character
+   * @returns {CharOptions}  The options for the character
    */
   public static charOptions(
     font: CharMap<CharOptions>,
@@ -805,7 +805,7 @@ export class FontData<
    *
    * @param {DynamicFileDef[]} dynamicFiles   The definitions to make
    * @param {string} extension                The name of the extension for this file (or empty)
-   * @returns {DynamicFileList}                The object of dynamic file data
+   * @returns {DynamicFileList}               The object of dynamic file data
    */
   public static defineDynamicFiles(
     dynamicFiles: DynamicFileDef[],
@@ -1011,7 +1011,7 @@ export class FontData<
    *
    * @param {FontExtensionData} data    The data for the font extension to merge into this font.
    * @param {string} prefix             The [prefix] to add to all component names
-   * @returns {string[]}                 The new CSS rules needed for this extension
+   * @returns {string[]}                The new CSS rules needed for this extension
    */
   public addExtension(
     data: FontExtensionData<C, D>,
@@ -1152,8 +1152,8 @@ export class FontData<
    * Create the mapping from Basic Latin and Greek blocks to
    * the Math Alphanumeric block for a given variant.
    *
-   * @param {CharMap<C>} chars The character mapping to fill.
-   * @param {string} name The new variant name.
+   * @param {CharMap<C>} chars   The character mapping to fill.
+   * @param {string} name        The new variant name.
    */
   protected remapSmpChars(chars: CharMap<C>, name: string) {
     const CLASS = this.CLASS;
@@ -1185,7 +1185,7 @@ export class FontData<
   }
 
   /**
-   * @param {number} n           Math Alphanumerics position for this remapping
+   * @param {number} n            Math Alphanumerics position for this remapping
    * @returns {CharDataArray<C>}  The character data for the remapping
    */
   protected smpChar(n: number): CharDataArray<C> {
@@ -1196,7 +1196,7 @@ export class FontData<
    * Create a collection of variants
    *
    * @param {string[][]} variants  Array of [name, inherit?, link?] values for
-   *                              the variants to define
+   *                               the variants to define
    */
   public createVariants(variants: string[][]) {
     for (const variant of variants) {
@@ -1293,7 +1293,7 @@ export class FontData<
    *
    * @param {DynamicRanges} ranges   The ranges to be flattened
    * @param {DynamicFile} dynamic    The DynamicFile to tie to the ranges
-   * @returns {DynamicCharMap}        The map from character positions to dynamic file
+   * @returns {DynamicCharMap}       The map from character positions to dynamic file
    */
   protected flattenRanges(
     ranges: DynamicRanges,
@@ -1314,7 +1314,7 @@ export class FontData<
 
   /**
    * @param {DynamicFile} dynamic    The data for the dynamic file
-   * @returns {string}                The prefixed name for the file
+   * @returns {string}               The prefixed name for the file
    */
   protected dynamicFileName(dynamic: DynamicFile): string {
     const prefix = !dynamic.extension
@@ -1330,7 +1330,7 @@ export class FontData<
    *   and do any associated setup that needs access to the FontData instance.
    *
    * @param {DynamicFile} dynamic   The data for the file to load
-   * @returns {Promise<void>}        The promise that is resolved when the file is loaded
+   * @returns {Promise<void>}       The promise that is resolved when the file is loaded
    */
   public async loadDynamicFile(dynamic: DynamicFile): Promise<void> {
     if (dynamic.failed) {
@@ -1482,14 +1482,17 @@ export class FontData<
   /**
    * @param {string} name       The variant whose character data is being querried
    * @param {number} n          The unicode number for the character to be found
-   * @returns {CharDataArray}    The data for the given character (or undefined)
+   * @returns {CharDataArray}   The data for the given character (or undefined)
    */
   public getChar(name: string, n: number): CharDataArray<C> {
     const char = this.variant[name].chars[n];
     if (char && !Array.isArray(char)) {
       const variant = this.variant[name];
       this.deleteDef(variant.chars, n);
-      variant.linked.forEach((link) => delete link[n]);
+      variant.linked.forEach((link) => {
+        delete link[0][n];
+        delete link[1][n];
+      });
       if (mathjax.asyncIsSynchronous) {
         this.loadDynamicFileSync(char);
         return this.getChar(name, n);
@@ -1516,7 +1519,7 @@ export class FontData<
 
   /**
    * @param {string} name   The name of the variant whose data is to be obtained
-   * @returns {V}            The data for the requested variant (or undefined)
+   * @returns {V}           The data for the requested variant (or undefined)
    */
   public getVariant(name: string): V {
     return this.variant[name];
@@ -1524,7 +1527,7 @@ export class FontData<
 
   /**
    * @param {string} variant   The name of the variant whose data is to be obtained
-   * @returns {CssFontData}     The CSS data for the requested variant
+   * @returns {CssFontData}    The CSS data for the requested variant
    */
   public getCssFont(variant: string): CssFontData {
     return this.cssFontMap[variant] || ['serif', false, false];
@@ -1532,7 +1535,7 @@ export class FontData<
 
   /**
    * @param {string} family   The font camily to use
-   * @returns {string}         The family with the css prefix
+   * @returns {string}        The family with the css prefix
    */
   public getFamily(family: string): string {
     return this.cssFamilyPrefix ? this.cssFamilyPrefix + ', ' + family : family;
@@ -1541,7 +1544,7 @@ export class FontData<
   /**
    * @param {string} name   The name of the map to query
    * @param {number} c      The character to remap
-   * @returns {string}       The remapped character (or the original)
+   * @returns {string}      The remapped character (or the original)
    */
   public getRemappedChar(name: string, c: number): string {
     const map = this.remapChars[name] || ({} as RemapMap);
