@@ -1,6 +1,6 @@
 {
   "BadProofTree": "Beweisbaum falsch angegeben.",
-  "EnvMissingEnd": "\\end{%1} fehlt",
+  "EnvMissingEnd": "Fehlendes \\end{%1}",
   "IllegalProofCommand": "Beweisbefehle sind nur in der prooftree-Umgebung zulässig.",
   "IllegalUseOfCommand": "Die Verwendung von %1 entspricht nicht seiner Definition.",
   "MissingDisplayProof": "%1 fehlt, um den Beweisbaum anzuzeigen.",

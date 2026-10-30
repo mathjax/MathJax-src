@@ -1,8 +1,14 @@
 {
+  "NoBraille": "Braille not available",
+  "NoSpeech": "Speech not available",
   "ProsodyError": "운율 일치 중 문제가 발생했습니다",
   "SpeechError": "음성 생성 오류:",
   "Worker/Cancelled": "작업 %1이(가) 취소되었습니다",
+  "Worker/Failed": "MathJax webworker failed to load: %1",
+  "Worker/FailedFrom": "MathJax webworker failed to load from %2: %1",
+  "Worker/Warning": "Warning: MathJax is not able to generate speech for the mathematics on this page",
+  "Worker/Maps": "MathJax webworker failed to load math map: %1",
+  "Worker/MapsFrom": "MathJax webworker failed to load math map from %2: %1",
   "Worker/NotStarted": "작업자가 시작되지 않았습니다",
-  "Worker/Started": "작업자가 이미 시작되었습니다",
   "Worker/Terminate": "WorkerHandler 종료로 인해 %1이(가) 취소되었습니다"
 }
