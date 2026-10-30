@@ -17,7 +17,7 @@ import { mathjax } from '#js/mathjax.js';
 import { OptionList } from '#js/util/Options.js';
 import { tmpJsonFile } from '#src/constants.js';
 import * as fs from 'fs';
-import { init } from '#source/node-main/node-main.mjs';
+import { init } from '#source/main/main.js';
 import { expect } from '@jest/globals';
 import { source } from '#source/source.js';
 import { Locale } from '#js/util/Locale.js';

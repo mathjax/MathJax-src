@@ -23,15 +23,31 @@
     "url": "https://github.com/mathjax/Mathjax-src"
   },
   "type": "module",
-  "main": "components/mjs/node-main/node-main.js",
+  "main": "components/mjs/main/main.js",
   "exports": {
     ".": {
-      "import": "./bundle/node-main.mjs",
-      "require": "./bundle/node-main.cjs"
+      "import": "./bundle/main/main.mjs",
+      "require": "./bundle/main/main.js"
+    },
+    "./node": {
+      "import": "./bundle/main/node.mjs",
+      "require": "./bundle/main/node.js"
+    },
+    "./browser": {
+      "import": "./bundle/main/browser.mjs",
+      "require": "./bundle/main/browser.js"
     },
     "./source": {
-      "import": "./components/mjs/node-main/node-main.mjs",
-      "require": "./components/cjs/node-main/node-main.cjs"
+      "import": "./components/mjs/main/main.js",
+      "require": "./components/cjs/main/main.cjs"
+    },
+    "./node/source": {
+      "import": "./components/mjs/main/node/node.js",
+      "require": "./components/cjs/main/node/node.cjs"
+    },
+    "./browser/source": {
+      "import": "./components/mjs/main/browser/browser.js",
+      "require": "./components/cjs/main/browser/browser.cjs"
     },
     "./js/*": {
       "import": "./mjs/*",
@@ -103,7 +119,7 @@
     "cjs:bundle:clean": "pnpm --silent clean:dir bundle-cjs",
     "cjs:bundle:finalize": "pnpm --silent log:single 'Finalize cjs bundle'; echo '{\n  \"type\": \"commonjs\"\n}' > bundle-cjs/package.json;",
     "cjs:compile": "pnpm --silent cjs:copy:components && pnpm --silent cjs:copy:ts && pnpm --silent cjs:compile:tsc",
-    "cjs:compile:tsc": "pnpm --silent log:single 'Compiling cjs typescript files' && pnpm tsc --project tsconfig/worker-cjs.json && pnpm tsc --project tsconfig/cjs.json",
+    "cjs:compile:tsc": "pnpm --silent log:single 'Compiling cjs typescript files' && pnpm tsc --project tsconfig/cjs.json && pnpm tsc --project tsconfig/worker-cjs.json",
     "cjs:components:build": "pnpm --silent log:comp 'Building cjs components'; pnpm --silent cjs:components:src:build && pnpm --silent clean:dir bundle-cjs && pnpm --silent cjs:components:make --build",
     "cjs:components:clean": "pnpm --silent log:single \"Cleaning cjs components\"; pnpm rimraf components/cjs",
     "cjs:components:compile": "pnpm --silent log:single 'Compiling component files'; pnpm tsc --project tsconfig/components.json",

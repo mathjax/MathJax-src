@@ -213,7 +213,7 @@ export function buildLabel(
  */
 export function buildSpeech(
   speech: string,
-  locale: string = Locale.default,
+  locale: string = Locale.current,
   rate: string = '100'
 ): [string, SsmlElement[]] {
   return ssmlParsing(

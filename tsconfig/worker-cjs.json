@@ -1,15 +1,15 @@
 {
-  "extends": "./mjs.json",
+  "extends": "./cjs.json",
   "compilerOptions": {
     "removeComments": false,
-    "rootDir": "../ts/a11y/sre",
-    "outDir": "../cjs/a11y/sre",
-    "module": "preserve",
-    "moduleResolution": "bundler"
+    "rootDir": "../ts/",
+    "outDir": "../cjs",
+    "module": "CommonJS"
   },
   "files": [
     "../ts/a11y/sre/speech-worker.ts",
-    "../ts/a11y/sre/worker_threads.d.ts"
+    "../ts/a11y/sre/worker_threads.d.ts",
+    "../ts/components/cjs/json.ts"
   ],
   "include": [],
   "exclude": []

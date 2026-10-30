@@ -1,10 +1,12 @@
-import {startup} from '../startup/init.js';
-import {Loader} from '#js/components/loader.js';
+import { startup, readyAfter } from '../startup/init.js';
+import { Loader } from '#js/components/loader.js';
 import '../core/core.js';
 import '../input/mml/mml.js';
-import {loadFont} from '../output/chtml/chtml.js';
+import { loadFont } from '../output/chtml/chtml.js';
 import '../ui/menu/menu.js';
 import '../a11y/util.js';
+
+const COMPONENT = 'mml-chtml-nofont';
 
 Loader.preLoaded(
   'loader', 'startup',
@@ -13,6 +15,6 @@ Loader.preLoaded(
   'output/chtml',
   'ui/menu'
 );
-Loader.saveVersion('mml-chtml-nofont');
+Loader.saveVersion(COMPONENT);
 
-loadFont(startup);
+readyAfter(COMPONENT, () => loadFont(startup));

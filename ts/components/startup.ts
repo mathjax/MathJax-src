@@ -50,6 +50,8 @@ import { DOM, DOM_TYPES, N, T, D, OPTIONAL } from '../types/Types.js';
 
 import { TeX } from '../input/tex.js';
 
+export type ReadyFunction<T> = (mjx: MathJaxObject) => T;
+
 /**
  * The option types for the startup component.
  */
@@ -61,8 +63,8 @@ export type STARTUP_OPTIONS = {
   document: any; //             The document (or fragment or string) to work in
   elements: any[]; //           The elements to typeset (default is document body)
   typeset: boolean; //          Perform initial typeset?
-  ready: () => void; //         Function to perform when components are ready
-  pageReady: () => void; //     Function to perform when page is ready
+  ready: ReadyFunction<void>; //              Function to perform when components are ready
+  pageReady: ReadyFunction<Promise<void>>; // Function to perform when page is ready
   invalidOption?: 'fatal' | 'warn'; // Do invalid options produce a warning, or throw an error?
   optionError?: (message: string, key: string) => void; // Function to report invalid options
   loadAllFontFiles: boolean; // true means force all dynamic font files to load initially
@@ -72,30 +74,18 @@ export type STARTUP_OPTIONS = {
 /**
  * Generic types for the standard MathJax objects
  */
-export type MATHDOCUMENT<DD extends DOM_TYPES = DOM> = MathDocument<
-  N<DD>,
-  T<DD>,
-  D<DD>
-> & {
+/* prettier-ignore */
+export type MATHDOCUMENT<DD extends DOM_TYPES = DOM> = MathDocument<N<DD>, T<DD>, D<DD>> & {
   menu?: { loadingPromise: Promise<void> };
   options: { elements?: N<DD>[] };
 };
 export type HANDLER<DD extends DOM_TYPES = DOM> = Handler<N<DD>, T<DD>, D<DD>>;
-export type DOMADAPTOR<DD extends DOM_TYPES = DOM> = DOMAdaptor<
-  N<DD>,
-  T<DD>,
-  D<DD>
->;
-export type INPUTJAX<DD extends DOM_TYPES = DOM> = InputJax<
-  N<DD>,
-  T<DD>,
-  D<DD>
->;
-export type OUTPUTJAX<DD extends DOM_TYPES = DOM> = OutputJax<
-  N<DD>,
-  T<DD>,
-  D<DD>
->;
+/* prettier-ignore */
+export type DOMADAPTOR<DD extends DOM_TYPES = DOM> = DOMAdaptor<N<DD>, T<DD>, D<DD>>;
+/* prettier-ignore */
+export type INPUTJAX<DD extends DOM_TYPES = DOM> = InputJax<N<DD>, T<DD>, D<DD>>;
+/* prettier-ignore */
+export type OUTPUTJAX<DD extends DOM_TYPES = DOM> = OutputJax<N<DD>, T<DD>, D<DD>>;
 /* prettier-ignore */
 export type COMMONJAX<DD extends DOM_TYPES = DOM> =
   CommonOutputJax<N<DD>, T<DD>, D<DD>, any, any, any, any, any, any, any, any>;
@@ -327,7 +317,7 @@ export abstract class Startup {
     Startup.getComponents();
     Startup.makeMethods();
     Startup.pagePromise
-      .then(() => CONFIG.pageReady()) // usually the initial typesetting call
+      .then(() => CONFIG.pageReady.call(Startup, MathJax)) // usually the initial typesetting call
       .then(() => Startup.promiseResolve())
       .catch((err) => Startup.promiseReject(err));
   }
@@ -347,7 +337,7 @@ export abstract class Startup {
         ? (Startup.output as COMMONJAX).font.loadDynamicFiles()
         : Promise.resolve()
     )
-      .then(() => Startup.document.menu?.loadingPromise)
+      .then(() => Startup.document?.menu?.loadingPromise)
       .then(
         CONFIG.typeset && MathJax.typesetPromise
           ? () => Startup.typesetPromise(CONFIG.elements)
