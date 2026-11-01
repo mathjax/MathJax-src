@@ -22,7 +22,7 @@
  */
 
 import { OptionList } from '../../util/Options.js';
-import { split } from '../../util/string.js';
+import { split, rtlRanges } from '../../util/string.js';
 import {
   CommonWrapper,
   CommonWrapperClass,
@@ -698,17 +698,20 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @returns {number}         The computed width of the text
    */
   protected addUtext(x: number, y: number, parent: N, variant: string): number {
-    const c = this.utext;
-    if (!c) {
+    let utext = this.utext;
+    if (!utext) {
       return 0;
     }
     this.utext = '';
+    if (rtlRanges.test(utext)) {
+      utext = '\u202D' + utext; // remapChars will have already reversed RTL runs
+    }
     const text = this.adaptor.append(
       parent,
-      this.jax.unknownText(c, variant)
+      this.jax.unknownText(utext, variant)
     ) as N;
     this.place(x, y, text);
-    return this.jax.measureTextNodeWithCache(text, c, variant).w;
+    return this.jax.measureTextNodeWithCache(text, utext, variant).w;
   }
 
   /**

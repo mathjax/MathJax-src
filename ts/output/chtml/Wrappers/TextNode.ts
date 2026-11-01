@@ -40,6 +40,7 @@ import {
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { TextNode } from '../../../core/MmlTree/MmlNode.js';
 import { StyleJson } from '../../../util/StyleJson.js';
+import { rtlRanges } from '../../../util/string.js';
 
 /*****************************************************************/
 /**
@@ -227,6 +228,9 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
      */
     protected addUtext(utext: string, variant: string, parent: N): string {
       if (utext) {
+        if (rtlRanges.test(utext)) {
+          utext = '\u202D' + utext; // remapChars will have already reversed RTL runs
+        }
         this.adaptor.append(parent, this.jax.unknownText(utext, variant));
       }
       return '';

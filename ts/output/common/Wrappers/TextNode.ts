@@ -36,6 +36,7 @@ import {
 } from '../FontData.js';
 import { CommonOutputJax } from '../../common.js';
 import { BBox } from '../../../util/BBox.js';
+import { rtlRanges } from '../../../util/string.js';
 import { TextNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
 
@@ -238,6 +239,9 @@ export function CommonTextNodeMixin<
      */
     protected addUtextBBox(bbox: BBox, utext: string, variant: string): string {
       if (utext) {
+        if (rtlRanges.test(utext)) {
+          utext = '\u202D' + utext; // remapChars will have already reversed RTL runs
+        }
         const { h, d, w } = this.jax.measureText(utext, variant);
         this.updateBBox(bbox, h, d, w);
       }

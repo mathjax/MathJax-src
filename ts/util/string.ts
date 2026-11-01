@@ -117,4 +117,4 @@ export function toEntity(c: string): string {
  * (From https://www.unicode.org/Public/UCD/latest/ucd/extracted/DerivedBidiClass.txt)
  */
 export const rtlRanges =
-  /[\u0590-\u08FF\uFB1D-\uFEFF\u{10800}-\u{10FFF}\u{1E800}-\u{1EFFF}]+/u;
+  /[\u0590-\u05FF\u0606-\u065F\u066A\u066D-\u06DC\u06DE-\u088F\u0892-\u08E1\u08E3-\u08FF\uFB1D-\uFEFF\u{10800}-\u{10D2F}\u{10D3A}-\u{10D3F}\u{10D4A}-\u{10E5F}\u{10E7F}-\u{10FFF}\u{1E800}-\u{1EFFF}]+/u;
