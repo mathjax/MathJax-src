@@ -204,6 +204,7 @@ export class Safe<N, T, D> {
    */
   constructor(document: MathDocument<N, T, D>, options: OptionList) {
     this.adaptor = document.adaptor;
+    this.adaptor.document = document as D;
     this.options = options;
     this.allow = this.options.allow;
   }
