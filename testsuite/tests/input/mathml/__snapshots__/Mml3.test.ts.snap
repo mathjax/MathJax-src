@@ -4525,34 +4525,6 @@ exports[`Mml3 Example 72 1`] = `
         <mn>1</mn>
       </mtd>
       <mtd>
-        <mover>
-          <mn>2</mn>
-          <mpadded width="0em" lspace="-0.5width">
-            <mn>8</mn>
-          </mpadded>
-        </mover>
-      </mtd>
-      <mtd>
-        <mover>
-          <mn>3</mn>
-          <mpadded width="0em" lspace="-0.5width">
-            <mn>9</mn>
-          </mpadded>
-        </mover>
-      </mtd>
-    </mtr>
-  </mtable>
-</math>"
-`;
-
-exports[`Mml3 Example 73 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
-    <mtr>
-      <mtd>
-        <mn>1</mn>
-      </mtd>
-      <mtd>
         <mn>2</mn>
       </mtd>
       <mtd>
@@ -4570,7 +4542,7 @@ exports[`Mml3 Example 73 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 74 1`] = `
+exports[`Mml3 Example 73 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -4595,7 +4567,7 @@ exports[`Mml3 Example 74 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 75 1`] = `
+exports[`Mml3 Example 74 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -4622,7 +4594,7 @@ exports[`Mml3 Example 75 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 76 1`] = `
+exports[`Mml3 Example 75 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -4647,7 +4619,7 @@ exports[`Mml3 Example 76 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 77 1`] = `
+exports[`Mml3 Example 76 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -4672,7 +4644,7 @@ exports[`Mml3 Example 77 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 78 1`] = `
+exports[`Mml3 Example 77 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -4699,7 +4671,7 @@ exports[`Mml3 Example 78 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 79 1`] = `
+exports[`Mml3 Example 78 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -4724,7 +4696,7 @@ exports[`Mml3 Example 79 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 80 1`] = `
+exports[`Mml3 Example 79 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -4751,7 +4723,7 @@ exports[`Mml3 Example 80 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 81 1`] = `
+exports[`Mml3 Example 80 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -4779,6 +4751,67 @@ exports[`Mml3 Example 81 1`] = `
           <mn>5</mn>
           <mpadded width="0em" lspace="-0.5width">
             <mstyle mathsize="57%">
+              <mn>9</mn>
+            </mstyle>
+          </mpadded>
+        </mover>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd></mtd>
+      <mtd></mtd>
+      <mtd>
+        <mn>1</mn>
+      </mtd>
+      <mtd>
+        <mover>
+          <mn>2</mn>
+          <mpadded width="0em" lspace="-0.5width">
+            <mn>8</mn>
+          </mpadded>
+        </mover>
+      </mtd>
+      <mtd>
+        <mover>
+          <mn>3</mn>
+          <mpadded width="0em" lspace="-0.5width">
+            <mn>9</mn>
+          </mpadded>
+        </mover>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Mml3 Example 81 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
+    <mtr>
+      <mtd>
+        <mn>1</mn>
+      </mtd>
+      <mtd>
+        <mn>2</mn>
+      </mtd>
+      <mtd>
+        <mn>3</mn>
+      </mtd>
+      <mtd>
+        <mover>
+          <mn>4</mn>
+          <mpadded width="0em" lspace="-0.5width">
+            <mstyle mathsize="214%">
+              <mn>8</mn>
+            </mstyle>
+          </mpadded>
+        </mover>
+      </mtd>
+      <mtd>
+        <mover>
+          <mn>5</mn>
+          <mpadded width="0em" lspace="-0.5width">
+            <mstyle mathsize="214%">
               <mn>9</mn>
             </mstyle>
           </mpadded>
@@ -4813,67 +4846,6 @@ exports[`Mml3 Example 81 1`] = `
 `;
 
 exports[`Mml3 Example 82 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
-    <mtr>
-      <mtd>
-        <mn>1</mn>
-      </mtd>
-      <mtd>
-        <mn>2</mn>
-      </mtd>
-      <mtd>
-        <mn>3</mn>
-      </mtd>
-      <mtd>
-        <mover>
-          <mn>4</mn>
-          <mpadded width="0em" lspace="-0.5width">
-            <mstyle mathsize="214%">
-              <mn>8</mn>
-            </mstyle>
-          </mpadded>
-        </mover>
-      </mtd>
-      <mtd>
-        <mover>
-          <mn>5</mn>
-          <mpadded width="0em" lspace="-0.5width">
-            <mstyle mathsize="214%">
-              <mn>9</mn>
-            </mstyle>
-          </mpadded>
-        </mover>
-      </mtd>
-    </mtr>
-    <mtr>
-      <mtd></mtd>
-      <mtd></mtd>
-      <mtd>
-        <mn>1</mn>
-      </mtd>
-      <mtd>
-        <mover>
-          <mn>2</mn>
-          <mpadded width="0em" lspace="-0.5width">
-            <mn>8</mn>
-          </mpadded>
-        </mover>
-      </mtd>
-      <mtd>
-        <mover>
-          <mn>3</mn>
-          <mpadded width="0em" lspace="-0.5width">
-            <mn>9</mn>
-          </mpadded>
-        </mover>
-      </mtd>
-    </mtr>
-  </mtable>
-</math>"
-`;
-
-exports[`Mml3 Example 83 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mstyle scriptsizemultiplier=".4">
     <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
@@ -4932,7 +4904,7 @@ exports[`Mml3 Example 83 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 84 1`] = `
+exports[`Mml3 Example 83 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -4955,7 +4927,7 @@ exports[`Mml3 Example 84 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 85 1`] = `
+exports[`Mml3 Example 84 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -4978,7 +4950,7 @@ exports[`Mml3 Example 85 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 86 1`] = `
+exports[`Mml3 Example 85 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -4995,6 +4967,96 @@ exports[`Mml3 Example 86 1`] = `
       </mtd>
       <mtd>
         <mn>3</mn>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Mml3 Example 86 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
+    <mtr>
+      <mtd>
+        <mo>+</mo>
+      </mtd>
+      <mtd>
+        <msup>
+          <mrow></mrow>
+          <mpadded lspace="-1width" width="0em">
+            <mn>0</mn>
+          </mpadded>
+        </msup>
+        <mn>1</mn>
+      </mtd>
+      <mtd>
+        <mmultiscripts>
+          <mn>2</mn>
+          <mprescripts></mprescripts>
+          <mrow></mrow>
+          <mpadded lspace="-1width" width="0em">
+            <mn>0</mn>
+          </mpadded>
+        </mmultiscripts>
+      </mtd>
+      <mtd>
+        <mover>
+          <mn>3</mn>
+          <mpadded width="0em" lspace="-0.5width">
+            <mn>0</mn>
+          </mpadded>
+        </mover>
+      </mtd>
+      <mtd>
+        <msup>
+          <mn>4</mn>
+          <mpadded width="0em">
+            <mn>0</mn>
+          </mpadded>
+        </msup>
+      </mtd>
+      <mtd>
+        <mn>5</mn>
+        <msup>
+          <mrow></mrow>
+          <mpadded width="0em">
+            <mn>0</mn>
+          </mpadded>
+        </msup>
+      </mtd>
+      <mtd>
+        <msub>
+          <mn>6</mn>
+          <mpadded width="0em">
+            <mn>0</mn>
+          </mpadded>
+        </msub>
+      </mtd>
+      <mtd>
+        <munder>
+          <mn>7</mn>
+          <mpadded width="0em" lspace="-0.5width">
+            <mn>0</mn>
+          </mpadded>
+        </munder>
+      </mtd>
+      <mtd>
+        <mmultiscripts>
+          <mn>8</mn>
+          <mprescripts></mprescripts>
+          <mpadded lspace="-1width" width="0em">
+            <mn>0</mn>
+          </mpadded>
+          <mrow></mrow>
+        </mmultiscripts>
+      </mtd>
+      <mtd>
+        <mover>
+          <mn>9</mn>
+          <mpadded width="0em" lspace="-0.5width">
+            <mn>0</mn>
+          </mpadded>
+        </mover>
       </mtd>
     </mtr>
   </mtable>
@@ -5096,96 +5158,6 @@ exports[`Mml3 Example 88 1`] = `
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
       <mtd>
-        <mo>+</mo>
-      </mtd>
-      <mtd>
-        <msup>
-          <mrow></mrow>
-          <mpadded lspace="-1width" width="0em">
-            <mn>0</mn>
-          </mpadded>
-        </msup>
-        <mn>1</mn>
-      </mtd>
-      <mtd>
-        <mmultiscripts>
-          <mn>2</mn>
-          <mprescripts></mprescripts>
-          <mrow></mrow>
-          <mpadded lspace="-1width" width="0em">
-            <mn>0</mn>
-          </mpadded>
-        </mmultiscripts>
-      </mtd>
-      <mtd>
-        <mover>
-          <mn>3</mn>
-          <mpadded width="0em" lspace="-0.5width">
-            <mn>0</mn>
-          </mpadded>
-        </mover>
-      </mtd>
-      <mtd>
-        <msup>
-          <mn>4</mn>
-          <mpadded width="0em">
-            <mn>0</mn>
-          </mpadded>
-        </msup>
-      </mtd>
-      <mtd>
-        <mn>5</mn>
-        <msup>
-          <mrow></mrow>
-          <mpadded width="0em">
-            <mn>0</mn>
-          </mpadded>
-        </msup>
-      </mtd>
-      <mtd>
-        <msub>
-          <mn>6</mn>
-          <mpadded width="0em">
-            <mn>0</mn>
-          </mpadded>
-        </msub>
-      </mtd>
-      <mtd>
-        <munder>
-          <mn>7</mn>
-          <mpadded width="0em" lspace="-0.5width">
-            <mn>0</mn>
-          </mpadded>
-        </munder>
-      </mtd>
-      <mtd>
-        <mmultiscripts>
-          <mn>8</mn>
-          <mprescripts></mprescripts>
-          <mpadded lspace="-1width" width="0em">
-            <mn>0</mn>
-          </mpadded>
-          <mrow></mrow>
-        </mmultiscripts>
-      </mtd>
-      <mtd>
-        <mover>
-          <mn>9</mn>
-          <mpadded width="0em" lspace="-0.5width">
-            <mn>0</mn>
-          </mpadded>
-        </mover>
-      </mtd>
-    </mtr>
-  </mtable>
-</math>"
-`;
-
-exports[`Mml3 Example 89 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
-    <mtr>
-      <mtd>
         <menclose notation="none">
           <mo>+</mo>
         </menclose>
@@ -5218,7 +5190,7 @@ exports[`Mml3 Example 89 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 90 1`] = `
+exports[`Mml3 Example 89 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr class="msline">
@@ -5248,7 +5220,7 @@ exports[`Mml3 Example 90 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 91 1`] = `
+exports[`Mml3 Example 90 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr class="msline">
@@ -5283,7 +5255,7 @@ exports[`Mml3 Example 91 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 92 1`] = `
+exports[`Mml3 Example 91 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -5306,6 +5278,31 @@ exports[`Mml3 Example 92 1`] = `
             </mpadded>
           </menclose>
         </mpadded>
+      </mtd>
+      <mtd>
+        <mpadded depth="+.2em">
+          <menclose notation="bottom">
+            <mpadded depth=".1em" height=".8em" width=".8em">
+              <mspace width=".15em"></mspace>
+              <mn>3</mn>
+            </mpadded>
+          </menclose>
+        </mpadded>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Mml3 Example 92 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
+    <mtr>
+      <mtd>
+        <mn>1</mn>
+      </mtd>
+      <mtd>
+        <mn>2</mn>
       </mtd>
       <mtd>
         <mpadded depth="+.2em">
@@ -5376,6 +5373,8 @@ exports[`Mml3 Example 95 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
+      <mtd></mtd>
+      <mtd></mtd>
       <mtd>
         <mn>1</mn>
       </mtd>
@@ -5383,11 +5382,90 @@ exports[`Mml3 Example 95 1`] = `
         <mn>2</mn>
       </mtd>
       <mtd>
+        <mn>3</mn>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd></mtd>
+      <mtd>
+        <mpadded depth="+.2em">
+          <menclose notation="bottom">
+            <mpadded depth=".1em" height=".8em" width=".8em">
+              <mspace width=".15em"></mspace>
+              <mo>&#xD7;</mo>
+            </mpadded>
+          </menclose>
+        </mpadded>
+      </mtd>
+      <mtd>
         <mpadded depth="+.2em">
           <menclose notation="bottom">
             <mpadded depth=".1em" height=".8em" width=".8em">
               <mspace width=".15em"></mspace>
               <mn>3</mn>
+            </mpadded>
+          </menclose>
+        </mpadded>
+      </mtd>
+      <mtd>
+        <mpadded depth="+.2em">
+          <menclose notation="bottom">
+            <mpadded depth=".1em" height=".8em" width=".8em">
+              <mspace width=".15em"></mspace>
+              <mn>2</mn>
+            </mpadded>
+          </menclose>
+        </mpadded>
+      </mtd>
+      <mtd>
+        <mpadded depth="+.2em">
+          <menclose notation="bottom">
+            <mpadded depth=".1em" height=".8em" width=".8em">
+              <mspace width=".15em"></mspace>
+              <mn>1</mn>
+            </mpadded>
+          </menclose>
+        </mpadded>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd></mtd>
+      <mtd></mtd>
+      <mtd>
+        <mn>1</mn>
+      </mtd>
+      <mtd>
+        <mn>2</mn>
+      </mtd>
+      <mtd>
+        <mn>3</mn>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd></mtd>
+      <mtd>
+        <mn>2</mn>
+      </mtd>
+      <mtd>
+        <mn>4</mn>
+      </mtd>
+      <mtd>
+        <mn>6</mn>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mn>3</mn>
+      </mtd>
+      <mtd>
+        <mn>6</mn>
+      </mtd>
+      <mtd>
+        <mpadded depth="+.2em">
+          <menclose notation="bottom">
+            <mpadded depth=".1em" height=".8em" width=".8em">
+              <mspace width=".15em"></mspace>
+              <mn>9</mn>
             </mpadded>
           </menclose>
         </mpadded>
@@ -5401,19 +5479,6 @@ exports[`Mml3 Example 96 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
-      <mtd></mtd>
-      <mtd></mtd>
-      <mtd>
-        <mn>1</mn>
-      </mtd>
-      <mtd>
-        <mn>2</mn>
-      </mtd>
-      <mtd>
-        <mn>3</mn>
-      </mtd>
-    </mtr>
-    <mtr>
       <mtd>
         <mpadded depth="+.2em">
           <menclose notation="bottom">
@@ -5428,7 +5493,6 @@ exports[`Mml3 Example 96 1`] = `
           <menclose notation="bottom">
             <mpadded depth=".1em" height=".8em" width=".8em">
               <mspace width=".15em"></mspace>
-              <mo>&#xD7;</mo>
             </mpadded>
           </menclose>
         </mpadded>
@@ -5438,7 +5502,7 @@ exports[`Mml3 Example 96 1`] = `
           <menclose notation="bottom">
             <mpadded depth=".1em" height=".8em" width=".8em">
               <mspace width=".15em"></mspace>
-              <mn>3</mn>
+              <mn>1</mn>
             </mpadded>
           </menclose>
         </mpadded>
@@ -5458,64 +5522,7 @@ exports[`Mml3 Example 96 1`] = `
           <menclose notation="bottom">
             <mpadded depth=".1em" height=".8em" width=".8em">
               <mspace width=".15em"></mspace>
-              <mn>1</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-    </mtr>
-    <mtr>
-      <mtd></mtd>
-      <mtd></mtd>
-      <mtd>
-        <mn>1</mn>
-      </mtd>
-      <mtd>
-        <mn>2</mn>
-      </mtd>
-      <mtd>
-        <mn>3</mn>
-      </mtd>
-    </mtr>
-    <mtr>
-      <mtd></mtd>
-      <mtd>
-        <mn>2</mn>
-      </mtd>
-      <mtd>
-        <mn>4</mn>
-      </mtd>
-      <mtd>
-        <mn>6</mn>
-      </mtd>
-    </mtr>
-    <mtr>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
               <mn>3</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>6</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>9</mn>
             </mpadded>
           </menclose>
         </mpadded>
@@ -5529,44 +5536,12 @@ exports[`Mml3 Example 97 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
-      <mtd></mtd>
-      <mtd></mtd>
-      <mtd>
-        <mn>1</mn>
-      </mtd>
-      <mtd>
-        <mn>2</mn>
-      </mtd>
-      <mtd>
-        <mn>3</mn>
-      </mtd>
-    </mtr>
-    <mtr>
       <mtd>
         <mpadded depth="+.2em">
           <menclose notation="bottom">
             <mpadded depth=".1em" height=".8em" width=".8em">
               <mspace width=".15em"></mspace>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mo>&#xD7;</mo>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>3</mn>
+              <mn>1</mn>
             </mpadded>
           </menclose>
         </mpadded>
@@ -5586,64 +5561,7 @@ exports[`Mml3 Example 97 1`] = `
           <menclose notation="bottom">
             <mpadded depth=".1em" height=".8em" width=".8em">
               <mspace width=".15em"></mspace>
-              <mn>1</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-    </mtr>
-    <mtr>
-      <mtd></mtd>
-      <mtd></mtd>
-      <mtd>
-        <mn>1</mn>
-      </mtd>
-      <mtd>
-        <mn>2</mn>
-      </mtd>
-      <mtd>
-        <mn>3</mn>
-      </mtd>
-    </mtr>
-    <mtr>
-      <mtd></mtd>
-      <mtd>
-        <mn>2</mn>
-      </mtd>
-      <mtd>
-        <mn>4</mn>
-      </mtd>
-      <mtd>
-        <mn>6</mn>
-      </mtd>
-    </mtr>
-    <mtr>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
               <mn>3</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>6</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>9</mn>
             </mpadded>
           </menclose>
         </mpadded>
@@ -5657,36 +5575,12 @@ exports[`Mml3 Example 98 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
-      <mtd></mtd>
-      <mtd></mtd>
-      <mtd>
-        <mn>1</mn>
-      </mtd>
-      <mtd>
-        <mn>2</mn>
-      </mtd>
-      <mtd>
-        <mn>3</mn>
-      </mtd>
-    </mtr>
-    <mtr>
-      <mtd></mtd>
       <mtd>
         <mpadded depth="+.2em">
           <menclose notation="bottom">
             <mpadded depth=".1em" height=".8em" width=".8em">
               <mspace width=".15em"></mspace>
-              <mo>&#xD7;</mo>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>3</mn>
+              <mn>1</mn>
             </mpadded>
           </menclose>
         </mpadded>
@@ -5706,50 +5600,7 @@ exports[`Mml3 Example 98 1`] = `
           <menclose notation="bottom">
             <mpadded depth=".1em" height=".8em" width=".8em">
               <mspace width=".15em"></mspace>
-              <mn>1</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-    </mtr>
-    <mtr>
-      <mtd></mtd>
-      <mtd></mtd>
-      <mtd>
-        <mn>1</mn>
-      </mtd>
-      <mtd>
-        <mn>2</mn>
-      </mtd>
-      <mtd>
-        <mn>3</mn>
-      </mtd>
-    </mtr>
-    <mtr>
-      <mtd></mtd>
-      <mtd>
-        <mn>2</mn>
-      </mtd>
-      <mtd>
-        <mn>4</mn>
-      </mtd>
-      <mtd>
-        <mn>6</mn>
-      </mtd>
-    </mtr>
-    <mtr>
-      <mtd>
-        <mn>3</mn>
-      </mtd>
-      <mtd>
-        <mn>6</mn>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>9</mn>
+              <mn>3</mn>
             </mpadded>
           </menclose>
         </mpadded>
@@ -5763,24 +5614,6 @@ exports[`Mml3 Example 99 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
       <mtd>
         <mpadded depth="+.2em">
           <menclose notation="bottom">
@@ -5896,123 +5729,6 @@ exports[`Mml3 Example 101 1`] = `
 
 exports[`Mml3 Example 102 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
-    <mtr>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>1</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>2</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>3</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-    </mtr>
-  </mtable>
-</math>"
-`;
-
-exports[`Mml3 Example 103 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
-    <mtr>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>1</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>2</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>3</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-    </mtr>
-  </mtable>
-</math>"
-`;
-
-exports[`Mml3 Example 104 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
-    <mtr>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>1</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>2</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-      <mtd>
-        <mpadded depth="+.2em">
-          <menclose notation="bottom">
-            <mpadded depth=".1em" height=".8em" width=".8em">
-              <mspace width=".15em"></mspace>
-              <mn>3</mn>
-            </mpadded>
-          </menclose>
-        </mpadded>
-      </mtd>
-    </mtr>
-  </mtable>
-</math>"
-`;
-
-exports[`Mml3 Example 105 1`] = `
-"<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mstyle mathcolor="gray">
     <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
       <mtr>
@@ -6052,7 +5768,7 @@ exports[`Mml3 Example 105 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 106 1`] = `
+exports[`Mml3 Example 103 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <merror data-mjx-error="Unknown node type 'msline'" title="Unknown node type 'msline'">
     <mtext>Math input error</mtext>
@@ -6060,7 +5776,7 @@ exports[`Mml3 Example 106 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 107 1`] = `
+exports[`Mml3 Example 104 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -6319,7 +6035,7 @@ exports[`Mml3 Example 107 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 108 1`] = `
+exports[`Mml3 Example 105 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mstyle decimalpoint=",">
     <menclose xmlns:m="http://www.w3.org/1998/Math/MathML" notation="right">
@@ -6503,7 +6219,7 @@ exports[`Mml3 Example 108 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 109 1`] = `
+exports[`Mml3 Example 106 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" decimalpoint="&#x66B;">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -6739,7 +6455,7 @@ exports[`Mml3 Example 109 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 110 1`] = `
+exports[`Mml3 Example 107 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -6784,7 +6500,7 @@ exports[`Mml3 Example 110 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 111 1`] = `
+exports[`Mml3 Example 108 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr class="msline">
@@ -6813,7 +6529,7 @@ exports[`Mml3 Example 111 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 112 1`] = `
+exports[`Mml3 Example 109 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr class="msline">
@@ -6843,7 +6559,7 @@ exports[`Mml3 Example 112 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 113 1`] = `
+exports[`Mml3 Example 110 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
@@ -6885,7 +6601,7 @@ exports[`Mml3 Example 113 1`] = `
 </math>"
 `;
 
-exports[`Mml3 Example 114 1`] = `
+exports[`Mml3 Example 111 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>

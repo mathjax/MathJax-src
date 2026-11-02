@@ -1305,8 +1305,7 @@ describe('Mml3', () => {
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mstack>
-    <mscarries>
-      <mn>8</mn>
+    <mscarries location='n' crossout='none'>
       <mn>9</mn>
     </mscarries>
     <mn>123</mn>
@@ -1321,7 +1320,7 @@ describe('Mml3', () => {
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mstack>
-    <mscarries location='n' crossout='none'>
+    <mscarries location='ne' crossout='updiagonalstrike'>
       <mn>9</mn>
     </mscarries>
     <mn>123</mn>
@@ -1336,7 +1335,7 @@ describe('Mml3', () => {
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mstack>
-    <mscarries location='ne' crossout='updiagonalstrike'>
+    <mscarries location='nw' crossout='downdiagonalstrike'>
       <mn>9</mn>
     </mscarries>
     <mn>123</mn>
@@ -1351,7 +1350,7 @@ describe('Mml3', () => {
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mstack>
-    <mscarries location='nw' crossout='downdiagonalstrike'>
+    <mscarries location='n' crossout='verticalstrike'>
       <mn>9</mn>
     </mscarries>
     <mn>123</mn>
@@ -1366,7 +1365,7 @@ describe('Mml3', () => {
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mstack>
-    <mscarries location='n' crossout='verticalstrike'>
+    <mscarries location='ne' crossout='horizontalstrike'>
       <mn>9</mn>
     </mscarries>
     <mn>123</mn>
@@ -1381,7 +1380,7 @@ describe('Mml3', () => {
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mstack>
-    <mscarries location='ne' crossout='horizontalstrike'>
+    <mscarries location='nw' crossout='downdiagonalstrike updiagonalstrike'>
       <mn>9</mn>
     </mscarries>
     <mn>123</mn>
@@ -1396,7 +1395,7 @@ describe('Mml3', () => {
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mstack>
-    <mscarries location='nw' crossout='downdiagonalstrike updiagonalstrike'>
+    <mscarries position='1' location='n' crossout='verticalstrike horizontalstrike downdiagonalstrike updiagonalstrike'>
       <mn>9</mn>
     </mscarries>
     <mn>123</mn>
@@ -1411,21 +1410,6 @@ describe('Mml3', () => {
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mstack>
-    <mscarries position='1' location='n' crossout='verticalstrike horizontalstrike downdiagonalstrike updiagonalstrike'>
-      <mn>9</mn>
-    </mscarries>
-    <mn>123</mn>
-  </mstack>
-</math>
-`)
-    ).toMatchSnapshot();
-  });
-
-  test('Example 80', () => {
-    expect(
-      mml3(`
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mstack>
     <mscarries location='nw' crossout='  downdiagonalstrike    updiagonalstrike downdiagonalstrike '>
       <mn>9</mn>
     </mscarries>
@@ -1436,7 +1420,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 81', () => {
+  test('Example 80', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1457,7 +1441,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 82', () => {
+  test('Example 81', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1479,7 +1463,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 83', () => {
+  test('Example 82', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1502,7 +1486,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 84', () => {
+  test('Example 83', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1517,7 +1501,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 85', () => {
+  test('Example 84', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1532,7 +1516,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 86', () => {
+  test('Example 85', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1548,7 +1532,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 87', () => {
+  test('Example 86', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1574,7 +1558,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 88', () => {
+  test('Example 87', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1600,7 +1584,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 89', () => {
+  test('Example 88', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1623,7 +1607,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 90', () => {
+  test('Example 89', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1635,7 +1619,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 91', () => {
+  test('Example 90', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1648,7 +1632,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 92', () => {
+  test('Example 91', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1661,7 +1645,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 93', () => {
+  test('Example 92', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1674,7 +1658,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 94', () => {
+  test('Example 93', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1687,7 +1671,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 95', () => {
+  test('Example 94', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1700,51 +1684,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 96', () => {
-    expect(
-      mml3(`
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mstack>
-    <msgroup>
-      <mn>123</mn>
-      <msrow><mo>&#xD7;<!--MULTIPLICATION SIGN--></mo><mn>321</mn></msrow>
-    </msgroup>
-    <msline/>
-    <msgroup shift="1">
-      <mn>123</mn>
-      <mn>246</mn>
-      <mn>369</mn>
-    </msgroup>
-    <msline/>
-  </mstack>
-</math>
-`)
-    ).toMatchSnapshot();
-  });
-
-  test('Example 97', () => {
-    expect(
-      mml3(`
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mstack>
-    <msgroup>
-      <mn>123</mn>
-      <msrow><mo>&#xD7;<!--MULTIPLICATION SIGN--></mo><mn>321</mn></msrow>
-    </msgroup>
-    <msline/>
-    <msgroup shift="1">
-      <mn>123</mn>
-      <mn>246</mn>
-      <mn>369</mn>
-    </msgroup>
-    <msline/>
-  </mstack>
-</math>
-`)
-    ).toMatchSnapshot();
-  });
-
-  test('Example 98', () => {
+  test('Example 95', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1766,7 +1706,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 99', () => {
+  test('Example 96', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1779,7 +1719,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 100', () => {
+  test('Example 97', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1792,7 +1732,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 101', () => {
+  test('Example 98', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1805,7 +1745,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 102', () => {
+  test('Example 99', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1818,7 +1758,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 103', () => {
+  test('Example 100', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1831,7 +1771,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 104', () => {
+  test('Example 101', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1844,7 +1784,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 105', () => {
+  test('Example 102', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1859,7 +1799,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 106', () => {
+  test('Example 103', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1876,7 +1816,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 107', () => {
+  test('Example 104', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1914,7 +1854,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 108', () => {
+  test('Example 105', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -1954,7 +1894,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 109', () => {
+  test('Example 106', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"  decimalpoint="&#x066B;">
@@ -1991,7 +1931,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 110', () => {
+  test('Example 107', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -2005,7 +1945,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 111', () => {
+  test('Example 108', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -2016,7 +1956,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 112', () => {
+  test('Example 109', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -2028,7 +1968,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 113', () => {
+  test('Example 110', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -2041,7 +1981,7 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 
-  test('Example 114', () => {
+  test('Example 111', () => {
     expect(
       mml3(`
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
