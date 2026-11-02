@@ -551,7 +551,7 @@ Mml3.XSLT = `
    <xsl:otherwise><xsl:value-of select="$dp1"/></xsl:otherwise>
   </xsl:choose>
  </xsl:variable>
- <m:mtr l="$p">
+ <m:mtr l="{$p}">
   <xsl:variable name="mn" select="normalize-space(.)"/>
   <xsl:variable name="len" select="string-length($mn)"/>
   <xsl:choose>

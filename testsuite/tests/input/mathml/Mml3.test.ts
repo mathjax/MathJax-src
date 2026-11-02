@@ -2132,6 +2132,18 @@ describe('Mml3 coverage', () => {
       'mstack stackalign right with generic row then msrow',
       '<math><mstack stackalign="right"><mi>x</mi><msrow><mi>y</mi><mi>z</mi></msrow></mstack></math>',
     ],
+    [
+      'mstack stackalign left with mn rows and mscarries position',
+      '<math><mstack stackalign="left"><mscarries position="1"><mn>1</mn></mscarries><mn>12345</mn><mn>67</mn></mstack></math>',
+    ],
+    [
+      'mstack stackalign left with mn rows and msrow position',
+      '<math><mstack stackalign="left"><mn>12345</mn><msrow position="1"><mn>67</mn></msrow></mstack></math>',
+    ],
+    [
+      'mstack stackalign left with mn rows and msgroup position',
+      '<math><mstack stackalign="left"><mn>12345</mn><msgroup position="1"><mn>67</mn></msgroup></mstack></math>',
+    ],
   ];
   for (const [name, mml] of cases) {
     test(name, () => {

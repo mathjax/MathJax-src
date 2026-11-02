@@ -7232,6 +7232,115 @@ exports[`Mml3 coverage mstack stackalign left with generic row then msrow 1`] = 
 </math>"
 `;
 
+exports[`Mml3 coverage mstack stackalign left with mn rows and mscarries position 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
+    <mtr>
+      <mtd>
+        <mover>
+          <mphantom>
+            <mn>0</mn>
+          </mphantom>
+          <mpadded width="0em" lspace="-0.5width">
+            <mn>1</mn>
+          </mpadded>
+        </mover>
+      </mtd>
+      <mtd>
+        <mn>1</mn>
+      </mtd>
+      <mtd>
+        <mn>2</mn>
+      </mtd>
+      <mtd>
+        <mn>3</mn>
+      </mtd>
+      <mtd>
+        <mn>4</mn>
+      </mtd>
+      <mtd>
+        <mn>5</mn>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd></mtd>
+      <mtd>
+        <mn>6</mn>
+      </mtd>
+      <mtd>
+        <mn>7</mn>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Mml3 coverage mstack stackalign left with mn rows and msgroup position 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
+    <mtr>
+      <mtd></mtd>
+      <mtd>
+        <mn>1</mn>
+      </mtd>
+      <mtd>
+        <mn>2</mn>
+      </mtd>
+      <mtd>
+        <mn>3</mn>
+      </mtd>
+      <mtd>
+        <mn>4</mn>
+      </mtd>
+      <mtd>
+        <mn>5</mn>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mn>6</mn>
+      </mtd>
+      <mtd>
+        <mn>7</mn>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Mml3 coverage mstack stackalign left with mn rows and msrow position 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
+    <mtr>
+      <mtd></mtd>
+      <mtd>
+        <mn>1</mn>
+      </mtd>
+      <mtd>
+        <mn>2</mn>
+      </mtd>
+      <mtd>
+        <mn>3</mn>
+      </mtd>
+      <mtd>
+        <mn>4</mn>
+      </mtd>
+      <mtd>
+        <mn>5</mn>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mn>6</mn>
+      </mtd>
+      <mtd>
+        <mn>7</mn>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
 exports[`Mml3 coverage mstack stackalign left with mrow and msrow 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
@@ -7261,10 +7370,20 @@ exports[`Mml3 coverage mstack stackalign left with mscarries 1`] = `
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
     <mtr>
       <mtd>
-        <mn>4</mn>
+        <mover>
+          <mn>4</mn>
+          <mpadded width="0em" lspace="-0.5width">
+            <mn>1</mn>
+          </mpadded>
+        </mover>
       </mtd>
       <mtd>
-        <mn>9</mn>
+        <mover>
+          <mn>9</mn>
+          <mpadded width="0em" lspace="-0.5width">
+            <mn>2</mn>
+          </mpadded>
+        </mover>
       </mtd>
       <mtd>
         <mn>6</mn>
