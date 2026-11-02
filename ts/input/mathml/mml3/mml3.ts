@@ -494,7 +494,7 @@ Mml3.XSLT = `
  <xsl:param name="p"/>
  <xsl:param name="maxl" select="0"/>
  <m:mtr l="{1 + $p}">
-  <xsl:if test="ancestor::mstack[1]/@stackalign='left'">
+  <xsl:if test="ancestor::m:mstack[1]/@stackalign='left'">
    <xsl:attribute name="l"><xsl:value-of select="$p"/></xsl:attribute>
   </xsl:if>
   <m:mtd><xsl:apply-templates select="."/></m:mtd>

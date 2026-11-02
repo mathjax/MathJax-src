@@ -1999,8 +1999,6 @@ describe('Mml3', () => {
 /**
  * Additional cases to cover the parts of the XSLT not reached by the examples
  * above (right-to-left handling and the remaining longdivstyle values, etc.).
- * The mstack stackalign='left' test in the mstack1 default template is not
- * reachable, as the XPath expression lacks the m: prefix.
  */
 describe('Mml3 coverage', () => {
   const cases: [string, string][] = [
@@ -2117,6 +2115,22 @@ describe('Mml3 coverage', () => {
     [
       'mscarry with unknown location',
       '<math><mstack><mscarries><mscarry location="x"><mn>1</mn></mscarry><mn>2</mn></mscarries><mn>496</mn><msrow><mo>+</mo><mn>28</mn></msrow><msline/></mstack></math>',
+    ],
+    [
+      'mstack stackalign left with generic row then msrow',
+      '<math><mstack stackalign="left"><mi>x</mi><msrow><mi>y</mi><mi>z</mi></msrow></mstack></math>',
+    ],
+    [
+      'mstack stackalign left with msrow then generic row',
+      '<math><mstack stackalign="left"><msrow><mi>y</mi><mi>z</mi></msrow><mi>x</mi></mstack></math>',
+    ],
+    [
+      'mstack stackalign left with mrow and msrow',
+      '<math><mstack stackalign="left"><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><msrow><mo>-</mo><mi>c</mi></msrow></mstack></math>',
+    ],
+    [
+      'mstack stackalign right with generic row then msrow',
+      '<math><mstack stackalign="right"><mi>x</mi><msrow><mi>y</mi><mi>z</mi></msrow></mstack></math>',
     ],
   ];
   for (const [name, mml] of cases) {

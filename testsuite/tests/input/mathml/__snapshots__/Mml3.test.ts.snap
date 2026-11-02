@@ -7212,6 +7212,50 @@ exports[`Mml3 coverage msline with length and stackalign left 1`] = `
 </math>"
 `;
 
+exports[`Mml3 coverage mstack stackalign left with generic row then msrow 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
+    <mtr>
+      <mtd>
+        <mi>x</mi>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mi>y</mi>
+      </mtd>
+      <mtd>
+        <mi>z</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Mml3 coverage mstack stackalign left with mrow and msrow 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
+    <mtr>
+      <mtd>
+        <mrow>
+          <mi>a</mi>
+          <mo>+</mo>
+          <mi>b</mi>
+        </mrow>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mo>-</mo>
+      </mtd>
+      <mtd>
+        <mi>c</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
 exports[`Mml3 coverage mstack stackalign left with mscarries 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
@@ -7241,6 +7285,26 @@ exports[`Mml3 coverage mstack stackalign left with mscarries 1`] = `
 </math>"
 `;
 
+exports[`Mml3 coverage mstack stackalign left with msrow then generic row 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
+    <mtr>
+      <mtd>
+        <mi>y</mi>
+      </mtd>
+      <mtd>
+        <mi>z</mi>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mi>x</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
 exports[`Mml3 coverage mstack stackalign left with plain row 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML">
   <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
@@ -7261,6 +7325,27 @@ exports[`Mml3 coverage mstack stackalign left with plain row 1`] = `
       </mtd>
       <mtd>
         <mn>8</mn>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>"
+`;
+
+exports[`Mml3 coverage mstack stackalign right with generic row then msrow 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mtable xmlns:m="http://www.w3.org/1998/Math/MathML" columnspacing="0em" rowspacing="0em">
+    <mtr>
+      <mtd></mtd>
+      <mtd>
+        <mi>x</mi>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mi>y</mi>
+      </mtd>
+      <mtd>
+        <mi>z</mi>
       </mtd>
     </mtr>
   </mtable>
