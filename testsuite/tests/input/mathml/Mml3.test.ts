@@ -2055,3 +2055,133 @@ describe('Mml3', () => {
     ).toMatchSnapshot();
   });
 });
+
+/**
+ * Additional cases to cover the parts of the XSLT not reached by the examples
+ * above (right-to-left handling and the remaining longdivstyle values, etc.).
+ * The mstack stackalign='left' test in the mstack1 default template is not
+ * reachable, as the XPath expression lacks the m: prefix.
+ */
+describe('Mml3 coverage', () => {
+  const cases: [string, string][] = [
+    [
+      'rtl text and brackets',
+      '<math dir="rtl"><mrow><mo>(</mo><mi>a</mi><mo>)</mo><mo>{</mo><mi>b</mi><mo>}</mo><mi>x</mi><mo>&lt;</mo><mi>y</mi><mo>&gt;</mo><mi>z</mi><mo>&#x2208;</mo><mi>A</mi><mo>&#x220b;</mo><mi>B</mi></mrow></math>',
+    ],
+    [
+      'rtl mfenced round, square, curly',
+      '<math dir="rtl"><mrow><mfenced open="(" close=")"><mi>a</mi></mfenced><mfenced open="[" close="]"><mi>b</mi></mfenced><mfenced open="{" close="}"><mi>c</mi></mfenced></mrow></math>',
+    ],
+    [
+      'rtl mfenced reversed brackets',
+      '<math dir="rtl"><mrow><mfenced open=")" close="("><mi>a</mi></mfenced><mfenced open="]" close="["><mi>b</mi></mfenced><mfenced open="}" close="{"><mi>c</mi></mfenced></mrow></math>',
+    ],
+    [
+      'rtl mfenced other delimiters',
+      '<math dir="rtl"><mfenced open="|" close="&#x2016;"><mi>a</mi><mi>b</mi></mfenced></math>',
+    ],
+    ['rtl mfrac', '<math dir="rtl"><mfrac><mi>a</mi><mi>b</mi></mfrac></math>'],
+    [
+      'rtl bevelled mfrac',
+      '<math dir="rtl"><mfrac bevelled="true"><mi>a</mi><mi>b</mi></mfrac></math>',
+    ],
+    ['rtl mroot', '<math dir="rtl"><mroot><mi>a</mi><mn>3</mn></mroot></math>'],
+    [
+      'rtl msqrt',
+      '<math dir="rtl"><msqrt><mi>a</mi><mo>+</mo><mi>b</mi></msqrt></math>',
+    ],
+    [
+      'rtl mtable',
+      '<math dir="rtl"><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable></math>',
+    ],
+    [
+      'rtl munder, mover, munderover',
+      '<math dir="rtl"><mrow><munder><mi>a</mi><mi>b</mi></munder><mover><mi>c</mi><mi>d</mi></mover><munderover><mi>e</mi><mi>f</mi><mi>g</mi></munderover></mrow></math>',
+    ],
+    [
+      'rtl msup, msub, msubsup',
+      '<math dir="rtl"><mrow><msup><mi>a</mi><mn>2</mn></msup><msub><mi>b</mi><mn>1</mn></msub><msubsup><mi>c</mi><mn>1</mn><mn>2</mn></msubsup></mrow></math>',
+    ],
+    [
+      'rtl mmultiscripts with prescripts',
+      '<math dir="rtl"><mmultiscripts><mi>a</mi><mi>b</mi><mi>c</mi><mprescripts/><mi>d</mi><mi>e</mi></mmultiscripts></math>',
+    ],
+    [
+      'rtl mmultiscripts without prescripts',
+      '<math dir="rtl"><mmultiscripts><mi>a</mi><mi>b</mi><mi>c</mi></mmultiscripts></math>',
+    ],
+    [
+      'rtl menclose radical',
+      '<math dir="rtl"><menclose notation="radical"><mi>a</mi></menclose></math>',
+    ],
+    [
+      'rtl menclose madruwb',
+      '<math dir="rtl"><menclose notation="madruwb"><mn>5</mn></menclose></math>',
+    ],
+    [
+      'rtl mstack',
+      '<math dir="rtl"><mstack><mn>496</mn><msrow><mo>+</mo><mn>28</mn></msrow><msline/></mstack></math>',
+    ],
+    [
+      'rtl mlongdiv',
+      '<math dir="rtl"><mlongdiv><mn>3</mn><mn>4</mn><mn>12</mn><msgroup><mn>12</mn><msline length="2"/></msgroup></mlongdiv></math>',
+    ],
+    [
+      'mstack stackalign left with plain row',
+      '<math><mstack stackalign="left"><mn>496</mn><mn>28</mn><msline/></mstack></math>',
+    ],
+    [
+      'mstack stackalign left with mscarries',
+      '<math><mstack stackalign="left"><mscarries><mn>1</mn><mn>2</mn></mscarries><mn>496</mn><msrow><mo>+</mo><mn>28</mn></msrow><msline/></mstack></math>',
+    ],
+    [
+      'mscarries with scriptsizemultiplier',
+      '<math><mstack><mscarries scriptsizemultiplier="0.5"><mscarry><mn>1</mn></mscarry><mn>2</mn></mscarries><mn>496</mn><msrow><mo>+</mo><mn>28</mn></msrow><msline/></mstack></math>',
+    ],
+    [
+      'mscarries without location',
+      '<math><mstack><mscarries><mn>1</mn><mn>2</mn></mscarries><mn>496</mn><msrow><mo>+</mo><mn>28</mn></msrow><msline/></mstack></math>',
+    ],
+    [
+      'msline with length and stackalign left',
+      '<math><mstack stackalign="left"><mn>496</mn><msrow><mo>+</mo><mn>28</mn></msrow><msline length="2"/><mn>524</mn></mstack></math>',
+    ],
+    [
+      'longdivstyle left)(right',
+      '<math><mlongdiv longdivstyle="left)(right"><mn>12</mn><mn>16.5</mn><mn>198</mn></mlongdiv></math>',
+    ],
+    [
+      'longdivstyle left/\\right',
+      '<math><mlongdiv longdivstyle="left/\\right"><mn>12</mn><mn>16.5</mn><mn>198</mn></mlongdiv></math>',
+    ],
+    [
+      'longdivstyle :right=right',
+      '<math><mlongdiv longdivstyle=":right=right"><mn>12</mn><mn>16.5</mn><mn>198</mn></mlongdiv></math>',
+    ],
+    [
+      'longdivstyle righttop',
+      '<math><mlongdiv longdivstyle="righttop"><mn>12</mn><mn>16.5</mn><mn>198</mn></mlongdiv></math>',
+    ],
+    [
+      'longdivstyle mediumstackedrightright',
+      '<math><mlongdiv longdivstyle="mediumstackedrightright"><mn>12</mn><mn>16.5</mn><mn>198</mn></mlongdiv></math>',
+    ],
+    [
+      'longdivstyle shortstackedrightright',
+      '<math><mlongdiv longdivstyle="shortstackedrightright"><mn>12</mn><mn>16.5</mn><mn>198</mn></mlongdiv></math>',
+    ],
+    [
+      'longdivstyle stackedleftleft',
+      '<math><mlongdiv longdivstyle="stackedleftleft"><mn>12</mn><mn>16.5</mn><mn>198</mn></mlongdiv></math>',
+    ],
+    [
+      'mscarry with unknown location',
+      '<math><mstack><mscarries><mscarry location="x"><mn>1</mn></mscarry><mn>2</mn></mscarries><mn>496</mn><msrow><mo>+</mo><mn>28</mn></msrow><msline/></mstack></math>',
+    ],
+  ];
+  for (const [name, mml] of cases) {
+    test(name, () => {
+      expect(mml3(mml)).toMatchSnapshot();
+    });
+  }
+});
