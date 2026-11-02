@@ -381,7 +381,7 @@ export class MathMLCompile<N, T, D> {
           mml.setProperty('variantForm', true);
         } else if (name.substring(0, 11) !== 'MJX-TeXAtom') {
           mml.attributes.set(
-            'mathvariant',
+            'data-mjx-variant',
             this.fixCalligraphic(name.substring(3))
           );
         }
