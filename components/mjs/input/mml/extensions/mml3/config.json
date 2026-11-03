@@ -5,13 +5,6 @@
     "targets": ["input/mathml/mml3"],
     "excludeSubdirs": true
   },
-  "copy": {
-    "to": "[bundle]/input/mml/extensions",
-    "from": "[ts]/input/mathml/mml3",
-    "copy": [
-      "mml3.sef.json"
-    ]
-  },
   "webpack": {
     "name": "input/mml/extensions/mml3",
     "libs": [
