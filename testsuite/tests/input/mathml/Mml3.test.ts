@@ -1,5 +1,4 @@
-import { createRequire } from 'node:module';
-import { beforeAll, describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from '@jest/globals';
 import { mathjax } from '#js/mathjax.js';
 import { MathML } from '#js/input/mathml.js';
 import { RegisterHTMLHandler } from '#js/handlers/html.js';
@@ -9,7 +8,7 @@ import { SerializedMmlVisitor } from '#js/core/MmlTree/SerializedMmlVisitor.js';
 
 /**
  * Tests for the MathML3 elementary math support (mstack, mlongdiv, etc.),
- * which is implemented via an XSLT transform run as a MathML pre-filter.
+ * which is implemented by a transform run as a MathML pre-filter.
  */
 
 const adaptor = liteAdaptor();
@@ -28,13 +27,7 @@ function mml3(mml: string): string {
   return visitor.visitTree(Array.from(doc.math as any[])[0].root);
 }
 
-beforeAll(() => {
-  //
-  // The node version of the MML3 transform uses eval('require') to load
-  // Saxon-JS, but require is not available in ESM modules, so provide it.
-  //
-  (globalThis as any).require = createRequire(import.meta.url);
-});
+beforeAll(() => {});
 
 describe('Mml3', () => {
   test('Example 1', () => {
@@ -2143,6 +2136,30 @@ describe('Mml3 coverage', () => {
     [
       'mstack stackalign left with mn rows and msgroup position',
       '<math><mstack stackalign="left"><mn>12345</mn><msgroup position="1"><mn>67</mn></msgroup></mstack></math>',
+    ],
+    [
+      'msline with non-numeric length',
+      '<math><mstack><mn>12</mn><msline length="abc"/></mstack></math>',
+    ],
+    [
+      'msrow with decimalpoint',
+      '<math><mstack><mn>1,5</mn><msrow decimalpoint=","><mo>+</mo><mn>2,25</mn></msrow></mstack></math>',
+    ],
+    [
+      'msgroup with decimalpoint',
+      '<math><mstack><msgroup decimalpoint=","><mn>1,5</mn><mn>2,25</mn></msgroup></mstack></math>',
+    ],
+    [
+      'mscarry containing none',
+      '<math><mstack><mscarries><mscarry location="n"><none/></mscarry><mn>1</mn></mscarries><mn>496</mn></mstack></math>',
+    ],
+    [
+      'msrow with empty mn',
+      '<math><mstack><msrow><mn></mn><mi>x</mi></msrow></mstack></math>',
+    ],
+    [
+      'rtl msup with missing script',
+      '<math dir="rtl"><msup><mi>a</mi></msup></math>',
     ],
   ];
   for (const [name, mml] of cases) {
