@@ -320,7 +320,7 @@ export interface SRE_OPTIONS {
  */
 const SRE_options: SRE_OPTIONS = {
   speech: 'none',
-  locale: Locale.default,
+  locale: Locale.current,
   domain: 'clearspeak',
   style: 'default',
   braille: 'nemeth',

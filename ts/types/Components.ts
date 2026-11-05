@@ -34,7 +34,10 @@ import type {
   N,
   T,
   D,
+  EMPTY,
 } from './Types.js';
+import type { LITE_DOM } from './dom/lite.js';
+import type { HTML_DOM } from './dom/html.js';
 
 import type { STARTUP_TYPES } from '../components/startup.js';
 import type { LOADER_TYPES } from '../components/loader.js';
@@ -109,6 +112,8 @@ import type {
   SafeMathDocument,
 } from '../ui/safe/SafeHandler.js';
 
+type COMBINED<T extends string, U> = U | 'startup' | EMPTY_COMPONENT<T>;
+
 /**
  * The mapping of component names to their component definitions.
  *
@@ -135,46 +140,46 @@ export type COMPONENTS<DOM extends DOM_TYPES> = {
       >
     | '__base__';
 
-  '[tex]/action': EMPTY_COMPONENT<'[tex]/action'>;
+  '[tex]/action': TEX_PACKAGE<'action'>;
   '[tex]/ams': TEX_PACKAGE<'ams', AMS_OPTIONS>;
   '[tex]/amscd': TEX_PACKAGE<'amscd', AMSCD_OPTIONS>;
   '[tex]/autoload': TEX_PACKAGE<'autoload', AUTOLOAD_OPTIONS>;
   '[tex]/bbm': TEX_PACKAGE<'bbm', BBM_OPTIONS>;
   '[tex]/bboldx': TEX_PACKAGE<'bboldx', BBOLDX_OPTIONS>;
-  '[tex]/bbox': EMPTY_COMPONENT<'[tex]/bbox'>;
+  '[tex]/bbox': TEX_PACKAGE<'bbox'>;
   '[tex]/begingroup': TEX_PACKAGE<'begingroup', BEGINGROUP_OPTIONS>;
-  '[tex]/boldsymbol': EMPTY_COMPONENT<'[tex]/boldsymbol'>;
-  '[tex]/braket': EMPTY_COMPONENT<'[tex]/braket'>;
-  '[tex]/bussproofs': EMPTY_COMPONENT<'[tex]/bussproofs'>;
-  '[tex]/cancel': EMPTY_COMPONENT<'[tex]/cancel'>;
-  '[tex]/cases': EMPTY_COMPONENT<'[tex]/cases'>;
-  '[tex]/centernot': EMPTY_COMPONENT<'[tex]/centernot'>;
+  '[tex]/boldsymbol': TEX_PACKAGE<'boldsymbol'>;
+  '[tex]/braket': TEX_PACKAGE<'braket'>;
+  '[tex]/bussproofs': TEX_PACKAGE<'bussproofs'>;
+  '[tex]/cancel': TEX_PACKAGE<'cancel'>;
+  '[tex]/cases': TEX_PACKAGE<'cases'>;
+  '[tex]/centernot': TEX_PACKAGE<'centernot'>;
   '[tex]/color': TEX_PACKAGE<'color', COLOR_OPTIONS>;
-  '[tex]/colorv2': EMPTY_COMPONENT<'[tex]/colorv2'>;
+  '[tex]/colorv2': TEX_PACKAGE<'colorv2'>;
   '[tex]/configmacros': TEX_PACKAGE<'configmacros', CONFIGMACROS_OPTIONS>;
   '[tex]/dsfont': TEX_PACKAGE<'dsfont', DSFONT_OPTIONS>;
-  '[tex]/empheq': EMPTY_COMPONENT<'[tex]/empheq'>;
-  '[tex]/enclose': EMPTY_COMPONENT<'[tex]/enclose'>;
-  '[tex]/extpfeil': EMPTY_COMPONENT<'[tex]/extpfeil'>;
-  '[tex]/fontsizev3': EMPTY_COMPONENT<'[tex]/fontsizev3'>;
-  '[tex]/gensymb': EMPTY_COMPONENT<'[tex]/gensymb'>;
-  '[tex]/html': EMPTY_COMPONENT<'[tex]/html'>;
+  '[tex]/empheq': TEX_PACKAGE<'empheq'>;
+  '[tex]/enclose': TEX_PACKAGE<'enclose'>;
+  '[tex]/extpfeil': TEX_PACKAGE<'extpfeil'>;
+  '[tex]/fontsizev3': TEX_PACKAGE<'fontsizev3'>;
+  '[tex]/gensymb': TEX_PACKAGE<'gensymb'>;
+  '[tex]/html': TEX_PACKAGE<'html'>;
   '[tex]/mathtools': TEX_PACKAGE<'mathtools', MATHTOOLS_OPTIONS>;
-  '[tex]/mhchem': EMPTY_COMPONENT<'[tex]/mhchem'>;
+  '[tex]/mhchem': TEX_PACKAGE<'mhchem'>;
   '[tex]/newcommand': TEX_PACKAGE<'newcommand', NEWCOMMAND_OPTIONS>;
-  '[tex]/noerrors': EMPTY_COMPONENT<'[tex]/noerrors'>;
+  '[tex]/noerrors': TEX_PACKAGE<'noerrors'>;
   '[tex]/noundefined': TEX_PACKAGE<'noundefined', NOUNDEFINED_OPTIONS>;
   '[tex]/physics': TEX_PACKAGE<'physics', PHYSICS_OPTIONS>;
   '[tex]/require': TEX_PACKAGE<'require', REQUIRE_OPTIONS>;
   '[tex]/setoptions': TEX_PACKAGE<'setoptions', SETOPTIONS_OPTIONS>;
   '[tex]/tagformat': TEX_PACKAGE<'tagformat', TAGFORMAT_OPTIONS>;
   '[tex]/texhtml': TEX_PACKAGE<'texhtml', TEXHTML_OPTIONS>;
-  '[tex]/textcomp': EMPTY_COMPONENT<'[tex]/textcomp'>;
+  '[tex]/textcomp': TEX_PACKAGE<'textcomp'>;
   '[tex]/textmacros': TEX_PACKAGE<'textmacros', TEXTMACROS_OPTIONS>;
-  '[tex]/unicode': EMPTY_COMPONENT<'[tex]/unicode'>;
+  '[tex]/unicode': TEX_PACKAGE<'unicode'>;
   '[tex]/units': TEX_PACKAGE<'units', UNITS_OPTIONS>;
-  '[tex]/upgreek': EMPTY_COMPONENT<'[tex]/upgreek'>;
-  '[tex]/verb': EMPTY_COMPONENT<'[tex]/verb'>;
+  '[tex]/upgreek': TEX_PACKAGE<'upgreek'>;
+  '[tex]/verb': TEX_PACKAGE<'verb'>;
 
   '[mml]/mml3': MML_PACKAGE<'mml3', MML3_OPTIONS>;
   'input/mml/entities': EMPTY_COMPONENT<'input/mml/entities'>;
@@ -220,35 +225,59 @@ export type COMPONENTS<DOM extends DOM_TYPES> = {
 
   startup: STARTUP_TYPES<DOM> &
     LOADER_TYPES &
-    DOC_OPTIONS<HTMLDOCUMENT_OPTIONS<DOM> & HTMLDOMSTRINGS_OPTIONS<DOM>>;
-  loader: LOADER_TYPES;
+    DOC_OPTIONS<HTMLDOCUMENT_OPTIONS<DOM> & HTMLDOMSTRINGS_OPTIONS<DOM>> & {
+      config: { locale: string };
+    };
+  loader: LOADER_TYPES & { config: { locale: string } };
 
-  'mml-chtml':
-    'input/mml' | 'output/chtml' | 'ui/menu' | '__a11y__' | 'startup';
-  'mml-chtml-nofont': 'mml-chtml';
-  'mml-svg': 'input/mml' | 'output/svg' | 'ui/menu' | '__a11y__' | 'startup';
-  'mml-svg-nofont': 'mml-svg';
-  'tex-chtml':
-    'input/tex' | 'output/chtml' | 'ui/menu' | '__a11y__' | 'startup';
-  'tex-chtml-nofont': 'tex-chtml';
-  'tex-mml-chtml':
-    | 'input/tex'
-    | 'input/mml'
-    | 'output/chtml'
-    | 'ui/menu'
-    | '__a11y__'
-    | 'startup';
-  'tex-mml-chtml-nofont': 'tex-mml-chtml';
-  'tex-svg': 'input/tex' | 'output/svg' | 'ui/menu' | '__a11y__' | 'startup';
-  'tex-svg-nofont': 'tex-svg';
-  'tex-mml-svg':
-    | 'input/tex'
-    | 'input/mml'
-    | 'output/svg'
-    | 'ui/menu'
-    | '__a11y__'
-    | 'startup';
-  'tex-mml-svg-nofont': 'tex-mml-svg';
+  'mml-chtml': COMBINED<
+    'mml-chtml',
+    'input/mml' | 'output/chtml' | 'ui/menu' | '__a11y__'
+  >;
+  'mml-chtml-nofont': COMBINED<
+    'mml-chtml-nofont',
+    'input/mml' | 'output/chtml' | 'ui/menu' | '__a11y__'
+  >;
+  'mml-svg': COMBINED<
+    'mml-svg',
+    'input/mml' | 'output/svg' | 'ui/menu' | '__a11y__'
+  >;
+  'mml-svg-nofont': COMBINED<
+    'mml-svg-nofont',
+    'input/mml' | 'output/svg' | 'ui/menu' | '__a11y__'
+  >;
+  'tex-chtml': COMBINED<
+    'tex-chtml',
+    'input/tex' | 'output/chtml' | 'ui/menu' | '__a11y__'
+  >;
+  'tex-chtml-nofont': COMBINED<
+    'tex-chtml-nofont',
+    'input/tex' | 'output/chtml' | 'ui/menu' | '__a11y__'
+  >;
+  'tex-mml-chtml': COMBINED<
+    'tex-mml-chtml',
+    'input/tex' | 'input/mml' | 'output/chtml' | 'ui/menu' | '__a11y__'
+  >;
+  'tex-mml-chtml-nofont': COMBINED<
+    'tex-mml-chtml-nofont',
+    'input/tex' | 'input/mml' | 'output/chtml' | 'ui/menu' | '__a11y__'
+  >;
+  'tex-svg': COMBINED<
+    'tex-svg',
+    'input/tex' | 'output/svg' | 'ui/menu' | '__a11y__'
+  >;
+  'tex-svg-nofont': COMBINED<
+    'tex-svg-nofont',
+    'input/tex' | 'output/svg' | 'ui/menu' | '__a11y__'
+  >;
+  'tex-mml-svg': COMBINED<
+    'tex-mml-svg',
+    'input/tex' | 'input/mml' | 'output/svg' | 'ui/menu' | '__a11y__'
+  >;
+  'tex-mml-svg-nofont': COMBINED<
+    'tex-mml-svg-nofont',
+    'input/tex' | 'input/mml' | 'output/svg' | 'ui/menu' | '__a11y__'
+  >;
 
   __base__: TEX_CONFIG<BASE_OPTIONS>;
   __PACKAGES__:
@@ -261,4 +290,27 @@ export type COMPONENTS<DOM extends DOM_TYPES> = {
     | '[tex]/autoload'
     | '[tex]/require';
   __a11y__: 'a11y/explorer' | 'input/mml';
+  __NONE__: EMPTY;
+};
+
+/**
+ * The DOM adaptor definitions
+ */
+export type ADAPTORS = {
+  liteDOM: {
+    component: COMPONENTS<LITE_DOM>['adaptors/liteDOM'];
+    DOM: LITE_DOM;
+  };
+  jsdom: {
+    component: COMPONENTS<HTML_DOM>['adaptors/jsdom'];
+    DOM: HTML_DOM;
+  };
+  linkedom: {
+    component: COMPONENTS<HTML_DOM>['adaptors/linkedom'];
+    DOM: HTML_DOM;
+  };
+  browser: {
+    component: EMPTY;
+    DOM: HTML_DOM;
+  };
 };
