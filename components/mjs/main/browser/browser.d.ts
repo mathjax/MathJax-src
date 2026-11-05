@@ -12,9 +12,8 @@ export function init<
   T extends COMPONENT_LIST<ADAPTOR_DOM<A>> = 'startup',
   A extends ADAPTOR_LIST = 'browser'
 >(
-  config: MATHJAX_CONFIG<T, A>,
-  component?: MATHJAX_COMPONENTS<T, A>
-): Promise<MATHJAX_OBJECT<T, A>>;
+  config: MATHJAX_CONFIG<T | 'startup', A>,
+  component?: MATHJAX_COMPONENTS<T | 'startup', A>
+): Promise<MATHJAX_OBJECT<T | 'startup', A>>;
 
 export const MathJax: MathJaxObject;
-

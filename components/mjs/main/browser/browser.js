@@ -34,7 +34,7 @@ export function makeInit(nodeSetup = null, adaptor = '') {
       const CONFIG = MathJax.config.loader;
       CONFIG.load ??= [];
       if (CONFIG.load.filter((name) => name.substring(0, 9) === 'adaptors/').length === 0) {
-        CONFIG.load.unshift(adaptor);
+        CONFIG.load.push(adaptor);
       }
     }
     MathJax.loader = Loader;

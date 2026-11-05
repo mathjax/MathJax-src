@@ -1,7 +1,6 @@
 import { MathJax, combineDefaults } from '#js/components/global.js';
 import { Package } from '#js/components/package.js';
 import { mathjax } from '#js/mathjax.js';
-import { isCJS } from '#js/util/context.js';
 import { resolvePath } from '#js/util/AsyncLoad.js';
 
 export async function setup() {
