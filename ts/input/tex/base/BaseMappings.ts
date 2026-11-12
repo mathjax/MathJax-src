@@ -623,6 +623,9 @@ new sm.CommandMap('macros', {
   framebox: BaseMethods.FrameBox,
   makebox: BaseMethods.MakeBox,
 
+  rtl: [BaseMethods.Dir, 'rtl'], // non-standard
+  ltr: [BaseMethods.Dir, 'ltr'], // non-standard
+
   strut: BaseMethods.Strut,
   mathstrut: [BaseMethods.Macro, '\\vphantom{(}'],
   phantom: BaseMethods.Phantom,

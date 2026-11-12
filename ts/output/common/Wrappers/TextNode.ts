@@ -36,6 +36,7 @@ import {
 } from '../FontData.js';
 import { CommonOutputJax } from '../../common.js';
 import { BBox } from '../../../util/BBox.js';
+import { rtlRanges } from '../../../util/string.js';
 import { TextNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
 
@@ -151,12 +152,19 @@ export function CommonTextNodeMixin<
     extends Base
     implements CommonTextNode<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
   {
+    protected charCache: number[] = null;
+
     /**
      * @override
      */
     public remappedText(text: string, variant: string): number[] {
-      const c = this.parent.stretch.c;
-      return c ? [c] : this.parent.remapChars(this.unicodeChars(text, variant));
+      if (!this.charCache) {
+        const c = this.parent.stretch.c;
+        this.charCache = c
+          ? [c]
+          : this.parent.remapChars(this.unicodeChars(text, variant));
+      }
+      return this.charCache;
     }
 
     /******************************************************/
@@ -184,9 +192,10 @@ export function CommonTextNodeMixin<
         // Loop through the characters and add them in one by one
         //
         for (let i = 0; i < chars.length; i++) {
-          const [h, d, w, data] = this.getVariantChar(variant, chars[i]);
+          const c = Math.abs(chars[i]);
+          const [h, d, w, data] = this.getVariantChar(variant, c);
           if (data.unknown) {
-            utext += String.fromCodePoint(chars[i]);
+            utext += String.fromCodePoint(c);
           } else {
             utext = this.addUtextBBox(bbox, utext, variant);
             //
@@ -230,6 +239,9 @@ export function CommonTextNodeMixin<
      */
     protected addUtextBBox(bbox: BBox, utext: string, variant: string): string {
       if (utext) {
+        if (rtlRanges.test(utext)) {
+          utext = '\u202D' + utext; // remapChars will have already reversed RTL runs
+        }
         const { h, d, w } = this.jax.measureText(utext, variant);
         this.updateBBox(bbox, h, d, w);
       }
