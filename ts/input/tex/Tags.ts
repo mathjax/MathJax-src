@@ -660,7 +660,7 @@ let defaultTags = 'none';
  */
 export type TAGS_OPTIONS = {
   // Tagging style, used to be autonumber in v2.
-  tags: string;
+  tags: string | AbstractTags;
   // This specifies the side on which \tag{} macros will place the tags.
   tagSide: 'left' | 'right';
   // This is the amount of indentation (from right or left) for the tags.
