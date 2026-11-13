@@ -151,8 +151,13 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D, ParseOptions> {
     configuration: ParserConfiguration
   ) {
     TagsFactory.addTags(configuration.tags);
-    TagsFactory.setDefault(options.options.tags);
-    options.tags = TagsFactory.getDefault();
+    const tags = options.options.tags;
+    if (typeof tags === 'string') {
+      TagsFactory.setDefault(tags);
+      options.tags = TagsFactory.getDefault();
+    } else {
+      options.tags = new tags();
+    }
     options.tags.configuration = options;
   }
 

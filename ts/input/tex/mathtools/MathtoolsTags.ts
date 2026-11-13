@@ -37,11 +37,6 @@ export type MathtoolsTags = AbstractTags & {
 };
 
 /**
- * The ID number for the current tag class
- */
-let tagID = 0;
-
-/**
  * Creates and registers a subclass of the currently configured tag class
  * that handles the formats created by the \newtagform macro.
  *
@@ -109,15 +104,7 @@ export function MathtoolsTagFormat(
   }
 
   //
-  //  Get a unique name for the tag class (since it is tied to the input jax)
-  //  Note:  These never get freed, so they will accumulate if you create many
-  //  TeX input jax instances with this extension.
+  // Use the new tag class
   //
-  tagID++;
-  const tagName = 'MathtoolsTags-' + tagID;
-  //
-  // Register the tag class
-  //
-  TagsFactory.add(tagName, TagFormat);
-  jax.parseOptions.options.tags = tagName;
+  jax.parseOptions.options.tags = TagFormat;
 }
