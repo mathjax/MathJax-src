@@ -4,14 +4,15 @@
   "Help/Text1": "<h2 role=\"heading\" aria-level=\"2\">Utforsk uttrykk med %1</h2>\n\n<p>Matematikken på denne siden vises av <a href=\"https://www.mathjax.org/\" target=\"_blank\">MathJax</a>, som genererer både teksten som leses opp av skjermlesere, og det visuelle oppsettet for seende brukere.</p>\n\n<p>Uttrykk satt av MathJax kan utforskes interaktivt og kan få fokus.  Du kan bruke <kbd>Tab</kbd>-tasten til å flytte til et satt uttrykk%2%3.  Innledningsvis leses uttrykket opp i sin helhet, men du kan bruke følgende taster for å utforske uttrykket videre:</p>",
   "Help/Text2": "<p>MathJax' kontekstmeny lar deg aktivere eller deaktivere tale- eller punktskriftgenerering for matematiske uttrykk, språket som skal brukes for talt matematikk, og andre funksjoner i MathJax.  Spesielt lar undermenyen Utforsker deg angi hvordan matematikken skal identifiseres på siden (f.eks. ved å si \"matematikk\" når uttrykket leses opp), og om det skal inkluderes en melding om at bokstaven \"h\" åpner denne dialogboksen.  Å slå av tale og punktskrift deaktiverer uttrykksutforskeren, dens utheving og hjelpeikonet.</p>\n\n<p>Støtte for taktile punktskriftenheter varierer på tvers av skjermlesere, nettlesere og operativsystemer.  Hvis du bruker en punktskriftenhet, må du kanskje velge alternativet \"Kombiner med tale\" i undermenyen Punktskrift i kontekstmenyen for å få Nemeth- eller Euro Braille-utdata i stedet for taleteksten på punktskriftenheten din. %1</p>\n\n<p>Kontekstmenyen gir også muligheter til å vise eller kopiere en MathML-versjon av uttrykket eller dets opprinnelige kildeformat, opprette en SVG-versjon av uttrykket, og vise ulik annen informasjon.</p>\n\n<p>Til slutt vil valg av elementet \"Sett inn skjult MathML\" i alternativundermenyen slå av MathJax' tale- og punktskriftgenerering og i stedet bruke visuelt skjult MathML som noen skjermlesere kan lese opp, selv om støtte for dette ikke er universell på tvers av alle skjermlesere og operativsystemer.  Å velge tale- eller punktskriftgenerering i deres undermenyer fjerner den skjulte MathML-en igjen.</p>\n\n<p>For mer hjelp, se <a href=\"https://docs.mathjax.org/en/latest/basic/accessibility.html\" target=\"_blank\">MathJax' dokumentasjon om tilgjengelighet.</a></p>",
   "Help/Title": "Hjelp til MathJax-uttrykksutforskeren",
+  "JumpTo": "Gå til rad %1 og kolonne",
   "Mac/Select": "eller VoiceOver-piltastene for å velge et uttrykk",
   "Mac/Title": "macOS og iOS med VoiceOver",
-  "JumpTo": "Gå til rad %1 og kolonne",
   "PositionMarked": "Posisjon markert",
   "Unix/Select": "Orca bør automatisk gå inn i fokusmodus. Hvis ikke, bruk Orca+a-tasten for å slå fokusmodus av eller på. Merk også at du kan bruke Orca+piltastene for å utforske uttrykk selv i gjennomsynsmodus",
   "Unix/Title": "Unix med Orca",
   "Unknown/Title": "en skjermleser",
   "Win/Braille": "NVDA-brukere må velge dette alternativet, mens JAWS-brukere bør kunne få punktskriftutdata uten å endre denne innstillingen.",
   "Win/Select": "Skjermleseren bør automatisk gå inn i fokus- eller skjemamodus når uttrykket får nettleserfokus, men hvis ikke, kan du veksle fokusmodus med NVDA+mellomrom i NVDA; for JAWS bør Enter starte skjemamodus mens Numpad Plus avslutter den.  Merk også at du kan bruke NVDA- eller JAWS-tasten sammen med piltastene for å utforske uttrykket selv i gjennomsynsmodus, og du kan bruke NVDA+shift+piltastene for å navigere ut av et uttrykk som har fokus i NVDA",
-  "Win/Title": "Windows med NVDA eller JAWS"
+  "Win/Title": "Windows med NVDA eller JAWS",
+  "Word/Math": "matematikk"
 }

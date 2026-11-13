@@ -1,6 +1,6 @@
 {
   "CantUseHash2": "Ogiltig användning av # i mallen för %1",
-  "EnvBadEnd": "\\begin{%1} slutade med \\end{%2}",
+  "EnvBadEnd": "\\begin{%1} avslutades med \\end{%2}",
   "EnvMissingEnd": "\\end{%1} saknas",
   "IllegalControlSequenceName": "Ogiltigt kontrollsekvensnamn för %1",
   "IllegalParamNumber": "Ogiltigt antal parametrar angivet i %1",
