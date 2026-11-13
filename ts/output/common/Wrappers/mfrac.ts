@@ -332,13 +332,13 @@ export function CommonMfracMixin<
       const delta = display ? 0.4 : 0.15;
       const H =
         Math.max(
-          nbox.scale * (nbox.h + nbox.d),
-          dbox.scale * (dbox.h + dbox.d)
+          nbox.rscale * (nbox.h + nbox.d),
+          dbox.rscale * (dbox.h + dbox.d)
         ) +
         2 * delta;
       const a = this.font.params.axis_height;
-      const u = (nbox.scale * (nbox.d - nbox.h)) / 2 + a + delta;
-      const v = (dbox.scale * (dbox.d - dbox.h)) / 2 + a - delta;
+      const u = (nbox.rscale * (nbox.d - nbox.h)) / 2 + a + delta;
+      const v = (dbox.rscale * (dbox.d - dbox.h)) / 2 + a - delta;
       return { H, delta, u, v, nbox, dbox };
     }
 

@@ -176,8 +176,8 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
       const sbox = surd.getBBox();
       const bbox = base.getOuterBBox();
       const q = this.getPQ(sbox)[1];
-      const t = this.font.params.surd_height * this.bbox.scale;
-      const H = bbox.h + q + t;
+      const t = this.font.params.surd_height;
+      const H = bbox.h * bbox.rscale + q + t;
       //
       //  Create the SVG structure for the root
       //
@@ -194,7 +194,7 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
       this.adaptor.append(
         SVG[SVG.length - 1],
         this.svg('rect', {
-          width: this.fixed(bbox.w),
+          width: this.fixed(bbox.w * bbox.rscale),
           height: this.fixed(t),
           x: this.fixed(dx + sbox.w),
           y: this.fixed(H - t),
