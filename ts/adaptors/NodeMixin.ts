@@ -215,6 +215,7 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
         terminate() {
           this.worker.terminate();
         }
+        onerror(this: any, _err: ErrorEvent) {}
       }
       const { path, maps, worker: file } = options;
       const url = `${path}/${file}`;
@@ -225,7 +226,7 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
       worker.addEventListener('message', listener);
       worker.addEventListener('error', (err) => {
         const event = new MessageEvent('error', {
-          data: { cmd: 'Failed', data: err.message },
+          data: { cmd: 'Failed', data: { error: err.message } },
         });
         listener(event);
       });
