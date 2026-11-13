@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --localstorage-file ./lib/localstorage' pnpm jest",
+    "coverage:mml3": "node scripts/mml3-coverage.mjs",
     "lint": "pnpm -w lint testsuite/tests; pnpm -w lint testsuite/src",
     "lint:fix": "pnpm -w lint:fix testsuite/tests; pnpm -w lint:fix testsuite/src",
     "format": "pnpm -w format testsuite/tests; pnpm -w format testsuite/src",
