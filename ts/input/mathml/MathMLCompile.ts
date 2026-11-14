@@ -295,8 +295,8 @@ export class MathMLCompile<N, T, D> {
    */
   public setFilters(
     filterAttribute: (name: string, value: string) => string,
-    filterClassList: (list: string[]) => string[],
-  ) : void {
+    filterClassList: (list: string[]) => string[]
+  ): void {
     this.filterAttribute = filterAttribute;
     this.filterClassList = filterClassList;
   }

@@ -270,7 +270,10 @@ export function CommonMsqrtMixin<
         : t;
       const { h, d, rscale } = this.childNodes[this.base].getOuterBBox();
       this.surdH = rscale * (h + d) + t + s + p / 4;
-      this.surd.getStretchedVariant([this.surdH - d * rscale, d * rscale], true);
+      this.surd.getStretchedVariant(
+        [this.surdH - d * rscale, d * rscale],
+        true
+      );
     }
 
     /*************************************************************/

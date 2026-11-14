@@ -928,11 +928,14 @@ export abstract class AbstractMmlNode
     //
     // Get any font styles
     //
-    defaults = this.addInheritedAttributes(defaults, defined({
-      fontfamily: attributes.getInherited('fontfamily'),
-      fontweight: attributes.getInherited('fontweight'),
-      fontstyle: attributes.getInherited('fontstyle'),
-    }));
+    defaults = this.addInheritedAttributes(
+      defaults,
+      defined({
+        fontfamily: attributes.getInherited('fontfamily'),
+        fontweight: attributes.getInherited('fontweight'),
+        fontstyle: attributes.getInherited('fontstyle'),
+      })
+    );
     const styles = attributes.getExplicit('style') as string;
     if (styles) {
       const style = new Styles(styles);

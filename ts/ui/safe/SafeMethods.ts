@@ -39,7 +39,10 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    * @template T  The Text node class
    * @template D  The Document class
    */
-  filterURL<N, T, D>(safe: Safe<N, T, D & {location?: string}>, url: string): string | null {
+  filterURL<N, T, D>(
+    safe: Safe<N, T, D & { location?: string }>,
+    url: string
+  ): string | null {
     const location = safe.adaptor.document.location ?? 'file:';
     let protocol;
     // FIXME: switch to URL.parse() when that is more widely available
