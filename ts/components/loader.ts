@@ -269,7 +269,11 @@ export const Loader = {
         extension = new Package(name, true);
         extension.provides(CONFIG.provides[name]);
       }
-      extension.loaded();
+      this.saveVersion(name);
+      extension.isLoaded = true;
+    }
+    for (const name of names) {
+      Package.packages.get(name).loaded();
     }
   },
 
