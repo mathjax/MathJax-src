@@ -160,8 +160,8 @@ export class MathML<N, T, D> extends AbstractInputJax<
    */
   public setFilters(
     filterAttribute: (name: string, value: string) => string,
-    filterClassList: (list: string[]) => string[],
-  ) : void {
+    filterClassList: (list: string[]) => string[]
+  ): void {
     this.mathml.setFilters(filterAttribute, filterClassList);
   }
 

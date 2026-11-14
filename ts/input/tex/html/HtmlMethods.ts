@@ -69,7 +69,9 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
       }
       const safe = parser.configuration.packageData.get('safe');
       const id = `data-${key}`;
-      const value = safe ? safe.filterMethods.filterData(safe, data[key], id) : data[key];
+      const value = safe
+        ? safe.filterMethods.filterData(safe, data[key], id)
+        : data[key];
       if (value) {
         NodeUtil.setAttribute(arg, id, value);
       }
