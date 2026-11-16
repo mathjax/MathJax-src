@@ -48,6 +48,7 @@ export const source = {
   '[tex]/dsfont': `${src}/input/tex/extensions/dsfont/dsfont.js`,
   '[tex]/empheq': `${src}/input/tex/extensions/empheq/empheq.js`,
   '[tex]/enclose': `${src}/input/tex/extensions/enclose/enclose.js`,
+  '[tex]/esdiff': `${src}/input/tex/extensions/esdiff/esdiff.js`,
   '[tex]/extpfeil': `${src}/input/tex/extensions/extpfeil/extpfeil.js`,
   '[tex]/fontsizev3': `${src}/input/tex/extensions/fontsizev3/fontsizev3.js`,
   '[tex]/gensymb': `${src}/input/tex/extensions/gensymb/gensymb.js`,

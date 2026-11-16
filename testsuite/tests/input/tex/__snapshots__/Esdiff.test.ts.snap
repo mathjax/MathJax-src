@@ -1,0 +1,453 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Esdiff diff 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diff{f}{x}" display="block">
+  <mfrac data-latex="\\frac{\\mathrm{d} f}{\\mathrm{d} x}">
+    <mrow data-latex="\\mathrm{d} f">
+      <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{d}">
+        <mi mathvariant="normal" data-latex="d">d</mi>
+      </mrow>
+      <mi data-latex="f">f</mi>
+    </mrow>
+    <mrow data-latex="\\mathrm{d} x">
+      <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{d}">
+        <mi mathvariant="normal" data-latex="d">d</mi>
+      </mrow>
+      <mi data-latex="x">x</mi>
+    </mrow>
+  </mfrac>
+</math>"
+`;
+
+exports[`Esdiff diff inline 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diff{f}{x}">
+  <mstyle displaystyle="true" data-latex="\\displaystyle{\\frac{\\mathrm{d} f}{\\mathrm{d} x}}">
+    <mrow data-mjx-texclass="ORD" data-latex="{\\frac{\\mathrm{d} f}{\\mathrm{d} x}}">
+      <mfrac data-latex="\\frac{\\mathrm{d} f}{\\mathrm{d} x}">
+        <mrow data-latex="\\mathrm{d} f">
+          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{d}">
+            <mi mathvariant="normal" data-latex="d">d</mi>
+          </mrow>
+          <mi data-latex="f">f</mi>
+        </mrow>
+        <mrow data-latex="\\mathrm{d} x">
+          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{d}">
+            <mi mathvariant="normal" data-latex="d">d</mi>
+          </mrow>
+          <mi data-latex="x">x</mi>
+        </mrow>
+      </mfrac>
+    </mrow>
+  </mstyle>
+</math>"
+`;
+
+exports[`Esdiff diff order 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diff[n]{f}{x}" display="block">
+  <mfrac data-latex="\\frac{\\mathrm{d}^{n} f}{\\mathrm{d} x^{n}}">
+    <mrow data-latex="\\mathrm{d}^{n} f">
+      <msup data-latex="\\mathrm{d}^{n}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{d}">
+          <mi mathvariant="normal" data-latex="d">d</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{n}">
+          <mi data-latex="n">n</mi>
+        </mrow>
+      </msup>
+      <mi data-latex="f">f</mi>
+    </mrow>
+    <mrow data-latex="\\mathrm{d} x^{n}">
+      <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{d}">
+        <mi mathvariant="normal" data-latex="d">d</mi>
+      </mrow>
+      <msup data-latex="x^{n}">
+        <mi data-latex="x">x</mi>
+        <mrow data-mjx-texclass="ORD" data-latex="{n}">
+          <mi data-latex="n">n</mi>
+        </mrow>
+      </msup>
+    </mrow>
+  </mfrac>
+</math>"
+`;
+
+exports[`Esdiff diff script 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a^{\\diff{f}{x}}" display="block">
+  <msup data-latex="\\mathchoice{\\frac{\\mathrm{d} f}{\\mathrm{d} x}}{\\displaystyle{\\frac{\\mathrm{d} f}{\\mathrm{d} x}}}{\\scriptstyle{\\frac{\\mathrm{d} f}{\\mathrm{d} x}}}{\\scriptstyle{\\frac{\\mathrm{d} f}{\\mathrm{d} x}}}}">
+    <mi data-latex="a">a</mi>
+    <mrow data-mjx-texclass="ORD" data-latex="{\\mathchoice{\\frac{\\mathrm{d} f}{\\mathrm{d} x}}{\\displaystyle{\\frac{\\mathrm{d} f}{\\mathrm{d} x}}}{\\scriptstyle{\\frac{\\mathrm{d} f}{\\mathrm{d} x}}}{\\scriptstyle{\\frac{\\mathrm{d} f}{\\mathrm{d} x}}}}">
+      <mrow data-mjx-texclass="ORD" data-latex="\\scriptstyle{\\frac{\\mathrm{d} f}{\\mathrm{d} x}}">
+        <mfrac data-latex="\\frac{\\mathrm{d} f}{\\mathrm{d} x}">
+          <mrow data-latex="\\mathrm{d} f">
+            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{d}">
+              <mi mathvariant="normal" data-latex="d">d</mi>
+            </mrow>
+            <mi data-latex="f">f</mi>
+          </mrow>
+          <mrow data-latex="\\mathrm{d} x">
+            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{d}">
+              <mi mathvariant="normal" data-latex="d">d</mi>
+            </mrow>
+            <mi data-latex="x">x</mi>
+          </mrow>
+        </mfrac>
+      </mrow>
+    </mrow>
+  </msup>
+</math>"
+`;
+
+exports[`Esdiff diff star 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diff*{f}{x}{x_0}" display="block">
+  <msub data-latex="\\left(\\frac{\\mathrm{d} f}{\\mathrm{d} x}\\right)_{\\mkern-7mu x_0 }">
+    <mrow data-mjx-texclass="INNER" data-latex="\\left(\\frac{\\mathrm{d} f}{\\mathrm{d} x}\\right)">
+      <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+      <mfrac data-latex="\\frac{\\mathrm{d} f}{\\mathrm{d} x}">
+        <mrow data-latex="\\mathrm{d} f">
+          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{d}">
+            <mi mathvariant="normal" data-latex="d">d</mi>
+          </mrow>
+          <mi data-latex="f">f</mi>
+        </mrow>
+        <mrow data-latex="\\mathrm{d} x">
+          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{d}">
+            <mi mathvariant="normal" data-latex="d">d</mi>
+          </mrow>
+          <mi data-latex="x">x</mi>
+        </mrow>
+      </mfrac>
+      <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
+    </mrow>
+    <mrow data-mjx-texclass="ORD" data-latex="{\\mkern-7mu x_0}">
+      <mspace width="-0.389em" linebreak="nobreak" data-latex="\\mkern-7mu"></mspace>
+      <msub data-latex="x_0">
+        <mi data-latex="x">x</mi>
+        <mn data-latex="0">0</mn>
+      </msub>
+    </mrow>
+  </msub>
+</math>"
+`;
+
+exports[`Esdiff diff star order 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diff*[2]{g}{y}{0}" display="block">
+  <msub data-latex="\\left(\\frac{\\mathrm{d}^{2} g}{\\mathrm{d} y^{2}}\\right)_{\\mkern-7mu 0}">
+    <mrow data-mjx-texclass="INNER" data-latex="\\left(\\frac{\\mathrm{d}^{2} g}{\\mathrm{d} y^{2}}\\right)">
+      <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+      <mfrac data-latex="\\frac{\\mathrm{d}^{2} g}{\\mathrm{d} y^{2}}">
+        <mrow data-latex="\\mathrm{d}^{2} g">
+          <msup data-latex="\\mathrm{d}^{2}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{d}">
+              <mi mathvariant="normal" data-latex="d">d</mi>
+            </mrow>
+            <mrow data-mjx-texclass="ORD" data-latex="{2}">
+              <mn data-latex="2">2</mn>
+            </mrow>
+          </msup>
+          <mi data-latex="g">g</mi>
+        </mrow>
+        <mrow data-latex="\\mathrm{d} y^{2}">
+          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{d}">
+            <mi mathvariant="normal" data-latex="d">d</mi>
+          </mrow>
+          <msup data-latex="y^{2}">
+            <mi data-latex="y">y</mi>
+            <mrow data-mjx-texclass="ORD" data-latex="{2}">
+              <mn data-latex="2">2</mn>
+            </mrow>
+          </msup>
+        </mrow>
+      </mfrac>
+      <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
+    </mrow>
+    <mrow data-mjx-texclass="ORD" data-latex="{\\mkern-7mu0}">
+      <mspace width="-0.389em" linebreak="nobreak" data-latex="\\mkern-7mu"></mspace>
+      <mn data-latex="0">0</mn>
+    </mrow>
+  </msub>
+</math>"
+`;
+
+exports[`Esdiff diffp 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diffp{f}{x}" display="block">
+  <mfrac data-latex="\\frac{\\partial f}{{\\partial x}}">
+    <mrow data-latex="\\partial f">
+      <mi data-latex="\\partial">&#x2202;</mi>
+      <mi data-latex="f">f</mi>
+    </mrow>
+    <mrow data-mjx-texclass="ORD" data-latex="{\\partial x}">
+      <mi data-latex="\\partial">&#x2202;</mi>
+      <mi data-latex="x">x</mi>
+    </mrow>
+  </mfrac>
+</math>"
+`;
+
+exports[`Esdiff diffp crossed 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diffp{f}{{x}{y^2}}" display="block">
+  <mfrac data-latex="\\frac{\\partial^{3} f}{{\\partial x}{\\partial y^2}}">
+    <mrow data-latex="\\partial^{3} f">
+      <msup data-latex="\\partial^{3}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <mrow data-mjx-texclass="ORD" data-latex="{3}">
+          <mn data-latex="3">3</mn>
+        </mrow>
+      </msup>
+      <mi data-latex="f">f</mi>
+    </mrow>
+    <mrow data-latex="{\\partial x}{\\partial y^2 }">
+      <mrow data-mjx-texclass="ORD" data-latex="{\\partial x}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <mi data-latex="x">x</mi>
+      </mrow>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\partial y^2}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <msup data-latex="y^2">
+          <mi data-latex="y">y</mi>
+          <mn data-latex="2">2</mn>
+        </msup>
+      </mrow>
+    </mrow>
+  </mfrac>
+</math>"
+`;
+
+exports[`Esdiff diffp crossed braced power 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diffp{f}{{x^2}}" display="block">
+  <mfrac data-latex="\\frac{\\partial^{2} f}{{\\partial x^2}}">
+    <mrow data-latex="\\partial^{2} f">
+      <msup data-latex="\\partial^{2}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <mrow data-mjx-texclass="ORD" data-latex="{2}">
+          <mn data-latex="2">2</mn>
+        </mrow>
+      </msup>
+      <mi data-latex="f">f</mi>
+    </mrow>
+    <mrow data-mjx-texclass="ORD" data-latex="{\\partial x^2 }">
+      <mi data-latex="\\partial">&#x2202;</mi>
+      <msup data-latex="x^2">
+        <mi data-latex="x">x</mi>
+        <mn data-latex="2">2</mn>
+      </msup>
+    </mrow>
+  </mfrac>
+</math>"
+`;
+
+exports[`Esdiff diffp crossed large power 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diffp{f}{{x^{10}}{y^2}z}" display="block">
+  <mfrac data-latex="\\frac{\\partial^{13} f}{{\\partial x^{10}}{\\partial y^2}{\\partial z}}">
+    <mrow data-latex="\\partial^{13} f">
+      <msup data-latex="\\partial^{13}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <mrow data-mjx-texclass="ORD" data-latex="{13}">
+          <mn data-latex="13">13</mn>
+        </mrow>
+      </msup>
+      <mi data-latex="f">f</mi>
+    </mrow>
+    <mrow data-latex="{\\partial x^{10}}{\\partial y^2 }{\\partial z}">
+      <mrow data-mjx-texclass="ORD" data-latex="{\\partial x^{10}}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <msup data-latex="x^{10}">
+          <mi data-latex="x">x</mi>
+          <mrow data-mjx-texclass="ORD" data-latex="{10}">
+            <mn data-latex="10">10</mn>
+          </mrow>
+        </msup>
+      </mrow>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\partial y^2}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <msup data-latex="y^2">
+          <mi data-latex="y">y</mi>
+          <mn data-latex="2">2</mn>
+        </msup>
+      </mrow>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\partial z}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <mi data-latex="z">z</mi>
+      </mrow>
+    </mrow>
+  </mfrac>
+</math>"
+`;
+
+exports[`Esdiff diffp crossed macros 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diffp{\\phi}{\\alpha\\beta}" display="block">
+  <mfrac data-latex="\\frac{\\partial^{2} \\phi}{{\\partial \\alpha}{\\partial \\beta}}">
+    <mrow data-latex="\\partial^{2} \\phi">
+      <msup data-latex="\\partial^{2}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <mrow data-mjx-texclass="ORD" data-latex="{2}">
+          <mn data-latex="2">2</mn>
+        </mrow>
+      </msup>
+      <mi data-latex="\\phi">&#x3D5;</mi>
+    </mrow>
+    <mrow data-latex="{\\partial \\alpha}{\\partial \\beta}">
+      <mrow data-mjx-texclass="ORD" data-latex="{\\partial\\alpha}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <mi data-latex="\\alpha">&#x3B1;</mi>
+      </mrow>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\partial\\beta}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <mi data-latex="\\beta">&#x3B2;</mi>
+      </mrow>
+    </mrow>
+  </mfrac>
+</math>"
+`;
+
+exports[`Esdiff diffp crossed star 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diffp*{f}{{x^2}{y^3}}{z}" display="block">
+  <msub data-latex="\\left(\\frac{\\partial^{5} f}{{\\partial x^2}{\\partial y^3}}\\right)_{\\mkern-7mu z}">
+    <mrow data-mjx-texclass="INNER" data-latex="\\left(\\frac{\\partial^{5} f}{{\\partial x^2}{\\partial y^3}}\\right)">
+      <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+      <mfrac data-latex="\\frac{\\partial^{5} f}{{\\partial x^2}{\\partial y^3}}">
+        <mrow data-latex="\\partial^{5} f">
+          <msup data-latex="\\partial^{5}">
+            <mi data-latex="\\partial">&#x2202;</mi>
+            <mrow data-mjx-texclass="ORD" data-latex="{5}">
+              <mn data-latex="5">5</mn>
+            </mrow>
+          </msup>
+          <mi data-latex="f">f</mi>
+        </mrow>
+        <mrow data-latex="{\\partial x^2 }{\\partial y^3 }">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\partial x^2}">
+            <mi data-latex="\\partial">&#x2202;</mi>
+            <msup data-latex="x^2">
+              <mi data-latex="x">x</mi>
+              <mn data-latex="2">2</mn>
+            </msup>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{\\partial y^3}">
+            <mi data-latex="\\partial">&#x2202;</mi>
+            <msup data-latex="y^3">
+              <mi data-latex="y">y</mi>
+              <mn data-latex="3">3</mn>
+            </msup>
+          </mrow>
+        </mrow>
+      </mfrac>
+      <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
+    </mrow>
+    <mrow data-mjx-texclass="ORD" data-latex="{\\mkern-7mu z}">
+      <mspace width="-0.389em" linebreak="nobreak" data-latex="\\mkern-7mu"></mspace>
+      <mi data-latex="z">z</mi>
+    </mrow>
+  </msub>
+</math>"
+`;
+
+exports[`Esdiff diffp crossed unbraced 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diffp{f}{xy}" display="block">
+  <mfrac data-latex="\\frac{\\partial^{2} f}{{\\partial x}{\\partial y}}">
+    <mrow data-latex="\\partial^{2} f">
+      <msup data-latex="\\partial^{2}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <mrow data-mjx-texclass="ORD" data-latex="{2}">
+          <mn data-latex="2">2</mn>
+        </mrow>
+      </msup>
+      <mi data-latex="f">f</mi>
+    </mrow>
+    <mrow data-latex="{\\partial x}{\\partial y}">
+      <mrow data-mjx-texclass="ORD" data-latex="{\\partial x}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <mi data-latex="x">x</mi>
+      </mrow>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\partial y}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <mi data-latex="y">y</mi>
+      </mrow>
+    </mrow>
+  </mfrac>
+</math>"
+`;
+
+exports[`Esdiff diffp order 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diffp[2]{f}{x}" display="block">
+  <mfrac data-latex="\\frac{\\partial^{2} f}{\\partial x^{2}}">
+    <mrow data-latex="\\partial^{2} f">
+      <msup data-latex="\\partial^{2}">
+        <mi data-latex="\\partial">&#x2202;</mi>
+        <mrow data-mjx-texclass="ORD" data-latex="{2}">
+          <mn data-latex="2">2</mn>
+        </mrow>
+      </msup>
+      <mi data-latex="f">f</mi>
+    </mrow>
+    <mrow data-latex="\\partial x^{2}">
+      <mi data-latex="\\partial">&#x2202;</mi>
+      <msup data-latex="x^{2}">
+        <mi data-latex="x">x</mi>
+        <mrow data-mjx-texclass="ORD" data-latex="{2}">
+          <mn data-latex="2">2</mn>
+        </mrow>
+      </msup>
+    </mrow>
+  </mfrac>
+</math>"
+`;
+
+exports[`Esdiff diffp star 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diffp*{p}{V}{T}" display="block">
+  <msub data-latex="\\left(\\frac{\\partial p}{{\\partial V}}\\right)_{\\mkern-7mu T}">
+    <mrow data-mjx-texclass="INNER" data-latex="\\left(\\frac{\\partial p}{{\\partial V}}\\right)">
+      <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+      <mfrac data-latex="\\frac{\\partial p}{{\\partial V}}">
+        <mrow data-latex="\\partial p">
+          <mi data-latex="\\partial">&#x2202;</mi>
+          <mi data-latex="p">p</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{\\partial V}">
+          <mi data-latex="\\partial">&#x2202;</mi>
+          <mi data-latex="V">V</mi>
+        </mrow>
+      </mfrac>
+      <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
+    </mrow>
+    <mrow data-mjx-texclass="ORD" data-latex="{\\mkern-7mu T}">
+      <mspace width="-0.389em" linebreak="nobreak" data-latex="\\mkern-7mu"></mspace>
+      <mi data-latex="T">T</mi>
+    </mrow>
+  </msub>
+</math>"
+`;
+
+exports[`Esdiff diffp star order 1`] = `
+"<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\diffp*[2]{p}{V}{T}" display="block">
+  <msub data-latex="\\left(\\frac{\\partial^{2} p}{\\partial V^{2}}\\right)_{\\mkern-7mu T}">
+    <mrow data-mjx-texclass="INNER" data-latex="\\left(\\frac{\\partial^{2} p}{\\partial V^{2}}\\right)">
+      <mo data-mjx-texclass="OPEN" data-latex="\\left(">(</mo>
+      <mfrac data-latex="\\frac{\\partial^{2} p}{\\partial V^{2}}">
+        <mrow data-latex="\\partial^{2} p">
+          <msup data-latex="\\partial^{2}">
+            <mi data-latex="\\partial">&#x2202;</mi>
+            <mrow data-mjx-texclass="ORD" data-latex="{2}">
+              <mn data-latex="2">2</mn>
+            </mrow>
+          </msup>
+          <mi data-latex="p">p</mi>
+        </mrow>
+        <mrow data-latex="\\partial V^{2}">
+          <mi data-latex="\\partial">&#x2202;</mi>
+          <msup data-latex="V^{2}">
+            <mi data-latex="V">V</mi>
+            <mrow data-mjx-texclass="ORD" data-latex="{2}">
+              <mn data-latex="2">2</mn>
+            </mrow>
+          </msup>
+        </mrow>
+      </mfrac>
+      <mo data-mjx-texclass="CLOSE" data-latex="\\right)">)</mo>
+    </mrow>
+    <mrow data-mjx-texclass="ORD" data-latex="{\\mkern-7mu T}">
+      <mspace width="-0.389em" linebreak="nobreak" data-latex="\\mkern-7mu"></mspace>
+      <mi data-latex="T">T</mi>
+    </mrow>
+  </msub>
+</math>"
+`;
