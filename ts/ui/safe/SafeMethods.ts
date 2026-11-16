@@ -39,10 +39,15 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    * @template T  The Text node class
    * @template D  The Document class
    */
-  filterURL<N, T, D>(safe: Safe<N, T, D>, url: string): string | null {
-    const protocol = (url.match(/^\s*([a-z\t\n\r]+):/i) || [null, ''])[1]
-      .replace(/[\t\n\r]/g, '')
-      .toLowerCase();
+  filterURL<N, T, D>(safe: Safe<N, T, D & {location?: string}>, url: string): string | null {
+    const location = safe.adaptor.document.location ?? 'file:';
+    let protocol;
+    // FIXME: switch to URL.parse() when that is more widely available
+    try {
+      protocol = new URL(url, location).protocol.replace(/:$/, '');
+    } catch (_) {
+      protocol = '';
+    }
     const allow = safe.allow.URLs;
     return allow === 'all' ||
       (allow === 'safe' && (safe.options.safeProtocols[protocol] || !protocol))

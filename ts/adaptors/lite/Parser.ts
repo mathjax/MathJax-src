@@ -81,17 +81,13 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   };
 
   /**
-   * The list of tags chose content is not parsed (PCDATA)
+   * The list of tags whose content is not parsed (CDATA)
    */
-  public static PCDATA: { [name: string]: boolean } = {
-    option: true,
-    textarea: true,
-    fieldset: true,
-    title: true,
-    style: true,
-    script: true,
-  };
+  public static CDATA = new Set(['textarea', 'style', 'script']);
 
+  /**
+   * URLs for various namespace definitions
+   */
   public static XMLNS: { [name: string]: string } = {
     svg: 'http://www.w3.org/2000/svg',
     math: 'http://www.w3.org/1998/Math/MathML',
@@ -193,7 +189,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     tag: string,
     parts: string[]
   ): LiteElement {
-    const PCDATA = (this.constructor as typeof LiteParser).PCDATA;
+    const CDATA = (this.constructor as typeof LiteParser).CDATA;
     const SELF_CLOSING = (this.constructor as typeof LiteParser).SELF_CLOSING;
     //
     // Get the child to be added to the node
@@ -216,15 +212,15 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
       adaptor.append(node, child);
       //
       // For non-self-closing tags,
-      //   For tags whose contents is PCDATA (like <script>), collect the
+      //   For tags whose contents is CDATA (like <script>), collect the
       //     content up until the end tag, and continue adding nee tags
       //     to the current parent node.
       //   Otherwise, the child tag becames the parent node to which
       //     new tags are added
       //
       if (!SELF_CLOSING[kind] && !tag.match(/\/>$/)) {
-        if (PCDATA[kind]) {
-          this.handlePCDATA(adaptor, child, kind, parts);
+        if (CDATA.has(kind)) {
+          this.handleCDATA(adaptor, child, kind, parts);
         } else {
           node = child;
         }
@@ -253,17 +249,17 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
 
   /**
    * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
-   * @param {LiteElement} node     The node whose PCDATA content is being collected
+   * @param {LiteElement} node     The node whose CDATA content is being collected
    * @param {string} kind          The tag name being handled
    * @param {string[]} parts       The array of text/tag data for the document
    */
-  protected handlePCDATA(
+  protected handleCDATA(
     adaptor: LiteAdaptor,
     node: LiteElement,
     kind: string,
     parts: string[]
   ) {
-    const pcdata = [] as string[];
+    const cdata = [] as string[];
     const etag = '</' + kind + '>';
     let ptag = '';
     //
@@ -272,14 +268,14 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     //    and try the next tag until we find the end tag.
     //
     while (parts.length && ptag !== etag) {
-      pcdata.push(ptag);
-      pcdata.push(parts.shift());
+      cdata.push(ptag);
+      cdata.push(parts.shift());
       ptag = parts.shift();
     }
     //
     //  Add the collected contents as a text node
     //
-    adaptor.append(node, adaptor.text(pcdata.join('')));
+    adaptor.append(node, adaptor.text(cdata.join('')));
   }
 
   /**
@@ -397,8 +393,8 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     node: LiteElement,
     xml: boolean = false
   ): string {
-    const PCDATA = (this.constructor as typeof LiteParser).PCDATA;
-    if (Object.hasOwn(PCDATA, node.kind)) {
+    const CDATA = (this.constructor as typeof LiteParser).CDATA;
+    if (CDATA.has(node.kind)) {
       return adaptor
         .childNodes(node)
         .map((x) => adaptor.value(x))

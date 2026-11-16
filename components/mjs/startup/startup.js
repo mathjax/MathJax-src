@@ -1,3 +1,7 @@
-import {startup} from './init.js';
+import { startup, readyAfter } from './init.js';
+import { Loader } from '#js/components/loader.js';
 
-startup();
+const COMPONENT = 'startup';
+
+Loader.saveVersion(COMPONENT);
+readyAfter(COMPONENT, startup);

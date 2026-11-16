@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { CONFIG, Loader } from './loader.js';
+import { CONFIG, Loader, MathJax, MathJaxObject } from './loader.js';
 import { context } from '../util/context.js';
 import { localize } from '../core/__locales__/Component.js';
 
@@ -45,8 +45,9 @@ export class PackageError extends Error {
 /**
  * Types for ready() and failed() functions and for promises
  */
-export type PackageReady = (name: string) => string | void;
-export type PackageFailed = (message: PackageError) => void;
+export type PackageReady = (name: string, mjx: MathJaxObject) => string | void;
+export type PackageFailed = (message: PackageError, mjx: MathJaxObject) => void;
+export type PackageCheck = (mjx: MathJaxObject) => Promise<void> | void;
 export type PackagePromise = (
   resolve: PackageReady,
   reject: PackageFailed
@@ -59,7 +60,7 @@ export type PackagePromise = (
 export interface PackageConfig {
   ready?: PackageReady;                // Function to call when package is loaded successfully
   failed?: PackageFailed;              // Function to call when package fails to load
-  checkReady?: () => Promise<void>;    // Function called to see if package is fully loaded
+  checkReady?: PackageCheck;           // Function called to see if package is fully loaded
                                        //   (may cause additional packages to load, for example)
   extraLoads?: string[];               // Extra packages to load after this one
   rendererExtensions?: string[];       // Font extensions to load when renderer changes
@@ -164,7 +165,9 @@ export class Package {
       ? Loader.load(...config.extraLoads)
       : Promise.resolve();
     const checkReady = config.checkReady || (() => Promise.resolve());
-    return promise.then(() => checkReady()) as Promise<void>;
+    return promise.then(() =>
+      checkReady.call(Loader, MathJax)
+    ) as Promise<void>;
   }
 
   /**
@@ -267,7 +270,7 @@ export class Package {
     const config = (CONFIG[this.name] || {}) as PackageConfig;
     if (config.ready) {
       promise = promise.then((_name: string) =>
-        config.ready(this.name)
+        config.ready.call(Loader, this.name, MathJax)
       ) as Promise<string>;
     }
     //
@@ -286,9 +289,14 @@ export class Package {
     //    Add a catch to handle the error
     //
     if (config.failed) {
-      promise.catch((message: string) =>
-        config.failed(new PackageError(message, this.name))
-      );
+      promise = promise.catch((message: string) => {
+        config.failed.call(
+          Loader,
+          new PackageError(message, this.name),
+          MathJax
+        );
+        return '';
+      });
     }
     //
     //  Return the promise that represents when this file is loaded
@@ -367,7 +375,7 @@ export class Package {
     for (const provided of this.provided) {
       provided.loaded();
     }
-    this.resolve(this.name);
+    this.resolve.call(Loader, this.name, MathJax);
   }
 
   /**
@@ -381,7 +389,7 @@ export class Package {
   protected failed(message: string) {
     this.hasFailed = true;
     this.isLoading = false;
-    this.reject(new PackageError(message, this.name));
+    this.reject.call(Loader, new PackageError(message, this.name), MathJax);
   }
 
   /**

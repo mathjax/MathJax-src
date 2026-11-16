@@ -644,12 +644,13 @@ export class HTMLAdaptor<
       try {
         importScripts('${quoted(file)}');
       } catch (e) {
-        postMessage({cmd: 'Failed', data: e.message});
+        postMessage({cmd: 'Failed', data: {error: e.message}});
       }
     `;
-    const url = URL.createObjectURL(
-      new Blob([content], { type: 'text/javascript' })
-    );
+    const url =
+      window.origin === 'null'
+        ? 'data:text/html,' + content
+        : URL.createObjectURL(new Blob([content], { type: 'text/javascript' }));
     const webworker = new Worker(url);
     webworker.onmessage = listener;
     URL.revokeObjectURL(url);

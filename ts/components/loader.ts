@@ -41,6 +41,7 @@ import { FunctionList } from '../util/FunctionList.js';
 import { mjxRoot } from '#root/root.js';
 import { context } from '../util/context.js';
 import { OPTIONAL } from '../types/Types.js';
+import { EXPANDABLE_LIST_OF } from '../util/Options.js';
 import { Locale } from '../util/Locale.js';
 
 import { COMPONENT } from '../core/__locales__/Component.js';
@@ -70,7 +71,7 @@ export type LOADER_OPTIONS = {
   ready: PackageReady; //                          A function to call when MathJax is ready
   failed: PackageFailed; //                        A function to call when MathJax fails to load
   require: (url: string) => any; //                A function for loading URLs
-  json: (url: string) => any; //                   A function for loading JSON files
+  json: (url: string) => Promise<any>; //          A function for loading JSON files
   pathFilters: PathFilterList; //                  List of path filters (and optional priorities) to add
   versionWarnings: boolean; //                     True means warn when extension version doesn't match MJ version
 };
@@ -78,9 +79,7 @@ export type LOADER_OPTIONS = {
 /**
  * The loader config option types.  It allows for package-specific configuration.
  */
-export interface LOADER_CONFIG extends LOADER_OPTIONS {
-  [component: string]: any; // should be PackageConfig, but that causes problems with LOADER_TYPES
-}
+export type LOADER_CONFIG = EXPANDABLE_LIST_OF<PackageConfig> & LOADER_OPTIONS;
 
 /**
  * Functions used to filter the path to a package
@@ -306,7 +305,7 @@ export const Loader = {
    */
   defaultReady() {
     if (typeof MathJax.startup !== 'undefined') {
-      MathJax.config.startup.ready();
+      MathJax.config.startup.ready.call(MathJax.startup, MathJax);
     }
   },
 
@@ -396,7 +395,7 @@ const options: LOADER_OPTIONS = {
 export type LOADER_TYPES = {
   component: { loader: true };
   config: {
-    loader: LOADER_CONFIG;
+    loader: LOADER_OPTIONS;
   };
   properties: {
     loader: typeof Loader;
@@ -442,6 +441,12 @@ if (typeof MathJax.loader === 'undefined') {
     } else {
       Loader.pathFilters.add(filter);
     }
+  }
+} else if (MathJax.loader !== Loader) {
+  MathJax.loader.versions = Loader.versions;
+  MathJax.loader.pathFilters = Loader.pathFilters;
+  for (const [name, value] of Package.packages.entries()) {
+    MathJax._.components.package.Package.packages.add(name, value);
   }
 }
 

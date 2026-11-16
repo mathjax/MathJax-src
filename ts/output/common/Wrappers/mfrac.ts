@@ -66,7 +66,7 @@ export interface CommonMfrac<
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   CC extends CharOptions,
-  VV extends VariantData<CC>,
+  VV extends VariantData<CC, DD>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
@@ -168,7 +168,7 @@ export interface CommonMfracClass<
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   CC extends CharOptions,
-  VV extends VariantData<CC>,
+  VV extends VariantData<CC, DD>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
@@ -204,7 +204,7 @@ export function CommonMfracMixin<
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   CC extends CharOptions,
-  VV extends VariantData<CC>,
+  VV extends VariantData<CC, DD>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
@@ -332,13 +332,13 @@ export function CommonMfracMixin<
       const delta = display ? 0.4 : 0.15;
       const H =
         Math.max(
-          nbox.scale * (nbox.h + nbox.d),
-          dbox.scale * (dbox.h + dbox.d)
+          nbox.rscale * (nbox.h + nbox.d),
+          dbox.rscale * (dbox.h + dbox.d)
         ) +
         2 * delta;
       const a = this.font.params.axis_height;
-      const u = (nbox.scale * (nbox.d - nbox.h)) / 2 + a + delta;
-      const v = (dbox.scale * (dbox.d - dbox.h)) / 2 + a - delta;
+      const u = (nbox.rscale * (nbox.d - nbox.h)) / 2 + a + delta;
+      const v = (dbox.rscale * (dbox.d - dbox.h)) / 2 + a - delta;
       return { H, delta, u, v, nbox, dbox };
     }
 

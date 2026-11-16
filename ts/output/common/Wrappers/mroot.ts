@@ -60,7 +60,7 @@ export interface CommonMroot<
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   CC extends CharOptions,
-  VV extends VariantData<CC>,
+  VV extends VariantData<CC, DD>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
@@ -91,7 +91,7 @@ export interface CommonMrootClass<
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   CC extends CharOptions,
-  VV extends VariantData<CC>,
+  VV extends VariantData<CC, DD>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
@@ -127,7 +127,7 @@ export function CommonMrootMixin<
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   CC extends CharOptions,
-  VV extends VariantData<CC>,
+  VV extends VariantData<CC, DD>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
@@ -160,12 +160,12 @@ export function CommonMrootMixin<
      */
     public getRootDimens(sbox: BBox, H: number) {
       const surd = this.surd;
-      const bbox = this.childNodes[this.root].getOuterBBox();
+      const rbox = this.childNodes[this.root].getOuterBBox();
       const offset = (surd.size < 0 ? 0.5 : 0.6) * sbox.w;
-      const { w, rscale } = bbox;
+      const { w, rscale } = rbox;
       const W = Math.max(w, offset / rscale);
       const dx = Math.max(0, W - w);
-      const h = this.rootHeight(bbox, sbox, surd.size, H);
+      const h = this.rootHeight(rbox, sbox, surd.size, H);
       const x = W * rscale - offset;
       return [x, h, dx];
     }
