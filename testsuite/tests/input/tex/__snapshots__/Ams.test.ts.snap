@@ -2022,7 +2022,7 @@ exports[`Ams SideSet Sideset Simple Sum 1`] = `
 
 exports[`Ams Symbol 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\digamma" display="block">
-  <mi data-latex="\\digamma">&#x3DD;</mi>
+  <mi mathvariant="normal" data-latex="\\digamma">&#x3DD;</mi>
 </math>"
 `;
 
@@ -3030,7 +3030,7 @@ exports[`Ams symbols impliedby 1`] = `
 
 exports[`Ams symbols math0mi 1 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\varkappa\\varGamma\\varDelta\\varTheta\\varLambda\\varXi\\varPi\\varSigma\\varUpsilon\\varPhi\\varPsi\\varOmega" display="block">
-  <mi data-latex="\\varkappa">&#x3F0;</mi>
+  <mi mathvariant="normal" data-latex="\\varkappa">&#x3F0;</mi>
   <mi data-latex="\\varGamma">&#x393;</mi>
   <mi data-latex="\\varDelta">&#x394;</mi>
   <mi data-latex="\\varTheta">&#x398;</mi>
@@ -3053,26 +3053,26 @@ exports[`Ams symbols math0mi 2 1`] = `
   <mi data-mjx-alternate="1" data-latex="\\backprime">&#x2035;</mi>
   <mi data-latex="\\hslash">&#x210F;</mi>
   <mi data-mjx-alternate="1" data-latex="\\varnothing">&#x2205;</mi>
-  <mi data-latex="\\blacktriangle">&#x25B4;</mi>
+  <mi mathvariant="normal" data-latex="\\blacktriangle">&#x25B4;</mi>
   <mi data-mjx-alternate="1" data-latex="\\triangledown">&#x25BD;</mi>
-  <mi data-latex="\\blacktriangledown">&#x25BE;</mi>
-  <mi data-latex="\\square">&#x25FB;</mi>
-  <mi data-latex="\\Box">&#x25FB;</mi>
+  <mi mathvariant="normal" data-latex="\\blacktriangledown">&#x25BE;</mi>
+  <mi mathvariant="normal" data-latex="\\square">&#x25FB;</mi>
+  <mi mathvariant="normal" data-latex="\\Box">&#x25FB;</mi>
 </math>"
 `;
 
 exports[`Ams symbols math0mi 3 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\blacksquare\\lozenge\\Diamond\\blacklozenge\\circledS\\bigstar\\sphericalangle\\measuredangle\\nexists\\complement" display="block">
-  <mi data-latex="\\blacksquare">&#x25FC;</mi>
-  <mi data-latex="\\lozenge">&#x25CA;</mi>
-  <mi data-latex="\\Diamond">&#x25CA;</mi>
-  <mi data-latex="\\blacklozenge">&#x29EB;</mi>
+  <mi mathvariant="normal" data-latex="\\blacksquare">&#x25FC;</mi>
+  <mi mathvariant="normal" data-latex="\\lozenge">&#x25CA;</mi>
+  <mi mathvariant="normal" data-latex="\\Diamond">&#x25CA;</mi>
+  <mi mathvariant="normal" data-latex="\\blacklozenge">&#x29EB;</mi>
   <mi mathvariant="normal" data-latex="\\circledS">&#x24C8;</mi>
-  <mi data-latex="\\bigstar">&#x2605;</mi>
-  <mi data-latex="\\sphericalangle">&#x2222;</mi>
-  <mi data-latex="\\measuredangle">&#x2221;</mi>
-  <mi data-latex="\\nexists">&#x2204;</mi>
-  <mi data-latex="\\complement">&#x2201;</mi>
+  <mi mathvariant="normal" data-latex="\\bigstar">&#x2605;</mi>
+  <mi mathvariant="normal" data-latex="\\sphericalangle">&#x2222;</mi>
+  <mi mathvariant="normal" data-latex="\\measuredangle">&#x2221;</mi>
+  <mi mathvariant="normal" data-latex="\\nexists">&#x2204;</mi>
+  <mi mathvariant="normal" data-latex="\\complement">&#x2201;</mi>
 </math>"
 `;
 
@@ -3081,14 +3081,14 @@ exports[`Ams symbols math0mi 4 1`] = `
   <mi data-latex="\\mho">&#x2127;</mi>
   <mi mathvariant="normal" data-latex="\\eth">&#xF0;</mi>
   <mi data-latex="\\Finv">&#x2132;</mi>
-  <mi data-latex="\\diagup">&#x2571;</mi>
-  <mi data-latex="\\Game">&#x2141;</mi>
-  <mi data-latex="\\diagdown">&#x2572;</mi>
+  <mi mathvariant="normal" data-latex="\\diagup">&#x2571;</mi>
+  <mi mathvariant="normal" data-latex="\\Game">&#x2141;</mi>
+  <mi mathvariant="normal" data-latex="\\diagdown">&#x2572;</mi>
   <mi mathvariant="double-struck" data-latex="\\Bbbk">k</mi>
-  <mi data-latex="\\yen">&#xA5;</mi>
-  <mi data-latex="\\circledR">&#xAE;</mi>
-  <mi data-latex="\\checkmark">&#x2713;</mi>
-  <mi data-latex="\\maltese">&#x2720;</mi>
+  <mi mathvariant="normal" data-latex="\\yen">&#xA5;</mi>
+  <mi mathvariant="normal" data-latex="\\circledR">&#xAE;</mi>
+  <mi mathvariant="normal" data-latex="\\checkmark">&#x2713;</mi>
+  <mi mathvariant="normal" data-latex="\\maltese">&#x2720;</mi>
 </math>"
 `;
 

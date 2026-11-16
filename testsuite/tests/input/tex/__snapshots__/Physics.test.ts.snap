@@ -4531,13 +4531,13 @@ exports[`Physics3_7 Operators_Imaginary_6 1`] = `
 
 exports[`Physics3_7 Operators_Imaginary_7 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\real" display="block">
-  <mi mathvariant="normal" data-latex="\\real">&#x211C;</mi>
+  <mi data-latex="\\real">&#x211C;</mi>
 </math>"
 `;
 
 exports[`Physics3_7 Operators_Imaginary_8 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\real{x}" display="block">
-  <mi mathvariant="normal" data-latex="\\real">&#x211C;</mi>
+  <mi data-latex="\\real">&#x211C;</mi>
   <mrow data-mjx-texclass="ORD" data-latex="{x}">
     <mi data-latex="x">x</mi>
   </mrow>
@@ -4649,13 +4649,13 @@ exports[`Physics3_7 Operators_Imaginary_15 1`] = `
 
 exports[`Physics3_7 Operators_Imaginary_16 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\imaginary" display="block">
-  <mi mathvariant="normal" data-latex="\\imaginary">&#x2111;</mi>
+  <mi data-latex="\\imaginary">&#x2111;</mi>
 </math>"
 `;
 
 exports[`Physics3_7 Operators_Imaginary_17 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\imaginary{x}" display="block">
-  <mi mathvariant="normal" data-latex="\\imaginary">&#x2111;</mi>
+  <mi data-latex="\\imaginary">&#x2111;</mi>
   <mrow data-mjx-texclass="ORD" data-latex="{x}">
     <mi data-latex="x">x</mi>
   </mrow>

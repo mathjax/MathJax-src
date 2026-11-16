@@ -145,7 +145,7 @@ const ParseMethods = {
    * @param {Token} mchar The parsed token.
    */
   mathchar0mi(parser: TexParser, mchar: Token) {
-    const def = mchar.attributes || { mathvariant: MATHVARIANT.ITALIC };
+    const def = mchar.attributes || { mathvariant: MATHVARIANT.NORMAL };
     const node = parser.create('token', 'mi', def, mchar.char);
     parser.Push(node);
   },

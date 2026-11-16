@@ -80,8 +80,8 @@ new CharacterMap('Physics-vector-mo', ParseMethods.mathchar0mo, {
 });
 
 new CharacterMap('Physics-vector-mi', ParseMethods.mathchar0mi, {
-  real: ['\u211C', { mathvariant: TexConstant.Variant.NORMAL }],
-  imaginary: ['\u2111', { mathvariant: TexConstant.Variant.NORMAL }],
+  real: ['\u211C', {}],
+  imaginary: ['\u2111', {}],
 });
 
 new CommandMap('Physics-vector-macros', {

@@ -751,7 +751,7 @@ exports[`Newcommand Let Relet 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\al\\alpha\\al\\alpha\\let\\al\\aleph\\al\\alpha" display="block">
   <mi data-latex="\\al">&#x3B1;</mi>
   <mi data-latex="\\let\\al\\aleph">&#x3B1;</mi>
-  <mi mathvariant="normal" data-latex="\\al">&#x2135;</mi>
+  <mi data-latex="\\al">&#x2135;</mi>
   <mi data-latex="\\alpha">&#x3B1;</mi>
 </math>"
 `;

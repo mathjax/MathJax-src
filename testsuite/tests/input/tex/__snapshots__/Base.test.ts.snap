@@ -4846,13 +4846,13 @@ exports[`Mathchar0mi AA 1`] = `
 
 exports[`Mathchar0mi Im 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Im" display="block">
-  <mi mathvariant="normal" data-latex="\\Im">&#x2111;</mi>
+  <mi data-latex="\\Im">&#x2111;</mi>
 </math>"
 `;
 
 exports[`Mathchar0mi Re 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Re" display="block">
-  <mi mathvariant="normal" data-latex="\\Re">&#x211C;</mi>
+  <mi data-latex="\\Re">&#x211C;</mi>
 </math>"
 `;
 
@@ -4864,7 +4864,7 @@ exports[`Mathchar0mi S 1`] = `
 
 exports[`Mathchar0mi aleph 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\aleph" display="block">
-  <mi mathvariant="normal" data-latex="\\aleph">&#x2135;</mi>
+  <mi data-latex="\\aleph">&#x2135;</mi>
 </math>"
 `;
 
@@ -5002,7 +5002,7 @@ exports[`Mathchar0mi triangle 1`] = `
 
 exports[`Mathchar0mi wp 1`] = `
 "<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\wp" display="block">
-  <mi mathvariant="normal" data-latex="\\wp">&#x2118;</mi>
+  <mi data-latex="\\wp">&#x2118;</mi>
 </math>"
 `;
 

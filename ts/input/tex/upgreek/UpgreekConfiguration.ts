@@ -23,28 +23,13 @@
 
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
-import { Token } from '../Token.js';
 import { CharacterMap } from '../TokenMap.js';
-import { TexConstant } from '../TexConstants.js';
-import TexParser from '../TexParser.js';
-
-/**
- * Handle greek mathchar as mi in normal variant.
- *
- * @param {TexParser} parser The current tex parser.
- * @param {Token} mchar The parsed token.
- */
-function mathchar0miNormal(parser: TexParser, mchar: Token) {
-  const def = mchar.attributes || {};
-  def.mathvariant = TexConstant.Variant.NORMAL;
-  const node = parser.create('token', 'mi', def, mchar.char);
-  parser.Push(node);
-}
+import ParseMethods from '../ParseMethods.js';
 
 /**
  * Upright Greek characters.
  */
-new CharacterMap('upgreek', mathchar0miNormal, {
+new CharacterMap('upgreek', ParseMethods.mathchar0mi, {
   upalpha: '\u03B1',
   upbeta: '\u03B2',
   upgamma: '\u03B3',

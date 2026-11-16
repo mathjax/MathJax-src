@@ -259,14 +259,14 @@ new sm.CharacterMap('AMSsymbols-mathchar0mi', ParseMethods.mathchar0mi, {
   varOmega: ['\u03A9', { mathvariant: TexConstant.Variant.ITALIC }],
 
   // Hebrew letters
-  beth: '\u2136',
-  gimel: '\u2137',
-  daleth: '\u2138',
+  beth: ['\u2136', {}],
+  gimel: ['\u2137', {}],
+  daleth: ['\u2138', {}],
 
   // Miscellaneous symbols
   //    hbar:                   '\u0127',  // in TeX/jax.js
   backprime: ['\u2035', { variantForm: true }],
-  hslash: '\u210F',
+  hslash: ['\u210F', {}],
   varnothing: ['\u2205', { variantForm: true }],
   blacktriangle: '\u25B4',
   triangledown: ['\u25BD', { variantForm: true }],
@@ -277,16 +277,16 @@ new sm.CharacterMap('AMSsymbols-mathchar0mi', ParseMethods.mathchar0mi, {
   lozenge: '\u25CA',
   Diamond: '\u25CA',
   blacklozenge: '\u29EB',
-  circledS: ['\u24C8', { mathvariant: TexConstant.Variant.NORMAL }],
+  circledS: '\u24C8',
   bigstar: '\u2605',
-  //    angle:                  '\u2220',  // in TeX/jax.js
+  //    angle:                  '\u2220',  // in base/BaseMapping.ts
   sphericalangle: '\u2222',
   measuredangle: '\u2221',
   nexists: '\u2204',
   complement: '\u2201',
-  mho: '\u2127',
-  eth: ['\u00F0', { mathvariant: TexConstant.Variant.NORMAL }],
-  Finv: '\u2132',
+  mho: ['\u2127', {}],
+  eth: '\u00F0',
+  Finv: ['\u2132', {}],
   diagup: '\u2571',
   Game: '\u2141',
   diagdown: '\u2572',
