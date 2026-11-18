@@ -160,6 +160,7 @@ export type COMPONENTS<DOM extends DOM_TYPES> = {
   '[tex]/dsfont': TEX_PACKAGE<'dsfont', DSFONT_OPTIONS>;
   '[tex]/empheq': TEX_PACKAGE<'empheq'>;
   '[tex]/enclose': TEX_PACKAGE<'enclose'>;
+  '[tex]/esdiff': TEX_PACKAGE<'esdiff'>;
   '[tex]/extpfeil': TEX_PACKAGE<'extpfeil'>;
   '[tex]/fontsizev3': TEX_PACKAGE<'fontsizev3'>;
   '[tex]/gensymb': TEX_PACKAGE<'gensymb'>;
