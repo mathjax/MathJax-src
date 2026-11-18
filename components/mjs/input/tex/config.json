@@ -12,7 +12,12 @@
       "input/tex/require",
       "input/tex/autoload",
       "input/tex/configmacros",
-      "input/tex/__locales__"
+      "input/tex/__locales__",
+      "input/tex/base/__locales__",
+      "input/tex/ams/__locales__",
+      "input/tex/newcommand/__locales__",
+      "input/tex/require/__locales__",
+      "input/tex/textmacros/__locales__"
     ],
     "excludeSubdirs": true
   },

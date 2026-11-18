@@ -4,7 +4,9 @@
     "targets": [
       "input/tex.ts",
       "input/tex",
-      "input/tex/base"
+      "input/tex/__locales__",
+      "input/tex/base",
+      "input/tex/base/__locales__"
     ],
     "excludeSubdirs": true
   },
