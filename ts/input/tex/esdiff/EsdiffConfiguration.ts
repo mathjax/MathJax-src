@@ -37,7 +37,6 @@ export { COMPONENT };
  * The `esdiff` utility functions.
  */
 export const EsdiffUtil = {
-
   /**
    * Get the variables of a crossed partial derivative and the total order
    * of the derivative.  As in esdiff, each token of the list is one
@@ -62,7 +61,7 @@ export const EsdiffUtil = {
     for (const arg of args) {
       PARSER.string = arg + '^1';
       PARSER.i = 0;
-      PARSER.GetUpTo(name, '^')
+      PARSER.GetUpTo(name, '^');
       order += this.getPower(PARSER, parser, name);
     }
     return [args, order];
@@ -86,7 +85,11 @@ export const EsdiffUtil = {
     if (power.trim().match(/^-?\d+$/)) {
       return parseInt(power);
     }
-    const mml = new TexParser(power, PARSER.stack.env, PARSER.configuration).mml();
+    const mml = new TexParser(
+      power,
+      PARSER.stack.env,
+      PARSER.configuration
+    ).mml();
     if (mml.kind === 'mn') {
       return parseInt((mml as AbstractMmlTokenNode).getText());
     }
@@ -97,15 +100,20 @@ export const EsdiffUtil = {
         parser.Push(mml);
         return parseInt(child.getText());
       }
-      if (child.kind === 'mo' && child.getText() === '\u2212' && mml.childNodes[1].kind === 'mn') {
+      if (
+        child.kind === 'mo' &&
+        child.getText() === '\u2212' &&
+        mml.childNodes[1].kind === 'mn'
+      ) {
         mml.childNodes.shift();
-        const n = '-' + (mml.childNodes.shift() as AbstractMmlTokenNode).getText();
+        const n =
+          '-' + (mml.childNodes.shift() as AbstractMmlTokenNode).getText();
         parser.Push(mml);
         return parseInt(n);
       }
     }
     texError(COMPONENT, 'PowerNotNumber', name, power);
-  }
+  },
 };
 
 /**
