@@ -26,109 +26,91 @@
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import { ParseUtil } from '../ParseUtil.js';
 import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
 import { texError } from '../TexError.js';
-import { COMPONENT as TEX_COMPONENT } from '../__locales__/Component.js';
+import { AbstractMmlTokenNode } from '../../../core/MmlTree/MmlNode.js';
 import { COMPONENT } from './__locales__/Component.js';
 export { COMPONENT };
 
 /**
- * Get the next token from a TeX string: a braced group, a control
- * sequence, or a single character.
- *
- * @param {string} text The string to scan.
- * @param {number} i The starting position.
- * @returns {number} The position following the token.
+ * The `esdiff` utility functions.
  */
-function nextToken(text: string, i: number): number {
-  if (i >= text.length) {
-    return text.length;
-  }
-  const c = text.charAt(i);
-  if (c === '{') {
-    let braces = 0;
-    for (; i < text.length; i++) {
-      const d = text.charAt(i);
-      if (d === '\\') {
-        i++;
-      } else if (d === '{') {
-        braces++;
-      } else if (d === '}' && --braces === 0) {
-        return i + 1;
+export const EsdiffUtil = {
+
+  /**
+   * Get the variables of a crossed partial derivative and the total order
+   * of the derivative.  As in esdiff, each token of the list is one
+   * variable, with braces used to group a variable with its power (so
+   * {x}{y^2} is x and y squared), and the order is the sum of the powers,
+   * which must be numbers (or at least prefixed by one).
+   *
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} text The denominator variables.
+   * @returns {[string[], number]} The variables and the total order.
+   */
+  crossedVariables(parser: TexParser, text: string): [string[], number] {
+    const name = parser.currentCS;
+    const PARSER = new TexParser('', parser.stack.env, parser.configuration);
+    PARSER.configuration.popParser();
+    PARSER.string = text;
+    const args = [];
+    while (PARSER.i < PARSER.string.length) {
+      args.push(PARSER.GetArgument(name));
+    }
+    let order = 0;
+    for (const arg of args) {
+      PARSER.string = arg + '^1';
+      PARSER.i = 0;
+      PARSER.GetUpTo(name, '^')
+      order += this.getPower(PARSER, parser, name);
+    }
+    return [args, order];
+  },
+
+  /**
+   * Get a number from the next argument (either as a direct string,
+   * or after parsing, as a single `mn` element, as an `mn` followed
+   * by other content, or as an `mo` minus sign followed by an `mn`.
+   * Any additional nodes are pushed immediately (as they are in the
+   * actual LaTeX package, though that should probably be considered a
+   * bug in that package).  If there is no number, an error is thrown.
+   *
+   * @param {TexParser} PARSER   The temprary parser for the cross variables.
+   * @param {TexParser} parser   The original parser.
+   * @param {string} name        The name of the macro currently running.
+   * @returns {number|void}      The leading integer from the argument.
+   */
+  getPower(PARSER: TexParser, parser: TexParser, name: string): number | void {
+    const power = PARSER.GetArgument(name);
+    if (power.trim().match(/^-?\d+$/)) {
+      return parseInt(power);
+    }
+    const mml = new TexParser(power, PARSER.stack.env, PARSER.configuration).mml();
+    if (mml.kind === 'mn') {
+      return parseInt((mml as AbstractMmlTokenNode).getText());
+    }
+    if (mml.isInferred && mml.childNodes.length) {
+      const child = mml.childNodes[0] as AbstractMmlTokenNode;
+      if (child.kind === 'mn') {
+        mml.childNodes.shift();
+        parser.Push(mml);
+        return parseInt(child.getText());
+      }
+      if (child.kind === 'mo' && child.getText() === '\u2212' && mml.childNodes[1].kind === 'mn') {
+        mml.childNodes.shift();
+        const n = '-' + (mml.childNodes.shift() as AbstractMmlTokenNode).getText();
+        parser.Push(mml);
+        return parseInt(n);
       }
     }
-    return i;
+    texError(COMPONENT, 'PowerNotNumber', name, power);
   }
-  if (c === '\\') {
-    const match = text.slice(i + 1).match(/^(?:[a-z]+|.)/i);
-    return i + 1 + (match ? match[0].length : 0);
-  }
-  return i + String.fromCodePoint(text.codePointAt(i)).length;
-}
+};
 
 /**
- * Remove one level of braces surrounding a TeX string.
- *
- * @param {string} text The string to unbrace.
- * @returns {string} The string without its outer braces.
+ * The `esdiff` macro methods.
  */
-function unbrace(text: string): string {
-  text = text.trim();
-  return text.charAt(0) === '{' && nextToken(text, 0) === text.length
-    ? text.slice(1, -1).trim()
-    : text;
-}
-
-/**
- * Get the variables of a crossed partial derivative and the total order
- * of the derivative.  As in esdiff, each token of the list is one
- * variable, with braces used to group a variable with its power (so
- * {x}{y^2} is x and y squared), and the order is the sum of the powers,
- * which must be numbers.
- *
- * @param {TexParser} parser The current tex parser.
- * @param {string} text The denominator variables.
- * @returns {[string[], number]} The variables and the total order.
- */
-function crossedVariables(parser: TexParser, text: string): [string[], number] {
-  const vars: string[] = [];
-  let order = 0;
-  let i = 0;
-  while (i < text.length) {
-    if (text.charAt(i).match(/\s/)) {
-      i++;
-      continue;
-    }
-    const j = nextToken(text, i);
-    const item = unbrace(text.slice(i, j));
-    let power = null;
-    for (let p = 0; p < item.length; p = nextToken(item, p)) {
-      const c = item.charAt(p);
-      if (c === '^' || c === '_') {
-        let k = p + 1;
-        while (k < item.length && item.charAt(k).match(/\s/)) k++;
-        if (k >= item.length) {
-          texError(TEX_COMPONENT, 'MissingScript');
-        }
-        if (c === '^' && power === null) {
-          power = unbrace(item.slice(k, nextToken(item, k)));
-        }
-      }
-    }
-    power = power ?? '1';
-    if (!power.match(/^\d+$/)) {
-      texError(COMPONENT, 'PowerNotNumber', parser.currentCS, power);
-    }
-    order += parseInt(power);
-    vars.push(item);
-    i = j;
-  }
-  return [vars, order];
-}
-
-// Namespace
 export const EsdiffMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements \diff and \diffp, and their starred versions.
@@ -145,30 +127,28 @@ export const EsdiffMethods: { [key: string]: ParseMethod } = {
     const x = parser.GetArgument(name);
     const at = star ? parser.GetArgument(name) : '';
     let frac;
-    if (order != null || !crossed) {
-      const n = order != null ? `^{${order}}` : '';
+    if (order || !crossed) {
+      const n = order ? `^{${order}}` : '';
       frac = `\\frac{${d}${n} ${f}}{${d} ${x}${n}}`;
     } else {
-      const [vars, n] = crossedVariables(parser, x);
+      const [vars, n] = EsdiffUtil.crossedVariables(parser, x);
       const den = vars.map((v) => `{${d} ${v}}`).join('');
       frac = `\\frac{${d}${n > 1 ? `^{${n}}` : ''} ${f}}{${den}}`;
     }
     if (star) {
       frac = `\\left(${frac}\\right)_{\\mkern-7mu ${at}}`;
     }
-    const macro =
-      `\\mathchoice{${frac}}{\\displaystyle{${frac}}}` +
-      `{\\scriptstyle{${frac}}}{\\scriptstyle{${frac}}}`;
-    parser.string = ParseUtil.addArgs(
-      parser,
-      macro,
-      parser.string.slice(parser.i)
-    );
+    parser.string =
+      `\\mathchoice{${frac}}{\\displaystyle${frac}}` +
+      `{\\scriptstyle${frac}}{\\scriptstyle${frac}}` +
+      parser.string.slice(parser.i);
     parser.i = 0;
-    ParseUtil.checkMaxMacros(parser);
   },
 };
 
+/**
+ * The `esdiff` macros.
+ */
 new CommandMap('esdiff', {
   diff: [EsdiffMethods.Diff, '\\mathrm{d}', false],
   diffp: [EsdiffMethods.Diff, '\\partial', true],

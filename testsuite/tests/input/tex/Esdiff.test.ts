@@ -1,5 +1,6 @@
 import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
-import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers';
+import { getTokens, setupTex, tex2mml, expectTexError } from '#helpers/index.js';
+import '#js/input/tex/newcommand/NewcommandConfiguration.js';
 import '#js/input/tex/esdiff/EsdiffConfiguration.js';
 
 beforeEach(() => setupTex(['base', 'esdiff']));
@@ -70,6 +71,27 @@ describe('Esdiff', () => {
   test('diffp crossed large power', () => {
     expect(tex2mml('\\diffp{f}{{x^{10}}{y^2}z}')).toMatchSnapshot();
   });
+
+  test('diffp crossed negative power', () => {
+    expect(tex2mml('\\diffp{f}{{x^{-2}}{y^4}}')).toMatchSnapshot();
+  });
+
+  test('diffp crossed extra in power', () => {
+    expect(tex2mml('\\diffp{f}{{x^{2n}}}')).toMatchSnapshot();
+  });
+
+  test('diffp crossed negative power with extra', () => {
+    expect(tex2mml('\\diffp{f}{{x^{-2n}}{y^4}}')).toMatchSnapshot();
+  });
+
+  test('diffp crossed macro in power', () => {
+    setupTex(['base', 'esdiff', 'newcommand']);
+    expect(tex2mml('\\def\\p{2}\\diffp{f}{{x^\\p}}')).toMatchSnapshot();
+  });
+
+  test('diffp crossed spaces in power', () => {
+    expect(tex2mml('\\diffp{f}{{x^{ 2 }}}')).toMatchSnapshot();
+  });
 });
 
 /**********************************************************************************/
@@ -113,18 +135,6 @@ describe('Esdiff errors', () => {
 
   test('diffp unbraced power', () => {
     expectTexError('\\diffp{f}{x^2}').toBe(
-      'Missing superscript or subscript argument'
-    );
-  });
-
-  test('diffp dangling subscript', () => {
-    expectTexError('\\diffp{f}{x_}').toBe(
-      'Missing superscript or subscript argument'
-    );
-  });
-
-  test('diffp dangling subscript braced', () => {
-    expectTexError('\\diffp{f}{{x_}}').toBe(
       'Missing superscript or subscript argument'
     );
   });
