@@ -172,9 +172,20 @@ export class Safe<N, T, D> {
     ['scriptminsize', 'filterFontSize'],
     ['scriptsizemultiplier', 'filterSizeMultiplier'],
     ['scriptlevel', 'filterScriptLevel'],
-    ['data-', 'filterData'],
-    ['on*', 'filterListeners'],
+    ['autofocus', 'filterRemove'],
+    ['tabindex', 'filterRemove'],
+    ['contenteditable', 'filterRemove'],
   ]);
+
+  /**
+   * The attribute-pattern-to-filter-method mapping
+   */
+  public filterAttributePatterns: [RegExp, string][] = [
+    [/^data-/, 'filterData'],
+    [/^on/, 'filterRemove'],
+    [/^xlink:/, 'filterRemove'],
+  ];
+
 
   /**
    * The safe options from the document option list
@@ -263,16 +274,17 @@ export class Safe<N, T, D> {
    */
   public mmlAttribute(id: string, value: string): string | null {
     if (id === 'class') return null;
-    const method = this.filterAttributes.get(id);
-    const filter =
-      method ||
-      (id.substring(0, 5) === 'data-'
-        ? this.filterAttributes.get('data-')
-        : id.substring(0, 2) === 'on'
-          ? this.filterAttributes.get('on*')
-          : null);
+    let filter = this.filterAttributes.get(id);
     if (!filter) {
-      return value;
+      for (const [pattern, method] of this.filterAttributePatterns) {
+        if (pattern.exec(id)) {
+          filter = method;
+          break;
+        }
+      }
+      if (!filter) {
+        return value;
+      }
     }
     const result = this.filterMethods[filter](this, value, id);
     return typeof result === 'number' || typeof result === 'boolean'
