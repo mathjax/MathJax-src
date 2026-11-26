@@ -64,6 +64,7 @@ export const source = {
   '[tex]/texhtml': `${src}/input/tex/extensions/texhtml/texhtml.js`,
   '[tex]/textcomp': `${src}/input/tex/extensions/textcomp/textcomp.js`,
   '[tex]/textmacros': `${src}/input/tex/extensions/textmacros/textmacros.js`,
+  '[tex]/thermodynamics': `${src}/input/tex/extensions/thermodynamics/thermodynamics.js`,
   '[tex]/unicode': `${src}/input/tex/extensions/unicode/unicode.js`,
   '[tex]/units': `${src}/input/tex/extensions/units/units.js`,
   '[tex]/upgreek': `${src}/input/tex/extensions/upgreek/upgreek.js`,

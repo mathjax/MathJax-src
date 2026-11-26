@@ -8,6 +8,7 @@
     "name": "input/tex/extensions/thermodynamics",
     "libs": [
       "components/src/input/tex-base/lib",
+      "components/src/input/tex/extensions/newcommand/lib",
       "components/src/core/lib"
     ]
   }

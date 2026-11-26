@@ -19,133 +19,157 @@
  * @file Methods file for the thermodynamics package.
  *
  * @author kaiserkarl31@yahoo.com (Karl D. Hammond)
+ * Updated by dpvc@mathjax.org (Davide P. Cervone)
  */
 
 import TexParser from '../TexParser.js';
-import { ParseMethod } from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
-import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 import { StackItem } from '../StackItem.js';
-import TexError from '../TexError.js';
+import { texError } from '../TexError.js';
+import { ThermodynamicsUtil as TDU } from './ThermodynamicsUtil.js';
+import { COMPONENT } from './__locales__/Component.js';
 
-let PartialOpen = '(';
-let PartialClose = ')';
-let PartialEmptyClose = ')';
-let localdelimiterchange = false;
+/**
+ * A mapping of extensive/intensive styles to functions that convert a
+ * symbol to the proper format.
+ */
+export type EISmethods = {
+  [style: string]: (
+    symbol: string,
+    parser?: TexParser,
+    name?: string
+  ) => string | (() => void);
+};
 
-function CheckForChangeInDelimiterOptions (parser: TexParser)
-{
-  let delimiteroptions =
-      ['parentheses','brackets','braces','bar','plain-derivatives'];
-
-  if ( localdelimiterchange )
-    {} // we do nothing if we are inside an environment that changes delimiters
-  else if ( parser.options.thermodynamics['parentheses'] )
-  {
-      for ( let opt of delimiteroptions )
-        parser.options.thermodynamics[opt] = false;
-      PartialOpen = '(';
-      PartialClose = ')';
-      PartialEmptyClose = ')';
-  }
-  else if ( parser.options.thermodynamics['brackets'] )
-  {
-      for ( let opt of delimiteroptions )
-        parser.options.thermodynamics[opt] = false;
-      PartialOpen = '[';
-      PartialClose = ']';
-      PartialEmptyClose = ']';
-  }
-  else if ( parser.options.thermodynamics['braces'] )
-  {
-      for ( let opt of delimiteroptions )
-        parser.options.thermodynamics[opt] = false;
-      PartialOpen = '\\{';
-      PartialClose = '\\}';
-      PartialEmptyClose = '\\}';
-  }
-  else if ( parser.options.thermodynamics['bar'] )
-  {
-      for ( let opt of delimiteroptions )
-        parser.options.thermodynamics[opt] = false;
-      PartialOpen = '.';
-      PartialClose = '\\rvert';
-      PartialEmptyClose = '.';
-  }
-  else if ( parser.options.thermodynamics['plain-derivatives'] )
-  {
-      for ( let opt of delimiteroptions )
-        parser.options.thermodynamics[opt] = false;
-      PartialOpen = '.';
-      PartialClose = '.';
-      PartialEmptyClose = '.';
-  }
+/**
+ * A function to priduce an object with no prototype from
+ * an object literal.
+ *
+ * @param {EISmethods} methods   The methods to define
+ * @returns {EISmethods}         The methods with no prototype
+ */
+export function DefineEISmethods(methods: EISmethods): EISmethods {
+  return Object.assign(Object.create(null), methods);
 }
 
-export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
+/**
+ * The collection of conversion functions for the various output formats.
+ */
+export const EISmethodsMap = {
+  extensive: DefineEISmethods({
+    'extensive-plain': (symbol) => symbol,
+    'intensive-plain': (symbol) =>
+      `{\\mkern1mu\\underline{\\mkern-1mu ${symbol}\\mkern-4mu}\\mkern4mu}`,
+    'extensive-superscript': (symbol, parser, name) => () => {
+      ThermodynamicsMethods.SuperscriptedSymbol(parser, name, symbol, 't');
+    },
+    'intensive-lowercase': (symbol) => symbol,
+  }),
 
-  ExtensiveProperty (parser: TexParser, name: string) {
-    switch (parser.options.thermodynamics['extensive-style']) {
-      case 'intensive-plain' :
-        ThermodynamicsMethods.Macro (parser, name,
-          "{\\mkern1mu\\underline{\\mkern-1mu #1\\mkern-4mu}\\mkern4mu}", 1);
-        break;
-      case 'extensive-plain' :
-      case 'intensive-lowercase' :
-        ThermodynamicsMethods.Macro (parser, name, '#1', 1);
-        break;
-      case 'extensive-superscript' :
-        let arg = parser.GetArgument(name);
-        ThermodynamicsMethods.SuperscriptedSymbol (parser, name, arg, 't');
-        break;
-      default :
-        throw new TexError('InvalidOption', 'Thermodynamics error: "' + 
-          parser.options.thermodynamics['extensive-style']
-          + 'is not a valid symbol style');
+  intensive: DefineEISmethods({
+    'extensive-plain': (symbol) =>
+      `{\\mkern1mu\\underline{\\mkern-1mu ${symbol}\\mkern-4mu}\\mkern4mu}`,
+    'intensive-plain': (symbol) => symbol,
+    'extensive-superscript': (symbol) => symbol,
+    'intensive-lowercase': (symbol, parser) => TDU.lowerCase(parser, symbol),
+  }),
+
+  specific: DefineEISmethods({
+    'extensive-plain': (symbol) => `\\hat{${symbol}}`,
+    'intensive-plain': (symbol) => `\\hat{${symbol}}`,
+    'extensive-superscript': (symbol) => `\\hat{${symbol}}`,
+    'intensive-lowercase': (symbol, parser) =>
+      `\\hat{${TDU.lowerCase(parser, symbol)}}`,
+  }),
+};
+
+/**
+ * The union 'extensive' | 'intensive' | 'specific'
+ */
+export type THERMODYNAMICS_EIS_NAMES = keyof typeof EISmethodsMap;
+
+/**
+ * A union of valid names for the extensive/intensive/specific styles.
+ */
+export type THERMODYNAMICS_EIS_STYLE = keyof typeof EISmethodsMap.extensive;
+
+/**
+ * The delimiters to use for the various partial derivative styles.
+ */
+export const ThermodynamicsDelimiters = Object.assign(Object.create(null), {
+  parentheses: '( ) )',
+  brackets: '[ ] ]',
+  braces: '\\{ \\} \\}',
+  bar: '. | .',
+  plain: '. . .',
+});
+
+/**
+ * The union of the names of the delimiter styles.
+ */
+export type THERMODYNAMICS_DELIMITER_STYLE =
+  keyof typeof ThermodynamicsDelimiters;
+
+/**
+ * The macro methods for the [tex]/thermodynamics package.
+ */
+export const ThermodynamicsMethods = {
+  /**************************************************************************/
+
+  /**
+   * Parse a self-contained LaTeX string
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} _name       The name of the current macro
+   * @param {string} tex         The LaTeX string to parse
+   */
+  Latex(parser: TexParser, _name: string, tex: string) {
+    TDU.latex(parser, tex);
+  },
+
+  /**************************************************************************/
+
+  /**
+   * Implement \extensive, \intensive, and \specific macros using
+   * one of the EISmethodMaps defined above and the current EIS style.
+   *
+   * @param {TexParser} parser                   The active TeX parser
+   * @param {string} name                        The name of the current macro
+   * @param {THERMODYNAMICS_EIS_NAMES} methods   The EISmethods map to use
+   */
+  EISProperty(
+    parser: TexParser,
+    name: string,
+    methods: THERMODYNAMICS_EIS_NAMES
+  ) {
+    const style = TDU.getOption(parser, 'eis-style');
+    const method = EISmethodsMap[methods][style];
+    if (!method) {
+      texError(COMPONENT, 'InvalidSymbolStyle', style);
+    }
+    const result = method(parser.GetArgument(name), parser, name);
+    if (typeof result === 'string') {
+      TDU.latex(parser, result);
+    } else {
+      result();
     }
   },
 
-  IntensiveProperty (parser: TexParser, name: string) {
-    switch (parser.options.thermodynamics['extensive-style']) {
-      case 'extensive-plain' :
-        ThermodynamicsMethods.Macro (parser, name,
-          "{\\mkern1mu\\underline{\\mkern-1mu #1\\mkern-4mu}\\mkern4mu}", 1);
-        break;
-      case 'intensive-plain' :
-      case 'extensive-superscript' :
-        ThermodynamicsMethods.Macro (parser, name, '#1', 1);
-        break;
-      case 'intensive-lowercase' :
-        // FIXME need a better way to handle this case
-        let arg = parser.GetArgument(name);
-        ThermodynamicsMethods.Macro (parser, name, arg.toLowerCase());
-        break;
-      default :
-        throw new TexError('InvalidOption', 'Thermodynamics error: "' + 
-          parser.options.thermodynamics['extensive-style']
-          + 'is not a valid symbol style');
-    }
+  /**
+   * Locally change the EIS style within an environment.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {StackItem} begin    The StackItem that starts an environment
+   *                             (which contains a new `stack.env` that disappears
+   *                              after the environment is ended)
+   * @param {string} style       The name of the temporary EIS style
+   */
+  LocalEISstyle(parser: TexParser, begin: StackItem, style: string) {
+    parser.Push(begin);
+    TDU.setOption(parser, 'eis-style', style);
   },
 
-  SpecificProperty (parser: TexParser, name: string) {
-    switch (parser.options.thermodynamics['extensive-style']) {
-      case 'extensive-plain' :
-      case 'intensive-plain' :
-      case 'extensive-superscript' :
-        ThermodynamicsMethods.Macro (parser, name, '\\hat{#1}', 1);
-        break;
-      case 'intensive-lowercase' :
-        // FIXME need a better way to handle this case
-        let arg = parser.GetArgument(name);
-        ThermodynamicsMethods.Macro (parser, name,
-          '\\hat{' + arg.toLowerCase() + '}');
-        break;
-      default :
-        throw new TexError('InvalidOption', 'Thermodynamics error: "' + 
-          parser.options.thermodynamics['extensive-style']
-          + 'is not a valid symbol style');
-    }
-  },
+  /**************************************************************************/
 
   // Partial molar quantities
   // cases to consider:
@@ -154,771 +178,553 @@ export const ThermodynamicsMethods: { [key: string]: ParseMethod } = {
   // (3) Mpm^S_i
   // (4) Mpm_i^S
   // (5) Mpm_i
-  PartialMolar (parser: TexParser, name: string, symbol: string) {
-    let supers = parser.GetBrackets(name);
-    let subs = null;
-
-    // Check for updated shortpm options
-    if ( parser.options.thermodynamics['shortpm'] )
-    {
-      // shortpm is always false unless the user changed it recently
-      parser.options.thermodynamics['longpm'] = false;
-      parser.options.thermodynamics['shortpm'] = false;
-    }
-
-    let arg = parser.GetArgument(name, true);
-    if ( arg == '_' ) {
-      subs = parser.GetArgument(name);
-      // "peek" at next argument to see whether it's ^
-      const nextchar = parser.string.charAt(parser.i)
-      if ( nextchar == '^' ) {
-        arg = parser.GetArgument(name); // '^'
-        supers = parser.GetArgument(name); // the superscript argument
-      }
-    } else if ( arg == '^' ) {
-      supers = parser.GetArgument(name);
-      // "peek" at next argument to see whether it's _
-      const nextchar = parser.string.charAt(parser.i)
-      if ( nextchar == '_' ) {
-        arg = parser.GetArgument(name); // '_'
-        subs = parser.GetArgument(name); // the subscript argument
-      }
-    }
-    else subs = arg;
-    if ( subs == null )
-        subs = '';
-    if ( typeof supers !== "undefined" )
-    {
-      if ( parser.options.thermodynamics['longpm'] )
-        // \mkern2mu\overline{\mkern-2mu{symbol_subs^supers}\mkern-1mu}\mkern1mu
-        ThermodynamicsMethods.Macro (parser, name,
-          '\\mkern2mu\\overline{\\mkern-2mu{'
-            + symbol + '}_{' + subs + '}^{' + supers
-            + '}\\mkern-1mu}\\mkern1mu');
-      else
-        ThermodynamicsMethods.Macro (parser, name,
-          '\\mkern2mu\\overline{\\mkern-2mu{'
-            + symbol + '\\mkern-1mu}\\mkern1mu'
-            + '}_{' + subs + '}^{' + supers + '}');
-    } else {
-      if ( parser.options.thermodynamics['longpm'] )
-        // \mkern2mu\overline{\mkern-2mu{symbol_subs}\mkern-1mu}\mkern1mu
-        ThermodynamicsMethods.Macro (parser, name,
-          '\\mkern2mu\\overline{\\mkern-2mu{'
-            + symbol + '_{' + subs + '}}\\mkern-1mu}\\mkern1mu');
-      else
-{
-        ThermodynamicsMethods.Macro (parser, name,
-          '\\mkern2mu\\overline{\\mkern-2mu{'
-            + symbol + '\\mkern-1mu}}\\mkern1mu' + '_{' + subs + '}');
-}
-    }
+  /**
+   * Implement \partialmolar handling super- and subscripts that follow.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   * @param {string} symbol      The symbol that is being decorated
+   */
+  PartialMolar(
+    parser: TexParser,
+    name: string,
+    symbol: string = parser.GetArgument(name)
+  ) {
+    const [sup, sub] = TDU.getSupSub(parser, name);
+    TDU.latex(
+      parser,
+      TDU.getOption(parser, 'pm-style') === 'long'
+        ? `\\mkern2mu\\overline{\\mkern-2mu{${symbol}}${sub}${sup}\\mkern-1mu}\\mkern1mu`
+        : `\\mkern2mu\\overline{\\mkern-2mu{${symbol}\\mkern-1mu}}\\mkern1mu${sub}${sup}`
+    );
   },
 
-  PartialMolarMacro (parser: TexParser, name: string) {
-    let symbol: string = parser.GetArgument(name);
-    ThermodynamicsMethods.PartialMolar (parser, name, symbol)
-  },
-
-  LocalShortPm (parser: TexParser, begin: StackItem) {
-    let oldvalue: boolean = parser.options.thermodynamics['longpm'];
-    let name: string = begin.getName();
-    let endstr: string = '\\end{' + name + '}';
-    let istop: number = parser.string.indexOf(endstr);
-    let rest: string = parser.string.slice(istop);
-    parser.options.thermodynamics['longpm'] = false;
+  /**
+   * Locally changes the pm-style option within an environment.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {StackItem} begin    The StackItem that starts an environment
+   *                             (which contains a new `stack.env` that disappears
+   *                              after the environment is ended)
+   * @param {string} style       The name of the temporary pm style to use
+   */
+  LocalPmStyle(parser: TexParser, begin: StackItem, style: string) {
     parser.Push(begin);
-    parser.string = parser.string.substring(parser.i, istop);
-    parser.i = 0;
-    parser.Parse();
-    parser.options.thermodynamics['longpm'] = oldvalue;
-    parser.string = rest;
-    parser.i = 0;
+    TDU.setOption(parser, 'pm-style', style);
   },
 
-  LocalLongPm (parser: TexParser, begin: StackItem) {
-    let oldvalue = parser.options.thermodynamics['longpm'];
-    let name: string = begin.getName();
-    let endstr: string = '\\end{' + name + '}';
-    let istop: number = parser.string.indexOf(endstr);
-    let rest: string = parser.string.slice(istop);
-    parser.options.thermodynamics['longpm'] = true;
+  /**
+   * Locally change the delimiters to use within an environment.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {StackItem} begin    The StackItem that starts an environment
+   *                             (which contains a new `stack.env` that disappears
+   *                              after the environment is ended)
+   * @param {string} delimiters  The name of the temporary delimiter style
+   */
+  LocalPmDelimiters(parser: TexParser, begin: StackItem, delimiters: string) {
     parser.Push(begin);
-    parser.string = parser.string.substring(parser.i, istop);
-    parser.i = 0;
-    parser.Parse();
-    parser.options.thermodynamics['longpm'] = oldvalue;
-    parser.string = rest;
-    parser.i = 0;
+    TDU.setOption(parser, 'pm-delims', delimiters);
+    if (delimiters === ThermodynamicsDelimiters.plain) {
+      TDU.setOption(parser, 'subscripts', false);
+    }
   },
 
-  // Implements alternative delimiters for \Partial and friends
-  LocallyChangeDelimiters (parser: TexParser, begin: StackItem,
-        open: string, close: string, emptyclose: string) {
-    let oldPartialOpen = PartialOpen;
-    let oldPartialClose = PartialClose;
-    let oldPartialEmptyClose = PartialEmptyClose;
-    let name: string = begin.getName();
-    let endstr: string = '\\end{' + name + '}';
-    let istop: number = parser.string.indexOf(endstr);
-    let rest: string = parser.string.slice(istop);
-    localdelimiterchange = true;
+  /**
+   * Locally change the subscript option within an environment.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {StackItem} begin    The StackItem that starts an environment
+   *                             (which contains a new `stack.env` that disappears
+   *                              after the environment is ended)
+   * @param {boolean} scripts    The temporary setting for the subscripts option
+   */
+  LocalSubscripts(parser: TexParser, begin: StackItem, scripts: boolean) {
     parser.Push(begin);
-    PartialOpen = open;
-    PartialClose = close;
-    PartialEmptyClose = emptyclose;
-    parser.string = parser.string.substring(parser.i, istop);
-    parser.i = 0;
-    parser.Parse();
-    parser.string = rest;
-    parser.i = 0;
-    PartialOpen = oldPartialOpen;
-    PartialClose = oldPartialClose;
-    PartialEmptyClose = oldPartialEmptyClose;
-    localdelimiterchange = false;
+    TDU.setOption(parser, 'subscripts', scripts);
   },
 
-  LocalSubscripts (parser: TexParser, begin: StackItem)
-  {
-    let name: string = begin.getName();
-    let oldvalue = parser.options.thermodynamics['subscripts'];
-    let endstr: string = '\\end{' + name + '}';
-    let istop: number = parser.string.indexOf(endstr);
-    let rest: string = parser.string.slice(istop);
-    parser.options.thermodynamics['subscripts'] = true;
-    parser.Push(begin);
-    parser.string = parser.string.substring(parser.i, istop);
-    parser.i = 0;
-    parser.Parse();
-    parser.options.thermodynamics['subscripts'] = oldvalue;
-    parser.string = rest;
-    parser.i = 0;
+  /**************************************************************************/
+
+  /**
+   * Implements the \Partial, \Partialinline, and \Partialinlinetext macros.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   * @param {boolean} inline     `true` when this is an inline macro
+   * @param {boolean} text       `true` when this is an inlinetext macro
+   * @param {string} left        The string to use before the left-hand delimiter
+   * @param {string} right       The string to use before the right-hand delimiter
+   */
+  Partial(
+    parser: TexParser,
+    name: string,
+    inline: boolean = false,
+    text: boolean = false,
+    left: string = '\\left',
+    right: string = '\\right'
+  ) {
+    const star = inline ? '' : parser.GetStar();
+    const f = parser.GetArgument(name);
+    const v = parser.GetArgument(name);
+    const at = parser.GetArgument(name);
+
+    [inline, left, right] = TDU.getILR(parser, inline, text, left, right);
+    const [open, close, empty] = TDU.getOption(parser, 'pm-delims').split(/ /);
+    const subscripts = TDU.getOption(parser, 'subscripts');
+    const args = subscripts ? '' : TDU.sort(v, at);
+    const end =
+      (subscripts ? (at ? `${close}_{${at}}` : empty) : '') +
+      (!inline && star ? '\\mkern-12mu' : '');
+    TDU.latex(
+      parser,
+      subscripts
+        ? inline
+          ? `${left}${open}\\partial ${f}/\\partial ${v}${right}${end}`
+          : `${left}${open}\\frac{\\partial ${f}}{\\partial ${v}}${right}${end}`
+        : inline
+          ? `${left}${open}\\partial ${f}(${args})/\\partial ${v}${right}${close}`
+          : `${left}${open}\\frac{\\partial ${f}(${args})}{\\partial ${v}}${right}${close}`
+    );
   },
 
-  LocalNoSubscripts (parser: TexParser, begin: StackItem)
-  {
-    let name: string = begin.getName();
-    let oldvalue = parser.options.thermodynamics['subscripts'];
-    let endstr: string = '\\end{' + name + '}';
-    let istop: number = parser.string.indexOf(endstr);
-    let rest: string = parser.string.slice(istop);
-    parser.options.thermodynamics['subscripts'] = false;
-    parser.Push(begin);
-    parser.string = parser.string.substring(parser.i, istop);
-    parser.i = 0;
-    parser.Parse();
-    parser.options.thermodynamics['subscripts'] = oldvalue;
-    parser.string = rest;
-    parser.i = 0;
+  /**
+   * Implements the \PartialSecnd, \PartialSecondinline, and
+   * \PartiaSecondlinlinetext macros.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   * @param {boolean} inline     `true` when this is an inline macro
+   * @param {boolean} text       `true` when this is an inlinetext macro
+   * @param {string} left        The string to use before the left-hand delimiter
+   * @param {string} right       The string to use before the right-hand delimiter
+   */
+  PartialSecond(
+    parser: TexParser,
+    name: string,
+    inline: boolean = false,
+    text: boolean = false,
+    left: string = '\\left',
+    right: string = '\\right'
+  ) {
+    const star = inline ? '' : parser.GetStar();
+    const f = parser.GetArgument(name);
+    const v = parser.GetArgument(name);
+    const at = parser.GetArgument(name);
+
+    [inline, left, right] = TDU.getILR(parser, inline, text, left, right);
+    const [open, close, empty] = TDU.getOption(parser, 'pm-delims').split(/ /);
+    const subscripts = TDU.getOption(parser, 'subscripts');
+    const args = subscripts ? '' : TDU.sort(v, at);
+    const end =
+      (subscripts ? (at ? `${close}_{${at}}` : empty) : '') +
+      (!inline && star ? '\\mkern-12mu' : '');
+    TDU.latex(
+      parser,
+      subscripts
+        ? inline
+          ? `${left}${open}\\partial^2 ${f}/\\partial ${v}^2${right}${end}`
+          : `${left}${open}\\frac{\\partial^2 ${f}}{\\partial ${v}^2}${right}${end}`
+        : inline
+          ? `${left}${open}\\partial^2 ${f}(${args})/\\partial ${v}^2${right}${close}`
+          : `${left}${open}\\frac{\\partial^2 ${f}(${args})}{\\partial^2 ${v}}${right}${close}`
+    );
   },
 
-  Partial (parser: TexParser, name: string, begin='\\left', end='\\right') {
-    const star = parser.GetStar();
-    const arg1 = parser.GetArgument(name);
-    const arg2 = parser.GetArgument(name);
-    const arg3 = parser.GetArgument(name);
-    CheckForChangeInDelimiterOptions (parser);
+  /**
+   * Implements the \PartialMixSecond, \PartialMixSecondinline, and
+   * \PartialMixSecndinlinetext macros.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   * @param {boolean} inline     `true` when this is an inline macro
+   * @param {boolean} text       `true` when this is an inlinetext macro
+   * @param {string} left        The string to use before the left-hand delimiter
+   * @param {string} right       The string to use before the right-hand delimiter
+   */
+  PartialMixSecond(
+    parser: TexParser,
+    name: string,
+    inline: boolean = false,
+    text: boolean = false,
+    left: string = '\\left',
+    right: string = '\\right'
+  ) {
+    const star = inline ? '' : parser.GetStar();
+    const f = parser.GetArgument(name);
+    const v1 = parser.GetArgument(name);
+    const v2 = parser.GetArgument(name);
+    const at = parser.GetArgument(name);
 
-    let kerning = '';
-    if ( parser.options.thermodynamics['subscripts'] )
-    {
-      // subscripts version
-      if ( star )
-        kerning = '\\mkern-12mu';
-      if ( arg3 == '' )
-        ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
-          + '\\frac{\\partial ' + arg1 + '}{\\partial ' + arg2 + '}'
-          + end + PartialEmptyClose + kerning);
-      else
-        ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
-          + '\\frac{\\partial ' + arg1 + '}{\\partial ' + arg2 + '}'
-          + end + PartialClose + '_{' + arg3 + '}' + kerning);
-    }
-    else {
-      // nosubscripts version
-      if ( arg3 == '' )
-        ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
-          + '\\frac{\\partial ' + arg1 + '}{\\partial ' + arg2 + '}'
-          + end + PartialEmptyClose + kerning);
-      else {
-        let tmpstr: string = arg2 + ',' + arg3;
-        // TODO need to sort these the same way as in the original package
-        //let tmparray: string[]
-        //    = tmpstr.split(',').sort((a,b) => a.localeCompare(b));
-        //tmpstr = tmparray.join();
-        ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
-          + '\\frac{\\partial ' + arg1 + '(' + tmpstr
-          + ')}{\\partial ' + arg2 + '}' + end + PartialClose + kerning);
-      }
-    }
+    [inline, left, right] = TDU.getILR(parser, inline, text, left, right);
+    const [open, close, empty] = TDU.getOption(parser, 'pm-delims').split(/ /);
+    const subscripts = TDU.getOption(parser, 'subscripts');
+    const args = subscripts ? '' : TDU.sort(v1, v2, at);
+    const end =
+      (subscripts ? (at ? `${close}_{${at}}` : empty) : '') +
+      (!inline && star ? '\\mkern-12mu' : '');
+    TDU.latex(
+      parser,
+      subscripts
+        ? inline
+          ? `${left}${open}\\partial^2 ${f}/\\partial ${v1}\\partial ${v2}${right}${end}`
+          : `${left}${open}\\frac{\\partial^2 ${f}}{\\partial ${v1}\\partial ${v2}}${right}${end}`
+        : inline
+          ? `${left}${open}\\partial^2 ${f}(${args})/\\partial ${v1}\\partial ${v2}${right}${close}`
+          : `${left}${open}\\frac{\\partial^2 ${f}(${args})}{\\partial ${v1}\\partial ${v2}}${right}${close}`
+    );
   },
 
-  PartialSecond (parser: TexParser, name: string,
-        begin='\\left', end='\\right')
-  {
-    const star = parser.GetStar();
-    const arg1 = parser.GetArgument(name);
-    const arg2 = parser.GetArgument(name);
-    const arg3 = parser.GetArgument(name);
-    CheckForChangeInDelimiterOptions (parser);
+  /**************************************************************************/
 
-    let kerning = '';
-    if ( parser.options.thermodynamics['subscripts'] )
-    {
-      // subscripts version
-      if ( star )
-        kerning = '\\mkern-12mu';
-      if ( arg3 == '' )
-        ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
-          + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2 + '^2}'
-          + end + PartialEmptyClose + kerning);
-      else
-        ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
-          + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2 + '^2}'
-          + end + PartialClose + '_{' + arg3 + '}' + kerning);
-    }
-    else {
-      // nosubscripts version
-      if ( arg3 == '' )
-        ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
-          + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2 + '}'
-          + end + PartialEmptyClose + kerning);
-      else {
-        let tmpstr: string = arg2 + ',' + arg3;
-        // TODO need to sort these the same way as in the original package
-        //let tmparray: string[]
-        //    = tmpstr.split(',').sort((a,b) => a.localeCompare(b));
-        //tmpstr = tmparray.join();
-        ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
-          + '\\frac{\\partial^2 ' + arg1 + '(' + tmpstr
-          + ')}{\\partial^2 ' + arg2 + '}' + end + PartialClose + kerning);
-      }
-    }
-  },
-
-  PartialMixSecond (parser: TexParser, name: string,
-        begin='\\left', end='\\right')
-  {
-    const star = parser.GetStar();
-    const arg1 = parser.GetArgument(name);
-    const arg2 = parser.GetArgument(name);
-    const arg3 = parser.GetArgument(name);
-    const arg4 = parser.GetArgument(name);
-    CheckForChangeInDelimiterOptions (parser);
-
-    let kerning = '';
-    if ( parser.options.thermodynamics['subscripts'] )
-    {
-      // subscripts version
-      if ( star )
-        kerning = '\\mkern-12mu';
-      if ( arg4 == '' )
-        ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
-          + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2
-          + '\\partial ' + arg3 + '}' + end + PartialEmptyClose + kerning);
-      else
-        ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
-          + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2
-          + '\\partial ' + arg3 + '}' + end + PartialClose
-          + '_{' + arg4 + '}' + kerning);
-    }
-    else {
-      // nosubscripts version
-      if ( arg4 == '' )
-        ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
-          + '\\frac{\\partial^2 ' + arg1 + '}{\\partial ' + arg2
-          + '\\partial ' + arg3 + '}' + end + PartialEmptyClose + kerning);
-      else {
-        let tmpstr: string = arg2 + ',' + arg3 + ',' + arg4;
-        // TODO need to sort these the same way as in the original package
-        //let tmparray: string[]
-        //    = tmpstr.split(',').sort((a,b) => a.localeCompare(b));
-        //tmpstr = tmparray.join();
-        ThermodynamicsMethods.Macro (parser, name, begin + PartialOpen
-          + '\\frac{\\partial^2 ' + arg1 + '(' + tmpstr
-          + ')}{\\partial ' + arg2 + '\\partial ' + arg3
-          + '}' + end + PartialClose + kerning);
-      }
-    }
-  },
-
-  NewExtensiveProperty (parser: TexParser, name: string) {
+  /**
+   * Implements the \NewExtensiceProperty macro.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   */
+  NewExtensiveProperty(parser: TexParser, name: string) {
     const csbase = parser.GetArgument(name);
     const symbol = parser.GetArgument(name);
-    NewcommandUtil.addMacro (parser, csbase + 't',
-      ThermodynamicsMethods.Macro, ["\\extensive{" + symbol + "}"]);
-    NewcommandUtil.addMacro (parser, csbase + 'm',
-      ThermodynamicsMethods.Macro, ["\\intensive{" + symbol + "}"]);
-    NewcommandUtil.addMacro (parser, csbase + 's',
-      ThermodynamicsMethods.Macro, ["\\specific{" + symbol + "}"]);
+    TDU.tmsMacros(parser, symbol, csbase);
   },
 
-  NewPartialMolarProperty (parser: TexParser, name: string) {
+  /**
+   * Implements the \NewPartialMolarProperty macro.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   */
+  NewPartialMolarProperty(parser: TexParser, name: string) {
     const csbase = parser.GetArgument(name);
     const symbol = parser.GetArgument(name);
-    NewcommandUtil.addMacro (parser, csbase + 'pm',
-      ThermodynamicsMethods.PartialMolar, [symbol]);
+    TDU.pmMacro(parser, symbol, csbase);
   },
 
-  NewExcessProperty (parser: TexParser, name: string) {
+  /**
+   * Implements the \NewExcessProperty macro.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   */
+  NewExcessProperty(parser: TexParser, name: string) {
     const csbase = parser.GetArgument(name);
     const symbol = parser.GetArgument(name);
-    NewcommandUtil.addMacro (parser, csbase + 'Et',
-      ThermodynamicsMethods.Macro, ["\\extensive{" + symbol + "}^\\excess"]);
-    NewcommandUtil.addMacro (parser, csbase + 'E',
-      ThermodynamicsMethods.Macro, ["\\intensive{" + symbol + "}^\\excess"]);
-    NewcommandUtil.addMacro (parser, csbase + 'Es',
-      ThermodynamicsMethods.Macro, ["\\specific{" + symbol + "}^\\excess"]);
-    NewcommandUtil.addMacro (parser, csbase + 'Epm',
-      ThermodynamicsMethods.PartialMolarSuperscripted, [symbol,'\\excess']);
+    TDU.tmsMacros(parser, symbol, csbase, 'E', '\\excess');
+    TDU.pmMacro(parser, symbol, csbase, 'E', '\\excess');
   },
 
-  NewResidualProperty (parser: TexParser, name: string) {
+  /**
+   * Implements the \NewResidualProperty macro.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   */
+  NewResidualProperty(parser: TexParser, name: string) {
     const csbase = parser.GetArgument(name);
     const symbol = parser.GetArgument(name);
-    NewcommandUtil.addMacro (parser, csbase + 'Rt',
-      ThermodynamicsMethods.Macro, ["\\extensive{" + symbol + "}^\\residual"]);
-    NewcommandUtil.addMacro (parser, csbase + 'R',
-      ThermodynamicsMethods.Macro, ["\\intensive{" + symbol + "}^\\residual"]);
-    NewcommandUtil.addMacro (parser, csbase + 'Rs',
-      ThermodynamicsMethods.Macro, ["\\specific{" + symbol + "}^\\residual"]);
-    NewcommandUtil.addMacro (parser, csbase + 'Rpm',
-      ThermodynamicsMethods.PartialMolarSuperscripted, [symbol,'\\residual']);
+    TDU.tmsMacros(parser, symbol, csbase, 'E', '\\excess');
+    TDU.tmsMacros(parser, symbol, csbase, 'R', '\\residual');
+    TDU.pmMacro(parser, symbol, csbase, 'R', '\\residual');
   },
 
-  NewThermodynamicProperty (parser: TexParser, name: string) {
+  /**
+   * Implements the \NewThermodynamocProperty macro.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   */
+  NewThermodynamicProperty(parser: TexParser, name: string) {
     const csbase = parser.GetArgument(name);
     const symbol = parser.GetArgument(name);
-    NewcommandUtil.addMacro (parser, csbase + 't',
-      ThermodynamicsMethods.Macro, ["\\extensive{" + symbol + "}"]);
-    NewcommandUtil.addMacro (parser, csbase + 'm',
-      ThermodynamicsMethods.Macro, ["\\intensive{" + symbol + "}"]);
-    NewcommandUtil.addMacro (parser, csbase + 's',
-      ThermodynamicsMethods.Macro, ["\\specific{" + symbol + "}"]);
-    NewcommandUtil.addMacro (parser, csbase + 'pm',
-        ThermodynamicsMethods.PartialMolar, [symbol]);
-    NewcommandUtil.addMacro (parser, csbase + 'Et',
-      ThermodynamicsMethods.Macro, ["\\extensive{" + symbol + "}^\\excess"]);
-    NewcommandUtil.addMacro (parser, csbase + 'E',
-      ThermodynamicsMethods.Macro, ["\\intensive{" + symbol + "}^\\excess"]);
-    NewcommandUtil.addMacro (parser, csbase + 'Es',
-      ThermodynamicsMethods.Macro, ["\\specific{" + symbol + "}^\\excess"]);
-    NewcommandUtil.addMacro (parser, csbase + 'Epm',
-      ThermodynamicsMethods.PartialMolarSuperscripted, [symbol,'\\excess']);
-    NewcommandUtil.addMacro (parser, csbase + 'Rt',
-      ThermodynamicsMethods.Macro, ["\\extensive{" + symbol + "}^\\residual"]);
-    NewcommandUtil.addMacro (parser, csbase + 'R',
-      ThermodynamicsMethods.Macro, ["\\intensive{" + symbol + "}^\\residual"]);
-    NewcommandUtil.addMacro (parser, csbase + 'Rs',
-      ThermodynamicsMethods.Macro, ["\\specific{" + symbol + "}^\\residual"]);
-    NewcommandUtil.addMacro (parser, csbase + 'Rpm',
-      ThermodynamicsMethods.PartialMolarSuperscripted, [symbol,'\\residual']);
+    TDU.tmsMacros(parser, symbol, csbase);
+    TDU.pmMacro(parser, symbol, csbase);
+    TDU.tmsMacros(parser, symbol, csbase, 'E', '\\excess');
+    TDU.pmMacro(parser, symbol, csbase, 'E', '\\excess');
+    TDU.tmsMacros(parser, symbol, csbase, 'R', '\\residual');
+    TDU.pmMacro(parser, symbol, csbase, 'R', '\\residual');
   },
 
-  SubscriptedSymbol (parser: TexParser, name: string,
-        symbol: string, subscript: string) {
-    let arg = parser.GetArgument(name, true);
-    switch ( arg ) {
-      case '_' :
-        arg = parser.GetArgument(name);
-        ThermodynamicsMethods.Macro (parser, name,
-          symbol + '_{' + subscript + ',' + arg + '}');
-        break;
-      case '^' :
-        let supers = parser.GetArgument(name);
-        // peek at next char
-        const nextchar = parser.string.charAt(parser.i)
-        if ( nextchar == '_' )
-        {
-          let subs = parser.GetArgument(name);
-          subs = parser.GetArgument(name);
-          ThermodynamicsMethods.Macro (parser, name,
-            symbol + '^{' + supers + '}_{' + subscript + ',' + subs + '}');
-        }
-        break;
-      case null :
-        ThermodynamicsMethods.Macro (parser, name,
-          symbol + '_{' + subscript + '}');
-        break;
-      default :
-        ThermodynamicsMethods.Macro (parser, 'SubscriptedSymbol',
-          symbol + '_{' + subscript + '}' + arg);
-    }
+  /**************************************************************************/
+
+  /**
+   * Implements a subscripted symbol with a subscript prefix.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   * @param {string} symbol      The symbol to have super- and subscripts
+   * @param {string} subscript   The prefix subscript
+   */
+  SubscriptedSymbol(
+    parser: TexParser,
+    name: string,
+    symbol: string,
+    subscript: string
+  ) {
+    const [sup, sub] = TDU.getSupSub(
+      parser,
+      name,
+      subscript,
+      '',
+      '',
+      undefined,
+      false
+    );
+    TDU.latex(parser, symbol + sup + sub);
   },
 
-  SuperscriptedSymbol (parser: TexParser, name: string,
-        symbol: string, superscript: string) {
-    let arg = parser.GetArgument(name, true);
-    switch ( arg ) {
-      case '^' :
-        arg = parser.GetArgument(name);
-        ThermodynamicsMethods.Macro (parser, name,
-          symbol + '^{' + superscript + ',' + arg + '}');
-        break;
-      case null :
-        ThermodynamicsMethods.Macro (parser, name,
-          symbol + '^{' + superscript + '}');
-        break;
-      default :
-        ThermodynamicsMethods.Macro (parser, name,
-          symbol + '^{' + superscript + '}' + arg);
-    }
+  /**
+   * Implements a superscripted symbol with a superscript prefix.
+   *
+   * @param {TexParser} parser     The active TeX parser
+   * @param {string} name          The name of the current macro
+   * @param {string} symbol        The symbol to have super- and subscripts
+   * @param {string} superscript   The prefix superscript
+   */
+  SuperscriptedSymbol(
+    parser: TexParser,
+    name: string,
+    symbol: string,
+    superscript: string
+  ) {
+    const [sup, sub] = TDU.getSupSub(
+      parser,
+      name,
+      '',
+      superscript,
+      undefined,
+      '',
+      false
+    );
+    TDU.latex(parser, symbol + sup + sub);
   },
 
-  PartialMolarSubscripted (parser: TexParser, name: string, symbol: string,
-        subscript: string) {
-    let supers = parser.GetBrackets(name);
-    let subs = null;
-    let arg = parser.GetArgument(name, true);
-    switch (arg) {
-      case '_' :
-        subs = parser.GetArgument(name);
-        // "peek" at next argument to see whether it's ^
-        const nextchar = parser.string.charAt(parser.i)
-        if ( nextchar == '^' ) {
-          arg = parser.GetArgument(name); // '^'
-          supers = parser.GetArgument(name); // the superscript argument
-        }
-        break;
-      case '^' :
-        supers = parser.GetArgument(name);
-        // "peek" at next argument to see whether it's _
-        const nextc = parser.string.charAt(parser.i)
-        if ( nextc == '_' ) {
-          arg = parser.GetArgument(name); // '_'
-          subs = parser.GetArgument(name); // the subscript argument
-        }
-        break;
-      default :
-        subs = arg;
-    }
-    if ( subs == null )
-    {
-      //subs = '';
-      throw new TexError('NoSubscript', 'ERROR: found neither'
-        + ' superscript nor subscript for partial molar quantity');
-    }
-    if ( typeof supers !== "undefined" )
-    {
-      // \mkern2mu\overline{\mkern-2mu{symbol_{subscript,subs}^supers}\mkern-1mu}\mkern1mu
-      ThermodynamicsMethods.Macro (parser, name,
-        '\\mkern2mu\\overline{\\mkern-2mu{' + symbol + '}_{' + subscript
-            + ',' + subs + '}^{' + supers + '}\\mkern-1mu}\\mkern1mu');
-    } else {
-      // \mkern2mu\overline{\mkern-2mu{symbol_{subscript,subs}}\mkern-1mu}\mkern1mu
-      ThermodynamicsMethods.Macro (parser, name,
-        '\\mkern2mu\\overline{\\mkern-2mu{' + symbol + '}_{' + subscript
-            + ',' + subs + '}\\mkern-1mu}\\mkern1mu');
-    }
+  /**
+   * Implements a subscripted parial-molar symbol with a subscript prefix.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   * @param {string} symbol      The symbol to have super- and subscripts
+   * @param {string} subscript   The prefix subscript
+   */
+  PartialMolarSubscripted(
+    parser: TexParser,
+    name: string,
+    symbol: string,
+    subscript: string
+  ) {
+    const [sup, sub] = TDU.getSupSub(parser, name, subscript);
+    TDU.latex(
+      parser,
+      `\\mkern2mu\\overline{\\mkern-2mu{${symbol}}${sub}${sup}\\mkern-1mu}\\mkern1mu`
+    );
   },
 
-  PartialMolarSuperscripted (parser: TexParser, name: string, symbol: string,
-        superscript: string) {
-    let supers = parser.GetBrackets(name);
-    let subs;
-    let arg = parser.GetArgument(name, true);
-    if ( arg == '_' ) {
-      subs = parser.GetArgument(name);
-      // "peek" at next argument to see whether it's ^
-      const nextchar = parser.string.charAt(parser.i)
-      if ( nextchar == '^' ) {
-        arg = parser.GetArgument(name); // '^'
-        supers = parser.GetArgument(name); // the superscript argument
-      }
-    } else if ( arg == '^' ) {
-      supers = parser.GetArgument(name);
-      // "peek" at next argument to see whether it's _
-      const nextchar = parser.string.charAt(parser.i)
-      if ( nextchar == '_' ) {
-        arg = parser.GetArgument(name); // '_'
-        subs = parser.GetArgument(name); // the subscript argument
-      }
-    }
-    else subs = arg;
-    if ( subs == null )
-        subs = '';
-    if ( typeof supers !== "undefined" )
-    {
-      if ( parser.options.thermodynamics['longpm'] )
-        ThermodynamicsMethods.Macro (parser, name,
-          '\\mkern2mu\\overline{\\mkern-2mu{' + symbol + '}_{' + subs + '}^{'
-          + superscript + ',' + supers + '}\\mkern-1mu}\\mkern1mu');
-      else
-        ThermodynamicsMethods.Macro (parser, name,
-          '\\mkern2mu\\overline{\\mkern-2mu{' + symbol
-          + '}\\mkern-1mu}\\mkern1mu' + '}_{' + subs + '}^{'
-          + superscript + ',' + supers);
-    } else {
-      if ( parser.options.thermodynamics['longpm'] )
-        ThermodynamicsMethods.Macro (parser, name,
-          '\\mkern2mu\\overline{\\mkern-2mu{' + symbol + '}_{'
-              + subs + '}^{' + superscript + '}\\mkern-1mu}\\mkern1mu');
-      else
-        ThermodynamicsMethods.Macro (parser, name,
-          '\\mkern2mu\\overline{\\mkern-2mu{' + symbol
-            + '\\mkern-1mu}\\mkern1mu}_{' + subs + '}^{' + superscript + '}');
-    }
+  /**
+   * Implements a superscripted partial-molar symbol with a superscript prefix.
+   *
+   * @param {TexParser} parser     The active TeX parser
+   * @param {string} name          The name of the current macro
+   * @param {string} symbol        The symbol to have super- and subscripts
+   * @param {string} superscript   The prefix superscript
+   */
+  PartialMolarSuperscripted(
+    parser: TexParser,
+    name: string,
+    symbol: string,
+    superscript: string
+  ) {
+    const [sup, sub] = TDU.getSupSub(parser, name, '', superscript);
+    TDU.latex(
+      parser,
+      TDU.getOption(parser, 'pm-style') === 'long'
+        ? `\\mkern2mu\\overline{\\mkern-2mu{${symbol}}${sub}${sup}\\mkern-1mu}\\mkern1mu`
+        : `\\mkern2mu\\overline{\\mkern-2mu${symbol}\\mkern-1mu}\\mkern1mu${sub}${sup}`
+    );
   },
 
-  ChangeonSomething (parser: TexParser, name: string,
-      subscript = null, superscript = null) {
+  /**************************************************************************/
+
+  /**
+   * Implements the \Delta macros.
+   *
+   * @param {TexParser} parser     The active TeX parser
+   * @param {string} name          The name of the current macro
+   * @param {string} subscript     The subscript prefix, if any
+   * @param {string} superscript   The superscript prefix, if any
+   */
+  ChangeonSomething(
+    parser: TexParser,
+    name: string,
+    subscript: string = null,
+    superscript: string = null
+  ) {
     const symbol = parser.GetArgument(name);
-    const nextchar = parser.string.charAt(parser.i);
-    let nextnextchar = null;
-    let subs = '';
-    let supers = '';
-    // look for subscripts or superscripts
-    switch ( nextchar ) {
-      case '_' :
-        parser.i++;
-        subs = parser.GetArgument(name);
-        // now check for additional superscript
-        nextnextchar = parser.string.charAt(parser.i);
-        if ( nextnextchar == '^' ) {
-          parser.i++;
-          supers = parser.GetArgument(name);
-        }
-        break;
-      case '^' :
-        parser.i++;
-        supers = parser.GetArgument(name);
-        // now check for additional subscript
-        nextnextchar = parser.string.charAt(parser.i);
-        if ( nextnextchar == '_' ) {
-          parser.i++;
-          subs = parser.GetArgument(name);
-        }
-        break;
-    }
-    // Add the "intrinsic" subscripts/superscripts
-    if ( subscript != null ) {
-      if ( subs == '' )
-        subs = subscript;
-      else
-        subs = subscript + ',' + subs;
-    }
-    if ( superscript != null ) {
-      if ( supers == '' )
-        supers = superscript;
-      else
-        supers = superscript + ',' + supers;
-    }
-    // Print symbol with non-null superscripts and subscripts
-    if ( subs == '' && supers == '' )
-      // will this EVER happen? (it is an implied check that BOTH are not null)
-      ThermodynamicsMethods.Macro (parser, 'ChangeonSomething', '\\Delta '
-        + symbol);
-    else if ( subs == '' )
-      ThermodynamicsMethods.Macro (parser, 'ChangeonSomething', '\\Delta '
-        + symbol + '^{' + supers + '}');
-    else if ( supers == '' )
-      ThermodynamicsMethods.Macro (parser, 'ChangeonSomething', '\\Delta '
-        + symbol + '_{' + subs + '}');
-    else
-      ThermodynamicsMethods.Macro (parser, 'ChangeonSomething', '\\Delta '
-        + symbol + '_{' + subs + '}^{' + supers + '}');
+    const [sup, sub] = TDU.getSupSub(
+      parser,
+      name,
+      subscript,
+      superscript,
+      '',
+      '',
+      false
+    );
+    TDU.latex(parser, `\\Delta ${symbol}${sub}${sup}`);
   },
 
-  // EIS = extensive, intensive, specific
-  LocallyChangeEISappearance (parser: TexParser, begin: StackItem,
-        value: string) {
-    let name: string = begin.getName();
-    let endstr: string = '\\end{' + name + '}';
-    let istop: number = parser.string.indexOf(endstr);
-    let rest: string = parser.string.slice(istop);
-    let oldvalue: string = parser.options.thermodynamics['extensive-style'];
-    // set EIS to values given
-    parser.options.thermodynamics['extensive-style'] = value;
+  /**************************************************************************/
+
+  /**
+   * Implement the \ncomponets macro, based on the its current value.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} _name       The name of the current macro
+   */
+  NComponents(parser: TexParser, _name: string) {
+    TDU.latex(parser, TDU.getOption(parser, 'ncomponents'));
+  },
+
+  /**
+   * Implements the \all.s macros.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} _name       The name of the current macro
+   * @param {string} symbol      The symbol for the range
+   */
+  AllThings(parser: TexParser, _name: string, symbol: string) {
+    TDU.latex(
+      parser,
+      TDU.getOption(parser, 'moles-style') === 'index'
+        ? `\\vec{${symbol}}`
+        : `${symbol}_1,\\dotsc,${symbol}_{\\ncomponents}`
+    );
+  },
+
+  /**
+   * Implements the \all.sbut macros.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   * @param {string} symbol      The symbol for the range
+   */
+  AllThingsExcept(parser: TexParser, name: string, symbol: string) {
+    const otherindex = parser.GetBrackets(name, 'j');
+    const index = parser.GetArgument(name);
+    symbol ??= parser.GetArgument(name);
+    const ncomponents = TDU.getOption(parser, 'ncomponents');
+    const tex =
+      TDU.getOption(parser, 'moles-style') === 'index'
+        ? index === 'j' && otherindex === 'j'
+          ? `${symbol}_{k \\neq ${index}}`
+          : `${symbol}_{${otherindex} \\neq ${index}}`
+        : index === '1'
+          ? `${symbol}_2,\\dotsc,${symbol}_{\\ncomponents}`
+          : index === ncomponents || index === '\\ncomponents'
+            ? `${symbol}_1,\\dotsc,${symbol}_{\\ncomponents-1}`
+            : `${symbol}_1,\\dotsc,[${symbol}_{${index}}],\\dotsc,${symbol}_{\\ncomponents}`;
+    TDU.latex(parser, tex);
+  },
+
+  /**
+   * Implements the \all.sbutLstAnd macros.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   * @param {string} symbol      The symbol for the range
+   */
+  AllThingsExceptLastAnd(parser: TexParser, name: string, symbol: string) {
+    const otherindex = parser.GetBrackets(name, 'j');
+    const index = parser.GetArgument(name);
+    symbol ??= parser.GetArgument(name);
+    const ncomponents = TDU.getOption(parser, 'ncomponents');
+    const tex =
+      TDU.getOption(parser, 'moles-style') === 'index'
+        ? index == 'j' && otherindex == 'j'
+          ? `${symbol}_{k \\neq ${index},\\ncomponents}`
+          : index === ncomponents || index === '\\ncomponents'
+            ? `${symbol}_{${otherindex}\\neq ${index}}`
+            : `${symbol}_{${otherindex}\\neq ${index},\\ncomponents}`
+        : index === '1'
+          ? `${symbol}_2,\\dotsc,${symbol}_{\\ncomponents-1}`
+          : index === ncomponents || index === '\\ncomponents'
+            ? `${symbol}_1,\\dotsc,${symbol}_{\\ncomponents-1}`
+            : index.replace(/ /g, '') === `\\ncomponents-1` ||
+                index.replace(/ /g, '') === '\\ncomponents-1'
+              ? `${symbol}_1,\\dotsc,${symbol}_{\\ncomponents-2}`
+              : `${symbol}_1,\\dotsc,[${symbol}_{${index}}],\\dotsc,${symbol}_{\\ncomponents-1}`;
+    TDU.latex(parser, tex);
+  },
+
+  /**
+   * Locally changes the moles-style option within an environment.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {StackItem} begin    The StackItem that starts an environment
+   *                             (which contains a new `stack.env` that disappears
+   *                              after the environment is ended)
+   * @param {string} style       The name of the temporary moles style to use
+   */
+  LocalMolesStyle(parser: TexParser, begin: StackItem, style: string) {
     parser.Push(begin);
-    parser.string = parser.string.substring(parser.i, istop);
-    parser.i = 0;
-    parser.Parse();
-    // change them back and set the rest of the string to be parsed
-    parser.options.thermodynamics['extensive-style'] = oldvalue;
-    parser.string = rest;
-    parser.i = 0;
+    TDU.setOption(parser, 'moles-style', style);
   },
 
-  AllThings (parser: TexParser, name: string, symbol: string) {
-    // check if the user changed the default options
-    if ( parser.options.thermodynamics['moles-range'] )
-    {
-      parser.options.thermodynamics['moles-range'] = false;
-      parser.options.thermodynamics['moles-index'] = false;
-    }
+  /**************************************************************************/
 
-    // draw it
-    if ( parser.options.thermodynamics['moles-index'] )
-      ThermodynamicsMethods.Macro (parser, name, '\\vec{' + symbol + '}');
-    else
-      ThermodynamicsMethods.Macro (parser, name,
-        symbol + '_1,\\dotsc,' + symbol + '_{\\ncomponents}');
-  },
-
-  AllThingsExcept (parser: TexParser, name: string, symbol: string) {
-    // check if the user changed the default options
-    if ( parser.options.thermodynamics['moles-range'] )
-    {
-      parser.options.thermodynamics['moles-range'] = false;
-      parser.options.thermodynamics['moles-index'] = false;
-    }
-
-    let otherindex = parser.GetBrackets(name);
-    let index = parser.GetArgument(name);
-    let actualsymbol: string = symbol;
-    if ( symbol == null )
-      actualsymbol = parser.GetArgument(name);
-    if ( otherindex == undefined ) otherindex = 'j';
-    if ( parser.options.thermodynamics['moles-index'] ) {
-      if ( index == 'j' && otherindex == 'j' )
-        ThermodynamicsMethods.Macro (parser, name, actualsymbol
-          + '_{k \\neq ' + index + '}');
-      else
-        ThermodynamicsMethods.Macro (parser, name, actualsymbol
-          + '_{' + otherindex + ' \\neq ' + index + '}');
-    } else {
-      if ( index == '1' )
-        ThermodynamicsMethods.Macro (parser, name,
-          actualsymbol + '_2,\\dotsc,' + actualsymbol + '_{\\ncomponents}');
-      else if ( index == '\\ncomponents' )
-        ThermodynamicsMethods.Macro (parser, name,
-          actualsymbol + '_1,\\dotsc,' + actualsymbol + '_{\\ncomponents-1}');
-      else
-        ThermodynamicsMethods.Macro (parser, name, actualsymbol
-          + '_1,\\dotsc,[' + actualsymbol + '_' + index + '],\\dotsc,'
-          + actualsymbol + '_{\\ncomponents}');
-    }
-  },
-
-  AllThingsExceptLastAnd (parser: TexParser, name: string, symbol: string) {
-    // check if the user changed the default options
-    if ( parser.options.thermodynamics['moles-range'] )
-    {
-      parser.options.thermodynamics['moles-range'] = false;
-      parser.options.thermodynamics['moles-index'] = false;
-    }
-    let otherindex = parser.GetBrackets(name);
-    let index = parser.GetArgument(name);
-    let actualsymbol: string = symbol;
-    if ( symbol == null )
-      actualsymbol = parser.GetArgument(name);
-    if ( otherindex == undefined ) otherindex = 'j';
-    if ( parser.options.thermodynamics['moles-index'] ) {
-      if ( index == 'j' && otherindex == 'j' )
-        ThermodynamicsMethods.Macro (parser, name, actualsymbol + '_{k \\neq '
-            + index + ',\\ncomponents}');
-      else if ( index == '\\ncomponents' )
-        ThermodynamicsMethods.Macro (parser, name, actualsymbol + '_{'
-          + otherindex + '\\neq ' + index + '}');
-      else
-        ThermodynamicsMethods.Macro (parser, name, actualsymbol + '_{'
-          + otherindex + '\\neq ' + index + ',\\ncomponents}');
-    } else {
-      if ( index == '1' )
-        ThermodynamicsMethods.Macro (parser, name,
-          actualsymbol + '_2,\\dotsc,' + actualsymbol + '_{\\ncomponents-1}');
-      else if ( index == '\\ncomponents' )
-        ThermodynamicsMethods.Macro (parser, name,
-          actualsymbol + '_1,\\dotsc,' + actualsymbol + '_{\\ncomponents-1}');
-      else if ( index.split(' ').join('') == '\\ncomponents-1' )
-        ThermodynamicsMethods.Macro (parser, name,
-          actualsymbol + '_1,\\dotsc,' + actualsymbol + '_{\\ncomponents-2}');
-      else
-        ThermodynamicsMethods.Macro (parser, name, actualsymbol
-          + '_1,\\dotsc,[' + actualsymbol + '_' + index + '],\\dotsc,'
-          + actualsymbol + '_{\\ncomponents-1}');
-    }
-  },
-
-  LocalMolesIndex (parser: TexParser, begin: StackItem) {
-    let oldvalue: boolean = parser.options.thermodynamics['moles-index'];
-    let name: string = begin.getName();
-    let endstr: string = '\\end{' + name + '}';
-    let istop: number = parser.string.indexOf(endstr);
-    let rest: string = parser.string.slice(istop);
-    parser.options.thermodynamics['moles-index'] = true;
-    parser.Push(begin);
-    parser.string = parser.string.substring(parser.i, istop);
-    parser.i = 0;
-    parser.Parse();
-    parser.options.thermodynamics['moles-index'] = oldvalue;
-    parser.string = rest;
-    parser.i = 0;
-  },
-
-  LocalMolesRange (parser: TexParser, begin: StackItem) {
-    let oldvalue: boolean = parser.options.thermodynamics['moles-index'];
-    let name: string = begin.getName();
-    let endstr: string = '\\end{' + name + '}';
-    let istop: number = parser.string.indexOf(endstr);
-    let rest: string = parser.string.slice(istop);
-    parser.options.thermodynamics['moles-index'] = false;
-    parser.Push(begin);
-    parser.string = parser.string.substring(parser.i, istop);
-    parser.i = 0;
-    parser.Parse();
-    parser.options.thermodynamics['moles-index'] = oldvalue;
-    parser.string = rest;
-    parser.i = 0;
-  },
-
-  JacobianDeterminant (parser: TexParser, name: string) {
-    let optional: string = parser.GetBrackets(name);
-    let numerator: string = parser.GetArgument(name);
-    let denominator: string = parser.GetArgument(name);
-    let numarray: string[] = numerator.split(',');
-    let denarray: string[] = denominator.split(',');
-    let string_to_parse = '\\begin{vmatrix}';
-    let last_ampersand: number;
-    let held_constant: string = '';
-    if ( numarray.includes('\\dots') ) {
+  /**
+   * Implements the Jacobian macros.
+   *
+   * @param {TexParser} parser   The active TeX parser
+   * @param {string} name        The name of the current macro
+   * @param {string} env         The environment used to wrap the Jacobian
+   */
+  JacobianMatrix(parser: TexParser, name: string, env: string = 'matrix') {
+    const optional = parser.GetBrackets(name, '');
+    const space = parser.GetBrackets(name, '1ex');
+    const numerator = parser.GetArgument(name).replace(/ /g, '');
+    const denominator = parser.GetArgument(name).replace(/ /g, '');
+    const numarray = numerator.split(',');
+    const denarray = denominator.split(',');
+    const rows = [];
+    if (numarray.includes('\\dots')) {
       // handle three arguments with \dots in the middle
       // find which symbols we are working with
-      let i: number = numarray[0].indexOf('_');
-      let func = numarray[0].slice(0,i);
-      i = denarray[0].indexOf('_');
-      let variable = denarray[0].slice(0,i);
-      i = denarray[2].indexOf('_');
-      let lastindex = denarray[2].slice(i+1);
-      // row 1
-      string_to_parse = string_to_parse + '\\Partial{' + func + '_1}{'
-        + variable + '_1}{\\allbut{1}{' + variable
-        + '}} & \\dots & \\Partial{' + numarray[0] + '}{'
-        + denarray[2] + '}{\\allbut{1}{' + variable + '}} \\\\';
-      // row 2
-      string_to_parse = string_to_parse + '\\vdots & \\ddots & \\vdots \\\\';
-      // row 3
-      string_to_parse = string_to_parse + '\\Partial{' + func + '_'
-        + lastindex + '}{' + variable + '_1}{\\allbut{1}{' + variable
-        + '}} & \\dots & \\Partial{' + numarray[0] + '}{'
-        + denarray[2] + '}{\\allbut{' + lastindex + '}{' + variable + '}} \\\\';
-    }
-    else {
-      for (let num of numarray) {
-        for (let den of denarray) {
-          held_constant = denominator.replace(den,'').replace(',,',',')
-              .replace(/^ *,/, '').replace(/, *$/,'');
-          if ( optional !== undefined )
-            string_to_parse = string_to_parse + optional;
-          string_to_parse = string_to_parse + '\\Partial{' + num + '}{'
-              + den + '}{' + held_constant + '} &';
+      const f = numarray[0].split(/_/)[0];
+      const [v, m] = denarray[2].split(/_/);
+      TDU.setOption(parser, 'ncomponents', m);
+      rows.push(
+        [
+          `\\Partial{${f}_1}{${v}_1}{\\allbut{1}{${v}}}`,
+          '\\dots',
+          `\\Partial{${f}_1}{${v}_${m}}{\\allbut{${m}}{${v}}}`,
+        ].join(' & '),
+        '\\vdots & \\ddots & \\vdots',
+        [
+          `\\Partial{${f}_{${m}}}{${v}_1}{\\allbut{1}{${v}}}`,
+          '\\dots',
+          `\\Partial{${f}_{${m}}}{${v}_{${m}}}{\\allbut{${m}}{${v}}}`,
+        ].join(' & ')
+      );
+    } else {
+      for (const num of numarray) {
+        const cols = [];
+        for (let i = 0; i < denarray.length; ++i) {
+          const constant = [...denarray];
+          constant.splice(i, 1);
+          cols.push(
+            `${optional}\\Partial{${num}}{${denarray[i]}}{${constant.join(',')}}`
+          );
         }
-        // remove final & and replace with \\
-        last_ampersand = string_to_parse.lastIndexOf('&');
-        string_to_parse = string_to_parse.slice(0,last_ampersand);
-        string_to_parse = string_to_parse + '\\\\';
+        rows.push(cols.join('&'));
       }
     }
-    let last_linebreak = string_to_parse.lastIndexOf('\\\\');
-    string_to_parse = string_to_parse.slice(0,last_linebreak)
-        + '\\end{vmatrix}';
-    parser.string = string_to_parse;
-    parser.i = 0;
-    parser.Parse();
+    const table = `\\begin{${env}}${rows.join('\\\\' + (space ? `[${space}]` : ''))}\\end{${env}}`;
+    TDU.latex(parser, table);
   },
+
+  /**************************************************************************/
 
   Macro: BaseMethods.Macro,
 
-}
-
-export default ThermodynamicsMethods;
+  /**************************************************************************/
+};

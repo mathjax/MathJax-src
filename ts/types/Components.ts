@@ -68,6 +68,7 @@ import type { SETOPTIONS_OPTIONS } from '../input/tex/setoptions/SetOptionsConfi
 import type { TAGFORMAT_OPTIONS } from '../input/tex/tagformat/TagFormatConfiguration.js';
 import type { TEXHTML_OPTIONS } from '../input/tex/texhtml/TexHtmlConfiguration.js';
 import type { TEXTMACROS_OPTIONS } from '../input/tex/textmacros/TextMacrosConfiguration.js';
+import type { THERMODYNAMICS_OPTIONS } from '../input/tex/thermodynamics/ThermodynamicsConfiguration.js';
 import type { UNITS_OPTIONS } from '../input/tex/units/UnitsConfiguration.js';
 
 import type { MATHML_OPTIONS } from '../input/mathml.js';
@@ -176,6 +177,7 @@ export type COMPONENTS<DOM extends DOM_TYPES> = {
   '[tex]/texhtml': TEX_PACKAGE<'texhtml', TEXHTML_OPTIONS>;
   '[tex]/textcomp': TEX_PACKAGE<'textcomp'>;
   '[tex]/textmacros': TEX_PACKAGE<'textmacros', TEXTMACROS_OPTIONS>;
+  '[tex]/thermodynamics': TEX_PACKAGE<'thermodynamics', THERMODYNAMICS_OPTIONS>;
   '[tex]/unicode': TEX_PACKAGE<'unicode'>;
   '[tex]/units': TEX_PACKAGE<'units', UNITS_OPTIONS>;
   '[tex]/upgreek': TEX_PACKAGE<'upgreek'>;
