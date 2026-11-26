@@ -339,7 +339,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   },
 
   /**
-   * Filter an on* attribute (don't allow them)
+   * Filter that removes an attribute entirely (e.g., for on* attributes).
    *
    * @param {Safe<N,T,D>} _safe  The Safe object being used
    * @param {string} _value      The attribute's value
@@ -350,7 +350,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    * @template T  The Text node class
    * @template D  The Document class
    */
-  filterListeners<N, T, D>(
+  filterRemove<N, T, D>(
     _safe: Safe<N, T, D>,
     _value: string,
     _id: string
