@@ -107,6 +107,12 @@ export default class Stack {
       if (item.env) {
         if (item.copyEnv) {
           Object.assign(item.env, this.env);
+        } else {
+          for (const id of Object.keys(this.env)) {
+            if (id.charAt(0) === '-') {
+              item.env[id] = this.env[id];
+            }
+          }
         }
         this.env = item.env;
       } else {

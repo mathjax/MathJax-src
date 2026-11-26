@@ -415,7 +415,7 @@ export const NewcommandUtil = {
       [cs],
       [NewcommandTables.NEW_DELIMITER]
     )[0];
-    delims.remove(cs);
+    delims?.remove(cs);
     if (
       parser.configuration.handlers.get(HandlerType.DELIMITER).applicable(cs)
     ) {

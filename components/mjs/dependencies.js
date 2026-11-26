@@ -57,6 +57,7 @@ export const dependencies = {
   '[tex]/texhtml': ['input/tex-base'],
   '[tex]/textcomp': ['input/tex-base', '[tex]/textmacros'],
   '[tex]/textmacros': ['input/tex-base'],
+  '[tex]/thermodynamics': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],
   '[tex]/unicode': ['input/tex-base'],
   '[tex]/units': ['input/tex-base'],
   '[tex]/upgreek': ['input/tex-base'],

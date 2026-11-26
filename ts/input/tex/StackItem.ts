@@ -534,7 +534,9 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    */
   public clearEnv() {
     for (const id of Object.keys(this.env)) {
-      delete this.env[id];
+      if (id.charAt(0) !== '-') {
+        delete this.env[id];
+      }
     }
   }
 
