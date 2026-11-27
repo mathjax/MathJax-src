@@ -1,0 +1,67 @@
+NAME    : Publish Release to MathJax
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout MathJax-src repository
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm -s i
+
+      - name: Build MathJax
+        run: |
+          ./components/bin/version
+          pnpm -s link:src
+          pnpm -s build
+        
+      # - name: Get files to push from package.json
+      #   id: get_files
+      #   run: |
+      #     # Extract the "files" list from package.json
+      #     FILES=$(jq -r '.files | join(" ")' package.json)
+      #     echo "FILES=$FILES" >> $GITHUB_ENV
+
+      - name: Create MathJax branch and push build
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          
+          # Get the release name from the context
+          RELEASE_NAME="${{ github.event.release.name }}"
+          
+          # Clone the MathJax repo
+          git clone https://github.com/MathJax/MathJax.git
+          cd MathJax
+          
+          # Create a new branch using the release name
+          git checkout -b "$RELEASE_NAME"
+          
+          # Copy the build output from MathJax-src repo to MathJax
+          cp -r ../bundle/* ./
+
+          # Add, commit, and push the changes
+          git add .
+          git commit -m "Add build artifacts for release $RELEASE_NAME"
+          git push origin "$RELEASE_NAME"
+
+      - name: Create a pull request in MathJax
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: MathJax/MathJax
+          head: "$RELEASE_NAME"
+          base: develop
+          title: "New build artifacts for release $RELEASE_NAME"
+          body: "This pull request contains the build artifacts from release $RELEASE_NAME."
