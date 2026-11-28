@@ -2,7 +2,8 @@
  *  Custom reporter for tex macro coverage.
  */
 
-import { tmpJsonFile, ESC } from './constants.js';
+import { texJsonFile, ESC } from './constants.js';
+import { makeColumn, percentage, getColor, colorize } from './reportUtil.js';
 import * as fs from 'fs';
 
 export default class TexReporter {
@@ -13,17 +14,17 @@ export default class TexReporter {
   }
 
   onRunStart(aggregatedResults, options) {
-    fs.writeFileSync(tmpJsonFile, '[{}');
+    fs.writeFileSync(texJsonFile, '[{}');
   }
 
   onRunComplete(testContexts, results) {
-    fs.appendFileSync(tmpJsonFile, ']');
-    let coverage = JSON.parse(fs.readFileSync(tmpJsonFile));
+    fs.appendFileSync(texJsonFile, ']');
+    let coverage = JSON.parse(fs.readFileSync(texJsonFile));
+    fs.unlinkSync(texJsonFile);
     if (!coverage) {
       return;
     }
     coverage = coverage.slice(1);
-    fs.unlinkSync(tmpJsonFile);
     createCoverageOutput(coverage);
   }
 
@@ -40,7 +41,7 @@ export default class TexReporter {
  * Convert the array of configurations to an array of rows of data,
  * sorted by package name.
  * @param coverage The coverage data from the json file
- * @return The array of rows of data
+ * @returns The array of rows of data
  */
 function combineCoverage(coverage) {
   const maps = [];
@@ -111,7 +112,7 @@ function createCoverageOutput(coverage) {
  * Trim the missing token list to fit the screen
  * @param rows The rows whose data is to be trimmed
  * @param width The width of the table name column
- * @return The width of the missing token column
+ * @returns The width of the missing token column
  */
 function trimMissing(rows, width) {
   const rest = process.stdout.columns - width - 32;
@@ -127,57 +128,4 @@ function trimMissing(rows, width) {
     }
   }
   return mwidth;
-}
-
-/**
- * Sets cell content with respect to column with surronding it by whitespace.
- * @param cell The string in that cell.
- * @param size The column size.
- * @param left Cell is left aligned if set.
- * @return The string with the correctly set column
- */
-function makeColumn(cell, size, color = 0, left = false) {
-  let length = cell.toString().length;
-  let column = new Array(Math.max(0, size - length + 1)).join(' ');
-  cell = colorize(cell, color);
-  if (left) {
-    column = cell + column;
-  } else {
-    column += cell;
-  }
-  column += ' | ';
-  return column;
-}
-
-/**
- * Percentage computation with two digit precision.
- * @param actual The number of tested elements.
- * @param size The table size.
- * @return The percentage for table size to tested elements.
- */
-function percentage(actual, size) {
-  return Math.round((actual / size) * 10000) / 100;
-}
-
-/**
- * Get the color number for the percentage of coverage
- * @param actual The number of tested elements.
- * @param size The table size.
- * @return The color number for use in a color escape sequence
- */
-function getColor(actual, size) {
-  const percent = (actual / size) * 100;
-  return percent >= 80 ? 32 : percent >= 50 ? 33 : 31;
-}
-
-/**
- * Add color escape sequences, if needed
- * @param cell The cell contents
- * @param color The color number to use in the escape sequence
- * @return The cell contents with color sequences
- */
-function colorize(cell, color) {
-  return color && process.stdout.isTTY
-    ? `${ESC}[1m${ESC}[${color}m${cell}${ESC}[0m`
-    : cell;
 }
