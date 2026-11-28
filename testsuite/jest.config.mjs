@@ -26,7 +26,11 @@ const config = {
   transform: {
     '^.+\\.tsx?$': [ tsjest, { useESM: true, tsconfig: './tsconfig.json' } ],
   },
-  reporters: ['default', [path.resolve(__dirname, 'src/texReporter.js'), {}]]
+  reporters: [
+    'default',
+    [path.resolve(__dirname, 'src/localeReporter.js'), {}],
+    [path.resolve(__dirname, 'src/texReporter.js'), {}],
+  ],
 };
 
 export default config;

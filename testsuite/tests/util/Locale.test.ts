@@ -3,6 +3,7 @@ import { trapOutput, trapAsyncOutput } from '#helpers/traps.js';
 import { mathjax } from '#js/mathjax.js';
 import { asyncLoad } from '#js/util/AsyncLoad.js';
 import { Locale } from '#js/util/Locale.js';
+import '#helpers/locale.js';
 import '#js/util/asyncLoad/esm.js';
 
 /**********************************************************************************/

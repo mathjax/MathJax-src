@@ -156,7 +156,7 @@ export class Locale {
    *
    * @param {string} message The message string to process.
    * @param {string| namedData} data The first argument or the object of
-   *     names arguments
+   *     named arguments
    * @param {string[]} args Additional arguments (if data is a string)
    * @returns {string} The processed message string with arguments substituted
    */

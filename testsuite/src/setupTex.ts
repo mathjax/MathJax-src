@@ -15,7 +15,7 @@ import { SerializedMmlVisitor } from '#js/core/MmlTree/SerializedMmlVisitor.js';
 import { MmlNode } from '#js/core/MmlTree/MmlNode.js';
 import { mathjax } from '#js/mathjax.js';
 import { OptionList } from '#js/util/Options.js';
-import { tmpJsonFile } from '#src/constants.js';
+import { texJsonFile } from '#src/constants.js';
 import * as fs from 'fs';
 import { init } from '#source/main/main.js';
 import { expect } from '@jest/globals';
@@ -412,7 +412,7 @@ export function getTokens(configuration: string) {
       });
     }
   });
-  fs.appendFileSync(tmpJsonFile, ',' + JSON.stringify(outJSON, null, 2));
+  fs.appendFileSync(texJsonFile, ',' + JSON.stringify(outJSON, null, 2));
 }
 
 //
